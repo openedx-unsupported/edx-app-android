@@ -1,11 +1,13 @@
 package org.edx.mobile.module.registration.view;
 
+import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -15,28 +17,28 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 
-import java.util.Locale;
-
 class RegistrationEditTextView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
     protected RegistrationFormField mField;
     private View mView;
-    protected EditText mInputView;
-    private TextView mErrorView, mInstructionView;
-    private IActionListener actionListener;
+    protected TextInputLayout mTextInputLayout;
+    protected TextInputEditText mTextInputEditText;
+    protected TextView mInstructionsTextView;
+    protected TextView mErrorTextView;
 
     public RegistrationEditTextView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
         this.mField = field;
         this.mView = view;
 
-        this.mInputView = (EditText) view.findViewById(R.id.txt_input);
-        this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
-        this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
+        mTextInputLayout = (TextInputLayout) view.findViewById(R.id.register_edit_text_til);
+        mTextInputEditText = (TextInputEditText) view.findViewById(R.id.register_edit_text_tilEt);
+        mInstructionsTextView = (TextView) view.findViewById(R.id.input_instructions);
+        mErrorTextView = (TextView) view.findViewById(R.id.input_error);
 
         // set max lines for this input to be 1
-        mInputView.setLines(1);
+        mTextInputEditText.setLines(1);
 
         // apply max length
         if (mField.getRestriction().getMaxLength() > 0) {
@@ -44,50 +46,38 @@ class RegistrationEditTextView implements IRegistrationFieldView {
 
             InputFilter[] FilterArray = new InputFilter[1];
             FilterArray[0] = new InputFilter.LengthFilter(mField.getRestriction().getMaxLength());
-            mInputView.setFilters(FilterArray);
+            mTextInputEditText.setFilters(FilterArray);
         }
+
+        setInstructions(field.getInstructions());
 
         // set hint
-        mInputView.setHint(mField.getLabel());
+        mTextInputLayout.setHint(mField.getLabel());
 
-        // display default value
-        mInputView.setText(mField.getDefaultValue());
-
-        // display instructions if available
-        if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
-            mInstructionView.setVisibility(View.VISIBLE);
-            String text = mField.getInstructions();
-            if (TextUtils.isEmpty( text ) ){
-                mInstructionView.setText( text );
-            } else {
-                Spanned result = Html.fromHtml(text);
-                mInstructionView.setText(result);
-            }
-        } else {
-            mInstructionView.setVisibility(View.GONE);
-        }
+        // set default
+        mTextInputEditText.setText(mField.getDefaultValue());
 
         // hide error text view
-        mErrorView.setVisibility(View.GONE);
+        mErrorTextView.setVisibility(View.GONE);
 
         // This tag is necessary for End-to-End tests to work properly
-        mInputView.setTag(mField.getName());
+        mTextInputLayout.setTag(mField.getName());
     }
 
     public boolean setRawValue(String value){
-        mInputView.setText(value);
+        mTextInputEditText.setText(value);
         return true;
     }
 
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(mInputView.getText().toString());
+        return new JsonPrimitive(mTextInputEditText.getText().toString());
     }
 
     @Override
     public boolean hasValue() {
-        return !mInputView.getText().toString().isEmpty();
+        return !mTextInputEditText.getText().toString().isEmpty();
     }
 
     @Override
@@ -101,11 +91,23 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     }
 
     @Override
+    public void setInstructions(@Nullable String instructions) {
+        if (!TextUtils.isEmpty(instructions)) {
+            Spanned result = Html.fromHtml(instructions);
+            mInstructionsTextView.setText(result);
+            mInstructionsTextView.setVisibility(View.VISIBLE);
+        }
+        else {
+            mInstructionsTextView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public void handleError(String error) {
         if (!TextUtils.isEmpty(error)) {
-            mErrorView.setVisibility(View.VISIBLE);
-            Spanned result = Html.fromHtml(error.toString());
-            mErrorView.setText(result);
+            Spanned result = Html.fromHtml(error);
+            mErrorTextView.setText(result);
+            mErrorTextView.setVisibility(View.VISIBLE);
         }
         else {
             logger.warn("error message not provided, so not informing the user about this error");
@@ -115,7 +117,7 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     @Override
     public boolean isValidInput() {
         // hide error as we are re-validating the input
-        mErrorView.setVisibility(View.GONE);
+        mErrorTextView.setVisibility(View.GONE);
 
         // check if this is required field and has an input value
         if (mField.isRequired() && !hasValue()) {
@@ -155,7 +157,7 @@ class RegistrationEditTextView implements IRegistrationFieldView {
 
     @Override
     public void setEnabled(boolean enabled) {
-        mInputView.setEnabled(enabled);
+        mTextInputLayout.setEnabled(enabled);
     }
 
     @Override
