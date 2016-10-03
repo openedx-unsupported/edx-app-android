@@ -22,10 +22,10 @@ public class AlertDialogFragment extends DialogFragment {
     public static final String ARG_MESSAGE = "message";
 
     /**
-     * Creates a new instance of this dialog fragment with the provided title and message.
+     * Creates a new instance of this dialog fragment.
      *
-     * @param title   The title to set.
-     * @param message The message to set.
+     * @param title   The title.
+     * @param message The message.
      * @return AlertDialogFragment object.
      * @see #showDialog(FragmentManager, String, String)
      */
@@ -39,20 +39,20 @@ public class AlertDialogFragment extends DialogFragment {
     }
 
     /**
-     * Creates and shows a new instance of this dialog fragment with the provided title and message.
+     * Creates and shows a new instance of this dialog fragment.
      *
-     * @param title   The title to set.
-     * @param message The message to set.
+     * @param title   The title.
+     * @param message The message.
      */
     public static void showDialog(@NonNull FragmentManager manager,
                                   @Nullable String title, @NonNull String message) {
+
+        // TODO: Re-work this code after migrating to an MVP framework.
         try {
             newInstance(title, message).show(manager, null);
         } catch (IllegalStateException e) {
-            // Do nothing, since this is a known issue in the support package
-            // Bug: http://code.google.com/p/android/issues/detail?id=19917
+            // Do nothing, since this is an issue due to improper session management in our tasks.
         }
-
     }
 
     @NonNull
