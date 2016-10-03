@@ -1,5 +1,6 @@
 package org.edx.mobile.base;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.content.res.Configuration;
@@ -538,7 +539,11 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     public void showErrorDialog(@Nullable String title, @NonNull String message) {
-        AlertDialogFragment.newInstance(title, message).show(getSupportFragmentManager(), null);
+        showErrorDialog(title, message, null);
+    }
+
+    public void showErrorDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
+        AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
     }
 
     @Override

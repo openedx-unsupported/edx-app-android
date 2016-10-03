@@ -3,32 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="4dp"
-    android:paddingBottom="2dp">
+    android:paddingTop="@dimen/registration_field_vertical_padding"
+    android:paddingBottom="@dimen/registration_field_vertical_padding"
+    android:orientation="vertical">
 
     <org.edx.mobile.module.registration.view.RegistrationOptionSpinner
         android:id="@+id/input_spinner"
-        style="@style/spinner"
+        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/hint_grey_text"
-        android:paddingLeft="5dp"
-        android:paddingStart="5dp"
-        android:paddingRight="10dp"
-        android:paddingEnd="10dp"
+        android:textColorHint="@color/grey_text"
         android:focusable="true"
+        android:paddingStart="@dimen/registration_spinner_horizontal_padding"
+        android:paddingLeft="@dimen/registration_spinner_horizontal_padding"
         tools:targetApi="17"/>
+
+    <TextView
+        android:id="@+id/input_spinner_instructions"
+        style="@style/registration_instruction_message"
+        android:visibility="visible"
+        tools:text="error text here"/>
 
     <TextView
         android:id="@+id/input_spinner_error"
         style="@style/registration_error_message"
         android:visibility="visible"
         tools:text="error text here"/>
-
-    <TextView
-        android:id="@+id/input_spinner_instruction"
-        style="@style/registration_instruction_message"
-        android:visibility="visible"
-        tools:text="instructions here"/>
-
 </LinearLayout>

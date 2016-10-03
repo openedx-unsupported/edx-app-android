@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:paddingTop="@dimen/registration_field_vertical_padding"
+    android:paddingBottom="@dimen/registration_field_vertical_padding"
     android:orientation="vertical">
 
     <CheckBox
@@ -17,15 +17,14 @@
         tools:hint="enter something"/>
 
     <TextView
-        android:id="@+id/checkbox_input_error"
-        style="@style/registration_error_message"
+        android:id="@+id/checkbox_input_instructions"
+        style="@style/registration_instruction_message"
         android:visibility="visible"
         tools:text="error text here"/>
 
     <TextView
-        android:id="@+id/checkbox_input_instruction"
-        style="@style/registration_instruction_message"
+        android:id="@+id/checkbox_input_error"
+        style="@style/registration_error_message"
         android:visibility="visible"
-        tools:text="instructions here"/>
-
+        tools:text="error text here"/>
 </LinearLayout>

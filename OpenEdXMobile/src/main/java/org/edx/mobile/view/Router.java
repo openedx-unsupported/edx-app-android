@@ -85,6 +85,12 @@ public class Router {
         context.startActivity(launchIntent);
     }
 
+    public void showSplashScreen(Context context) {
+        final Intent launchIntent = new Intent(context, SplashActivity.class);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(launchIntent);
+    }
+
     @NonNull
     public Intent getLogInIntent() {
         return LoginActivity.newIntent();
@@ -272,7 +278,7 @@ public class Router {
 
         delegate.unsubscribeAll();
 
-        showLaunchScreen(context);
+        showSplashScreen(context);
     }
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {

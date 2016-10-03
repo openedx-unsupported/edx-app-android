@@ -468,10 +468,9 @@
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <!-- Prompt leading user to create account screen -->
     <string name="sign_up_and_learn">Sign up and start learning</string>
-    <!-- In Sign up screen -->
-    <string name="sign_up_with">Sign up with</string>
-    <!-- In Sign up screen -->
-    <string name="or_sign_up_with_email">or sign up with email</string>
+    <!-- In Register screen -->
+    <string name="register_with">Register with</string>
+    <string name="or_register_with_email">or register with email</string>
 
     <!-- New Logistration Launch screen text -->
     <!-- Button leading user to create account screen -->
@@ -506,6 +505,9 @@
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->
     <string name="try_again">Try again</string>
+    <!-- Registration error -->
+    <string name="registration_error_title">Registration Error</string>
+    <string name="registration_error_message">Update the highlighted fields and try again.</string>
 
     <!-- data charges may apply dialog text -->
     <!-- Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app -->

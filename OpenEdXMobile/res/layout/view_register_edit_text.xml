@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="6dp"
-    android:paddingBottom="2dp"
+    android:paddingTop="@dimen/registration_field_vertical_padding"
+    android:paddingBottom="@dimen/registration_field_vertical_padding"
     android:orientation="vertical">
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_edit_text_til"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_input"
-        style="@style/edit_text_style"
-        android:textColorHint="@color/hint_grey_text"
-        tools:hint="enter something"/>
+        android:textColorHint="@color/grey_text">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/register_edit_text_tilEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/txt_input_error"
-        style="@style/registration_error_message"
-        android:visibility="visible"
-        tools:text="error text here"/>
-
-    <TextView
-        android:id="@+id/txt_input_instruction"
+        android:id="@+id/input_instructions"
         style="@style/registration_instruction_message"
-        android:visibility="visible"
-        tools:text="instructions here"/>
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/input_error"
+        style="@style/registration_error_message"
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package org.edx.mobile.module.registration.view;
 
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -18,6 +19,7 @@ public interface IRegistrationFieldView {
     boolean hasValue();
     RegistrationFormField getField();
     View getView();
+    void setInstructions(@Nullable String instructions);
     void handleError(String errorMessage);
     boolean isValidInput();
     void setEnabled(boolean enabled);

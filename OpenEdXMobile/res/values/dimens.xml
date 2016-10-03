@@ -70,6 +70,10 @@
     <dimen name="signup_social_title_margin">5dp</dimen>
     <dimen name="signup_social_title_margin_large">13dp</dimen>
     <dimen name="signup_social_title_margin_bottom">6dp</dimen>
+    <dimen name="registration_field_vertical_padding">2dp</dimen>
+    <dimen name="registration_field_horizontal_padding">2dp</dimen>
+    <dimen name="registration_spinner_horizontal_padding">-10dp</dimen>
+    <dimen name="social_auth_bottom_margin">5dp</dimen>
 
     <!-- Switch -->
     <dimen name="switch_corner_radius">3dp</dimen>
@@ -181,5 +185,5 @@
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
-
+    <dimen name="divider_with_text_margin">12dp</dimen>
 </resources>
