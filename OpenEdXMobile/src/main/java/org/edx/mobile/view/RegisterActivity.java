@@ -376,6 +376,12 @@ public class RegisterActivity extends BaseFragmentActivity
         }
     }
 
+    // make sure that on the login activity, all errors show up as a dialog as opposed to a flying snackbar
+    @Override
+    public void showErrorDialog(String header, String message) {
+        super.showErrorDialog(header, message);
+    }
+
     @Override
     public boolean createOptionsMenu(Menu menu) {
         // Register screen doesn't have any menu

@@ -8,8 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
 
 import com.google.inject.Inject;
 
@@ -31,6 +33,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.dialog.ResetPasswordActivity;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.login.LoginPresenter;
@@ -254,6 +257,12 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         SimpleAlertDialog noNetworkFragment = SimpleAlertDialog.newInstance(args);
         noNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         noNetworkFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    // make sure that on the login activity, all errors show up as a dialog as opposed to a flying snackbar
+    @Override
+    public void showErrorDialog(String header, String message) {
+        super.showErrorDialog(header, message);
     }
 
     @Override
