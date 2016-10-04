@@ -9,6 +9,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
 
 import java.util.List;
@@ -34,6 +35,9 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     CourseAPI api;
 
     @Inject
+    UserAPI api;
+
+    @Inject
     LoginPrefs loginPrefs;
 
     public CoursesAsyncLoader(Context context) {
@@ -49,9 +53,11 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
 
         try {
-            enrolledCoursesResponse = executeStrict(api.getEnrolledCourses());
-            environment.getNotificationDelegate().syncWithServerForFailure();
-            environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
+            if (profile != null) {
+                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, config.getOrganizationCode(), false);
+                environment.getNotificationDelegate().syncWithServerForFailure();
+                environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
+            }
 
         } catch (Exception exception) {
             result.setEx(exception);

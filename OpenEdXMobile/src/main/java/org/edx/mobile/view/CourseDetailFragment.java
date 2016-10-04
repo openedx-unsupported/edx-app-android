@@ -8,6 +8,8 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,6 +52,11 @@ import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import java.util.List;
+import java.util.regex.Pattern;
+
+import org.edx.mobile.base.BaseFragment;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -375,6 +382,48 @@ public class CourseDetailFragment extends BaseFragment {
                         Toast.makeText(getActivity(), R.string.enrollment_failure, Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                //super.onException(ex);
+                boolean hasAuditMode = false;
+                for (int i = 0; i < this.courseModes.length(); i++) {
+                    try {
+                        JSONObject courseMode = this.courseModes.getJSONObject(i);
+                        if(courseMode.getString("slug") == "audit"){
+                            hasAuditMode = true;
+                            break;
+                        }
+                    } catch (JSONException e) {
+                        logger.debug("Bad course modes: "+this.courseModes.toString());
+                    }
+                }
+                if(!hasAuditMode){
+                    new AlertDialog.Builder(context)
+                        .setMessage("To enroll in this course you must visit the website. Would you like to now?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String apiHostURL = environment.getConfig().getApiHostURL();
+                                String courseId = courseDetail.course_id.replaceAll(Pattern.quote("+"), "%2B");
+                                String courseUrl = apiHostURL+"/courses/"+courseId+"/about";
+                                String platformUrl = apiHostURL+"/login?next="+courseUrl;
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(platformUrl));
+                                startActivity(browserIntent);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
+                }else{
+                    Toast.makeText(getContext(), R.string.enrollment_failure, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        enrollForCourseTask.execute();
     }
 
     /**

@@ -75,4 +75,120 @@ public class UserAPI {
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
                 RequestBody.create(MediaType.parse(mimeType), file));
     }
+
+    public static class ProfileImageUpdatedCallback extends ErrorHandlingCallback<ResponseBody> {
+        @Inject
+        private LoginPrefs loginPrefs;
+        @NonNull
+        private final String username;
+        @Nullable
+        private final Uri profileImageUri;
+
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type) {
+            super(context, type);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type,
+                                           @Nullable final TaskProgressCallback progressCallback) {
+            super(context, type, progressCallback);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type,
+                                           @Nullable final TaskMessageCallback messageCallback) {
+            super(context, type, messageCallback);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type,
+                                           @Nullable final TaskProgressCallback progressCallback,
+                                           @Nullable final TaskMessageCallback messageCallback) {
+            super(context, type, progressCallback, messageCallback);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        @Override
+        protected void onResponse(@NonNull final ResponseBody response) {
+            EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, profileImageUri));
+            if (profileImageUri == null) {
+                // Delete the logged in user's ProfileImage
+                loginPrefs.setProfileImage(username, null);
+            }
+        }
+    }
+
+    public
+    @NonNull
+    String getUserEnrolledCoursesURL(@NonNull String username) {
+        return config.getApiHostURL() + "/api/mobile/v0.5/users/" + username + "/course_enrollments";
+    }
+
+    public
+    @NonNull
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, String org, boolean tryCache) throws Exception {
+        String json = null;
+
+        final String cacheKey = getUserEnrolledCoursesURL(username);
+
+        // try to get from cache if we should
+        if (tryCache) {
+            try {
+                json = cache.get(cacheKey);
+            } catch (IOException | NoSuchAlgorithmException e) {
+                logger.debug(e.toString());
+            }
+        }
+
+        // if we don't have a json yet, get it from userService
+        if (json == null) {
+            Response<ResponseBody> response = userService.getUserEnrolledCourses(username, org).execute();
+            if (response.isSuccessful()) {
+                json = userService.getUserEnrolledCourses(username, org).execute().body().string();
+                // cache result
+                try {
+                    cache.put(cacheKey, json);
+                } catch (IOException | NoSuchAlgorithmException e) {
+                    logger.debug(e.toString());
+                }
+            } else {
+                // Cache has already been checked, and connectivity
+                // can't be established, so throw an exception.
+                if (tryCache) throw new HttpResponseStatusException(response.code());
+                // Otherwise fall back to fetching from the cache
+                try {
+                    json = cache.get(cacheKey);
+                } catch (IOException | NoSuchAlgorithmException e) {
+                    logger.debug(e.toString());
+                    throw new HttpResponseStatusException(response.code());
+                }
+                // If the cache is empty, then throw an exception.
+                if (json == null) throw new HttpResponseStatusException(response.code());
+            }
+        }
+
+        // We aren't use TypeToken here because it throws NoClassDefFoundError
+        final JsonArray ary = gson.fromJson(json, JsonArray.class);
+        final List<EnrolledCoursesResponse> ret = new ArrayList<>(ary.size());
+        for (int cnt = 0; cnt < ary.size(); ++cnt) {
+            ret.add(gson.fromJson(ary.get(cnt), EnrolledCoursesResponse.class));
+        }
+        return ret;
+    }
 }

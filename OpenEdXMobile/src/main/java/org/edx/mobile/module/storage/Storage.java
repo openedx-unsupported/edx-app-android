@@ -214,7 +214,7 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public void getAverageDownloadProgressInChapter(String enrollmentId, String chapter, 
+    public void getAverageDownloadProgressInChapter(String enrollmentId, String chapter,
             final DataCallback<Integer> callback) {
         List<Long> dmidList = db.getDownloadingVideoDmIdsForChapter(enrollmentId, chapter, null);
         if (dmidList == null || dmidList.isEmpty()) {
@@ -317,10 +317,6 @@ public class Storage implements IStorage {
             if(videoCount>0){
                 enrolledCoursesResponse.videoCount = videoCount;
                 enrolledCoursesResponse.size = db.getDownloadedVideosSizeByCourse(
-                        enrolledCoursesResponse.getCourse().getId(),null);
-                downloadedCourseList.add(enrolledCoursesResponse);
-            }
-        }
 
         return downloadedCourseList;
     }
@@ -404,10 +400,10 @@ public class Storage implements IStorage {
             for (Entry<String, SectionEntry> chapterentry : courseHeirarchyMap.entrySet()) {
                 boolean chapterAddedFlag=false;
                 // iterate lectures
-                for (Entry<String, ArrayList<VideoResponseModel>> lectureEntry : 
+                for (Entry<String, ArrayList<VideoResponseModel>> lectureEntry :
                     chapterentry.getValue().sections.entrySet()) {
                     boolean lectureAddedFlag=false;
-                    // iterate videos 
+                    // iterate videos
                     for (VideoResponseModel v : lectureEntry.getValue()) {
                         for(VideoModel de : downloadList){
                             // identify the video
@@ -438,7 +434,7 @@ public class Storage implements IStorage {
         } catch (Exception e) {
             logger.error(e);
         }
-        
+
         return null;
     }
 

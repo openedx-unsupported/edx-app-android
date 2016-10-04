@@ -45,7 +45,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                 break;
             }
             case FAILED: {
-                errorText = getContext().getString(R.string.error_download_failed);
+                errorText = getContext().getString(R.string.download_failed_text);
                 progressDrawable = R.drawable.custom_progress_bar_horizontal_error;
                 if (item.getDownloadedByteCount() > 0) {
                     progressText = getByteCountProgressText(item);
