@@ -36,6 +36,9 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     UserAPI api;
 
     @Inject
+    UserAPI api;
+
+    @Inject
     LoginPrefs loginPrefs;
 
     public CoursesAsyncLoader(Context context) {
