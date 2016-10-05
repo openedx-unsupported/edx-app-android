@@ -30,11 +30,20 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <View
-                        android:id="@+id/offline_bar"
-                        style="@style/offline_bar"
-                        android:layout_alignParentTop="true"
-                        android:visibility="gone" />
+                <LinearLayout
+                    android:id="@+id/error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <include layout="@layout/panel_error_message_with_title"/>
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/offline_bar"
+                    style="@style/offline_bar"
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone" />
 
                     <RelativeLayout
                         android:id="@+id/my_groups_list_container"
