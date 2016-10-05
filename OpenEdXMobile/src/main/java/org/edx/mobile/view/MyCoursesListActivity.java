@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.ViewGroup;
 
 import com.google.inject.Inject;
 
@@ -22,10 +21,12 @@ import org.edx.mobile.util.IntentFactory;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import roboguice.inject.InjectView;
 
 public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
     @NonNull
+    @InjectView(R.id.coorinator_layout)
     private CoordinatorLayout coordinatorLayout;
 
     @Inject
@@ -43,15 +44,6 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         super.onCreate(savedInstanceState);
         configureDrawer();
         setTitle(getString(R.string.label_my_courses));
-        /* Add a CoordinatorLayout so that the Snackbar can be dismissed. It's added as a
-         * new content view for convenience, to avoid messing with the existing layout.
-         * TODO: As we implement Snackbar notifications globally throughout the app, we
-         * should probably set up the CoordinatorLayout as a global content view parent in
-         * BaseFragmentActivity.
-         */
-        coordinatorLayout = new CoordinatorLayout(this);
-        addContentView(coordinatorLayout, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         environment.getSegment().trackScreenView(getString(R.string.label_my_courses));
     }
 
