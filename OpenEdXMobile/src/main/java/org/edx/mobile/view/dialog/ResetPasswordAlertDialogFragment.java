@@ -29,7 +29,7 @@ public class ResetPasswordAlertDialogFragment extends AlertDialogFragment {
 
     public interface Listener {
         void onResult(boolean result, @Nullable String errorMessage);
-        void omDismissed();
+        void onDismissed();
     }
 
     @Inject
@@ -37,8 +37,8 @@ public class ResetPasswordAlertDialogFragment extends AlertDialogFragment {
 
     protected static final String EXTRA_LOGIN_EMAIL = "login_email";
 
-    private TextInputEditText et;
-    private TextInputLayout til;
+    private TextInputEditText editText;
+    private TextInputLayout textInputLayout;
     private Listener listener;
 
     public static ResetPasswordAlertDialogFragment newInstance(@NonNull Context context, @Nullable String email) {
@@ -55,37 +55,45 @@ public class ResetPasswordAlertDialogFragment extends AlertDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog alertDialog = (AlertDialog) super.onCreateDialog(savedInstanceState);
-        RoboGuice.injectMembers(getContext(), this);
 
-        et = new TextInputEditText(getContext());
-        til = new TextInputLayout(getContext());
-        til.addView(et);
-        til.setHint(getContext().getString(R.string.email));
+        editText = new TextInputEditText(getContext());
+        textInputLayout = new TextInputLayout(getContext());
+        textInputLayout.addView(editText);
+        textInputLayout.setHint(getContext().getString(R.string.email));
 
         int paddingWidth = Math.round(getResources().getDimension(R.dimen.alert_dialog_padding_width));
         int paddingHeight = Math.round(getResources().getDimension(R.dimen.alert_dialog_padding_height));
-        til.setPadding(paddingWidth, paddingHeight, paddingWidth, paddingHeight);
+        textInputLayout.setPadding(paddingWidth, paddingHeight, paddingWidth, paddingHeight);
 
-        alertDialog.setView(til);
+        alertDialog.setView(textInputLayout);
+        editText.setText(getArguments().getString(EXTRA_LOGIN_EMAIL));
 
-        String email = getArguments().getString(EXTRA_LOGIN_EMAIL);
-        if (email != null && !email.isEmpty()) {
-            et.setText(email);
-        }
         return alertDialog;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        /**
-         * This is a way to prevent the alert dialog from auto-dismissing when the positive/negative button is pressed
-         * We find the positive button (must be after it is created), then manually override the onClickListener
+
+        /** There are two OnClickListeners associated with an alert dialog button:
+         * DialogInterface.OnClickListener and View.OnClickListener.
+         *
+         * DialogInterface.OnClickListener defines what clicking the button
+         * does before the normal flow takes over (before the dialog is auto-dismissed)
+         * This is what is generally set in AlertDialog.Builder.
+         *
+         * View.OnClickListener is the listener for the complete behavior of the button.
+         * This has to be set by finding the button (after it has been created),
+         * and overriding it. If you want to override the normal button click flow,
+         * do so by overriding View.OnClickListener.
+         *
+         * We want to prevent the dialog from automatically closing on positive button click,
+         * and letting submit() control the logic so, we are overriding View.OnClickListener here.
          */
         ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submit(getEnteredEmail());
+                submit(editText.getText().toString().trim());
             }
         });
     }
@@ -95,7 +103,7 @@ public class ResetPasswordAlertDialogFragment extends AlertDialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         if (listener!=null) {
-            listener.omDismissed();
+            listener.onDismissed();
         }
     }
 
@@ -103,31 +111,10 @@ public class ResetPasswordAlertDialogFragment extends AlertDialogFragment {
         this.listener = listener;
     }
 
-    @Nullable
-    protected String getEnteredEmail() {
-        String email = null;
-
-        if (et != null) {
-            email = et.getText().toString().trim();
-        }
-
-        return email;
-    }
-
-    /**
-     * Shows or hides error
-     * @param error The error to show. If null, error will be hidden
-     */
-    public void showError(@Nullable String error) {
-        if (til != null) {
-            if (error != null) {
-                til.setError(error);
-                til.setErrorEnabled(true);
-                til.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
-            } else {
-                til.setErrorEnabled(false);
-            }
-        }
+    public void showError(@NonNull String error) {
+        textInputLayout.setError(error);
+        textInputLayout.setErrorEnabled(true);
+        textInputLayout.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
     }
 
     private void submit(@Nullable String email) {
@@ -191,8 +178,11 @@ public class ResetPasswordAlertDialogFragment extends AlertDialogFragment {
             @Nullable
             @Override
             public DialogInterface.OnClickListener getOnClickListener() {
-                /** just set to null here, we have to find the positive button and override
-                 * its onClickListener to prevent the dialog from being auto-dismissed */
+
+                /**
+                 * Set null for now. We override the behavior on View.OnClickListener in OnCreate.
+                 * Refer the comment in onCreate() for more details.
+                 */
                 return null;
             }
         };

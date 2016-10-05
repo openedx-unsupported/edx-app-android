@@ -5,10 +5,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import org.edx.mobile.R;
+
+import roboguice.fragment.RoboDialogFragment;
 
 /**
  * Note: This is a very simple implementation that only shows an {@link AlertDialog} with a given
@@ -17,7 +18,7 @@ import org.edx.mobile.R;
  * In the future, more customizability might be added as need.
  */
 
-public class AlertDialogFragment extends DialogFragment {
+public class AlertDialogFragment extends RoboDialogFragment {
     protected static final String ARG_TITLE = "title";
     protected static final String ARG_MESSAGE = "message";
 
@@ -53,7 +54,7 @@ public class AlertDialogFragment extends DialogFragment {
 
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
-                .setPositiveButton(R.string.label_ok, null)
+                .setPositiveButton(positiveButtonAttributes.getMessage(), positiveButtonAttributes.getOnClickListener())
                 .create();
 
         alertDialog.setCanceledOnTouchOutside(false);

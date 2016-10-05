@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
@@ -46,7 +47,7 @@ public class WebViewActivityTest extends BaseTestCase {
         assertNotNull(webView);
         final ShadowWebView shadowWebView = Shadows.shadowOf(webView);
         assertEquals(shadowWebView.getLastLoadedUrl(), url);
-        android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();
+        ActionBar actionBar = activity.getSupportActionBar();
         assertNotNull(actionBar);
         if (TextUtils.isEmpty(title)) {
             assertTrue(!actionBar.isShowing());
@@ -54,7 +55,6 @@ public class WebViewActivityTest extends BaseTestCase {
             assertTrue(actionBar.isShowing());
             assertTrue(title.equals(activity.getTitle()));
         }
-
         activity.onBackPressed();
         assertTrue(activity.isFinishing());
     }

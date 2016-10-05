@@ -533,11 +533,11 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    public void showErrorDialog(@Nullable String title, @NonNull String message) {
-        showErrorDialog(title, message, null);
+    public void showAlertDialog(@Nullable String title, @NonNull String message) {
+        showAlertDialog(title, message, null);
     }
 
-    public void showErrorDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
+    public void showAlertDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
         AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
     }
 

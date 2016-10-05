@@ -12,10 +12,10 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseAppActivity;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
-public class WebViewActivity extends BaseAppActivity {
+public class WebViewActivity extends BaseFragmentActivity {
 
     private static final String ARG_URL = "url";
     private static final String ARG_TITLE = "title";
@@ -31,7 +31,7 @@ public class WebViewActivity extends BaseAppActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_web_dialog);
+        setContentView(R.layout.activity_webview);
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.loading_indicator);
         progress.setVisibility(View.GONE);
@@ -69,21 +69,6 @@ public class WebViewActivity extends BaseAppActivity {
         if (!TextUtils.isEmpty(title)) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(title);
-        }
-        else {
-            getSupportActionBar().hide();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
