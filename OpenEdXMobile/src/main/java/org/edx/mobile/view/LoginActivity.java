@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.View;
@@ -31,12 +30,13 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.dialog.ResetPasswordActivity;
-import org.edx.mobile.view.dialog.SimpleAlertDialog;
+import org.edx.mobile.view.dialog.ResetPasswordAlertDialogFragment;
 import org.edx.mobile.view.login.LoginPresenter;
 
-public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface> implements SocialLoginDelegate.MobileLoginCallback {
+public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface>
+        implements SocialLoginDelegate.MobileLoginCallback, ResetPasswordAlertDialogFragment.Listener {
 
+    private ResetPasswordAlertDialogFragment resetPasswordAlert;
     private SocialLoginDelegate socialLoginDelegate;
     private ActivityLoginBinding activityLoginBinding;
 
@@ -86,7 +86,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
                 if (NetworkUtil.isConnected(LoginActivity.this)) {
                     showResetPasswordDialog();
                 } else {
-                    showNoNetworkDialog();
+                    showAlertDialog(getString(R.string.reset_no_network_title), getString(R.string.network_not_connected));
                 }
             }
         });
@@ -97,7 +97,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         activityLoginBinding.endUserAgreementTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEulaDialog();
+                environment.getRouter().showWebView(LoginActivity.this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
             }
         });
 
@@ -179,7 +179,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
 
     public void callServerForLogin() {
         if (!NetworkUtil.isConnected(this)) {
-            showErrorDialog(getString(R.string.no_connectivity),
+            showAlertDialog(getString(R.string.no_connectivity),
                     getString(R.string.network_not_connected));
             return;
         }
@@ -188,11 +188,11 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         final String passwordStr = activityLoginBinding.passwordEt.getText().toString().trim();
 
         if (activityLoginBinding.emailEt != null && emailStr.length() == 0) {
-            showErrorDialog(getString(R.string.login_error),
+            showAlertDialog(getString(R.string.login_error),
                     getString(R.string.error_enter_email));
             activityLoginBinding.emailEt.requestFocus();
         } else if (activityLoginBinding.passwordEt != null && passwordStr.length() == 0) {
-            showErrorDialog(getString(R.string.login_error),
+            showAlertDialog(getString(R.string.login_error),
                     getString(R.string.error_enter_password));
             activityLoginBinding.passwordEt.requestFocus();
         } else {
@@ -236,24 +236,32 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         return activityLoginBinding.emailEt.getText().toString().trim();
     }
 
-    private static final int RESET_PASSWORD_REQUEST_CODE = 0;
-
     private void showResetPasswordDialog() {
-        startActivityForResult(ResetPasswordActivity.newIntent(getEmail()), RESET_PASSWORD_REQUEST_CODE);
+        resetPasswordAlert = ResetPasswordAlertDialogFragment.newInstance(this, getEmail());
+        resetPasswordAlert.setListener(this);
+        resetPasswordAlert.show(getSupportFragmentManager(), null);
     }
 
-    public void showEulaDialog() {
-        environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
+    @Override
+    public void onResult(boolean success, @Nullable String errorMessage) {
+        if (success) {
+            if (resetPasswordAlert != null) {
+                resetPasswordAlert.dismiss();
+            }
+            showAlertDialog(getString(R.string.success_dialog_title_help), getString(R.string.success_dialog_message_help));
+        } else if (resetPasswordAlert != null) {
+            if (errorMessage != null) {
+                resetPasswordAlert.showError(errorMessage);
+            } else {
+                // this shouldn't happen, but just in case we are here, dismiss the dialog
+                resetPasswordAlert.dismiss();
+            }
+        }
     }
 
-    public void showNoNetworkDialog() {
-        Bundle args = new Bundle();
-        args.putString(SimpleAlertDialog.EXTRA_TITLE, getString(R.string.reset_no_network_title));
-        args.putString(SimpleAlertDialog.EXTRA_MESSAGE, getString(R.string.reset_no_network_message));
-
-        SimpleAlertDialog noNetworkFragment = SimpleAlertDialog.newInstance(args);
-        noNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        noNetworkFragment.show(getSupportFragmentManager(), "dialog");
+    @Override
+    public void onDismissed() {
+        resetPasswordAlert = null;
     }
 
     @Override
@@ -296,12 +304,12 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         if (ex != null && ex instanceof LoginException) {
             LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
 
-            showErrorDialog(
+            showAlertDialog(
                     error.getMessageLine1(),
                     (error.getMessageLine2() != null) ?
                             error.getMessageLine2() : getString(R.string.login_failed));
         } else {
-            showErrorDialog(getString(R.string.login_error), getString(R.string.error_unknown));
+            showAlertDialog(getString(R.string.login_error), getString(R.string.error_unknown));
             logger.error(ex);
         }
     }

@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -152,10 +151,10 @@ public class RegisterActivity extends BaseFragmentActivity
 
         if (isInAppEULALink) {
             // show EULA license that is shipped with app
-            environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
+            environment.getRouter().showWebView(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
         } else {
             // for any other link, open agreement link in a webview container
-            environment.getRouter().showWebViewDialog(this, agreement.getLink(), agreement.getText());
+            environment.getRouter().showWebView(this, agreement.getLink(), agreement.getText());
         }
     }
 
@@ -295,7 +294,7 @@ public class RegisterActivity extends BaseFragmentActivity
                         return; // Return here to avoid showing the generic error pop-up.
                     }
                 }
-                RegisterActivity.this.showErrorDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
+                RegisterActivity.this.showAlertDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
             }
         };
         task.execute();
@@ -319,7 +318,7 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     private void showErrorPopup() {
-        showErrorDialog(getResources().getString(R.string.registration_error_title), getResources().getString(R.string.registration_error_message), new DialogInterface.OnClickListener() {
+        showAlertDialog(getResources().getString(R.string.registration_error_title), getResources().getString(R.string.registration_error_message), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);

@@ -40,6 +40,8 @@
         <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title</item>
         <item name="android:progressBarStyleLarge">@style/edX.Widget.ProgressBar.Large</item>
         <item name="android:progressBarStyleInverse">@style/edX.Widget.ProgressBar.Inverse</item>
+        <!--Text input layout error color-->
+        <item name="textColorError">@color/edx_error_text</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
         <item name="android:progressBarStyleSmallInverse">
             @style/edX.Widget.ProgressBar.Small.Inverse
