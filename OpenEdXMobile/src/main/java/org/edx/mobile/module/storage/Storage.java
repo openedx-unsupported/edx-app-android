@@ -275,7 +275,7 @@ public class Storage implements IStorage {
         String username = getUsername();
 
         if (username != null) {
-            for(EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, true)){
+            for(EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, true, true)){
                 int videoCount = db.getDownloadedVideoCountByCourse(
                         enrolledCoursesResponse.getCourse().getId(),null);
                 if(videoCount>0){
@@ -308,7 +308,7 @@ public class Storage implements IStorage {
 
         String username = getUsername();
         if (username != null) {
-            for (final EnrolledCoursesResponse course : api.getUserEnrolledCourses(username, true)) {
+            for (final EnrolledCoursesResponse course : api.getUserEnrolledCourses(username, true, true)) {
                 // add all videos to the list for this course
                 List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
                         course.getCourse().getId(), null);

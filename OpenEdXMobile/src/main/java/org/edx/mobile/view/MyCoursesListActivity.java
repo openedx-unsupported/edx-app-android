@@ -6,8 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
+import com.joanzapata.iconify.Icon;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
@@ -15,6 +22,7 @@ import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.notification.NotificationDelegate;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppUpdateUtils;
 import org.edx.mobile.util.IntentFactory;
 
@@ -79,6 +87,13 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         notificationDelegate.checkAppUpgrade();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.my_courses, menu);
+        return true;
+    }
+
     public void updateDatabaseAfterDownload(ArrayList<EnrolledCoursesResponse> list) {
         if (list != null && list.size() > 0) {
             //update all videos in the DB as Deactivated
@@ -127,11 +142,11 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
                         AppUpdateUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER);
             }
             snackbar.setCallback(new Snackbar.Callback() {
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event) {
-                            newVersionAvailableEvent.markAsConsumed();
-                        }
-                    });
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    newVersionAvailableEvent.markAsConsumed();
+                }
+            });
             snackbar.show();
         }
     }

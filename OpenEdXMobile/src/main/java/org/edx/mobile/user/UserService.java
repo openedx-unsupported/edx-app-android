@@ -1,6 +1,7 @@
 package org.edx.mobile.user;
 
 import com.google.inject.Inject;
+import com.google.repacked.kotlin.collections.BooleanIterator;
 
 import org.edx.mobile.model.Page;
 import org.edx.mobile.profiles.BadgeAssertion;
@@ -49,7 +50,8 @@ public interface UserService {
     Call<ResponseBody> deleteProfileImage(@Path("username") String username);
 
     @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
-    Call<ResponseBody> getUserEnrolledCourses(@Path("username") String username);
+    Call<ResponseBody> getUserEnrolledCourses(@Path("username") String username,
+                                              @Query("mobile") Boolean showMobileCourses);
 
     @GET("/api/badges/v1/assertions/user/{username}?" + PARAM_PAGE_SIZE)
     Call<Page<BadgeAssertion>> getBadges(@Path("username") String username,

@@ -20,6 +20,7 @@ import roboguice.RoboGuice;
 public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
     private AsyncTaskResult<List<EnrolledCoursesResponse>> mData;
     private final Context context;
+    private final Boolean showMobileCourses;
     private Observer mObserver;
 
     @Inject
@@ -31,9 +32,10 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     @Inject
     LoginPrefs loginPrefs;
 
-    public CoursesAsyncLoader(Context context) {
+    public CoursesAsyncLoader(Context context, Boolean showMobileCourses) {
         super(context);
         this.context = context;
+        this.showMobileCourses = showMobileCourses;
         RoboGuice.injectMembers(context, this);
     }
 
@@ -46,7 +48,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
         try {
             if (profile != null) {
-                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, false);
+                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, showMobileCourses, false);
                 environment.getNotificationDelegate().syncWithServerForFailure();
                 environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             }

@@ -7,8 +7,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -46,6 +50,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
     private FragmentMyCoursesListBinding binding;
     private final Logger logger = new Logger(getClass().getSimpleName());
     private boolean refreshOnResume = false;
+    private boolean showMobileCourses = true;
 
     @Inject
     private IEdxEnvironment environment;
@@ -67,6 +72,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                 environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, true);
             }
         };
+        setHasOptionsMenu(true);
         environment.getSegment().trackScreenView(ISegment.Screens.MY_COURSES);
         EventBus.getDefault().register(this);
     }
@@ -112,7 +118,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
 
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
-        return new CoursesAsyncLoader(getActivity());
+        return new CoursesAsyncLoader(getActivity(), showMobileCourses);
     }
 
     @Override
@@ -150,6 +156,30 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
             binding.myCourseList.setVisibility(View.VISIBLE);
             binding.noCourseTv.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.mobile_courses:
+                showMobileCourses = true;
+                loadData(true);
+                break;
+            case R.id.non_mobile_courses:
+                showMobileCourses = false;
+                loadData(true);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

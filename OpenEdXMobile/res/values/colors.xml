@@ -56,7 +56,8 @@
 
     <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
     <color name="edx_brand_primary_dark">#065683</color>
-    <color name="edx_brand_primary_base">#0075B4</color>
+    <!--<color name="edx_brand_primary_base">#0075B4</color>-->
+    <color name="edx_brand_primary_base">#E09BBE</color>
     <color name="edx_brand_primary_accent">#2991C3</color>
     <color name="edx_brand_primary_back">#CCE3F0</color>
     <color name="edx_brand_primary_x_back">#F2F8FB</color>
