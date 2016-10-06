@@ -29,6 +29,8 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
+import static org.edx.mobile.http.CallUtil.executeStrict;
+
 @Singleton
 public class LoginAPI {
 
@@ -200,11 +202,7 @@ public class LoginAPI {
 
     @NonNull
     public ProfileModel getProfile() throws Exception {
-        Response<ProfileModel> response = loginService.getProfile().execute();
-        if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response);
-        }
-        ProfileModel data = response.body();
+        ProfileModel data = executeStrict(loginService.getProfile());
         loginPrefs.storeUserProfile(data);
         return data;
     }
