@@ -200,16 +200,16 @@ public class UserAPI {
             } else {
                 // Cache has already been checked, and connectivity
                 // can't be established, so throw an exception.
-                if (tryCache) throw new HttpResponseStatusException(response.code());
+                if (tryCache) throw new HttpResponseStatusException(response);
                 // Otherwise fall back to fetching from the cache
                 try {
                     json = cache.get(cacheKey);
                 } catch (IOException e) {
                     logger.debug(e.toString());
-                    throw new HttpResponseStatusException(response.code());
+                    throw new HttpResponseStatusException(response);
                 }
                 // If the cache is empty, then throw an exception.
-                if (json == null) throw new HttpResponseStatusException(response.code());
+                if (json == null) throw new HttpResponseStatusException(response);
             }
         }
 

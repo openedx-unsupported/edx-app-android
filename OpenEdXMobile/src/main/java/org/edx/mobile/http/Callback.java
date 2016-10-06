@@ -57,7 +57,7 @@ public abstract class Callback<T> implements retrofit2.Callback<T> {
         if (response.isSuccessful()) {
             onResponse(response.body());
         } else {
-            onFailure(call, new HttpResponseStatusException(response.code()));
+            onFailure(call, new HttpResponseStatusException(response));
         }
     }
 

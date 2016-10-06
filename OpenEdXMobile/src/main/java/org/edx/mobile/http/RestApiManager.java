@@ -195,7 +195,7 @@ public class RestApiManager implements IApi {
         retrofit2.Response<SyncLastAccessedSubsectionResponse> response =
                 oauthRestApi.syncLastAccessedSubsection(body, loginPrefs.getUsername(), courseId).execute();
         if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response.code());
+            throw new HttpResponseStatusException(response);
         }
         return response.body();
 
@@ -206,7 +206,7 @@ public class RestApiManager implements IApi {
         retrofit2.Response<SyncLastAccessedSubsectionResponse> response =
                 oauthRestApi.getLastAccessedSubsection(loginPrefs.getUsername(), courseId).execute();
         if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response.code());
+            throw new HttpResponseStatusException(response);
         }
         return response.body();
     }

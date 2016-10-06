@@ -107,7 +107,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
         refreshTokenResponse = loginService.refreshAccessToken("refresh_token",
                 config.getOAuthClientId(), currentAuth.refresh_token).execute();
         if (!refreshTokenResponse.isSuccessful()) {
-            throw new HttpResponseStatusException(refreshTokenResponse.code());
+            throw new HttpResponseStatusException(refreshTokenResponse);
         }
         AuthResponse refreshTokenData = refreshTokenResponse.body();
         loginPrefs.storeRefreshTokenResponse(refreshTokenData);

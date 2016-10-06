@@ -109,7 +109,7 @@ public class LoginAPI {
             throw new AccountNotLinkedException();
         }
         if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response.code());
+            throw new HttpResponseStatusException(response);
         }
         final AuthResponse data = response.body();
         if (data.error != null && data.error.equals(Integer.toString(HttpURLConnection.HTTP_UNAUTHORIZED))) {
@@ -194,7 +194,7 @@ public class LoginAPI {
                     // Looks like the response does not contain form validation errors.
                 }
             }
-            throw new HttpResponseStatusException(errorCode);
+            throw new HttpResponseStatusException(response);
         }
     }
 
@@ -202,7 +202,7 @@ public class LoginAPI {
     public ProfileModel getProfile() throws Exception {
         Response<ProfileModel> response = loginService.getProfile().execute();
         if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response.code());
+            throw new HttpResponseStatusException(response);
         }
         ProfileModel data = response.body();
         loginPrefs.storeUserProfile(data);
