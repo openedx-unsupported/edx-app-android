@@ -26,6 +26,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import roboguice.RoboGuice;
 
+import static org.edx.mobile.http.CallUtil.executeStrict;
+
 /**
  * Authenticator for 401 responses for refreshing oauth tokens. Checks for
  * the expired oauth token case and then uses the refresh token to retrieve a
@@ -103,13 +105,8 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
                 .build();
         LoginService loginService = retrofit.create(LoginService.class);
 
-        retrofit2.Response<AuthResponse> refreshTokenResponse;
-        refreshTokenResponse = loginService.refreshAccessToken("refresh_token",
-                config.getOAuthClientId(), currentAuth.refresh_token).execute();
-        if (!refreshTokenResponse.isSuccessful()) {
-            throw new HttpResponseStatusException(refreshTokenResponse);
-        }
-        AuthResponse refreshTokenData = refreshTokenResponse.body();
+        AuthResponse refreshTokenData = executeStrict(loginService.refreshAccessToken(
+                "refresh_token", config.getOAuthClientId(), currentAuth.refresh_token));
         loginPrefs.storeRefreshTokenResponse(refreshTokenData);
         return refreshTokenData;
     }

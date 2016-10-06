@@ -34,7 +34,8 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
+
+import static org.edx.mobile.http.CallUtil.executeStrict;
 
 @Singleton
 public class UserAPI {
@@ -188,28 +189,27 @@ public class UserAPI {
 
         // if we don't have a json yet, get it from userService
         if (json == null) {
-            Response<ResponseBody> response = userService.getUserEnrolledCourses(username, org).execute();
-            if (response.isSuccessful()) {
-                json = userService.getUserEnrolledCourses(username, org).execute().body().string();
+            try {
+                json = executeStrict(userService.getUserEnrolledCourses(username, org)).string();
                 // cache result
                 try {
                     cache.put(cacheKey, json);
                 } catch (IOException e) {
                     logger.debug(e.toString());
                 }
-            } else {
+            } catch (HttpResponseStatusException connectivityException) {
                 // Cache has already been checked, and connectivity
-                // can't be established, so throw an exception.
-                if (tryCache) throw new HttpResponseStatusException(response);
+                // can't be established, so throw the exception.
+                if (tryCache) throw connectivityException;
                 // Otherwise fall back to fetching from the cache
                 try {
                     json = cache.get(cacheKey);
                 } catch (IOException e) {
                     logger.debug(e.toString());
-                    throw new HttpResponseStatusException(response);
+                    throw connectivityException;
                 }
-                // If the cache is empty, then throw an exception.
-                if (json == null) throw new HttpResponseStatusException(response);
+                // If the cache is empty, then throw the exception.
+                if (json == null) throw connectivityException;
             }
         }
 

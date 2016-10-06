@@ -46,6 +46,8 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static org.edx.mobile.http.CallUtil.executeStrict;
+
 /**
  * DESIGN NOTES -
  * retrofit uses annotation approach, which can be handy for simple cases.
@@ -121,11 +123,11 @@ public class RestApiManager implements IApi {
     public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
         String orgCode = environment.getConfig().getOrganizationCode();
         if (!NetworkUtil.isConnected(context)) {
-            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername(), orgCode).execute().body();
+            return executeStrict(oauthRestApi.getEnrolledCourses(loginPrefs.getUsername(), orgCode));
         } else if (fetchFromCache) {
-            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername(), orgCode).execute().body();
+            return executeStrict(oauthRestApi.getEnrolledCourses(loginPrefs.getUsername(), orgCode));
         } else {
-            return oauthRestApi.getEnrolledCoursesNoCache(loginPrefs.getUsername(), orgCode).execute().body();
+            return executeStrict(oauthRestApi.getEnrolledCoursesNoCache(loginPrefs.getUsername(), orgCode));
         }
     }
 
@@ -192,23 +194,13 @@ public class RestApiManager implements IApi {
         EnrollmentRequestBody.LastAccessRequestBody body = new EnrollmentRequestBody.LastAccessRequestBody();
         body.last_visited_module_id = lastVisitedModuleId;
         body.modification_date = date;
-        retrofit2.Response<SyncLastAccessedSubsectionResponse> response =
-                oauthRestApi.syncLastAccessedSubsection(body, loginPrefs.getUsername(), courseId).execute();
-        if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response);
-        }
-        return response.body();
+        return executeStrict(oauthRestApi.syncLastAccessedSubsection(body, loginPrefs.getUsername(), courseId));
 
     }
 
     @Override
     public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-        retrofit2.Response<SyncLastAccessedSubsectionResponse> response =
-                oauthRestApi.getLastAccessedSubsection(loginPrefs.getUsername(), courseId).execute();
-        if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response);
-        }
-        return response.body();
+        return executeStrict(oauthRestApi.getLastAccessedSubsection(loginPrefs.getUsername(), courseId));
     }
 
     @Override
@@ -261,11 +253,11 @@ public class RestApiManager implements IApi {
 
         String response;
         if (!NetworkUtil.isConnected(context)) {
-            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts).execute().body();
+            response = executeStrict(oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts));
         } else if (preferCache) {
-            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts).execute().body();
+            response = executeStrict(oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts));
         } else {
-            response = oauthRestApi.getCourseOutlineNoCache(courseId, username, requested_fields, student_view_data, block_counts).execute().body();
+            response = executeStrict(oauthRestApi.getCourseOutlineNoCache(courseId, username, requested_fields, student_view_data, block_counts));
         }
 
         CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(response);
