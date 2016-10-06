@@ -55,7 +55,7 @@ public class OkHttpUtil {
             }
             final Cache cache = new Cache(cacheDirectory, cacheSize);
             builder.cache(cache);
-            interceptors.add(new OfflineRequestInterceptor(context));
+            interceptors.add(new OfflineRequestInterceptor());
         }
         interceptors.add(new JsonMergePatchInterceptor());
         interceptors.add(new UserAgentInterceptor(
