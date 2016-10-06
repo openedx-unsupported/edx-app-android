@@ -5,7 +5,6 @@ import android.content.Context;
 import org.edx.mobile.http.GzipRequestInterceptor;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.OauthHeaderRequestInterceptor;
-import org.edx.mobile.http.OfflineRequestInterceptor;
 import org.edx.mobile.test.BaseTestCase;
 import org.junit.Ignore;
 import org.robolectric.RuntimeEnvironment;
@@ -68,11 +67,6 @@ public class RetrofitOkhttpTestCase extends BaseTestCase {
         List<Interceptor> interceptors = oauthBasedClientBuilder.interceptors();
         interceptors.add(new GzipRequestInterceptor());
         interceptors.add(new OauthHeaderRequestInterceptor(context));
-        interceptors.add(new OfflineRequestInterceptor(context) {
-            public boolean isNetworkConnected() {
-                return isNetworkConnected;
-            }
-        });
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         interceptors.add(loggingInterceptor);
