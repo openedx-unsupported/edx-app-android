@@ -67,7 +67,7 @@ public abstract class Callback<T> implements retrofit2.Callback<T> {
      * unexpected error while constructing the request or processing the response. It's also invoked
      * by the {@link #onResponse(Call, Response)} implementation when it receives an HTTP error
      * status code. However, this method definition provides extra information that's not needed by
-     * most individual callback implementation, so this implementation only delegates to
+     * most individual callback implementations, so this implementation only delegates to
      * {@link #onFailure(Throwable)}. This method is declared as final, as subclasses are meant to
      * be implementing the abstract {@link #onFailure(Throwable)} method instead of this one.
      *
