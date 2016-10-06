@@ -2,29 +2,38 @@ package org.edx.mobile.http;
 
 import android.support.annotation.NonNull;
 
-import retrofit2.Response;
+import okhttp3.Response;
 
 /**
  * Signals an HTTP status error.
  */
 public class HttpResponseStatusException extends Exception {
     @NonNull
-    private final Response<?> response;
+    private final Response response;
 
     /**
      * Constructs a new {@code HttpResponseStatusException}.
      *
      * @param response The error response.
      */
-    public HttpResponseStatusException(@NonNull final Response<?> response) {
+    public HttpResponseStatusException(@NonNull final Response response) {
         this.response = response;
+    }
+
+    /**
+     * Constructs a new {@code HttpResponseStatusException}.
+     *
+     * @param response The Retrofit error response.
+     */
+    public HttpResponseStatusException(@NonNull final retrofit2.Response<?> response) {
+        this(response.raw());
     }
 
     /**
      * @return The error response.
      */
     @NonNull
-    public Response<?> getResponse() {
+    public Response getResponse() {
         return response;
     }
 
