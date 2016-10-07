@@ -1,6 +1,9 @@
 package org.edx.mobile.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RawRes;
@@ -19,6 +22,31 @@ public class FileUtil {
     // Make this class non-instantiable
     private FileUtil() {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Utility method to determine if any removable storage (such as an SD card) is available.
+     * @param context The current context
+     * @return True if there is removable storage available on the device.
+     */
+    @TargetApi(21)
+    public static boolean isRemovableStorageAvailable(@NonNull Context context){
+        return getRemovableStorageAppDir(context) != null;
+    }
+
+    @Nullable
+    @TargetApi(21)
+    public static File getRemovableStorageAppDir(@NonNull Context context) {
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+            File[] fileList = context.getExternalFilesDirs(null);
+            for (File extFile : fileList){
+                if (extFile != null && Environment.isExternalStorageRemovable(extFile)){
+                    return extFile;
+                }
+            }
+        }
+        return null;
     }
 
     /**

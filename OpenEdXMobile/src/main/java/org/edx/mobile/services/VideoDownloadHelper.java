@@ -101,8 +101,7 @@ public class VideoDownloadHelper {
                 downloadCount++;
             }
         }
-        if (downloadSize > MemoryUtil
-                .getAvailableExternalMemory(activity)) {
+        if (downloadSize > MemoryUtil.getAvailableExternalMemory(activity)) {
             ((BaseFragmentActivity) activity).showInfoMessage(activity.getString(R.string.file_size_exceeded));
             callback.updateListUI();
             EventBus.getDefault().post(new BulkVideosDownloadCancelledEvent());
