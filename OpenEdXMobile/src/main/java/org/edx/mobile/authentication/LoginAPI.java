@@ -72,7 +72,7 @@ public class LoginAPI {
     public Response<AuthResponse> getAccessToken(@NonNull String username,
                                        @NonNull String password) throws IOException {
         String grantType = "password";
-        String clientID = "abc";
+        String clientID = config.getOAuthClientId();
         return loginService.getAccessToken(grantType, clientID, username, password).execute();
     }
 

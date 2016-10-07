@@ -1,11 +1,8 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mobile_courses"
-        android:title="Mobile Only"/>
-
+        android:title="Mobile Only" />
     <item
         android:id="@+id/non_mobile_courses"
-        android:title="All Courses"/>
-
+        android:title="All Courses" />
 </menu>
