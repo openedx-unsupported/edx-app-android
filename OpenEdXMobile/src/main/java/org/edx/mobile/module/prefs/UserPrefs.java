@@ -54,7 +54,20 @@ public class UserPrefs {
      */
     @Nullable
     public File getDownloadDirectory() {
-        final File externalAppDir = FileUtil.getExternalAppDir(context);
+        final PrefManager prefManger = new PrefManager(context, PrefManager.Pref.SD_CARD);
+        File externalAppDir = null;
+        if (prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false)) {
+            // This directory is confirmed to be removable storage
+            externalAppDir = FileUtil.getRemovableStorageAppDir(context);
+        }
+
+        // If the SD Card setting was set, but failed to get a removable storage path
+        if (externalAppDir == null) {
+            // This method can return emulated storage, which is internal storage
+            // made to look like external or hardware external storage depending on the
+            // device.
+            externalAppDir = FileUtil.getExternalAppDir(context);
+        }
         final ProfileModel profile = getProfile();
         if (externalAppDir != null && profile != null) {
             File videosDir = new File(externalAppDir, AppConstants.Directories.VIDEOS);

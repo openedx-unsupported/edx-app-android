@@ -53,6 +53,11 @@
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">Only download content when Wi-Fi is turned on</string>
 
+    <!-- Label for the Download location switch -->
+    <string name="setting_download_location_top">Download Video to SD Card</string>
+    <!-- Label explaining the download location setting in detail -->
+    <string name="setting_download_location_detail">Videos will be downloaded to the SD Card if available</string>
+
     <!-- Certificate Page -->
     <!-- Description of button that will open the certificate sharing menu -->
     <string name="share_certificate_button">Share your certificate</string>
