@@ -1,6 +1,7 @@
 package org.edx.mobile.model.api;
 
 import android.content.Context;
+import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -35,6 +36,7 @@ public class CourseEntry implements Serializable {
     private String discussion_url;
     private SocialURLModel social_urls;
     private CoursewareAccess courseware_access;
+    private Boolean mobile_available;
 
     public LatestUpdateModel getLatest_updates() {
         return latest_updates;
@@ -220,4 +222,7 @@ public class CourseEntry implements Serializable {
         return CourseCardUtils.getDescription(org, number, CourseCardUtils.getFormattedDate(context, this));
     }
 
+    public Boolean getMobile_available() {
+        return mobile_available;
+    }
 }

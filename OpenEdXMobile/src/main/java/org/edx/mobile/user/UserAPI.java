@@ -191,7 +191,7 @@ public class UserAPI {
         if (json == null) {
             Response<ResponseBody> response = userService.getUserEnrolledCourses(username, showMobileCourses).execute();
             if (response.isSuccessful()) {
-                json = userService.getUserEnrolledCourses(username, showMobileCourses).execute().body().string();
+                json = response.body().string();
                 // cache result
                 try {
                     cache.put(cacheKey, json);

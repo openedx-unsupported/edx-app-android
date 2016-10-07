@@ -64,7 +64,11 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
         adapter = new MyCoursesAdapter(getActivity(), environment) {
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
-                environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, false);
+                if (model.getCourse().getMobile_available()) {
+                    environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, false);
+                } else {
+                    environment.getRouter().showSettings(getActivity());
+                }
             }
 
             @Override

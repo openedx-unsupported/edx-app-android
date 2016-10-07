@@ -29,6 +29,12 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
         final CourseEntry courseData = enrollment.getCourse();
         holder.setCourseTitle(courseData.getName());
         holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
+        if (!courseData.getMobile_available()) {
+            holder.addGreyFilterOnImage();
+        } else {
+            // Filter needs to be removed since the cards already placed are recycled.
+            holder.removeGreyFilterOnImage();
+        }
 
         if (enrollment.getCourse().hasUpdates()) {
             holder.setHasUpdates(courseData, new OnClickListener() {

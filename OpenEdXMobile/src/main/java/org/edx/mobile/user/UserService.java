@@ -49,7 +49,7 @@ public interface UserService {
     @DELETE("/api/user/v1/accounts/{username}/image")
     Call<ResponseBody> deleteProfileImage(@Path("username") String username);
 
-    @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
+    @GET("/api/mobile/v0.5/users/{username}/course_enrollments/")
     Call<ResponseBody> getUserEnrolledCourses(@Path("username") String username,
                                               @Query("mobile") Boolean showMobileCourses);
 

@@ -2,10 +2,10 @@
 
     <item
         android:id="@+id/mobile_courses"
-        android:title="Mobile"/>
+        android:title="Mobile Only"/>
 
     <item
         android:id="@+id/non_mobile_courses"
-        android:title="Non-mobile"/>
+        android:title="All Courses"/>
 
 </menu>

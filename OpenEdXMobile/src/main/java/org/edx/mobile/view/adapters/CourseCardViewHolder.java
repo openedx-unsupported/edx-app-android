@@ -1,5 +1,6 @@
 package org.edx.mobile.view.adapters;
 
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -46,6 +47,14 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
                 .placeholder(R.drawable.placeholder_course_card_image)
                 .transform(new TopAnchorFillWidthTransformation(courseImage.getContext()))
                 .into(courseImage);
+    }
+
+    public void addGreyFilterOnImage() {
+        courseImage.setColorFilter(Color.argb(200, 235, 235, 235));
+    }
+
+    public void removeGreyFilterOnImage() {
+        courseImage.clearColorFilter();
     }
 
     public void setHasUpdates(@NonNull CourseEntry courseData, @NonNull View.OnClickListener listener) {
