@@ -85,9 +85,14 @@ public class Storage implements IStorage {
                 //on mobile network even if user has "Only on wifi" settings as ON
                 downloadPreference = false;
             }
+
+            // Fail the download if download directory isn't available
+            final File downloadDirectory = pref.getDownloadDirectory();
+            if (downloadDirectory == null) return -1;
+
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
-            long dmid = dm.addDownload(pref.getDownloadFolder(), model.getVideoUrl(),
+            long dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
                     downloadPreference);
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager

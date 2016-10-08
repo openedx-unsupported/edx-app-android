@@ -7,10 +7,10 @@ import org.edx.mobile.util.BrowserUtil;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class UtilTests extends BaseTestCase {
-
+public class BrowserUtilTest extends BaseTestCase {
     @Test
     public void testBrowserOpenUrl() throws Exception {
         String url = "https://courses.edx.org/register";
