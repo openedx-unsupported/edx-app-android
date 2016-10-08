@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -42,6 +41,7 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.util.IntentFactory;
+import org.edx.mobile.view.custom.DividerWithTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -424,7 +424,7 @@ public class RegisterActivity extends BaseFragmentActivity
         signupWith.setVisibility(View.GONE);
         View socialPanel = findViewById(R.id.panel_social_layout);
         socialPanel.setVisibility(View.GONE);
-        TextView signupWithEmailTitle = (TextView) findViewById(R.id.or_signup_with_email_title);
+        DividerWithTextView signupWithEmailTitle = (DividerWithTextView) findViewById(R.id.or_signup_with_email_title);
         signupWithEmailTitle.setText(getString(R.string.complete_registration));
         //help method
         showRegularMessage(socialType);
