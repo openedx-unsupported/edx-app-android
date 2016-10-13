@@ -2,7 +2,6 @@ package org.edx.mobile.discussion;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.SpannableString;
@@ -68,7 +67,11 @@ public abstract class DiscussionTextUtils {
                 final SpannableString authorSpan = new SpannableString(author);
                 if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
                     // Change the author text color and style
-                    applyColorAndStyle(context, authorSpan, R.color.edx_brand_primary_base, Typeface.BOLD);
+                    authorSpan.setSpan(new ForegroundColorSpan(context.getResources().
+                                    getColor(R.color.edx_brand_primary_base)), 0,
+                            authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     // Set the click listener on the whole textView
                     textView.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +117,13 @@ public abstract class DiscussionTextUtils {
             if (!TextUtils.isEmpty(author)) {
                 final SpannableString authorSpan = new SpannableString(author);
                 // Change the author text color and style
-                applyColorAndStyle(context, authorSpan, R.color.edx_brand_primary_base, Typeface.BOLD);
+                if (!authorData.isAuthorAnonymous()) {
+                    authorSpan.setSpan(new ForegroundColorSpan(context.getResources().
+                                    getColor(R.color.edx_brand_primary_base)), 0,
+                            authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 joinableStrings.add(authorSpan);
             }
 
@@ -131,14 +140,6 @@ public abstract class DiscussionTextUtils {
         } else {
             textView.setText(authorText);
         }
-    }
-
-    private static void applyColorAndStyle(@NonNull Context context,
-                                           @NonNull SpannableString span,
-                                           @ColorRes int color, int style) {
-        span.setSpan(new ForegroundColorSpan(context.getResources().getColor(color)), 0,
-                span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        span.setSpan(new StyleSpan(style), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     public static CharSequence getRelativeTimeSpanString(@NonNull Context context, long nowMs,
