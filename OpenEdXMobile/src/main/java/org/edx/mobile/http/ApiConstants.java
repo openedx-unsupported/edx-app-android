@@ -13,6 +13,7 @@ public class ApiConstants {
     public static final String COURSE_ID = "courseId";
     public static final String USER_NAME = "username";
     public static final String GROUP_ID = "groupId";
+    public static final String ORG_CODE = "org";
 
     public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
 

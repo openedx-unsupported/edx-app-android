@@ -119,12 +119,13 @@ public class RestApiManager implements IApi {
 
     @Override
     public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
+        String orgCode = environment.getConfig().getOrganizationCode();
         if (!NetworkUtil.isConnected(context)) {
-            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername()).execute().body();
+            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername(), orgCode).execute().body();
         } else if (fetchFromCache) {
-            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername()).execute().body();
+            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername(), orgCode).execute().body();
         } else {
-            return oauthRestApi.getEnrolledCoursesNoCache(loginPrefs.getUsername()).execute().body();
+            return oauthRestApi.getEnrolledCoursesNoCache(loginPrefs.getUsername(), orgCode).execute().body();
         }
     }
 
