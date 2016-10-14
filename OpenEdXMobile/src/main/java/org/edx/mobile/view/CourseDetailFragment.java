@@ -160,7 +160,7 @@ public class CourseDetailFragment extends BaseFragment {
         if (courseDetail.effort != null && !courseDetail.effort.isEmpty()) {
             ViewHolder holder = createCourseDetailFieldViewHolder(inflater, mCourseDetailLayout);
             holder.rowIcon.setIcon(FontAwesomeIcons.fa_dashboard);
-            holder.rowFieldName.setText("Effort:");
+            holder.rowFieldName.setText(R.string.effort_field_name);
             holder.rowFieldText.setText(courseDetail.effort);
         }
 
