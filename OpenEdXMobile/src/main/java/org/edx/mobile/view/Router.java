@@ -24,6 +24,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.view.dialog.WebViewDialogActivity;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
@@ -264,11 +265,16 @@ public class Router {
     }
 
     /**
-     * this method can be called either through UI [ user clicks LOGOUT button],
-     * or programmatically
+     * Clear the login data and exit to the splash screen. This should only be called internally;
+     * for handling manual logout,
+     * {@link #performManualLogout(Context, ISegment, NotificationDelegate)} should be used instead.
+     *
+     * @param context  The context.
+     * @param segment  The segment object.
+     * @param delegate The notification delegate.
+     * @see #performManualLogout(Context, ISegment, NotificationDelegate)
      */
     public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate) {
-        loginAPI.logOut();
         loginPrefs.clear();
 
         EventBus.getDefault().post(new LogoutEvent());
@@ -279,6 +285,23 @@ public class Router {
         delegate.unsubscribeAll();
 
         showSplashScreen(context);
+    }
+
+    /**
+     * Clears all the user data, revokes the refresh and access tokens, and exit to the splash
+     * screen. This should only be called in response to manual logout by the user; for performing
+     * logout internally (e.g. in response to refresh token expiration),
+     * {@link #forceLogout(Context, ISegment, NotificationDelegate)} should be used instead.
+     *
+     * @param context  The context.
+     * @param segment  The segment object.
+     * @param delegate The notification delegate.
+     * @see #forceLogout(Context, ISegment, NotificationDelegate)
+     */
+    public void performManualLogout(Context context, ISegment segment, NotificationDelegate delegate) {
+        loginAPI.logOut();
+        forceLogout(context, segment, delegate);
+        SecurityUtil.clearUserData(context);
     }
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {

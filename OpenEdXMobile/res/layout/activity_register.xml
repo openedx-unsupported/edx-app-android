@@ -113,7 +113,6 @@
 
         </LinearLayout>
     </ScrollView>
-
     <TextView
         android:id="@+id/flying_message"
         style="@style/flying_message"

@@ -78,37 +78,33 @@ public class IDownloadManagerImpl implements IDownloadManager {
         if(!isDownloadManagerEnabled())
             return dmid;
 
-        try {
-            // skip if URL is not valid
-            if(url == null) {
-                // URL is null
-                return dmid;
-            }
-            url = url.trim();
-            if (url.length() == 0) {
-                // URL is empty
-                return dmid;
-            }
-            
-            logger.debug("Starting download: " + url);
-            
-            Uri target = Uri.fromFile(new File(destFolder, Sha1Util.SHA1(url)));
-            Request request = new Request(Uri.parse(url));
-            request.setDestinationUri(target);
-            request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
-            request.setVisibleInDownloadsUi(false);
-
-            if (wifiOnly) {
-                request.setAllowedNetworkTypes(Request.NETWORK_WIFI);
-            } else {
-                request.setAllowedNetworkTypes(Request.NETWORK_WIFI | Request.NETWORK_MOBILE);
-            }
-    
-            dmid = dm.enqueue(request);
-        } catch(Exception ex) {
-            logger.error(ex);
+        // skip if URL is not valid
+        if(url == null) {
+            // URL is null
+            return dmid;
         }
-        
+        url = url.trim();
+        if (url.length() == 0) {
+            // URL is empty
+            return dmid;
+        }
+
+        logger.debug("Starting download: " + url);
+
+        Uri target = Uri.fromFile(new File(destFolder, Sha1Util.SHA1(url)));
+        Request request = new Request(Uri.parse(url));
+        request.setDestinationUri(target);
+        request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
+        request.setVisibleInDownloadsUi(false);
+
+        if (wifiOnly) {
+            request.setAllowedNetworkTypes(Request.NETWORK_WIFI);
+        } else {
+            request.setAllowedNetworkTypes(Request.NETWORK_WIFI | Request.NETWORK_MOBILE);
+        }
+
+        dmid = dm.enqueue(request);
+
         return dmid;
     }
 

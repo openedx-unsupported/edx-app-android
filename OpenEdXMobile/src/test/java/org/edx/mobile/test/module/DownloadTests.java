@@ -27,7 +27,7 @@ public class DownloadTests extends BaseTestCase {
     public void testAddDownload() throws Exception {
         File dir = null;
         try {
-           dir = new UserPrefs(RuntimeEnvironment.application, MainApplication.getEnvironment(RuntimeEnvironment.application).getLoginPrefs()).getDownloadFolder();
+           dir = new UserPrefs(RuntimeEnvironment.application, MainApplication.getEnvironment(RuntimeEnvironment.application).getLoginPrefs()).getDownloadDirectory();
         }catch (Exception ex){
             // it happens in CI environment and we should skip the test.
             print( "dir is null, it happens in CI environment and we should skip the test.");
