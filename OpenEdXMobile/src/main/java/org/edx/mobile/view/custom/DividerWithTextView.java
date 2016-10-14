@@ -23,6 +23,10 @@ public class DividerWithTextView extends RelativeLayout {
         init(context, attrs);
     }
 
+    public void setText(CharSequence text)    {
+        tv.setText(text);
+    }
+
     private void init(@NonNull Context context, AttributeSet attrs) {
         inflate(getContext(), R.layout.view_divider_with_text, this);
         tv = (TextView)findViewById(R.id.divider_with_text_tv);
