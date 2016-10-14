@@ -10,7 +10,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.UserAPI;
-import org.edx.mobile.util.Config;
 
 import java.util.List;
 import java.util.Observable;
@@ -25,9 +24,6 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     @Inject
     IEdxEnvironment environment;
-
-    @Inject
-    private Config config;
 
     @Inject
     UserAPI api;
@@ -50,8 +46,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
         try {
             if (profile != null) {
-                String orgCode = config.getOrganizationCode();
-                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, orgCode, false);
+                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, false);
                 environment.getNotificationDelegate().syncWithServerForFailure();
                 environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             }

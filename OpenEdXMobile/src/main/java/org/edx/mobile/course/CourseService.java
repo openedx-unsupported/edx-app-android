@@ -32,16 +32,12 @@ public interface CourseService {
      * @param mobile   (optional):
      *                 If specified, only visible `CourseOverview` objects that are
      *                 designated as mobile_available are returned.
-     * @param org      (optional):
-     *                 If specified, only courses with the relevant organization
-     *                 code are returned.
      * @param page     (optional):
      *                 Which page to fetch. If not given, defaults to page 1
      */
     @GET("/api/courses/v1/courses/")
     Call<Page<CourseDetail>> getCourseList(@Query("username") String username,
                                            @Query("mobile") boolean mobile,
-                                           @Query("org") String org,
                                            @Query("page") int page);
 
     /**
