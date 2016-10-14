@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.util.Config;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
@@ -16,9 +15,6 @@ import retrofit2.Call;
 
 @Singleton
 public class CourseAPI {
-
-    @Inject
-    protected Config config;
 
     @NonNull
     private final CourseService courseService;
@@ -35,7 +31,7 @@ public class CourseAPI {
     public
     @NonNull
     Call<Page<CourseDetail>> getCourseList(int page) {
-        return courseService.getCourseList(getUsername(), true, config.getOrganizationCode(), page);
+        return courseService.getCourseList(getUsername(), true, page);
     }
 
     public
