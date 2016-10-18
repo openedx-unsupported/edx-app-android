@@ -7,6 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 
 import org.edx.mobile.R;
@@ -18,7 +19,9 @@ import roboguice.fragment.RoboDialogFragment;
  */
 public class AlertDialogFragment extends RoboDialogFragment {
     protected static final String ARG_TITLE = "ARG_TITLE";
+    protected static final String ARG_TITLE_RES = "titleRes";
     protected static final String ARG_MESSAGE = "ARG_MESSAGE";
+    protected static final String ARG_MESSAGE_RES = "messageRes";
     protected static final String ARG_POSITIVE_ATTR = "ARG_POSITIVE_ATTR";
     protected static final String ARG_NEGATIVE_ATTR = "ARG_NEGATIVE_ATTR";
 
@@ -53,6 +56,29 @@ public class AlertDialogFragment extends RoboDialogFragment {
             }
         });
         fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    public static AlertDialogFragment newInstance(@StringRes int titleResId, @StringRes int messageResId, @Nullable final DialogInterface.OnClickListener onPositiveClick) {
+        final AlertDialogFragment fragment = new AlertDialogFragment();
+        final Bundle arguments = new Bundle();
+        Bundle args = new Bundle();
+        args.putInt(ARG_TITLE_RES, titleResId);
+        args.putInt(ARG_MESSAGE_RES, messageResId);
+        arguments.putParcelable(ARG_POSITIVE_ATTR, new ButtonAttribute() {
+            @NonNull
+            @Override
+            public String getText() {
+                return fragment.getResources().getString(R.string.label_ok);
+            }
+
+            @Nullable
+            @Override
+            public DialogInterface.OnClickListener getOnClickListener() {
+                return onPositiveClick;
+            }
+        });
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -112,10 +138,17 @@ public class AlertDialogFragment extends RoboDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String title = getArguments().getString(ARG_TITLE);
-        String message = getArguments().getString(ARG_MESSAGE);
+        Bundle args = getArguments();
+        int titleResId = args.getInt(ARG_TITLE_RES);
+        int messageResId = args.getInt(ARG_MESSAGE_RES);
+        CharSequence title = titleResId != 0 ?
+                getText(titleResId) : args.getString(ARG_TITLE);
+        CharSequence message = messageResId != 0 ?
+                getText(messageResId) : args.getString(ARG_MESSAGE);
+
         ButtonAttribute positiveButtonAttr = getArguments().getParcelable(ARG_POSITIVE_ATTR);
         ButtonAttribute negativeButtonAttr = getArguments().getParcelable(ARG_NEGATIVE_ATTR);
+
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
                 .setPositiveButton(positiveButtonAttr.getText(), positiveButtonAttr.getOnClickListener())
