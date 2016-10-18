@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/content_error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <org.edx.mobile.view.custom.IconImageViewXml
             android:id="@+id/content_error_icon"
@@ -18,9 +20,17 @@
 
         <TextView
             android:id="@+id/content_error_text"
-            style="@style/content_unavailable_error_text"
             android:visibility="visible"
+            style="@style/content_unavailable_error_text"
             tools:text="@string/reset_no_network_message" />
 
+        <Button
+            android:id="@+id/content_error_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            style="@style/edX.Widget.DisableableButton"
+            tools:visibility="visible"
+            tools:text="Update" />
     </LinearLayout>
 </layout>
