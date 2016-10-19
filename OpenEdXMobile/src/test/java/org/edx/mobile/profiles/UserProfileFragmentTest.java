@@ -39,7 +39,7 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
 
     @Test
     public void setName_updatesTextView() {
-        view.setName(ProfileValues.USERNAME);
+        view.setUsername(ProfileValues.USERNAME);
         assertThat((TextView) binding.nameText).hasText(ProfileValues.USERNAME);
     }
 

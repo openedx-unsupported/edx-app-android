@@ -143,6 +143,8 @@ public class EditUserProfileFragment extends BaseFragment {
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
+        viewHolder.username.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.profile_username_description, "username", username));
+
         final IconDrawable icon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
                 .colorRes(getActivity(), R.color.disableable_button_text)
                 .sizeRes(getActivity(), R.dimen.fa_x_small)

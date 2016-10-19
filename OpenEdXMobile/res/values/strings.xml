@@ -558,8 +558,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">Profile</string>
-    <!-- The accessibility description for the name section -->
-    <string name="profile_name_description">Name: {name}</string>
+    <!-- The accessibility description for the username section -->
+    <string name="profile_username_description">Username: {username}</string>
     <!-- The accessibility description for the language section -->
     <string name="profile_language_description">Language: {language}</string>
     <!-- The accessibility description for the location section -->
@@ -596,6 +596,8 @@
     <string name="edit_user_profile_current_location">Current location: {current_location}</string>
     <!-- Button label that will open gallery or camera for choosing new profile photo -->
     <string name="edit_user_profile_change_photo">Change</string>
+    <!-- Content Description for change photo button -->
+    <string name="edit_user_profile_change_photo_description">Change profile picture</string>
     <!-- Button that will open a camera for taking a new profile photo -->
     <string name="edit_user_profile_take_photo">Take photo</string>
     <!-- Button that will open photo gallery for choosing a new profile photo -->
