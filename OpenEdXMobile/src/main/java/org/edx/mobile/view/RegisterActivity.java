@@ -314,6 +314,7 @@ public class RegisterActivity extends BaseFragmentActivity
             for (RegisterResponseFieldError e : errors) {
                 buffer.append(e.getUserMessage() + " ");
             }
+            fieldView.handleError(buffer.toString());
             showErrorPopup();
         }
     }
