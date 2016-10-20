@@ -4,8 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -18,6 +19,12 @@ public enum ErrorUtils {
 
     @NonNull
     public static String getErrorMessage(@NonNull Throwable ex, @NonNull Context context) {
+        return getErrorMessage(ex, CallTrigger.LOADING_UNCACHED, context);
+    }
+
+    @NonNull
+    public static String getErrorMessage(@NonNull Throwable ex, @NonNull CallTrigger callTrigger,
+                                         @NonNull Context context) {
         String errorMessage = null;
         if (ex instanceof IOException) {
             if (NetworkUtil.isConnected(context)) {
@@ -32,8 +39,9 @@ public enum ErrorUtils {
                     errorMessage = context.getString(R.string.network_service_unavailable);
                     break;
                 case HttpStatus.NOT_FOUND:
-                case HttpStatus.INTERNAL_SERVER_ERROR:
-                    errorMessage = context.getString(R.string.action_not_completed);
+                    if (callTrigger == CallTrigger.USER_ACTION) {
+                        errorMessage = context.getString(R.string.action_not_completed);
+                    }
                     break;
                 case HttpStatus.UPGRADE_REQUIRED:
                     errorMessage = context.getString(R.string.app_version_unsupported);
