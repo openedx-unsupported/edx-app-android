@@ -11,17 +11,16 @@ import android.widget.ListView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.OverlayErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.view.adapters.FindCoursesListAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
-
-import org.edx.mobile.base.BaseFragment;
-import org.edx.mobile.view.common.TaskProgressCallback;
 
 import retrofit2.Call;
 
@@ -70,8 +69,9 @@ public class NativeFindCoursesFragment extends BaseFragment {
                     call.cancel();
                 }
                 call = courseAPI.getCourseList(nextPage);
-                call.enqueue(new ErrorHandlingCallback<Page<CourseDetail>>(getActivity(),
-                        CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
+                call.enqueue(new ErrorHandlingCallback<Page<CourseDetail>>(getActivity(), null,
+                        nextPage > 1 ? new SnackbarErrorNotification(viewHolder.listView) :
+                                new OverlayErrorNotification(viewHolder.listView)) {
                     @Override
                     protected void onResponse(@NonNull final Page<CourseDetail> coursesPage) {
                         callback.onPageLoaded(coursesPage);

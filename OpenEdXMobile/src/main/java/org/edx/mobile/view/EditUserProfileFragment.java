@@ -39,7 +39,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.callback.CallTrigger;
+import org.edx.mobile.http.notifications.DialogErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.user.Account;
@@ -57,7 +58,6 @@ import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
-import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -116,8 +116,13 @@ public class EditUserProfileFragment extends BaseFragment {
         getAccountCall.enqueue(new AccountDataUpdatedCallback(
                 getActivity(),
                 username,
-                CallTrigger.LOADING_UNCACHED,
-                (TaskProgressCallback) null)); // Disable default loading indicator, we have our own
+                null, // Disable default loading indicator, we have our own
+                new SnackbarErrorNotification(
+                        /* Since this Fragment's view hasn't been
+                         * initialized yet, we'll use the Activity's content
+                         * view to give to the Snackbar.
+                         */
+                        getActivity().findViewById(android.R.id.content))));
 
         getProfileFormDescriptionTask = new GetProfileFormDescriptionTask(getActivity()) {
             @Override
@@ -449,7 +454,7 @@ public class EditUserProfileFragment extends BaseFragment {
         }
         userService.updateAccount(username, Collections.singletonMap(field.getName(), valueObject))
                 .enqueue(new AccountDataUpdatedCallback(getActivity(), username,
-                        CallTrigger.USER_ACTION) {
+                        new DialogErrorNotification(getChildFragmentManager())) {
                     @Override
                     protected void onResponse(@NonNull final Account account) {
                         super.onResponse(account);

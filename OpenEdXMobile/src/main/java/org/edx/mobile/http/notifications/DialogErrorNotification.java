@@ -11,10 +11,9 @@ import com.joanzapata.iconify.Icon;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 /**
- * A user notification of errors while submitting content to a remote server. This is currently
- * shown as a modal dialog.
+ * A modal dialog notification error message.
  */
-public class SubmitErrorNotification implements ErrorNotification {
+public class DialogErrorNotification extends ErrorNotification {
     /**
      * The Fragment manager of the concerned Activity.
      */
@@ -27,12 +26,12 @@ public class SubmitErrorNotification implements ErrorNotification {
      * @param fragmentManager The Fragment manager of the concerned Activity, to use for displaying
      *                        the DialogFragment.
      */
-    public SubmitErrorNotification(@NonNull final FragmentManager fragmentManager) {
+    public DialogErrorNotification(@NonNull final FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
     }
 
     /**
-     * Show the error notification as a modal dialog.
+     * Show the error notification as a modal dialog, according to the provided details.
      *
      * @param errorResId The resource ID of the error message.
      * @param icon The error icon. This is currently ignored here.
@@ -40,10 +39,10 @@ public class SubmitErrorNotification implements ErrorNotification {
      * @param actionListener The callback to be invoked when the action button is clicked.
      */
     @Override
-    public void showError(@StringRes final int errorResId,
-                          @NonNull final Icon icon,
-                          @StringRes final int actionTextResId,
-                          @Nullable final View.OnClickListener actionListener) {
+    protected void showError(@StringRes final int errorResId,
+                             @NonNull final Icon icon,
+                             @StringRes final int actionTextResId,
+                             @Nullable final View.OnClickListener actionListener) {
         AlertDialogFragment.newInstance(0, errorResId, null).show(fragmentManager, null);
     }
 }

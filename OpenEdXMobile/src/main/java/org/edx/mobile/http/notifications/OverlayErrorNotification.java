@@ -21,10 +21,9 @@ import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
- * A user notification of errors while loading uncached content from a remote server. This is
- * currently shown as an overlay message on top of the content area.
+ * An overlay notification error message on top of the content area.
  */
-public class UncachedContentErrorNotification implements ErrorNotification {
+public class OverlayErrorNotification extends ErrorNotification {
     /**
      * The content view.
      */
@@ -36,12 +35,13 @@ public class UncachedContentErrorNotification implements ErrorNotification {
      *
      * @param view The content view, on which the notification will be overlaid.
      */
-    public UncachedContentErrorNotification(@NonNull final View view) {
+    public OverlayErrorNotification(@NonNull final View view) {
         this.view = view;
     }
 
     /**
-     * Show the error notification as an overlay message on top of the content area.
+     * Show the error notification as an overlay message on top of the content area, according to
+     * the provided details.
      *
      * The root view will be determined by walking up the view tree to see if there is any view with
      * the ID of {@link R.id#content_error R.id.content_error}. If one is found, then that would be
@@ -55,10 +55,10 @@ public class UncachedContentErrorNotification implements ErrorNotification {
      * @param actionListener The callback to be invoked when the action button is clicked.
      */
     @Override
-    public void showError(@StringRes final int errorResId,
-                          @Nullable final Icon icon,
-                          @StringRes final int actionTextResId,
-                          @Nullable final View.OnClickListener actionListener) {
+    protected void showError(@StringRes final int errorResId,
+                             @Nullable final Icon icon,
+                             @StringRes final int actionTextResId,
+                             @Nullable final View.OnClickListener actionListener) {
         final ViewGroup root = findSuitableAncestorLayout();
         if (root == null) return;
 

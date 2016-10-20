@@ -37,6 +37,8 @@ import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TimePeriod;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.OverlayErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -225,8 +227,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         discussionService.getSpecificCourseTopics(courseData.getCourse().getId(),
                 Collections.singletonList(topicId))
                 .enqueue(new ErrorHandlingCallback<CourseTopics>(getContext(),
-                        CallTrigger.LOADING_UNCACHED,
-                        new ProgressViewController(loadingIndicator)) {
+                        new ProgressViewController(loadingIndicator),
+                        new OverlayErrorNotification(discussionPostsListView)) {
                     @Override
                     protected void onResponse(@NonNull final CourseTopics courseTopics) {
                         discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
@@ -347,12 +349,15 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     courseData.getCourse().getId(), postsFilter.getQueryParamValue(),
                     postsSort.getQueryParamValue(), nextPage, requestedFields);
         }
+        final boolean isRefreshingSilently = callback.isRefreshingSilently();
         getThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(getActivity(),
-                CallTrigger.LOADING_UNCACHED,
                 // Initially we need to show the spinner at the center of the screen. After that,
                 // the ListView will start showing a footer-based loading indicator.
-                nextPage > 1 || callback.isRefreshingSilently() ? null :
-                        new ProgressViewController(loadingIndicator)) {
+                nextPage > 1 || isRefreshingSilently ? null :
+                        new ProgressViewController(loadingIndicator),
+                isRefreshingSilently ? null : (nextPage > 1 ?
+                        new SnackbarErrorNotification(discussionPostsListView) :
+                        new OverlayErrorNotification(discussionPostsListView))) {
             @Override
             protected void onResponse(@NonNull final Page<DiscussionThread> threadsPage) {
                 if (getView() == null) return;
