@@ -21,11 +21,11 @@ import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
@@ -145,8 +145,8 @@ public class DiscussionAddResponseFragment extends BaseFragment {
                 editTextNewComment.getText().toString(), null);
         createCommentCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
                 getActivity(),
-                CallTrigger.USER_ACTION,
-                new ProgressViewController(createCommentProgressBar)) {
+                new ProgressViewController(createCommentProgressBar),
+                new DialogErrorNotification(getChildFragmentManager())) {
             @Override
             protected void onResponse(@NonNull final DiscussionComment thread) {
                 logger.debug(thread.toString());

@@ -21,8 +21,8 @@ import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
@@ -152,8 +152,8 @@ public class DiscussionAddCommentFragment extends BaseFragment {
                 editTextNewComment.getText().toString(), discussionResponse.getIdentifier());
         createCommentCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
                 getActivity(),
-                CallTrigger.USER_ACTION,
-                new ProgressViewController(createCommentProgressBar)) {
+                new ProgressViewController(createCommentProgressBar),
+                new DialogErrorNotification(getChildFragmentManager())) {
             @Override
             protected void onResponse(@NonNull final DiscussionComment thread) {
                 logger.debug(thread.toString());

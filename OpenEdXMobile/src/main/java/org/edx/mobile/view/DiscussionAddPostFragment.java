@@ -29,15 +29,15 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.discussion.ThreadBody;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.DialogErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
-import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
 
         getTopicList();
-        
+
         topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -215,8 +215,8 @@ public class DiscussionAddPostFragment extends BaseFragment {
         createThreadCall = discussionService.createThread(threadBody);
         createThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(
                 getActivity(),
-                CallTrigger.USER_ACTION,
-                new ProgressViewController(addPostProgressBar)) {
+                new ProgressViewController(addPostProgressBar),
+                new DialogErrorNotification(getChildFragmentManager())) {
             @Override
             protected void onResponse(@NonNull final DiscussionThread courseTopics) {
                 EventBus.getDefault().post(new DiscussionThreadPostedEvent(courseTopics));
@@ -235,8 +235,8 @@ public class DiscussionAddPostFragment extends BaseFragment {
             getTopicListCall.cancel();
         }
         getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
-        getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(getActivity(),
-                CallTrigger.LOADING_UNCACHED, (TaskMessageCallback) null) {
+        getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(
+                getActivity(), new SnackbarErrorNotification(topicsSpinner)) {
             @Override
             protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 final ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
