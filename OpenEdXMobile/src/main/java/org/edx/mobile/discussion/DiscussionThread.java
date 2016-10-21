@@ -209,8 +209,6 @@ public class DiscussionThread implements Serializable, IAuthorData, ProfileImage
 
     public void incrementCommentCount() {
         ++commentCount;
-        ++unreadCommentCount;
-        read = false;
     }
 
     public boolean hasSameId(@NonNull DiscussionThread discussionThread) {
