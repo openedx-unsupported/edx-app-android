@@ -291,6 +291,7 @@ public class RegisterActivity extends BaseFragmentActivity
                         }
                     }
                     if (fieldErrorShown) {
+                        showErrorPopup();
                         // We are showing an error message on a visible form field.
                         return; // Return here to avoid showing the generic error pop-up.
                     }
@@ -314,6 +315,7 @@ public class RegisterActivity extends BaseFragmentActivity
             for (RegisterResponseFieldError e : errors) {
                 buffer.append(e.getUserMessage() + " ");
             }
+            fieldView.handleError(buffer.toString());
             showErrorPopup();
         }
     }
