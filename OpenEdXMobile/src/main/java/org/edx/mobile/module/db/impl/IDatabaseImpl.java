@@ -653,7 +653,11 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 dataCallback.sendException(ex);
             }
         });
-        return enqueue(op);
+        List<Integer> ordinals = enqueue(op);
+        if (ordinals != null && !ordinals.isEmpty()) {
+            return WatchedState.values()[ordinals.get(0)];
+        }
+        return WatchedState.UNWATCHED;
     }
 
     @Override
@@ -713,7 +717,11 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 dataCallback.sendException(ex);
             }
         });
-        return enqueue(op);
+        List<Integer> ordinals = enqueue(op);
+        if (ordinals != null && !ordinals.isEmpty()) {
+            return DownloadedState.values()[ordinals.get(0)];
+        }
+        return DownloadedState.ONLINE;
     }
 
     @Override
