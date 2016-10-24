@@ -316,7 +316,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 buffer.append(e.getUserMessage() + " ");
             }
             fieldView.handleError(buffer.toString());
-            showErrorPopup();
         }
     }
 
