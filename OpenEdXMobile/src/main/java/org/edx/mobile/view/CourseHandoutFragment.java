@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.inject.Inject;
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconDrawable;
@@ -38,6 +39,8 @@ import roboguice.inject.InjectView;
 public class CourseHandoutFragment extends BaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
@@ -59,6 +62,18 @@ public class CourseHandoutFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         segIO.trackScreenView(courseData.getCourse().getName() + " - Handouts");
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "123");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "dummy");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        Bundle params = new Bundle();
+        params.putString("custom_event_field", "custom_event_value");
+        mFirebaseAnalytics.logEvent("custom_event", params);
+
     }
 
     @Override
