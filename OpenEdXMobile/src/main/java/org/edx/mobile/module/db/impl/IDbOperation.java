@@ -20,6 +20,12 @@ interface IDbOperation<T> {
     T requestExecute(SQLiteDatabase db);
     
     /**
+     * Returns the default value of the data type.
+     * @return The data type
+     */
+    T getDefaultValue();
+    
+    /**
      * Sets a callback for database operation success and failure.
      * @param callback
      */

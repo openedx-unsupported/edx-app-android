@@ -145,7 +145,8 @@ class DbHelper extends SQLiteOpenHelper {
                                 final String previousDirPath = TextUtils.join(
                                         "/", Arrays.<CharSequence>asList(previousAppDirPath,
                                                 username)) + "/";
-                                if (!filePath.startsWith(previousDirPath)) {
+                                // filePath is null when a video is downloading
+                                if (filePath == null || !filePath.startsWith(previousDirPath)) {
                                     db.delete(DbStructure.Table.DOWNLOADS,
                                             DbStructure.Column.ID + "= ?", new String[]{id});
                                     continue;
