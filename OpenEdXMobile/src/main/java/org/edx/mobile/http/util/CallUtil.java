@@ -1,4 +1,6 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.util;
+
+import org.edx.mobile.http.HttpResponseStatusException;
 
 import java.io.IOException;
 

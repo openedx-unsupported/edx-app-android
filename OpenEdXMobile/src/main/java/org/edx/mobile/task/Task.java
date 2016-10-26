@@ -9,7 +9,7 @@ import android.view.View;
 import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.common.MessageType;

@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.EdxEnvironment;
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.module.prefs.PrefManager;
 
 import java.util.List;

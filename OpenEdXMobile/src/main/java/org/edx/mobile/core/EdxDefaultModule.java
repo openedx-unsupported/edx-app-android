@@ -15,7 +15,7 @@ import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter;
 import org.edx.mobile.http.serialization.JsonPageDeserializer;

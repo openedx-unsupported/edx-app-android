@@ -39,7 +39,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.user.Account;

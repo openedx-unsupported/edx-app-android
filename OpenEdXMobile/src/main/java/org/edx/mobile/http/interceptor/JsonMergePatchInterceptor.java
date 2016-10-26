@@ -1,4 +1,4 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.interceptor;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

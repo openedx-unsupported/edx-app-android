@@ -1,4 +1,4 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.util;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,6 +6,12 @@ import android.support.annotation.NonNull;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.http.interceptor.JsonMergePatchInterceptor;
+import org.edx.mobile.http.interceptor.NewVersionBroadcastInterceptor;
+import org.edx.mobile.http.interceptor.OauthHeaderRequestInterceptor;
+import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
+import org.edx.mobile.http.interceptor.OfflineRequestInterceptor;
+import org.edx.mobile.http.interceptor.UserAgentInterceptor;
 
 import java.io.File;
 import java.net.HttpCookie;

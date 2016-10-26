@@ -12,6 +12,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.model.CourseIdObject;
 import org.edx.mobile.http.model.EnrollmentRequestBody;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -46,7 +47,7 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static org.edx.mobile.http.CallUtil.executeStrict;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 /**
  * DESIGN NOTES -

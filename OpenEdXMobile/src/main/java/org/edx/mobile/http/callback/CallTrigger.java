@@ -1,4 +1,4 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.callback;
 
 import android.support.annotation.NonNull;
 

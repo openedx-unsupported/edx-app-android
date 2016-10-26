@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.cache.CacheManager;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 

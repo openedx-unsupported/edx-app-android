@@ -1,6 +1,7 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.interceptor;
 
 import org.edx.mobile.event.NewVersionAvailableEvent;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Version;

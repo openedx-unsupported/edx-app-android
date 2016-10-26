@@ -4,7 +4,7 @@ import android.view.View;
 import android.webkit.WebView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;

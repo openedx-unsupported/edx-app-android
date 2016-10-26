@@ -13,8 +13,8 @@ import com.google.inject.Singleton;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.CallTrigger;
-import org.edx.mobile.http.ErrorHandlingCallback;
+import org.edx.mobile.http.callback.CallTrigger;
+import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.logger.Logger;
@@ -35,7 +35,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-import static org.edx.mobile.http.CallUtil.executeStrict;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 @Singleton
 public class UserAPI {

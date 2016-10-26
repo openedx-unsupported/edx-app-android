@@ -1,6 +1,8 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.callback;
 
 import android.support.annotation.NonNull;
+
+import org.edx.mobile.http.HttpResponseStatusException;
 
 import java.io.IOException;
 

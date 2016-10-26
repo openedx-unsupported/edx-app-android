@@ -29,7 +29,7 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
-import static org.edx.mobile.http.CallUtil.executeStrict;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 @Singleton
 public class LoginAPI {

@@ -2,7 +2,7 @@ package org.edx.mobile.profiles;
 
 import android.support.annotation.NonNull;
 
-import org.edx.mobile.http.Callback;
+import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;

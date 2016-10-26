@@ -1,4 +1,4 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.authenticator;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import com.google.inject.Inject;
 import org.edx.mobile.authentication.LoginService;
 
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
@@ -26,7 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import roboguice.RoboGuice;
 
-import static org.edx.mobile.http.CallUtil.executeStrict;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 /**
  * Authenticator for 401 responses for refreshing oauth tokens. Checks for

@@ -10,7 +10,7 @@ import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.http.HttpRequestDelegate;
 import org.edx.mobile.http.HttpRequestEndPoint;
 import org.edx.mobile.http.IApi;
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;

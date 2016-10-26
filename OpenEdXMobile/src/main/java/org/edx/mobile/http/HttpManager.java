@@ -32,6 +32,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.IOUtils;
 import org.json.JSONException;

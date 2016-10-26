@@ -1,4 +1,4 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.interceptor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

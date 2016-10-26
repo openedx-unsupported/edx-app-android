@@ -2,7 +2,7 @@ package org.edx.mobile.test.http;
 
 import com.google.gson.Gson;
 
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.PaginationData;
 import org.edx.mobile.profiles.BadgeAssertion;
