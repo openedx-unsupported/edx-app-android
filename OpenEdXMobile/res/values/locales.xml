@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cc_english_code" translatable="false">en</string>
+    <string name="lbl_cc_english" translatable="false">English</string>
+    <string name="cc_chinese_code" translatable="false">zh</string>
+    <string name="lbl_cc_chinese" translatable="false">Chinese</string>
+    <string name="cc_portugal_code" translatable="false">pt</string>
+    <string name="lbl_cc_portugal" translatable="false">Portugal</string>
+    <string name="cc_german_code" translatable="false">de</string>
+    <string name="lbl_cc_german" translatable="false">German</string>
+    <string name="cc_french_code" translatable="false">fr</string>
+    <string name="lbl_cc_french" translatable="false">French</string>
+    <string name="cc_spanish_code" translatable="false">es</string>
+    <string name="lbl_cc_spanish">Spanish</string>
+    <string name="lbl_cc_arabic_code">Arabic</string>
+</resources>
