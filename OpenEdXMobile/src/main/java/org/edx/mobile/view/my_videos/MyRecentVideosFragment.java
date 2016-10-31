@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -69,6 +70,9 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
 
     @Inject
     protected IEdxEnvironment environment;
+
+    @Inject
+    private CourseAPI courseApi;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -278,7 +282,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
 
         VideoResponseModel vrm;
         try {
-            vrm = environment.getServiceManager().getVideoById(videoModel.eid, videoModel.videoId);
+            vrm = courseApi.getVideoById(videoModel.eid, videoModel.videoId);
         } catch (Exception e) {
             logger.error(e);
             return;
@@ -292,7 +296,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
 
         TranscriptModel transcript = null;
         try {
-            transcript = environment.getServiceManager().getTranscriptsOfVideo(videoModel.eid, videoModel.videoId);
+            transcript = courseApi.getTranscriptsOfVideo(videoModel.eid, videoModel.videoId);
         } catch (Exception e) {
             logger.error(e);
         }

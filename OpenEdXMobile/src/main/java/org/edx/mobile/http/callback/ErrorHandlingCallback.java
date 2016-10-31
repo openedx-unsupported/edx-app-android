@@ -56,6 +56,33 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
     /**
      * Create a new instance of this class.
      *
+     * @param context A Context for resolving the error message strings.
+     * @param callTrigger The trigger for initiating the call. This is used to determine the type of
+     *                    error message to deliver.
+     * @param progressCallback The callback to invoke on start and finish of the request. Note that
+     *                         since no callback method in this class is invoked upon request
+     *                         initiation, it assumes that it's being initiated immediately, and
+     *                         thus invokes that start callback immediately as well.
+     * @param messageCallback The callback to invoke for delivering any error messages.
+     */
+    public ErrorHandlingCallback(@NonNull final Context context,
+                                 @NonNull final CallTrigger callTrigger,
+                                 @Nullable final TaskProgressCallback progressCallback,
+                                 @Nullable final TaskMessageCallback messageCallback) {
+        this.context = context;
+        this.callTrigger = callTrigger;
+        this.progressCallback = progressCallback;
+        this.messageCallback = messageCallback;
+        // For the convenience of subclasses
+        RoboGuice.injectMembers(context, this);
+        if (progressCallback != null) {
+            progressCallback.startProcess();
+        }
+    }
+
+    /**
+     * Create a new instance of this class.
+     *
      * @param context A Context for resolving the error message strings. Note that for convenience,
      *                this will be checked to determine whether it's implementing any of the
      *                callback interfaces, and will be registered as such if so. If this is not the
@@ -114,33 +141,6 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
         this(context, callTrigger,
                 context instanceof TaskProgressCallback ? (TaskProgressCallback) context : null,
                 messageCallback);
-    }
-
-    /**
-     * Create a new instance of this class.
-     *
-     * @param context A Context for resolving the error message strings.
-     * @param callTrigger The trigger for initiating the call. This is used to determine the type of
-     *                    error message to deliver.
-     * @param progressCallback The callback to invoke on start and finish of the request. Note that
-     *                         since no callback method in this class is invoked upon request
-     *                         initiation, it assumes that it's being initiated immediately, and
-     *                         thus invokes that start callback immediately as well.
-     * @param messageCallback The callback to invoke for delivering any error messages.
-     */
-    public ErrorHandlingCallback(@NonNull final Context context,
-                                 @NonNull final CallTrigger callTrigger,
-                                 @Nullable final TaskProgressCallback progressCallback,
-                                 @Nullable final TaskMessageCallback messageCallback) {
-        this.context = context;
-        this.callTrigger = callTrigger;
-        this.progressCallback = progressCallback;
-        this.messageCallback = messageCallback;
-        // For the convenience of subclasses
-        RoboGuice.injectMembers(context, this);
-        if (progressCallback != null) {
-            progressCallback.startProcess();
-        }
     }
 
     /**

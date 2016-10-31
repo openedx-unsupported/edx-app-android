@@ -6,10 +6,9 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
 
 import java.util.List;
@@ -17,6 +16,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import roboguice.RoboGuice;
+
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
     private AsyncTaskResult<List<EnrolledCoursesResponse>> mData;
@@ -30,7 +31,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     private Config config;
 
     @Inject
-    UserAPI api;
+    CourseAPI api;
 
     @Inject
     LoginPrefs loginPrefs;
@@ -43,18 +44,14 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
-        ProfileModel profile = loginPrefs.getCurrentUserProfile();
         List<EnrolledCoursesResponse> enrolledCoursesResponse = null;
 
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
 
         try {
-            if (profile != null) {
-                String orgCode = config.getOrganizationCode();
-                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, orgCode, false);
-                environment.getNotificationDelegate().syncWithServerForFailure();
-                environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
-            }
+            enrolledCoursesResponse = executeStrict(api.getEnrolledCourses());
+            environment.getNotificationDelegate().syncWithServerForFailure();
+            environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
 
         } catch (Exception exception) {
             result.setEx(exception);

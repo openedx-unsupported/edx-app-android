@@ -9,8 +9,8 @@ import com.google.inject.Inject;
 import org.edx.mobile.authentication.LoginService;
 
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.http.HttpStatusException;
-import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
@@ -20,12 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.Authenticator;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import roboguice.RoboGuice;
 
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
@@ -99,13 +96,10 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     @NonNull
     private AuthResponse refreshAccessToken(AuthResponse currentAuth)
             throws IOException, HttpStatusException {
-        OkHttpClient client = OkHttpUtil.getClient(context);
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(client)
-                .baseUrl(config.getApiHostURL())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        LoginService loginService = retrofit.create(LoginService.class);
+        // RoboGuice doesn't seem to allow this to be injected via annotation at initialization
+        // time. TODO: Investigate whether this is a bug in RoboGuice.
+        LoginService loginService = RoboGuice.getInjector(context)
+                .getInstance(RetrofitProvider.class).getNonOAuthBased().create(LoginService.class);
 
         AuthResponse refreshTokenData = executeStrict(loginService.refreshAccessToken(
                 "refresh_token", config.getOAuthClientId(), currentAuth.refresh_token));

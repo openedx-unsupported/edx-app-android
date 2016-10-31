@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
@@ -18,16 +19,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.course.CourseService;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.task.EnrollForCourseTask;
-import org.edx.mobile.task.GetEnrolledCourseTask;
+import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.ResponseBody;
 
 public abstract class FindCoursesBaseActivity extends BaseFragmentActivity implements
         URLInterceptorWebViewClient.IActionListener,
@@ -46,6 +53,12 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     private boolean isTaskInProgress = false;
     private String lastClickEnrollCourseId;
     private boolean lastClickEnrollEmailOptIn;
+
+    @Inject
+    private CourseService courseService;
+
+    @Inject
+    private CourseAPI courseApi;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -225,48 +238,48 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
         logger.debug("CourseId - " + courseId);
         logger.debug("Email option - " + emailOptIn);
-        EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this,
-                courseId, emailOptIn) {
-            @Override
-            public void onSuccess(Void result) {
-                logger.debug("Enrollment successful: " + courseId);
-                Toast.makeText(FindCoursesBaseActivity.this, context.getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
-
-                new Handler().post(new Runnable() {
+        courseService.enrollInACourse(new CourseService.EnrollBody(courseId, emailOptIn))
+                .enqueue(new CourseService.EnrollCallback(
+                        FindCoursesBaseActivity.this,
+                        CallTrigger.USER_ACTION,
+                        new TaskProgressCallback.ProgressViewController(progressWheel)) {
                     @Override
-                    public void run() {
-                        GetEnrolledCourseTask getEnrolledCourseTask =
-                                new GetEnrolledCourseTask(FindCoursesBaseActivity.this, courseId) {
+                    protected void onResponse(@NonNull final ResponseBody responseBody) {
+                        super.onResponse(responseBody);
+                        logger.debug("Enrollment successful: " + courseId);
+                        Toast.makeText(FindCoursesBaseActivity.this, getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
+
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
+                                        FindCoursesBaseActivity.this,
+                                        courseId,
+                                        CallTrigger.USER_ACTION,
+                                        new TaskProgressCallback.ProgressViewController(progressWheel)) {
                                     @Override
-                                    public void onSuccess(EnrolledCoursesResponse course) {
+                                    protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                                         environment.getRouter().showMyCourses(FindCoursesBaseActivity.this);
                                         environment.getRouter().showCourseDashboardTabs(FindCoursesBaseActivity.this, environment.getConfig(), course, false);
                                     }
 
                                     @Override
-                                    public void onException(Exception ex) {
-                                        super.onException(ex);
+                                    protected void onFailure(@NonNull final Throwable error) {
                                         isTaskInProgress = false;
-                                        Toast.makeText(getContext(), R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FindCoursesBaseActivity.this, R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
                                     }
-                                };
-                        getEnrolledCourseTask.setProgressDialog(progressWheel);
-                        getEnrolledCourseTask.execute();
+                                });
+                            }
+                        });
+                    }
 
+                    @Override
+                    protected void onFailure(@NonNull Throwable error) {
+                        isTaskInProgress = false;
+                        logger.debug("Error during enroll api call");
+                        showEnrollErrorMessage(courseId, emailOptIn);
                     }
                 });
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
-                isTaskInProgress = false;
-                logger.debug("Error during enroll api call");
-                showEnrollErrorMessage(courseId, emailOptIn);
-            }
-        };
-        enrollForCourseTask.setProgressDialog(progressWheel);
-        enrollForCourseTask.execute();
     }
 
     @Override

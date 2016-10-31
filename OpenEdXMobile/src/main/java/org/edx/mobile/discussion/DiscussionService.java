@@ -34,7 +34,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-import static org.edx.mobile.http.ApiConstants.PARAM_PAGE_SIZE;
+import static org.edx.mobile.http.constants.ApiConstants.PARAM_PAGE_SIZE;
 
 public interface DiscussionService {
     /**

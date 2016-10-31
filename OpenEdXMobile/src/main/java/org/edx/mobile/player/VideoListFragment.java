@@ -19,6 +19,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -70,6 +71,9 @@ public class VideoListFragment extends BaseFragment {
 
     @Inject
     protected IEdxEnvironment environment;
+
+    @Inject
+    private CourseAPI courseApi;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -222,7 +226,7 @@ public class VideoListFragment extends BaseFragment {
         if (model instanceof DownloadEntry) {
             DownloadEntry v = (DownloadEntry) model;
             try {
-                final VideoResponseModel vrm = environment.getServiceManager().getVideoById(v.eid, v.videoId);
+                final VideoResponseModel vrm = courseApi.getVideoById(v.eid, v.videoId);
                 lastAccessManager.setLastAccessed(v.eid, vrm.getSection().getId());
 
                 // capture chapter name

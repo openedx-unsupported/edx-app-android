@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.edx.mobile.http.HttpManager;
+//import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.social.SocialMember;
@@ -42,11 +42,12 @@ public class GoogleProvider implements SocialProvider {
     public void getUserInfo(Context context,
                             SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,
                             final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
-        new GoogleUserInfoTask(context, userInfoCallback, accessToken).execute();
+        // TODO: See if this should be implemented in Retrofit
+        //new GoogleUserInfoTask(context, userInfoCallback, accessToken).execute();
 
     }
 
-    private class GoogleUserInfoTask extends Task<String> {
+    /*private class GoogleUserInfoTask extends Task<String> {
         private SocialLoginDelegate.SocialUserInfoCallback userInfoCallback;
         private String accessToken;
 
@@ -90,6 +91,6 @@ public class GoogleProvider implements SocialProvider {
             }
             return name;
         }
-    }
+    }*/
 
 }

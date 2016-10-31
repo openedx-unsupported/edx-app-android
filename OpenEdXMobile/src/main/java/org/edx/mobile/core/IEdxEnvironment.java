@@ -8,7 +8,6 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.Router;
 
@@ -34,6 +33,4 @@ public interface IEdxEnvironment {
     Router getRouter();
 
     Config getConfig();
-
-    ServiceManager getServiceManager();
 }

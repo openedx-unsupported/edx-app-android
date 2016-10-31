@@ -10,7 +10,7 @@ import android.os.Message;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.RestApiManager;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.module.analytics.Analytics;
@@ -21,9 +21,11 @@ import org.edx.mobile.util.NetworkUtil;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import roboguice.service.RoboService;
@@ -51,10 +53,10 @@ public class DownloadSpeedService extends RoboService {
     private static final Logger logger = new Logger(DownloadSpeedService.class);
 
     @Inject
-    private AnalyticsRegistry analyticsRegistry;
+    private OkHttpClientProvider okHttpClientProvider;
 
     @Inject
-    RestApiManager apiManager;
+    private AnalyticsRegistry analyticsRegistry;
 
     SpeedTestHandler messageHandler;
 
@@ -108,11 +110,16 @@ public class DownloadSpeedService extends RoboService {
         try {
             startTime = System.nanoTime();
 
+            OkHttpClient client = okHttpClientProvider.getNonOAuthBased().newBuilder()
+                    .connectTimeout(getResources().getInteger(
+                            R.integer.speed_test_timeout_in_milliseconds), TimeUnit.MILLISECONDS)
+                    .build();
+
             Request request = new Request.Builder()
                 .url(file.getUrl())
                 .build();
 
-            apiManager.createSpeedTestClient().newCall(request).enqueue(new Callback() {
+            client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException throwable) {
                     logger.error(throwable);

@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.ApiConstants;
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.model.api.FormFieldMessageBody;

@@ -1,35 +1,42 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 
 import com.facebook.Settings;
 import com.facebook.widget.LikeView;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.http.callback.CallTrigger;
+import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.facebook.FacebookProvider;
-import org.edx.mobile.task.GetAnnouncementTask;
 import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.WebViewUtil;
+import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Request;
 
 public class CourseCombinedInfoFragment extends BaseFragment {
 
@@ -48,13 +55,18 @@ public class CourseCombinedInfoFragment extends BaseFragment {
     @Inject
     protected IEdxEnvironment environment;
 
+    @Inject
+    private OkHttpClientProvider okHttpClientProvider;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         logger.debug("created: " + getClass().getName());
 
-        Settings.sdkInitialize(getActivity());
+        final Context context = getContext();
+
+        Settings.sdkInitialize(context);
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
@@ -170,30 +182,29 @@ public class CourseCombinedInfoFragment extends BaseFragment {
     }
 
     private void loadAnnouncementData(EnrolledCoursesResponse enrollment) {
-        GetAnnouncementTask task = new GetAnnouncementTask(getActivity(), enrollment) {
+        okHttpClientProvider.getWithOfflineCache().newCall(new Request.Builder()
+                .url(enrollment.getCourse().getCourse_updates())
+                .get()
+                .build())
+                .enqueue(new ErrorHandlingOkCallback<List<AnnouncementsModel>>(
+                        getActivity(),
+                        new TypeToken<List<AnnouncementsModel>>() {},
+                        CallTrigger.LOADING_CACHED,
+                        new TaskProgressCallback.ProgressViewController(
+                                getView().findViewById(R.id.loading_indicator))) {
+                    @Override
+                    protected void onResponse(
+                            @NonNull final List<AnnouncementsModel> announcementsList) {
+                        savedAnnouncements = announcementsList;
+                        populateAnnouncements(announcementsList);
+                    }
 
-            @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
-                showEmptyAnnouncementMessage();
-            }
-
-            @Override
-            public void onSuccess(List<AnnouncementsModel> announcementsList) {
-                try {
-
-                    savedAnnouncements = announcementsList;
-                    populateAnnouncements(savedAnnouncements);
-
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    showEmptyAnnouncementMessage();
-                }
-            }
-        };
-        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.loading_indicator);
-        task.setProgressDialog(progressBar);
-        task.execute();
+                    @Override
+                    protected void onFailure(@NonNull final Throwable error) {
+                        super.onFailure(error);
+                        showEmptyAnnouncementMessage();
+                    }
+                });
 
     }
 

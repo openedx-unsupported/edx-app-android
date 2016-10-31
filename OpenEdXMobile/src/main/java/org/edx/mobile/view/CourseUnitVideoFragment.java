@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
@@ -57,6 +60,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     private final static String HAS_PREV_UNIT_ID = "has_prev_unit";
     private boolean hasPreviousUnit;
+
+    @Inject
+    private CourseAPI courseApi;
 
     /**
      * Create a new instance of fragment
@@ -375,7 +381,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if ( transcript == null ) {
             try {
                 if (video.videoId != null) {
-                    transcript =  environment.getServiceManager().getTranscriptsOfVideo(video.eid, video.videoId);
+                    transcript =  courseApi.getTranscriptsOfVideo(video.eid, video.videoId);
                 }
             } catch (Exception e) {
                 logger.error(e);

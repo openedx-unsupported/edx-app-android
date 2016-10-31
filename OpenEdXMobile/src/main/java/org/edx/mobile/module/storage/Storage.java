@@ -4,11 +4,11 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -28,8 +28,6 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.services.ServiceManager;
-import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -41,6 +39,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.greenrobot.event.EventBus;
+
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 @Singleton
 public class Storage implements IStorage {
@@ -58,8 +58,7 @@ public class Storage implements IStorage {
     @Inject
     private LoginPrefs loginPrefs;
     @Inject
-    ServiceManager serviceManager;
-    @Inject UserAPI api;
+    private CourseAPI api;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -277,34 +276,19 @@ public class Storage implements IStorage {
     public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws Exception {
         ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<>();
 
-        String username = getUsername();
-        String org = config.getOrganizationCode();
-
-        if (username != null) {
-            for(EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, org, true)){
-                int videoCount = db.getDownloadedVideoCountByCourse(
+        for (EnrolledCoursesResponse enrolledCoursesResponse :
+                executeStrict(api.getEnrolledCoursesFromCache())) {
+            int videoCount = db.getDownloadedVideoCountByCourse(
+                    enrolledCoursesResponse.getCourse().getId(),null);
+            if(videoCount>0){
+                enrolledCoursesResponse.videoCount = videoCount;
+                enrolledCoursesResponse.size = db.getDownloadedVideosSizeByCourse(
                         enrolledCoursesResponse.getCourse().getId(),null);
-                if(videoCount>0){
-                    enrolledCoursesResponse.videoCount = videoCount;
-                    enrolledCoursesResponse.size = db.getDownloadedVideosSizeByCourse(
-                            enrolledCoursesResponse.getCourse().getId(),null);
-                    downloadedCourseList.add(enrolledCoursesResponse);
-                }
+                downloadedCourseList.add(enrolledCoursesResponse);
             }
         }
 
         return downloadedCourseList;
-    }
-
-    @Nullable
-    private String getUsername() {
-        String ret = null;
-        ProfileModel profile = pref.getProfile();
-        if (profile != null) {
-            ret = profile.username;
-        }
-
-        return ret;
     }
 
     @Override
@@ -312,22 +296,19 @@ public class Storage implements IStorage {
     public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws Exception {
         ArrayList<SectionItemInterface> recentVideolist = new ArrayList<>();
 
-        String username = getUsername();
-        String org = config.getOrganizationCode();
-        if (username != null) {
-            for (final EnrolledCoursesResponse course : api.getUserEnrolledCourses(username, org, true)) {
-                // add all videos to the list for this course
-                List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
-                        course.getCourse().getId(), null);
+        for (final EnrolledCoursesResponse course :
+                executeStrict(api.getEnrolledCoursesFromCache())) {
+            // add all videos to the list for this course
+            List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
+                    course.getCourse().getId(), null);
 
-                // ArrayList<IVideoModel> videos = new ArrayList<IVideoModel>();
-                if (videos != null && videos.size() > 0) {
-                    // add course header to the list
-                    recentVideolist.add(course);
-                    for (VideoModel videoModel : videos) {
-                        //TODO : Need to check how SectionItemInterface can be converted to IVideoModel
-                        recentVideolist.add((SectionItemInterface) videoModel);
-                    }
+            // ArrayList<IVideoModel> videos = new ArrayList<IVideoModel>();
+            if (videos != null && videos.size() > 0) {
+                // add course header to the list
+                recentVideolist.add(course);
+                for (VideoModel videoModel : videos) {
+                    //TODO : Need to check how SectionItemInterface can be converted to IVideoModel
+                    recentVideolist.add((SectionItemInterface) videoModel);
                 }
             }
         }
@@ -383,7 +364,7 @@ public class Storage implements IStorage {
 
         try {
             Map<String, SectionEntry> courseHeirarchyMap =
-                serviceManager.getCourseHierarchy(courseId);
+                api.getCourseHierarchy(courseId);
 
             // iterate chapters
             for (Entry<String, SectionEntry> chapterentry : courseHeirarchyMap.entrySet()) {

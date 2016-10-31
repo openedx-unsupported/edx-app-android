@@ -1,4 +1,4 @@
-package org.edx.mobile.http;
+package org.edx.mobile.http.constants;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
@@ -30,6 +30,8 @@ public class ApiConstants {
     public static final String URL_EXCHANGE_ACCESS_TOKEN = "/oauth2/exchange_access_token/{" + GROUP_ID + "}/";
 
     public static final String URL_REVOKE_TOKEN = "/oauth2/revoke_token/";
+
+    public static final String URL_LOGIN = "/oauth2/login/";
 
     public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 

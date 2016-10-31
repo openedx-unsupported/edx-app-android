@@ -107,7 +107,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                             case HttpStatus.FORBIDDEN:
                             case HttpStatus.UNAUTHORIZED:
                             case HttpStatus.NOT_FOUND:
-                                EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
+                                EdxCookieManager.getSharedInstance(getContext())
+                                        .tryToRefreshSessionCookie();
                                 break;
                         }
                         showErrorMessage(R.string.network_error_message,
@@ -257,9 +258,10 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             // Requery the session cookie if unavailable or expired if we are on
             // an API level lesser than Marshmallow (which provides HTTP error
             // codes in the error callback for WebViewClient).
+            final EdxCookieManager cookieManager = EdxCookieManager.getSharedInstance(getContext());
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M &&
-                    EdxCookieManager.getSharedInstance().isSessionCookieMissingOrExpired()) {
-                EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
+                    cookieManager.isSessionCookieMissingOrExpired()) {
+                cookieManager.tryToRefreshSessionCookie();
             } else {
                 webView.loadUrl(unit.getBlockUrl(), map);
             }

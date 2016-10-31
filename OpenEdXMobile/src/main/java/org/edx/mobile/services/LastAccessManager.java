@@ -6,11 +6,12 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.http.callback.CallTrigger;
+import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.task.GetLastAccessedTask;
-import org.edx.mobile.task.SyncLastAccessedTask;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Sha1Util;
 
@@ -34,6 +35,9 @@ public class LastAccessManager {
     private final LoginPrefs loginPrefs;
 
     @Inject
+    private CourseAPI courseApi;
+
+    @Inject
     public LastAccessManager(@NonNull LoginPrefs loginPrefs) {
         this.loginPrefs = loginPrefs;
     }
@@ -43,36 +47,32 @@ public class LastAccessManager {
     }
 
     public void fetchLastAccessed(final LastAccessManagerCallback callback, final View view, final String courseId) {
-        try {
-            if (!callback.isFetchingLastAccessed()) {
-                final String username = loginPrefs.getUsername();
-                if (courseId != null && username != null) {
-                    final LastAccessedPrefManager prefManager = new LastAccessedPrefManager(MainApplication.instance(), username, courseId);
-                    final String prefModuleId = prefManager.getLastAccessedSubsectionId();
+        if (!callback.isFetchingLastAccessed()) {
+            final String username = loginPrefs.getUsername();
+            if (courseId != null && username != null) {
+                final LastAccessedPrefManager prefManager = new LastAccessedPrefManager(MainApplication.instance(), username, courseId);
+                final String prefModuleId = prefManager.getLastAccessedSubsectionId();
 
-                    logger.debug("Last Accessed Module ID from Preferences "
-                            + prefModuleId);
+                logger.debug("Last Accessed Module ID from Preferences "
+                        + prefModuleId);
 
-                    callback.showLastAccessedView(prefModuleId, courseId, view);
-                    GetLastAccessedTask getLastAccessedTask = new GetLastAccessedTask(MainApplication.instance(), courseId) {
-                        @Override
-                        public void onSuccess(SyncLastAccessedSubsectionResponse result) {
-                            syncWithServerOnSuccess(result, prefModuleId, prefManager, courseId, callback, view);
-                        }
+                callback.showLastAccessedView(prefModuleId, courseId, view);
+                courseApi.getLastAccessedSubsection(courseId).enqueue(
+                        new ErrorHandlingCallback<SyncLastAccessedSubsectionResponse>(
+                                MainApplication.instance(), CallTrigger.LOADING_CACHED) {
+                            @Override
+                            protected void onResponse(@NonNull final SyncLastAccessedSubsectionResponse result) {
+                                syncWithServerOnSuccess(result, prefModuleId, prefManager, courseId, callback, view);
+                            }
 
-                        @Override
-                        public void onException(Exception ex) {
-                            super.onException(ex);
-                            callback.setFetchingLastAccessed(false);
-                        }
-                    };
+                            @Override
+                            protected void onFailure(@NonNull Throwable error) {
+                                callback.setFetchingLastAccessed(false);
+                            }
+                        });
 
-                    callback.setFetchingLastAccessed(true);
-                    getLastAccessedTask.execute();
-                }
+                callback.setFetchingLastAccessed(true);
             }
-        } catch (Exception e) {
-            logger.error(e);
         }
     }
 
@@ -116,23 +116,19 @@ public class LastAccessManager {
                                             String prefModuleId,
                                             final String courseId,
                                             final LastAccessManagerCallback callback) {
-        try {
-            SyncLastAccessedTask syncLastAccessTask = new SyncLastAccessedTask(
-                    MainApplication.instance(), courseId, prefModuleId) {
-                @Override
-                public void onSuccess(SyncLastAccessedSubsectionResponse result) {
-                    if (result != null && result.getLastVisitedModuleId() != null) {
-                        prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
-                        logger.debug("Last Accessed Module ID from Server Sync "
-                                + result.getLastVisitedModuleId());
-                        callback.showLastAccessedView(result.getLastVisitedModuleId(), courseId, view);
+        courseApi.syncLastAccessedSubsection(courseId, prefModuleId).enqueue(
+                new ErrorHandlingCallback<SyncLastAccessedSubsectionResponse>(
+                        MainApplication.instance(), CallTrigger.LOADING_UNCACHED) {
+                    @Override
+                    protected void onResponse(@NonNull final SyncLastAccessedSubsectionResponse result) {
+                        if (result.getLastVisitedModuleId() != null) {
+                            prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
+                            logger.debug("Last Accessed Module ID from Server Sync "
+                                    + result.getLastVisitedModuleId());
+                            callback.showLastAccessedView(result.getLastVisitedModuleId(), courseId, view);
+                        }
                     }
-                }
-            };
-            syncLastAccessTask.execute();
-        } catch (Exception e) {
-            logger.error(e);
-        }
+                });
     }
 
     public void setLastAccessed(@NonNull String courseId, @NonNull String subsectionId) {

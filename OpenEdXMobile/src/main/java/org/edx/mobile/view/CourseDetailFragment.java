@@ -29,18 +29,16 @@ import com.google.inject.Inject;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
-import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
+import org.edx.mobile.course.CourseService;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.services.ServiceManager;
-import org.edx.mobile.task.EnrollForCourseTask;
-import org.edx.mobile.task.GetEnrolledCourseTask;
+import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -51,9 +49,11 @@ import java.util.List;
 
 import org.edx.mobile.base.BaseFragment;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 public class CourseDetailFragment extends BaseFragment {
 
@@ -87,6 +87,9 @@ public class CourseDetailFragment extends BaseFragment {
 
 
     protected final Logger logger = new Logger(getClass().getName());
+
+    @Inject
+    private CourseService courseService;
 
     @Inject
     private CourseAPI courseApi;
@@ -250,7 +253,7 @@ public class CourseDetailFragment extends BaseFragment {
         buff.append("</body>");
 
         courseAboutWebView.clearCache(true);
-        courseAboutWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", HTTP.UTF_8, null);
+        courseAboutWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", StandardCharsets.UTF_8.name(), null);
     }
 
     /**
@@ -285,10 +288,10 @@ public class CourseDetailFragment extends BaseFragment {
      * is then taken to the dashboard for target course.
      */
     private void configureEnrollButton() {
-        ServiceManager api = environment.getServiceManager();
         // This call should already be cached, if not, set button as if not enrolled.
         try {
-            List<EnrolledCoursesResponse> enrolledCoursesResponse = api.getEnrolledCourses(true);
+            List<EnrolledCoursesResponse> enrolledCoursesResponse =
+                    executeStrict(courseApi.getEnrolledCoursesFromCache());
             for (EnrolledCoursesResponse course : enrolledCoursesResponse) {
                 if (course.getCourse().getId().equals(courseDetail.course_id)) {
                     mEnrolled = true;
@@ -333,46 +336,49 @@ public class CourseDetailFragment extends BaseFragment {
             return;
         }
         environment.getAnalyticsRegistry().trackEnrollClicked(courseDetail.course_id, emailOptIn);
-        EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(getActivity(),
-                courseDetail.course_id, emailOptIn) {
-            @Override
-            public void onSuccess(Void result) {
-                mEnrolled = true;
-                logger.debug("Enrollment successful: " + courseDetail.course_id);
-                mEnrollButton.setText(R.string.view_course_button_text);
-                Toast.makeText(getContext(), R.string.you_are_now_enrolled, Toast.LENGTH_SHORT).show();
-
-                new Handler().post(new Runnable() {
+        courseService.enrollInACourse(new CourseService.EnrollBody(courseDetail.course_id, emailOptIn))
+                .enqueue(new CourseService.EnrollCallback(
+                        getActivity(),
+                        CallTrigger.USER_ACTION) {
                     @Override
-                    public void run() {
-                        GetEnrolledCourseTask getEnrolledCourseTask =
-                                new GetEnrolledCourseTask(getActivity(), courseDetail.course_id) {
+                    protected void onResponse(@NonNull final ResponseBody responseBody) {
+                        super.onResponse(responseBody);
+                        mEnrolled = true;
+                        logger.debug("Enrollment successful: " + courseDetail.course_id);
+                        mEnrollButton.setText(R.string.view_course_button_text);
+                        Toast.makeText(getActivity(), R.string.you_are_now_enrolled, Toast.LENGTH_SHORT).show();
+
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
+                                        getActivity(),
+                                        courseDetail.course_id,
+                                        CallTrigger.USER_ACTION) {
                                     @Override
-                                    public void onSuccess(EnrolledCoursesResponse course) {
+                                    protected void onResponse(@NonNull EnrolledCoursesResponse course) {
                                         environment.getRouter().showMyCourses(getActivity());
                                         environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), course, false);
                                     }
-                                };
-                        getEnrolledCourseTask.execute();
+                                });
+                            }
+                        });
+                    }
+
+                    @Override
+                    protected void onFailure(@NonNull final Throwable error) {
+                        Toast.makeText(getActivity(), R.string.enrollment_failure, Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-            @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
-                Toast.makeText(getContext(), R.string.enrollment_failure, Toast.LENGTH_SHORT).show();
-            }
-        };
-        enrollForCourseTask.execute();
     }
 
     /**
      * Open course dashboard for given course from the enrollments list cache.
      */
     private void openCourseDashboard() {
-        ServiceManager api = environment.getServiceManager();
         try {
-            List<EnrolledCoursesResponse> enrolledCoursesResponse = api.getEnrolledCourses(true);
+            List<EnrolledCoursesResponse> enrolledCoursesResponse =
+                    executeStrict(courseApi.getEnrolledCoursesFromCache());
             for (EnrolledCoursesResponse course : enrolledCoursesResponse) {
                 if (course.getCourse().getId().equals(courseDetail.course_id)) {
                     environment.getRouter().showMyCourses(getActivity());

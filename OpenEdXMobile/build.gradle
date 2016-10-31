@@ -247,8 +247,6 @@ android {
     compileSdkVersion 23
     buildToolsVersion BUILD_TOOLS_VERSION
 
-    useLibrary 'org.apache.http.legacy'
-
     dataBinding {
         enabled = true
     }
