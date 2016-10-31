@@ -51,12 +51,12 @@ class IDatabaseBaseImpl implements Runnable {
      * @param op
      * @return
      */
-    private synchronized <T extends Object> T execute(IDbOperation<?> op) {
+    private synchronized <T> T execute(IDbOperation<T> op) {
         // perform this database operation
         synchronized (helper) {
             T result;
             try {
-                result = (T) op.requestExecute(helper.getDatabase());
+                result = op.requestExecute(helper.getDatabase());
             } catch (SQLiteException e) {
                 /* Catch any SQLite exceptions thrown by the operation, or by the database creation
                  * or upgrade process invoked by the helper, deliver the exception to the callback,
@@ -64,7 +64,7 @@ class IDatabaseBaseImpl implements Runnable {
                  */
                 op.getCallback().sendException(e);
                 logger.error(e, true);
-                result = (T) op.getDefaultValue();
+                result = op.getDefaultValue();
             }
 
             return result;
@@ -80,7 +80,7 @@ class IDatabaseBaseImpl implements Runnable {
      *
      * @param operation
      */
-    public synchronized <T extends Object> T enqueue(IDbOperation<?> operation) {
+    public synchronized <T> T enqueue(IDbOperation<T> operation) {
         // execute right away if this operation doesn't have a callback to send back the result
         if (operation.getCallback() == null) {
             return execute(operation);
