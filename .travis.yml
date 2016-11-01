@@ -44,6 +44,7 @@ before_script:
   - echo "runtime.scalefactor=auto" >> $HOME/.android/avd/screenshotDevice.avd/config.ini
   # Boot up the emulator in the background
   - emulator -avd screenshotDevice -no-audio -no-window &
+  - android list sdk --all
 
 script:
 # --debug or --info info flag can be suffixed to following command for more detailed logs of tests
