@@ -11,6 +11,7 @@ import com.facebook.testing.screenshot.Screenshot;
 
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.test.EdxInstrumentationTestApplication;
+import org.edx.mobile.test.GenericSuperclassUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
