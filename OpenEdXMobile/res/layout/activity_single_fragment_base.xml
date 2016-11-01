@@ -54,13 +54,8 @@
 
                     </RelativeLayout>
 
-                    <fragment
-                        android:name="org.edx.mobile.view.LogInSignUpFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:tag="org.edx.mobile.view.LogInSignUpFragment" />
-
-                </LinearLayout>
+                <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
+            </LinearLayout>
 
                 <TextView
                     android:id="@+id/flying_message"

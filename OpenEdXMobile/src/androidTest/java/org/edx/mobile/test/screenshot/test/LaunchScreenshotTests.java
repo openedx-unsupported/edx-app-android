@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.facebook.testing.screenshot.Screenshot;
 
-import org.edx.mobile.R;
 import org.edx.mobile.view.LaunchActivity;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class LaunchScreenshotTests {
 
     @Test
     public void testScreenshot_recordLaunchActivity() throws Throwable {
-        View view = mActivityRule.getActivity().findViewById(R.id.root_view);
+        View view = mActivityRule.getActivity().findViewById(android.R.id.content);
         Screenshot.snap(view).record();
     }
 }

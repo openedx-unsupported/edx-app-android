@@ -17,7 +17,6 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         environment.getSegment().trackScreenView(ISegment.Screens.COURSE_INFO_SCREEN);
     }
 
@@ -31,6 +30,12 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
         WebView webview = (WebView) findViewById(R.id.webview);
         webview.loadUrl(url);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
     }
 
     @Override

@@ -5,8 +5,7 @@ import android.support.annotation.NonNull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public enum GenericSuperclassUtils {
-    ;
+public abstract class GenericSuperclassUtils {
 
     @NonNull
     public static <T extends V, V> Type[] getTypeArguments(@NonNull Class<T> clazz, @NonNull Class<V> superclass) {

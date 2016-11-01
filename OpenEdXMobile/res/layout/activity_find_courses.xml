@@ -40,11 +40,7 @@
 
         </RelativeLayout>
 
-        <fragment
-            android:name="org.edx.mobile.view.LogInSignUpFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:tag="org.edx.mobile.view.LogInSignUpFragment" />
+        <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
     </LinearLayout>
 
     <include layout="@layout/navigation_drawer_container" />
