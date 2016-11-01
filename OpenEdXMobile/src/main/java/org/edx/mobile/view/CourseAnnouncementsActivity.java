@@ -45,8 +45,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
         //check courseData again, it may be fetched from local cache
         if ( courseData != null ) {
             activityTitle = courseData.getCourse().getName();
-
-            environment.getSegment().trackScreenView(courseData.getCourse().getName());
         } else {
 
             boolean handleFromNotification = handleIntentFromNotification();

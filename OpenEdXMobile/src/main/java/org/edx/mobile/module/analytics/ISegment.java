@@ -266,7 +266,6 @@ public interface ISegment {
         String MY_VIDEOS_RECENT = "My Videos - Recent Videos";
         String MY_COURSES = "My Courses";
         String SETTINGS = "Settings";
-
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
         String FORUM_SEARCH_THREADS = "Forum: Search Threads";
         String FORUM_VIEW_TOPIC_THREADS = "Forum: View Topic Threads";
