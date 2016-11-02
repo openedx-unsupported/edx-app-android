@@ -255,6 +255,8 @@ public interface ISegment {
         String LAUNCH_ACTIVITY = "Launch";
         String COURSE_DASHBOARD = "Course Dashboard";
         String COURSE_OUTLINE = "Course Outline";
+        String COURSE_HANDOUTS = "Course Handouts";
+        String COURSE_ANNOUNCEMENTS = "Course Announcements";
         String SECTION_OUTLINE = "Section Outline";
         String UNIT_DETAIL = "Unit Detail";
         String CERTIFICATE = "Certificate";

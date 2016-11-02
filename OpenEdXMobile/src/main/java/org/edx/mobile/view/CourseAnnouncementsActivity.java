@@ -13,6 +13,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
 
 
 public class CourseAnnouncementsActivity extends BaseFragmentActivity {
@@ -43,8 +44,12 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
                 .getSerializable(Router.EXTRA_COURSE_DATA);
 
         //check courseData again, it may be fetched from local cache
-        if ( courseData != null ) {
+        if (courseData != null) {
             activityTitle = courseData.getCourse().getName();
+            environment.getSegment().trackScreenView(
+                    ISegment.Screens.COURSE_ANNOUNCEMENTS,
+                    courseData.getCourse().getId(),
+                    null);
         } else {
 
             boolean handleFromNotification = handleIntentFromNotification();
@@ -62,20 +67,20 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     /**
      * @return <code>true</code> if handle intent from notification successfully
      */
-    private boolean handleIntentFromNotification(){
-        if ( bundle != null ){
+    private boolean handleIntentFromNotification() {
+        if (bundle != null) {
             String courseId = bundle.getString(Router.EXTRA_COURSE_ID);
             //this is from notification
-            if (!TextUtils.isEmpty(courseId)){
-                try{
+            if (!TextUtils.isEmpty(courseId)) {
+                try {
                     bundle.remove(Router.EXTRA_COURSE_ID);
                     courseData = api.getCourseById(courseId);
-                    if (courseData != null && courseData.getCourse() != null ) {
+                    if (courseData != null && courseData.getCourse() != null) {
                         bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
                         activityTitle = courseData.getCourse().getName();
                         return true;
                     }
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     logger.error(ex);
                 }
             }
@@ -97,8 +102,8 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
             offlineBar.setVisibility(View.VISIBLE);
         }
 
-        for (Fragment fragment : getSupportFragmentManager().getFragments()){
-            if (fragment instanceof NetworkObserver){
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof NetworkObserver) {
                 ((NetworkObserver) fragment).onOffline();
             }
         }
@@ -117,8 +122,8 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
             offlineBar.setVisibility(View.GONE);
         }
 
-        for (Fragment fragment : getSupportFragmentManager().getFragments()){
-            if (fragment instanceof NetworkObserver){
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof NetworkObserver) {
                 ((NetworkObserver) fragment).onOnline();
             }
         }
@@ -135,7 +140,7 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             try {
 
                 fragment = new CourseCombinedInfoFragment();

@@ -58,6 +58,7 @@ public class CourseHandoutFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        segIO.trackScreenView(ISegment.Screens.COURSE_HANDOUTS, courseData.getCourse().getId(), null);
     }
 
     @Override
