@@ -154,10 +154,6 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
      */
     @Override
     public final void onResponse(@NonNull final Call<T> call, @NonNull final Response<T> response) {
-        if (1 == 1) {
-            onFailure(call, new IOException());
-            return;
-        }
         if (!response.isSuccessful()) {
             onFailure(call, new HttpStatusException(response));
         } else {
