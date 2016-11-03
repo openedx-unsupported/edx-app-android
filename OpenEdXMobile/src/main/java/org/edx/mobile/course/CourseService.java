@@ -6,16 +6,14 @@ import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.event.EnrolledInCourseEvent;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseStructureV1Model;
-import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.Date;
@@ -172,28 +170,13 @@ public interface CourseService {
     }
 
     class EnrollCallback extends ErrorHandlingCallback<ResponseBody> {
-        public EnrollCallback(@NonNull final Context context,
-                              @NonNull final CallTrigger type) {
-            super(context, type);
+        public EnrollCallback(@NonNull final Context context) {
+            super(context);
         }
 
         public EnrollCallback(@NonNull final Context context,
-                              @NonNull final CallTrigger type,
                               @Nullable final TaskProgressCallback progressCallback) {
-            super(context, type, progressCallback);
-        }
-
-        public EnrollCallback(@NonNull final Context context,
-                              @NonNull final CallTrigger type,
-                              @Nullable final TaskMessageCallback messageCallback) {
-            super(context, type, messageCallback);
-        }
-
-        public EnrollCallback(@NonNull final Context context,
-                              @NonNull final CallTrigger type,
-                              @Nullable final TaskProgressCallback progressCallback,
-                              @Nullable final TaskMessageCallback messageCallback) {
-            super(context, type, progressCallback, messageCallback);
+            super(context, progressCallback);
         }
 
         @Override

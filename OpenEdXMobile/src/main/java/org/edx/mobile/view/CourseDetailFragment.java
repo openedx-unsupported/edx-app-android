@@ -35,7 +35,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.course.CourseService;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
@@ -337,9 +336,7 @@ public class CourseDetailFragment extends BaseFragment {
         }
         environment.getAnalyticsRegistry().trackEnrollClicked(courseDetail.course_id, emailOptIn);
         courseService.enrollInACourse(new CourseService.EnrollBody(courseDetail.course_id, emailOptIn))
-                .enqueue(new CourseService.EnrollCallback(
-                        getActivity(),
-                        CallTrigger.USER_ACTION) {
+                .enqueue(new CourseService.EnrollCallback(getActivity()) {
                     @Override
                     protected void onResponse(@NonNull final ResponseBody responseBody) {
                         super.onResponse(responseBody);
@@ -353,8 +350,7 @@ public class CourseDetailFragment extends BaseFragment {
                             public void run() {
                                 courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
                                         getActivity(),
-                                        courseDetail.course_id,
-                                        CallTrigger.USER_ACTION) {
+                                        courseDetail.course_id) {
                                     @Override
                                     protected void onResponse(@NonNull EnrolledCoursesResponse course) {
                                         environment.getRouter().showMyCourses(getActivity());

@@ -35,7 +35,6 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TimePeriod;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.OverlayErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
@@ -456,8 +455,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         createNewPostLayout.setVisibility(View.GONE);
 
         discussionService.getCourseDiscussionInfo(courseData.getCourse().getId())
-                .enqueue(new ErrorHandlingCallback<CourseDiscussionInfo>(
-                        getContext(), CallTrigger.LOADING_UNCACHED, null, null) {
+                .enqueue(new ErrorHandlingCallback<CourseDiscussionInfo>(getContext(), null, null) {
                     @Override
                     public void onFailure(@NonNull Call<CourseDiscussionInfo> call, @NonNull Throwable t) {
                         markAsBlackedOut(false);

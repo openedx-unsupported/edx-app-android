@@ -114,8 +114,7 @@ public class ResetPasswordDialogFragment extends RoboDialogFragment {
             setUiForInteraction(false);
             binding.emailInputLayout.setError(null);
             resetCall = loginService.resetPassword(email);
-            resetCall.enqueue(new ErrorHandlingCallback<ResetPasswordResponse>(
-                    getContext(), CallTrigger.USER_ACTION) {
+            resetCall.enqueue(new ErrorHandlingCallback<ResetPasswordResponse>(getContext()) {
                 @Override
                 protected void onResponse(@NonNull final ResetPasswordResponse result) {
                     setUiForInteraction(true);
