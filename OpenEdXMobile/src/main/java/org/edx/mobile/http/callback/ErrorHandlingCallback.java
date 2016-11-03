@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.ErrorNotification;
-import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.io.IOException;
@@ -49,31 +48,6 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
     /**
      * Create a new instance of this class.
      *
-     * @param context A Context for resolving the error message strings.
-     * @param callTrigger The trigger for initiating the call. This is used to determine the type of
-     *                    error message to deliver.
-     * @param progressCallback The callback to invoke on start and finish of the request. Note that
-     *                         since no callback method in this class is invoked upon request
-     *                         initiation, it assumes that it's being initiated immediately, and
-     *                         thus invokes that start callback immediately as well.
-     * @param messageCallback The callback to invoke for delivering any error messages.
-     */
-    public ErrorHandlingCallback(@NonNull final Context context,
-                                 @NonNull final CallTrigger callTrigger,
-                                 @Nullable final TaskProgressCallback progressCallback,
-                                 @Nullable final TaskMessageCallback messageCallback) {
-        this.context = context;
-        this.progressCallback = progressCallback;
-        // For the convenience of subclasses
-        RoboGuice.injectMembers(context, this);
-        if (progressCallback != null) {
-            progressCallback.startProcess();
-        }
-    }
-
-    /**
-     * Create a new instance of this class.
-     *
      * @param context A Context for resolving the error message strings. Note that for convenience,
      *                this will be checked to determine whether it's implementing the
      *                {@link TaskProgressCallback} interface, and will be registered as such if so.
@@ -84,7 +58,7 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
      */
     public ErrorHandlingCallback(@NonNull final Context context) {
         this(context, context instanceof TaskProgressCallback ?
-                (TaskProgressCallback) context : null,
+                        (TaskProgressCallback) context : null,
                 null);
     }
 
@@ -143,9 +117,9 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
      * the implementation to manually check for success in each case). Therefore this implementation
      * delegates to {@link #onResponse(Object)} in the case where it receives a successful HTTP
      * status code, and to {@link #onFailure(Call, Throwable)} otherwise, passing an instance of
-     * {@link HttpStatusException} with the relevant error status code. This method is declared as
-     * final, as subclasses are meant to be implementing the abstract {@link #onResponse(Object)}
-     * method instead of this one.
+     * {@link HttpStatusException} with the relevant error status code. This method is
+     * declared as final, as subclasses are meant to be implementing the abstract
+     * {@link #onResponse(Object)} method instead of this one.
      * <p>
      * This implementation takes care of invoking the callback for request process completion.
      *
@@ -170,7 +144,7 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
      * unexpected error while constructing the request or processing the response. It's also invoked
      * by the {@link #onResponse(Call, Response)} implementation when it receives an HTTP error
      * status code. However, this method definition provides extra information that's not needed by
-     * most individual callback implementations, so this implementation only delegates to
+     * most individual callback implementation, so this implementation only delegates to
      * {@link #onFailure(Throwable)}.
      * <p>
      * This implementation takes care of delivering the appropriate error message to it's registered

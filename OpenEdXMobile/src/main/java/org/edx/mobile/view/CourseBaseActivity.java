@@ -14,7 +14,6 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -110,7 +109,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
             final String courseId = courseData.getCourse().getId();
             getHierarchyCall = courseApi.getCourseStructure(courseId);
             getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
-                    CallTrigger.LOADING_CACHED, new ProgressViewController(progressWheel)) {
+                    new ProgressViewController(progressWheel)) {
                 @Override
                 protected void onResponse(@NonNull final CourseComponent courseComponent) {
                     courseComponentId = courseComponent.getId();

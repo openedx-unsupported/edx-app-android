@@ -24,7 +24,6 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
@@ -242,7 +241,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         courseService.enrollInACourse(new CourseService.EnrollBody(courseId, emailOptIn))
                 .enqueue(new CourseService.EnrollCallback(
                         FindCoursesBaseActivity.this,
-                        CallTrigger.USER_ACTION,
                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                     @Override
                     protected void onResponse(@NonNull final ResponseBody responseBody) {
@@ -256,7 +254,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
                                 courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
                                         FindCoursesBaseActivity.this,
                                         courseId,
-                                        CallTrigger.USER_ACTION,
                                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                                     @Override
                                     protected void onResponse(@NonNull final EnrolledCoursesResponse course) {

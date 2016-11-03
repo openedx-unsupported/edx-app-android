@@ -27,7 +27,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.DrawerNavigationBinding;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
@@ -90,12 +89,7 @@ public class NavigationFragment extends BaseFragment {
                     getActivity(),
                     profile.username,
                     null, // Disable global loading indicator
-                    new SnackbarErrorNotification(
-                            /* Since this Fragment's view hasn't been
-                             * initialized yet, we'll use the Activity's content
-                             * view to give to the Snackbar.
-                             */
-                            getActivity().findViewById(android.R.id.content))));
+                    null)); // No place to show an error notification
         }
         EventBus.getDefault().register(this);
     }
