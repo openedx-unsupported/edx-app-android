@@ -5,12 +5,12 @@ buildscript {
         mavenCentral()  //  This is the Maven Central repo
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.2'
     }
 }
 
 project.ext {
-    BUILD_TOOLS_VERSION = "23.0.3"
+    BUILD_TOOLS_VERSION = "25.0.0"
 
     // dummy keystore configuration if not already defined
     if ( !project.properties.containsKey("RELEASE_STORE_FILE")) {
