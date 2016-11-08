@@ -496,7 +496,7 @@
     <!-- Text shown while waiting for registration request -->
     <string name="creating_account_text">Creating account...</string>
     <!-- Registration screen title -->
-    <string name="register_title">Sign up for {platform_name}</string>
+    <string name="register_title">Register</string>
     <!-- Text for successful registration with social token  -->
     <string name="sign_up_with_facebook_ok">You’ve successfully signed in with Facebook.</string>
     <string name="sign_up_with_google_ok">You’ve successfully signed in with Google.</string>
