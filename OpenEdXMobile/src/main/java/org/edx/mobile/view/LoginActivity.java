@@ -266,7 +266,8 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     }
 
     @Override
-    public boolean createOptionsMenu(Menu menu) {
+    protected void onResume() {
+        super.onResume();
         if (!environment.getConfig().isRegistrationEnabled()) {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
@@ -275,7 +276,6 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
                 actionBar.setDisplayShowHomeEnabled(false);
             }
         }
-        return false;
     }
 
     /**
