@@ -1,12 +1,13 @@
 package org.edx.mobile.base;
 
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +30,7 @@ import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
+import org.edx.mobile.interfaces.OnActivityResultListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
@@ -42,7 +44,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
-        implements NetworkSubject, ICommonUI {
+        implements NetworkSubject, ICommonUI, OnActivityResultListener {
 
     private MenuItem offlineMenuItem;
     protected ActionBarDrawerToggle mDrawerToggle;
@@ -554,11 +556,11 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    public void showErrorDialog(@Nullable String title, @NonNull String message) {
-        showErrorDialog(title, message, null);
+    public void showAlertDialog(@Nullable String title, @NonNull String message) {
+        showAlertDialog(title, message, null);
     }
 
-    public void showErrorDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
+    public void showAlertDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
         AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
     }
 
@@ -567,4 +569,14 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>To conform with the {@link OnActivityResultListener} interface this function has been
+     * implemented emptily, making it publicly accessible.</p>
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

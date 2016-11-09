@@ -257,7 +257,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
         footer.courseNotListedTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getRouter().showWebViewDialog((getActivity()), getString(R.string.course_not_listed_file_name), null);
+                environment.getRouter().showWebViewActivity((getActivity()), getString(R.string.course_not_listed_file_name), null);
             }
         });
     }

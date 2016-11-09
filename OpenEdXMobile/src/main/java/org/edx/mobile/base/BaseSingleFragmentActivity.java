@@ -150,7 +150,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
                 this.hideMessageInSitu();
                 break;
             case DIALOG:
-                this.showErrorDialog(null, message);
+                this.showAlertDialog(null, message);
         }
     }
 
