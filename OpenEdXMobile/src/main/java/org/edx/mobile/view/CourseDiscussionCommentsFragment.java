@@ -188,9 +188,6 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Override
     public void reportComment(@NonNull DiscussionComment comment) {
-        if (setCommentFlaggedCall != null) {
-            setCommentFlaggedCall.cancel();
-        }
         setCommentFlaggedCall = discussionService.setCommentFlagged(
                 comment.getIdentifier(), new FlagBody(!comment.isAbuseFlagged()));
         setCommentFlaggedCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
