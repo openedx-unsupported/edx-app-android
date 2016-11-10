@@ -34,32 +34,19 @@ before_script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR | jq -r .head.ref`; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH, DESCRIBE=$DESCRIBE"
   - chmod +x gradlew
-  # ARM architecture is used instead of x86 (which is 10x faster) of the lack of support from CI due
-  # to complications of creating a virtual machine within a virtual machine. This may be solved
-  # eventually and would significantly speed some things up.
-  # Create the AVD for screenshot tests
-  - android create avd --force --name screenshotDevice --target android-21 --abi armeabi-v7a --device "Nexus 4" --skin 768x1280 --sdcard 250M
-  - echo "runtime.scalefactor=auto" >> $HOME/.android/avd/screenshotDevice.avd/config.ini
-  # Boot up the emulator in the background
-  - emulator -avd screenshotDevice -no-audio -no-window &
+  # Begin spinning up an emulator in the background
+  - make emulator
 
 script:
-# --debug or --info info flag can be suffixed to following command for more detailed logs of tests
-# It comes in handy to see stacktraces from test failures, which otherwise aren't printed
-# P.S. --debug flag prints too many logs that are mostly not needed, which make it exceed the
-#      4mb limit enforced by travis (so use it with caution)
-  - ./gradlew lintProdDebug
-  - ./gradlew copyLintBuildArtifacts
-  - ./gradlew testProdDebugUnitTestCoverage
-  - ./gradlew copyUnitTestBuildArtifacts
-
+  - make quality
+  - make test
+  # Check if emulator has finished booting
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
-  # Run screenshot tests and compare them against screenshots in PR
-  - ./gradlew verifyMode screenshotTests -PdisablePreDex
+  - make e2e
 
 after_script:
-  - ./gradlew recordMode pullScreenshots -PdisablePreDex
+  - make artifacts
   - mv OpenEdXMobile/screenshots artifacts/
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
   - ~/bin/artifacts upload artifacts
