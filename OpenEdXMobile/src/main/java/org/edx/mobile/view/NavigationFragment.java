@@ -42,7 +42,6 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import java.util.HashMap;
@@ -94,7 +93,8 @@ public class NavigationFragment extends BaseFragment {
                     getActivity(),
                     profile.username,
                     CallTrigger.LOADING_UNCACHED,
-                    (TaskProgressCallback) null)); // Disable global loading indicator
+                    null, // Disable global loading indicator
+                    null)); // Disable global error message overlay
         }
         EventBus.getDefault().register(this);
     }
