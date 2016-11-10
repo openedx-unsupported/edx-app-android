@@ -1,5 +1,5 @@
 SHELL := /usr/bin/env bash
-.PHONY: help requirements clean emulator test e2e
+.PHONY: help requirements clean emulator quality test validate e2e artifacts
 
 help :
 	@echo ''
@@ -9,8 +9,11 @@ help :
 	@echo '    make clean           remove artifacts from previous usage'
 	@echo '    make requirements    install python requirements'
 	@echo '    make emulator        create and initialize an android emulator'
-	@echo '    make test            run all local tests (linting, unit tests)'
+	@echo '    make quality         check coding style'
+	@echo '    make test            run unit tests'
+	@echo '    make validate        run all local tests (linting, unit tests)'
 	@echo '    make e2e             run all emulator tests (e2e, screenshot tests)'
+	@echo '    make artifacts       gather artifacts from testing (reports, screenhsots)'
 	@echo 'Requirements:'
 	@echo '    You must have the `tools` directory in the Android SDK available'
 	@echo '    in your path'
@@ -24,7 +27,7 @@ clean :
 
 requirements :
 	@echo 'Installing python requirements'
-	@pip install --user -r requirements.txt --exists-action w
+	@pip install -r requirements.txt --exists-action w
 
 emulator :
 	@echo 'Creating and initializing an Android emulator for testing the app'
@@ -45,12 +48,18 @@ emulator :
 # stacktraces from test failures, which otherwise aren't printed. P.S. --debug
 # flag prints too many logs that are mostly not needed, which make it exceed
 # the 4mb limit enforced by travis (so use it with caution)
-test:
+quality:
 	@./gradlew lintProdDebug
-	@./gradlew copyLintBuildArtifacts
+
+test:
 	@./gradlew testProdDebugUnitTestCoverage
-	@./gradlew copyUnitTestBuildArtifacts
+
+validate: quality test
 
 e2e :
 	@./gradlew verifyMode screenshotTests -PdisablePreDex
+
+artifacts:
+	@./gradlew copyLintBuildArtifacts
+	@./gradlew copyUnitTestBuildArtifacts
 	@./gradlew recordMode pullScreenshots -PdisablePreDex

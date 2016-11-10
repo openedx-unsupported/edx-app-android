@@ -34,10 +34,11 @@ before_script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR | jq -r .head.ref`; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH, DESCRIBE=$DESCRIBE"
   - chmod +x gradlew
-  # Beging spinning up an emulator in the background
+  # Begin spinning up an emulator in the background
   - make emulator
 
 script:
+  - make quality
   - make test
   # Check if emulator has finished booting
   - android-wait-for-emulator
@@ -45,6 +46,7 @@ script:
   - make e2e
 
 after_script:
+  - make artifacts
   - mv OpenEdXMobile/screenshots artifacts/
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
   - ~/bin/artifacts upload artifacts
