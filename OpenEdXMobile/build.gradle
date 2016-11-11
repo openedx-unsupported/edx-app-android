@@ -425,7 +425,9 @@ screenshots {
     connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
 }
 
-// Google suggests to add this at the bottom https://developers.google.com/android/guides/google-services-plugin
+// Google suggests to add this at the bottom
+// https://developers.google.com/android/guides/google-services-plugin
+// If plugin is applied, Google Firebase will send out of box events automatically.
 if (config.get('GOOGLE_FIREBASE')) {
     apply plugin: 'com.google.gms.google-services'
 }
