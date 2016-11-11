@@ -15,8 +15,8 @@ public class NavigationDrawerInteractor {
         return new NavigationDrawerInteractor();
     }
 
-    public LogInScreenInteractor logOut() {
+    public LandingScreenInteractor logOut() {
         onView(withText(R.string.logout)).perform(click());
-        return new LogInScreenInteractor();
+        return new LandingScreenInteractor();
     }
 }

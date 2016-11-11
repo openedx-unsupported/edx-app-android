@@ -12,6 +12,7 @@ public class LogInFeatureTest extends FeatureTest {
                 .launchApp()
                 .observeLandingScreen()
                 .navigateToLogInScreen()
+                .observeLogInScreen()
                 .logIn(TestValues.ACTIVE_USER_CREDENTIALS)
                 .observeMyCoursesScreen();
     }
