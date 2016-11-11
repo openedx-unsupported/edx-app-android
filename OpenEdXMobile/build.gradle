@@ -129,9 +129,9 @@ dependencies {
     compile project (':android-iconify-fontawesome')
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.facebook.android:facebook-android-sdk:3.23.1'
-    compile 'com.google.android.gms:play-services-plus:9.4.0'
-    compile 'com.google.android.gms:play-services-analytics:9.4.0'
-    compile 'com.google.android.gms:play-services-auth:9.4.0'
+    compile 'com.google.android.gms:play-services-plus:9.8.0'
+    compile 'com.google.android.gms:play-services-analytics:9.8.0'
+    compile 'com.google.android.gms:play-services-auth:9.8.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'de.greenrobot:eventbus:2.4.1'
     compile 'com.squareup.phrase:phrase:1.1.0'
@@ -158,6 +158,9 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+
+    // Google Firebase
+    compile 'com.google.firebase:firebase-core:9.8.0'
 
     // Segment Library
     compile('com.segment.analytics.android:analytics-core:3.4.0@aar') {
@@ -220,9 +223,9 @@ configurations {
     androidTestCompile.exclude group: 'javax.inject'
     androidTestCompile.exclude group: 'javax.annotation'
 }
+def config = new TaskHelper().loadConfig(project)
 
 android {
-    def config = new TaskHelper().loadConfig(project)
 
     signingConfigs {
         releasekey {
@@ -367,6 +370,8 @@ android {
         }
 
         release {
+            minifyEnabled = true
+            shrinkResources = true
             signingConfig signingConfigs.releasekey
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
@@ -403,7 +408,6 @@ android.applicationVariants.all { variant ->
     def configureTask = project.task(taskName) << {
         def taskHelper = new TaskHelper()
         def helper = new AndroidHelper()
-        def config = taskHelper.loadConfig(project)
         helper.saveProcessedConfig(project, config)
     }
     def generateTask = project.tasks.getByName("generate" + variantName + "Resources")
@@ -419,4 +423,9 @@ android.applicationVariants.all { variant ->
 screenshots {
     testApkTarget = 'packageProdDebuggableAndroidTest'
     connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
+}
+
+// Google suggests to add this at the bottom https://developers.google.com/android/guides/google-services-plugin
+if (config.get('GOOGLE_FIREBASE')) {
+    apply plugin: 'com.google.gms.google-services'
 }
