@@ -9,6 +9,8 @@ import com.segment.analytics.Analytics;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+import com.segment.analytics.android.integrations.google.analytics.GoogleAnalyticsIntegration;
+import com.segment.analytics.integrations.Integration;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -28,7 +30,6 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
 
     @Inject
     public ISegmentTrackerImpl(Context context, Config config) {
-        try {
             this.config = config;
             String writeKey = config.getSegmentConfig().getSegmentWriteKey();
             boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
@@ -38,22 +39,20 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
             // Must be called before any calls to Analytics.with(context)
             // Now Analytics.with will return the custom instance
 
+            Options defaultOptions = new Options().setIntegration("Heap", false);
+
             if (writeKey != null) {
                 logger.debug("SegmentTracker created with write key: " + writeKey);
                 // Now Analytics.with will return the custom instance
                 analytics = new Analytics.Builder(context, writeKey)
-                        .flushQueueSize(queueSize)
+                        .use(GoogleAnalyticsIntegration.FACTORY)
+                        .flushQueueSize(1)
                         .flushInterval(flushInterval, TimeUnit.SECONDS)
                         .logLevel(debugging ? Analytics.LogLevel.VERBOSE : Analytics.LogLevel.NONE)
                         .build();
             } else {
                 logger.warn("writeKey is null, Segment analytics will not work.");
             }
-        } catch(RuntimeException ex) {
-            logger.error(ex);
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
     }
 
     /**

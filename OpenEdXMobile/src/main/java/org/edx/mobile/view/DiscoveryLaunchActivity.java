@@ -25,6 +25,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     protected DiscoveryLaunchPresenter.ViewInterface createView(@Nullable Bundle savedInstanceState) {
         final ActivityDiscoveryLaunchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_discovery_launch);
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
+        environment.getSegment().trackScreenView("Another Invalid Key event");
         AuthPanelUtils.setAuthPanelVisible(true, binding.authPanel, environment);
         return new DiscoveryLaunchPresenter.ViewInterface() {
             @Override

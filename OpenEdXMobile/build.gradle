@@ -129,9 +129,13 @@ dependencies {
     compile project (':android-iconify-fontawesome')
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.facebook.android:facebook-android-sdk:3.23.1'
+
+    // All google services need to be pinned at the same version
     compile 'com.google.android.gms:play-services-plus:9.4.0'
-    compile 'com.google.android.gms:play-services-analytics:9.4.0'
+    compile 'com.google.android.gms:play-services-analytics:9.4.0' // Segment GA is pinned at 9.4.0
     compile 'com.google.android.gms:play-services-auth:9.4.0'
+    compile 'com.google.firebase:firebase-core:9.4.0'
+
     compile 'com.google.code.gson:gson:2.7'
     compile 'de.greenrobot:eventbus:2.4.1'
     compile 'com.squareup.phrase:phrase:1.1.0'
@@ -159,11 +163,15 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 06d167e... confusion
     // Segment Library
-    compile('com.segment.analytics.android:analytics-core:3.4.0@aar') {
-        transitive = true
-    }
-    compile('com.segment.analytics.android:analytics-integration-google-analytics:3.4.0@aar') {
+//    compile fileTree(dir: 'analytics-android', include: ['analytics'])
+    compile project (':analytics')
+
+    compile('com.segment.analytics.android.integrations:google-analytics:1.1.2') {
         exclude module: 'play-services-analytics'
         transitive = true
     }
