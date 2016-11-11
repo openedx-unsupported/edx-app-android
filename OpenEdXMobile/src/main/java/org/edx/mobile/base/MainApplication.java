@@ -132,7 +132,7 @@ public abstract class MainApplication extends MultiDexApplication {
     }
 
     public Injector getInjector() {
-        return injector;
+        return RoboGuice.getInjector(this.getApplicationContext());
     }
 
     @NonNull
