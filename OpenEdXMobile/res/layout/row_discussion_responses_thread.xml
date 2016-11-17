@@ -57,8 +57,6 @@
 
     </LinearLayout>
 
-    <View style="@style/light_gray_separator" />
-
     <include layout="@layout/discussion_response_action_bar_layout" />
 
 </LinearLayout>

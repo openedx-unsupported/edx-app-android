@@ -5,6 +5,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 
@@ -30,6 +32,9 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
 
     @Inject
     private Config config;
+
+    @Inject
+    private LoginPrefs loginPrefs;
 
     @NonNull
     private final Context context;
@@ -111,6 +116,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         final ResponseOrCommentViewHolder holder = (ResponseOrCommentViewHolder) viewHolder;
         final DiscussionComment discussionComment;
         final IconDrawable iconDrawable;
+
         if (position == 0) {
             discussionComment = response;
 
@@ -123,7 +129,6 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
                     .colorRes(context, R.color.edx_brand_gray_base);
             holder.discussionCommentCountReportTextView.setOnClickListener(null);
             holder.discussionCommentCountReportTextView.setClickable(false);
-
         } else {
             holder.authorLayoutViewHolder.answerTextView.setVisibility(View.GONE);
             discussionComment = discussionComments.get(position - 1);
@@ -131,14 +136,20 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_flag)
                     .sizeRes(context, R.dimen.edx_small)
                     .colorRes(context, discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
-            holder.discussionCommentCountReportTextView.setText(discussionComment.isAbuseFlagged() ? context.getString(R.string.discussion_responses_reported_label) : context.getString(R.string.discussion_responses_report_label));
-            holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_brand_gray_base));
 
-            holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(final View v) {
-                    listener.reportComment(discussionComment);
-                }
-            });
+            if (TextUtils.equals(loginPrefs.getUsername(), discussionComment.getAuthor())) {
+                holder.discussionCommentCountReportTextView.setVisibility(View.GONE);
+            } else {
+                holder.discussionCommentCountReportTextView.setVisibility(View.VISIBLE);
+                holder.discussionCommentCountReportTextView.setText(discussionComment.isAbuseFlagged() ? context.getString(R.string.discussion_responses_reported_label) : context.getString(R.string.discussion_responses_report_label));
+                holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_brand_gray_base));
+
+                holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(final View v) {
+                        listener.reportComment(discussionComment);
+                    }
+                });
+            }
         }
 
         holder.authorLayoutViewHolder.populateViewHolder(config, discussionComment,
