@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/discussion_actions_bar"
     style="@style/discussion_responses_nested_card_layout"
     android:layout_height="@dimen/discussion_responses_secondary_actions_bar_height"
     tools:showIn="@layout/row_discussion_responses_response">
@@ -71,4 +72,8 @@
             style="@style/discussion_responses_small_text"
             android:text="@string/discussion_responses_report_label" />
     </LinearLayout>
+
+    <View
+        style="@style/light_gray_separator"
+        android:layout_gravity="top" />
 </FrameLayout>

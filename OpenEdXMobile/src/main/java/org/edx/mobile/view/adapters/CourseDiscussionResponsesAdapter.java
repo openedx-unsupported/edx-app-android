@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.http.ErrorHandlingCallback;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -57,6 +59,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     @Inject
     private DiscussionService discussionService;
+
+    @Inject
+    private LoginPrefs loginPrefs;
 
     @NonNull
     private final Context context;
@@ -164,29 +169,33 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     "cohort", groupName));
         }
 
-        bindSocialView(holder.socialLayoutViewHolder, discussionThread);
-
         bindNumberResponsesView(holder.numberResponsesViewHolder);
 
-        holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                discussionService.setThreadFlagged(discussionThread.getIdentifier(),
-                        new FlagBody(!discussionThread.isAbuseFlagged()))
-                        .enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                                context,
-                                CallTrigger.USER_ACTION,
-                                (TaskProgressCallback) null) {
-                            @Override
-                            protected void onResponse(@NonNull final DiscussionThread topicThread) {
-                                discussionThread = discussionThread.patchObject(topicThread);
-                                notifyItemChanged(0);
-                                EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
-                            }
-                        });
-            }
-        });
+        if (TextUtils.equals(loginPrefs.getUsername(), discussionThread.getAuthor())) {
+            holder.actionsBar.setVisibility(View.GONE);
+        } else {
+            holder.actionsBar.setVisibility(View.VISIBLE);
 
-        holder.discussionReportViewHolder.setReported(discussionThread.isAbuseFlagged());
+            bindSocialView(holder.socialLayoutViewHolder, discussionThread);
+            holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
+                public void onClick(final View v) {
+                    discussionService.setThreadFlagged(discussionThread.getIdentifier(),
+                            new FlagBody(!discussionThread.isAbuseFlagged()))
+                            .enqueue(new ErrorHandlingCallback<DiscussionThread>(
+                                    context,
+                                    CallTrigger.USER_ACTION,
+                                    (TaskProgressCallback) null) {
+                                @Override
+                                protected void onResponse(@NonNull final DiscussionThread topicThread) {
+                                    discussionThread = discussionThread.patchObject(topicThread);
+                                    notifyItemChanged(0);
+                                    EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                                }
+                            });
+                }
+            });
+            holder.discussionReportViewHolder.setReported(discussionThread.isAbuseFlagged());
+        }
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
@@ -310,29 +319,33 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
 
         bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
-        bindSocialView(holder.socialLayoutViewHolder, position, comment);
 
-        holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                discussionService.setCommentFlagged(comment.getIdentifier(),
-                        new FlagBody(!comment.isAbuseFlagged()))
-                        .enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                                context,
-                                CallTrigger.USER_ACTION,
-                                (TaskProgressCallback) null) {
-                            @Override
-                            protected void onResponse(@NonNull final DiscussionComment comment) {
-                                discussionResponses.get(position - 1).patchObject(comment);
-                                discussionResponses.set(position - 1, comment);
-                                notifyItemChanged(position);
-                            }
-                        });
-            }
-        });
+        if (TextUtils.equals(loginPrefs.getUsername(), comment.getAuthor())) {
+            holder.actionsBar.setVisibility(View.GONE);
+        } else {
+            holder.actionsBar.setVisibility(View.VISIBLE);
 
-        holder.discussionReportViewHolder.setReported(comment.isAbuseFlagged());
-
-        holder.socialLayoutViewHolder.threadFollowContainer.setVisibility(View.INVISIBLE);
+            bindSocialView(holder.socialLayoutViewHolder, position, comment);
+            holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
+                public void onClick(final View v) {
+                    discussionService.setCommentFlagged(comment.getIdentifier(),
+                            new FlagBody(!comment.isAbuseFlagged()))
+                            .enqueue(new ErrorHandlingCallback<DiscussionComment>(
+                                    context,
+                                    CallTrigger.USER_ACTION,
+                                    (TaskProgressCallback) null) {
+                                @Override
+                                protected void onResponse(@NonNull final DiscussionComment comment) {
+                                    discussionResponses.get(position - 1).patchObject(comment);
+                                    discussionResponses.set(position - 1, comment);
+                                    notifyItemChanged(position);
+                                }
+                            });
+                }
+            });
+            holder.discussionReportViewHolder.setReported(comment.isAbuseFlagged());
+            holder.socialLayoutViewHolder.threadFollowContainer.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
@@ -459,6 +472,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     public static class DiscussionThreadViewHolder extends RecyclerView.ViewHolder {
+        View actionsBar;
         TextView threadTitleTextView;
         TextView threadBodyTextView;
         TextView threadVisibilityTextView;
@@ -471,6 +485,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         public DiscussionThreadViewHolder(View itemView) {
             super(itemView);
 
+            actionsBar = itemView.findViewById(R.id.discussion_actions_bar);
             threadTitleTextView = (TextView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_title_text_view);
             threadBodyTextView = (TextView) itemView.
@@ -486,6 +501,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     public static class DiscussionResponseViewHolder extends RecyclerView.ViewHolder {
+        View actionsBar;
         RelativeLayout addCommentLayout;
         TextView responseCommentBodyTextView;
         TextView responseAnswerAuthorTextView;
@@ -498,9 +514,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
 
+            actionsBar = itemView.findViewById(R.id.discussion_actions_bar);
             addCommentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_comment_relative_layout);
             responseCommentBodyTextView = (TextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
             responseAnswerAuthorTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_author_text_view);
+
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView.findViewById(R.id.discussion_user_profile_row));
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);

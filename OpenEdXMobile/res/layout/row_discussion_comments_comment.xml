@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,10 +7,10 @@
     android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
     android:layout_marginRight="@dimen/discussion_responses_standard_margin"
     app:cardCornerRadius="@dimen/edx_box_radius"
-    app:cardPreventCornerOverlap="false"
-    app:cardUseCompatPadding="true"
     app:cardElevation="1dp"
-    app:cardMaxElevation="1dp">
+    app:cardMaxElevation="1dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:id="@+id/row_discussion_comment_layout"
@@ -28,13 +27,21 @@
             style="@style/discussion_regular_text"
             tools:text="This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment." />
 
-        <TextView
-            android:id="@+id/discussion_comment_count_report_text_view"
-            style="@style/discussion_responses_small_text"
+        <!-- This container layout is only defined to add bottom padding to the parent view, when
+             the enclosed TextView's visibility is set to GONE. -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="?android:selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/discussion_responses_box_padding"
-            tools:text="@string/discussion_responses_report_label" />
+            android:minHeight="@dimen/discussion_responses_box_padding">
+
+            <TextView
+                android:id="@+id/discussion_comment_count_report_text_view"
+                style="@style/discussion_responses_small_text"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/discussion_responses_box_padding"
+                tools:text="@string/discussion_responses_report_label" />
+        </FrameLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
