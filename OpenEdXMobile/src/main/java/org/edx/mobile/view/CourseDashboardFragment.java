@@ -23,7 +23,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -46,7 +46,7 @@ public class CourseDashboardFragment extends BaseFragment {
     private ImageButton shareButton;
 
     @Inject
-    private ISegment segIO;
+    private AnalyticsRegistry analyticsRegistry;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -214,7 +214,7 @@ public class CourseDashboardFragment extends BaseFragment {
                         } else {
                             shareText = shareTextWithPlatformName;
                         }
-                        segIO.courseDetailShared(courseData.getCourse().getId(), shareText, shareType);
+                        analyticsRegistry.courseDetailShared(courseData.getCourse().getId(), shareText, shareType);
                         final Intent intent = ShareUtils.newShareIntent(shareText);
                         intent.setComponent(componentName);
                         startActivity(intent);

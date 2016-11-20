@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import org.edx.mobile.base.BaseVideosDownloadStateActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 
 public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
 
@@ -26,8 +26,8 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
         // hence is shifted to onCreate() function
         //  configureDrawer();
 
-        environment.getSegment().trackScreenView(
-                ISegment.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
+        environment.getAnalyticsRegistry().trackScreenView(
+                Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
 
     }
 

@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
 public class NativeFindCoursesActivity extends BaseSingleFragmentActivity {
@@ -21,7 +21,7 @@ public class NativeFindCoursesActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.find_courses_title));
-        environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
         if (environment.getLoginPrefs().getUsername() != null) {
             configureDrawer();
         }

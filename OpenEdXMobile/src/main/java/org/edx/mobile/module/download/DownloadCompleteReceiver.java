@@ -11,9 +11,8 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.prefs.PrefManager;
 
 import roboguice.receiver.RoboBroadcastReceiver;
 
@@ -48,9 +47,9 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
                         public void onResult(VideoModel result) {
                             if(result!=null){
                                 DownloadEntry download = (DownloadEntry) result;
-                                
-                                ISegment segIO = environment.getSegment();
-                                segIO.trackDownloadComplete(download.videoId, download.eid, 
+
+                                AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
+                                analyticsRegistry.trackDownloadComplete(download.videoId, download.eid,
                                         download.lmsUrl);
                             }
                         }

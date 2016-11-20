@@ -24,7 +24,7 @@ import com.google.inject.Injector;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
@@ -98,7 +98,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
         final Injector injector = RoboGuice.getInjector(getActivity());
         final String username = getUsername();
         return new UserProfilePresenter(
-                injector.getInstance(ISegment.class),
+                injector.getInstance(AnalyticsRegistry.class),
                 new UserProfileInteractor(
                         username,
                         injector.getInstance(UserService.class),
