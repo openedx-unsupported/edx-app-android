@@ -17,7 +17,7 @@ import org.edx.mobile.util.Config;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class ISegmentTrackerImpl implements ISegmentTracker {
+public class SegmentTracker implements Tracker<Properties, Traits, Options> {
 
     /* Singleton instance of Analytics */
     private Analytics analytics;
@@ -27,14 +27,14 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
     Config config;
 
     @Inject
-    public ISegmentTrackerImpl(Context context, Config config) {
+    public SegmentTracker(Context context, Config config) {
         try {
             this.config = config;
             String writeKey = config.getSegmentConfig().getSegmentWriteKey();
             boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
             int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
             int flushInterval = context.getResources().getInteger(R.integer.analytics_flush_interval);
-            
+
             // Must be called before any calls to Analytics.with(context)
             // Now Analytics.with will return the custom instance
 
@@ -49,9 +49,9 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
             } else {
                 logger.warn("writeKey is null, Segment analytics will not work.");
             }
-        } catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             logger.error(ex);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
@@ -66,13 +66,14 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
             if (analytics != null) {
                 analytics.flush();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     /**
      * Calls track method of Analytics.
+     *
      * @param event
      * @param props
      */
@@ -82,29 +83,31 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
             if (analytics != null) {
                 analytics.track(event, props);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     /**
      * Calls screen method of Analytics.
+     *
      * @param category
      * @param name
      */
     @Override
-    public  void screen(String category, String name, Properties properties) {
+    public void screen(String category, String name, Properties properties) {
         try {
             if (analytics != null) {
                 analytics.screen(category, name, properties);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     /**
      * Calls identify method of Analytics.
+     *
      * @param id
      * @param traits
      * @param options
@@ -115,7 +118,7 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
             if (analytics != null) {
                 analytics.identify(id, traits, options);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }

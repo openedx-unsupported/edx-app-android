@@ -26,7 +26,8 @@ import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsProvider;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -68,7 +69,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private DiscussionService discussionService;
 
     @Inject
-    ISegment segIO;
+    AnalyticsProvider analyticsProvider;
 
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
@@ -156,10 +157,10 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         EventBus.getDefault().register(this);
 
         Map<String, String> values = new HashMap<>();
-        values.put(ISegment.Keys.TOPIC_ID, discussionThread.getTopicId());
-        values.put(ISegment.Keys.THREAD_ID, discussionThread.getIdentifier());
-        values.put(ISegment.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
-        segIO.trackScreenView(ISegment.Screens.FORUM_VIEW_RESPONSE_COMMENTS,
+        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
+        values.put(Analytics.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
+        analyticsProvider.trackScreenView(Analytics.Screens.FORUM_VIEW_RESPONSE_COMMENTS,
                 discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }
 

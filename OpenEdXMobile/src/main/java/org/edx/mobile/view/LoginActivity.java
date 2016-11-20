@@ -21,7 +21,7 @@ import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
@@ -100,7 +100,7 @@ public class LoginActivity
             }
         });
 
-        environment.getSegment().trackScreenView(ISegment.Screens.LOGIN);
+        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.LOGIN);
 
         // enable login buttons at launch
         tryToSetUIInteraction(true);
@@ -278,11 +278,13 @@ public class LoginActivity
      * @param backend
      */
     public void onSocialLoginSuccess(String accessToken, String backend, Task task) {
+        environment.getAnalyticsProvider().trackUserLogin(backend);
         tryToSetUIInteraction(false);
         task.setProgressDialog(activityLoginBinding.progress.progressIndicator);
     }
 
     public void onUserLoginSuccess(ProfileModel profile) {
+        environment.getAnalyticsProvider().trackUserLogin("Email");
         setResult(RESULT_OK);
         finish();
         if (!environment.getConfig().isRegistrationEnabled()) {
@@ -291,6 +293,7 @@ public class LoginActivity
     }
 
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
+        environment.getAnalyticsProvider().trackUserLogin(backend, false);
         tryToSetUIInteraction(true);
 
 
