@@ -31,7 +31,7 @@ import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.EventsTracker;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
@@ -177,8 +177,8 @@ public class NavigationFragment extends BaseFragment {
             drawerNavigationBinding.drawerOptionFindCourses.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ISegment segIO = environment.getSegment();
-                    segIO.trackUserFindsCourses();
+                    EventsTracker eventsTracker = environment.getEventsTracker();
+                    eventsTracker.trackUserFindsCourses();
                     FragmentActivity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
                     if (!(act instanceof WebViewFindCoursesActivity || act instanceof NativeFindCoursesActivity)) {
@@ -246,7 +246,7 @@ public class NavigationFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                environment.getRouter().performManualLogout(getActivity(), environment.getSegment(), environment.getNotificationDelegate());
+                environment.getRouter().performManualLogout(getActivity(), environment.getEventsTracker(), environment.getNotificationDelegate());
             }
         });
 

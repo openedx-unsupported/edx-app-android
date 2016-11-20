@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.user.ProfileImage;
 
@@ -39,7 +39,7 @@ public class LoginPrefs {
 
     public void storeAuthTokenResponse(@NonNull AuthResponse response, @NonNull AuthBackend backend) {
         pref.put(PrefManager.Key.AUTH_JSON, gson.toJson(response));
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, segmentKeyFromAuthBackend(backend));
+        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, eventKeyFromAuthBackend(backend));
     }
 
     public void clearAuthTokenResponse() {
@@ -165,14 +165,14 @@ public class LoginPrefs {
     }
 
     @NonNull
-    private static String segmentKeyFromAuthBackend(@NonNull AuthBackend backend) {
+    private static String eventKeyFromAuthBackend(@NonNull AuthBackend backend) {
         switch (backend) {
             case PASSWORD:
-                return ISegment.Values.PASSWORD;
+                return IEvents.Values.PASSWORD;
             case FACEBOOK:
-                return ISegment.Values.FACEBOOK;
+                return IEvents.Values.FACEBOOK;
             case GOOGLE:
-                return ISegment.Values.GOOGLE;
+                return IEvents.Values.GOOGLE;
             default:
                 throw new IllegalArgumentException(backend.name());
         }

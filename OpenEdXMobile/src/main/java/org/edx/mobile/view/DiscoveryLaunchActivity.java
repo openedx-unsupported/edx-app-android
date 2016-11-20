@@ -10,7 +10,7 @@ import android.view.View.OnClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.ActivityDiscoveryLaunchBinding;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 
 public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
 
@@ -24,7 +24,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     @Override
     protected DiscoveryLaunchPresenter.ViewInterface createView(@Nullable Bundle savedInstanceState) {
         final ActivityDiscoveryLaunchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_discovery_launch);
-        environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
+        environment.getEventsTracker().trackScreenView(IEvents.Screens.LAUNCH_ACTIVITY);
         AuthPanelUtils.setAuthPanelVisible(true, binding.authPanel, environment);
         return new DiscoveryLaunchPresenter.ViewInterface() {
             @Override
@@ -33,7 +33,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                     binding.discoverCourses.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            environment.getSegment().trackDiscoverCoursesClicked();
+                            environment.getEventsTracker().trackDiscoverCoursesClicked();
                             environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this);
                         }
                     });
@@ -44,7 +44,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                     binding.exploreSubjects.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            environment.getSegment().trackExploreSubjectsClicked();
+                            environment.getEventsTracker().trackExploreSubjectsClicked();
                             environment.getRouter().showExploreSubjects(DiscoveryLaunchActivity.this);
                         }
                     });

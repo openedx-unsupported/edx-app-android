@@ -26,7 +26,7 @@ import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.task.RestoreVideosCacheDataTask;
 import org.edx.mobile.util.NetworkUtil;
@@ -69,7 +69,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                 environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, true);
             }
         };
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_COURSES);
+        environment.getEventsTracker().trackScreenView(IEvents.Screens.MY_COURSES);
         EventBus.getDefault().register(this);
 
         // Restore cache of the courses for which the user has downloaded any videos
@@ -131,7 +131,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                     ((HttpResponseStatusException) result.getEx()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 environment.getRouter().forceLogout(
                         getContext(),
-                        environment.getSegment(),
+                        environment.getEventsTracker(),
                         environment.getNotificationDelegate());
             } else {
                 logger.error(result.getEx());
@@ -250,7 +250,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
         footer.courseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getSegment().trackUserFindsCourses();
+                environment.getEventsTracker().trackUserFindsCourses();
                 environment.getRouter().showFindCourses(getActivity());
             }
         });

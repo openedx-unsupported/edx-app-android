@@ -4,7 +4,7 @@ import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.module.analytics.ISegmentImpl;
 import org.edx.mobile.module.analytics.ISegmentTracker;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class SegmentTests extends BaseTestCase {
 
     private static ISegmentTracker tracker;
-    private static ISegment segment;
+    private static ISegmentImpl segment;
 
     @Override
     public void setUp() throws Exception {
@@ -70,14 +70,14 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackVideoPlaying(videoId, currentTime,
                 courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.PLAYED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.PLAYED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
-        testPropertiesWithCurrentTimeStamp((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testPropertiesWithCurrentTimeStamp((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -88,18 +88,17 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime = 10.2;
-        Properties props = segment.trackVideoPause(videoId, currentTime, courseId,
-                unitUrl);
+        Properties props = segment.trackVideoPause(videoId, currentTime, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.PAUSED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.PAUSED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
 
-        testPropertiesWithCurrentTimeStamp((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testPropertiesWithCurrentTimeStamp((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -113,14 +112,14 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackVideoStop(videoId, currentTime, courseId,
                 unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.STOPPED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.STOPPED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
-        testPropertiesWithCurrentTimeStamp((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testPropertiesWithCurrentTimeStamp((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -132,15 +131,15 @@ public class SegmentTests extends BaseTestCase {
         String unitUrl = "uniturl";
         Properties props = segment.trackVideoLoading(videoId, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.LOADED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.LOADED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
 
-        testCommonProperties((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testCommonProperties((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -154,15 +153,15 @@ public class SegmentTests extends BaseTestCase {
         double currentTime=10.11;
         Properties props = segment.trackShowTranscript(videoId, currentTime, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SHOW_TRANSCRIPT),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.SHOW_TRANSCRIPT),
                 (Properties) Mockito.any());
 
         // verify root level properties
         //testCommonProperties(props);
-        testCommonProperties((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testCommonProperties((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -177,14 +176,14 @@ public class SegmentTests extends BaseTestCase {
                 courseId, unitUrl);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.HIDE_TRANSCRIPT),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.HIDE_TRANSCRIPT),
                 (Properties) Mockito.any());
 
         // verify root level properties
-        testCommonProperties((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testCommonProperties((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -200,39 +199,39 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackVideoSeek(videoId, oldTime,
                 newTime, courseId, unitUrl, skipSeek);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SEEK_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.SEEK_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
         //testCommonProperties(props);
-        Properties dataProps = (Properties)props.get(ISegment.Keys.DATA);
+        Properties dataProps = (Properties)props.get(IEvents.Keys.DATA);
         testCommonProperties(dataProps);
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
-        assertTrue(dataProps.containsKey(ISegment.Keys.SEEK_TYPE));
-        assertTrue(dataProps.containsValue(ISegment.Values.SKIP));
-        assertTrue(dataProps.containsKey(ISegment.Keys.NEW_TIME));
-        assertTrue(dataProps.containsKey(ISegment.Keys.OLD_TIME));
-        assertTrue(dataProps.containsKey(ISegment.Keys.REQUESTED_SKIP_INTERVAL));
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+        assertTrue(dataProps.containsKey(IEvents.Keys.SEEK_TYPE));
+        assertTrue(dataProps.containsValue(IEvents.Values.SKIP));
+        assertTrue(dataProps.containsKey(IEvents.Keys.NEW_TIME));
+        assertTrue(dataProps.containsKey(IEvents.Keys.OLD_TIME));
+        assertTrue(dataProps.containsKey(IEvents.Keys.REQUESTED_SKIP_INTERVAL));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
 
     private void testAnalyticsContext(Properties contextProps){
-        assertTrue(contextProps.containsKey(ISegment.Keys.COURSE_ID));
-        assertTrue(contextProps.containsKey(ISegment.Keys.OPEN_BROWSER));
-        assertTrue(contextProps.containsKey(ISegment.Keys.COMPONENT));
+        assertTrue(contextProps.containsKey(IEvents.Keys.COURSE_ID));
+        assertTrue(contextProps.containsKey(IEvents.Keys.OPEN_BROWSER));
+        assertTrue(contextProps.containsKey(IEvents.Keys.COMPONENT));
 
     }
 
     private void testCommonProperties(Properties props){
-        assertTrue(props.containsKey(ISegment.Keys.MODULE_ID));
-        assertTrue(props.containsKey(ISegment.Keys.CODE));
+        assertTrue(props.containsKey(IEvents.Keys.MODULE_ID));
+        assertTrue(props.containsKey(IEvents.Keys.CODE));
     }
 
     private void testPropertiesWithCurrentTimeStamp(Properties props){
         testCommonProperties(props);
-        assertTrue(props.containsKey(ISegment.Keys.CURRENT_TIME));
+        assertTrue(props.containsKey(IEvents.Keys.CURRENT_TIME));
     }
 
 
@@ -245,14 +244,14 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackDownloadComplete(videoId, courseId, unitUrl);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.VIDEO_DOWNLOADED),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.VIDEO_DOWNLOADED),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
-        testCommonProperties((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testCommonProperties((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -263,17 +262,17 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackOpenInBrowser(url);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.BROWSER_LAUNCHED),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.BROWSER_LAUNCHED),
                 (Properties) Mockito.any());
         // verify root level properties
 
-        assertTrue(props.containsKey(ISegment.Keys.CONTEXT));
+        assertTrue(props.containsKey(IEvents.Keys.CONTEXT));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
-        Properties data = (Properties) props.get(ISegment.Keys.DATA);
-        assertTrue(data.containsKey(ISegment.Keys.TARGET_URL));
+        Properties data = (Properties) props.get(IEvents.Keys.DATA);
+        assertTrue(data.containsKey(IEvents.Keys.TARGET_URL));
 
         print(props.toString());
     }
@@ -287,14 +286,14 @@ public class SegmentTests extends BaseTestCase {
                 section, videoCount);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.BULK_DOWNLOAD_SECTION),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.BULK_DOWNLOAD_SECTION),
                 (Properties) Mockito.any());
         // verify root level properties
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        Properties contextProps = (Properties)props.get(ISegment.Keys.CONTEXT);
-        assertTrue(contextProps.containsKey(ISegment.Keys.COURSE_ID));
-        assertTrue(contextProps.containsKey(ISegment.Keys.COMPONENT));
+        Properties contextProps = (Properties)props.get(IEvents.Keys.CONTEXT);
+        assertTrue(contextProps.containsKey(IEvents.Keys.COURSE_ID));
+        assertTrue(contextProps.containsKey(IEvents.Keys.COMPONENT));
 
         print(props.toString());
 
@@ -308,16 +307,16 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackSubSectionBulkVideoDownload(section,
                 subSection, enrollmentId, videoCount);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.BULK_DOWNLOAD_SUBSECTION),(Properties) Mockito.any());
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.BULK_DOWNLOAD_SUBSECTION),(Properties) Mockito.any());
 
         // verify root level properties
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        Properties contextProps = (Properties)props.get(ISegment.Keys.CONTEXT);
-        assertTrue(contextProps.containsKey(ISegment.Keys.COURSE_ID));
-        assertTrue(contextProps.containsKey(ISegment.Keys.COMPONENT));
+        Properties contextProps = (Properties)props.get(IEvents.Keys.CONTEXT);
+        assertTrue(contextProps.containsKey(IEvents.Keys.COURSE_ID));
+        assertTrue(contextProps.containsKey(IEvents.Keys.COMPONENT));
 
-        //testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        //testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
 
@@ -327,14 +326,14 @@ public class SegmentTests extends BaseTestCase {
     public void testUserLogout() throws Exception {
         Properties props= segment.trackUserLogout();
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.USER_LOGOUT),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.USER_LOGOUT),
                 (Properties) Mockito.any());
-        
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
-        assertTrue(props.containsKey(ISegment.Keys.CONTEXT));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.CONTEXT));
+
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
     }
 
     @Test
@@ -346,14 +345,14 @@ public class SegmentTests extends BaseTestCase {
         String lang="lang";
         Properties props = segment.trackTranscriptLanguage(videoId, currentTime, lang, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.LANGUAGE_CLICKED),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.LANGUAGE_CLICKED),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
-        testCommonProperties((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testCommonProperties((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -367,14 +366,14 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackSingleVideoDownload(videoId, courseId, unitUrl);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SINGLE_VIDEO_DOWNLOAD),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.SINGLE_VIDEO_DOWNLOAD),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
-        testCommonProperties((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testCommonProperties((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -389,14 +388,14 @@ public class SegmentTests extends BaseTestCase {
         boolean isLandscape=true;
         Properties props = segment.trackVideoOrientation(videoId, currentTime, isLandscape, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SCREEN_TOGGLED),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.SCREEN_TOGGLED),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
-        testCommonProperties((Properties)props.get(ISegment.Keys.DATA));
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        testCommonProperties((Properties)props.get(IEvents.Keys.DATA));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
 
-        testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
+        testAnalyticsContext((Properties)props.get(IEvents.Keys.CONTEXT));
 
         print(props.toString());
     }
@@ -404,29 +403,43 @@ public class SegmentTests extends BaseTestCase {
     @Test
     public void testEventLogin() throws Exception {
         String method = "Password";
-        Properties props = segment.trackUserLogin(method);
+        Properties props = segment.trackUserLogin(method, true);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.USER_LOGIN),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.USER_LOGIN),
                 (Properties) Mockito.any());
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
-        assertTrue(props.containsKey(ISegment.Keys.CONTEXT));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.CONTEXT));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
+    }
+
+    @Test
+    public void testEventRegister() throws Exception {
+        String method = "Password";
+        Properties props = segment.trackUserRegister(method, true);
+        // verify that the track method was called
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.USER_REGISTER),
+                (Properties) Mockito.any());
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.CONTEXT));
+
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
     }
 
 
     @Test
     public void testScreenView() throws Exception {
         String screenName = "testscreen";
-        Properties props = segment.trackScreenView(screenName);
+        Properties props = segment.trackScreenView(screenName, null, null, null);
 
         // verify that the identity method was called
         Mockito.verify(tracker).screen(Mockito.anyString(),
                 Mockito.eq(screenName), (Properties) Mockito.any());
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
         print(props.toString());
     }
@@ -435,13 +448,13 @@ public class SegmentTests extends BaseTestCase {
 
         Properties props = segment.trackUserSignUpForAccount();
 
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SIGN_UP),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.SIGN_UP),
                 (Properties) Mockito.any());
-            
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
         print(props.toString());
     }
@@ -451,15 +464,15 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackUserFindsCourses();
 
         // verify that the identity method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.FIND_COURSES),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.FIND_COURSES),
                 (Properties) Mockito.any());
-            
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
-        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
-        assertTrue(props.containsKey(ISegment.Keys.LABEL));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.CATEGORY));
+        assertTrue(props.containsKey(IEvents.Keys.LABEL));
+
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
         print(props.toString());
     }
@@ -472,15 +485,15 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackCreateAccountClicked(appVersion, source);
 
         // verify that the identity method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.CREATE_ACCOUNT_CLICKED),
+        Mockito.verify(tracker).track(Mockito.eq(IEvents.Events.CREATE_ACCOUNT_CLICKED),
                 (Properties) Mockito.any());
 
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
-        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
-        assertTrue(props.containsKey(ISegment.Keys.LABEL));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.CATEGORY));
+        assertTrue(props.containsKey(IEvents.Keys.LABEL));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
         print(props.toString());
     }
@@ -491,16 +504,16 @@ public class SegmentTests extends BaseTestCase {
         boolean email_opt_in = true;
         Properties props = segment.trackEnrollClicked(courseId, email_opt_in);
 
-        assertTrue(props.containsKey(ISegment.Keys.NAME));
-        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
-        assertTrue(props.containsKey(ISegment.Keys.LABEL));
+        assertTrue(props.containsKey(IEvents.Keys.NAME));
+        assertTrue(props.containsKey(IEvents.Keys.CATEGORY));
+        assertTrue(props.containsKey(IEvents.Keys.LABEL));
 
-        Properties dataProps = (Properties)props.get(ISegment.Keys.DATA);
-        assertTrue(dataProps.containsKey(ISegment.Keys.COURSE_ID));
-        assertTrue(dataProps.containsKey(ISegment.Keys.EMAIL_OPT_IN));
+        Properties dataProps = (Properties)props.get(IEvents.Keys.DATA);
+        assertTrue(dataProps.containsKey(IEvents.Keys.COURSE_ID));
+        assertTrue(dataProps.containsKey(IEvents.Keys.EMAIL_OPT_IN));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
         print(props.toString());
     }
@@ -510,15 +523,15 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "a_courseId";
         Properties props = segment.trackNotificationReceived(courseId);
 
-        assertTrue("has ISegment.Keys.NAME", props.containsKey(ISegment.Keys.NAME));
-        assertTrue("has ISegment.Keys.CATEGORY", props.containsKey(ISegment.Keys.CATEGORY));
-        assertTrue("has ISegment.Keys.LABEL", props.containsKey(ISegment.Keys.LABEL));
-        assertTrue("ISegment.Keys.NAME", props.get(ISegment.Keys.NAME).equals(ISegment.Values.NOTIFICATION_RECEIVED));
-        assertTrue("ISegment.Keys.CATEGORY", props.get(ISegment.Keys.CATEGORY).equals(ISegment.Values.PUSH_NOTIFICATION));
-        assertTrue("ISegment.Keys.LABEL", props.get(ISegment.Keys.LABEL).equals(courseId));
+        assertTrue("has IEvents.Keys.NAME", props.containsKey(IEvents.Keys.NAME));
+        assertTrue("has IEvents.Keys.CATEGORY", props.containsKey(IEvents.Keys.CATEGORY));
+        assertTrue("has IEvents.Keys.LABEL", props.containsKey(IEvents.Keys.LABEL));
+        assertTrue("IEvents.Keys.NAME", props.get(IEvents.Keys.NAME).equals(IEvents.Values.NOTIFICATION_RECEIVED));
+        assertTrue("IEvents.Keys.CATEGORY", props.get(IEvents.Keys.CATEGORY).equals(IEvents.Values.PUSH_NOTIFICATION));
+        assertTrue("IEvents.Keys.LABEL", props.get(IEvents.Keys.LABEL).equals(courseId));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
         print(props.toString());
     }
@@ -528,15 +541,15 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "a_courseId";
         Properties props = segment.trackNotificationTapped(courseId);
 
-        assertTrue("has ISegment.Keys.NAME", props.containsKey(ISegment.Keys.NAME));
-        assertTrue("has ISegment.Keys.CATEGORY", props.containsKey(ISegment.Keys.CATEGORY));
-        assertTrue("has ISegment.Keys.LABEL", props.containsKey(ISegment.Keys.LABEL));
-        assertTrue("ISegment.Keys.NAME", props.get(ISegment.Keys.NAME).equals(ISegment.Values.NOTIFICATION_TAPPED));
-        assertTrue("ISegment.Keys.CATEGORY", props.get(ISegment.Keys.CATEGORY).equals(ISegment.Values.PUSH_NOTIFICATION));
-        assertTrue("ISegment.Keys.LABEL", props.get(ISegment.Keys.LABEL).equals(courseId));
+        assertTrue("has IEvents.Keys.NAME", props.containsKey(IEvents.Keys.NAME));
+        assertTrue("has IEvents.Keys.CATEGORY", props.containsKey(IEvents.Keys.CATEGORY));
+        assertTrue("has IEvents.Keys.LABEL", props.containsKey(IEvents.Keys.LABEL));
+        assertTrue("IEvents.Keys.NAME", props.get(IEvents.Keys.NAME).equals(IEvents.Values.NOTIFICATION_TAPPED));
+        assertTrue("IEvents.Keys.CATEGORY", props.get(IEvents.Keys.CATEGORY).equals(IEvents.Values.PUSH_NOTIFICATION));
+        assertTrue("IEvents.Keys.LABEL", props.get(IEvents.Keys.LABEL).equals(courseId));
 
-        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
-        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+        Properties cxt = (Properties) props.get(IEvents.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(IEvents.Keys.APP));
 
         print(props.toString());
     }

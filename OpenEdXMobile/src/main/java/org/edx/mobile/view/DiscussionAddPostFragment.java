@@ -33,7 +33,8 @@ import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.EventsTracker;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
 import org.edx.mobile.view.common.TaskMessageCallback;
@@ -87,7 +88,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
     private DiscussionService discussionService;
 
     @Inject
-    ISegment segIO;
+    EventsTracker eventsTracker;
 
     private ViewGroup container;
 
@@ -266,8 +267,8 @@ public class DiscussionAddPostFragment extends BaseFragment {
 
                 DiscussionTopic selectedTopic = ((DiscussionTopicDepth) topicsSpinner.getSelectedItem()).getDiscussionTopic();
                 Map<String, String> values = new HashMap<>();
-                values.put(ISegment.Keys.TOPIC_ID, selectedTopic.getIdentifier());
-                segIO.trackScreenView(ISegment.Screens.FORUM_CREATE_TOPIC_THREAD,
+                values.put(IEvents.Keys.TOPIC_ID, selectedTopic.getIdentifier());
+                eventsTracker.trackScreenView(IEvents.Screens.FORUM_CREATE_TOPIC_THREAD,
                         courseData.getCourse().getId(), selectedTopic.getName(), values);
             }
         });

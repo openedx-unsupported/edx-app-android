@@ -39,7 +39,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.CallTrigger;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.EventsTracker;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.DataType;
@@ -99,7 +99,7 @@ public class EditUserProfileFragment extends BaseFragment {
     private Router router;
 
     @Inject
-    private ISegment segment;
+    private EventsTracker eventsTracker;
 
     @NonNull
     private final ImageCaptureHelper helper = new ImageCaptureHelper();
@@ -416,7 +416,7 @@ public class EditUserProfileFragment extends BaseFragment {
                     final Task task = new SetAccountImageTask(getActivity(), username, imageUri, cropRect);
                     task.setProgressDialog(viewHolder.profileImageProgress);
                     executePhotoTask(task);
-                    segment.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
+                    eventsTracker.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
                 }
                 break;
             }

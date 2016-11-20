@@ -631,7 +631,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                environment.getSegment().trackVideoPause(videoEntry.videoId, current_time,
+                environment.getEventsTracker().trackVideoPause(videoEntry.videoId, current_time,
                         videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
@@ -770,7 +770,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         clearAllErrors();
         initializeClosedCaptioning();
         handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
-        environment.getSegment().trackVideoLoading(videoEntry.videoId, videoEntry.eid,
+        environment.getEventsTracker().trackVideoLoading(videoEntry.videoId, videoEntry.eid,
                 videoEntry.lmsUrl);
     }
 
@@ -800,7 +800,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                environment.getSegment().trackVideoPlaying(videoEntry.videoId, current_time
+                environment.getEventsTracker().trackVideoPlaying(videoEntry.videoId, current_time
                         , videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
@@ -828,7 +828,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                environment.getSegment().trackVideoStop(videoEntry.videoId,
+                environment.getEventsTracker().trackVideoStop(videoEntry.videoId,
                         current_time, videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
@@ -884,7 +884,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             if (isPrepared) {
-                if (environment.getSegment() == null) {
+                if (environment.getEventsTracker() == null) {
                     logger.warn("segment is NOT initialized, cannot capture event enterFullScreen");
                     return;
                 }
@@ -897,7 +897,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     return;
                 }
 
-                environment.getSegment().trackVideoOrientation(videoEntry.videoId,
+                environment.getEventsTracker().trackVideoOrientation(videoEntry.videoId,
                         player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
                         true, videoEntry.eid, videoEntry.lmsUrl);
             }
@@ -912,7 +912,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
             if (isPrepared) {
-                if (environment.getSegment() == null) {
+                if (environment.getEventsTracker() == null) {
                     logger.warn("segment is NOT initialized, cannot capture event exitFullScreen");
                     return;
                 }
@@ -925,7 +925,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     return;
                 }
 
-                environment.getSegment().trackVideoOrientation(videoEntry.videoId,
+                environment.getEventsTracker().trackVideoOrientation(videoEntry.videoId,
                         player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
                         false, videoEntry.eid, videoEntry.lmsUrl);
             }
@@ -1514,7 +1514,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                                 setSubtitleLanguage(languageSubtitle);
                                 try{
                                     if(player!=null){
-                                        environment.getSegment().trackTranscriptLanguage(videoEntry.videoId,
+                                        environment.getEventsTracker().trackTranscriptLanguage(videoEntry.videoId,
                                                 player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                                 languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
                                     }
@@ -1581,7 +1581,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         setSubtitleLanguage(null);
                         try{
                             if(player!=null){
-                                environment.getSegment().trackHideTranscript(videoEntry.videoId,
+                                environment.getEventsTracker().trackHideTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1630,10 +1630,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         try{
                             setSubtitleLanguage(languageSubtitle);
                             if(player!=null){
-                                environment.getSegment().trackShowTranscript(videoEntry.videoId,
+                                environment.getEventsTracker().trackShowTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         videoEntry.eid, videoEntry.lmsUrl);
-                                environment.getSegment().trackTranscriptLanguage(videoEntry.videoId,
+                                environment.getEventsTracker().trackTranscriptLanguage(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1657,7 +1657,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         try{
                             setSubtitleLanguage(null);
                             if(player!=null){
-                                environment.getSegment().trackHideTranscript(videoEntry.videoId,
+                                environment.getEventsTracker().trackHideTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1731,7 +1731,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     if (srt != null) {
                         try{
                             if(player!=null){
-                                environment.getSegment().trackShowTranscript(videoEntry.videoId,
+                                environment.getEventsTracker().trackShowTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1774,7 +1774,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if(isRewindClicked){
                 resetClosedCaptioning();
             }
-            environment.getSegment().trackVideoSeek(videoEntry.videoId,
+            environment.getEventsTracker().trackVideoSeek(videoEntry.videoId,
                     lastPostion/AppConstants.MILLISECONDS_PER_SECOND,
                     newPosition/AppConstants.MILLISECONDS_PER_SECOND,
                     videoEntry.eid, videoEntry.lmsUrl,

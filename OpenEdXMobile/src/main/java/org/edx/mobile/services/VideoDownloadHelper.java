@@ -11,7 +11,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.EventsTracker;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -49,7 +49,7 @@ public class VideoDownloadHelper {
     IStorage storage;
 
     @Inject
-    ISegment segment;
+    EventsTracker eventsTracker;
 
 
     public void downloadVideos(final List<? extends HasDownloadEntry> model, final FragmentActivity activity,
@@ -144,7 +144,7 @@ public class VideoDownloadHelper {
             return;
         try {
             if (downloadList.size() > 1) {
-                segment.trackSectionBulkVideoDownload(downloadList.get(0).getEnrollmentId(),
+                eventsTracker.trackSectionBulkVideoDownload(downloadList.get(0).getEnrollmentId(),
                         downloadList.get(0).getChapterName(), noOfDownloads);
             }
         } catch (Exception e) {

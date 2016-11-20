@@ -13,7 +13,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 
 
 public class CourseAnnouncementsActivity extends BaseFragmentActivity {
@@ -46,8 +46,8 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
         //check courseData again, it may be fetched from local cache
         if (courseData != null) {
             activityTitle = courseData.getCourse().getName();
-            environment.getSegment().trackScreenView(
-                    ISegment.Screens.COURSE_ANNOUNCEMENTS,
+            environment.getEventsTracker().trackScreenView(
+                    IEvents.Screens.COURSE_ANNOUNCEMENTS,
                     courseData.getCourse().getId(),
                     null);
         } else {

@@ -14,7 +14,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
-import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.services.DownloadSpeedService;
 import org.edx.mobile.util.NetworkUtil;
 

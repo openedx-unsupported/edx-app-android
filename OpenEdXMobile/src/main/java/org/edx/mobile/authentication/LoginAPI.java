@@ -14,7 +14,7 @@ import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.EventsTracker;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
@@ -42,7 +42,7 @@ public class LoginAPI {
     private final LoginPrefs loginPrefs;
 
     @NonNull
-    private final ISegment segment;
+    private final EventsTracker eventsTracker;
 
     @NonNull
     private final NotificationDelegate notificationDelegate;
@@ -57,13 +57,13 @@ public class LoginAPI {
     public LoginAPI(@NonNull LoginService loginService,
                     @NonNull Config config,
                     @NonNull LoginPrefs loginPrefs,
-                    @NonNull ISegment segment,
+                    @NonNull EventsTracker eventsTracker,
                     @NonNull NotificationDelegate notificationDelegate,
                     @NonNull Gson gson) {
         this.loginService = loginService;
         this.config = config;
         this.loginPrefs = loginPrefs;
-        this.segment = segment;
+        this.eventsTracker = eventsTracker;
         this.notificationDelegate = notificationDelegate;
         this.gson = gson;
     }
@@ -131,13 +131,13 @@ public class LoginAPI {
             throw e;
         }
         loginPrefs.setLastAuthenticatedEmail(usernameUsedToLogIn);
-        segment.identifyUser(
+        eventsTracker.identifyUser(
                 response.profile.id.toString(),
                 response.profile.email,
                 usernameUsedToLogIn);
         final String backendKey = loginPrefs.getAuthBackendKeyForSegment();
         if (backendKey != null) {
-            segment.trackUserLogin(backendKey);
+            eventsTracker.trackUserLogin(backendKey);
         }
         notificationDelegate.resubscribeAll();
         logInEvents.sendData(new LogInEvent());

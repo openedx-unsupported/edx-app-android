@@ -22,7 +22,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
-import org.edx.mobile.view.LoginActivity;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -218,7 +217,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
             return;
         }
 
-        environment.getSegment().trackEnrollClicked(courseId, emailOptIn);
+        environment.getEventsTracker().trackEnrollClicked(courseId, emailOptIn);
 
         isTaskInProgress = true;
 

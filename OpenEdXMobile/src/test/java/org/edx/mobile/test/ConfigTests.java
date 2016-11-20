@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import org.edx.mobile.module.analytics.ISegmentImpl;
 import org.edx.mobile.util.Config;
 
 import org.junit.runner.RunWith;
@@ -51,7 +52,6 @@ public class ConfigTests extends BaseTestCase {
     private static final String PARSE_ENABLED = "NOTIFICATIONS_ENABLED";
     private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
     private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
-
 
     @Test
     public void testZeroRatingNoConfig() {
@@ -377,5 +377,18 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
         assertTrue(config.getSegmentConfig().isEnabled());
         assertEquals(key, config.getSegmentConfig().getSegmentWriteKey());
+    }
+
+    @Test
+    public void testEventsTrackers()    {
+        Config config = new Config(new JsonObject());
+
+        assertNotNull(config.getEventsTrackers());
+        assertTrue(config.getEventsTrackers().isEmpty());
+
+        config.addEventsTracker(new ISegmentImpl());
+        assertFalse(config.getEventsTrackers().isEmpty());
+        
+        assertTrue(config.getEventsTrackers().get(0) instanceof ISegmentImpl);
     }
 }

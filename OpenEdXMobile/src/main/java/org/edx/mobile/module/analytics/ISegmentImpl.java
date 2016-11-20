@@ -20,11 +20,10 @@ import java.math.RoundingMode;
 import java.util.Map;
 
 @Singleton
-public class ISegmentImpl implements ISegment {
+public class ISegmentImpl implements IEvents {
     @Inject
     private ISegmentTracker tracker;
 
-    @Override
     public void setTracker(ISegmentTracker tracker) {
         this.tracker = tracker;
     }
@@ -85,32 +84,6 @@ public class ISegmentImpl implements ISegment {
         traits.putUsername(username);
         tracker.identify(userID, traits, new Options());
         return traits;
-    }
-
-    /**
-     * This function is used to send the screen tracking event.
-     *
-     * @param screenName The screen name to track
-     * @return A {@link Properties} object populated with analytics-event info
-     */
-    @Override
-    public Properties trackScreenView(@NonNull String screenName) {
-        return trackScreenView(screenName, null, null);
-    }
-
-    /**
-     * This function is used to send the screen tracking event, with an extra event for
-     * sending course id.
-     *
-     * @param screenName The screen name to track
-     * @param courseId   course id of the course we are viewing
-     * @param action     any custom action we need to send with event
-     * @return A {@link Properties} object populated with analytics-event info
-     */
-    @Override
-    public Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
-                                      @Nullable String action) {
-        return trackScreenView(screenName, courseId, action, null);
     }
 
     /**
@@ -524,7 +497,7 @@ public class ISegmentImpl implements ISegment {
      * Method will take the following inputs “Password”|”Google”|”Facebook”
      */
     @Override
-    public Properties trackUserLogin(String method) {
+    public Properties trackUserLogin(String method, boolean didSucceed) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGIN);
         //More information regarding a track event should be under 'data'
@@ -532,9 +505,30 @@ public class ISegmentImpl implements ISegment {
             aEvent.data.putValue(Keys.METHOD, method);
         }
 
-
+        aEvent.data.putValue(Keys.SUCCEED, didSucceed);
         aEvent.setAppNameContext();
         tracker.track(Events.USER_LOGIN, aEvent.properties);
+        return aEvent.properties;
+    }
+
+    /**
+     * This function is used to track User Registration
+     *
+     * @param method     - will take the following inputs “Password”|”Google”|”Facebook”
+     * @param didSucceed - Indicates whether the user succeed in the login or not
+     */
+    @Override
+    public Properties trackUserRegister(String method, boolean didSucceed) {
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.USER_REGISTER);
+        //More information regarding a track event should be under 'data'
+        if (method != null) {
+            aEvent.data.putValue(Keys.METHOD, method);
+        }
+        aEvent.data.putValue(Keys.SUCCEED, didSucceed);
+        aEvent.setAppNameContext();
+        tracker.track(Events.USER_REGISTER, aEvent.properties);
+
         return aEvent.properties;
     }
 
@@ -700,27 +694,27 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties courseDetailShared(String courseId, String aboutUrl, ShareUtils.ShareType shareType) {
+    public Properties courseDetailShared(String courseId, String aboutUrl, String shareType) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_COURSE_DETAIL_SHARED);
 
         aEvent.data.putValue(Keys.NAME, courseId);
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, aboutUrl);
-        aEvent.data.putValue(Keys.TYPE, getShareTypeValue(shareType));
+        aEvent.data.putValue(Keys.TYPE, shareType);
         aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_COURSE_DETAIL_SHARED, aEvent.properties);
         return aEvent.properties;
     }
 
     @Override
-    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ShareUtils.ShareType shareType) {
+    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull String shareType) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CERTIFICATE_SHARED);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, certificateUrl);
-        aEvent.data.putValue(Keys.TYPE, getShareTypeValue(shareType));
+        aEvent.data.putValue(Keys.TYPE, shareType);
         aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
         return aEvent.properties;
@@ -805,16 +799,5 @@ public class ISegmentImpl implements ISegment {
         props.put(Keys.CATEGORY, category);
         props.put(Keys.LABEL, label);
         return props;
-    }
-
-    public static String getShareTypeValue(@NonNull ShareUtils.ShareType shareType) {
-        switch (shareType) {
-            case FACEBOOK:
-                return "facebook";
-            case TWITTER:
-                return "twitter";
-            default:
-                return "other";
-        }
     }
 }
