@@ -207,7 +207,9 @@
         <activity
             android:name="org.edx.mobile.view.CertificateActivity"
             android:label="@string/tab_label_certificate"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
+
         <activity
             android:name="org.edx.mobile.view.SettingsActivity"
             android:label="@string/app_name"
