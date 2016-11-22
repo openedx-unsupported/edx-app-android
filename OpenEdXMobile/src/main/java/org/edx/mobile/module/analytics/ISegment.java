@@ -255,6 +255,8 @@ public interface ISegment {
         String LAUNCH_ACTIVITY = "Launch";
         String COURSE_DASHBOARD = "Course Dashboard";
         String COURSE_OUTLINE = "Course Outline";
+        String COURSE_HANDOUTS = "Course Handouts";
+        String COURSE_ANNOUNCEMENTS = "Course Announcements";
         String SECTION_OUTLINE = "Section Outline";
         String UNIT_DETAIL = "Unit Detail";
         String CERTIFICATE = "Certificate";
@@ -266,7 +268,6 @@ public interface ISegment {
         String MY_VIDEOS_RECENT = "My Videos - Recent Videos";
         String MY_COURSES = "My Courses";
         String SETTINGS = "Settings";
-
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
         String FORUM_SEARCH_THREADS = "Forum: Search Threads";
         String FORUM_VIEW_TOPIC_THREADS = "Forum: View Topic Threads";
