@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -150,9 +150,9 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
      * the implementation to manually check for success in each case). Therefore this implementation
      * delegates to {@link #onResponse(Object)} in the case where it receives a successful HTTP
      * status code, and to {@link #onFailure(Call, Throwable)} otherwise, passing an instance of
-     * {@link HttpResponseStatusException} with the relevant error status code. This method is
-     * declared as final, as subclasses are meant to be implementing the abstract
-     * {@link #onResponse(Object)} method instead of this one.
+     * {@link HttpStatusException} with the relevant error status code. This method is declared as
+     * final, as subclasses are meant to be implementing the abstract {@link #onResponse(Object)}
+     * method instead of this one.
      * <p>
      * This implementation takes care of invoking the callback for request process completion.
      *
@@ -162,7 +162,7 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
     @Override
     public final void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
         if (!response.isSuccessful()) {
-            onFailure(call, new HttpResponseStatusException(response));
+            onFailure(call, new HttpStatusException(response));
         } else {
             if (progressCallback != null) {
                 progressCallback.finishProcess();

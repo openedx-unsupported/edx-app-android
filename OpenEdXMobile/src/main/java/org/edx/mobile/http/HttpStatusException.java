@@ -7,7 +7,7 @@ import okhttp3.Response;
 /**
  * Signals an HTTP status error.
  */
-public class HttpResponseStatusException extends Exception {
+public class HttpStatusException extends Exception {
     @NonNull
     private final Response response;
 
@@ -16,7 +16,7 @@ public class HttpResponseStatusException extends Exception {
      *
      * @param response The error response.
      */
-    public HttpResponseStatusException(@NonNull final Response response) {
+    public HttpStatusException(@NonNull final Response response) {
         this.response = response;
     }
 
@@ -25,7 +25,7 @@ public class HttpResponseStatusException extends Exception {
      *
      * @param response The Retrofit error response.
      */
-    public HttpResponseStatusException(@NonNull final retrofit2.Response<?> response) {
+    public HttpStatusException(@NonNull final retrofit2.Response<?> response) {
         this(response.raw());
     }
 

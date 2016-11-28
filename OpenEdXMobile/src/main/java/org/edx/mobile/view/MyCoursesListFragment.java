@@ -18,7 +18,7 @@ import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
@@ -127,8 +127,8 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
             if (result.getEx() instanceof AuthException) {
                 loginPrefs.clear();
                 getActivity().finish();
-            } else if (result.getEx() instanceof HttpResponseStatusException &&
-                    ((HttpResponseStatusException) result.getEx()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            } else if (result.getEx() instanceof HttpStatusException &&
+                    ((HttpStatusException) result.getEx()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 environment.getRouter().forceLogout(
                         getContext(),
                         environment.getAnalyticsRegistry(),

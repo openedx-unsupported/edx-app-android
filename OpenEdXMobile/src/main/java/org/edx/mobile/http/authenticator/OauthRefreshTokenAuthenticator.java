@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.authentication.LoginService;
 
 import org.edx.mobile.authentication.AuthResponse;
-import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.util.OkHttpUtil;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -74,7 +74,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
                     final AuthResponse refreshedAuth;
                     try {
                         refreshedAuth = refreshAccessToken(currentAuth);
-                    } catch (HttpResponseStatusException e) {
+                    } catch (HttpStatusException e) {
                         return null;
                     }
                     return response.request().newBuilder()
@@ -98,7 +98,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
 
     @NonNull
     private AuthResponse refreshAccessToken(AuthResponse currentAuth)
-            throws IOException, HttpResponseStatusException {
+            throws IOException, HttpStatusException {
         OkHttpClient client = OkHttpUtil.getClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)

@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.ApiConstants;
-import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
@@ -111,7 +111,7 @@ public class LoginAPI {
             throw new AccountNotLinkedException();
         }
         if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response);
+            throw new HttpStatusException(response);
         }
         final AuthResponse data = response.body();
         if (data.error != null && data.error.equals(Integer.toString(HttpURLConnection.HTTP_UNAUTHORIZED))) {
@@ -196,7 +196,7 @@ public class LoginAPI {
                     // Looks like the response does not contain form validation errors.
                 }
             }
-            throw new HttpResponseStatusException(response);
+            throw new HttpStatusException(response);
         }
     }
 

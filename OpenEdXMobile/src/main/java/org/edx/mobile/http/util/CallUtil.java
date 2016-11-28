@@ -1,6 +1,6 @@
 package org.edx.mobile.http.util;
 
-import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatusException;
 
 import java.io.IOException;
 
@@ -27,15 +27,15 @@ public class CallUtil {
      * @return The converted response body.
      *
      * @throws IOException if a problem occurred talking to the server.
-     * @throws HttpResponseStatusException if the server returns an error status.
+     * @throws HttpStatusException if the server returns an error status.
      * @throws RuntimeException (and subclasses) if an unexpected error occurs creating the request
      * or decoding the response.
      */
     public static <T> T executeStrict(Call<T> call)
-            throws IOException, HttpResponseStatusException {
+            throws IOException, HttpStatusException {
         final Response<T> response = call.execute();
         if (!response.isSuccessful()) {
-            throw new HttpResponseStatusException(response);
+            throw new HttpStatusException(response);
         }
         return response.body();
     }

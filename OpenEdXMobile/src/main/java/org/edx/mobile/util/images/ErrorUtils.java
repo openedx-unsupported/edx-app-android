@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
@@ -25,8 +25,8 @@ public enum ErrorUtils {
             } else {
                 errorMessage = context.getString(R.string.reset_no_network_message);
             }
-        } else if (ex instanceof HttpResponseStatusException) {
-            final int status = ((HttpResponseStatusException) ex).getStatusCode();
+        } else if (ex instanceof HttpStatusException) {
+            final int status = ((HttpStatusException) ex).getStatusCode();
             switch (status) {
                 case HttpStatus.SERVICE_UNAVAILABLE:
                     errorMessage = context.getString(R.string.network_service_unavailable);
