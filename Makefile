@@ -23,7 +23,7 @@ clean :
 	@echo 'Cleaning the workspace and any previously created AVDs'
 	./gradlew clean
 	rm -Rf $$HOME/.android/avd/screenshotDevice.avd
-	rm $$HOME/.android/avd/screenshotDevice.ini
+	rm -f $$HOME/.android/avd/screenshotDevice.ini
 
 requirements :
 	@echo 'Installing python requirements'
