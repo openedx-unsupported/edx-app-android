@@ -87,22 +87,18 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         updateActionBarShadow();
-
-        logger.debug("created");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        isActivityStarted = true;
-
-        // enabling action bar app icon.
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayShowHomeEnabled(true);
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setIcon(android.R.color.transparent);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityStarted = true;
     }
 
     @Override

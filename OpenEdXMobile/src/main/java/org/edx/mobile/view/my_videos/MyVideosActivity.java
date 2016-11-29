@@ -3,6 +3,7 @@ package org.edx.mobile.view.my_videos;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,6 +23,13 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myvideos_tab);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayShowHomeEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setIcon(android.R.color.transparent);
+        }
 
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function

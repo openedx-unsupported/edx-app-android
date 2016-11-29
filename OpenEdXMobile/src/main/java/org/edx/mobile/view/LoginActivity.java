@@ -7,11 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
 
 import com.google.inject.Inject;
 
@@ -33,7 +30,6 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.dialog.ResetPasswordActivity;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.login.LoginPresenter;
@@ -122,6 +118,16 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         }
 
         return new LoginPresenter.LoginViewInterface() {
+            @Override
+            public void disableToolbarNavigation() {
+                ActionBar actionBar = getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setHomeButtonEnabled(false);
+                    actionBar.setDisplayHomeAsUpEnabled(false);
+                    actionBar.setDisplayShowHomeEnabled(false);
+                }
+            }
+
             @Override
             public void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled) {
                 if (!facebookEnabled && !googleEnabled) {
@@ -265,18 +271,6 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         super.showErrorDialog(header, message);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!environment.getConfig().isRegistrationEnabled()) {
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setHomeButtonEnabled(false);
-                actionBar.setDisplayHomeAsUpEnabled(false);
-                actionBar.setDisplayShowHomeEnabled(false);
-            }
-        }
-    }
 
     /**
      * Starts fetching profile of the user after login by Facebook or Google.

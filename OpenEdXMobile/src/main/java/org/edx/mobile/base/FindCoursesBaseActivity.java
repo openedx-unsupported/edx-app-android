@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -52,6 +53,14 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         super.onCreate(savedInstanceState);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayShowHomeEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setIcon(android.R.color.transparent);
+        }
+
 
         webview = (WebView) findViewById(R.id.webview);
         offlineBar = findViewById(R.id.offline_bar);
