@@ -109,21 +109,15 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().registerSticky(this);
-        try {
-            DrawerLayout mDrawerLayout = (DrawerLayout)
-                    findViewById(R.id.drawer_layout);
-            if (mDrawerLayout != null) {
-
-                Fragment frag = getSupportFragmentManager()
-                        .findFragmentByTag("NavigationFragment");
-                if (frag == null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.slider_menu,
-                                    new NavigationFragment(), "NavigationFragment").commit();
-                }
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (mDrawerLayout != null) {
+            Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
+            if (frag == null) {
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.slider_menu,
+                        new NavigationFragment(),
+                        "NavigationFragment").commit();
             }
-        } catch (Exception ex) {
-            logger.error(ex);
         }
     }
 
