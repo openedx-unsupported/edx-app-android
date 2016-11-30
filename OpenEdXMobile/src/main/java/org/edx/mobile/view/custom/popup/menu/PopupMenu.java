@@ -26,7 +26,6 @@ import android.support.v7.view.SupportMenuInflater;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPresenter;
 import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.ListPopupWindow.ForwardingListener;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -158,7 +157,7 @@ public class PopupMenu implements MenuBuilder.Callback, MenuPresenter.Callback {
      */
     public OnTouchListener getDragToOpenListener() {
         if (mDragListener == null) {
-            mDragListener = new ForwardingListener(mAnchor) {
+            mDragListener = new ListPopupWindow.ForwardingListener(mAnchor) {
                 @Override
                 protected boolean onForwardingStarted() {
                     show();
