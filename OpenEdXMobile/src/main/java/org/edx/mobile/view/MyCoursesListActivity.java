@@ -46,6 +46,8 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         configureDrawer();
         setTitle(getString(R.string.label_my_courses));
         environment.getSegment().trackScreenView(ISegment.Screens.MY_COURSES);
+
+        throw new RuntimeException("I am a crash");
     }
 
     @Override

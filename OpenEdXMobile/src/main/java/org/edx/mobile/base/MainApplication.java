@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.inject.Injector;
