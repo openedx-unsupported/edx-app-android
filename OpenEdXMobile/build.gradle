@@ -328,6 +328,10 @@ android {
             prod.res.srcDirs = [RES_DIR]
         }
 
+        if (project.hasProperty('ASSETS')) {
+            prod.assets.srcDirs = [ASSETS]
+        }
+
         String sharedTestDir = 'src/sharedTest/java'
         test {
             java.srcDir sharedTestDir
