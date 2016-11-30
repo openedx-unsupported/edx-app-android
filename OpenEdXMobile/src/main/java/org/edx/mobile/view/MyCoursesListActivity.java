@@ -47,7 +47,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         setTitle(getString(R.string.label_my_courses));
         environment.getSegment().trackScreenView(ISegment.Screens.MY_COURSES);
 
-        throw new RuntimeException("I am a crash");
+        throw new RuntimeException("AM I ARPRESTOTR?");
     }
 
     @Override
