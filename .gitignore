@@ -36,6 +36,9 @@ proguard/
 crashlytics-build.properties
 com_crashlytics_export_strings.xml
 
+# Google Firebase
+*google-services.json
+
 # Other files and directories to be ignored
 OpenEdXMobile/default_config/local.yaml
 bin
