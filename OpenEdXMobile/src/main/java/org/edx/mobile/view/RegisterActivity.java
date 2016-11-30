@@ -73,7 +73,7 @@ public class RegisterActivity extends BaseFragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        setTitle(ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName()));
+        setTitle(R.string.register_title);
 
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
 

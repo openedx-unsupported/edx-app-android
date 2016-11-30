@@ -26,10 +26,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 public class RegistrationScreenInteractor {
     public RegistrationScreenInteractor observeRegistrationScreen() {
-        final MainApplication app = MainApplication.instance();
-        final CharSequence title = ResourceUtil.getFormattedString(app.getResources(),
-                R.string.register_title, "platform_name",
-                app.getInjector().getInstance(Config.class).getPlatformName());
+        final CharSequence title = "Register";
         onView(allOf(isInActionBar(), withText(title.toString()))).check(matches(isCompletelyDisplayed()));
         return this;
     }

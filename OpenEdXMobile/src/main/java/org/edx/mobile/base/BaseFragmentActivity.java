@@ -87,16 +87,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         updateActionBarShadow();
-
-        logger.debug("created");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        isActivityStarted = true;
-
-        // enabling action bar app icon.
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayShowHomeEnabled(true);
@@ -106,24 +96,24 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityStarted = true;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().registerSticky(this);
-        try {
-            DrawerLayout mDrawerLayout = (DrawerLayout)
-                    findViewById(R.id.drawer_layout);
-            if (mDrawerLayout != null) {
-
-                Fragment frag = getSupportFragmentManager()
-                        .findFragmentByTag("NavigationFragment");
-                if (frag == null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.slider_menu,
-                                    new NavigationFragment(), "NavigationFragment").commit();
-                }
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (mDrawerLayout != null) {
+            Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
+            if (frag == null) {
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.slider_menu,
+                        new NavigationFragment(),
+                        "NavigationFragment").commit();
             }
-        } catch (Exception ex) {
-            logger.error(ex);
         }
     }
 

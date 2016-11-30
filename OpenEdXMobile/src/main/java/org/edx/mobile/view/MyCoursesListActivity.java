@@ -27,7 +27,7 @@ import roboguice.inject.InjectView;
 public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
     @NonNull
-    @InjectView(R.id.coorinator_layout)
+    @InjectView(R.id.coordinator_layout)
     private CoordinatorLayout coordinatorLayout;
 
     @Inject
