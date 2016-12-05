@@ -63,6 +63,7 @@ public class Config {
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
+    private static final String FIREBASE_ENABLED = "FIREBASE_ENABLED";
 
 
     public static class ZeroRatingConfig {
