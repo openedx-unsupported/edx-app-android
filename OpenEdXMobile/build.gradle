@@ -226,6 +226,11 @@ configurations {
 
 def config = new TaskHelper().loadConfig(project)
 
+// https://developers.google.com/android/guides/google-services-plugin
+if (config.get('FIREBASE_ENABLED')?: false) {
+    apply plugin: 'com.google.gms.google-services'
+}
+
 android {
     signingConfigs {
         releasekey {
@@ -278,8 +283,9 @@ android {
 
         // Enabling multidex support.
         multiDexEnabled true
-        
-        manifestPlaceholders = [ supportsRtl:"false", firebaseEnabled: config.get('FIREBASE_ENABLED')?: false]
+
+        manifestPlaceholders = [supportsRtl:"false",
+                                firebaseEnabled: config.get('FIREBASE_ENABLED')?: false]
 
         def platformName = config.get('PLATFORM_NAME')
         resValue "string", "platform_name", platformName
@@ -420,10 +426,4 @@ android.applicationVariants.all { variant ->
 screenshots {
     testApkTarget = 'packageProdDebuggableAndroidTest'
     connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
-}
-
-// Google suggests to add this at the bottom
-// https://developers.google.com/android/guides/google-services-plugin
-if (config.get('FIREBASE_ENABLED')?: false) {
-    apply plugin: 'com.google.gms.google-services'
 }
