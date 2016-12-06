@@ -185,16 +185,6 @@
     <string name="label_ended">Ended - {date}</string>
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending - {date}</string>
-    <!-- Title for the course filter menu popup -->
-    <string name="course_view_modes">Course View Options</string>
-    <!-- Label for the course filter menu popup option for filtering by videos only -->
-    <string name="course_view_mode_videos_only">Videos Only</string>
-    <!-- Label for the course filter menu popup option for displaying the full course -->
-    <string name="course_view_mode_full_course">Full Course</string>
-    <!-- Label for the menu popup for viewing the course on the web -->
-    <string name="course_view_on_web">View on Web</string>
-    <!-- Label for the menu popup for changing mode to Videos Only/Full Course -->
-    <string name="course_change_mode">Course viewing options</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
@@ -347,8 +337,6 @@
     <string name="assessment_next">Next</string>
     <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
     <string name="assessment_previous">Previous</string>
-    <!-- Label for empty video in video only mode-->
-    <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select {mode_switcher} above and switch to full course mode.</string>
     <!-- Label showing assessment only available on website-->
     <string name="assessment_not_available">This interactive component isn’t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->

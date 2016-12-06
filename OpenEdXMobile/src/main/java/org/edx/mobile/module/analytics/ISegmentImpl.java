@@ -12,7 +12,6 @@ import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.math.BigDecimal;
@@ -60,13 +59,6 @@ public class ISegmentImpl implements ISegment {
                     .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
             this.properties.putValue(Keys.DEVICE_ORIENTATION,
                     (isPortrait ? Values.PORTRAIT : Values.LANDSCAPE));
-
-            // Current navigation mode dimension
-            PrefManager.UserPrefManager userPrefManager =
-                    new PrefManager.UserPrefManager(MainApplication.instance());
-            boolean isVideoMode = userPrefManager.isUserPrefVideoModel();
-            this.properties.putValue(Keys.NAVIGATION_MODE,
-                    (isVideoMode ? Values.OUTLINE_MODE_VIDEO : Values.OUTLINE_MODE_FULL));
         }
     }
 
@@ -723,19 +715,6 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.TYPE, getShareTypeValue(shareType));
         aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
-        return aEvent.properties;
-    }
-
-    @Override
-    public Properties trackCourseOutlineMode(boolean isVideoMode) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.SWITCH_OUTLINE_MODE);
-
-        aEvent.setAppNameContext();
-        //Add category for Google Analytics
-        String label = (isVideoMode ? Values.SWITCH_TO_VIDEO_MODE : Values.SWITCH_TO_FULL_MODE);
-        aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.NAVIGATION, label);
-        tracker.track(Events.SWITCH_OUTLINE_MODE, aEvent.properties);
         return aEvent.properties;
     }
 

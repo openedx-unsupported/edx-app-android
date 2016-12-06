@@ -152,15 +152,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         updateDataModel();
     }
 
-    @Override
-    protected String getUrlForWebView() {
-        if (selectedUnit == null) {
-            return ""; //wont happen
-        } else {
-            return selectedUnit.getWebUrl();
-        }
-    }
-
     private void setCurrentUnit(CourseComponent component) {
         this.selectedUnit = component;
         if (this.selectedUnit == null)
@@ -234,9 +225,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         List<CourseComponent> leaves = new ArrayList<>();
 
         PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        EnumSet<BlockType> types = userPrefManager.isUserPrefVideoModel() ?
-                EnumSet.of(BlockType.VIDEO) : EnumSet.allOf(BlockType.class);
-        selectedUnit.getRoot().fetchAllLeafComponents(leaves, types);
+        selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
 
@@ -251,10 +240,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         if (pagerAdapter != null)
             pagerAdapter.notifyDataSetChanged();
 
-    }
-
-    protected void modeChanged() {
-        onBackPressed();
     }
 
     @Override

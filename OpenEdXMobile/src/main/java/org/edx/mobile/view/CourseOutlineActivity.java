@@ -81,13 +81,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
     }
 
     @Override
-    protected String getUrlForWebView() {
-        if ( courseComponentId == null ) return "";
-        CourseComponent courseComponent = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
-        return courseComponent.getWebUrl();
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (savedInstanceState != null){

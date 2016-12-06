@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -56,7 +57,6 @@ import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.view.common.TaskProgressCallback;
-import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.Collections;
 import java.util.HashMap;

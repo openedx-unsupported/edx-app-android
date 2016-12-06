@@ -198,15 +198,6 @@ public class PrefManager {
             super(context, Pref.USER_PREF);
         }
 
-        public boolean isUserPrefVideoModel() {
-            //default is full mode
-            return getBoolean(Key.UserPrefVideoModel, false);
-        }
-
-        public void setUserPrefVideoModel(boolean enabled) {
-            super.put(Key.UserPrefVideoModel, enabled);
-        }
-
         public long getLastCourseStructureFetch(String courseId) {
             return getLong(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId);
         }
@@ -264,7 +255,6 @@ public class PrefManager {
         public static final String AppNotificationPushHash = "AppNotificationPushHash";
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
-        public static final String UserPrefVideoModel = "UserPrefVideoModel";
         public static final String LAST_COURSE_STRUCTURE_FETCH = "LastCourseStructureFetch";
         /**
          * For downloaded videos to appear in order on the My Videos screen, we need

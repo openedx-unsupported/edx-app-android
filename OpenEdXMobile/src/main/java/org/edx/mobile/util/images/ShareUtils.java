@@ -7,13 +7,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.view.custom.popup.SizedDrawable;
-import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.List;
 
