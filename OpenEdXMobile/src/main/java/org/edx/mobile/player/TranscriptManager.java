@@ -172,6 +172,9 @@ public class TranscriptManager {
         if(transcript.spanishUrl!=null){
             startTranscriptDownload(transcript.spanishUrl);
         }
+        if(transcript.arabicUrl!=null){
+            startTranscriptDownload(transcript.arabicUrl);
+        }
     }
 
 
@@ -213,6 +216,11 @@ public class TranscriptManager {
             if(transcript.spanishUrl!=null){
                 transcriptList.put(context.getString(R.string.cc_spanish_code),
                         fetchTranscriptResponse(transcript.spanishUrl));
+            }
+
+            if(transcript.arabicUrl!=null){
+                transcriptList.put(context.getString(R.string.lbl_cc_arabic_code),
+                        fetchTranscriptResponse(transcript.arabicUrl));
             }
 
             return transcriptList;
