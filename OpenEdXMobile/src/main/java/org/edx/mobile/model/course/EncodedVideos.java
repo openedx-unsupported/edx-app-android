@@ -4,6 +4,9 @@ import android.support.annotation.Nullable;
 import android.webkit.URLUtil;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.inject.Inject;
+
+import org.edx.mobile.core.EdxEnvironment;
 
 import java.io.Serializable;
 
@@ -21,13 +24,11 @@ public class EncodedVideos implements Serializable {
     public VideoInfo youtube;
 
     @Nullable
-    public VideoInfo getPreferredVideoInfo() {
+    public VideoInfo getMobileVideoInfo() {
         if (mobileLow != null && URLUtil.isNetworkUrl(mobileLow.url))
             return mobileLow;
         if (mobileHigh != null && URLUtil.isNetworkUrl(mobileHigh.url))
             return mobileHigh;
-        if (fallback != null && URLUtil.isNetworkUrl(fallback.url))
-            return fallback;
         return null;
     }
 
@@ -35,6 +36,13 @@ public class EncodedVideos implements Serializable {
     public VideoInfo getYoutubeVideoInfo() {
         if (youtube != null && URLUtil.isNetworkUrl(youtube.url))
             return youtube;
+        return null;
+    }
+
+    @Nullable
+    public VideoInfo getFallbackVideoInfo() {
+        if (fallback != null && URLUtil.isNetworkUrl(fallback.url))
+            return fallback;
         return null;
     }
 

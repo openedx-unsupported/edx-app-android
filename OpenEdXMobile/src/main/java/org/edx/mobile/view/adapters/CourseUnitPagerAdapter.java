@@ -52,7 +52,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
      * @return True if given unit is a video unit (not an only on YouTube unit)
      */
     public static boolean isCourseUnitVideo(CourseComponent unit) {
-        return (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getPreferredVideoInfo() != null);
+        return (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getMobileVideoInfo() != null);
     }
 
     @Override
@@ -61,6 +61,8 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         CourseUnitFragment unitFragment;
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
         if (isCourseUnitVideo(unit)) {
+            unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit, (pos < unitList.size()), (pos > 0));
+        } else if (config.isFallbackVideoEncodingsEnabled() && unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getFallbackVideoInfo() != null){
             unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit, (pos < unitList.size()), (pos > 0));
         } else if (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit);

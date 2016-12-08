@@ -64,6 +64,7 @@ public class Config {
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
     private static final String FIREBASE_ENABLED = "FIREBASE_ENABLED";
+    private static final String FALLBACK_VIDEO_ENCODINGS_ENABLED = "FALLBACK_VIDEO_ENCODINGS_ENABLED";
 
 
     public static class ZeroRatingConfig {
@@ -429,6 +430,10 @@ public class Config {
 
     public boolean isDiscussionProfilePicturesEnabled() {
         return getBoolean(DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM, false);
+    }
+
+    public boolean isFallbackVideoEncodingsEnabled() {
+        return getBoolean(FALLBACK_VIDEO_ENCODINGS_ENABLED, true);
     }
 
     public boolean isRegistrationEnabled() {

@@ -35,7 +35,6 @@ import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
 import java.io.IOException;
@@ -387,7 +386,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         VideoBlockModel encodeVideosModel = Mockito.mock(VideoBlockModel.class);
         VideoData videoData = Mockito.mock(VideoData.class);
         videoData.encodedVideos = Mockito.mock(EncodedVideos.class);
-        when(videoData.encodedVideos.getPreferredVideoInfo())
+        when(videoData.encodedVideos.getMobileVideoInfo())
                 .thenReturn(Mockito.mock(VideoInfo.class));
         when(encodeVideosModel.getData()).thenReturn(videoData);
         unitList.add(encodeVideosModel);
@@ -465,7 +464,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 VideoBlockModel encodedVideosModel = Mockito.mock(VideoBlockModel.class);
                 VideoData videoData = Mockito.mock(VideoData.class);
                 videoData.encodedVideos = Mockito.mock(EncodedVideos.class);
-                when(videoData.encodedVideos.getPreferredVideoInfo())
+                when(videoData.encodedVideos.getMobileVideoInfo())
                         .thenReturn(Mockito.mock(VideoInfo.class));
                 when(encodedVideosModel.getData()).thenReturn(videoData);
                 argsList.add(new Object[] {encodedVideosModel, CourseUnitVideoFragment.class, true});
