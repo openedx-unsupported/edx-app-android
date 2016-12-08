@@ -5,7 +5,19 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
-public interface Analytics<P, T> {
+public interface Analytics {
+
+    /**
+     * This function is used to send the screen tracking event, with an extra event for
+     * sending course id.
+     *
+     * @param screenName The screen name to track
+     * @param courseId   course id of the course we are viewing
+     * @param action     any custom action we need to send with event
+     * @param values     any custom key- value pairs we need to send with event
+     */
+    void trackScreenView(@NonNull String screenName, @Nullable String courseId,
+                         @Nullable String action, @Nullable Map<String, String> values);
 
     /**
      * This function is used to track Video Playing
@@ -15,8 +27,8 @@ public interface Analytics<P, T> {
      * @param unitUrl     - Page Url for that Video
      * @param courseId    - CourseId under which the video is present
      */
-    P trackVideoPlaying(String videoId, Double currentTime,
-                             String courseId, String unitUrl);
+    void trackVideoPlaying(String videoId, Double currentTime,
+                           String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Pause
@@ -26,8 +38,8 @@ public interface Analytics<P, T> {
      * @param courseId    - CourseId under which the video is present
      * @param unitUrl     - Page Url for that Video
      */
-    P trackVideoPause(String videoId, Double currentTime,
-                           String courseId, String unitUrl);
+    void trackVideoPause(String videoId, Double currentTime,
+                         String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Stop
@@ -37,8 +49,8 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackVideoStop(String videoId, Double currentTime,
-                          String courseId, String unitUrl);
+    void trackVideoStop(String videoId, Double currentTime,
+                        String courseId, String unitUrl);
 
     /**
      * This function is used to Show Transcript
@@ -48,8 +60,8 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackShowTranscript(String videoId, Double currentTime,
-                               String courseId, String unitUrl);
+    void trackShowTranscript(String videoId, Double currentTime,
+                             String courseId, String unitUrl);
 
     /**
      * This function is used to Hide Transcript
@@ -59,8 +71,8 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackHideTranscript(String videoId, Double currentTime,
-                               String courseId, String unitUrl);
+    void trackHideTranscript(String videoId, Double currentTime,
+                             String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Loading
@@ -69,7 +81,7 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackVideoLoading(String videoId, String courseId, String unitUrl);
+    void trackVideoLoading(String videoId, String courseId, String unitUrl);
 
     /**
      * This function is used to track 30 second rewind on Video
@@ -81,22 +93,10 @@ public interface Analytics<P, T> {
      * @param unitUrl
      * @param skipSeek
      */
-    P trackVideoSeek(String videoId, Double oldTime, Double newTime,
-                          String courseId, String unitUrl, Boolean skipSeek);
+    void trackVideoSeek(String videoId, Double oldTime, Double newTime,
+                        String courseId, String unitUrl, Boolean skipSeek);
 
     /* Events not mentioned in PDF */
-
-    /**
-     * This function is used to send the screen tracking event, with an extra event for
-     * sending course id.
-     *
-     * @param screenName The screen name to track
-     * @param courseId   course id of the course we are viewing
-     * @param action     any custom action we need to send with event
-     * @param values     any custom key- value pairs we need to send with event
-     */
-    P trackScreenView(@NonNull String screenName, @Nullable String courseId,
-                           @Nullable String action, @Nullable Map<String, String> values);
 
     /**
      * This function is used to track Video Download completed
@@ -105,15 +105,15 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackDownloadComplete(String videoId, String courseId,
-                                 String unitUrl);
+    void trackDownloadComplete(String videoId, String courseId,
+                               String unitUrl);
 
     /**
      * This function is used to track Open in Browser
      *
      * @param url
      */
-    P trackOpenInBrowser(String url);
+    void trackOpenInBrowser(String url);
 
     /**
      * This function is used to track Bulk Download from Sections
@@ -122,8 +122,8 @@ public interface Analytics<P, T> {
      * @param enrollmentId - Course under which the subsection is present
      * @param videoCount   - no of videos started downloading
      */
-    P trackSectionBulkVideoDownload(String enrollmentId,
-                                         String section, long videoCount);
+    void trackSectionBulkVideoDownload(String enrollmentId,
+                                       String section, long videoCount);
 
     /**
      * This function is used to track Bulk Download from Subsection
@@ -133,8 +133,8 @@ public interface Analytics<P, T> {
      * @param enrollmentId - Course under which the subsection is present
      * @param videoCount   - no of videos started downloading
      */
-    P trackSubSectionBulkVideoDownload(String section, String subSection,
-                                            String enrollmentId, long videoCount);
+    void trackSubSectionBulkVideoDownload(String section, String subSection,
+                                          String enrollmentId, long videoCount);
 
     /**
      * This function is used to track User Login
@@ -142,7 +142,7 @@ public interface Analytics<P, T> {
      * @param method     - will take the following inputs “Password”|”Google”|”Facebook”
      * @param didSucceed - Indicates whether the user succeed in the login or not
      */
-    P trackUserLogin(String method, boolean didSucceed);
+    void trackUserLogin(String method, boolean didSucceed);
 
     /**
      * This function is used to track User Registration
@@ -150,12 +150,12 @@ public interface Analytics<P, T> {
      * @param method     - will take the following inputs “Password”|”Google”|”Facebook”
      * @param didSucceed - Indicates whether the user succeed in the login or not
      */
-    P trackUserRegister(String method, boolean didSucceed);
+    void trackUserRegister(String method, boolean didSucceed);
 
     /**
      * This function is used to track user logout
      */
-    P trackUserLogout();
+    void trackUserLogout();
 
     /**
      * This function is used to track Language changed for Transcripts
@@ -166,8 +166,8 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackTranscriptLanguage(String videoId, Double currentTime,
-                                   String lang, String courseId, String unitUrl);
+    void trackTranscriptLanguage(String videoId, Double currentTime,
+                                 String lang, String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Download started from Video List
@@ -176,8 +176,8 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackSingleVideoDownload(String videoId, String courseId,
-                                    String unitUrl);
+    void trackSingleVideoDownload(String videoId, String courseId,
+                                  String unitUrl);
 
     /**
      * This function is used to track Video Orientation
@@ -188,27 +188,27 @@ public interface Analytics<P, T> {
      * @param courseId
      * @param unitUrl
      */
-    P trackVideoOrientation(String videoId, Double currentTime,
-                                 boolean isLandscape, String courseId, String unitUrl);
+    void trackVideoOrientation(String videoId, Double currentTime,
+                               boolean isLandscape, String courseId, String unitUrl);
 
-    P trackDiscoverCoursesClicked();
+    void trackDiscoverCoursesClicked();
 
-    P trackExploreSubjectsClicked();
+    void trackExploreSubjectsClicked();
 
     /**
      * This function is used to track if user clicks on Sign up on landing page
      */
-    P trackUserSignUpForAccount();
+    void trackUserSignUpForAccount();
 
     /**
      * This function is used to track if user clicks on Find Courses
      */
-    P trackUserFindsCourses();
+    void trackUserFindsCourses();
 
     /**
      * This function is used to track if user clicks on Create Account on registration screen
      */
-    P trackCreateAccountClicked(String appVersion, String source);
+    void trackCreateAccountClicked(String appVersion, String source);
 
     /**
      * This function is used to track if user clicks on Enroll in the FindCourses Activity
@@ -216,29 +216,29 @@ public interface Analytics<P, T> {
      * @param courseId   - Course Id for which user selected enroll
      * @param emailOptIn - Flag to show user wants to opt in for email notification
      */
-    P trackEnrollClicked(String courseId, boolean emailOptIn);
+    void trackEnrollClicked(String courseId, boolean emailOptIn);
 
-    P trackNotificationReceived(@Nullable String courseId);
+    void trackNotificationReceived(@Nullable String courseId);
 
-    P trackNotificationTapped(@Nullable String courseId);
+    void trackNotificationTapped(@Nullable String courseId);
 
-    P trackUserConnectionSpeed(String connectionType, float connectionSpeed);
+    void trackUserConnectionSpeed(String connectionType, float connectionSpeed);
 
-    P certificateShared(@NonNull String courseId, @NonNull String certificateUrl,
-                             @NonNull String shareType);
+    void certificateShared(@NonNull String courseId, @NonNull String certificateUrl,
+                           @NonNull String shareType);
 
-    P courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl,
-                              @NonNull String shareType);
+    void courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl,
+                            @NonNull String shareType);
 
-    P trackCourseComponentViewed(String blockId, String courseId);
+    void trackCourseComponentViewed(String blockId, String courseId);
 
-    P trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
+    void trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
 
-    P trackProfileViewed(@NonNull String username);
+    void trackProfileViewed(@NonNull String username);
 
-    P trackProfilePhotoSet(boolean fromCamera);
+    void trackProfilePhotoSet(boolean fromCamera);
 
-    T identifyUser(String userID, String email, String username);
+    void identifyUser(String userID, String email, String username);
 
     /**
      * This resets the Identify user once the user has logged out
