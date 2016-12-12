@@ -18,7 +18,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
@@ -177,9 +177,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
 
-        environment.getSegment().trackScreenView(
-                ISegment.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
-        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
+        environment.getEventsTracker().trackScreenView(
+                IEvents.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
+        environment.getEventsTracker().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void tryToUpdateForEndOfSequential() {
@@ -261,7 +261,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
-        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
+        environment.getEventsTracker().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void updateUIForOrientation() {

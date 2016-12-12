@@ -1,7 +1,7 @@
 package org.edx.mobile.core;
 
 
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.EventsTracker;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
@@ -27,7 +27,7 @@ public interface IEdxEnvironment {
 
     LoginPrefs getLoginPrefs();
 
-    ISegment getSegment();
+    EventsTracker getEventsTracker();
 
     NotificationDelegate getNotificationDelegate();
 

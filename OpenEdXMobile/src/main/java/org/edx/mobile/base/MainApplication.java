@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -22,6 +21,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.analytics.ISegmentImpl;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
@@ -75,7 +75,7 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
-            Fabric.with(this, new CrashlyticsCore(), new Answers());
+            Fabric.with(this, new CrashlyticsCore());
             EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
         }
 
@@ -85,6 +85,10 @@ public abstract class MainApplication extends MultiDexApplication {
             NewRelic.withApplicationToken(config.getNewRelicConfig().getNewRelicKey())
                     .withCrashReportingEnabled(false)
                     .start(this);
+        }
+
+        if (config.getSegmentConfig().isEnabled())  {
+            config.addEventsTracker(injector.getInstance(ISegmentImpl.class));
         }
 
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));

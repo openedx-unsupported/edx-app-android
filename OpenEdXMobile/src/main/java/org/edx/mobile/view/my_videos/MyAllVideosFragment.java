@@ -14,7 +14,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.task.GetAllDownloadedVideosTask;
@@ -39,7 +39,7 @@ public class MyAllVideosFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS_ALL);
+        environment.getEventsTracker().trackScreenView(IEvents.Screens.MY_VIDEOS_ALL);
         EventBus.getDefault().register(this);
     }
 

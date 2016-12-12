@@ -27,7 +27,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
@@ -73,7 +73,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS_RECENT);
+        environment.getEventsTracker().trackScreenView(IEvents.Screens.MY_VIDEOS_RECENT);
         setHasOptionsMenu(!isLandscape());
         EventBus.getDefault().register(this);
     }

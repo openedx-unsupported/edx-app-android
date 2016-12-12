@@ -332,7 +332,7 @@ public class CourseDetailFragment extends BaseFragment {
             startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
             return;
         }
-        environment.getSegment().trackEnrollClicked(courseDetail.course_id, emailOptIn);
+        environment.getEventsTracker().trackEnrollClicked(courseDetail.course_id, emailOptIn);
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(getActivity(),
                 courseDetail.course_id, emailOptIn) {
             @Override

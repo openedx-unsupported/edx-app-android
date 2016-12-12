@@ -45,7 +45,7 @@ public class AuthPanelUtils {
             signUpButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    environment.getSegment().trackUserSignUpForAccount();
+                    environment.getEventsTracker().trackUserSignUpForAccount();
                     v.getContext().startActivity(environment.getRouter().getRegisterIntent());
                 }
             });

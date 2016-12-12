@@ -10,7 +10,7 @@ import android.view.WindowManager;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseVideosDownloadStateActivity;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
 
 public class MyVideosActivity extends BaseVideosDownloadStateActivity {
@@ -37,7 +37,7 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
 
         offlineBar = findViewById(R.id.offline_bar);
 
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS);
+        environment.getEventsTracker().trackScreenView(IEvents.Screens.MY_VIDEOS);
 
         // now init the tabs
         initializeTabs();

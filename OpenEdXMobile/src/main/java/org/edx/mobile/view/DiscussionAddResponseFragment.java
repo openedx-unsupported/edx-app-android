@@ -24,7 +24,8 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.EventsTracker;
+import org.edx.mobile.module.analytics.IEvents;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
@@ -71,7 +72,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     private Router router;
 
     @Inject
-    private ISegment segIO;
+    private EventsTracker eventsTracker;
 
     @Inject
     private Config config;
@@ -81,9 +82,9 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         Map<String, String> values = new HashMap<>();
-        values.put(ISegment.Keys.TOPIC_ID, discussionThread.getTopicId());
-        values.put(ISegment.Keys.THREAD_ID, discussionThread.getIdentifier());
-        segIO.trackScreenView(ISegment.Screens.FORUM_ADD_RESPONSE,
+        values.put(IEvents.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(IEvents.Keys.THREAD_ID, discussionThread.getIdentifier());
+        eventsTracker.trackScreenView(IEvents.Screens.FORUM_ADD_RESPONSE,
                 discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }
 
