@@ -16,17 +16,8 @@
     <dimen name="drawer_email_text">13sp</dimen>
     <dimen name="drawer_app_version_text">12sp</dimen>
 
-    <!-- Popup Menu -->
-    <dimen name="popup_menu_width">154dp</dimen>
-    <dimen name="popup_menu_horizontal_offset">-6dp</dimen>
-    <dimen name="popup_menu_vertical_offset">6dp</dimen>
-    <dimen name="popup_menu_horizontal_padding">16dp</dimen>
-    <dimen name="popup_menu_vertical_padding">18dp</dimen>
-    <dimen name="popup_menu_item_vertical_padding">12dp</dimen>
-    <dimen name="popup_menu_header_text_size">13sp</dimen>
-    <dimen name="popup_menu_row_text_size">14sp</dimen>
+    <!-- Popup Spinner -->
     <dimen name="popup_menu_icon_default_size">16dp</dimen>
-    <dimen name="popup_menu_icon_padding">16dp</dimen>
     <dimen name="popup_spinner_border">1dp</dimen>
     <dimen name="popup_spinner_min_height">34dp</dimen>
 

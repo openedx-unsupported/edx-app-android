@@ -188,11 +188,6 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackCourseOutlineMode(boolean isVideoMode) {
-        return null;
-    }
-
-    @Override
     public Properties trackCourseComponentViewed(String blockId, String courseId) {
         return null;
     }

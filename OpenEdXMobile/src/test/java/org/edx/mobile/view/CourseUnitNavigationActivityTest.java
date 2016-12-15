@@ -25,7 +25,6 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.DisableableViewPager;
 import org.junit.Ignore;
@@ -34,7 +33,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
@@ -89,11 +87,6 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         extras.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
         extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseUnit.getId());
         intent.putExtra(Router.EXTRA_BUNDLE, extras);
-
-        // Change the settings to show all the course content for easier and
-        // more comprehensive testing
-        new PrefManager.UserPrefManager(RuntimeEnvironment.application)
-                .setUserPrefVideoModel(false);
         return intent;
     }
 

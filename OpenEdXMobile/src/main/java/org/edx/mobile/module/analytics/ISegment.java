@@ -115,8 +115,6 @@ public interface ISegment {
 
     Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ShareUtils.ShareType shareType);
 
-    Properties trackCourseOutlineMode(boolean isVideoMode);
-
     Properties trackCourseComponentViewed(String blockId, String courseId);
 
     Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
@@ -153,9 +151,7 @@ public interface ISegment {
         String PROVIDER = "provider";
         String BLOCK_ID = "block_id";
         String SUPPORTED = "supported";
-        String NEW_OUTLINE_MODE = "new-mode";
         String DEVICE_ORIENTATION = "device-orientation";
-        String NAVIGATION_MODE = "navigation-mode";
 
         String CELL_CARRIER = "cell_carrier";
         String CELL_ZERO_RATED = "cell_zero_rated";
@@ -230,15 +226,10 @@ public interface ISegment {
         String PROFILE = "profiles";
         String CAMERA = "camera";
         String LIBRARY = "library";
-        String SWITCH_OUTLINE_MODE = "edx.bi.app.navigation.switched-mode.clicked";
         String PROFILE_VIEWED = "edx.bi.app.profile.view";
         String PROFILE_PHOTO_SET = "edx.bi.app.profile.setphoto";
         String COMPONENT_VIEWED = "edx.bi.app.navigation.component.viewed";
         String OPEN_IN_BROWSER = "edx.bi.app.navigation.open-in-browser";
-        String OUTLINE_MODE_FULL = "full";
-        String OUTLINE_MODE_VIDEO = "video";
-        String SWITCH_TO_FULL_MODE = "Switch to Full Mode";
-        String SWITCH_TO_VIDEO_MODE = "Switch to Video Mode";
         String OPEN_IN_WEB_SUPPORTED = "Open in browser - Supported";
         String OPEN_IN_WEB_NOT_SUPPORTED = "Open in browser - Unsupported";
         String LANDSCAPE = "landscape";
@@ -304,7 +295,6 @@ public interface ISegment {
         String SPEED = "Connected Speed Report";
         String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
         String SOCIAL_COURSE_DETAIL_SHARED = "Shared a course";
-        String SWITCH_OUTLINE_MODE = "Switch outline mode";
         String COMPONENT_VIEWED = "Component Viewed";
         String OPEN_IN_BROWSER = "Browser Launched";
         String PUSH_NOTIFICATION_RECEIVED = "notification-received";

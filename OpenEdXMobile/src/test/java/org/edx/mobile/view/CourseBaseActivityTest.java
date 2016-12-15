@@ -2,15 +2,10 @@ package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ProgressBar;
-
-import com.joanzapata.iconify.IconDrawable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.OkHttpUtil;
@@ -19,8 +14,6 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
 import org.robolectric.Robolectric;
-import org.robolectric.Shadows;
-import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
@@ -130,35 +123,6 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
             assertThat(progressWheel).isVisible();
             activity.finishProcess();
             assertThat(progressWheel).isNotVisible();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Test
-    @Override
-    public void initializeOptionsMenuTest() {
-        ShadowActivity shadowActivity = Shadows.shadowOf(
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get());
-        Menu menu = shadowActivity.getOptionsMenu();
-        assertNotNull(menu);
-        MenuItem shareOnWebItem = menu.findItem(R.id.action_share_on_web);
-        if (menu.findItem(R.id.action_share_on_web) != null) {
-            Drawable shareOnWebIcon = shareOnWebItem.getIcon();
-            assertThat(shareOnWebIcon).isInstanceOf(IconDrawable.class);
-            // IconDrawable doesn't expose any property getters..
-            // should we use reflection? Or add it to the imported class?
-
-            shadowActivity.clickMenuItem(R.id.action_share_on_web);
-            // How to get the shown custom PopupMenu?
-        }
-
-        MenuItem changeModelItem = menu.findItem(R.id.action_change_mode);
-        if (changeModelItem != null) {
-            Drawable shareOnWebIcon = changeModelItem.getIcon();
-            assertThat(shareOnWebIcon).isInstanceOf(IconDrawable.class);
         }
     }
 }
