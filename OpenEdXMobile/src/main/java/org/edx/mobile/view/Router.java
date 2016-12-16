@@ -25,7 +25,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SecurityUtil;
-import org.edx.mobile.view.dialog.WebViewDialogActivity;
+import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
@@ -358,7 +358,7 @@ public class Router {
         context.startActivity(findCoursesIntent);
     }
 
-    public void showWebViewDialog(@NonNull Activity activity, @NonNull String url, @Nullable String dialogTitle) {
-        activity.startActivity(WebViewDialogActivity.newIntent(activity, url, dialogTitle));
+    public void showWebViewActivity(@NonNull Activity activity, @NonNull String url, @Nullable String title) {
+        activity.startActivity(WebViewActivity.newIntent(activity, url, title));
     }
 }

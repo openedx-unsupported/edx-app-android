@@ -1,5 +1,7 @@
 package org.edx.mobile.authentication;
 
+import android.support.annotation.NonNull;
+
 import com.google.inject.Inject;
 
 import org.edx.mobile.http.ApiConstants;
@@ -41,6 +43,7 @@ public interface LoginService {
      * If there are form validation errors, this call will fail with 400 or 409 error code.
      * In case of validation errors the response body will be {@link org.edx.mobile.model.api.FormFieldMessageBody}.
      */
+    @NonNull
     @FormUrlEncoded
     @POST(ApiConstants.URL_REGISTRATION)
     Call<ResponseBody> register(@FieldMap Map<String, String> parameters);
@@ -49,6 +52,7 @@ public interface LoginService {
      * Depending on the query parameters for this endpoint, a different action will be triggered
      * on the server side. In this case, we are sending a user and password to get the AuthResponse.
      */
+    @NonNull
     @FormUrlEncoded
     @POST(ApiConstants.URL_ACCESS_TOKEN)
     Call<AuthResponse> getAccessToken(@Field("grant_type") String grant_type,
@@ -60,6 +64,7 @@ public interface LoginService {
      * Depending on the query parameters for this endpoint, a different action will be triggered
      * on the server side. In this case, we are using our refresh_token to get a new AuthResponse.
      */
+    @NonNull
     @FormUrlEncoded
     @POST(ApiConstants.URL_ACCESS_TOKEN)
     Call<AuthResponse> refreshAccessToken(@Field("grant_type") String grant_type,
@@ -69,10 +74,12 @@ public interface LoginService {
 
     /**
      * Authenticate with edX using an access token from a third party OAuth provider.
+     *
      * @param accessToken access token retrieved from third party OAuth provider (i.e. Facebook, Google)
-     * @param clientId edX OAuth client ID from config
-     * @param groupId Group ID as returned from {@link ApiConstants#getOAuthGroupIdForAuthBackend(LoginPrefs.AuthBackend)}
+     * @param clientId    edX OAuth client ID from config
+     * @param groupId     Group ID as returned from {@link ApiConstants#getOAuthGroupIdForAuthBackend(LoginPrefs.AuthBackend)}
      */
+    @NonNull
     @FormUrlEncoded
     @POST(ApiConstants.URL_EXCHANGE_ACCESS_TOKEN)
     Call<AuthResponse> exchangeAccessToken(@Field("access_token") String accessToken,
@@ -82,11 +89,13 @@ public interface LoginService {
     /**
      * Revoke the specified refresh or access token, along with all other tokens based on the same
      * application grant.
-     * @param clientId The client ID
-     * @param token The refresh or access token to be revoked
+     *
+     * @param clientId      The client ID
+     * @param token         The refresh or access token to be revoked
      * @param tokenTypeHint The type of the token to be revoked; This should be either
      *                      'access_token' or 'refresh_token'
      */
+    @NonNull
     @FormUrlEncoded
     @POST(ApiConstants.URL_REVOKE_TOKEN)
     Call<ResponseBody> revokeAccessToken(@Field("client_id") String clientId,
@@ -96,6 +105,7 @@ public interface LoginService {
     /**
      * Reset password for account associated with an email address.
      */
+    @NonNull
     @FormUrlEncoded
     @POST(ApiConstants.URL_PASSWORD_RESET)
     Call<ResetPasswordResponse> resetPassword(@Field("email") String email);
@@ -104,6 +114,7 @@ public interface LoginService {
     /**
      * @return basic profile information for currently authenticated user.
      */
+    @NonNull
     @GET(URL_MY_USER_INFO)
     Call<ProfileModel> getProfile();
 }

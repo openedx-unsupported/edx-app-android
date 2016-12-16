@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -151,10 +152,10 @@ public class RegisterActivity extends BaseFragmentActivity
 
         if (isInAppEULALink) {
             // show EULA license that is shipped with app
-            environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
+            environment.getRouter().showWebViewActivity(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
         } else {
             // for any other link, open agreement link in a webview container
-            environment.getRouter().showWebViewDialog(this, agreement.getLink(), agreement.getText());
+            environment.getRouter().showWebViewActivity(this, agreement.getLink(), agreement.getText());
         }
     }
 
@@ -299,7 +300,7 @@ public class RegisterActivity extends BaseFragmentActivity
                         return; // Return here to avoid falling back to the generic error handler.
                     }
                 }
-                RegisterActivity.this.showErrorDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
+                RegisterActivity.this.showAlertDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
             }
         };
         task.execute();
@@ -323,7 +324,7 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     private void showErrorPopup(@NonNull final View errorView) {
-        showErrorDialog(getResources().getString(R.string.registration_error_title), getResources().getString(R.string.registration_error_message), new DialogInterface.OnClickListener() {
+        showAlertDialog(getResources().getString(R.string.registration_error_title), getResources().getString(R.string.registration_error_message), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 scrollToView((ScrollView) findViewById(R.id.scrollview), errorView);
@@ -357,8 +358,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
     // make sure that on the login activity, all errors show up as a dialog as opposed to a flying snackbar
     @Override
-    public void showErrorDialog(String header, String message) {
-        super.showErrorDialog(header, message);
+    public void showAlertDialog(String header, String message) {
+        super.showAlertDialog(header, message);
     }
 
     @Override
@@ -483,7 +484,7 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
         tryToSetUIInteraction(true);
