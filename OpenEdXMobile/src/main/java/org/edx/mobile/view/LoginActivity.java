@@ -278,13 +278,11 @@ public class LoginActivity
      * @param backend
      */
     public void onSocialLoginSuccess(String accessToken, String backend, Task task) {
-        environment.getAnalyticsProvider().trackUserLogin(backend);
         tryToSetUIInteraction(false);
         task.setProgressDialog(activityLoginBinding.progress.progressIndicator);
     }
 
     public void onUserLoginSuccess(ProfileModel profile) {
-        environment.getAnalyticsProvider().trackUserLogin("Email");
         setResult(RESULT_OK);
         finish();
         if (!environment.getConfig().isRegistrationEnabled()) {
@@ -293,7 +291,6 @@ public class LoginActivity
     }
 
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
-        environment.getAnalyticsProvider().trackUserLogin(backend, false);
         tryToSetUIInteraction(true);
 
 

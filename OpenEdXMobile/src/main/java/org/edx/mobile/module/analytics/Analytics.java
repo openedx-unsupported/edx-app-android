@@ -140,9 +140,8 @@ public interface Analytics {
      * This function is used to track User Login
      *
      * @param method     - will take the following inputs “Password”|”Google”|”Facebook”
-     * @param didSucceed - Indicates whether the user succeed in the login or not
      */
-    void trackUserLogin(String method, boolean didSucceed);
+    void trackUserLogin(String method);
 
     /**
      * This function is used to track user logout
@@ -260,7 +259,6 @@ public interface Analytics {
         String CONTEXT = "context";
         String DATA = "data";
         String METHOD = "method";
-        String SUCCEED = "succeed";
         String APP = "app_name";
         String EMAIL_OPT_IN = "email_opt_in";
         String PROVIDER = "provider";

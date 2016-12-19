@@ -523,10 +523,9 @@ public class SegmentAnalytics implements Analytics {
 
     /**
      * This function is used to track User Login activity
-     * Method will take the following inputs “Password”|”Google”|”Facebook”
      */
     @Override
-    public void trackUserLogin(String method, boolean didSucceed) {
+    public void trackUserLogin(String method) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGIN);
         //More information regarding a track event should be under 'data'
@@ -534,7 +533,6 @@ public class SegmentAnalytics implements Analytics {
             aEvent.data.putValue(Keys.METHOD, method);
         }
 
-        aEvent.data.putValue(Keys.SUCCEED, didSucceed);
         aEvent.setAppNameContext();
         tracker.track(Events.USER_LOGIN, aEvent.properties);
     }
