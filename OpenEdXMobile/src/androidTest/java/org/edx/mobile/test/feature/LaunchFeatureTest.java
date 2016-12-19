@@ -7,9 +7,6 @@ import org.edx.mobile.test.feature.data.TestValues;
 import org.edx.mobile.test.feature.interactor.AppInteractor;
 import org.junit.Test;
 
-
-
-
 public class LaunchFeatureTest extends FeatureTest {
 
     @Test
