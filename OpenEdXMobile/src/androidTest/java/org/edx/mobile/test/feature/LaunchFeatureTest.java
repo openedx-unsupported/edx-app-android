@@ -7,6 +7,9 @@ import org.edx.mobile.test.feature.data.TestValues;
 import org.edx.mobile.test.feature.interactor.AppInteractor;
 import org.junit.Test;
 
+
+
+
 public class LaunchFeatureTest extends FeatureTest {
 
     @Test
@@ -15,7 +18,6 @@ public class LaunchFeatureTest extends FeatureTest {
                 .launchApp()
                 .observeLandingScreen();
     }
-
     @Test
     public void whenAppLaunched_withValidUser_myCoursesScreenIsShown() throws Exception {
         final MainApplication application = MainApplication.instance();
@@ -27,13 +29,12 @@ public class LaunchFeatureTest extends FeatureTest {
     }
 
     @Test
-    public void whenAppLaunched_withInvalidAuthToken_logInScreenIsShown() {
+    public void whenAppLaunched_withInvalidProfile_landingScreenIsShown() {
         environment.getLoginPrefs().storeAuthTokenResponse(TestValues.INVALID_AUTH_TOKEN_RESPONSE, LoginPrefs.AuthBackend.PASSWORD);
-        environment.getLoginPrefs().storeUserProfile(TestValues.DUMMY_PROFILE);
+        environment.getLoginPrefs().storeUserProfile(null); // Make sure that profile is null so we are going back to landing screen
         new AppInteractor()
                 .launchApp()
-                .observeLogInScreen()
-                .navigateBack()
-                .observeLandingScreen();
+                .observeLandingScreen(); // If profile is not set &
     }
 }
+

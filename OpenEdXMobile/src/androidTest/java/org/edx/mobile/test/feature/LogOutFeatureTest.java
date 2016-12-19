@@ -15,6 +15,6 @@ public class LogOutFeatureTest extends FeatureTest {
                 .logIn(TestValues.ACTIVE_USER_CREDENTIALS)
                 .openNavigationDrawer()
                 .logOut()
-                .observeLogInScreen();
+                .observeLandingScreen();
     }
 }
