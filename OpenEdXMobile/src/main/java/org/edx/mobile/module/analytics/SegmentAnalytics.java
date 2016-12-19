@@ -540,25 +540,6 @@ public class SegmentAnalytics implements Analytics {
     }
 
     /**
-     * This function is used to track User Registration
-     *
-     * @param method     - will take the following inputs “Password”|”Google”|”Facebook”
-     * @param didSucceed - Indicates whether the user succeed in the login or not
-     */
-    @Override
-    public void trackUserRegister(String method, boolean didSucceed) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.USER_REGISTER);
-        //More information regarding a track event should be under 'data'
-        if (method != null) {
-            aEvent.data.putValue(Keys.METHOD, method);
-        }
-        aEvent.data.putValue(Keys.SUCCEED, didSucceed);
-        aEvent.setAppNameContext();
-        tracker.track(Events.USER_REGISTER, aEvent.properties);
-    }
-
-    /**
      * This function is used to track user logout
      */
     @Override

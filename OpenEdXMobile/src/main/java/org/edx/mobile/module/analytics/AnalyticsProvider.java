@@ -114,13 +114,6 @@ public class AnalyticsProvider implements Analytics {
     }
 
     @Override
-    public void trackUserRegister(String method, boolean didSucceed) {
-        for (Analytics service : services) {
-            service.trackUserRegister(method, didSucceed);
-        }
-    }
-
-    @Override
     public void trackUserLogout() {
         for (Analytics service : services) {
             service.trackUserLogout();

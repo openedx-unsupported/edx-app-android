@@ -145,14 +145,6 @@ public interface Analytics {
     void trackUserLogin(String method, boolean didSucceed);
 
     /**
-     * This function is used to track User Registration
-     *
-     * @param method     - will take the following inputs “Password”|”Google”|”Facebook”
-     * @param didSucceed - Indicates whether the user succeed in the login or not
-     */
-    void trackUserRegister(String method, boolean didSucceed);
-
-    /**
      * This function is used to track user logout
      */
     void trackUserLogout();
@@ -321,7 +313,6 @@ public interface Analytics {
         String VIDEO_DOWNLOADED = "edx.bi.video.downloaded";
         String USERLOGOUT = "edx.bi.app.user.logout";
         String USERLOGIN = "edx.bi.app.user.login";
-        String USER_REGISTER = "edx.bi.app.user.register";
         String APP_NAME = "edx.mobileapp.android";
         String DISCOVER_COURSES_CLICK = "edx.bi.app.discover.courses.tapped";
         String EXPLORE_SUBJECTS_CLICK = "edx.bi.app.discover.explore.tapped";
@@ -407,7 +398,6 @@ public interface Analytics {
         String SINGLE_VIDEO_DOWNLOAD = "Single Video Download";
         String SCREEN_TOGGLED = "Screen Toggled";
         String USER_LOGIN = "User Login";
-        String USER_REGISTER = "User Register";
         String USER_LOGOUT = "User Logout";
         String BROWSER_LAUNCHED = "Browser Launched";
         String LANGUAGE_CLICKED = "Language Clicked";

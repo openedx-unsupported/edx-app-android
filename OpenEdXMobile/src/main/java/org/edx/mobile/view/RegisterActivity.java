@@ -27,8 +27,8 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsProvider;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
@@ -39,9 +39,9 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
-import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
 import java.util.ArrayList;
@@ -273,13 +273,11 @@ public class RegisterActivity extends BaseFragmentActivity
         final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
             @Override
             public void onSuccess(AuthResponse auth) {
-                analyticsProvider.trackUserRegister(backsourceType.toString(), true);
                 onUserLoginSuccess(auth.profile);
             }
 
             @Override
             public void onException(Exception ex) {
-                analyticsProvider.trackUserRegister(backsourceType.toString(), false);
                 hideProgress();
                 if (ex instanceof LoginAPI.RegistrationException) {
                     final FormFieldMessageBody messageBody = ((LoginAPI.RegistrationException) ex).getFormErrorBody();
