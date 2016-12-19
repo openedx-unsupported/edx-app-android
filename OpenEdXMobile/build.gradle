@@ -173,7 +173,7 @@ dependencies {
 
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics-core:2.3.8@aar') {
-        transitive = true
+        transitive = true;
     }
 
     //New Relic Integration
