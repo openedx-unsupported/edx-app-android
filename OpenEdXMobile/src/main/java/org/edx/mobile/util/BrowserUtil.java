@@ -90,7 +90,7 @@ public class BrowserUtil {
         context.startActivity(intent);
 
         AnalyticsProvider analyticsProvider = environment.getAnalyticsProvider();
-        analyticsProvider.trackOpenInBrowser(url);
+        analyticsProvider.trackBrowserLaunched(url);
     }
 
     public static boolean isUrlOfHost(String url, String host) {

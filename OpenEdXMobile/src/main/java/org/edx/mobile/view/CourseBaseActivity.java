@@ -159,7 +159,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         super.onBackPressed();
         finish();
     }
-
+    
     /**
      * This function shows the offline mode message
      */

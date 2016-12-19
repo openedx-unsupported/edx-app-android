@@ -42,16 +42,16 @@ public class AnalyticsProvider implements Analytics {
     }
 
     @Override
-    public void trackOpenInBrowser(String url) {
+    public void trackBrowserLaunched(String url) {
         for (Analytics service : services) {
-            service.trackOpenInBrowser(url);
+            service.trackBrowserLaunched(url);
         }
     }
 
     @Override
-    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
+    public void trackBrowserLaunched(String blockId, String courseId, boolean isSupported) {
         for (Analytics service : services) {
-            service.trackOpenInBrowser(blockId, courseId, isSupported);
+            service.trackBrowserLaunched(blockId, courseId, isSupported);
         }
     }
 
@@ -76,13 +76,13 @@ public class AnalyticsProvider implements Analytics {
         }
     }
 
-    public void certificateShared(String courseId, String certificateURL,
-                                  ShareUtils.ShareType method) {
+    public void certificateShared(@NonNull String courseId, @NonNull String certificateURL,
+                                  @NonNull ShareUtils.ShareType method) {
         certificateShared(courseId, certificateURL, getShareTypeValue(method));
     }
 
-    public void courseDetailShared(String courseId, String shareText,
-                                   ShareUtils.ShareType method) {
+    public void courseDetailShared(@NonNull String courseId, @NonNull String shareText,
+                                   @NonNull ShareUtils.ShareType method) {
         courseDetailShared(courseId, shareText, getShareTypeValue(method));
     }
 

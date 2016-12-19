@@ -109,11 +109,11 @@ public interface Analytics {
                                String unitUrl);
 
     /**
-     * This function is used to track Open in Browser
+     * This function is used to track browser's launching
      *
      * @param url
      */
-    void trackOpenInBrowser(String url);
+    void trackBrowserLaunched(String url);
 
     /**
      * This function is used to track Bulk Download from Sections
@@ -232,7 +232,7 @@ public interface Analytics {
 
     void trackCourseComponentViewed(String blockId, String courseId);
 
-    void trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
+    void trackBrowserLaunched(String blockId, String courseId, boolean isSupported);
 
     void trackProfileViewed(@NonNull String username);
 

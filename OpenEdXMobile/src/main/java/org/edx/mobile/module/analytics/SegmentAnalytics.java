@@ -570,12 +570,12 @@ public class SegmentAnalytics implements Analytics {
     }
 
     /**
-     * This function is used to track Open in Browser
+     * This function is used to track browser's launching
      *
      * @param url
      */
     @Override
-    public void trackOpenInBrowser(String url) {
+    public void trackBrowserLaunched(String url) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.BROWSER_LAUNCHED);
         if (url != null) {
@@ -740,7 +740,7 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
+    public void trackBrowserLaunched(String blockId, String courseId, boolean isSupported) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.OPEN_IN_BROWSER);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
