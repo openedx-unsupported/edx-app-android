@@ -81,17 +81,17 @@ public class AnalyticsProvider implements Analytics {
         certificateShared(courseId, certificateURL, getShareTypeValue(method));
     }
 
-    public void courseDetailShared(@NonNull String courseId, @NonNull String shareText,
-                                   @NonNull ShareUtils.ShareType method) {
-        courseDetailShared(courseId, shareText, getShareTypeValue(method));
-    }
-
     @Override
     public void certificateShared(@NonNull String courseId, @NonNull String certificateUrl,
                                   @NonNull String shareType) {
         for (Analytics service : services) {
             service.certificateShared(courseId, certificateUrl, shareType);
         }
+    }
+
+    public void courseDetailShared(@NonNull String courseId, @NonNull String shareText,
+                                   @NonNull ShareUtils.ShareType method) {
+        courseDetailShared(courseId, shareText, getShareTypeValue(method));
     }
 
     @Override
