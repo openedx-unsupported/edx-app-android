@@ -5,6 +5,11 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
+/**
+ * A base framework that defines the prototype of all the functions that spit our analytics events.
+ * This class contains all the {@link Screens} & {@link Events}. Additionally all the {@link Keys}
+ * and their corresponding {@link Values} are defined to make Screens and Events more meaningful.
+ */
 public interface Analytics {
 
     /**
@@ -139,7 +144,7 @@ public interface Analytics {
     /**
      * This function is used to track User Login
      *
-     * @param method     - will take the following inputs “Password”|”Google”|”Facebook”
+     * @param method - will take the following inputs “Password”|”Google”|”Facebook”
      */
     void trackUserLogin(String method);
 
@@ -248,7 +253,6 @@ public interface Analytics {
         String COURSE_ID = "course_id";
         String OPEN_BROWSER = "open_in_browser_url";
         String COMPONENT = "component";
-        String ENROLLMENT_ID = "enrollment_id";
         String COURSE_SECTION = "course_section";
         String COURSE_SUBSECTION = "course_subsection";
         String NO_OF_VIDEOS = "number_of_videos";

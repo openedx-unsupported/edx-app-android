@@ -270,7 +270,7 @@ public class Router {
      * {@link #performManualLogout(Context, AnalyticsProvider, NotificationDelegate)} should be used instead.
      *
      * @param context  The context.
-     * @param analyticsProvider  The Event object.
+     * @param analyticsProvider  The analytics provider object.
      * @param delegate The notification delegate.
      * @see #performManualLogout(Context, AnalyticsProvider, NotificationDelegate)
      */
@@ -294,7 +294,7 @@ public class Router {
      * {@link #forceLogout(Context, AnalyticsProvider, NotificationDelegate)} should be used instead.
      *
      * @param context  The context.
-     * @param analyticsProvider  The Event object.
+     * @param analyticsProvider  The analytics provider object.
      * @param delegate The notification delegate.
      * @see #forceLogout(Context, AnalyticsProvider, NotificationDelegate)
      */

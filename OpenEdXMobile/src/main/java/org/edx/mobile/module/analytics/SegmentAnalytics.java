@@ -22,19 +22,22 @@ import java.math.RoundingMode;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A concrete implementation of {@link Analytics} to report all the screens and events to Segment.
+ */
 @Singleton
 public class SegmentAnalytics implements Analytics {
     @Inject
-    private SegmentTracker tracker;
+    private Tracker tracker;
 
     /**
-     * Utility class that defines a specific format for an analytics event that we use in Segment.
+     * Utility class that defines a specific format for an analytics event that we deliver to Segment.
      */
-    private static class SegmentAnalyticsEvent {
+    private static class Event {
         public Properties properties;
         public Properties data;
 
-        public SegmentAnalyticsEvent() {
+        public Event() {
             this.properties = new Properties();
             this.data = new Properties();
             this.properties.putValue(Keys.DATA, this.data);
@@ -92,13 +95,13 @@ public class SegmentAnalytics implements Analytics {
      * Utility class that defines the basic structure for a Segment tracker that we can use for
      * sending analytics events.
      */
-    private static class SegmentTracker {
+    private static class Tracker {
         private com.segment.analytics.Analytics analytics;
         private final Logger logger = new Logger(getClass().getName());
         private Config config;
 
         @Inject
-        public SegmentTracker(Context context, Config config) {
+        public Tracker(Context context, Config config) {
             this.config = config;
             String writeKey = config.getSegmentConfig().getSegmentWriteKey();
             boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
@@ -109,7 +112,7 @@ public class SegmentAnalytics implements Analytics {
             // Now Analytics.with will return the custom instance
 
             if (writeKey != null) {
-                logger.debug("SegmentTracker created with write key: " + writeKey);
+                logger.debug("Tracker created with write key: " + writeKey);
                 // Now Analytics.with will return the custom instance
                 analytics = new com.segment.analytics.Analytics.Builder(context, writeKey)
                         .flushQueueSize(queueSize)
@@ -183,7 +186,7 @@ public class SegmentAnalytics implements Analytics {
                                 @Nullable String action,
                                 @Nullable Map<String, String> values) {
         // Sending screen view
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.setAppNameContext();
         if (!TextUtils.isEmpty(action)) {
             aEvent.properties.put(Keys.ACTION, action);
@@ -210,7 +213,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackVideoLoading(String videoId, String courseId, String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_LOADED);
+        Event aEvent = getCommonProperties(videoId, Values.VIDEO_LOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         tracker.track(Events.LOADED_VIDEO, aEvent.properties);
     }
@@ -226,7 +229,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackVideoPlaying(String videoId, Double currentTime,
                                   String courseId, String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
+        Event aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PLAYED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
@@ -244,7 +247,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackVideoPause(String videoId,
                                 Double currentTime, String courseId, String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
+        Event aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PAUSED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         tracker.track(Events.PAUSED_VIDEO, aEvent.properties);
@@ -261,7 +264,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackVideoStop(String videoId, Double currentTime, String courseId,
                                String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
+        Event aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_STOPPED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
@@ -281,7 +284,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackVideoSeek(String videoId,
                                Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
-        SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
+        Event aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         //Call the format Double value so that we can have upto 3 decimal places after
         oldTime = formatDoubleValue(oldTime, 3);
@@ -311,7 +314,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackShowTranscript(String videoId, Double currentTime, String courseId,
                                     String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
+        Event aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.TRANSCRIPT_SHOWN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
@@ -330,7 +333,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackHideTranscript(String videoId, Double currentTime, String courseId,
                                     String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
+        Event aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.TRANSCRIPT_HIDDEN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
@@ -350,10 +353,10 @@ public class SegmentAnalytics implements Analytics {
      *
      * @param videoId
      * @param eventName
-     * @return The {@link SegmentAnalyticsEvent} updated with provided with arguments
+     * @return The {@link Event} updated with provided with arguments
      */
-    private SegmentAnalyticsEvent getCommonProperties(String videoId, String eventName) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+    private Event getCommonProperties(String videoId, String eventName) {
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, eventName);
         if (videoId != null) {
             aEvent.data.putValue(Keys.MODULE_ID, videoId);
@@ -367,11 +370,11 @@ public class SegmentAnalytics implements Analytics {
      *
      * @param currentTime
      * @param videoId
-     * @return The {@link SegmentAnalyticsEvent} updated with provided with arguments
+     * @return The {@link Event} updated with provided with arguments
      */
-    private SegmentAnalyticsEvent getCommonPropertiesWithCurrentTime(Double currentTime,
-                                                                     String videoId, String eventName) {
-        SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, eventName);
+    private Event getCommonPropertiesWithCurrentTime(Double currentTime,
+                                                     String videoId, String eventName) {
+        Event aEvent = getCommonProperties(videoId, eventName);
         if (currentTime != null) {
             currentTime = formatDoubleValue(currentTime, 3);
             aEvent.data.putValue(Keys.CURRENT_TIME, currentTime);
@@ -413,7 +416,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackDownloadComplete(String videoId, String courseId,
                                       String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_DOWNLOADED);
+        Event aEvent = getCommonProperties(videoId, Values.VIDEO_DOWNLOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
 
         tracker.track(Events.VIDEO_DOWNLOADED, aEvent.properties);
@@ -429,7 +432,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackSectionBulkVideoDownload(String enrollmentId,
                                               String section, long videoCount) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         if (section != null) {
             aEvent.data.putValue(Keys.COURSE_SECTION, section);
         }
@@ -453,7 +456,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackSubSectionBulkVideoDownload(String section,
                                                  String subSection, String enrollmentId, long videoCount) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         if (section != null && subSection != null) {
             aEvent.data.putValue(Keys.COURSE_SECTION, section);
             aEvent.data.putValue(Keys.COURSE_SUBSECTION, subSection);
@@ -477,7 +480,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackSingleVideoDownload(String videoId, String courseId,
                                          String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonProperties(videoId,
+        Event aEvent = getCommonProperties(videoId,
                 Values.SINGLE_VIDEO_DOWNLOAD);
         aEvent.setCourseContext(courseId,
                 unitUrl, Values.DOWNLOAD_MODULE);
@@ -497,7 +500,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackVideoOrientation(String videoId, Double currentTime,
                                       boolean isLandscape, String courseId, String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
+        Event aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.FULLSREEN_TOGGLED);
         aEvent.data.putValue(Keys.FULLSCREEN, isLandscape);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -507,7 +510,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackDiscoverCoursesClicked() {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.DISCOVER_COURSES_CLICK);
         aEvent.setAppNameContext();
         tracker.track(Events.DISCOVER_COURSES, aEvent.properties);
@@ -515,7 +518,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackExploreSubjectsClicked() {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.EXPLORE_SUBJECTS_CLICK);
         aEvent.setAppNameContext();
         tracker.track(Events.EXPLORE_SUBJECTS, aEvent.properties);
@@ -526,7 +529,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackUserLogin(String method) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGIN);
         //More information regarding a track event should be under 'data'
         if (method != null) {
@@ -542,7 +545,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackUserLogout() {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGOUT);
         aEvent.setAppNameContext();
         tracker.track(Events.USER_LOGOUT, aEvent.properties);
@@ -555,7 +558,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackBrowserLaunched(String url) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.BROWSER_LAUNCHED);
         if (url != null) {
             aEvent.data.putValue(Keys.TARGET_URL, url);
@@ -571,7 +574,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackTranscriptLanguage(String videoId,
                                         Double currentTime, String lang, String courseId, String unitUrl) {
-        SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
+        Event aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.TRANSCRIPT_LANGUAGE);
         aEvent.properties.putValue(Keys.LANGUAGE, lang);
         aEvent.setCourseContext(courseId, unitUrl,
@@ -585,7 +588,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackUserSignUpForAccount() {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.USER_NO_ACCOUNT);
         aEvent.setAppNameContext();
 
@@ -598,7 +601,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackUserFindsCourses() {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.USER_FIND_COURSES);
         aEvent.setAppNameContext();
 
@@ -613,7 +616,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackCreateAccountClicked(String appVersion, String source) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
         if (!TextUtils.isEmpty(source))
             aEvent.properties.putValue(Keys.PROVIDER, source);
@@ -633,7 +636,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void trackEnrollClicked(String courseId, boolean email_opt_in) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.EMAIL_OPT_IN, email_opt_in);
         aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL);
@@ -648,7 +651,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackUserConnectionSpeed(String connectionType, float connectionSpeed) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.CONNECTION_SPEED);
         aEvent.data.putValue(Keys.CONNECTION_TYPE, connectionType);
         aEvent.data.putValue(Keys.CONNECTION_SPEED, connectionSpeed);
@@ -659,7 +662,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackNotificationReceived(@Nullable String courseId) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_RECEIVED);
         aEvent.setAppNameContext();
 
@@ -670,7 +673,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackNotificationTapped(@Nullable String courseId) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_TAPPED);
         aEvent.setAppNameContext();
 
@@ -681,7 +684,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void courseDetailShared(String courseId, String aboutUrl, String shareType) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_COURSE_DETAIL_SHARED);
 
         aEvent.data.putValue(Keys.NAME, courseId);
@@ -694,7 +697,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull String shareType) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CERTIFICATE_SHARED);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
@@ -706,7 +709,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackCourseComponentViewed(String blockId, String courseId) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.COMPONENT_VIEWED);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
@@ -720,7 +723,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackBrowserLaunched(String blockId, String courseId, boolean isSupported) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.OPEN_IN_BROWSER);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
@@ -736,7 +739,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackProfileViewed(@NonNull String username) {
-        final SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        final Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.PROFILE_VIEWED);
         aEvent.setAppNameContext();
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
@@ -746,7 +749,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackProfilePhotoSet(boolean fromCamera) {
-        final SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        final Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.PROFILE_PHOTO_SET);
         aEvent.setAppNameContext();
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,

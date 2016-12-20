@@ -39,12 +39,12 @@ public class LoginPrefs {
 
     public void storeAuthTokenResponse(@NonNull AuthResponse response, @NonNull AuthBackend backend) {
         pref.put(PrefManager.Key.AUTH_JSON, gson.toJson(response));
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, eventKeyFromAuthBackend(backend));
+        pref.put(PrefManager.Key.ANALYTICS_KEY_BACKEND, analyticsTokenFromAuthBackend(backend));
     }
 
     public void clearAuthTokenResponse() {
         pref.put(PrefManager.Key.AUTH_JSON, null);
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, null);
+        pref.put(PrefManager.Key.ANALYTICS_KEY_BACKEND, null);
     }
 
     public void storeRefreshTokenResponse(@NonNull AuthResponse refreshTokenResponse) {
@@ -137,7 +137,7 @@ public class LoginPrefs {
 
     @Nullable
     public String getAuthBackendKeyForSegment() {
-        return pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
+        return pref.getString(PrefManager.Key.ANALYTICS_KEY_BACKEND);
     }
 
     @Nullable
@@ -165,7 +165,7 @@ public class LoginPrefs {
     }
 
     @NonNull
-    private static String eventKeyFromAuthBackend(@NonNull AuthBackend backend) {
+    private static String analyticsTokenFromAuthBackend(@NonNull AuthBackend backend) {
         switch (backend) {
             case PASSWORD:
                 return Analytics.Values.PASSWORD;
