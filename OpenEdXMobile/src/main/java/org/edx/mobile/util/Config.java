@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,6 +25,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import io.fabric.sdk.android.Kit;
 
 @Singleton
 public class Config {
@@ -230,10 +234,14 @@ public class Config {
         @SerializedName("FABRIC_BUILD_SECRET")
         private String mFabricBuildSecret;
 
+        @SerializedName("KITS")
+        private FabricKitsConfig mKitsConfig;
+
         public boolean isEnabled() {
             return mEnabled
                     && !TextUtils.isEmpty(mFabricKey)
-                    && !TextUtils.isEmpty(mFabricBuildSecret);
+                    && !TextUtils.isEmpty(mFabricBuildSecret)
+                    && mKitsConfig != null && mKitsConfig.isEnabled();
         }
 
         public String getFabricKey() {
@@ -242,6 +250,44 @@ public class Config {
 
         public String getFabricBuildSecret() {
             return mFabricBuildSecret;
+        }
+
+        public FabricKitsConfig getKitsConfig()   {
+            return mKitsConfig;
+        }
+    }
+
+    public static class FabricKitsConfig {
+        @SerializedName("CRASHLYTICS")
+        private boolean mCrashlyticsEnabled;
+
+        @SerializedName("ANSWERS")
+        private boolean mAnswersEnabled;
+
+        public boolean isCrashlyticsEnabled() {
+            return mCrashlyticsEnabled;
+        }
+
+        public boolean isAnswersEnabled() {
+            return mAnswersEnabled;
+        }
+
+        public Kit[] getEnabledKits()   {
+            List<Kit> fabricKits = new ArrayList<>();
+
+            if (isCrashlyticsEnabled())    {
+                fabricKits.add(new CrashlyticsCore());
+            }
+
+            if (isAnswersEnabled()) {
+                fabricKits.add(new Answers());
+            }
+
+            return fabricKits.toArray(new Kit[fabricKits.size()]);
+        }
+
+        public boolean isEnabled()  {
+            return getEnabledKits().length != 0;
         }
     }
 
