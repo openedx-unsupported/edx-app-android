@@ -14,7 +14,6 @@ import com.segment.analytics.Traits;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 
 import java.math.BigDecimal;
@@ -27,8 +26,22 @@ import java.util.concurrent.TimeUnit;
  */
 @Singleton
 public class SegmentAnalytics implements Analytics {
+    private com.segment.analytics.Analytics tracker;
+
     @Inject
-    private Tracker tracker;
+    public SegmentAnalytics(@NonNull Context context, @NonNull Config config) {
+        final String writeKey = config.getSegmentConfig().getSegmentWriteKey();
+        final boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
+        final int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
+        final int flushInterval = context.getResources().getInteger(R.integer.analytics_flush_interval);
+
+        // Must be called before any calls to Analytics.with(context)
+        tracker = new com.segment.analytics.Analytics.Builder(context, writeKey)
+                .flushQueueSize(queueSize)
+                .flushInterval(flushInterval, TimeUnit.SECONDS)
+                .logLevel(debugging ? com.segment.analytics.Analytics.LogLevel.VERBOSE : com.segment.analytics.Analytics.LogLevel.NONE)
+                .build();
+    }
 
     /**
      * Utility class that defines a specific format for an analytics event that we deliver to Segment.
@@ -88,87 +101,6 @@ public class SegmentAnalytics implements Analytics {
             cxtProps.putValue(Keys.APP, Values.APP_NAME);
 
             return cxtProps;
-        }
-    }
-
-    /**
-     * Utility class that defines the basic structure for a Segment tracker that we can use for
-     * sending analytics events.
-     */
-    private static class Tracker {
-        private com.segment.analytics.Analytics analytics;
-        private final Logger logger = new Logger(getClass().getName());
-        private Config config;
-
-        @Inject
-        public Tracker(Context context, Config config) {
-            this.config = config;
-            String writeKey = config.getSegmentConfig().getSegmentWriteKey();
-            boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
-            int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
-            int flushInterval = context.getResources().getInteger(R.integer.analytics_flush_interval);
-
-            // Must be called before any calls to Analytics.with(context)
-            // Now Analytics.with will return the custom instance
-
-            if (writeKey != null) {
-                logger.debug("Tracker created with write key: " + writeKey);
-                // Now Analytics.with will return the custom instance
-                analytics = new com.segment.analytics.Analytics.Builder(context, writeKey)
-                        .flushQueueSize(queueSize)
-                        .flushInterval(flushInterval, TimeUnit.SECONDS)
-                        .logLevel(debugging ? com.segment.analytics.Analytics.LogLevel.VERBOSE : com.segment.analytics.Analytics.LogLevel.NONE)
-                        .build();
-            } else {
-                logger.warn("writeKey is null, Segment analytics will not work.");
-            }
-        }
-
-        /**
-         * This function is used to reset the user/
-         * flush all remaining events for particular user
-         */
-        public void resetIdentifyUser() {
-            if (analytics != null) {
-                analytics.flush();
-            }
-        }
-
-        /**
-         * Calls track method of Analytics.
-         *
-         * @param event
-         * @param props
-         */
-        public void track(String event, Properties props) {
-            if (analytics != null) {
-                analytics.track(event, props);
-            }
-        }
-
-        /**
-         * Calls screen method of Analytics.
-         *
-         * @param category
-         * @param name
-         */
-        public void screen(String category, String name, Properties properties) {
-            if (analytics != null) {
-                analytics.screen(category, name, properties);
-            }
-        }
-
-        /**
-         * Calls identify method of Analytics.
-         *
-         * @param id
-         * @param traits
-         * @param options
-         */
-        public void identify(String id, Traits traits, Options options) {
-            if (analytics != null) {
-                analytics.identify(id, traits, options);
-            }
         }
     }
 
@@ -345,7 +277,7 @@ public class SegmentAnalytics implements Analytics {
      */
     @Override
     public void resetIdentifyUser() {
-        tracker.resetIdentifyUser();
+        tracker.flush();
     }
 
     /**
