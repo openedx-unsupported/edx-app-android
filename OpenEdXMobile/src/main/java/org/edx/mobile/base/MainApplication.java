@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
+import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -79,8 +80,15 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
-            Fabric.with(this, new CrashlyticsCore());
-            EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
+            if (config.getFabricConfig().isAnswersEnabled()) {
+                Fabric.with(this, new CrashlyticsCore(), new Answers());
+            } else {
+                Fabric.with(this, new CrashlyticsCore());
+            }
+
+            if (config.getFabricConfig().isCrashlyticsEnabled()) {
+                EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
+            }
         }
 
         // initialize NewRelic with crash reporting disabled

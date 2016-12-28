@@ -230,10 +230,24 @@ public class Config {
         @SerializedName("FABRIC_BUILD_SECRET")
         private String mFabricBuildSecret;
 
+        @SerializedName("CRASHLYTICS")
+        private boolean mCrashlyticsEnabled;
+
+        @SerializedName("ANSWERS")
+        private boolean mAnswersEnabled;
+
         public boolean isEnabled() {
             return mEnabled
                     && !TextUtils.isEmpty(mFabricKey)
                     && !TextUtils.isEmpty(mFabricBuildSecret);
+        }
+
+        public boolean isCrashlyticsEnabled() {
+            return mCrashlyticsEnabled;
+        }
+
+        public boolean isAnswersEnabled() {
+            return mAnswersEnabled;
         }
 
         public String getFabricKey() {
