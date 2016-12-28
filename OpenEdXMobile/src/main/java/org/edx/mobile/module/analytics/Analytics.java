@@ -6,9 +6,10 @@ import android.support.annotation.Nullable;
 import java.util.Map;
 
 /**
- * A base framework that defines the prototype of all the functions that spit our analytics events.
- * This class contains all the {@link Screens} & {@link Events}. Additionally all the {@link Keys}
- * and their corresponding {@link Values} are defined to make Screens and Events more meaningful.
+ * An interface that defines methods for all analytics events, to be implemented for all analytics
+ * services that are used in the app. This class contains all the {@link Screens} & {@link Events}.
+ * Additionally all the {@link Keys} and their corresponding {@link Values} are defined to make
+ * Screens and Events more meaningful.
  */
 public interface Analytics {
 
@@ -114,7 +115,7 @@ public interface Analytics {
                                String unitUrl);
 
     /**
-     * This function is used to track browser's launching
+     * This function is used to track launching the browser
      *
      * @param url
      */
@@ -228,7 +229,7 @@ public interface Analytics {
 
     void trackCourseComponentViewed(String blockId, String courseId);
 
-    void trackBrowserLaunched(String blockId, String courseId, boolean isSupported);
+    void trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
 
     void trackProfileViewed(@NonNull String username);
 

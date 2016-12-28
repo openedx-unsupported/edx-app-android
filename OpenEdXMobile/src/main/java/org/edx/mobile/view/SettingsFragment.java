@@ -36,7 +36,7 @@ public class SettingsFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.SETTINGS);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.SETTINGS);
     }
 
     @Override

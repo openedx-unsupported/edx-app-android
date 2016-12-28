@@ -29,7 +29,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         super.onCreate(savedInstanceState);
 
         if (isOnCourseOutline()) {
-            environment.getAnalyticsProvider().trackScreenView(
+            environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_OUTLINE, courseData.getCourse().getId(), null);
         }
     }
@@ -72,7 +72,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         if (isOnCourseOutline()) {
             lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
         } else {
-            environment.getAnalyticsProvider().trackScreenView(
+            environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
 
             // Update the last accessed item reference if we are in the course subsection view

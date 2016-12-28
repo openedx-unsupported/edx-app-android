@@ -69,7 +69,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                 environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, true);
             }
         };
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.MY_COURSES);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
         EventBus.getDefault().register(this);
 
         // Restore cache of the courses for which the user has downloaded any videos
@@ -131,7 +131,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                     ((HttpResponseStatusException) result.getEx()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 environment.getRouter().forceLogout(
                         getContext(),
-                        environment.getAnalyticsProvider(),
+                        environment.getAnalyticsRegistry(),
                         environment.getNotificationDelegate());
             } else {
                 logger.error(result.getEx());
@@ -250,7 +250,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
         footer.courseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getAnalyticsProvider().trackUserFindsCourses();
+                environment.getAnalyticsRegistry().trackUserFindsCourses();
                 environment.getRouter().showFindCourses(getActivity());
             }
         });

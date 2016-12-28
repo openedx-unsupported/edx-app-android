@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
@@ -89,8 +89,8 @@ public class BrowserUtil {
         intent.setData(Uri.parse(url));
         context.startActivity(intent);
 
-        AnalyticsProvider analyticsProvider = environment.getAnalyticsProvider();
-        analyticsProvider.trackBrowserLaunched(url);
+        AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
+        analyticsRegistry.trackBrowserLaunched(url);
     }
 
     public static boolean isUrlOfHost(String url, String host) {

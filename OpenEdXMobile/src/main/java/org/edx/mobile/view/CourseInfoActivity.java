@@ -17,7 +17,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.COURSE_INFO_SCREEN);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_INFO_SCREEN);
     }
 
     @Override

@@ -168,9 +168,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
 
-        environment.getAnalyticsProvider().trackScreenView(
+        environment.getAnalyticsRegistry().trackScreenView(
                 Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
-        environment.getAnalyticsProvider().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
+        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void tryToUpdateForEndOfSequential() {
@@ -246,7 +246,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
-        environment.getAnalyticsProvider().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
+        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void updateUIForOrientation() {

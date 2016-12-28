@@ -16,7 +16,7 @@ import android.webkit.WebView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.services.EdxCookieManager;
@@ -36,7 +36,7 @@ public class CertificateFragment extends BaseFragment {
     static public final String ENROLLMENT = "enrollment";
 
     @Inject
-    AnalyticsProvider analyticsProvider;
+    AnalyticsRegistry analyticsRegistry;
 
     @InjectExtra(ENROLLMENT)
     EnrolledCoursesResponse courseData;
@@ -46,7 +46,7 @@ public class CertificateFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        analyticsProvider.trackScreenView(Analytics.Screens.CERTIFICATE);
+        analyticsRegistry.trackScreenView(Analytics.Screens.CERTIFICATE);
         setHasOptionsMenu(true);
     }
 
@@ -69,7 +69,7 @@ public class CertificateFragment extends BaseFragment {
                         new ShareUtils.ShareMenuItemListener() {
                             @Override
                             public void onMenuItemClick(@NonNull ComponentName componentName, @NonNull ShareUtils.ShareType shareType) {
-                                analyticsProvider.certificateShared(courseData.getCourse().getId(), courseData.getCertificateURL(), shareType);
+                                analyticsRegistry.certificateShared(courseData.getCourse().getId(), courseData.getCertificateURL(), shareType);
                                 final Intent intent = ShareUtils.newShareIntent(shareText);
                                 intent.setComponent(componentName);
                                 startActivity(intent);

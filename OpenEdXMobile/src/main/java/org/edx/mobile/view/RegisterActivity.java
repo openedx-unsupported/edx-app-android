@@ -28,7 +28,7 @@ import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
@@ -66,7 +66,7 @@ public class RegisterActivity extends BaseFragmentActivity
     LoginPrefs loginPrefs;
 
     @Inject
-    AnalyticsProvider analyticsProvider;
+    AnalyticsRegistry analyticsRegistry;
 
     @NonNull
     public static Intent newIntent() {
@@ -80,7 +80,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         setTitle(R.string.register_title);
 
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
 
@@ -262,7 +262,7 @@ public class RegisterActivity extends BaseFragmentActivity
             String versionName = BuildConfig.VERSION_NAME;
             String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
 
-            environment.getAnalyticsProvider().trackCreateAccountClicked(appVersion, backstore);
+            environment.getAnalyticsRegistry().trackCreateAccountClicked(appVersion, backstore);
         } catch (Exception e) {
             logger.error(e);
         }

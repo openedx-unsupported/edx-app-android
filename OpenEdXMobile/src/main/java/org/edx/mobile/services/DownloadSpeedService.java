@@ -14,7 +14,7 @@ import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -51,7 +51,7 @@ public class DownloadSpeedService extends RoboService {
     private static final Logger logger = new Logger(DownloadSpeedService.class);
 
     @Inject
-    private AnalyticsProvider analyticsProvider;
+    private AnalyticsRegistry analyticsRegistry;
 
     @Inject
     RestApiManager apiManager;
@@ -145,9 +145,9 @@ public class DownloadSpeedService extends RoboService {
         try{
 
             if (NetworkUtil.isConnectedWifi(DownloadSpeedService.this)) {
-                analyticsProvider.trackUserConnectionSpeed(Analytics.Values.WIFI,   downloadSpeedKps);
+                analyticsRegistry.trackUserConnectionSpeed(Analytics.Values.WIFI,   downloadSpeedKps);
             } else if (NetworkUtil.isConnectedMobile(DownloadSpeedService.this)) {
-                analyticsProvider.trackUserConnectionSpeed(Analytics.Values.CELL_DATA,   downloadSpeedKps);
+                analyticsRegistry.trackUserConnectionSpeed(Analytics.Values.CELL_DATA,   downloadSpeedKps);
             }
 
         }catch(Exception e){

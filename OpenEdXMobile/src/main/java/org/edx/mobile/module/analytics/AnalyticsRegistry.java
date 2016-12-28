@@ -12,11 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An analytics provider class whose function is to contain all the analytics services we are using
- * in our app, and call their respective APIs to send out analytics events.
+ * A registry for enabled Analytics implementations, that delegates all methods to them.
  */
 @Singleton
-public class AnalyticsProvider implements Analytics {
+public class AnalyticsRegistry implements Analytics {
     @NonNull
     private List<Analytics> services = new ArrayList<>();
 
@@ -49,9 +48,9 @@ public class AnalyticsProvider implements Analytics {
     }
 
     @Override
-    public void trackBrowserLaunched(String blockId, String courseId, boolean isSupported) {
+    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
         for (Analytics service : services) {
-            service.trackBrowserLaunched(blockId, courseId, isSupported);
+            service.trackOpenInBrowser(blockId, courseId, isSupported);
         }
     }
 

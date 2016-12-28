@@ -4,7 +4,7 @@ package org.edx.mobile.core;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
@@ -36,7 +36,7 @@ public class EdxEnvironment implements IEdxEnvironment {
     LoginPrefs loginPrefs;
 
     @Inject
-    AnalyticsProvider analyticsProvider;
+    AnalyticsRegistry analyticsRegistry;
 
     @Inject
     NotificationDelegate notificationDelegate;
@@ -73,8 +73,8 @@ public class EdxEnvironment implements IEdxEnvironment {
         return loginPrefs;
     }
 
-    public AnalyticsProvider getAnalyticsProvider() {
-        return analyticsProvider;
+    public AnalyticsRegistry getAnalyticsRegistry() {
+        return analyticsRegistry;
     }
 
     @Override

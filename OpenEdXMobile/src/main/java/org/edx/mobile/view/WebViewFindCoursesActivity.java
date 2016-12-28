@@ -34,7 +34,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         } else {
             blockDrawerFromOpening();
         }
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.FIND_COURSES);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
         webView = (WebView) findViewById(R.id.webview);
         webView.loadUrl(getInitialUrl());
     }
