@@ -25,7 +25,7 @@ import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
@@ -73,7 +73,7 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     private Router router;
 
     @Inject
-    private AnalyticsProvider analyticsProvider;
+    private AnalyticsRegistry analyticsRegistry;
 
     @Inject
     private Config config;
@@ -88,7 +88,7 @@ public class DiscussionAddCommentFragment extends BaseFragment {
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
         values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
         values.put(Analytics.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
-        analyticsProvider.trackScreenView(Analytics.Screens.FORUM_ADD_RESPONSE_COMMENT,
+        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_ADD_RESPONSE_COMMENT,
                 discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }
 

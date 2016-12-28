@@ -217,7 +217,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
             return;
         }
 
-        environment.getAnalyticsProvider().trackEnrollClicked(courseId, emailOptIn);
+        environment.getAnalyticsRegistry().trackEnrollClicked(courseId, emailOptIn);
 
         isTaskInProgress = true;
 

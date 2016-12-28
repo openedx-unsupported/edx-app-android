@@ -184,7 +184,7 @@ public class VideoListFragment extends BaseFragment {
             videoListView.setOnItemClickListener(adapter);
 
             setActivityTitle(enrollment.getCourse().getName());
-            environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.MY_VIDEOS_ALL);
+            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_ALL);
 
             ArrayList<SectionItemInterface> list = environment.getStorage()
                     .getSortedOrganizedVideosByCourse(enrollment.getCourse().getId());
@@ -584,8 +584,8 @@ public class VideoListFragment extends BaseFragment {
                     reloadListFlag = false;
                 }
 
-                if (environment.getAnalyticsProvider() != null) {
-                    environment.getAnalyticsProvider().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
+                if (environment.getAnalyticsRegistry() != null) {
+                    environment.getAnalyticsRegistry().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
                             downloadEntry.lmsUrl);
                 }
 

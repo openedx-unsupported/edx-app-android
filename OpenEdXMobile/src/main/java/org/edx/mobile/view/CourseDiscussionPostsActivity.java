@@ -62,7 +62,7 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
             }
             values.put(Analytics.Keys.TOPIC_ID, topicId);
         }
-        environment.getAnalyticsProvider().trackScreenView(screenName, courseData.getCourse().getId(),
+        environment.getAnalyticsRegistry().trackScreenView(screenName, courseData.getCourse().getId(),
                 actionItem, values);
     }
 

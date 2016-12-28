@@ -26,7 +26,7 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
         // hence is shifted to onCreate() function
         //  configureDrawer();
 
-        environment.getAnalyticsProvider().trackScreenView(
+        environment.getAnalyticsRegistry().trackScreenView(
                 Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
 
     }

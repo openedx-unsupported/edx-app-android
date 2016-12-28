@@ -100,7 +100,7 @@ public class LoginActivity
             }
         });
 
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.LOGIN);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LOGIN);
 
         // enable login buttons at launch
         tryToSetUIInteraction(true);

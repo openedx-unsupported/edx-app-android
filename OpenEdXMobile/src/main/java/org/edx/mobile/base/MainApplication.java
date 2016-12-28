@@ -22,7 +22,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
@@ -59,7 +59,7 @@ public abstract class MainApplication extends MultiDexApplication {
     protected Config config;
 
     @Inject
-    protected AnalyticsProvider analyticsProvider;
+    protected AnalyticsRegistry analyticsRegistry;
 
     @Override
     public void onCreate() {
@@ -101,7 +101,7 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // Add Segment as an analytics provider if enabled in the config
         if (config.getSegmentConfig().isEnabled())  {
-            analyticsProvider.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
+            analyticsRegistry.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
         }
 
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));

@@ -46,7 +46,7 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
         //check courseData again, it may be fetched from local cache
         if (courseData != null) {
             activityTitle = courseData.getCourse().getName();
-            environment.getAnalyticsProvider().trackScreenView(
+            environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_ANNOUNCEMENTS,
                     courseData.getCourse().getId(),
                     null);

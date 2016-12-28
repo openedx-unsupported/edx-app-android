@@ -24,7 +24,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     @Override
     protected DiscoveryLaunchPresenter.ViewInterface createView(@Nullable Bundle savedInstanceState) {
         final ActivityDiscoveryLaunchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_discovery_launch);
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
         AuthPanelUtils.setAuthPanelVisible(true, binding.authPanel, environment);
         return new DiscoveryLaunchPresenter.ViewInterface() {
             @Override
@@ -33,7 +33,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                     binding.discoverCourses.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            environment.getAnalyticsProvider().trackDiscoverCoursesClicked();
+                            environment.getAnalyticsRegistry().trackDiscoverCoursesClicked();
                             environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this);
                         }
                     });
@@ -44,7 +44,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                     binding.exploreSubjects.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            environment.getAnalyticsProvider().trackExploreSubjectsClicked();
+                            environment.getAnalyticsRegistry().trackExploreSubjectsClicked();
                             environment.getRouter().showExploreSubjects(DiscoveryLaunchActivity.this);
                         }
                     });

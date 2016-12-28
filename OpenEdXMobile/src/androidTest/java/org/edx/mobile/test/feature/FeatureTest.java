@@ -17,6 +17,6 @@ public abstract class FeatureTest {
         final MainApplication application = MainApplication.instance();
         environment = application.getInjector().getInstance(EdxEnvironment.class);
         environment.getLoginPrefs().clear();
-        environment.getAnalyticsProvider().resetIdentifyUser();
+        environment.getAnalyticsRegistry().resetIdentifyUser();
     }
 }

@@ -43,7 +43,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_downloads_list);
 
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.DOWNLOADS);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.DOWNLOADS);
 
         offlineBar = findViewById(R.id.offline_bar);
 

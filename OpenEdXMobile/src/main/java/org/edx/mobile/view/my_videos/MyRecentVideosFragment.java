@@ -73,7 +73,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.MY_VIDEOS_RECENT);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_RECENT);
         setHasOptionsMenu(!isLandscape());
         EventBus.getDefault().register(this);
     }

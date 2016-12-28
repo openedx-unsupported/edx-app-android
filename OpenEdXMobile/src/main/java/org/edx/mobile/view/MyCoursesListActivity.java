@@ -45,7 +45,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         super.onCreate(savedInstanceState);
         configureDrawer();
         setTitle(getString(R.string.label_my_courses));
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.MY_COURSES);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class CourseDiscussionTopicsActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         blockDrawerFromOpening();
-        environment.getAnalyticsProvider().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPICS,
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPICS,
                 courseData.getCourse().getId(), null, null);
     }
 

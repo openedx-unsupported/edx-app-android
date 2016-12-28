@@ -19,7 +19,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.AnalyticsProvider;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
@@ -267,20 +267,20 @@ public class Router {
     /**
      * Clear the login data and exit to the splash screen. This should only be called internally;
      * for handling manual logout,
-     * {@link #performManualLogout(Context, AnalyticsProvider, NotificationDelegate)} should be used instead.
+     * {@link #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
      * @param context  The context.
-     * @param analyticsProvider  The analytics provider object.
+     * @param analyticsRegistry  The analytics provider object.
      * @param delegate The notification delegate.
-     * @see #performManualLogout(Context, AnalyticsProvider, NotificationDelegate)
+     * @see #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
-    public void forceLogout(Context context, AnalyticsProvider analyticsProvider, NotificationDelegate delegate) {
+    public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
         loginPrefs.clear();
 
         EventBus.getDefault().post(new LogoutEvent());
 
-        analyticsProvider.trackUserLogout();
-        analyticsProvider.resetIdentifyUser();
+        analyticsRegistry.trackUserLogout();
+        analyticsRegistry.resetIdentifyUser();
 
         delegate.unsubscribeAll();
 
@@ -291,16 +291,16 @@ public class Router {
      * Clears all the user data, revokes the refresh and access tokens, and exit to the splash
      * screen. This should only be called in response to manual logout by the user; for performing
      * logout internally (e.g. in response to refresh token expiration),
-     * {@link #forceLogout(Context, AnalyticsProvider, NotificationDelegate)} should be used instead.
+     * {@link #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
      * @param context  The context.
-     * @param analyticsProvider  The analytics provider object.
+     * @param analyticsRegistry  The analytics provider object.
      * @param delegate The notification delegate.
-     * @see #forceLogout(Context, AnalyticsProvider, NotificationDelegate)
+     * @see #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
-    public void performManualLogout(Context context, AnalyticsProvider analyticsProvider, NotificationDelegate delegate) {
+    public void performManualLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
         loginAPI.logOut();
-        forceLogout(context, analyticsProvider, delegate);
+        forceLogout(context, analyticsRegistry, delegate);
         SecurityUtil.clearUserData(context);
     }
 
