@@ -215,13 +215,6 @@ public class AnalyticsProvider implements Analytics {
     }
 
     @Override
-    public void trackCourseOutlineMode(boolean isVideoMode) {
-        for (Analytics service : services) {
-            service.trackCourseOutlineMode(isVideoMode);
-        }
-    }
-
-    @Override
     public void trackCourseComponentViewed(String blockId, String courseId) {
         for (Analytics service : services) {
             service.trackCourseComponentViewed(blockId, courseId);
