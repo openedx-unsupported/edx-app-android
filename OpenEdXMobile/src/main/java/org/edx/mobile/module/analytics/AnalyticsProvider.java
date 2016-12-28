@@ -49,9 +49,9 @@ public class AnalyticsProvider implements Analytics {
     }
 
     @Override
-    public void trackBrowserLaunched(String blockId, String courseId, boolean isSupported) {
+    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
         for (Analytics service : services) {
-            service.trackBrowserLaunched(blockId, courseId, isSupported);
+            service.trackOpenInBrowser(blockId, courseId, isSupported);
         }
     }
 

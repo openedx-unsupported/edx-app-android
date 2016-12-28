@@ -99,7 +99,7 @@ public abstract class MainApplication extends MultiDexApplication {
                     .start(this);
         }
 
-        // Add Segment as an analytics provider only if its enabled in the config
+        // Add Segment as an analytics provider if enabled in the config
         if (config.getSegmentConfig().isEnabled())  {
             analyticsProvider.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
         }
