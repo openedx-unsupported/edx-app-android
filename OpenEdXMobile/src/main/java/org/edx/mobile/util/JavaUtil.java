@@ -1,5 +1,9 @@
 package org.edx.mobile.util;
 
+import android.support.annotation.NonNull;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,10 +33,10 @@ public class JavaUtil {
         }
 
         long s = bytes;
-        int gb = (int) (s / (1024f * 1024f * 1024f) );
-        s = s % (1024 * 1024 * 1024) ;
-        int mb = (int) (s / (1024f * 1024f) );
-        s = s % (1024 * 1024) ;
+        int gb = (int) (s / (1024f * 1024f * 1024f));
+        s = s % (1024 * 1024 * 1024);
+        int mb = (int) (s / (1024f * 1024f));
+        s = s % (1024 * 1024);
         int kb = (int) (s / 1024f);
         int b = (int) (s % 1024);
 
@@ -44,7 +48,7 @@ public class JavaUtil {
             return "00:00";
         }
 
-        long d = (long)duration;
+        long d = (long) duration;
         int hours = (int) (d / 3600f);
         d = d % 3600;
         int mins = (int) (d / 60f);
@@ -55,4 +59,32 @@ public class JavaUtil {
         return String.format("%02d:%02d:%02d", hours, mins, secs);
     }
 
+    /**
+     * This function returns decimals value for a Double upto provided places.
+     *
+     * @param value  The double value.
+     * @param places The number of places after the decimal.
+     * @return The formatted {@link Double}.
+     */
+    @NonNull
+    public static Double formatDoubleValue(@NonNull Double value, int places) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    /**
+     * Truncates a string to the given characters limit.
+     *
+     * @param string   The string to truncate.
+     * @param maxChars The max number of characters allowed for the string.
+     * @return The truncated string.
+     */
+    @NonNull
+    public static String truncateString(@NonNull String string, int maxChars) {
+        if (string.length() > maxChars) {
+            string = string.substring(0, maxChars);
+        }
+        return string;
+    }
 }

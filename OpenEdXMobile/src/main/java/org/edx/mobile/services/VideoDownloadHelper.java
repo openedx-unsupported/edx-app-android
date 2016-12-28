@@ -100,8 +100,13 @@ public class VideoDownloadHelper {
             ((BaseFragmentActivity) activity).showInfoMessage(activity.getString(R.string.file_size_exceeded));
             callback.updateListUI();
         } else {
-            if (downloadSize < MemoryUtil.GB) {
-                startDownload(downloadList, downloadCount, activity, callback);
+            if (downloadSize < MemoryUtil.GB && !downloadList.isEmpty()) {
+                startDownload(downloadList, activity, callback);
+
+                final DownloadEntry downloadEntry = downloadList.get(0);
+                analyticsRegistry.trackSubSectionBulkVideoDownload(downloadEntry.getSectionName(),
+                        downloadEntry.getChapterName(), downloadEntry.getEnrollmentId(),
+                        downloadCount);
             } else {
                 showDownloadSizeExceedDialog(downloadList, downloadCount, activity, callback);
             }
@@ -118,7 +123,14 @@ public class VideoDownloadHelper {
                 new IDialogCallback() {
                     @Override
                     public void onPositiveClicked() {
-                        startDownload(de, noOfDownloads, activity, callback);
+                        if (!de.isEmpty()) {
+                            startDownload(de, activity, callback);
+
+                            final DownloadEntry downloadEntry = de.get(0);
+                            analyticsRegistry.trackSubSectionBulkVideoDownload(downloadEntry.getSectionName(),
+                                    downloadEntry.getChapterName(), downloadEntry.getEnrollmentId(),
+                                    noOfDownloads);
+                        }
                     }
 
                     @Override
@@ -135,21 +147,15 @@ public class VideoDownloadHelper {
     public void downloadVideo(DownloadEntry downloadEntry, final FragmentActivity activity, final DownloadManagerCallback callback) {
         List<DownloadEntry> downloadEntries = new ArrayList<>();
         downloadEntries.add(downloadEntry);
-        startDownload(downloadEntries, 1, activity, callback);
+        startDownload(downloadEntries, activity, callback);
+        analyticsRegistry.trackSingleVideoDownload(downloadEntry.getVideoId(),
+                downloadEntry.getEnrollmentId(), downloadEntry.getVideoUrl());
     }
 
     private void startDownload(List<DownloadEntry> downloadList,
-                               int noOfDownloads, final FragmentActivity activity, final DownloadManagerCallback callback) {
-        if (downloadList.isEmpty())
-            return;
-        try {
-            if (downloadList.size() > 1) {
-                analyticsRegistry.trackSectionBulkVideoDownload(downloadList.get(0).getEnrollmentId(),
-                        downloadList.get(0).getChapterName(), noOfDownloads);
-            }
-        } catch (Exception e) {
-            logger.error(e);
-        }
+                               final FragmentActivity activity,
+                               final DownloadManagerCallback callback) {
+        if (downloadList.isEmpty()) return;
 
         EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(activity, downloadList) {
             @Override

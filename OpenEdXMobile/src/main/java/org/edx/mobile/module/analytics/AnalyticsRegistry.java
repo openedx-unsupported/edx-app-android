@@ -48,9 +48,10 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
+    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported,
+                                   String minifiedBlockId) {
         for (Analytics service : services) {
-            service.trackOpenInBrowser(blockId, courseId, isSupported);
+            service.trackOpenInBrowser(blockId, courseId, isSupported, minifiedBlockId);
         }
     }
 
@@ -203,9 +204,9 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackCourseComponentViewed(String blockId, String courseId) {
+    public void trackCourseComponentViewed(String blockId, String courseId, String minifiedBlockId) {
         for (Analytics service : services) {
-            service.trackCourseComponentViewed(blockId, courseId);
+            service.trackCourseComponentViewed(blockId, courseId, minifiedBlockId);
         }
     }
 
@@ -241,14 +242,6 @@ public class AnalyticsRegistry implements Analytics {
     public void trackProfileViewed(@NonNull String username) {
         for (Analytics service : services) {
             service.trackProfileViewed(username);
-        }
-    }
-
-    @Override
-    public void trackSectionBulkVideoDownload(String enrollmentId, String section,
-                                              long videoCount) {
-        for (Analytics service : services) {
-            service.trackSectionBulkVideoDownload(enrollmentId, section, videoCount);
         }
     }
 

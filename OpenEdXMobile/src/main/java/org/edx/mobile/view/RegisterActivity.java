@@ -80,7 +80,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         setTitle(R.string.register_title);
 
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.REGISTER);
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
 

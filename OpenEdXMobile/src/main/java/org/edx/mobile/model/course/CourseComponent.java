@@ -7,7 +7,6 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.IPathNode;
-import org.edx.mobile.module.storage.IStorage;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -21,6 +20,7 @@ import java.util.Locale;
 public class CourseComponent implements IBlock, IPathNode {
     protected final static Logger logger = new Logger(CourseComponent.class.getName());
     private String id;
+    private String blockId;
     private BlockType type;
     private String name;
     private boolean graded;
@@ -43,6 +43,7 @@ public class CourseComponent implements IBlock, IPathNode {
      */
     public CourseComponent(BlockModel blockModel, CourseComponent parent){
         this.id = blockModel.id;
+        this.blockId = blockModel.blockId;
         this.type = blockModel.type;
         this.name = blockModel.displayName;
         this.graded = blockModel.graded;
@@ -69,6 +70,16 @@ public class CourseComponent implements IBlock, IPathNode {
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String getBlockId() {
+        return blockId;
+    }
+
+    @Override
+    public void setBlockId(String blockId) {
+        this.blockId = blockId;
     }
 
     @Override
