@@ -13,7 +13,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.util.AppUpdateUtils;
@@ -45,7 +45,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         super.onCreate(savedInstanceState);
         configureDrawer();
         setTitle(getString(R.string.label_my_courses));
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_COURSES);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
     }
 
     @Override

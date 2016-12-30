@@ -14,7 +14,7 @@ import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
@@ -42,7 +42,7 @@ public class LoginAPI {
     private final LoginPrefs loginPrefs;
 
     @NonNull
-    private final ISegment segment;
+    private final AnalyticsRegistry analyticsRegistry;
 
     @NonNull
     private final NotificationDelegate notificationDelegate;
@@ -57,13 +57,13 @@ public class LoginAPI {
     public LoginAPI(@NonNull LoginService loginService,
                     @NonNull Config config,
                     @NonNull LoginPrefs loginPrefs,
-                    @NonNull ISegment segment,
+                    @NonNull AnalyticsRegistry analyticsRegistry,
                     @NonNull NotificationDelegate notificationDelegate,
                     @NonNull Gson gson) {
         this.loginService = loginService;
         this.config = config;
         this.loginPrefs = loginPrefs;
-        this.segment = segment;
+        this.analyticsRegistry = analyticsRegistry;
         this.notificationDelegate = notificationDelegate;
         this.gson = gson;
     }
@@ -131,13 +131,13 @@ public class LoginAPI {
             throw e;
         }
         loginPrefs.setLastAuthenticatedEmail(usernameUsedToLogIn);
-        segment.identifyUser(
+        analyticsRegistry.identifyUser(
                 response.profile.id.toString(),
                 response.profile.email,
                 usernameUsedToLogIn);
         final String backendKey = loginPrefs.getAuthBackendKeyForSegment();
         if (backendKey != null) {
-            segment.trackUserLogin(backendKey);
+            analyticsRegistry.trackUserLogin(backendKey);
         }
         notificationDelegate.resubscribeAll();
         logInEvents.sendData(new LogInEvent());

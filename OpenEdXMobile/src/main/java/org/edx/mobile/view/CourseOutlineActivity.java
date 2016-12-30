@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
 
@@ -29,8 +29,8 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         super.onCreate(savedInstanceState);
 
         if (isOnCourseOutline()) {
-            environment.getSegment().trackScreenView(
-                    ISegment.Screens.COURSE_OUTLINE, courseData.getCourse().getId(), null);
+            environment.getAnalyticsRegistry().trackScreenView(
+                    Analytics.Screens.COURSE_OUTLINE, courseData.getCourse().getId(), null);
         }
     }
 
@@ -72,8 +72,8 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         if (isOnCourseOutline()) {
             lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
         } else {
-            environment.getSegment().trackScreenView(
-                    ISegment.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
+            environment.getAnalyticsRegistry().trackScreenView(
+                    Analytics.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
 
             // Update the last accessed item reference if we are in the course subsection view
             lastAccessManager.setLastAccessed(courseComponent.getCourseId(), courseComponent.getId());

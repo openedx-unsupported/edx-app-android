@@ -3,126 +3,244 @@ package org.edx.mobile.module.analytics;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.segment.analytics.Properties;
-import com.segment.analytics.Traits;
-
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
 
-public interface ISegment {
+/**
+ * An interface that defines methods for all analytics events, to be implemented for all analytics
+ * services that are used in the app. This class contains all the {@link Screens} & {@link Events}.
+ * Additionally all the {@link Keys} and their corresponding {@link Values} are defined to make
+ * Screens and Events more meaningful.
+ */
+public interface Analytics {
 
-    /*
-     * Events mentioned in PDF 
-     * 1)Identify 
-     * 2)Video playing events
-     * a)edx.video.played 
-     * b)edx.video.paused
-     * c)edx.video.stopped
-     * d)edx.video.transcript.shown 
-     * e)edx.video.transcript.hidden
-     * 3)Load events edx.video.loaded
-     * 4)Seek events (NOTE: may not be implemented for General
-     * Availability due to technical limitations in the video player)
+    /**
+     * This function is used to send the screen tracking event, with an extra event for
+     * sending course id.
+     *
+     * @param screenName The screen name to track
+     * @param courseId   course id of the course we are viewing
+     * @param action     any custom action we need to send with event
+     * @param values     any custom key- value pairs we need to send with event
      */
+    void trackScreenView(@NonNull String screenName, @Nullable String courseId,
+                         @Nullable String action, @Nullable Map<String, String> values);
 
-    Traits identifyUser(String userID, String email, String username);
+    /**
+     * This function is used to track Video Playing
+     *
+     * @param videoId     - Video Id that is being Played
+     * @param currentTime - Video Playing started at
+     * @param unitUrl     - Page Url for that Video
+     * @param courseId    - CourseId under which the video is present
+     */
+    void trackVideoPlaying(String videoId, Double currentTime,
+                           String courseId, String unitUrl);
 
-    Properties trackVideoPlaying(String videoId, Double currentTime,
-            String courseId, String unitUrl);
+    /**
+     * This function is used to track Video Pause
+     *
+     * @param videoId     - Video Id that is being Played
+     * @param currentTime - Video Playing started at
+     * @param courseId    - CourseId under which the video is present
+     * @param unitUrl     - Page Url for that Video
+     */
+    void trackVideoPause(String videoId, Double currentTime,
+                         String courseId, String unitUrl);
 
-    Properties trackVideoPause(String videoId, Double currentTime,
-            String courseId, String unitUrl);
+    /**
+     * This function is used to track Video Stop
+     *
+     * @param videoId
+     * @param currentTime
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackVideoStop(String videoId, Double currentTime,
+                        String courseId, String unitUrl);
 
-    Properties trackVideoStop(String videoId, Double currentTime,
-            String courseId, String unitUrl);
+    /**
+     * This function is used to Show Transcript
+     *
+     * @param videoId
+     * @param currentTime
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackShowTranscript(String videoId, Double currentTime,
+                             String courseId, String unitUrl);
 
-    Properties trackShowTranscript(String videoId, Double currentTime,
-            String courseId, String unitUrl);
+    /**
+     * This function is used to Hide Transcript
+     *
+     * @param videoId
+     * @param currentTime
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackHideTranscript(String videoId, Double currentTime,
+                             String courseId, String unitUrl);
 
-    Properties trackHideTranscript(String videoId, Double currentTime,
-            String courseId, String unitUrl);
+    /**
+     * This function is used to track Video Loading
+     *
+     * @param videoId
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackVideoLoading(String videoId, String courseId, String unitUrl);
 
-    Properties trackVideoLoading(String videoId, String courseId, String unitUrl);
-
-    Properties trackVideoSeek(String videoId, Double oldTime,
-            Double newTime, String courseId, String unitUrl, Boolean skipSeek);
-
-    void resetIdentifyUser();
+    /**
+     * This function is used to track 30 second rewind on Video
+     *
+     * @param videoId
+     * @param oldTime
+     * @param newTime
+     * @param courseId
+     * @param unitUrl
+     * @param skipSeek
+     */
+    void trackVideoSeek(String videoId, Double oldTime, Double newTime,
+                        String courseId, String unitUrl, Boolean skipSeek);
 
     /* Events not mentioned in PDF */
 
-    Properties trackScreenView(@NonNull String screenName);
-
-    Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
-            @Nullable String value);
-
-    Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
-            @Nullable String value, @Nullable Map<String, String> values);
-
-    Properties trackDownloadComplete(String videoId, String courseId,
-            String unitUrl);
-
-    Properties trackOpenInBrowser(String url);
-
-    Properties trackSectionBulkVideoDownload(String enrollmentId,
-            String section, long videoCount);
-
-    Properties trackSubSectionBulkVideoDownload(String section,
-            String subSection, String enrollmentId, long videoCount);
-
-    Properties trackUserLogin(String method);
-
-    Properties trackUserLogout();
-
-    Properties trackTranscriptLanguage(String videoId, Double currentTime,
-            String lang, String courseId, String unitUrl);
-
-    Properties trackSingleVideoDownload(String videoId, String courseId,
-            String unitUrl);
-
-    Properties trackVideoOrientation(String videoId, Double currentTime,
-            boolean isLandscape, String courseId, String unitUrl);
-
-    Properties trackDiscoverCoursesClicked();
-
-    Properties trackExploreSubjectsClicked();
-
-    Properties trackUserSignUpForAccount();
-
-    Properties trackUserFindsCourses();
-
-    Properties trackCreateAccountClicked(String appVersion, String source);
-
-    Properties trackEnrollClicked(String courseId, boolean email_opt_in);
-
-    Properties trackNotificationReceived(@Nullable String courseId);
-
-    Properties trackNotificationTapped(@Nullable String courseId);
-
+    /**
+     * This function is used to track Video Download completed
+     *
+     * @param videoId  - Video id for which download has started
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackDownloadComplete(String videoId, String courseId,
+                               String unitUrl);
 
     /**
-     * Sets given tracker instance and uses it for analytics.
-     * This method is useful in some cases where a given tracker is to be used.
-     * For example, unit tests might use mocked tracker object.
-     * @param tracker
+     * This function is used to track launching the browser
+     *
+     * @param url
      */
-    void setTracker(ISegmentTracker tracker);
+    void trackBrowserLaunched(String url);
 
-    Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed);
+    /**
+     * This function is used to track Bulk Download from Sections
+     *
+     * @param section      - Section in which the subsection is present
+     * @param enrollmentId - Course under which the subsection is present
+     * @param videoCount   - no of videos started downloading
+     */
+    void trackSectionBulkVideoDownload(String enrollmentId,
+                                       String section, long videoCount);
 
-    Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ShareUtils.ShareType shareType);
+    /**
+     * This function is used to track Bulk Download from Subsection
+     *
+     * @param section      - Section in which the subsection is present
+     * @param subSection   - Subsection from which the download started
+     * @param enrollmentId - Course under which the subsection is present
+     * @param videoCount   - no of videos started downloading
+     */
+    void trackSubSectionBulkVideoDownload(String section, String subSection,
+                                          String enrollmentId, long videoCount);
 
-    Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ShareUtils.ShareType shareType);
+    /**
+     * This function is used to track User Login
+     *
+     * @param method - will take the following inputs “Password”|”Google”|”Facebook”
+     */
+    void trackUserLogin(String method);
 
-    Properties trackCourseComponentViewed(String blockId, String courseId);
+    /**
+     * This function is used to track user logout
+     */
+    void trackUserLogout();
 
-    Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
+    /**
+     * This function is used to track Language changed for Transcripts
+     *
+     * @param videoId
+     * @param currentTime
+     * @param lang
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackTranscriptLanguage(String videoId, Double currentTime,
+                                 String lang, String courseId, String unitUrl);
 
-    Properties trackProfileViewed(@NonNull String username);
+    /**
+     * This function is used to track Video Download started from Video List
+     *
+     * @param videoId  -  Video id for which download has started
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackSingleVideoDownload(String videoId, String courseId,
+                                  String unitUrl);
 
-    Properties trackProfilePhotoSet(boolean fromCamera);
+    /**
+     * This function is used to track Video Orientation
+     *
+     * @param videoId
+     * @param currentTime
+     * @param isLandscape -  true / false based on orientation
+     * @param courseId
+     * @param unitUrl
+     */
+    void trackVideoOrientation(String videoId, Double currentTime,
+                               boolean isLandscape, String courseId, String unitUrl);
 
+    void trackDiscoverCoursesClicked();
+
+    void trackExploreSubjectsClicked();
+
+    /**
+     * This function is used to track if user clicks on Sign up on landing page
+     */
+    void trackUserSignUpForAccount();
+
+    /**
+     * This function is used to track if user clicks on Find Courses
+     */
+    void trackUserFindsCourses();
+
+    /**
+     * This function is used to track if user clicks on Create Account on registration screen
+     */
+    void trackCreateAccountClicked(String appVersion, String source);
+
+    /**
+     * This function is used to track if user clicks on Enroll in the FindCourses Activity
+     *
+     * @param courseId   - Course Id for which user selected enroll
+     * @param emailOptIn - Flag to show user wants to opt in for email notification
+     */
+    void trackEnrollClicked(String courseId, boolean emailOptIn);
+
+    void trackNotificationReceived(@Nullable String courseId);
+
+    void trackNotificationTapped(@Nullable String courseId);
+
+    void trackUserConnectionSpeed(String connectionType, float connectionSpeed);
+
+    void certificateShared(String courseId, String certificateUrl, ShareUtils.ShareType method);
+
+    void courseDetailShared(String courseId, String aboutUrl, ShareUtils.ShareType method);
+
+    void trackCourseComponentViewed(String blockId, String courseId);
+
+    void trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
+
+    void trackProfileViewed(@NonNull String username);
+
+    void trackProfilePhotoSet(boolean fromCamera);
+
+    void identifyUser(String userID, String email, String username);
+
+    /**
+     * This resets the Identify user once the user has logged out
+     */
+    void resetIdentifyUser();
 
     interface Keys {
         String NAME = "name";
@@ -301,5 +419,28 @@ public interface ISegment {
         String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
         String PROFILE_VIEWED = "Viewed a profile";
         String PROFILE_PHOTO_SET = "Set a profile picture";
+    }
+
+    /**
+     * We can't have concrete functions inside interfaces till Java 8, therefore this
+     * class has been defined to add static utilities to this interface.
+     */
+    class Util {
+        /**
+         * Resolves and returns the string alternative of the given share type.
+         *
+         * @param shareType The share type.
+         * @return The string alternative of the given share type.
+         */
+        public static String getShareTypeValue(@NonNull ShareUtils.ShareType shareType) {
+            switch (shareType) {
+                case FACEBOOK:
+                    return "facebook";
+                case TWITTER:
+                    return "twitter";
+                default:
+                    return "other";
+            }
+        }
     }
 }

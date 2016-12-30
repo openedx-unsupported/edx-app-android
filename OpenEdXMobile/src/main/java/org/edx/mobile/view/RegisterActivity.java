@@ -27,7 +27,8 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
@@ -38,9 +39,9 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
-import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
 import java.util.ArrayList;
@@ -64,6 +65,9 @@ public class RegisterActivity extends BaseFragmentActivity
     @Inject
     LoginPrefs loginPrefs;
 
+    @Inject
+    AnalyticsRegistry analyticsRegistry;
+
     @NonNull
     public static Intent newIntent() {
         return IntentFactory.newIntentForComponent(RegisterActivity.class);
@@ -76,7 +80,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         setTitle(R.string.register_title);
 
-        environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
 
@@ -258,7 +262,7 @@ public class RegisterActivity extends BaseFragmentActivity
             String versionName = BuildConfig.VERSION_NAME;
             String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
 
-            environment.getSegment().trackCreateAccountClicked(appVersion, backstore);
+            environment.getAnalyticsRegistry().trackCreateAccountClicked(appVersion, backstore);
         } catch (Exception e) {
             logger.error(e);
         }

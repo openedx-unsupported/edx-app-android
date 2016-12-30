@@ -5,16 +5,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import org.edx.mobile.util.Config;
-
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -43,6 +45,9 @@ public class ConfigTests extends BaseTestCase {
     private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
     private static final String FABRIC_KEY = "FABRIC_KEY";
     private static final String FABRIC_BUILD_SECRET = "FABRIC_BUILD_SECRET";
+    private static final String KITS = "KITS";
+    private static final String CRASHLYTICS = "CRASHLYTICS";
+    private static final String ANSWERS = "ANSWERS";
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
     private static final String DOMAINS = "DOMAINS";
@@ -51,7 +56,6 @@ public class ConfigTests extends BaseTestCase {
     private static final String PARSE_ENABLED = "NOTIFICATIONS_ENABLED";
     private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
     private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
-
 
     @Test
     public void testZeroRatingNoConfig() {
@@ -150,7 +154,7 @@ public class ConfigTests extends BaseTestCase {
             this.expected = expected;
         }
 
-        @Parameters(name= "{index}: willUseWebview({0})={1}")
+        @Parameters(name = "{index}: willUseWebview({0})={1}")
         public static Iterable<Object[]> data() {
             return Arrays.asList(new Object[][]{
                     {"webview", true},
@@ -290,13 +294,18 @@ public class ConfigTests extends BaseTestCase {
 
     @Test
     public void testFabricConfig() {
-        String key = "fake-key";
-        String secret = "fake-secret";
+        final String key = "fake-key";
+        final String secret = "fake-secret";
+
+        JsonObject fabricKits = new JsonObject();
+        fabricKits.add(CRASHLYTICS, new JsonPrimitive(true));
+        fabricKits.add(ANSWERS, new JsonPrimitive(true));
 
         JsonObject fabricConfig = new JsonObject();
         fabricConfig.add(ENABLED, new JsonPrimitive(true));
         fabricConfig.add(FABRIC_KEY, new JsonPrimitive(key));
         fabricConfig.add(FABRIC_BUILD_SECRET, new JsonPrimitive(secret));
+        fabricConfig.add(KITS, fabricKits);
 
         JsonObject configBase = new JsonObject();
         configBase.add(FABRIC, fabricConfig);
@@ -305,6 +314,45 @@ public class ConfigTests extends BaseTestCase {
         assertTrue(config.getFabricConfig().isEnabled());
         assertEquals(key, config.getFabricConfig().getFabricKey());
         assertEquals(secret, config.getFabricConfig().getFabricBuildSecret());
+    }
+
+    @Test
+    public void testFabricConfig_withMissingKits() {
+        final String key = "fake-key";
+        final String secret = "fake-secret";
+
+        JsonObject fabricKits = new JsonObject();
+
+        JsonObject fabricConfig = new JsonObject();
+        fabricConfig.add(ENABLED, new JsonPrimitive(true));
+        fabricConfig.add(FABRIC_KEY, new JsonPrimitive(key));
+        fabricConfig.add(FABRIC_BUILD_SECRET, new JsonPrimitive(secret));
+        fabricConfig.add(KITS, fabricKits);
+
+        JsonObject configBase = new JsonObject();
+        configBase.add(FABRIC, fabricConfig);
+
+        Config config = new Config(configBase);
+        assertFalse(config.getFabricConfig().isEnabled());
+    }
+
+    @Test
+    public void testFabricKitsConfig() {
+        JsonObject fabricKits = new JsonObject();
+        fabricKits.add(CRASHLYTICS, new JsonPrimitive(true));
+        fabricKits.add(ANSWERS, new JsonPrimitive(true));
+
+        JsonObject fabricConfig = new JsonObject();
+        fabricConfig.add(KITS, fabricKits);
+
+        JsonObject configBase = new JsonObject();
+        configBase.add(FABRIC, fabricConfig);
+
+        Config config = new Config(configBase);
+        assertTrue(config.getFabricConfig().getKitsConfig().isAnswersEnabled());
+        assertTrue(config.getFabricConfig().getKitsConfig().isCrashlyticsEnabled());
+        assertTrue(config.getFabricConfig().getKitsConfig().hasEnabledKits());
+        assertEquals(2, config.getFabricConfig().getKitsConfig().getEnabledKits().length);
     }
 
     @Test

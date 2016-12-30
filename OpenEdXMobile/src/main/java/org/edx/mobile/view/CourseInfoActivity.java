@@ -5,7 +5,7 @@ import android.webkit.WebView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 
 import roboguice.inject.ContentView;
 
@@ -17,7 +17,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getSegment().trackScreenView(ISegment.Screens.COURSE_INFO_SCREEN);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_INFO_SCREEN);
     }
 
     @Override

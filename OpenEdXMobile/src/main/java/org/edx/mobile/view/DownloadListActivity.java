@@ -13,7 +13,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDbCallback;
 import org.edx.mobile.module.db.ObservableDataCallback;
@@ -43,7 +43,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_downloads_list);
 
-        environment.getSegment().trackScreenView(ISegment.Screens.DOWNLOADS);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.DOWNLOADS);
 
         offlineBar = findViewById(R.id.offline_bar);
 

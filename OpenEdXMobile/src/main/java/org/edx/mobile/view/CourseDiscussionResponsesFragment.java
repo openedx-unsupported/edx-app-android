@@ -27,7 +27,8 @@ import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -69,7 +70,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     private Router router;
 
     @Inject
-    ISegment segIO;
+    AnalyticsRegistry analyticsRegistry;
 
     @Nullable
     private Call<DiscussionThread> getAndReadThreadCall;
@@ -132,9 +133,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         EventBus.getDefault().register(this);
 
         Map<String, String> values = new HashMap<>();
-        values.put(ISegment.Keys.TOPIC_ID, discussionThread.getTopicId());
-        values.put(ISegment.Keys.THREAD_ID, discussionThread.getIdentifier());
-        segIO.trackScreenView(ISegment.Screens.FORUM_VIEW_THREAD,
+        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
+        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_THREAD,
                 courseData.getCourse().getId(), discussionThread.getTitle(), values);
     }
 

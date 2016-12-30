@@ -21,7 +21,7 @@ import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
@@ -100,7 +100,7 @@ public class LoginActivity
             }
         });
 
-        environment.getSegment().trackScreenView(ISegment.Screens.LOGIN);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LOGIN);
 
         // enable login buttons at launch
         tryToSetUIInteraction(true);
