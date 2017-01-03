@@ -57,6 +57,8 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         offlineBar = findViewById(R.id.offline_bar);
         progressWheel = (ProgressBar) findViewById(R.id.loading_indicator);
 
+        webview.getSettings().setDomStorageEnabled(true);
+
         setupWebView();
         enableEnrollCallback();
 
