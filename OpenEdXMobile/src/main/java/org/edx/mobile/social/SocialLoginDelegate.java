@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.google.inject.Inject;
@@ -227,7 +225,7 @@ public class SocialLoginDelegate {
         @Override
         public void onClick(View v) {
             if (!NetworkUtil.isConnected(activity)) {
-                callback.showErrorDialog(activity.getString(R.string.no_connectivity),
+                callback.showAlertDialog(activity.getString(R.string.no_connectivity),
                         activity.getString(R.string.network_not_connected));
             } else {
                 Task<Void> logout = new Task<Void>(activity) {
@@ -265,7 +263,7 @@ public class SocialLoginDelegate {
 
         void onUserLoginSuccess(ProfileModel profile);
 
-        void showErrorDialog(@Nullable String title, @NonNull String message);
+        void showAlertDialog(String header, String message);
     }
 
     public interface SocialUserInfoCallback {

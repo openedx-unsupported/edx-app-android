@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/login_social_divider_margin_top"
+    android:layout_marginBottom="@dimen/login_social_divider_margin_bottom"
+    android:weightSum="2">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="@color/grey_text"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/divider_with_text_tv"
+        style="@style/semibold_text"
+        android:paddingStart="@dimen/divider_with_text_margin"
+        android:paddingEnd="@dimen/divider_with_text_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/grey_text"
+        android:textSize="@dimen/edx_small"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="@color/grey_text"
+        android:layout_weight="1"/>
+
+</LinearLayout>

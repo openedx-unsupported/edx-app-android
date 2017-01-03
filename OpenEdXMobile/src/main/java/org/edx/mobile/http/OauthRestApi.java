@@ -23,6 +23,8 @@ import static org.edx.mobile.http.ApiConstants.URL_ENROLLMENT;
 import static org.edx.mobile.http.ApiConstants.URL_LAST_ACCESS_FOR_COURSE;
 import static org.edx.mobile.http.ApiConstants.URL_VIDEO_OUTLINE;
 import static org.edx.mobile.http.ApiConstants.USER_NAME;
+import static org.edx.mobile.http.ApiConstants.USER_NAME;
+import static org.edx.mobile.http.ApiConstants.ORG_CODE;
 
 /**
  * we group all the mobile endpoints which require oauth token together
@@ -56,11 +58,13 @@ public interface OauthRestApi {
      * @throws Exception
      */
     @GET(URL_COURSE_ENROLLMENTS)
-    Call<List<EnrolledCoursesResponse>> getEnrolledCourses(@Path(USER_NAME) String username);
+    Call<List<EnrolledCoursesResponse>> getEnrolledCourses(@Path(USER_NAME) String username,
+                                                           @Path(ORG_CODE) String org);
 
     @Headers("Cache-Control: no-cache")
     @GET(URL_COURSE_ENROLLMENTS)
-    Call<List<EnrolledCoursesResponse>> getEnrolledCoursesNoCache(@Path(USER_NAME) String username);
+    Call<List<EnrolledCoursesResponse>> getEnrolledCoursesNoCache(@Path(USER_NAME) String username,
+                                                                  @Path(ORG_CODE) String org);
 
     /* POST Calls */
 

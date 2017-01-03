@@ -160,7 +160,7 @@ public class CourseDetailFragment extends BaseFragment {
         if (courseDetail.effort != null && !courseDetail.effort.isEmpty()) {
             ViewHolder holder = createCourseDetailFieldViewHolder(inflater, mCourseDetailLayout);
             holder.rowIcon.setIcon(FontAwesomeIcons.fa_dashboard);
-            holder.rowFieldName.setText("Effort:");
+            holder.rowFieldName.setText(R.string.effort_field_name);
             holder.rowFieldText.setText(courseDetail.effort);
         }
 
@@ -332,7 +332,7 @@ public class CourseDetailFragment extends BaseFragment {
             startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
             return;
         }
-        environment.getSegment().trackEnrollClicked(courseDetail.course_id, emailOptIn);
+        environment.getAnalyticsRegistry().trackEnrollClicked(courseDetail.course_id, emailOptIn);
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(getActivity(),
                 courseDetail.course_id, emailOptIn) {
             @Override

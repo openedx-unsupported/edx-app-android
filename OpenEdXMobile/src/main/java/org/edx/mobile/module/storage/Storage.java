@@ -85,9 +85,14 @@ public class Storage implements IStorage {
                 //on mobile network even if user has "Only on wifi" settings as ON
                 downloadPreference = false;
             }
+
+            // Fail the download if download directory isn't available
+            final File downloadDirectory = pref.getDownloadDirectory();
+            if (downloadDirectory == null) return -1;
+
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
-            long dmid = dm.addDownload(pref.getDownloadFolder(), model.getVideoUrl(),
+            long dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
                     downloadPreference);
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager
@@ -273,9 +278,10 @@ public class Storage implements IStorage {
         ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<>();
 
         String username = getUsername();
+        String org = config.getOrganizationCode();
 
         if (username != null) {
-            for(EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, true)){
+            for(EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, org, true)){
                 int videoCount = db.getDownloadedVideoCountByCourse(
                         enrolledCoursesResponse.getCourse().getId(),null);
                 if(videoCount>0){
@@ -307,8 +313,9 @@ public class Storage implements IStorage {
         ArrayList<SectionItemInterface> recentVideolist = new ArrayList<>();
 
         String username = getUsername();
+        String org = config.getOrganizationCode();
         if (username != null) {
-            for (final EnrolledCoursesResponse course : api.getUserEnrolledCourses(username, true)) {
+            for (final EnrolledCoursesResponse course : api.getUserEnrolledCourses(username, org, true)) {
                 // add all videos to the list for this course
                 List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
                         course.getCourse().getId(), null);

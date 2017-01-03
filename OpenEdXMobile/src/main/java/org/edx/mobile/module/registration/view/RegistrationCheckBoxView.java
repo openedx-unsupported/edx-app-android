@@ -1,5 +1,6 @@
 package org.edx.mobile.module.registration.view;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -14,10 +15,11 @@ import org.edx.mobile.module.registration.model.RegistrationFormField;
 class RegistrationCheckBoxView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationCheckBoxView.class);
-    private RegistrationFormField mField;
     private View mView;
-    protected CheckBox mInputView;
-    private TextView mErrorView, mInstructionView;
+    private RegistrationFormField mField;
+    private CheckBox mInputView;
+    private TextView mInstructionsView;
+    private TextView mErrorView;
 
     public RegistrationCheckBoxView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
@@ -25,22 +27,16 @@ class RegistrationCheckBoxView implements IRegistrationFieldView {
         this.mView = view;
 
         this.mInputView = (CheckBox) view.findViewById(R.id.checkbox_input);
+        this.mInstructionsView = (TextView)view.findViewById(R.id.checkbox_input_instructions);
         this.mErrorView = (TextView) view.findViewById(R.id.checkbox_input_error);
-        this.mInstructionView = (TextView) view.findViewById(R.id.checkbox_input_instruction);
 
         // set hint
         mInputView.setHint(mField.getLabel());
 
+        setInstructions(field.getInstructions());
+
         // display default value
         mInputView.setChecked(Boolean.getBoolean(mField.getDefaultValue()));
-
-        // display instructions if available
-        if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
-            mInstructionView.setVisibility(View.VISIBLE);
-            mInstructionView.setText(mField.getInstructions());
-        } else {
-            mInstructionView.setVisibility(View.GONE);
-        }
 
         // hide error text view
         mErrorView.setVisibility(View.GONE);
@@ -79,6 +75,17 @@ class RegistrationCheckBoxView implements IRegistrationFieldView {
     @Override
     public View getView() {
         return mView;
+    }
+
+    @Override
+    public void setInstructions(@Nullable String instructions) {
+        if (instructions != null && !instructions.isEmpty()) {
+            mInstructionsView.setVisibility(View.VISIBLE);
+            mInstructionsView.setText(instructions);
+        }
+        else {
+            mInstructionsView.setVisibility(View.GONE);
+        }
     }
 
     @Override

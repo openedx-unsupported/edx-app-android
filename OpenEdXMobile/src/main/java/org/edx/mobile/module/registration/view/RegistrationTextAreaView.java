@@ -9,18 +9,19 @@ import org.edx.mobile.module.registration.model.RegistrationFormField;
 class RegistrationTextAreaView extends RegistrationEditTextView {
 
     // Number of lines for TextArea
-    private static final int LINES = 5;
+    private static final int INIT_LINES = 1;
+    private static final int MAX_LINES = 7;
 
     public RegistrationTextAreaView(RegistrationFormField field, View view) {
         super(field, view);
 
-        mInputView.setLines(LINES);
-        mInputView.setMaxLines(LINES);
+        mTextInputEditText.setLines(INIT_LINES);
+        mTextInputEditText.setMaxLines(MAX_LINES);
 
         // allow multiline text
-        mInputView.setInputType(InputType.TYPE_CLASS_TEXT
+        mTextInputEditText.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         // text should start from the left-top
-        mInputView.setGravity(Gravity.START | Gravity.TOP);
+        mTextInputEditText.setGravity(Gravity.START | Gravity.TOP);
     }
 }

@@ -67,35 +67,23 @@
             android:name="org.edx.mobile.view.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"></activity>
-
-        <activity
-            android:name=".view.dialog.ResetPasswordActivity"
-            android:label="@string/reset_dialog_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog.NoTitle" />
-
-        <activity
-            android:name=".view.dialog.ResetPasswordSuccessActivity"
-            android:label="@string/success_dialog_title_help"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog.NoTitle" />
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name="org.edx.mobile.view.MyCoursesListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.CourseDashboardActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="org.edx.mobile.view.CourseOutlineActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name=".view.CourseDiscussionTopicsActivity"
@@ -144,49 +132,49 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="user"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
 
         <activity
             android:name=".view.my_videos.MyVideosActivity"
             android:label="@string/label_my_videos"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.DownloadListActivity"
             android:label="@string/title_download"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".view.WebViewFindCoursesActivity"
             android:label="@string/find_courses_title"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name=".view.WebViewExploreSubjectsActivity"
             android:label="@string/launch_explore_subjects"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name=".view.NativeFindCoursesActivity"
             android:label="@string/find_courses_title"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
             android:label="@string/find_courses_title"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="org.edx.mobile.view.CourseDetailActivity"
             android:label="@string/find_courses_title"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.VideoListActivity"
@@ -207,7 +195,9 @@
         <activity
             android:name="org.edx.mobile.view.CertificateActivity"
             android:label="@string/tab_label_certificate"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
+
         <activity
             android:name="org.edx.mobile.view.SettingsActivity"
             android:label="@string/app_name"
@@ -233,8 +223,8 @@
             android:name=".view.FormFieldActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".view.CropImageActivity"
@@ -243,10 +233,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".view.dialog.WebViewDialogActivity"
-            android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".view.dialog.WebViewActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
@@ -258,7 +246,7 @@
         <!-- Setup for Code Coverage -->
         <instrumentation
             android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
-            android:targetPackage="org.edx.mobile"></instrumentation>
+            android:targetPackage="org.edx.mobile" />
 
         <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
         <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast">
@@ -267,13 +255,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- Setup Facebook -->
+        <activity android:name="com.facebook.LoginActivity" />
+
         <!-- Setup Google -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!-- Setup Facebook -->
-        <activity android:name="com.facebook.LoginActivity" />
+        <!-- Setup Firebase -->
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="${firebaseEnabled}" />
 
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
     </application>

@@ -18,7 +18,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
@@ -152,15 +152,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         updateDataModel();
     }
 
-    @Override
-    protected String getUrlForWebView() {
-        if (selectedUnit == null) {
-            return ""; //wont happen
-        } else {
-            return selectedUnit.getWebUrl();
-        }
-    }
-
     private void setCurrentUnit(CourseComponent component) {
         this.selectedUnit = component;
         if (this.selectedUnit == null)
@@ -177,9 +168,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
 
-        environment.getSegment().trackScreenView(
-                ISegment.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
-        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
+        environment.getAnalyticsRegistry().trackScreenView(
+                Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
+        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void tryToUpdateForEndOfSequential() {
@@ -234,9 +225,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         List<CourseComponent> leaves = new ArrayList<>();
 
         PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        EnumSet<BlockType> types = userPrefManager.isUserPrefVideoModel() ?
-                EnumSet.of(BlockType.VIDEO) : EnumSet.allOf(BlockType.class);
-        selectedUnit.getRoot().fetchAllLeafComponents(leaves, types);
+        selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
 
@@ -253,15 +242,11 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     }
 
-    protected void modeChanged() {
-        onBackPressed();
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
-        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
+        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void updateUIForOrientation() {

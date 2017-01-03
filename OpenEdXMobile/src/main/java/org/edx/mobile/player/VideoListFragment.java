@@ -24,6 +24,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.services.LastAccessManager;
@@ -183,8 +184,7 @@ public class VideoListFragment extends BaseFragment {
             videoListView.setOnItemClickListener(adapter);
 
             setActivityTitle(enrollment.getCourse().getName());
-            environment.getSegment().trackScreenView("My Videos - All Videos - "
-                    + enrollment.getCourse().getName());
+            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_ALL);
 
             ArrayList<SectionItemInterface> list = environment.getStorage()
                     .getSortedOrganizedVideosByCourse(enrollment.getCourse().getId());
@@ -584,8 +584,8 @@ public class VideoListFragment extends BaseFragment {
                     reloadListFlag = false;
                 }
 
-                if (environment.getSegment() != null) {
-                    environment.getSegment().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
+                if (environment.getAnalyticsRegistry() != null) {
+                    environment.getAnalyticsRegistry().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
                             downloadEntry.lmsUrl);
                 }
 

@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.view.MyCoursesListActivity;
 import org.edx.mobile.view.Router;
@@ -34,12 +34,12 @@ public class PushNotificationHelper {
         }
     }
 
-    public static void onClickNotification(Context context, ISegment segment, Router router, BaseNotificationPayload payload) {
+    public static void onClickNotification(Context context, AnalyticsRegistry analyticsRegistry, Router router, BaseNotificationPayload payload) {
         if (null != payload && null != payload.getAction()) {
             switch (payload.getAction()) {
                 case PushNotificationHelper.COURSE_ANNOUNCEMENT_ACTION: {
                     final String courseId = ((CourseUpdateNotificationPayload) payload).getCourseId();
-                    segment.trackNotificationTapped(courseId);
+                    analyticsRegistry.trackNotificationTapped(courseId);
                     router.showCourseAnnouncementFromNotification(context, courseId);
                     return;
                 }
@@ -47,7 +47,7 @@ public class PushNotificationHelper {
         }
 
         // Default behaviour for unknown notification types
-        segment.trackNotificationTapped(null);
+        analyticsRegistry.trackNotificationTapped(null);
         context.startActivity(new Intent(context, MyCoursesListActivity.class));
     }
 

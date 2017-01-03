@@ -5,13 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.view.AuthPanelUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
@@ -33,12 +34,24 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     @Nullable
     TextView centerMessageBox;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_fragment_base);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayShowHomeEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setIcon(android.R.color.transparent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
     }
 
     @Override
@@ -122,7 +135,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         //TODO - -we need to define different UI message view for different message type?
         switch (messageType) {
             case FLYIN_ERROR:
-                this.showErrorDialog(null, message);
+                this.showErrorMessage("", message);
                 break;
             case FLYIN_WARNING:
             case FLYIN_INFO:
@@ -137,7 +150,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
                 this.hideMessageInSitu();
                 break;
             case DIALOG:
-                this.showErrorDialog(null, message);
+                this.showAlertDialog(null, message);
         }
     }
 

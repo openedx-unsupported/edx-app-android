@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
@@ -25,8 +26,9 @@ import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.task.RestoreVideosCacheDataTask;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
@@ -67,8 +69,11 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                 environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, true);
             }
         };
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_COURSES);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
         EventBus.getDefault().register(this);
+
+        // Restore cache of the courses for which the user has downloaded any videos
+        RestoreVideosCacheDataTask.executeInstanceIfNeeded(MainApplication.application);
     }
 
     @Override
@@ -126,7 +131,7 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                     ((HttpResponseStatusException) result.getEx()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 environment.getRouter().forceLogout(
                         getContext(),
-                        environment.getSegment(),
+                        environment.getAnalyticsRegistry(),
                         environment.getNotificationDelegate());
             } else {
                 logger.error(result.getEx());
@@ -245,14 +250,14 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
         footer.courseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getSegment().trackUserFindsCourses();
+                environment.getAnalyticsRegistry().trackUserFindsCourses();
                 environment.getRouter().showFindCourses(getActivity());
             }
         });
         footer.courseNotListedTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getRouter().showWebViewDialog((getActivity()), getString(R.string.course_not_listed_file_name), null);
+                environment.getRouter().showWebViewActivity((getActivity()), getString(R.string.course_not_listed_file_name), null);
             }
         });
     }

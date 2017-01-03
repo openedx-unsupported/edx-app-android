@@ -31,7 +31,7 @@ import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
@@ -42,7 +42,6 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import java.util.HashMap;
@@ -94,7 +93,8 @@ public class NavigationFragment extends BaseFragment {
                     getActivity(),
                     profile.username,
                     CallTrigger.LOADING_UNCACHED,
-                    (TaskProgressCallback) null)); // Disable global loading indicator
+                    null, // Disable global loading indicator
+                    null)); // Disable global error message overlay
         }
         EventBus.getDefault().register(this);
     }
@@ -177,8 +177,8 @@ public class NavigationFragment extends BaseFragment {
             drawerNavigationBinding.drawerOptionFindCourses.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ISegment segIO = environment.getSegment();
-                    segIO.trackUserFindsCourses();
+                    AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
+                    analyticsRegistry.trackUserFindsCourses();
                     FragmentActivity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
                     if (!(act instanceof WebViewFindCoursesActivity || act instanceof NativeFindCoursesActivity)) {
@@ -246,7 +246,7 @@ public class NavigationFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                environment.getRouter().forceLogout(getActivity(), environment.getSegment(), environment.getNotificationDelegate());
+                environment.getRouter().performManualLogout(getActivity(), environment.getAnalyticsRegistry(), environment.getNotificationDelegate());
             }
         });
 

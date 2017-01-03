@@ -8,6 +8,12 @@
     <!-- Per Material Design Guidelines -->
     <dimen name="action_bar_icon_size">24dp</dimen>
 
+    <!-- Alert dialog default padding -->
+    <!-- Note: Copied from the support library, since they are private to the library
+         ("abc_" prefix has been removed to avoid overriding) -->
+    <dimen name="dialog_padding_material">24dp</dimen>
+    <dimen name="dialog_padding_top_material">18dp</dimen>
+
     <!-- Navigation Drawer -->
     <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="drawer_profile_image_diameter">85dp</dimen>
@@ -16,17 +22,8 @@
     <dimen name="drawer_email_text">13sp</dimen>
     <dimen name="drawer_app_version_text">12sp</dimen>
 
-    <!-- Popup Menu -->
-    <dimen name="popup_menu_width">154dp</dimen>
-    <dimen name="popup_menu_horizontal_offset">-6dp</dimen>
-    <dimen name="popup_menu_vertical_offset">6dp</dimen>
-    <dimen name="popup_menu_horizontal_padding">16dp</dimen>
-    <dimen name="popup_menu_vertical_padding">18dp</dimen>
-    <dimen name="popup_menu_item_vertical_padding">12dp</dimen>
-    <dimen name="popup_menu_header_text_size">13sp</dimen>
-    <dimen name="popup_menu_row_text_size">14sp</dimen>
+    <!-- Popup Spinner -->
     <dimen name="popup_menu_icon_default_size">16dp</dimen>
-    <dimen name="popup_menu_icon_padding">16dp</dimen>
     <dimen name="popup_spinner_border">1dp</dimen>
     <dimen name="popup_spinner_min_height">34dp</dimen>
 
@@ -70,6 +67,10 @@
     <dimen name="signup_social_title_margin">5dp</dimen>
     <dimen name="signup_social_title_margin_large">13dp</dimen>
     <dimen name="signup_social_title_margin_bottom">6dp</dimen>
+    <dimen name="registration_field_vertical_padding">2dp</dimen>
+    <dimen name="registration_field_horizontal_padding">2dp</dimen>
+    <dimen name="registration_spinner_horizontal_padding">-10dp</dimen>
+    <dimen name="social_auth_bottom_margin">5dp</dimen>
 
     <!-- Switch -->
     <dimen name="switch_corner_radius">3dp</dimen>
@@ -181,5 +182,5 @@
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
-
+    <dimen name="divider_with_text_margin">12dp</dimen>
 </resources>

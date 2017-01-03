@@ -14,7 +14,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,22 +47,22 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
         String actionItem;
         Map<String, String> values = new HashMap<>();
         if (searchQuery != null) {
-            screenName = ISegment.Screens.FORUM_SEARCH_THREADS;
-            values.put(ISegment.Keys.SEARCH_STRING, searchQuery);
+            screenName = Analytics.Screens.FORUM_SEARCH_THREADS;
+            values.put(Analytics.Keys.SEARCH_STRING, searchQuery);
             actionItem = searchQuery;
         } else {
-            screenName = ISegment.Screens.FORUM_VIEW_TOPIC_THREADS;
+            screenName = Analytics.Screens.FORUM_VIEW_TOPIC_THREADS;
             String topicId = discussionTopic.getIdentifier();
             if (DiscussionTopic.ALL_TOPICS_ID.equals(topicId)) {
-                topicId = actionItem = ISegment.Values.POSTS_ALL;
+                topicId = actionItem = Analytics.Values.POSTS_ALL;
             } else if (DiscussionTopic.FOLLOWING_TOPICS_ID.equals(topicId)) {
-                topicId = actionItem = ISegment.Values.POSTS_FOLLOWING;
+                topicId = actionItem = Analytics.Values.POSTS_FOLLOWING;
             } else {
                 actionItem = discussionTopic.getName();
             }
-            values.put(ISegment.Keys.TOPIC_ID, topicId);
+            values.put(Analytics.Keys.TOPIC_ID, topicId);
         }
-        environment.getSegment().trackScreenView(screenName, courseData.getCourse().getId(),
+        environment.getAnalyticsRegistry().trackScreenView(screenName, courseData.getCourse().getId(),
                 actionItem, values);
     }
 

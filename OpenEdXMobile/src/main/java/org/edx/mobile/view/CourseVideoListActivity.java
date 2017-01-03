@@ -6,11 +6,9 @@ import android.os.SystemClock;
 import android.view.Menu;
 import android.view.View;
 
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
@@ -70,14 +68,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                         // Handling the border case that if the Last Accessed component turns out
                         // to be the course root component itself, then we don't need to show it
                         if (!lastAccessComponent.getId().equals(courseId)) {
-                            //if last access section has no video and app is on video-only model,
-                            //we should hide last-access-view for now.  TODO - i believe it is a temporary solution. we should
-                            //get rid of video-only mode in the future?
-                            PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-                            if (userPrefManager.isUserPrefVideoModel() &&
-                                    lastAccessComponent.getVideos().isEmpty())
-                                return;
-
                             final CourseComponent finalLastAccessComponent = lastAccessComponent;
                             super.showLastAccessedView(null, lastAccessComponent.getDisplayName(), new View.OnClickListener() {
                                 @Override
@@ -111,16 +101,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     public boolean onPrepareOptionsMenu(Menu menu) {
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    protected void modeChanged(){
-
-        if (courseComponentId == null) return;
-
-        if (isOnCourseOutline())
-            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
-
-        updateListUI();
     }
 
     @Override

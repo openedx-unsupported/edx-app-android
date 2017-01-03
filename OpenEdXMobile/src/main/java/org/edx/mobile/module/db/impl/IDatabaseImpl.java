@@ -15,6 +15,7 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.util.Sha1Util;
 
 import java.util.List;
 
@@ -32,7 +33,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Nullable
     private String username() {
-        return loginPrefs.getUsername();
+        final String username = loginPrefs.getUsername();
+        return (username != null) ? Sha1Util.SHA1(username) : null;
     }
 
     @Override
@@ -651,7 +653,11 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 dataCallback.sendException(ex);
             }
         });
-        return enqueue(op);
+        List<Integer> ordinals = enqueue(op);
+        if (ordinals != null && !ordinals.isEmpty()) {
+            return WatchedState.values()[ordinals.get(0)];
+        }
+        return WatchedState.UNWATCHED;
     }
 
     @Override
@@ -711,7 +717,11 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 dataCallback.sendException(ex);
             }
         });
-        return enqueue(op);
+        List<Integer> ordinals = enqueue(op);
+        if (ordinals != null && !ordinals.isEmpty()) {
+            return DownloadedState.values()[ordinals.get(0)];
+        }
+        return DownloadedState.ONLINE;
     }
 
     @Override
@@ -750,6 +760,18 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                         DbStructure.Column.DOWNLOADED + "=?",
                 new String[]{courseId, section, subSection, username(),
                         String.valueOf(DownloadedState.DOWNLOADING.ordinal())}, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public List<String> getUniqueCourseIdsForDownloadedVideos(@Nullable final DataCallback<List<String>> callback) {
+        DbOperationGetColumn<String> op = new DbOperationGetColumn<String>(true,
+                DbStructure.Table.DOWNLOADS,
+                new String[]{DbStructure.Column.EID},
+                DbStructure.Column.USERNAME + "=? AND " + DbStructure.Column.DOWNLOADED + "=?",
+                new String[]{username(), String.valueOf(DownloadedState.DOWNLOADED.ordinal())},
+                null, String.class);
         op.setCallback(callback);
         return enqueue(op);
     }

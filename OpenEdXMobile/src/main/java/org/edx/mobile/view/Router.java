@@ -19,12 +19,13 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.view.dialog.WebViewDialogActivity;
+import org.edx.mobile.util.SecurityUtil;
+import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
@@ -81,6 +82,12 @@ public class Router {
                 config.isNewLogistrationEnabled()
                         ? DiscoveryLaunchActivity.class
                         : LaunchActivity.class);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(launchIntent);
+    }
+
+    public void showSplashScreen(Context context) {
+        final Intent launchIntent = new Intent(context, SplashActivity.class);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(launchIntent);
     }
@@ -258,21 +265,43 @@ public class Router {
     }
 
     /**
-     * this method can be called either through UI [ user clicks LOGOUT button],
-     * or programmatically
+     * Clear the login data and exit to the splash screen. This should only be called internally;
+     * for handling manual logout,
+     * {@link #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
+     *
+     * @param context  The context.
+     * @param analyticsRegistry  The analytics provider object.
+     * @param delegate The notification delegate.
+     * @see #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
-    public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate) {
-        loginAPI.logOut();
+    public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
         loginPrefs.clear();
 
         EventBus.getDefault().post(new LogoutEvent());
 
-        segment.trackUserLogout();
-        segment.resetIdentifyUser();
+        analyticsRegistry.trackUserLogout();
+        analyticsRegistry.resetIdentifyUser();
 
         delegate.unsubscribeAll();
 
-        showLaunchScreen(context);
+        showSplashScreen(context);
+    }
+
+    /**
+     * Clears all the user data, revokes the refresh and access tokens, and exit to the splash
+     * screen. This should only be called in response to manual logout by the user; for performing
+     * logout internally (e.g. in response to refresh token expiration),
+     * {@link #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
+     *
+     * @param context  The context.
+     * @param analyticsRegistry  The analytics provider object.
+     * @param delegate The notification delegate.
+     * @see #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)
+     */
+    public void performManualLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
+        loginAPI.logOut();
+        forceLogout(context, analyticsRegistry, delegate);
+        SecurityUtil.clearUserData(context);
     }
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
@@ -329,7 +358,7 @@ public class Router {
         context.startActivity(findCoursesIntent);
     }
 
-    public void showWebViewDialog(@NonNull Activity activity, @NonNull String url, @Nullable String dialogTitle) {
-        activity.startActivity(WebViewDialogActivity.newIntent(activity, url, dialogTitle));
+    public void showWebViewActivity(@NonNull Activity activity, @NonNull String url, @Nullable String title) {
+        activity.startActivity(WebViewActivity.newIntent(activity, url, title));
     }
 }

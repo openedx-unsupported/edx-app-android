@@ -17,8 +17,6 @@
         <item name="android:windowBackground">@color/edx_brand_gray_x_back</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:listPopupWindowStyle">@style/edX.Widget.ListPopupWindow</item>
-        <item name="android:popupMenuStyle">@style/edX.Widget.PopupMenu</item>
-        <item name="edgePopupMenuStyle">@style/edX.Widget.EdgePopupMenu</item>
         <item name="popupSpinnerStyle">@style/edX.Widget.Spinner.Popup</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="disableableButtonTextColor">@color/disableable_button_text</item>
@@ -75,14 +73,6 @@
         <item name="actionBarStyle">@style/MyActionBar.NoShadow</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog"></style>
-
-    <style name="AppTheme.Dialog.NoTitle" parent="Theme.AppCompat.Light.Dialog">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-
     <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/edx_brand_primary_base</item>
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
@@ -122,7 +112,6 @@
 
     <!-- ActionBar title text -->
     <style name="MyActionBarTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
@@ -365,7 +354,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/edx_button_height</item>
         <item name="android:layout_marginTop">@dimen/edx_margin</item>
-        <item name="android:background">@drawable/edx_brand_button</item>
+        <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
 
     <style name="edX.Widget.SignInButton" parent="regular_white_text">
@@ -448,39 +437,9 @@
 
     <!-- Spinner with the popup style -->
     <style name="edX.Widget.ListPopupWindow" parent="Widget.AppCompat.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/popup_menu_background</item>
+        <item name="android:popupBackground">@drawable/popup_window_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
-    </style>
-
-    <style name="edX.Widget.PopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
-        <item name="android:popupBackground">@drawable/popup_menu_background</item>
-        <item name="android:overlapAnchor" tools:targetApi="21">true</item>
-        <item name="overlapAnchor">true</item>
-        <item name="android:paddingLeft">@dimen/popup_menu_horizontal_padding</item>
-        <item name="android:paddingRight">@dimen/popup_menu_horizontal_padding</item>
-        <item name="android:paddingTop">@dimen/popup_menu_vertical_padding</item>
-        <item name="android:paddingBottom">@dimen/popup_menu_vertical_padding</item>
-        <item name="android:dropDownVerticalOffset">@dimen/popup_menu_vertical_offset</item>
-        <item name="android:minWidth">@dimen/popup_menu_width</item>
-        <item name="itemVerticalPadding">@dimen/popup_menu_item_vertical_padding</item>
-        <item name="iconPadding">@dimen/popup_menu_icon_padding</item>
-        <item name="iconDefaultSize">@dimen/popup_menu_icon_default_size</item>
-    </style>
-
-    <!-- Menu popup that is aligned to the vertical edge of the screen -->
-    <style name="edX.Widget.EdgePopupMenu" parent="edX.Widget.PopupMenu">
-        <item name="android:dropDownHorizontalOffset">@dimen/popup_menu_horizontal_offset</item>
-    </style>
-
-    <style name="edX.Widget.PopupMenu.HeaderTextAppearance" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textSize">@dimen/popup_menu_header_text_size</item>
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
-    </style>
-
-    <style name="edX.Widget.PopupMenu.RowTextAppearance" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textSize">@dimen/popup_menu_row_text_size</item>
-        <item name="android:textColor">@color/course_mode</item>
     </style>
 
     <style name="edX.Widget.ProgressBar" parent="android:Widget.ProgressBar">

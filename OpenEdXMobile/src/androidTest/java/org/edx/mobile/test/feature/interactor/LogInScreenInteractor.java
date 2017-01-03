@@ -25,7 +25,7 @@ public class LogInScreenInteractor {
 
     public LogInScreenInteractor observeLogInScreen() {
         final MainApplication app = MainApplication.instance();
-        final CharSequence title = ResourceUtil.getFormattedString(app.getResources(), R.string.login_title, "platform_name", app.getInjector().getInstance(Config.class).getPlatformName());
+        final CharSequence title = app.getResources().getString(R.string.login_title);
         onView(allOf(isInActionBar(), withText(title.toString()))).check(matches(isCompletelyDisplayed()));
         onUsernameView().check(matches(isCompletelyDisplayed()));
         onPasswordView().check(matches(isCompletelyDisplayed()));

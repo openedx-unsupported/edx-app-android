@@ -1,6 +1,6 @@
 package org.edx.mobile.profiles;
 
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.test.PresenterTest;
 import org.edx.mobile.util.observer.CachingObservable;
@@ -28,7 +28,7 @@ public class UserProfilePresenterTest extends PresenterTest<UserProfilePresenter
     @Mock
     private UserPrefs userPrefs;
     @Mock
-    private ISegment segment;
+    private AnalyticsRegistry analyticsRegistry;
 
     private CachingObservable<UserProfileViewModel> accountObservable;
 
@@ -46,7 +46,7 @@ public class UserProfilePresenterTest extends PresenterTest<UserProfilePresenter
         when(userProfileInteractor.observeProfileImage()).thenReturn(photoObservable);
         when(userProfileTabsInteractor.observeTabs()).thenReturn(tabsObservable);
         startPresenter(new UserProfilePresenter(
-                segment,
+                analyticsRegistry,
                 userProfileInteractor,
                 userProfileTabsInteractor
         ));
@@ -54,7 +54,7 @@ public class UserProfilePresenterTest extends PresenterTest<UserProfilePresenter
 
     @Test
     public void whenPresenterIsCreated_tracksProfileView() {
-        verify(segment).trackProfileViewed(PROFILE_USERNAME);
+        verify(analyticsRegistry).trackProfileViewed(PROFILE_USERNAME);
     }
 
     @Test

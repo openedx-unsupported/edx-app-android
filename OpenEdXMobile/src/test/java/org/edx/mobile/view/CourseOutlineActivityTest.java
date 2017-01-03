@@ -14,7 +14,6 @@ import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.IBlock;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.robolectric.Robolectric;
@@ -85,10 +84,6 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         ActivityController<? extends CourseOutlineActivity> controller =
                 Robolectric.buildActivity(getActivityClass()).withIntent(intent);
         CourseOutlineActivity activity = controller.create(null).postCreate(null).get();
-        // Change the settings to show all courses for easier and more comprehensive testing
-        new PrefManager.UserPrefManager(activity).setUserPrefVideoModel(false);
-        activity.modeChanged();
-        activity.invalidateOptionsMenu();
         // TODO: Write a comprehensive and isolated test suite for the Fragment
         Fragment fragment = activity.getSupportFragmentManager()
                 .findFragmentByTag(CourseOutlineFragment.TAG);

@@ -26,7 +26,6 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,7 +172,7 @@ public class UserAPI {
 
     public
     @NonNull
-    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws Exception {
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, String org, boolean tryCache) throws Exception {
         String json = null;
 
         final String cacheKey = getUserEnrolledCoursesURL(username);
@@ -182,20 +181,20 @@ public class UserAPI {
         if (tryCache) {
             try {
                 json = cache.get(cacheKey);
-            } catch (IOException | NoSuchAlgorithmException e) {
+            } catch (IOException e) {
                 logger.debug(e.toString());
             }
         }
 
         // if we don't have a json yet, get it from userService
         if (json == null) {
-            Response<ResponseBody> response = userService.getUserEnrolledCourses(username).execute();
+            Response<ResponseBody> response = userService.getUserEnrolledCourses(username, org).execute();
             if (response.isSuccessful()) {
-                json = userService.getUserEnrolledCourses(username).execute().body().string();
+                json = userService.getUserEnrolledCourses(username, org).execute().body().string();
                 // cache result
                 try {
                     cache.put(cacheKey, json);
-                } catch (IOException | NoSuchAlgorithmException e) {
+                } catch (IOException e) {
                     logger.debug(e.toString());
                 }
             } else {
@@ -205,7 +204,7 @@ public class UserAPI {
                 // Otherwise fall back to fetching from the cache
                 try {
                     json = cache.get(cacheKey);
-                } catch (IOException | NoSuchAlgorithmException e) {
+                } catch (IOException e) {
                     logger.debug(e.toString());
                     throw new HttpResponseStatusException(response.code());
                 }

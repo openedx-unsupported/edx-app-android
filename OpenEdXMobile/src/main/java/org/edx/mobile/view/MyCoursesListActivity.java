@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.ViewGroup;
 
 import com.google.inject.Inject;
 
@@ -14,6 +13,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.util.AppUpdateUtils;
@@ -22,10 +22,12 @@ import org.edx.mobile.util.IntentFactory;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import roboguice.inject.InjectView;
 
 public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
     @NonNull
+    @InjectView(R.id.coordinator_layout)
     private CoordinatorLayout coordinatorLayout;
 
     @Inject
@@ -43,16 +45,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         super.onCreate(savedInstanceState);
         configureDrawer();
         setTitle(getString(R.string.label_my_courses));
-        /* Add a CoordinatorLayout so that the Snackbar can be dismissed. It's added as a
-         * new content view for convenience, to avoid messing with the existing layout.
-         * TODO: As we implement Snackbar notifications globally throughout the app, we
-         * should probably set up the CoordinatorLayout as a global content view parent in
-         * BaseFragmentActivity.
-         */
-        coordinatorLayout = new CoordinatorLayout(this);
-        addContentView(coordinatorLayout, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        environment.getSegment().trackScreenView(getString(R.string.label_my_courses));
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
     }
 
     @Override

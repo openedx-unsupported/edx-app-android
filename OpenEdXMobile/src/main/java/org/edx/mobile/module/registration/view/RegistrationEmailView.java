@@ -14,7 +14,7 @@ class RegistrationEmailView extends RegistrationEditTextView {
 
     public RegistrationEmailView(RegistrationFormField field, View view) {
         super(field, view);
-        mInputView.setInputType(InputType.TYPE_CLASS_TEXT
+        mTextInputEditText.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     }
 

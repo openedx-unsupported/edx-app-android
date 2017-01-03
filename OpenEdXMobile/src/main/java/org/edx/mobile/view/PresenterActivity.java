@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.test.PresenterInjector;
 
 public abstract class PresenterActivity<P extends Presenter<V>, V> extends BaseFragmentActivity {
 
@@ -24,7 +25,13 @@ public abstract class PresenterActivity<P extends Presenter<V>, V> extends BaseF
         if (null == presenter) {
             presenter = getLastCustomNonConfigurationInstance();
             if (null == presenter) {
-                presenter = createPresenter(savedInstanceState);
+                if (getApplication() instanceof PresenterInjector) {
+                    //noinspection unchecked
+                    presenter = (P)((PresenterInjector) getApplication()).getPresenter();
+                }
+                if (null == presenter) {
+                    presenter = createPresenter(savedInstanceState);
+                }
             }
         }
         view = createView(savedInstanceState);

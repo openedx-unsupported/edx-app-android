@@ -67,7 +67,7 @@
     <!-- Snackbar notification shown when the current version of the app is unsupported -->
     <string name="app_version_unsupported">Your version of the app is no longer supported.</string>
     <!-- Snackbar notification shown when the current version of the app is deprecated -->
-    <string name="app_version_deprecated">@string/app_version_outdated</string>
+    <string name="app_version_deprecated" translatable="false">@string/app_version_outdated</string>
     <!-- Snackbar notification shown when the current version of the app is outdated -->
     <string name="app_version_outdated">A new version of the app is available.</string>
     <!-- Snackbar action button label for opening an app store to upgrade the app to the latest version -->

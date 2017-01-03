@@ -5,7 +5,7 @@ import android.webkit.WebView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 
 import roboguice.inject.ContentView;
 
@@ -17,8 +17,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        environment.getSegment().trackScreenView(ISegment.Screens.COURSE_INFO_SCREEN);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_INFO_SCREEN);
     }
 
     @Override
@@ -31,6 +30,12 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
         WebView webview = (WebView) findViewById(R.id.webview);
         webview.loadUrl(url);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
     }
 
     @Override

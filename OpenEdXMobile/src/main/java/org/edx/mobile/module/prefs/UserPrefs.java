@@ -2,18 +2,17 @@ package org.edx.mobile.module.prefs;
 
 
 import android.content.Context;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.user.ProfileImage;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.FileUtil;
+import org.edx.mobile.util.Sha1Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,22 +52,24 @@ public class UserPrefs {
      *
      * @return
      */
-    public File getDownloadFolder() {
-        ProfileModel profile = getProfile();
+    @Nullable
+    public File getDownloadDirectory() {
+        final File externalAppDir = FileUtil.getExternalAppDir(context);
+        final ProfileModel profile = getProfile();
+        if (externalAppDir != null && profile != null) {
+            File videosDir = new File(externalAppDir, AppConstants.Directories.VIDEOS);
+            File usersVidsDir = new File(videosDir, Sha1Util.SHA1(profile.username));
+            usersVidsDir.mkdirs();
+            try {
+                File noMediaFile = new File(usersVidsDir, ".nomedia");
+                noMediaFile.createNewFile();
+            } catch (IOException ioException) {
+                logger.error(ioException);
+            }
 
-        File android = new File(Environment.getExternalStorageDirectory(), "Android");
-        File downloadsDir = new File(android, "data");
-        File packDir = new File(downloadsDir, context.getPackageName());
-        File edxDir = new File(packDir, profile.username);
-        edxDir.mkdirs();
-        try {
-            File noMediaFile = new File(edxDir, ".nomedia");
-            noMediaFile.createNewFile();
-        } catch (IOException ioException) {
-            logger.error(ioException);
+            return usersVidsDir;
         }
-
-        return edxDir;
+        return null;
     }
 
     @Nullable

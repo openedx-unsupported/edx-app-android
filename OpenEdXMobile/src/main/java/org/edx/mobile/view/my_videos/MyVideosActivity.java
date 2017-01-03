@@ -3,13 +3,14 @@ package org.edx.mobile.view.my_videos;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseVideosDownloadStateActivity;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
 
 public class MyVideosActivity extends BaseVideosDownloadStateActivity {
@@ -23,13 +24,20 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
         setContentView(R.layout.activity_myvideos_tab);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayShowHomeEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setIcon(android.R.color.transparent);
+        }
+
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
         configureDrawer();
 
         offlineBar = findViewById(R.id.offline_bar);
 
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS);
 
         // now init the tabs
         initializeTabs();

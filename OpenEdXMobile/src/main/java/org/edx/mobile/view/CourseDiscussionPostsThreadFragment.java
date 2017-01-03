@@ -265,11 +265,18 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
-        // If a new comment was posted in a listed thread, increment its comment count
+        // If a new response/comment was posted in a listed thread, we need to update the list
         for (int i = 0; i < discussionPostsAdapter.getCount(); ++i) {
             final DiscussionThread discussionThread = discussionPostsAdapter.getItem(i);
             if (discussionThread.containsComment(event.getComment())) {
-                discussionThread.incrementCommentCount();
+                // No need to update the discussionThread object because its already updated on
+                // the responses screen and is shared on both screens, because it's queried via
+                // a PATCH call in the responses screen to mark it as read, and the response is
+                // broadcasted on the event bus as a DiscussionThreadUpdatedEvent, which is then
+                // used to replace the existing model. A better approach may be to not allow
+                // sharing of the objects in an unpredictable manner by always cloning or copying
+                // from them, or on the other extreme, having a central memory cache with
+                // registered observers so that the objects are always shared.
                 discussionPostsAdapter.notifyDataSetChanged();
                 break;
             }

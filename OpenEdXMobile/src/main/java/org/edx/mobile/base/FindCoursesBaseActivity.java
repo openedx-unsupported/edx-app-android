@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,7 +22,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
-import org.edx.mobile.view.LoginActivity;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -52,6 +52,14 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         super.onCreate(savedInstanceState);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayShowHomeEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setIcon(android.R.color.transparent);
+        }
+
 
         webview = (WebView) findViewById(R.id.webview);
         offlineBar = findViewById(R.id.offline_bar);
@@ -180,7 +188,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
@@ -209,7 +217,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
             return;
         }
 
-        environment.getSegment().trackEnrollClicked(courseId, emailOptIn);
+        environment.getAnalyticsRegistry().trackEnrollClicked(courseId, emailOptIn);
 
         isTaskInProgress = true;
 

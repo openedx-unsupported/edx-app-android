@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.fabric.sdk.android.Kit;
+
 @Singleton
 public class Config {
 
@@ -39,6 +43,7 @@ public class Config {
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
     private static final String APP_UPDATE_URIS = "APP_UPDATE_URIS";
+    private static final String ORGANIZATION_CODE = "ORGANIZATION_CODE";
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
@@ -58,10 +63,12 @@ public class Config {
     private static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
     private static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
-    private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
+    private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
+    private static final String FIREBASE_ENABLED = "FIREBASE_ENABLED";
+
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -227,10 +234,14 @@ public class Config {
         @SerializedName("FABRIC_BUILD_SECRET")
         private String mFabricBuildSecret;
 
+        @SerializedName("KITS")
+        private FabricKitsConfig mKitsConfig;
+
         public boolean isEnabled() {
             return mEnabled
                     && !TextUtils.isEmpty(mFabricKey)
-                    && !TextUtils.isEmpty(mFabricBuildSecret);
+                    && !TextUtils.isEmpty(mFabricBuildSecret)
+                    && mKitsConfig != null && mKitsConfig.hasEnabledKits();
         }
 
         public String getFabricKey() {
@@ -239,6 +250,44 @@ public class Config {
 
         public String getFabricBuildSecret() {
             return mFabricBuildSecret;
+        }
+
+        public FabricKitsConfig getKitsConfig()   {
+            return mKitsConfig;
+        }
+    }
+
+    public static class FabricKitsConfig {
+        @SerializedName("CRASHLYTICS")
+        private boolean mCrashlyticsEnabled;
+
+        @SerializedName("ANSWERS")
+        private boolean mAnswersEnabled;
+
+        public boolean isCrashlyticsEnabled() {
+            return mCrashlyticsEnabled;
+        }
+
+        public boolean isAnswersEnabled() {
+            return mAnswersEnabled;
+        }
+
+        public Kit[] getEnabledKits()   {
+            List<Kit> fabricKits = new ArrayList<>();
+
+            if (isCrashlyticsEnabled())    {
+                fabricKits.add(new CrashlyticsCore());
+            }
+
+            if (isAnswersEnabled()) {
+                fabricKits.add(new Answers());
+            }
+
+            return fabricKits.toArray(new Kit[fabricKits.size()]);
+        }
+
+        public boolean hasEnabledKits()  {
+            return getEnabledKits().length != 0;
         }
     }
 
@@ -412,6 +461,10 @@ public class Config {
         return uris;
     }
 
+    public String getOrganizationCode() {
+        return getString(ORGANIZATION_CODE);
+    }
+
     public boolean isNotificationEnabled() {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
@@ -422,6 +475,10 @@ public class Config {
 
     public boolean isDiscussionProfilePicturesEnabled() {
         return getBoolean(DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM, false);
+    }
+
+    public boolean isRegistrationEnabled() {
+        return getBoolean(REGISTRATION_ENABLED, true);
     }
 
     /**

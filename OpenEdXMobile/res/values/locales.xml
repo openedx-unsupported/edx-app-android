@@ -12,4 +12,5 @@
     <string name="lbl_cc_french">French</string>
     <string name="cc_spanish_code">es</string>
     <string name="lbl_cc_spanish">Spanish</string>
+    <string name="lbl_cc_arabic_code">Arabic</string>
 </resources>

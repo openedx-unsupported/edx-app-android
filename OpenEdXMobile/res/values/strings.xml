@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">@string/platform_name</string>
-    <string name="app_shortcut_name">@string/shortcut_name</string>
-    <string name="phonetic_app_name">@string/phonetic_platform_name</string>
+    <string name="app_name" translatable="false">@string/platform_name</string>
+    <string name="app_shortcut_name" translatable="false">@string/shortcut_name</string>
+    <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>
 
     <!-- Certificates -->
 
@@ -17,6 +17,8 @@
 
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
+    <!-- Effort field name -->
+    <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
     In that case, a play icon is shown on top of the course image. This is the content description. -->
     <string name="go_to_video">Go to video</string>
@@ -81,7 +83,7 @@
     <string name="login_failed">Please make sure that your user name or e-mail address and password are correct and try again.</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">{platform_name} Terms of Service and Honor Code</string>
-    <string name="login_title">Sign in to {platform_name}</string>
+    <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
     <string name="close">Close</string>
     <!-- Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns -->
@@ -145,8 +147,6 @@
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
     <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
-    <!-- Reset Dialog Fragment Place Holder messages -->
-    <string name="reset_dialog_title">Reset Title</string>
     <!-- Title of agreement users must accept to use the app -->
     <string name="end_user_title">End User License Agreement</string>
 
@@ -183,16 +183,6 @@
     <string name="label_ended">Ended - {date}</string>
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending - {date}</string>
-    <!-- Title for the course filter menu popup -->
-    <string name="course_view_modes">Course View Options</string>
-    <!-- Label for the course filter menu popup option for filtering by videos only -->
-    <string name="course_view_mode_videos_only">Videos Only</string>
-    <!-- Label for the course filter menu popup option for displaying the full course -->
-    <string name="course_view_mode_full_course">Full Course</string>
-    <!-- Label for the menu popup for viewing the course on the web -->
-    <string name="course_view_on_web">View on Web</string>
-    <!-- Label for the menu popup for changing mode to Videos Only/Full Course -->
-    <string name="course_change_mode">Course viewing options</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
@@ -224,7 +214,7 @@
     <!--Label for creating a new post-->
     <string name="discussion_post_create_new_post">Create a new post</string>
     <!--Label for creating a new comment-->
-    <string name="discussion_post_create_new_comment">@string/discussion_add_comment_title</string>
+    <string name="discussion_post_create_new_comment" translatable="false">@string/discussion_add_comment_title</string>
     <!--Discussion posts filter options-->
     <!--Discussion posts filter for all posts-->
     <string name="discussion_posts_filter_all_posts">All Posts</string>
@@ -262,7 +252,7 @@
     <!--Label for question type discussions that are unanswered-->
     <string name="course_discussion_unanswered_title">Unanswered Question</string>
     <!--Label for adding a discussion response-->
-    <string name="discussion_responses_add_response_button">@string/discussion_add_response_title</string>
+    <string name="discussion_responses_add_response_button" translatable="false">@string/discussion_add_response_title</string>
     <!--Label for number of discussion responses-->
     <plurals name="number_responses_or_comments_responses_label">
         <item quantity="one">%s response</item>
@@ -274,7 +264,7 @@
         <item quantity="other">%s comments</item>
     </plurals>
     <!--Label for adding a new comment-->
-    <string name="number_responses_or_comments_add_comment_label">@string/discussion_add_comment_title</string>
+    <string name="number_responses_or_comments_add_comment_label" translatable="false">@string/discussion_add_comment_title</string>
     <!--Label for indicating that a response is an answer-->
     <string name="discussion_responses_answer">Answer</string>
     <!--Label for indicating that a response is endorsed-->
@@ -308,7 +298,7 @@
     <!-- Add comment button description for accessibility in adding a new comment -->
     <string name="discussion_add_comment_button_description">Add comment button</string>
     <!-- Add your comment placeholder in adding a new comment -->
-    <string name="discussion_add_comment_hint">@string/discussion_add_comment_title</string>
+    <string name="discussion_add_comment_hint" translatable="false">@string/discussion_add_comment_title</string>
 
     <!-- Title in adding a new response -->
     <string name="discussion_add_response_title">Add a response</string>
@@ -319,7 +309,7 @@
     <!-- Add response button description for accessibility in adding a new response -->
     <string name="discussion_add_response_button_description">Add response button</string>
     <!-- Add your response placeholder in adding a new response -->
-    <string name="discussion_add_response_hint">@string/discussion_add_response_title</string>
+    <string name="discussion_add_response_hint" translatable="false">@string/discussion_add_response_title</string>
 
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
@@ -334,9 +324,9 @@
     <!-- Add post button content description for accessibility in adding a new post -->
     <string name="discussion_add_question_button_description">Post question button</string>
     <!-- Add your post placeholder in adding a new post -->
-    <string name="discussion_body_hint_discussion">@string/discussion_title</string>
+    <string name="discussion_body_hint_discussion" translatable="false">@string/discussion_title</string>
     <!-- Add your post placeholder in adding a new post -->
-    <string name="discussion_body_hint_question">@string/discussion_question</string>
+    <string name="discussion_body_hint_question" translatable="false">@string/discussion_question</string>
     <!-- Question text in adding a new post -->
     <string name="discussion_question">Question</string>
 
@@ -345,8 +335,6 @@
     <string name="assessment_next">Next</string>
     <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
     <string name="assessment_previous">Previous</string>
-    <!-- Label for empty video in video only mode-->
-    <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select {mode_switcher} above and switch to full course mode.</string>
     <!-- Label showing assessment only available on website-->
     <string name="assessment_not_available">This interactive component isn’t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
@@ -468,10 +456,9 @@
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <!-- Prompt leading user to create account screen -->
     <string name="sign_up_and_learn">Sign up and start learning</string>
-    <!-- In Sign up screen -->
-    <string name="sign_up_with">Sign up with</string>
-    <!-- In Sign up screen -->
-    <string name="or_sign_up_with_email">or sign up with email</string>
+    <!-- In Register screen -->
+    <string name="register_with">Register with</string>
+    <string name="or_register_with_email">or register with email</string>
 
     <!-- New Logistration Launch screen text -->
     <!-- Button leading user to create account screen -->
@@ -495,7 +482,7 @@
     <!-- Text shown while waiting for registration request -->
     <string name="creating_account_text">Creating account...</string>
     <!-- Registration screen title -->
-    <string name="register_title">Sign up for {platform_name}</string>
+    <string name="register_title">Register</string>
     <!-- Text for successful registration with social token  -->
     <string name="sign_up_with_facebook_ok">You’ve successfully signed in with Facebook.</string>
     <string name="sign_up_with_google_ok">You’ve successfully signed in with Google.</string>
@@ -506,6 +493,9 @@
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->
     <string name="try_again">Try again</string>
+    <!-- Registration error -->
+    <string name="registration_error_title">Registration Error</string>
+    <string name="registration_error_message">Update the highlighted fields and try again.</string>
 
     <!-- data charges may apply dialog text -->
     <!-- Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app -->
@@ -554,8 +544,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">Profile</string>
-    <!-- The accessibility description for the name section -->
-    <string name="profile_name_description">Name: {name}</string>
+    <!-- The accessibility description for the username section -->
+    <string name="profile_username_description">Username: {username}</string>
     <!-- The accessibility description for the language section -->
     <string name="profile_language_description">Language: {language}</string>
     <!-- The accessibility description for the location section -->
@@ -592,6 +582,8 @@
     <string name="edit_user_profile_current_location">Current location: {current_location}</string>
     <!-- Button label that will open gallery or camera for choosing new profile photo -->
     <string name="edit_user_profile_change_photo">Change</string>
+    <!-- Content Description for change photo button -->
+    <string name="edit_user_profile_change_photo_description">Change profile picture</string>
     <!-- Button that will open a camera for taking a new profile photo -->
     <string name="edit_user_profile_take_photo">Take photo</string>
     <!-- Button that will open photo gallery for choosing a new profile photo -->

@@ -3,18 +3,16 @@ package org.edx.mobile.view;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.support.v7.widget.SearchView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.Config;
 
 import java.io.UnsupportedEncodingException;
@@ -36,9 +34,16 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         } else {
             blockDrawerFromOpening();
         }
-        environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
         webView = (WebView) findViewById(R.id.webview);
         webView.loadUrl(getInitialUrl());
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
     }
 
     @NonNull

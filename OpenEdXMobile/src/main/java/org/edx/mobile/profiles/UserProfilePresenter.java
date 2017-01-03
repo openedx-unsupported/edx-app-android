@@ -2,7 +2,7 @@ package org.edx.mobile.profiles;
 
 import android.support.annotation.NonNull;
 
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.observer.Func1;
 import org.edx.mobile.util.observer.Observables;
 import org.edx.mobile.util.observer.Observer;
@@ -18,10 +18,10 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
     @NonNull
     private final UserProfileTabsInteractor userProfileTabsInteractor;
 
-    public UserProfilePresenter(@NonNull ISegment segment, @NonNull UserProfileInteractor userProfileInteractor, @NonNull UserProfileTabsInteractor userProfileTabsInteractor) {
+    public UserProfilePresenter(@NonNull AnalyticsRegistry analyticsRegistry, @NonNull UserProfileInteractor userProfileInteractor, @NonNull UserProfileTabsInteractor userProfileTabsInteractor) {
         this.userProfileInteractor = userProfileInteractor;
         this.userProfileTabsInteractor = userProfileTabsInteractor;
-        segment.trackProfileViewed(userProfileInteractor.getUsername());
+        analyticsRegistry.trackProfileViewed(userProfileInteractor.getUsername());
     }
 
     public UserProfileBioInteractor getBioInteractor() {
@@ -36,7 +36,7 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
     @Override
     public void attachView(@NonNull final ViewInterface view) {
         super.attachView(view);
-        view.setName(userProfileInteractor.getUsername());
+        view.setUsername(userProfileInteractor.getUsername());
         view.setEditProfileMenuButtonVisible(userProfileInteractor.isViewingOwnProfile());
         view.showLoading();
         observeOnView(userProfileInteractor.observeProfile()).subscribe(new Observer<UserProfileViewModel>() {
@@ -98,7 +98,7 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
 
         void setPhotoImage(@NonNull UserProfileImageViewModel model);
 
-        void setName(@NonNull String name);
+        void setUsername(@NonNull String username);
 
         void navigateToProfileEditor(@NonNull String username);
     }

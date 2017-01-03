@@ -30,6 +30,9 @@ public class TranscriptModel implements Serializable {
     @SerializedName("fr")
     public String frenchUrl;
 
+    @SerializedName("ar")
+    public String arabicUrl;
+
     public LinkedHashMap<String, String> getLanguageList(Context context) {
         LinkedHashMap<String, String> languageArray = new LinkedHashMap<String, String>();
         if (chineseUrl != null) {
@@ -55,6 +58,10 @@ public class TranscriptModel implements Serializable {
         if (spanishUrl != null) {
             languageArray.put(context.getString(R.string.cc_spanish_code),
                     context.getString(R.string.lbl_cc_spanish));
+        }
+        if (arabicUrl != null) {
+            languageArray.put(context.getString(R.string.lbl_cc_arabic_code),
+                    context.getString(R.string.lbl_cc_arabic_code));
         }
 
         if (languageArray.size() > 0) {
@@ -86,6 +93,8 @@ public class TranscriptModel implements Serializable {
         if (portugueseUrl != null ? !portugueseUrl.equals(that.portugueseUrl) : that.portugueseUrl != null)
             return false;
         if (chineseUrl != null ? !chineseUrl.equals(that.chineseUrl) : that.chineseUrl != null)
+            return false;
+        if (arabicUrl != null ? !arabicUrl.equals(that.arabicUrl) : that.arabicUrl != null)
             return false;
         return frenchUrl != null ? frenchUrl.equals(that.frenchUrl) : that.frenchUrl == null;
 

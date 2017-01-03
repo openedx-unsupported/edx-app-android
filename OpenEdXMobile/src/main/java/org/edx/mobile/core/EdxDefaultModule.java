@@ -20,11 +20,6 @@ import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter;
 import org.edx.mobile.http.serialization.JsonPageDeserializer;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.ISegmentEmptyImpl;
-import org.edx.mobile.module.analytics.ISegmentImpl;
-import org.edx.mobile.module.analytics.ISegmentTracker;
-import org.edx.mobile.module.analytics.ISegmentTrackerImpl;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.IDatabaseImpl;
 import org.edx.mobile.module.download.IDownloadManager;
@@ -33,8 +28,8 @@ import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
-import org.edx.mobile.util.AppUpdateUtils;
 import org.edx.mobile.user.UserService;
+import org.edx.mobile.util.AppUpdateUtils;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -42,7 +37,6 @@ import org.edx.mobile.util.MediaConsentUtils;
 import de.greenrobot.event.EventBus;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EdxDefaultModule extends AbstractModule {
     //if your module requires a context, add a constructor that will be passed a context.
@@ -59,13 +53,6 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(IDatabase.class).to(IDatabaseImpl.class);
         bind(IStorage.class).to(Storage.class);
-        bind(ISegmentTracker.class).to(ISegmentTrackerImpl.class);
-        if (config.getSegmentConfig().isEnabled()) {
-            bind(ISegment.class).to(ISegmentImpl.class);
-        } else {
-            bind(ISegment.class).to(ISegmentEmptyImpl.class);
-        }
-
         bind(IDownloadManager.class).to(IDownloadManagerImpl.class);
 
         bind(OkHttpClient.class).toInstance(OkHttpUtil.getOAuthBasedClient(context));

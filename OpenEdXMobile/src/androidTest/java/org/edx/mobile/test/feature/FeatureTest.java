@@ -4,7 +4,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.EdxEnvironment;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -18,6 +17,6 @@ public abstract class FeatureTest {
         final MainApplication application = MainApplication.instance();
         environment = application.getInjector().getInstance(EdxEnvironment.class);
         environment.getLoginPrefs().clear();
-        environment.getSegment().resetIdentifyUser();
+        environment.getAnalyticsRegistry().resetIdentifyUser();
     }
 }

@@ -195,7 +195,7 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
         if (progressCallback != null) {
             progressCallback.finishProcess();
         }
-        if (messageCallback != null) {
+        if (messageCallback != null && !call.isCanceled()) {
             messageCallback.onMessage(callTrigger.getMessageType(),
                     ErrorUtils.getErrorMessage(error, context));
         }

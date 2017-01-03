@@ -25,11 +25,17 @@ public class LoginPresenter extends ViewHoldingPresenter<LoginPresenter.LoginVie
         } else {
             view.setSocialLoginButtons(config.getGoogleConfig().isEnabled(), config.getFacebookConfig().isEnabled());
         }
+
+        if (!config.isRegistrationEnabled()) {
+            view.disableToolbarNavigation();
+        }
     }
 
     public interface LoginViewInterface {
 
         void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled);
+
+        void disableToolbarNavigation();
 
     }
 }

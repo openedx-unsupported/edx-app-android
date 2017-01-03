@@ -1,11 +1,13 @@
 package org.edx.mobile.base;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -27,6 +30,7 @@ import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
+import org.edx.mobile.interfaces.OnActivityResultListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
@@ -40,7 +44,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
-        implements NetworkSubject, ICommonUI {
+        implements NetworkSubject, ICommonUI, OnActivityResultListener {
 
     private MenuItem offlineMenuItem;
     protected ActionBarDrawerToggle mDrawerToggle;
@@ -85,16 +89,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         updateActionBarShadow();
-
-        logger.debug("created");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        isActivityStarted = true;
-
-        // enabling action bar app icon.
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayShowHomeEnabled(true);
@@ -104,24 +98,24 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityStarted = true;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().registerSticky(this);
-        try {
-            DrawerLayout mDrawerLayout = (DrawerLayout)
-                    findViewById(R.id.drawer_layout);
-            if (mDrawerLayout != null) {
-
-                Fragment frag = getSupportFragmentManager()
-                        .findFragmentByTag("NavigationFragment");
-                if (frag == null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.slider_menu,
-                                    new NavigationFragment(), "NavigationFragment").commit();
-                }
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (mDrawerLayout != null) {
+            Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
+            if (frag == null) {
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.slider_menu,
+                        new NavigationFragment(),
+                        "NavigationFragment").commit();
             }
-        } catch (Exception ex) {
-            logger.error(ex);
         }
     }
 
@@ -479,6 +473,31 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
+    public boolean showErrorMessage(String header, String message) {
+        return showErrorMessage(header, message, true);
+    }
+
+    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
+        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        if (error_layout == null) {
+            logger.warn("Error Layout not available, so couldn't show flying message");
+            return false;
+        }
+        TextView errorHeader = (TextView) findViewById(R.id.error_header);
+        TextView errorMessageView = (TextView) findViewById(R.id.error_message);
+        if (header == null || header.isEmpty()) {
+            errorHeader.setVisibility(View.GONE);
+        } else {
+            errorHeader.setVisibility(View.VISIBLE);
+            errorHeader.setText(header);
+        }
+        if (message != null) {
+            errorMessageView.setText(message);
+        }
+        ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
+        return true;
+    }
+
     /**
      * Sub-classes may override this method to handle connected state.
      */
@@ -537,8 +556,12 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    public void showErrorDialog(@Nullable String title, @NonNull String message) {
-        AlertDialogFragment.newInstance(title, message).show(getSupportFragmentManager(), null);
+    public void showAlertDialog(@Nullable String title, @NonNull String message) {
+        showAlertDialog(title, message, null);
+    }
+
+    public void showAlertDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
+        AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
     }
 
     @Override
@@ -546,4 +569,14 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>To conform with the {@link OnActivityResultListener} interface this function has been
+     * implemented emptily, making it publicly accessible.</p>
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

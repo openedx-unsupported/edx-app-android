@@ -15,7 +15,6 @@ import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
@@ -27,7 +26,6 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.Config;
 
@@ -56,15 +54,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private IDatabase dbStore;
     private IStorage storage;
     private DownloadListener mDownloadListener;
-    private Context context;
     private Config config;
-
-    private boolean currentVideoMode;
-    private int numOfTotalUnits;
 
     public CourseOutlineAdapter(Context context, Config config, IDatabase dbStore, IStorage storage,
                                 DownloadListener listener) {
-        this.context = context;
         this.config = config;
         this.dbStore = dbStore;
         this.storage = storage;
@@ -157,25 +150,16 @@ public class CourseOutlineAdapter extends BaseAdapter {
         if (component != null && !component.isContainer())
             return;//
         this.rootComponent = component;
-        this.numOfTotalUnits = 0;
         mData.clear();
         if (rootComponent != null) {
-            PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-            currentVideoMode = userPrefManager.isUserPrefVideoModel();
             List<IBlock> children = rootComponent.getChildren();
-            this.numOfTotalUnits = children.size();
             for (IBlock block : children) {
                 CourseComponent comp = (CourseComponent) block;
-                if (currentVideoMode && comp.getBlockCount().videoCount == 0)
-                    continue;
-
                 if (comp.isContainer()) {
                     SectionRow header = new SectionRow(SectionRow.SECTION, comp);
                     mData.add(header);
                     for (IBlock childBlock : comp.getChildren()) {
                         CourseComponent child = (CourseComponent) childBlock;
-                        if (currentVideoMode && child.getBlockCount().videoCount == 0)
-                            continue;
                         SectionRow row = new SectionRow(SectionRow.ITEM, false, child);
                         mData.add(row);
                     }
@@ -445,27 +429,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
             separator.setVisibility(View.VISIBLE);
         }
         return convertView;
-    }
-
-    /**
-     * @return <code>true</code> if we rebuild the list due to the change of mode preference
-     */
-    public boolean checkModeChange() {
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        boolean modeInConfiguration = userPrefManager.isUserPrefVideoModel();
-        if (modeInConfiguration != currentVideoMode) {
-            setData(rootComponent);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * if the app is in the video-only mode, some unit will not show up
-     */
-    public boolean hasFilteredUnits() {
-        return this.numOfTotalUnits > mData.size();
     }
 
     public ViewHolder getTag(View convertView) {

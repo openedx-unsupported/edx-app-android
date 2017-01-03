@@ -129,9 +129,9 @@ dependencies {
     compile project (':android-iconify-fontawesome')
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.facebook.android:facebook-android-sdk:3.23.1'
-    compile 'com.google.android.gms:play-services-plus:9.4.0'
-    compile 'com.google.android.gms:play-services-analytics:9.4.0'
-    compile 'com.google.android.gms:play-services-auth:9.4.0'
+    compile 'com.google.android.gms:play-services-plus:10.0.1'
+    compile 'com.google.android.gms:play-services-analytics:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'de.greenrobot:eventbus:2.4.1'
     compile 'com.squareup.phrase:phrase:1.1.0'
@@ -158,6 +158,9 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+
+    // Google Firebase
+    compile 'com.google.firebase:firebase-core:10.0.1'
 
     // Segment Library
     compile('com.segment.analytics.android:analytics-core:3.4.0@aar') {
@@ -198,6 +201,9 @@ dependencies {
     testCompile ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
         exclude group: 'com.android.support'
     }
+    testCompile ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
+        exclude group: 'com.android.support'
+    }
     testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
     testCompile ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
@@ -207,6 +213,8 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile "com.crittercism.dexmaker:dexmaker:1.4"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:1.4"
     androidTestCompile ("org.mockito:mockito-core:1.10.19"){
         exclude group: 'org.hamcrest'
     }
@@ -219,9 +227,14 @@ configurations {
     androidTestCompile.exclude group: 'javax.annotation'
 }
 
-android {
-    def config = new TaskHelper().loadConfig(project)
+def config = new TaskHelper().loadConfig(project)
 
+// https://developers.google.com/android/guides/google-services-plugin
+if (config.get('FIREBASE_ENABLED')?: false) {
+    apply plugin: 'com.google.gms.google-services'
+}
+
+android {
     signingConfigs {
         releasekey {
             storeFile file(RELEASE_STORE_FILE)
@@ -274,7 +287,8 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
 
-        manifestPlaceholders = [ supportsRtl:"false"]
+        manifestPlaceholders = [supportsRtl:"false",
+                                firebaseEnabled: config.get('FIREBASE_ENABLED')?: false]
 
         def platformName = config.get('PLATFORM_NAME')
         resValue "string", "platform_name", platformName
@@ -324,6 +338,18 @@ android {
 
         if (project.hasProperty('RES_DIR')) {
             prod.res.srcDirs = [RES_DIR]
+        }
+
+        if (project.hasProperty('ASSETS')) {
+            prod.assets.srcDirs = [ASSETS]
+        }
+
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
         }
     }
 
@@ -391,9 +417,7 @@ android.applicationVariants.all { variant ->
     def variantName = variant.name.capitalize()
     def taskName = "applyConfig" + variantName
     def configureTask = project.task(taskName) << {
-        def taskHelper = new TaskHelper()
         def helper = new AndroidHelper()
-        def config = taskHelper.loadConfig(project)
         helper.saveProcessedConfig(project, config)
     }
     def generateTask = project.tasks.getByName("generate" + variantName + "Resources")

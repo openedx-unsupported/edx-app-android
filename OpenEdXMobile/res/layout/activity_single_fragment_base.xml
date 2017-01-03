@@ -4,26 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_act_background"
-    android:orientation="vertical"
-    android:splitMotionEvents="false"
     android:fitsSystemWindows="true"
-    >
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true">
 
-        <include layout="@layout/toolbar"/>
-
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <include layout="@layout/toolbar" />
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <include layout="@layout/panel_error_message_with_title"/>
+                </LinearLayout>
 
                 <View
                     android:id="@+id/offline_bar"
@@ -31,40 +45,35 @@
                     android:layout_alignParentTop="true"
                     android:visibility="gone" />
 
-                <RelativeLayout
-                    android:id="@+id/my_groups_list_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_below="@id/offline_bar"
-                    android:layout_weight="1">
+                    <RelativeLayout
+                        android:id="@+id/my_groups_list_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="0px"
+                        android:layout_below="@id/offline_bar"
+                        android:layout_weight="1">
 
-                </RelativeLayout>
+                    </RelativeLayout>
 
-                <fragment
-                    android:name="org.edx.mobile.view.LogInSignUpFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:tag="org.edx.mobile.view.LogInSignUpFragment" />
-
+                <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/flying_message"
-                style="@style/flying_message"
-                android:layout_alignParentTop="true"
-                android:visibility="gone" />
+                <TextView
+                    android:id="@+id/flying_message"
+                    style="@style/flying_message"
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone" />
 
-            <include layout="@layout/loading_indicator" />
+                <include layout="@layout/loading_indicator" />
 
-            <TextView
-                android:id="@+id/center_message_box"
-                style="@style/content_unavailable_error_text"
-                tools:text="Error text comes here."
-                tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/center_message_box"
+                    style="@style/content_unavailable_error_text"
+                    tools:text="Error text comes here."
+                    tools:visibility="visible" />
 
-        </FrameLayout>
-    </LinearLayout>
-
+            </FrameLayout>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <include layout="@layout/navigation_drawer_container" />
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -39,7 +40,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.CallTrigger;
-import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.DataType;
@@ -56,7 +57,6 @@ import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.view.common.TaskProgressCallback;
-import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -99,7 +99,7 @@ public class EditUserProfileFragment extends BaseFragment {
     private Router router;
 
     @Inject
-    private ISegment segment;
+    private AnalyticsRegistry analyticsRegistry;
 
     @NonNull
     private final ImageCaptureHelper helper = new ImageCaptureHelper();
@@ -143,6 +143,8 @@ public class EditUserProfileFragment extends BaseFragment {
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
+        viewHolder.username.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.profile_username_description, "username", username));
+
         final IconDrawable icon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
                 .colorRes(getActivity(), R.color.disableable_button_text)
                 .sizeRes(getActivity(), R.dimen.fa_x_small)
@@ -414,7 +416,7 @@ public class EditUserProfileFragment extends BaseFragment {
                     final Task task = new SetAccountImageTask(getActivity(), username, imageUri, cropRect);
                     task.setProgressDialog(viewHolder.profileImageProgress);
                     executePhotoTask(task);
-                    segment.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
+                    analyticsRegistry.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
                 }
                 break;
             }

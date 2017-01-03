@@ -85,6 +85,8 @@ Now you can build a release build from Android Studio. Or, in the directory of `
 
 Customization
 -------------
+**Resources**
+
 To customize images, colors, and layouts, you can specify a custom resource directory. Create or edit the ``gradle.properties`` file inside the ``OpenEdXMobile`` directory of ``edx-app-android``. For example:
 
 ::
@@ -96,6 +98,16 @@ Any resources placed here will override resources of the same name in the ``Open
 To remove all edX branding, override the drawables for: ``edx_logo``, ``edx_logo_login``, ``ic_launcher``, ``ic_new_cert``, and ``profile_photo_placeholder``. These come in a number of resolutions, be sure to replace them all.
 
 If you need to make more in depth UI changes, most of the user interface is specified in standard Android XML files, which you can also override by placing new versions in your ``RES_DIR``.
+
+**Assets**
+
+To customize assets such as the End User License Agreement (EULA) you can specify a custom assets directory. Create or edit the ``gradle.properties`` file inside the ``OpenEdXMobile`` directory of ``edx-app-android``. For example:
+
+::
+
+    ASSETS = ../../path/to/your/assets
+
+Any assets placed here will override resources of the same name in the ``OpenEdXMobile/assets`` directory.
 
 Third Party Services
 --------------------
