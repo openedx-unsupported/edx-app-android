@@ -4,16 +4,19 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.services.ServiceManager;
 
+import okhttp3.Request;
+import okhttp3.Response;
 import roboguice.RoboGuice;
 
 public abstract class TranscriptDownloader implements Runnable {
 
     private String srtUrl;
     @Inject
-    ServiceManager localApi;
+    private OkHttpClientProvider okHttpClientProvider;
     private final Logger logger = new Logger(TranscriptDownloader.class.getName());
 
     public TranscriptDownloader(Context context, String url) {
@@ -24,8 +27,16 @@ public abstract class TranscriptDownloader implements Runnable {
     @Override
     public void run() {
         try {
-            String response = localApi.downloadTranscript(srtUrl);
-            onDownloadComplete(response);
+            final Response response = okHttpClientProvider.getWithOfflineCache()
+                    .newCall(new Request.Builder()
+                            .url(srtUrl)
+                            .get()
+                            .build())
+                    .execute();
+            if (!response.isSuccessful()) {
+                throw new HttpStatusException(response);
+            }
+            onDownloadComplete(response.body().string());
         } catch (Exception localException) {
             handle(localException);
             logger.error(localException);

@@ -4,14 +4,15 @@ import android.support.annotation.NonNull;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.http.ApiConstants;
-import org.edx.mobile.http.ApiConstants.TokenType;
+import org.edx.mobile.http.constants.ApiConstants;
+import org.edx.mobile.http.constants.ApiConstants.TokenType;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -22,7 +23,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-import static org.edx.mobile.http.ApiConstants.URL_MY_USER_INFO;
+import static org.edx.mobile.http.constants.ApiConstants.URL_MY_USER_INFO;
 
 public interface LoginService {
 
@@ -110,6 +111,8 @@ public interface LoginService {
     @POST(ApiConstants.URL_PASSWORD_RESET)
     Call<ResetPasswordResponse> resetPassword(@Field("email") String email);
 
+    @POST(ApiConstants.URL_LOGIN)
+    Call<RequestBody> login();
 
     /**
      * @return basic profile information for currently authenticated user.

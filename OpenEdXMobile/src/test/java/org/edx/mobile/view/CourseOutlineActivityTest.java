@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.IBlock;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
@@ -29,6 +31,7 @@ import java.util.List;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.*;
 
 public class CourseOutlineActivityTest extends CourseBaseActivityTest {
@@ -116,14 +119,15 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
                 extras.getSerializable(Router.EXTRA_COURSE_DATA);
         assertNotNull(courseData);
-        CourseComponent courseComponent;
+        String courseId = courseData.getCourse().getId();
+        CourseStructureV1Model model;
         try {
-            courseComponent = serviceManager.getCourseStructure(
-                    courseData.getCourse().getId(),
-                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+            model = executeStrict(courseAPI.getCourseStructure(courseId));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        CourseComponent courseComponent = (CourseComponent)
+                CourseAPI.normalizeCourseStructure(model, courseId);
         int subsectionRowIndex = -1;
         String subsectionId = null;
         CourseComponent subsectionUnit = null;
@@ -194,14 +198,15 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
                 extras.getSerializable(Router.EXTRA_COURSE_DATA);
         assertNotNull(courseData);
-        CourseComponent courseComponent;
+        String courseId = courseData.getCourse().getId();
+        CourseStructureV1Model model;
         try {
-            courseComponent = serviceManager.getCourseStructure(
-                    courseData.getCourse().getId(),
-                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+            model = executeStrict(courseAPI.getCourseStructure(courseId));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        CourseComponent courseComponent = (CourseComponent)
+                CourseAPI.normalizeCourseStructure(model, courseId);
         List<CourseComponent> leafComponents = new ArrayList<>();
         courseComponent.fetchAllLeafComponents(leafComponents,
                 EnumSet.allOf(BlockType.class));

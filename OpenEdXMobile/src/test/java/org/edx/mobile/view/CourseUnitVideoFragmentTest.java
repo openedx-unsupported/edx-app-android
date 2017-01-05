@@ -14,9 +14,11 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.junit.Test;
 import org.robolectric.Robolectric;
@@ -24,6 +26,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import static org.assertj.android.api.Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -47,15 +50,20 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      */
     private VideoBlockModel getVideoUnit() {
         EnrolledCoursesResponse courseData;
-        CourseComponent courseComponent;
         try {
-            courseData = api.getEnrolledCourses().get(0);
-            courseComponent = serviceManager.getCourseStructure(
-                    courseData.getCourse().getId(),
-                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+            courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        String courseId = courseData.getCourse().getId();
+        CourseStructureV1Model model;
+        try {
+            model = executeStrict(courseAPI.getCourseStructure(courseId));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        CourseComponent courseComponent = (CourseComponent)
+                CourseAPI.normalizeCourseStructure(model, courseId);
         return (VideoBlockModel) courseComponent.getVideos().get(0);
     }
 

@@ -19,6 +19,7 @@ import org.robolectric.util.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.*;
 
 public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivityTest {
@@ -40,7 +41,7 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
     protected Intent getIntent() {
         EnrolledCoursesResponse courseData;
         try {
-            courseData = api.getEnrolledCourses().get(0);
+            courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

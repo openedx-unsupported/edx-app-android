@@ -28,7 +28,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.DrawerNavigationBinding;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;

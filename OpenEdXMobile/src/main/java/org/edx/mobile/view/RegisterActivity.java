@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
@@ -44,6 +46,8 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,7 +169,10 @@ public class RegisterActivity extends BaseFragmentActivity
 
     private void setupRegistrationForm() {
         try {
-            RegistrationDescription form = environment.getServiceManager().getRegistrationDescription();
+            Gson gson = new Gson();
+            InputStream in = getAssets().open("config/registration_form.json");
+            RegistrationDescription form = gson.fromJson(new InputStreamReader(in),
+                    RegistrationDescription.class);
 
             LayoutInflater inflater = getLayoutInflater();
 

@@ -83,9 +83,7 @@ public class TranscriptManager {
             return null;
         }
 
-        FileInputStream in = new FileInputStream(file);
-        String cache = IOUtils.toString(in, Charset.defaultCharset());
-        in.close();
+        String cache = IOUtils.toString(file, Charset.defaultCharset());
         logger.debug("Cache.get=" + hash);
         return cache;
     }

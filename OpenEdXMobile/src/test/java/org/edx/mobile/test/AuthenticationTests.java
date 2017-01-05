@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.http.OauthRefreshTokenAuthenticator;
+import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.test.util.MockDataUtil;
 import org.junit.Before;

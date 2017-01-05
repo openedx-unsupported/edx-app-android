@@ -12,8 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseVideosDownloadStateActivity;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.player.IPlayerEventCallback;
@@ -35,6 +38,9 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
     private VideoListFragment listFragment;
     private final Handler playHandler = new Handler();
     private Runnable playPending;
+
+    @Inject
+    private CourseAPI courseApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,7 +193,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
             TranscriptModel transcript = null;
             try {
                 if (video.videoId != null) {
-                    transcript = environment.getServiceManager().getTranscriptsOfVideo(video.eid, video.videoId);
+                    transcript = courseApi.getTranscriptsOfVideo(video.eid, video.videoId);
                 }
 
             } catch (Exception e) {

@@ -42,9 +42,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 public abstract class MainApplication extends MultiDexApplication {
 
-    //FIXME - temporary solution
-    public static final boolean RETROFIT_ENABLED = false;
-
     protected final Logger logger = new Logger(getClass().getName());
 
     public static MainApplication application;

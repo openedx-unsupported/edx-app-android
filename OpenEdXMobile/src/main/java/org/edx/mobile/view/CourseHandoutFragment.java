@@ -22,17 +22,20 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.http.callback.CallTrigger;
+import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.task.GetHandoutTask;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import de.greenrobot.event.EventBus;
+import okhttp3.Request;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -47,6 +50,9 @@ public class CourseHandoutFragment extends BaseFragment {
 
     @Inject
     private IEdxEnvironment environment;
+
+    @Inject
+    private OkHttpClientProvider okHttpClientProvider;
 
     @InjectView(R.id.webview)
     private WebView webview;
@@ -88,37 +94,40 @@ public class CourseHandoutFragment extends BaseFragment {
     }
 
     private void loadData() {
-        GetHandoutTask task = new GetHandoutTask(getActivity(), courseData) {
+        okHttpClientProvider.getWithOfflineCache().newCall(new Request.Builder()
+                .url(courseData.getCourse().getCourse_handouts())
+                .get()
+                .build())
+                .enqueue(new ErrorHandlingOkCallback<HandoutModel>(getActivity(),
+                        HandoutModel.class, CallTrigger.LOADING_CACHED) {
+                    @Override
+                    protected void onResponse(@NonNull final HandoutModel result) {
+                        if (getActivity() == null) {
+                            return;
+                        }
 
-            @Override
-            public void onSuccess(HandoutModel result) {
-                if (getActivity() == null) {
-                    return;
-                }
+                        if (!TextUtils.isEmpty(result.handouts_html)) {
+                            populateHandouts(result);
+                        } else {
+                            CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
+                                    FontAwesomeIcons.fa_exclamation_circle);
+                        }
+                        isHandoutFetched = true;
+                    }
 
-                if (result != null && (!TextUtils.isEmpty(result.handouts_html))) {
-                    populateHandouts(result);
-                } else {
-                    CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
-                            FontAwesomeIcons.fa_exclamation_circle);
-                }
-                isHandoutFetched = true;
-            }
+                    @Override
+                    protected void onFailure(@NonNull final Throwable error) {
+                        super.onFailure(error);
 
-            @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
+                        if (getActivity() == null) {
+                            return;
+                        }
 
-                if (getActivity() == null) {
-                    return;
-                }
-
-                isHandoutFetched = false;
-                CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
-                        FontAwesomeIcons.fa_exclamation_circle);
-            }
-        };
-        task.execute();
+                        isHandoutFetched = false;
+                        CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
+                                FontAwesomeIcons.fa_exclamation_circle);
+                    }
+                });
     }
 
     private void populateHandouts(HandoutModel handout) {

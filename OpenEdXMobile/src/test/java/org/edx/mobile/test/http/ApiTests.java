@@ -1,8 +1,11 @@
 package org.edx.mobile.test.http;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.inject.Injector;
 
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.course.CourseService;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -14,6 +17,7 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.DiscussionData;
 import org.edx.mobile.model.course.HasDownloadEntry;
@@ -28,14 +32,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import retrofit2.Response;
+import okhttp3.Request;
 
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -59,14 +66,21 @@ public class ApiTests extends HttpBaseTestCase {
         super.setUp();
     }
 
+    @Override
+    protected void inject(Injector injector) throws Exception {
+        super.inject(injector);
+        courseAPI = injector.getInstance(CourseAPI.class);
+        courseService = injector.getInstance(CourseService.class);
+    }
+
     // TODO: Debug and fix test failure
     @Ignore
     @Test
     public void testSyncLastSubsection() throws Exception {
         login();
 
-        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
-        Map<String, SectionEntry> map = api.getCourseHierarchy(e.getCourse().getId(), false);
+        EnrolledCoursesResponse e = executeStrict(courseAPI.getEnrolledCourses()).get(0);
+        Map<String, SectionEntry> map = courseAPI.getCourseHierarchy(e.getCourse().getId());
         Entry<String, SectionEntry> entry = map.entrySet().iterator().next();
         Entry<String, ArrayList<VideoResponseModel>> subsection = entry.getValue().sections.entrySet().iterator().next();
 
@@ -81,7 +95,8 @@ public class ApiTests extends HttpBaseTestCase {
         // TODO: lastVisitedModuleId must be section.id (id is now available)
 
 
-        SyncLastAccessedSubsectionResponse model = api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
+        SyncLastAccessedSubsectionResponse model = executeStrict(
+                courseAPI.syncLastAccessedSubsection(courseId, lastVisitedModuleId));
         assertNotNull(model);
         print("sync returned: " + model.last_visited_module_id);
     }
@@ -92,14 +107,15 @@ public class ApiTests extends HttpBaseTestCase {
     public void testGetLastAccessedModule() throws Exception {
         login();
 
-        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
+        EnrolledCoursesResponse e = executeStrict(courseAPI.getEnrolledCourses()).get(0);
 
         String courseId = e.getCourse().getId();
         assertNotNull(courseId);
 
         print(String.format("course= %s", courseId));
 
-        SyncLastAccessedSubsectionResponse model = api.getLastAccessedSubsection(courseId);
+        SyncLastAccessedSubsectionResponse model = executeStrict(
+                courseAPI.getLastAccessedSubsection(courseId));
         assertNotNull(model);
         //  print(model.json);
     }
@@ -107,9 +123,7 @@ public class ApiTests extends HttpBaseTestCase {
     @Test
     public void testResetPassword() throws Exception {
         print("test: reset password");
-        Response<ResetPasswordResponse> response = loginService.resetPassword("user@edx.org").execute();
-        assertTrue(response.isSuccessful());
-        ResetPasswordResponse model = response.body();
+        ResetPasswordResponse model = executeStrict(loginService.resetPassword("user@edx.org"));
         assertTrue(model != null);
         print(model.value);
         print("test: finished: reset password");
@@ -122,12 +136,16 @@ public class ApiTests extends HttpBaseTestCase {
         login();
 
         // get a course id for this test
-        List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
+        List<EnrolledCoursesResponse> courses = executeStrict(courseAPI.getEnrolledCourses());
         assertTrue("Must have enrolled to at least one course",
                 courses != null && courses.size() > 0);
         String handoutURL = courses.get(0).getCourse().getCourse_handouts();
 
-        HandoutModel model = api.getHandout(handoutURL, false);
+        HandoutModel model = executeStrict(HandoutModel.class,
+                okHttpClient.newCall(new Request.Builder()
+                        .url(handoutURL)
+                        .get()
+                        .build()));
         assertTrue(model != null);
         print(model.handouts_html);
     }
@@ -137,7 +155,7 @@ public class ApiTests extends HttpBaseTestCase {
         login();
 
         // get a course id for this test
-        List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
+        List<EnrolledCoursesResponse> courses = executeStrict(courseAPI.getEnrolledCourses());
         assertTrue("Must have enrolled to at least one course",
                 courses != null && courses.size() > 0);
         String subscription_id = courses.get(0).getCourse().getSubscription_id();
@@ -152,12 +170,12 @@ public class ApiTests extends HttpBaseTestCase {
         login();
 
         // get a course id for this test
-        List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
+        List<EnrolledCoursesResponse> courses = executeStrict(courseAPI.getEnrolledCourses());
         assertTrue("Must have enrolled to at least one course",
                 courses != null && courses.size() > 0);
         String courseId = courses.get(0).getCourse().getId();
 
-        Map<String, SectionEntry> chapters = api.getCourseHierarchy(courseId, false);
+        Map<String, SectionEntry> chapters = courseAPI.getCourseHierarchy(courseId);
         for (Entry<String, SectionEntry> entry : chapters.entrySet()) {
             print("---------------" + entry.getKey() + "---------------");
             for (Entry<String, ArrayList<VideoResponseModel>> se : entry.getValue().sections.entrySet()) {
@@ -182,12 +200,17 @@ public class ApiTests extends HttpBaseTestCase {
         login();
 
         // get a course id for this test
-        List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
+        List<EnrolledCoursesResponse> courses = executeStrict(courseAPI.getEnrolledCourses());
         assertTrue("Must have enrolled to at least one course",
                 courses != null && courses.size() > 0);
         String updatesUrl = courses.get(0).getCourse().getCourse_updates();
 
-        List<AnnouncementsModel> res = api.getAnnouncement(updatesUrl, false);
+        List<AnnouncementsModel> res = executeStrict(
+                new TypeToken<List<AnnouncementsModel>>() {},
+                okHttpClient.newCall(new Request.Builder()
+                        .url(updatesUrl)
+                        .get()
+                        .build()));
         assertTrue(res != null);
         for (AnnouncementsModel r : res) {
             print(r.getDate());
@@ -196,7 +219,10 @@ public class ApiTests extends HttpBaseTestCase {
 
     @Test
     public void testReadRegistrationDescription() throws Exception {
-        RegistrationDescription form = api.getRegistrationDescription();
+        Gson gson = new Gson();
+        InputStream in = context.getAssets().open("config/registration_form.json");
+        RegistrationDescription form = gson.fromJson(new InputStreamReader(in),
+                RegistrationDescription.class);
 
         assertNotNull(form);
         assertNotNull(form.getEndpoint());
@@ -216,10 +242,9 @@ public class ApiTests extends HttpBaseTestCase {
 
         print("test: Enroll in a course");
 
-        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
+        EnrolledCoursesResponse e = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         String courseId = e.getCourse().getId();
-        boolean success = api.enrollInACourse(courseId, true);
-        assertTrue(success);
+        executeStrict(courseService.enrollInACourse(new CourseService.EnrollBody(courseId, true)));
         print("success");
         print("test: finished: reset password");
     }
@@ -229,10 +254,11 @@ public class ApiTests extends HttpBaseTestCase {
         login();
 
         // General overall testing of CourseComponent API without recursion
-        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
+        EnrolledCoursesResponse e = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         final String courseId = e.getCourse().getId();
-        final CourseComponent courseComponent = serviceManager.getCourseStructure(courseId,
-                OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+        final CourseStructureV1Model model = executeStrict(courseAPI.getCourseStructure(courseId));
+        final CourseComponent courseComponent = (CourseComponent)
+                CourseAPI.normalizeCourseStructure(model, courseId);
         assertNotNull(courseComponent);
         assertNotNull(courseComponent.getRoot());
         assertEquals(courseId, courseComponent.getCourseId());

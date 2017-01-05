@@ -13,13 +13,16 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.services.CourseManager;
-import org.edx.mobile.task.GetCourseStructureTask;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
+import retrofit2.Call;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
@@ -43,14 +46,15 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     ProgressBar progressWheel;
 
     @Inject
+    CourseAPI courseApi;
+
+    @Inject
     CourseManager courseManager;
 
     protected EnrolledCoursesResponse courseData;
     protected String courseComponentId;
 
-    private GetCourseStructureTask getHierarchyTask;
-
-    private boolean isDestroyed;
+    private Call<CourseStructureV1Model> getHierarchyCall;
 
     protected abstract void onLoadData();
 
@@ -85,11 +89,10 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (getHierarchyTask != null) {
-            getHierarchyTask.cancel(true);
-            getHierarchyTask = null;
+        if (getHierarchyCall != null) {
+            getHierarchyCall.cancel();
+            getHierarchyCall = null;
         }
-        isDestroyed = true;
     }
 
     @Override
@@ -104,31 +107,23 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         courseComponentId = savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
 
         if (courseComponentId == null) {
-            getHierarchyTask = new GetCourseStructureTask(this, courseData.getCourse().getId()) {
+            final String courseId = courseData.getCourse().getId();
+            getHierarchyCall = courseApi.getCourseStructure(courseId);
+            getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
+                    CallTrigger.LOADING_CACHED, new ProgressViewController(progressWheel)) {
                 @Override
-                public void onSuccess(CourseComponent courseComponent) {
-                    if (courseComponent != null) {
-                        courseComponentId = courseComponent.getId();
-                        // Only trigger the callback if the task has not been cancelled, and
-                        // the Activity has not been destroyed. The task should be canceled
-                        // in Activity destruction anyway, so the latter check is just a
-                        // precaution.
-                        if (getHierarchyTask != null && !isDestroyed) {
-                            invalidateOptionsMenu();
-                            onLoadData();
-                            getHierarchyTask = null;
-                        }
-                    }
+                protected void onResponse(@NonNull final CourseComponent courseComponent) {
+                    courseComponentId = courseComponent.getId();
+                    invalidateOptionsMenu();
+                    onLoadData();
                 }
 
                 @Override
-                public void onException(Exception ex) {
+                public void onFailure(@NonNull final Call<CourseStructureV1Model> call,
+                                      @NonNull final Throwable error) {
                     showInfoMessage(getString(R.string.no_connectivity));
                 }
-            };
-            getHierarchyTask.setTaskProcessCallback(this);
-            getHierarchyTask.setProgressDialog(progressWheel);
-            getHierarchyTask.execute();
+            });
         }
     }
 

@@ -6,15 +6,16 @@ import android.support.annotation.NonNull;
 import com.google.inject.Inject;
 
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.core.EdxEnvironment;
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.module.prefs.PrefManager;
 
 import java.util.List;
 
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+
 public class RestoreVideosCacheDataTask extends Task<Void> {
     @Inject
-    private EdxEnvironment environment;
+    private CourseAPI courseApi;
 
     private RestoreVideosCacheDataTask(@NonNull Context context) {
         super(context);
@@ -31,7 +32,7 @@ public class RestoreVideosCacheDataTask extends Task<Void> {
     public Void call() throws Exception {
         List<String> courseIds = environment.getDatabase().getUniqueCourseIdsForDownloadedVideos(null);
         for (String courseId : courseIds) {
-            environment.getServiceManager().getCourseStructure(courseId, OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+            executeStrict(courseApi.getCourseStructure(courseId));
         }
         return null;
     }

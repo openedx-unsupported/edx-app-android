@@ -2,7 +2,7 @@ package org.edx.mobile.test.http;
 
 import com.google.gson.Gson;
 
-import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.PaginationData;
 import org.edx.mobile.profiles.BadgeAssertion;
@@ -15,14 +15,14 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class UserApiTest extends BaseTestCase {
 
@@ -40,11 +40,11 @@ public class UserApiTest extends BaseTestCase {
     }
 
     @Test
-    public void testApiReturnsResult() throws IOException {
+    public void testApiReturnsResult() throws IOException, HttpStatusException {
         MockWebServer server = new MockWebServer();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .client(OkHttpUtil.getClient(context))
+                .client(new OkHttpClient())
                 .baseUrl(server.url("/"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -52,10 +52,8 @@ public class UserApiTest extends BaseTestCase {
         server.enqueue(new MockResponse().setBody(this.getTestBadgeString()));
 
         UserService service = retrofit.create(UserService.class);
-        Response<Page<BadgeAssertion>> response = service.getBadges("user", 1).execute();
-        assertTrue(response.isSuccessful());
+        Page<BadgeAssertion> badges = executeStrict(service.getBadges("user", 1));
 
-        Page<BadgeAssertion> badges = response.body();
         assertEquals(badges.getResults().size(), 1);
     }
 }

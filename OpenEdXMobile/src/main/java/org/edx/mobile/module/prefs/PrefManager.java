@@ -198,14 +198,6 @@ public class PrefManager {
             super(context, Pref.USER_PREF);
         }
 
-        public long getLastCourseStructureFetch(String courseId) {
-            return getLong(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId);
-        }
-
-        public void setLastCourseStructureFetch(String courseId, long timestamp) {
-            super.put(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId, timestamp);
-        }
-
         public boolean isVideosCacheRestored() {
             return getBoolean(Key.VIDEOS_CACHE_RESTORED, false);
         }
@@ -255,7 +247,6 @@ public class PrefManager {
         public static final String AppNotificationPushHash = "AppNotificationPushHash";
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
-        public static final String LAST_COURSE_STRUCTURE_FETCH = "LastCourseStructureFetch";
         /**
          * For downloaded videos to appear in order on the My Videos screen, we need
          * to have the videos' courses data cached. This is the key to a persistent

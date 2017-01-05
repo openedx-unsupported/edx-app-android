@@ -2,20 +2,27 @@ package org.edx.mobile.services;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import org.edx.mobile.base.MainApplication;
+import com.google.inject.Inject;
+
+import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.task.GetSessesionExchangeCookieTask;
+import org.edx.mobile.util.Config;
 
 import java.io.File;
-import java.net.HttpCookie;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
+import okhttp3.Cookie;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import roboguice.RoboGuice;
 
 /**
  *  A central place for course data model transformation
@@ -33,57 +40,56 @@ public class EdxCookieManager {
 
     private static EdxCookieManager instance;
 
-    private GetSessesionExchangeCookieTask task;
+    @Inject
+    private Config config;
 
-    public static synchronized EdxCookieManager getSharedInstance(){
-        if ( instance == null )
+    @Inject
+    private LoginService loginService;
+
+    private Call<RequestBody> loginCall;
+
+    public static synchronized EdxCookieManager getSharedInstance(@NonNull final Context context) {
+        if ( instance == null ) {
             instance = new EdxCookieManager();
+            RoboGuice.getInjector(context).injectMembers(instance);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                CookieSyncManager.createInstance(context);
+            }
+        }
         return instance;
     }
 
-    public void clearWebWiewCookie(Context context){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            android.webkit.CookieManager.getInstance().removeAllCookie();
-        } else {
-            try {
-                CookieSyncManager.createInstance(context);
-                android.webkit.CookieManager.getInstance().removeAllCookie();
-            }catch (Exception ex){
-                logger.debug(ex.getMessage());
-            }
-        }
+    public void clearWebWiewCookie() {
+        CookieManager.getInstance().removeAllCookie();
         authSessionCookieExpiration = -1;
     }
 
     public synchronized  void tryToRefreshSessionCookie( ){
-        if ( task == null || task.isCancelled()  ) {
-            task =new GetSessesionExchangeCookieTask(MainApplication.instance()) {
+        if (loginCall == null || loginCall.isCanceled()) {
+            loginCall = loginService.login();
+            loginCall.enqueue(new Callback<RequestBody>() {
                 @Override
-                public void onSuccess(List<HttpCookie> result) {
-                    if (result == null || result.isEmpty()) {
-                        logger.debug("result is empty");
-                        EventBus.getDefault().post(new SessionIdRefreshEvent(false));
-                        return;
-                    }
-
+                public void onResponse(@NonNull final Call<RequestBody> call,
+                                       @NonNull final Response<RequestBody> response) {
+                    clearWebWiewCookie();
                     final CookieManager cookieManager = CookieManager.getInstance();
-                    clearWebWiewCookie(context);
-                    for (HttpCookie cookie : result) {
-                        cookieManager.setCookie(environment.getConfig().getApiHostURL(), cookie.toString());
+                    for (Cookie cookie : Cookie.parseAll(
+                            call.request().url(), response.headers())) {
+                        cookieManager.setCookie(config.getApiHostURL(), cookie.toString());
                     }
                     authSessionCookieExpiration = System.currentTimeMillis() + FRESHNESS_INTERVAL;
                     EventBus.getDefault().post(new SessionIdRefreshEvent(true));
-                    task = null;
+                    loginCall = null;
                 }
 
                 @Override
-                public void onException(Exception ex) {
-                    super.onException(ex);
+                public void onFailure(@NonNull final Call<RequestBody> call,
+                                      @NonNull final Throwable error) {
                     EventBus.getDefault().post(new SessionIdRefreshEvent(false));
-                    task = null;
+                    loginCall = null;
                 }
-            };
-            task.execute();
+            });
         }
     }
 
