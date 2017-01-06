@@ -105,7 +105,6 @@ public class PlayerController extends FrameLayout {
     private ImageButton         mPrevButton;
     private IconImageButton     mFullscreenButton;
     private IconImageButton     mSettingsButton;
-    private ImageButton         mLmsButton;
     private Handler             mHandler = new MessageHandler(this);
     private String              mTitle;
     private TextView            mTitleTextView;
@@ -218,12 +217,6 @@ public class PlayerController extends FrameLayout {
                 seeker.setOnSeekBarChangeListener(mSeekListener);
             }
             mProgress.setMax(1000);
-        }
-
-        mLmsButton = (ImageButton) v.findViewById(R.id.lms_btn);
-        if (mLmsButton != null) {
-            mLmsButton.requestFocus();
-            mLmsButton.setOnClickListener(mLmsClickListener);
         }
 
         mSettingsButton = (IconImageButton) v.findViewById(R.id.settings);
@@ -502,12 +495,6 @@ public class PlayerController extends FrameLayout {
         }
     };
 
-    private View.OnClickListener mLmsClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            callLMSServer();
-        }
-    };
-
     private View.OnClickListener mSettingsListener = new View.OnClickListener() {
         public void onClick(View v) {
             try{
@@ -578,18 +565,6 @@ public class PlayerController extends FrameLayout {
             mPlayer.start();
         }
         updatePausePlay();
-    }
-
-    private void callLMSServer(){
-        if (mPlayer == null) {
-            return;
-        }
-        mPlayer.callLMSServer(mLmsUrl);
-
-        // callback this event
-//      if (mEventListener != null) {
-//          mEventListener.callLMSServer(mLmsUrl);
-//      }
     }
 
     private void callSettings(Point p){
@@ -710,9 +685,6 @@ public class PlayerController extends FrameLayout {
         }
         if (mPrevButton != null) {
             mPrevButton.setEnabled(enabled && mPrevListener != null);
-        }
-        if (mLmsButton != null) {
-            mLmsButton.setEnabled(enabled);
         }
         if (mProgress != null) {
             mProgress.setEnabled(enabled);

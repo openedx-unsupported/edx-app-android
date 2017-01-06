@@ -161,13 +161,6 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public void callLMSServer(String lmsUrl) {
-        if (callback != null) {
-            callback.callLMSServer(lmsUrl);
-        }
-    }
-
-    @Override
     public void callSettings(Point p) {
         if (callback != null) {
             callback.callSettings(p);

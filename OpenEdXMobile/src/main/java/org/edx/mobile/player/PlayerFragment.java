@@ -854,17 +854,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     @Override
-    public void callLMSServer(String url) {
-        try{
-            if(url!=null){
-                BrowserUtil.open(getActivity(), url);
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    @Override
     public void onFullScreen(boolean isFullScreen) {
         if (isPrepared) {
             isManualFullscreen = isFullScreen;
