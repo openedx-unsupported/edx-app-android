@@ -16,10 +16,23 @@ public class LocaleUtils {
 
     public static String getLanguageNameFromCode(@NonNull String languageCode) throws InvalidLocaleException {
         final String lowercaseLanguage = languageCode.toLowerCase(Locale.ROOT);
-        if (!isValidBcp47Alpha(lowercaseLanguage, 2, 3)) {
-            throw new InvalidLocaleException("Invalid language: " + languageCode);
+
+        switch (lowercaseLanguage) {
+            /* Chinese languages are special cases. The server uses different codes when compared
+            to Android's locale library. Additionally, zh_CN and zh_TW are not languageCodes that
+            Android's locale recognizes as exceptions. */
+            case "zh_cn":
+            case "zh_hans":
+                return Locale.SIMPLIFIED_CHINESE.getDisplayLanguage();
+            case "zh_tw":
+            case "zh_hant":
+                return Locale.TRADITIONAL_CHINESE.getDisplayLanguage();
+            default:
+                if (!isValidBcp47Alpha(lowercaseLanguage, 2, 3)) {
+                    throw new InvalidLocaleException("Invalid language: " + languageCode);
+                }
+                return new Locale(languageCode).getDisplayLanguage();
         }
-        return new Locale(languageCode).getDisplayLanguage();
     }
 
 
@@ -36,7 +49,6 @@ public class LocaleUtils {
                 return false;
             }
         }
-
         return true;
     }
 }
