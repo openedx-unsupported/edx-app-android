@@ -53,5 +53,4 @@ public interface IPlayer extends Serializable {
     boolean canSeekBackward();
     boolean canSeekForward();
     void    toggleFullScreen();
-    void    callLMSServer(String lmsUrl);
 }

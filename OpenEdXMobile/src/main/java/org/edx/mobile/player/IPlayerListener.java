@@ -13,7 +13,6 @@ public interface IPlayerListener {
     public void onPlaybackStarted();
     public void onPlaybackComplete();
     public void onFullScreen(boolean isFullScreen);
-    public void callLMSServer(String lmsUrl);
     public void callSettings(Point p);
     public void callPlayerSeeked(long lastPostion, long newPosition, boolean isRewindClicked);
 }
