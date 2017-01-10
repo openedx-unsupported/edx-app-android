@@ -2,14 +2,15 @@ package org.edx.mobile.base;
 
 import android.os.Bundle;
 
-import com.newrelic.agent.android.NewRelic;
+import org.edx.mobile.event.NewRelicEvent;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 
 public class BaseFragment extends RoboFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NewRelic.setInteractionName("Display " + getClass().getSimpleName());
+        EventBus.getDefault().post(new NewRelicEvent(getClass().getSimpleName()));
     }
 }

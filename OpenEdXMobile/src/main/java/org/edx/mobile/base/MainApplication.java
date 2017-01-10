@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -21,6 +20,7 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
@@ -87,6 +87,10 @@ public abstract class MainApplication extends MultiDexApplication {
             }
         }
 
+        if (config.getNewRelicConfig().isEnabled()) {
+            EventBus.getDefault().register(new NewRelicObserver());
+        }
+
         // initialize NewRelic with crash reporting disabled
         if (config.getNewRelicConfig().isEnabled()) {
             //Crash reporting for new relic has been disabled
@@ -141,6 +145,13 @@ public abstract class MainApplication extends MultiDexApplication {
         @SuppressWarnings("unused")
         public void onEventMainThread(Logger.CrashReportEvent e) {
             CrashlyticsCore.getInstance().logException(e.getError());
+        }
+    }
+
+    public static class NewRelicObserver {
+        @SuppressWarnings("unused")
+        public void onEventMainThread(NewRelicEvent e) {
+            NewRelic.setInteractionName("Display " + e.getScreenName());
         }
     }
 
