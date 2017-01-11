@@ -124,16 +124,6 @@ public interface Analytics {
     void trackBrowserLaunched(String url);
 
     /**
-     * This function is used to track Bulk Download from Sections
-     *
-     * @param section      - Section in which the subsection is present
-     * @param enrollmentId - Course under which the subsection is present
-     * @param videoCount   - no of videos started downloading
-     */
-    void trackSectionBulkVideoDownload(String enrollmentId,
-                                       String section, long videoCount);
-
-    /**
      * This function is used to track Bulk Download from Subsection
      *
      * @param section      - Section in which the subsection is present
@@ -227,9 +217,9 @@ public interface Analytics {
 
     void courseDetailShared(String courseId, String aboutUrl, ShareUtils.ShareType method);
 
-    void trackCourseComponentViewed(String blockId, String courseId);
+    void trackCourseComponentViewed(String blockId, String courseId, String minifiedBlockId);
 
-    void trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
+    void trackOpenInBrowser(String blockId, String courseId, boolean isSupported, String minifiedBlockId);
 
     void trackProfileViewed(@NonNull String username);
 
@@ -311,7 +301,6 @@ public interface Analytics {
         String FULLSREEN_TOGGLED = "edx.bi.video.screen.fullscreen.toggled";
         String BROWSER_LAUNCHED = "edx.bi.app.browser.launched";
         String SINGLE_VIDEO_DOWNLOAD = "edx.bi.video.download.requested";
-        String BULKDOWNLOAD_SECTION = "edx.bi.video.section.bulkdownload.requested";
         String BULK_DOWNLOAD_SUBSECTION = "edx.bi.video.subsection.bulkdownload.requested";
         String VIDEO_DOWNLOADED = "edx.bi.video.downloaded";
         String USERLOGOUT = "edx.bi.app.user.logout";
@@ -362,6 +351,8 @@ public interface Analytics {
     interface Screens {
         String COURSE_INFO_SCREEN = "Course Info";
         String LAUNCH_ACTIVITY = "Launch";
+        String REGISTER = "Register";
+        String LOGIN = "Login";
         String COURSE_DASHBOARD = "Course Dashboard";
         String COURSE_OUTLINE = "Course Outline";
         String COURSE_HANDOUTS = "Course Handouts";
@@ -371,7 +362,6 @@ public interface Analytics {
         String CERTIFICATE = "Certificate";
         String DOWNLOADS = "Downloads";
         String FIND_COURSES = "Find Courses";
-        String LOGIN = "Login";
         String MY_VIDEOS = "My Videos";
         String MY_VIDEOS_ALL = "My Videos - All Videos";
         String MY_VIDEOS_RECENT = "My Videos - Recent Videos";
@@ -396,7 +386,6 @@ public interface Analytics {
         String SHOW_TRANSCRIPT = "Show Transcript";
         String HIDE_TRANSCRIPT = "Hide Transcript";
         String VIDEO_DOWNLOADED = "Video Downloaded";
-        String BULK_DOWNLOAD_SECTION = "Bulk Download Section";
         String BULK_DOWNLOAD_SUBSECTION = "Bulk Download Subsection";
         String SINGLE_VIDEO_DOWNLOAD = "Single Video Download";
         String SCREEN_TOGGLED = "Screen Toggled";

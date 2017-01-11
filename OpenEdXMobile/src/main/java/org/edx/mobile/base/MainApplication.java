@@ -23,6 +23,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.module.analytics.FirebaseAnalytics;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
@@ -99,6 +100,11 @@ public abstract class MainApplication extends MultiDexApplication {
         // Add Segment as an analytics provider if enabled in the config
         if (config.getSegmentConfig().isEnabled())  {
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
+        }
+
+        // Add Firebase as an analytics provider if enabled in the config
+        if (config.isFirebaseEnabled())  {
+            analyticsRegistry.addAnalyticsProvider(injector.getInstance(FirebaseAnalytics.class));
         }
 
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));

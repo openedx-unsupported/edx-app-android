@@ -12,6 +12,9 @@ public class BlockModel implements Serializable {
     @SerializedName("id")
     public String id;
 
+    @SerializedName("block_id")
+    public String blockId;
+
     @SerializedName("type")
     public BlockType type;
 

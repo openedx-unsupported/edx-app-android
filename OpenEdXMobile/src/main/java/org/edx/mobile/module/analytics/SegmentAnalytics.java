@@ -15,10 +15,9 @@ import com.segment.analytics.Traits;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -59,15 +58,15 @@ public class SegmentAnalytics implements Analytics {
             this.properties.putValue(Keys.DATA, this.data);
 
             setCustomProperties();
+
+            // Set app name in the context properties
+            Properties cxtProps = new Properties();
+            cxtProps.putValue(Keys.APP, Values.APP_NAME);
+            this.properties.put(Keys.CONTEXT, cxtProps);
         }
 
         private void setCourseContext(String courseId, String unitUrl, String component) {
             this.properties.put(Keys.CONTEXT, getEventContext(courseId, unitUrl, component));
-        }
-
-        //This method sets app name in the context properties
-        private void setAppNameContext() {
-            this.properties.put(Keys.CONTEXT, getAppNameContext());
         }
 
         /**
@@ -122,7 +121,6 @@ public class SegmentAnalytics implements Analytics {
                                 @Nullable Map<String, String> values) {
         // Sending screen view
         Event aEvent = new Event();
-        aEvent.setAppNameContext();
         if (!TextUtils.isEmpty(action)) {
             aEvent.properties.put(Keys.ACTION, action);
         }
@@ -222,10 +220,10 @@ public class SegmentAnalytics implements Analytics {
         Event aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         //Call the format Double value so that we can have upto 3 decimal places after
-        oldTime = formatDoubleValue(oldTime, 3);
-        newTime = formatDoubleValue(newTime, 3);
+        oldTime = JavaUtil.formatDoubleValue(oldTime, 3);
+        newTime = JavaUtil.formatDoubleValue(newTime, 3);
         Double skipInterval = newTime - oldTime;
-        skipInterval = formatDoubleValue(skipInterval, 3);
+        skipInterval = JavaUtil.formatDoubleValue(skipInterval, 3);
         aEvent.data.putValue(Keys.OLD_TIME, oldTime);
         aEvent.data.putValue(Keys.NEW_TIME, newTime);
         if (skipSeek) {
@@ -311,34 +309,10 @@ public class SegmentAnalytics implements Analytics {
                                                      String videoId, String eventName) {
         Event aEvent = getCommonProperties(videoId, eventName);
         if (currentTime != null) {
-            currentTime = formatDoubleValue(currentTime, 3);
+            currentTime = JavaUtil.formatDoubleValue(currentTime, 3);
             aEvent.data.putValue(Keys.CURRENT_TIME, currentTime);
         }
         return aEvent;
-    }
-
-    /**
-     * This function returns decimals value for a Double
-     *
-     * @param value
-     * @param places
-     * @return The formatted {@link Double}
-     */
-    private Double formatDoubleValue(Double value, int places) {
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    /**
-     * This function sets and returns the app name in Properties object
-     *
-     * @return A {@link Properties} object populated with app's name
-     */
-    private static Properties getAppNameContext() {
-        Properties cxtProps = new Properties();
-        cxtProps.putValue(Keys.APP, Values.APP_NAME);
-        return cxtProps;
     }
 
     /**
@@ -355,28 +329,6 @@ public class SegmentAnalytics implements Analytics {
         aEvent.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
 
         tracker.track(Events.VIDEO_DOWNLOADED, aEvent.properties);
-    }
-
-    /**
-     * This function is used to track Bulk Download from Sections
-     *
-     * @param section      -   Section in which the subsection is present
-     * @param enrollmentId -  Course under which the subsection is present
-     * @param videoCount   -  no of videos started downloading
-     */
-    @Override
-    public void trackSectionBulkVideoDownload(String enrollmentId,
-                                              String section, long videoCount) {
-        Event aEvent = new Event();
-        if (section != null) {
-            aEvent.data.putValue(Keys.COURSE_SECTION, section);
-        }
-        aEvent.data.putValue(Keys.NO_OF_VIDEOS, videoCount);
-        aEvent.properties.putValue(Keys.NAME, Values.BULKDOWNLOAD_SECTION);
-        aEvent.setCourseContext(enrollmentId,
-                null, Values.DOWNLOAD_MODULE);
-
-        tracker.track(Events.BULK_DOWNLOAD_SECTION, aEvent.properties);
     }
 
 
@@ -447,7 +399,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackDiscoverCoursesClicked() {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.DISCOVER_COURSES_CLICK);
-        aEvent.setAppNameContext();
         tracker.track(Events.DISCOVER_COURSES, aEvent.properties);
     }
 
@@ -455,7 +406,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackExploreSubjectsClicked() {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.EXPLORE_SUBJECTS_CLICK);
-        aEvent.setAppNameContext();
         tracker.track(Events.EXPLORE_SUBJECTS, aEvent.properties);
     }
 
@@ -471,7 +421,6 @@ public class SegmentAnalytics implements Analytics {
             aEvent.data.putValue(Keys.METHOD, method);
         }
 
-        aEvent.setAppNameContext();
         tracker.track(Events.USER_LOGIN, aEvent.properties);
     }
 
@@ -482,7 +431,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackUserLogout() {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGOUT);
-        aEvent.setAppNameContext();
         tracker.track(Events.USER_LOGOUT, aEvent.properties);
     }
 
@@ -498,7 +446,6 @@ public class SegmentAnalytics implements Analytics {
         if (url != null) {
             aEvent.data.putValue(Keys.TARGET_URL, url);
         }
-        aEvent.setAppNameContext();
 
         tracker.track(Events.BROWSER_LAUNCHED, aEvent.properties);
     }
@@ -525,7 +472,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackUserSignUpForAccount() {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.USER_NO_ACCOUNT);
-        aEvent.setAppNameContext();
 
         tracker.track(Events.SIGN_UP, aEvent.properties);
 
@@ -538,7 +484,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackUserFindsCourses() {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.USER_FIND_COURSES);
-        aEvent.setAppNameContext();
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
@@ -555,7 +500,6 @@ public class SegmentAnalytics implements Analytics {
         aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
         if (!TextUtils.isEmpty(source))
             aEvent.properties.putValue(Keys.PROVIDER, source);
-        aEvent.setAppNameContext();
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
@@ -575,7 +519,6 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.EMAIL_OPT_IN, email_opt_in);
         aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL);
-        aEvent.setAppNameContext();
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, courseId);
@@ -591,7 +534,6 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.CONNECTION_TYPE, connectionType);
         aEvent.data.putValue(Keys.CONNECTION_SPEED, connectionSpeed);
 
-        aEvent.setAppNameContext();
         tracker.track(Events.SPEED, aEvent.properties);
     }
 
@@ -599,7 +541,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackNotificationReceived(@Nullable String courseId) {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_RECEIVED);
-        aEvent.setAppNameContext();
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION, courseId);
@@ -610,7 +551,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackNotificationTapped(@Nullable String courseId) {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_TAPPED);
-        aEvent.setAppNameContext();
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION, courseId);
@@ -626,7 +566,6 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, aboutUrl);
         aEvent.data.putValue(Keys.TYPE, getShareTypeValue(method));
-        aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_COURSE_DETAIL_SHARED, aEvent.properties);
     }
 
@@ -638,18 +577,16 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, certificateUrl);
         aEvent.data.putValue(Keys.TYPE, getShareTypeValue(method));
-        aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
     }
 
     @Override
-    public void trackCourseComponentViewed(String blockId, String courseId) {
+    public void trackCourseComponentViewed(String blockId, String courseId, String minifiedBlockId) {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.COMPONENT_VIEWED);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
 
-        aEvent.setAppNameContext();
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.NAVIGATION, Keys.COMPONENT_VIEWED);
@@ -657,14 +594,14 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
+    public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported,
+                                   String minifiedBlockId) {
         Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.OPEN_IN_BROWSER);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.SUPPORTED, isSupported);
 
-        aEvent.setAppNameContext();
         //Add category for Google Analytics
         String label = (isSupported ? Values.OPEN_IN_WEB_SUPPORTED : Values.OPEN_IN_WEB_NOT_SUPPORTED);
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
@@ -676,7 +613,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackProfileViewed(@NonNull String username) {
         final Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.PROFILE_VIEWED);
-        aEvent.setAppNameContext();
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.PROFILE, username);
         tracker.track(Events.PROFILE_VIEWED, aEvent.properties);
@@ -686,7 +622,6 @@ public class SegmentAnalytics implements Analytics {
     public void trackProfilePhotoSet(boolean fromCamera) {
         final Event aEvent = new Event();
         aEvent.properties.putValue(Keys.NAME, Values.PROFILE_PHOTO_SET);
-        aEvent.setAppNameContext();
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.PROFILE, fromCamera ? Values.CAMERA : Values.LIBRARY);
         tracker.track(Events.PROFILE_PHOTO_SET, aEvent.properties);

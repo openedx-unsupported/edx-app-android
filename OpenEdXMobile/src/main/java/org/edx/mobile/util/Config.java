@@ -511,6 +511,10 @@ public class Config {
         return getBoolean(COURSE_SHARING_ENABLED, false);
     }
 
+    public boolean isFirebaseEnabled() {
+        return getBoolean(FIREBASE_ENABLED, false);
+    }
+
     @NonNull
     public EnrollmentConfig getCourseDiscoveryConfig() {
         return getObjectOrNewInstance(COURSE_ENROLLMENT, EnrollmentConfig.class);

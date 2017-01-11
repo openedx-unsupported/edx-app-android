@@ -8,6 +8,10 @@ public interface IBlock extends Serializable {
 
     void setId(String id);
 
+    String getBlockId();
+
+    void setBlockId(String blockId);
+
     BlockType getType();
 
     void setType(BlockType category);
