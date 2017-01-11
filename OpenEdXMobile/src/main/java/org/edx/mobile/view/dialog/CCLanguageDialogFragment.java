@@ -85,8 +85,9 @@ public class CCLanguageDialogFragment extends RoboDialogFragment {
 
 
             TextView tvNone = (TextView) v.findViewById(R.id.tv_cc_cancel);
+            final String tvNoneTxt = getString(R.string.lbl_cc_cancel);
             if(langSelected!=null){
-                if(langSelected.equalsIgnoreCase("none")){
+                if(langSelected.equalsIgnoreCase(tvNoneTxt)){
                     tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
                 }else{
                     tvNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);

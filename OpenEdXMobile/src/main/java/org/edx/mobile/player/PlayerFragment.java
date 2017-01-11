@@ -14,6 +14,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.TypedValue;
@@ -24,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
+import android.view.accessibility.CaptioningManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,6 +65,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import subtitleFile.Caption;
 import subtitleFile.FormatSRT;
@@ -1644,7 +1647,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     try{
                         removeSubtitleDisplayCallBack();
                         try{
-                            setSubtitleLanguage(null);
+                            setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
                             if(player!=null){
                                 environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
@@ -1707,35 +1710,52 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * This function is used to display CC data when a transcript is selected
      */
-    private void displaySrtData(){
-        try{
-            if (subtitleDisplayHandler != null) {
-                subtitleDisplayHandler.removeCallbacks(subtitleProcessesor);
-            }
-            resetClosedCaptioning();
-            if(srtList!=null && srtList.size()>0){
-                final String languageSubtitle = getSubtitleLanguage();
-                if(languageSubtitle!=null){
-                    srt = srtList.get(languageSubtitle);
-                    if (srt != null) {
-                        try{
-                            if(player!=null){
-                                environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
-                                        player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                        videoEntry.eid, videoEntry.lmsUrl);
-                            }
-                        }catch(Exception e){
-                            logger.error(e);
+    private void displaySrtData() {
+        if (subtitleDisplayHandler != null) {
+            subtitleDisplayHandler.removeCallbacks(subtitleProcessesor);
+        }
+        resetClosedCaptioning();
+        if (srtList != null && srtList.size() > 0) {
+            String languageSubtitle = getSubtitleLanguage();
+
+            if (languageSubtitle == null) {
+                // Check if captioning is enabled in accessibility settings and set the captioning language implicitly
+                final CaptioningManager cManager = (CaptioningManager) getContext().getSystemService(Context.CAPTIONING_SERVICE);
+                if (cManager.isEnabled()) {
+                    final String defaultCcLanguage;
+                    {
+                        final Locale cManagerLocale = cManager.getLocale();
+                        if (cManagerLocale != null) {
+                            defaultCcLanguage = cManagerLocale.getLanguage();
+                        } else {
+                            defaultCcLanguage = Locale.getDefault().getLanguage();
                         }
-                        if(subtitleDisplayHandler==null){
-                            subtitleDisplayHandler = new Handler();
-                        }
-                        subtitleDisplayHandler.post(subtitleProcessesor);
+                    }
+                    if (srtList.containsKey(defaultCcLanguage)) {
+                        languageSubtitle = defaultCcLanguage;
+                        setSubtitleLanguage(languageSubtitle);
                     }
                 }
             }
-        }catch(Exception e){
-            logger.error(e);
+
+            if (languageSubtitle != null) {
+                srt = srtList.get(languageSubtitle);
+                if (srt != null) {
+                    try {
+                        if (player != null) {
+                            environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
+                                    player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                                    videoEntry.eid, videoEntry.lmsUrl);
+                        }
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
+                    if (subtitleDisplayHandler == null) {
+                        subtitleDisplayHandler = new Handler();
+                    }
+                    subtitleDisplayHandler.post(subtitleProcessesor);
+                }
+            }
         }
     }
 
@@ -1747,7 +1767,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         return loginPrefs.getSubtitleLanguage();
     }
 
-    private void setSubtitleLanguage(@Nullable String language) {
+    private void setSubtitleLanguage(@NonNull String language) {
         loginPrefs.setSubtitleLanguage(language);
     }
 
