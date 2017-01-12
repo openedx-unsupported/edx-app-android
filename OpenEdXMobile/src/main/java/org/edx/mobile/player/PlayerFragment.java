@@ -1718,22 +1718,24 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (srtList != null && srtList.size() > 0) {
             String languageSubtitle = getSubtitleLanguage();
 
-            if (languageSubtitle == null) {
-                // Check if captioning is enabled in accessibility settings and set the captioning language implicitly
-                final CaptioningManager cManager = (CaptioningManager) getContext().getSystemService(Context.CAPTIONING_SERVICE);
-                if (cManager.isEnabled()) {
-                    final String defaultCcLanguage;
-                    {
-                        final Locale cManagerLocale = cManager.getLocale();
-                        if (cManagerLocale != null) {
-                            defaultCcLanguage = cManagerLocale.getLanguage();
-                        } else {
-                            defaultCcLanguage = Locale.getDefault().getLanguage();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (languageSubtitle == null) {
+                    // Check if captioning is enabled in accessibility settings and set the captioning language implicitly
+                    final CaptioningManager cManager = (CaptioningManager) getContext().getSystemService(Context.CAPTIONING_SERVICE);
+                    if (cManager.isEnabled()) {
+                        final String defaultCcLanguage;
+                        {
+                            final Locale cManagerLocale = cManager.getLocale();
+                            if (cManagerLocale != null) {
+                                defaultCcLanguage = cManagerLocale.getLanguage();
+                            } else {
+                                defaultCcLanguage = Locale.getDefault().getLanguage();
+                            }
                         }
-                    }
-                    if (srtList.containsKey(defaultCcLanguage)) {
-                        languageSubtitle = defaultCcLanguage;
-                        setSubtitleLanguage(languageSubtitle);
+                        if (srtList.containsKey(defaultCcLanguage)) {
+                            languageSubtitle = defaultCcLanguage;
+                            setSubtitleLanguage(languageSubtitle);
+                        }
                     }
                 }
             }
