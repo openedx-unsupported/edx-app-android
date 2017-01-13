@@ -80,7 +80,7 @@ public class LoginPrefs {
     @Nullable
     public String getSubtitleLanguage() {
         final String lang = pref.getString(PrefManager.Key.TRANSCRIPT_LANGUAGE);
-        if (android.text.TextUtils.isEmpty(lang) || lang.equalsIgnoreCase("none")) {
+        if (android.text.TextUtils.isEmpty(lang)) {
             return null;
         }
         return lang;
