@@ -21,9 +21,10 @@ public interface IDownloadManager {
      * @param destFolder
      * @param url
      * @param wifiOnly
+     * @param title of video
      * @return
      */
-    long addDownload(File destFolder, String url, boolean wifiOnly);
+    long addDownload(File destFolder, String url, boolean wifiOnly, String title);
     
     /**
      * Removes download by given dmid. Returns true if download is cancelled 

@@ -59,6 +59,13 @@ public class Router {
         sourceActivity.startActivity(downloadIntent);
     }
 
+    public void showDownloads(Context context) {
+        Intent downloadIntent = new Intent(context, DownloadListActivity.class);
+        downloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        context.startActivity(downloadIntent);
+    }
+
     public void showCourseInfo(Activity sourceActivity, String pathId) {
         Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
         courseInfoIntent.putExtra(CourseInfoActivity.EXTRA_PATH_ID, pathId);

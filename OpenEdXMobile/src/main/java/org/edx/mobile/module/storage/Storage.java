@@ -92,7 +92,7 @@ public class Storage implements IStorage {
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
             long dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
-                    downloadPreference);
+                    downloadPreference, model.getTitle());
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager
                 return -1;

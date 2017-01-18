@@ -71,7 +71,7 @@ public class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public synchronized long addDownload(File destFolder, String url, boolean wifiOnly) {
+    public synchronized long addDownload(File destFolder, String url, boolean wifiOnly, String title) {
         long dmid = -1;
 
         //Need to check first if the download manager service is enabled
@@ -94,8 +94,7 @@ public class IDownloadManagerImpl implements IDownloadManager {
         Uri target = Uri.fromFile(new File(destFolder, Sha1Util.SHA1(url)));
         Request request = new Request(Uri.parse(url));
         request.setDestinationUri(target);
-        request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
-        request.setVisibleInDownloadsUi(false);
+        request.setTitle(title);
 
         if (wifiOnly) {
             request.setAllowedNetworkTypes(Request.NETWORK_WIFI);
