@@ -432,4 +432,14 @@ public interface Analytics {
             }
         }
     }
+
+    /**
+     * Defines the analytics events that need to be fired.
+     */
+    interface OnEventListener {
+        /**
+         * Fires a screen event.
+         */
+        void fireScreenEvent();
+    }
 }

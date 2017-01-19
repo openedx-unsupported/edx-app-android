@@ -63,7 +63,15 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
         if (tabLayout != null) {
             tabLayout.setTabsFromPagerAdapter(adapter);
             tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(pager));
-            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    final Analytics.OnEventListener listener =
+                            (Analytics.OnEventListener) adapter.getFragment(position);
+                    listener.fireScreenEvent();
+                }
+            });
         }
     }
 
