@@ -22,6 +22,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -185,11 +186,13 @@ public class VideoListFragment extends BaseFragment {
             videoListView.setAdapter(adapter);
             videoListView.setOnItemClickListener(adapter);
 
-            setActivityTitle(enrollment.getCourse().getName());
-            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_ALL);
+            final CourseEntry course = enrollment.getCourse();
+            setActivityTitle(course.getName());
+            environment.getAnalyticsRegistry().trackScreenView(
+                    Analytics.Screens.MY_VIDEOS_COURSE_VIDEOS, course.getId(), null);
 
             ArrayList<SectionItemInterface> list = environment.getStorage()
-                    .getSortedOrganizedVideosByCourse(enrollment.getCourse().getId());
+                    .getSortedOrganizedVideosByCourse(course.getId());
             downloadAvailable = false;
             if (list == null || list.size() == 0) {
                 hideDeletePanel(getView());

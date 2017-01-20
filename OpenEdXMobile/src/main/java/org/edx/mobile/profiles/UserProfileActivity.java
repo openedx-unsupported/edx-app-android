@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
+import org.edx.mobile.module.analytics.Analytics;
 
 public class UserProfileActivity extends BaseSingleFragmentActivity {
     public static final String EXTRA_USERNAME = "username";
@@ -27,6 +28,7 @@ public class UserProfileActivity extends BaseSingleFragmentActivity {
         } else {
             blockDrawerFromOpening();
         }
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.PROFILE_VIEW);
     }
 
     @Override

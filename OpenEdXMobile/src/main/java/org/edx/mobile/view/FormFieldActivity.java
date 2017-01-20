@@ -8,11 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
+import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.FormField;
 
 import roboguice.inject.InjectExtra;
 
-public class FormFieldActivity extends BaseSingleFragmentActivity {
+import static org.edx.mobile.user.DataType.COUNTRY;
+import static org.edx.mobile.user.DataType.LANGUAGE;
+
+public class FormFieldActivity extends BaseSingleFragmentActivity
+        implements Analytics.OnEventListener {
 
     public static final String EXTRA_FIELD = "field";
     public static final String EXTRA_VALUE = "value";
@@ -30,6 +36,7 @@ public class FormFieldActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         blockDrawerFromOpening();
+        fireScreenEvent();
     }
 
     @Override
@@ -50,5 +57,28 @@ public class FormFieldActivity extends BaseSingleFragmentActivity {
         }
         fragment.setArguments(getIntent().getExtras());
         return fragment;
+    }
+
+    @Override
+    public void fireScreenEvent() {
+        switch (field.getFieldType()) {
+            case SELECT: {
+                final String screenName;
+                final DataType dataType = field.getDataType();
+                if (dataType == COUNTRY) {
+                    screenName = Analytics.Screens.PROFILE_CHOOSE_LOCATION;
+                } else if (dataType == LANGUAGE) {
+                    screenName = Analytics.Screens.PROFILE_CHOOSE_LANGUAGE;
+                } else {
+                    screenName = Analytics.Screens.PROFILE_CHOOSE_BIRTH_YEAR;
+                }
+                environment.getAnalyticsRegistry().trackScreenView(screenName);
+                break;
+            }
+            case TEXTAREA: {
+                environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.PROFILE_EDIT_TEXT_VALUE);
+                break;
+            }
+        }
     }
 }
