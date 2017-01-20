@@ -52,7 +52,8 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class MyRecentVideosFragment extends BaseFragment implements IPlayerEventCallback {
+public class MyRecentVideosFragment extends BaseFragment
+        implements IPlayerEventCallback, Analytics.OnEventListener {
 
     private MyRecentVideoAdapter adapter;
     private ListView videoListView;
@@ -77,9 +78,11 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_RECENT);
         setHasOptionsMenu(!isLandscape());
         EventBus.getDefault().register(this);
+        if (getUserVisibleHint()) {
+            fireScreenEvent();
+        }
     }
 
     @Override
@@ -663,6 +666,11 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             return new PreviousClickListener();
         }
         return null;
+    }
+
+    @Override
+    public void fireScreenEvent() {
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_RECENT);
     }
 
     private class NextClickListener implements OnClickListener {

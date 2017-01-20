@@ -27,7 +27,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class MyAllVideosFragment extends BaseFragment {
+public class MyAllVideosFragment extends BaseFragment implements Analytics.OnEventListener {
 
     private MyAllVideoCourseAdapter myCoursesAdaptor;
     protected final Logger logger = new Logger(getClass().getName());
@@ -39,8 +39,10 @@ public class MyAllVideosFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_ALL);
         EventBus.getDefault().register(this);
+        if (getUserVisibleHint()) {
+            fireScreenEvent();
+        }
     }
 
     @Override
@@ -121,5 +123,10 @@ public class MyAllVideosFragment extends BaseFragment {
     }
     public void onEventMainThread(DownloadCompletedEvent e) {
         addMyAllVideosData();
+    }
+
+    @Override
+    public void fireScreenEvent() {
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS_ALL);
     }
 }
