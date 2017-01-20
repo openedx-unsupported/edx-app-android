@@ -359,7 +359,7 @@ public interface Analytics {
         String COURSE_ANNOUNCEMENTS = "Course Announcements";
         String SECTION_OUTLINE = "Section Outline";
         String UNIT_DETAIL = "Unit Detail";
-        String CERTIFICATE = "Certificate";
+        String CERTIFICATE = "View Certificate";
         String DOWNLOADS = "Downloads";
         String FIND_COURSES = "Find Courses";
         String MY_VIDEOS = "My Videos";
@@ -375,6 +375,13 @@ public interface Analytics {
         String FORUM_ADD_RESPONSE = "Forum: Add Thread Response";
         String FORUM_VIEW_RESPONSE_COMMENTS = "Forum: View Response Comments";
         String FORUM_ADD_RESPONSE_COMMENT = "Forum: Add Response Comment";
+        String PROFILE_VIEW = "Profile View";
+        String PROFILE_EDIT = "Profile Edit";
+        String PROFILE_CROP_PHOTO = "Crop Photo";
+        String PROFILE_CHOOSE_BIRTH_YEAR = "Choose Form Value from Birth Year";
+        String PROFILE_CHOOSE_LOCATION = "Choose Form Value from Location";
+        String PROFILE_CHOOSE_LANGUAGE = "Choose Form Value from Primary Language";
+        String PROFILE_EDIT_TEXT_VALUE = "Edit Text Form Value";
     }
 
     interface Events {
