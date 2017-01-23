@@ -2,8 +2,11 @@ package org.edx.mobile.module.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
+import android.support.annotation.NonNull;
 
 import org.edx.mobile.base.MainApplication;
+
+import java.util.List;
 
 /**
  * This is a Utility for reading and writing to shared preferences.
@@ -221,6 +224,14 @@ public class PrefManager {
         public static String[] getAll() {
             return new String[]{LOGIN, WIFI, VIDEOS, FEATURES, APP_INFO, USER_PREF};
         }
+
+        public static String[] getAllPreferenceFileNames() {
+            String[] preferencesFilesList = PrefManager.Pref.getAll();
+            for (int i=0; i<preferencesFilesList.length; i++) {
+                preferencesFilesList[i] += ".xml";
+            }
+            return preferencesFilesList;
+        }
     }
 
     /**
@@ -267,9 +278,14 @@ public class PrefManager {
 
     /**
      * Clears all the shared preferences that are used in the app.
+     *
+     * @param exceptions Names of the preferences that need to be skipped while clearing.
      */
-    public static void nukeSharedPreferences() {
+    public static void nukeSharedPreferences(@NonNull List<String> exceptions) {
         for (String prefName : Pref.getAll()) {
+            if (exceptions.contains(prefName)) {
+                continue;
+            }
             MainApplication.application.getSharedPreferences(
                     prefName, Context.MODE_PRIVATE).edit().clear().apply();
         }

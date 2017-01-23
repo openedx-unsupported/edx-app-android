@@ -10,6 +10,7 @@ import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.prefs.PrefManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 
 /**
@@ -30,6 +31,11 @@ public class SecurityUtil {
      * @param context The current context.
      */
     public static void clearUserData(@NonNull Context context) {
+        // Add all preference files and db in exceptions list
+        final ArrayList<String> exceptionsList = new ArrayList<>();
+        Collections.addAll(exceptionsList, PrefManager.Pref.getAllPreferenceFileNames());
+        exceptionsList.add(DbStructure.NAME);
+
         // Clear the data directory
         PackageManager packageManager = context.getPackageManager();
         try {
@@ -38,7 +44,7 @@ public class SecurityUtil {
             File[] filesList = dataDir.listFiles();
             if (filesList != null) {
                 for (final File child : filesList) {
-                    FileUtil.deleteRecursive(child, Collections.singletonList(DbStructure.NAME));
+                    FileUtil.deleteRecursive(child, exceptionsList);
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -55,7 +61,7 @@ public class SecurityUtil {
             }
         }
 
-        // Now clear the shared preferences
-        PrefManager.nukeSharedPreferences();
+        // Now clear all the shared preferences except app related preferences
+        PrefManager.nukeSharedPreferences(Collections.singletonList(PrefManager.Pref.APP_INFO));
     }
 }
