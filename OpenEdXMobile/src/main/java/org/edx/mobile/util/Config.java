@@ -68,6 +68,7 @@ public class Config {
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
     private static final String FIREBASE_ENABLED = "FIREBASE_ENABLED";
+    private static final String APP_REVIEWS_ENABLED = "APP_REVIEWS_ENABLED";
 
 
     public static class ZeroRatingConfig {
@@ -442,10 +443,10 @@ public class Config {
     }
 
     /**
-     * @return A list of URIs for updating the app, or an empty list if none are available.
+     * @return A list of URIs of app stores, or an empty list if none are available.
      */
     @NonNull
-    public List<Uri> getAppUpdateUris() {
+    public List<Uri> getAppStoreUris() {
         //noinspection unchecked
         final List<String> uriStrings = getObjectOrNewInstance(APP_UPDATE_URIS, ArrayList.class);
         final List<Uri> uris = new ArrayList<>(uriStrings.size());
@@ -501,6 +502,10 @@ public class Config {
 
     public boolean isDiscussionsEnabled() {
         return getBoolean(DISCUSSIONS_ENABLED, false);
+    }
+
+    public boolean isAppReviewsEnabled() {
+        return getBoolean(APP_REVIEWS_ENABLED, false);
     }
 
     public boolean areCertificateLinksEnabled() {

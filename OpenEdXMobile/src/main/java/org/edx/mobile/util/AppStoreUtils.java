@@ -19,11 +19,11 @@ import org.edx.mobile.R;
 import java.util.List;
 
 /**
- * Utility class for updating the app.
+ * Utility class for app store related interactions in the app.
  */
-public final class AppUpdateUtils {
+public final class AppStoreUtils {
     // Make this class non-instantiable
-    private AppUpdateUtils() {
+    private AppStoreUtils() {
         throw new UnsupportedOperationException();
     }
 
@@ -39,7 +39,7 @@ public final class AppUpdateUtils {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         final PackageManager packageManager = context.getPackageManager();
-        for (final Uri uri : config.getAppUpdateUris()) {
+        for (final Uri uri : config.getAppStoreUris()) {
             intent.setData(uri);
             if (intent.resolveActivity(packageManager) != null) {
                 return true;
@@ -49,7 +49,7 @@ public final class AppUpdateUtils {
     }
 
     /**
-     * Open a native app or a website on a web browser to update the app.
+     * Open a native app or a website on a web browser.
      *
      * @param context A Context for starting the new Activity.
      */
@@ -61,7 +61,7 @@ public final class AppUpdateUtils {
          */
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        final List<Uri> uris = config.getAppUpdateUris();
+        final List<Uri> uris = config.getAppStoreUris();
         if (uris.isEmpty()) return;
 
         /* Try to resolve the app store that was initially used to
