@@ -1,9 +1,17 @@
 package org.edx.mobile.test.feature;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.Switch;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -21,7 +29,13 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -39,6 +53,7 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
  *
  * Course discovery
  * Course info
+ * Find Courses
  *
  */
 
@@ -48,16 +63,16 @@ public class TouchEachScreen {
     protected EdxEnvironment environment;
 
     @Rule
-    public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<>(
+    public IntentsTestRule<SplashActivity> mActivityRule = new IntentsTestRule<>(
             SplashActivity.class, false, false);
 
     @Before
     public void setup() {
         // Ensure we are not logged in
-        final MainApplication application = MainApplication.instance();
-        environment = application.getInjector().getInstance(EdxEnvironment.class);
-        environment.getLoginPrefs().clear();
-        environment.getAnalyticsRegistry().resetIdentifyUser();
+//        final MainApplication application = MainApplication.instance();
+//        environment = application.getInjector().getInstance(EdxEnvironment.class);
+//        environment.getLoginPrefs().clear();
+//        environment.getAnalyticsRegistry().resetIdentifyUser();
 
 
         mActivityRule.launchActivity(new Intent());
@@ -65,34 +80,72 @@ public class TouchEachScreen {
 
     @Test
     public void withNoTestAssertions_navigateToAllScreens() throws InterruptedException {
-        from_launchActivity_login();
+//        fromLaunchActivity_login();
+//        fromMyCourses_navigateToAllSettingsScreens();
+//        fromMyCourses_navigateToAllCourseDashboardScreens();
         fromMyCourses_navigateToAllProfileScreens();
-        fromMyCourses_navigateToAllCourseDashboardScreens();
+
+
+    }
+
+    public void fromMyCourses_navigateToAllSettingsScreens() throws InterruptedException {
+        DrawerActions.openDrawer(R.id.drawer_layout);
+        onView(withId(R.id.drawer_option_my_settings)).perform(click());
+
+        // Hacky way to ensure that the setting is on
+        onView(withId(R.id.wifi_setting)).perform(click());
+        try {
+            onView(withId(R.id.positiveButton)).perform(click());
+        } catch (Exception e) {
+            onView(withId(R.id.wifi_setting)).perform(click());
+            onView(withId(R.id.positiveButton)).perform(click());
+        }
 
     }
 
     public void fromMyCourses_navigateToAllCourseDashboardScreens() {
-        onView(withText(startsWith("Demo Course"))).perform(click());
-        fromCourseDashboard_navigateToHandouts();
-        fromCourseDashboard_navigateToAnnouncements();
+        DrawerActions.openDrawer(R.id.drawer_layout);
+        onView(withId(R.id.drawer_option_my_courses)).perform(click());
+        onView(withText(startsWith("Introduction to Clee"))).perform(click());
+        fromCourseDashboard_navigateToHandoutsAndAnnouncements();
         fromCourseDashboard_navigateToAllDiscussionsScreens();
         fromCourseDashboard_navigateToAllCoursewareScreens();
-    }
-
-    public void fromCourseDashboard_navigateToHandouts() {
-        onView(withText(startsWith("Handouts"))).perform(click());
+        fromCourseDashboard_navigateToAllCertificateScreens();
         pressBack();
     }
 
-    public void fromCourseDashboard_navigateToAnnouncements() {
-        onView(withText(startsWith("Announcements"))).perform(click());
+    public void fromCourseDashboard_navigateToAllCertificateScreens() {
+        onView(withText(startsWith("View Certificate"))).perform(click());
+        onView(withId(R.id.menu_item_share)).perform(click());
+        Intent resultData = new Intent();
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        intending(toPackage("com.android.messaging")).respondWith(result);
+        onView(withText(startsWith("Share your certificate"))).perform(click());
+        onView(withText(startsWith("Messaging"))).perform(click());
         pressBack();
+
     }
 
     public void fromCourseDashboard_navigateToAllDiscussionsScreens() {
         onView(withText(startsWith("Discussion"))).perform(click());
-        onView(withId(R.id.discussion_topics_searchview)).perform(clearText(), typeText("forum search string"));
-
+        onView(withId(R.id.discussion_topics_searchview)).perform(typeText("forum search string"));
+        pressBack();
+        onView(withText(startsWith("All Posts"))).perform(click());
+        onView(withText(startsWith("test-automation-thread"))).perform(click());
+        onView(withText(startsWith("Discussion"))).perform(click());
+        onView(withText(startsWith("1 comment"))).perform(click());
+        onView(withText(startsWith("Add a comment"))).perform(click());
+        closeSoftKeyboard();
+        pressBack();
+        pressBack();
+        onView(withText(startsWith("Add a response"))).perform(click());
+        closeSoftKeyboard();
+        pressBack();
+        pressBack();
+        onView(withText(startsWith("Create a new post"))).perform(click());
+        closeSoftKeyboard();
+        pressBack();
+        pressBack();
         pressBack();
     }
 
@@ -101,7 +154,7 @@ public class TouchEachScreen {
         pressBack();
     }
 
-    public void from_launchActivity_login() {
+    public void fromLaunchActivity_login() {
         onView(withId(R.id.log_in)).perform(click());
         onView(withId(R.id.email_et)).perform(clearText(), typeText("clee+test@edx.org"));
         onView(withId(R.id.password_et)).perform(typeText("edx"));
@@ -121,5 +174,29 @@ public class TouchEachScreen {
         pressBack();
         onView(withText(startsWith("About me"))).perform(click());
         pressBack();
+        onView(withId(R.id.change_photo)).perform(click());
+
+        Bitmap icon = BitmapFactory.decodeResource(
+                InstrumentationRegistry.getTargetContext().getResources(),
+                R.mipmap.ic_launcher);
+        Intent resultData = new Intent();
+        resultData.putExtra("data", icon);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        intending(toPackage("com.android.camera")).respondWith(result);
+
+        onView(withText(startsWith("Take photo"))).perform(click());
+        onView(withId(R.id.save)).perform(click());
+        pressBack();
+        pressBack();
+
+
     }
+
+    public void fromCourseDashboard_navigateToHandoutsAndAnnouncements() {
+        onView(withText(startsWith("Handouts"))).perform(click());
+        pressBack();
+        onView(withText(startsWith("Announcements"))).perform(scrollTo(), click());
+        pressBack();
+    }
+
 }
