@@ -362,7 +362,7 @@ public interface Analytics {
         String CERTIFICATE = "View Certificate";
         String DOWNLOADS = "Downloads";
         String FIND_COURSES = "Find Courses";
-        String MY_VIDEOS = "My Videos";
+        String MY_VIDEOS_COURSE_VIDEOS = "My Videos - Course Videos";
         String MY_VIDEOS_ALL = "My Videos - All Videos";
         String MY_VIDEOS_RECENT = "My Videos - Recent Videos";
         String MY_COURSES = "My Courses";

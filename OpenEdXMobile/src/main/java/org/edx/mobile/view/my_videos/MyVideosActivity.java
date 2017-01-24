@@ -37,8 +37,6 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
 
         offlineBar = findViewById(R.id.offline_bar);
 
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_VIDEOS);
-
         // now init the tabs
         initializeTabs();
 
