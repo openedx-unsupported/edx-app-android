@@ -53,7 +53,7 @@ public class FirebaseAnalytics implements Analytics {
             }
         }
 
-        Log.d(, csv);
+        Log.d(FirebaseAnalytics.class.getName(), csv);
         tracker.logEvent(eventName, eventBundle);
     }
 
