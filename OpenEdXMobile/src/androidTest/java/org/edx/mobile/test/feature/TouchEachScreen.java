@@ -17,6 +17,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.EdxEnvironment;
 import org.edx.mobile.view.SplashActivity;
+import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,20 +41,22 @@ import static android.support.test.espresso.matcher.ViewMatchers.withContentDesc
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.hamcrest.object.HasToString.hasToString;
 
 
 /**
  * Hacky Test that will run through ALL screens to easily collect analytic event outputs.
  *
- * Screens that are not accessed:
+ * Screens that are not accessed due to complications:
  *
- * Course discovery
- * Course info
- * Find Courses
+ * Course discovery - Webview locks espresso
+ * Course info - Webview locks espresso
+ * Find Courses - Webview locks espresso
  *
  */
 
@@ -69,23 +72,28 @@ public class TouchEachScreen {
     @Before
     public void setup() {
         // Ensure we are not logged in
-//        final MainApplication application = MainApplication.instance();
-//        environment = application.getInjector().getInstance(EdxEnvironment.class);
-//        environment.getLoginPrefs().clear();
-//        environment.getAnalyticsRegistry().resetIdentifyUser();
-
+        final MainApplication application = MainApplication.instance();
+        environment = application.getInjector().getInstance(EdxEnvironment.class);
+        environment.getLoginPrefs().clear();
+        environment.getAnalyticsRegistry().resetIdentifyUser();
 
         mActivityRule.launchActivity(new Intent());
     }
 
     @Test
     public void withNoTestAssertions_navigateToAllScreens() throws InterruptedException {
-//        fromLaunchActivity_login();
-//        fromMyCourses_navigateToAllSettingsScreens();
-//        fromMyCourses_navigateToAllCourseDashboardScreens();
+        fromLaunchActivity_login();
+        fromMyCourses_navigateToAllSettingsScreens();
+        fromMyCourses_navigateToAllCourseDashboardScreens();
         fromMyCourses_navigateToAllProfileScreens();
+    }
 
-
+    public void fromLaunchActivity_login() {
+        onView(withId(R.id.log_in)).perform(click());
+        onView(withId(R.id.email_et)).perform(clearText(), typeText("clee+test@edx.org"));
+        onView(withId(R.id.password_et)).perform(typeText("edx"));
+        closeSoftKeyboard();
+        onView(withId(R.id.login_button_layout)).perform(click());
     }
 
     public void fromMyCourses_navigateToAllSettingsScreens() throws InterruptedException {
@@ -109,57 +117,9 @@ public class TouchEachScreen {
         onView(withText(startsWith("Introduction to Clee"))).perform(click());
         fromCourseDashboard_navigateToHandoutsAndAnnouncements();
         fromCourseDashboard_navigateToAllDiscussionsScreens();
-        fromCourseDashboard_navigateToAllCoursewareScreens();
         fromCourseDashboard_navigateToAllCertificateScreens();
+//        fromCourseDashboard_navigateToAllCoursewareScreens();
         pressBack();
-    }
-
-    public void fromCourseDashboard_navigateToAllCertificateScreens() {
-        onView(withText(startsWith("View Certificate"))).perform(click());
-        onView(withId(R.id.menu_item_share)).perform(click());
-        Intent resultData = new Intent();
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
-        intending(toPackage("com.android.messaging")).respondWith(result);
-        onView(withText(startsWith("Share your certificate"))).perform(click());
-        onView(withText(startsWith("Messaging"))).perform(click());
-        pressBack();
-
-    }
-
-    public void fromCourseDashboard_navigateToAllDiscussionsScreens() {
-        onView(withText(startsWith("Discussion"))).perform(click());
-        onView(withId(R.id.discussion_topics_searchview)).perform(typeText("forum search string"));
-        pressBack();
-        onView(withText(startsWith("All Posts"))).perform(click());
-        onView(withText(startsWith("test-automation-thread"))).perform(click());
-        onView(withText(startsWith("Discussion"))).perform(click());
-        onView(withText(startsWith("1 comment"))).perform(click());
-        onView(withText(startsWith("Add a comment"))).perform(click());
-        closeSoftKeyboard();
-        pressBack();
-        pressBack();
-        onView(withText(startsWith("Add a response"))).perform(click());
-        closeSoftKeyboard();
-        pressBack();
-        pressBack();
-        onView(withText(startsWith("Create a new post"))).perform(click());
-        closeSoftKeyboard();
-        pressBack();
-        pressBack();
-        pressBack();
-    }
-
-    public void fromCourseDashboard_navigateToAllCoursewareScreens() {
-        onView(withText(startsWith("Courseware"))).perform(click());
-        pressBack();
-    }
-
-    public void fromLaunchActivity_login() {
-        onView(withId(R.id.log_in)).perform(click());
-        onView(withId(R.id.email_et)).perform(clearText(), typeText("clee+test@edx.org"));
-        onView(withId(R.id.password_et)).perform(typeText("edx"));
-        closeSoftKeyboard();
-        onView(withId(R.id.login_button_layout)).perform(click());
     }
 
     public void fromMyCourses_navigateToAllProfileScreens() {
@@ -196,6 +156,52 @@ public class TouchEachScreen {
         onView(withText(startsWith("Handouts"))).perform(click());
         pressBack();
         onView(withText(startsWith("Announcements"))).perform(scrollTo(), click());
+        pressBack();
+    }
+
+    public void fromCourseDashboard_navigateToAllDiscussionsScreens() {
+        onView(withText(startsWith("Discussion"))).perform(click());
+        onView(withId(R.id.discussion_topics_searchview)).perform(typeText("forum search string"));
+        pressBack();
+        onView(withText(startsWith("All Posts"))).perform(click());
+        onView(withText(startsWith("test-automation-thread"))).perform(click());
+        onView(withText(startsWith("Discussion"))).perform(click());
+        onView(withText(startsWith("1 comment"))).perform(click());
+        onView(withText(startsWith("Add a comment"))).perform(click());
+        closeSoftKeyboard();
+        pressBack();
+        pressBack();
+        onView(withText(startsWith("Add a response"))).perform(click());
+        closeSoftKeyboard();
+        pressBack();
+        pressBack();
+        onView(withText(startsWith("Create a new post"))).perform(click());
+        closeSoftKeyboard();
+        pressBack();
+        pressBack();
+        pressBack();
+    }
+
+    public void fromCourseDashboard_navigateToAllCertificateScreens() {
+        onView(withText(startsWith("View Certificate"))).perform(click());
+        onView(withId(R.id.menu_item_share)).perform(click());
+        Intent resultData = new Intent();
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        intending(toPackage("com.android.messaging")).respondWith(result);
+        onView(withText(startsWith("Share your certificate"))).perform(click());
+        onView(withText(startsWith("Messaging"))).perform(click());
+        pressBack();
+
+    }
+
+    public void fromCourseDashboard_navigateToAllCoursewareScreens() {
+        onView(withText(startsWith("Courseware"))).perform(click());
+
+        onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(1).onChildView(withId(R.id.bulk_download)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(1).perform(click());
+
+        onView(withId(R.id.bulk_download)).perform(click());
+
         pressBack();
     }
 
