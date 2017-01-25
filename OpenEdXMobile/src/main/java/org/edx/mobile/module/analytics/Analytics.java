@@ -254,6 +254,7 @@ public interface Analytics {
         BLOCK_ID("block_id"),
         COURSE_SECTION("course_section"),
         COURSE_SUBSECTION("course_subsection"),
+        NO_OF_VIDEOS("number_of_videos"),
 
         // Discussions
         SEARCH_STRING("search_string"),
@@ -274,7 +275,6 @@ public interface Analytics {
 
         OPEN_BROWSER("open_in_browser_url"),
 
-        NO_OF_VIDEOS("number_of_videos"),
         TARGET_URL("target_url"),
         URL("url"),
         CONTEXT("context"),
