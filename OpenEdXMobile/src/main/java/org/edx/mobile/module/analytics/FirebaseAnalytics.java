@@ -1,9 +1,11 @@
 package org.edx.mobile.module.analytics;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,6 +31,19 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     /**
+     * This function is used to send the event to Firebase and log the output.
+     */
+    private void logEventToFirebase(@NonNull String eventName, @NonNull Bundle eventBundle) {
+        String csv = eventName;
+        for (String pName : eventBundle.keySet()) {
+            csv += "," + pName + "," + eventBundle.get(pName);
+        }
+        Log.d(FirebaseAnalytics.class.getName(), csv);
+        tracker.logEvent(eventName, eventBundle);
+    }
+
+
+    /**
      * This function is used to send the screen tracking event.
      *
      * @param screenName The screen name to track
@@ -51,14 +66,14 @@ public class FirebaseAnalytics implements Analytics {
             event.putMap(values);
         }
 
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
     public void trackVideoLoading(String videoId, String courseId, String unitUrl) {
         final FirebaseEvent event = new FirebaseEvent(Events.LOADED_VIDEO, videoId, Values.VIDEO_LOADED);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -67,7 +82,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.PLAYED_VIDEO, videoId,
                 Values.VIDEO_PLAYED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -76,7 +91,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.PAUSED_VIDEO,
                 videoId, Values.VIDEO_PAUSED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -85,7 +100,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.STOPPED_VIDEO,
                 videoId, Values.VIDEO_STOPPED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -107,7 +122,7 @@ public class FirebaseAnalytics implements Analytics {
         }
         event.putDouble(Keys.REQUESTED_SKIP_INTERVAL, skipInterval);
 
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -116,7 +131,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.SHOW_TRANSCRIPT, videoId,
                 Values.TRANSCRIPT_SHOWN, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -125,7 +140,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.HIDE_TRANSCRIPT,
                 videoId, Values.TRANSCRIPT_HIDDEN, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -133,7 +148,7 @@ public class FirebaseAnalytics implements Analytics {
                                       String unitUrl) {
         final FirebaseEvent event = new FirebaseEvent(Events.VIDEO_DOWNLOADED, videoId, Values.VIDEO_DOWNLOADED);
         event.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -147,7 +162,7 @@ public class FirebaseAnalytics implements Analytics {
         }
         event.putLong(Keys.NO_OF_VIDEOS, videoCount);
         event.setCourseContext(enrollmentId, null, Values.DOWNLOAD_MODULE);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -156,7 +171,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.SINGLE_VIDEO_DOWNLOAD, videoId,
                 Values.SINGLE_VIDEO_DOWNLOAD);
         event.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -166,21 +181,21 @@ public class FirebaseAnalytics implements Analytics {
                 Values.FULLSREEN_TOGGLED, currentTime);
         event.putBoolean(Keys.FULLSCREEN, isLandscape);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
     public void trackDiscoverCoursesClicked() {
         final FirebaseEvent event = new FirebaseEvent(Events.DISCOVER_COURSES,
                 Values.DISCOVER_COURSES_CLICK);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
     public void trackExploreSubjectsClicked() {
         final FirebaseEvent event = new FirebaseEvent(Events.EXPLORE_SUBJECTS,
                 Values.EXPLORE_SUBJECTS_CLICK);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -190,13 +205,13 @@ public class FirebaseAnalytics implements Analytics {
         if (method != null) {
             event.putString(Keys.METHOD, method);
         }
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
     public void trackUserLogout() {
         final FirebaseEvent event = new FirebaseEvent(Events.USER_LOGOUT, Values.USERLOGOUT);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -206,7 +221,7 @@ public class FirebaseAnalytics implements Analytics {
         if (url != null) {
             event.putString(Keys.TARGET_URL, url);
         }
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -216,13 +231,13 @@ public class FirebaseAnalytics implements Analytics {
                 Values.TRANSCRIPT_LANGUAGE, currentTime);
         event.putString(Keys.LANGUAGE, lang);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
     public void trackUserSignUpForAccount() {
         final FirebaseEvent event = new FirebaseEvent(Events.SIGN_UP, Values.USER_NO_ACCOUNT);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
 
     }
 
@@ -233,7 +248,7 @@ public class FirebaseAnalytics implements Analytics {
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.USER_ENGAGEMENT, Values.COURSE_DISCOVERY);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -245,7 +260,7 @@ public class FirebaseAnalytics implements Analytics {
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.CONVERSION, appVersion);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -257,7 +272,7 @@ public class FirebaseAnalytics implements Analytics {
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.CONVERSION, courseId);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -265,7 +280,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.SPEED, Values.CONNECTION_SPEED);
         event.putString(Keys.CONNECTION_TYPE, connectionType);
         event.putFloat(Keys.CONNECTION_SPEED, connectionSpeed);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -275,7 +290,7 @@ public class FirebaseAnalytics implements Analytics {
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.PUSH_NOTIFICATION, courseId);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -285,7 +300,7 @@ public class FirebaseAnalytics implements Analytics {
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.PUSH_NOTIFICATION, courseId);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -296,7 +311,7 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.CATEGORY, Values.SOCIAL_SHARING);
         event.putString(Keys.URL, aboutUrl);
         event.putString(Keys.TYPE, getShareTypeValue(method));
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -307,7 +322,7 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.CATEGORY, Values.SOCIAL_SHARING);
         event.putString(Keys.URL, certificateUrl);
         event.putString(Keys.TYPE, getShareTypeValue(method));
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -320,7 +335,7 @@ public class FirebaseAnalytics implements Analytics {
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.NAVIGATION, Keys.COMPONENT_VIEWED);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -335,14 +350,14 @@ public class FirebaseAnalytics implements Analytics {
         //Add category for Google Analytics
         String label = (isSupported ? Values.OPEN_IN_WEB_SUPPORTED : Values.OPEN_IN_WEB_NOT_SUPPORTED);
         event.addCategoryToBiEvents(Values.NAVIGATION, label);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
     public void trackProfileViewed(@NonNull String username) {
         final FirebaseEvent event = new FirebaseEvent(Events.PROFILE_VIEWED, Values.PROFILE_VIEWED);
         event.addCategoryToBiEvents(Values.PROFILE, username);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     @Override
@@ -350,7 +365,7 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.PROFILE_PHOTO_SET,
                 Values.PROFILE_PHOTO_SET);
         event.addCategoryToBiEvents(Values.PROFILE, fromCamera ? Values.CAMERA : Values.LIBRARY);
-        tracker.logEvent(event.getName(), event.getBundle());
+        logEventToFirebase(event.getName(), event.getBundle());
     }
 
     /**
