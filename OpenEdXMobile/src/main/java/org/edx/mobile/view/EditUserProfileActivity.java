@@ -6,12 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-
-import roboguice.inject.InjectExtra;
+import org.edx.mobile.module.analytics.Analytics;
 
 public class EditUserProfileActivity extends BaseSingleFragmentActivity {
     public static final String EXTRA_USERNAME = "username";
@@ -26,6 +23,7 @@ public class EditUserProfileActivity extends BaseSingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.edit_user_profile_title));
         blockDrawerFromOpening();
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.PROFILE_EDIT);
     }
 
     @Override

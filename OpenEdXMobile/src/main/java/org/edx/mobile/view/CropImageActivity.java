@@ -10,8 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseAppActivity;
+import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.third_party.subscaleview.ImageSource;
 import org.edx.mobile.user.SaveUriToFileTask;
 import org.edx.mobile.view.custom.CropImageView;
@@ -20,6 +24,9 @@ public class CropImageActivity extends BaseAppActivity {
     public static final String EXTRA_IMAGE_URI = "imageUri";
     public static final String EXTRA_CROP_RECT = "cropRect";
     public static final String EXTRA_FROM_CAMERA = "fromCamera";
+
+    @Inject
+    private IEdxEnvironment environment;
 
     public static Intent newIntent(@NonNull Context context, @NonNull Uri imageUri, boolean isFromCamera) {
         return new Intent(context, CropImageActivity.class)
@@ -82,6 +89,8 @@ public class CropImageActivity extends BaseAppActivity {
                 onBackPressed();
             }
         });
+
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.PROFILE_CROP_PHOTO);
     }
 
     @Override
