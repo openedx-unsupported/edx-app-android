@@ -232,51 +232,74 @@ public interface Analytics {
      */
     void resetIdentifyUser();
 
-    interface Keys {
-        String NAME = "name";
-        String OLD_TIME = "old_time";
-        String NEW_TIME = "new_time";
-        String SEEK_TYPE = "seek_type";
-        String REQUESTED_SKIP_INTERVAL = "requested_skip_interval";
-        String MODULE_ID = "module_id";
-        String CODE = "code";
-        String CURRENT_TIME = "current_time";
-        String COURSE_ID = "course_id";
-        String OPEN_BROWSER = "open_in_browser_url";
-        String COMPONENT = "component";
-        String COURSE_SECTION = "course_section";
-        String COURSE_SUBSECTION = "course_subsection";
-        String NO_OF_VIDEOS = "number_of_videos";
-        String FULLSCREEN = "settings.video.fullscreen";
-        String LANGUAGE = "language";
-        String TARGET_URL = "target_url";
-        String URL = "url";
-        String CONTEXT = "context";
-        String DATA = "data";
-        String METHOD = "method";
-        String APP = "app_name";
-        String EMAIL_OPT_IN = "email_opt_in";
-        String PROVIDER = "provider";
-        String BLOCK_ID = "block_id";
-        String SUPPORTED = "supported";
-        String DEVICE_ORIENTATION = "device-orientation";
+    enum Keys {
+        // Common
+        COURSE_ID("course_id"),
+        DEVICE_ORIENTATION("device-orientation"),
+        NAME("name"),
 
-        String CELL_CARRIER = "cell_carrier";
-        String CELL_ZERO_RATED = "cell_zero_rated";
+        // Video Player
+        CODE("code"),
+        COMPONENT("component"),
+        CURRENT_TIME("current_time"),
+        MODULE_ID("module_id"),
+        NEW_TIME("new_time"),
+        OLD_TIME("old_time"),
+        SEEK_TYPE("seek_type"),
+        REQUESTED_SKIP_INTERVAL("requested_skip_interval"),
+        FULLSCREEN("settings.video.fullscreen"),
+        LANGUAGE("language"),
 
-        String CONNECTION_TYPE = "connection_type";
-        String CONNECTION_SPEED = "connection_speed";
+        // Course
+        BLOCK_ID("block_id"),
+        COURSE_SECTION("course_section"),
+        COURSE_SUBSECTION("course_subsection"),
 
-        String TYPE = "type";
-        String CATEGORY = "category";
-        String LABEL = "label";
-        String ACTION = "action";
-        String SEARCH_STRING = "search_string";
-        String TOPIC_ID = "topic_id";
-        String THREAD_ID = "thread_id";
-        String RESPONSE_ID = "response_id";
+        // Discussions
+        SEARCH_STRING("search_string"),
+        RESPONSE_ID("response_id"),
+        THREAD_ID("thread_id"),
+        TOPIC_ID("topic_id"),
 
-        String COMPONENT_VIEWED = "Component Viewed";
+        // Google Analytics
+        CATEGORY("category"),
+        LABEL("label"),
+
+        // Login/Register
+        METHOD("method"),
+
+        // Other
+
+        ACTION("action"),
+
+        OPEN_BROWSER("open_in_browser_url"),
+
+        NO_OF_VIDEOS("number_of_videos"),
+        TARGET_URL("target_url"),
+        URL("url"),
+        CONTEXT("context"),
+        DATA("data"),
+        APP("app_name"),
+        EMAIL_OPT_IN("email_opt_in"),
+        PROVIDER("provider"),
+        SUPPORTED("supported"),
+        CONNECTION_TYPE("connection_type"),
+        CONNECTION_SPEED("connection_speed"),
+        TYPE("type"),
+
+
+        COMPONENT_VIEWED("Component Viewed");
+
+        private String value;
+
+        Keys(String aValue) {
+            value=aValue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
     }
 
     interface Values {

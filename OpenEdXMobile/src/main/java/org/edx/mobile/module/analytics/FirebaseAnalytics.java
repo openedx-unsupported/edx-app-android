@@ -42,9 +42,9 @@ public class FirebaseAnalytics implements Analytics {
     private void logEvent(@NonNull String eventName, @NonNull Bundle eventBundle){
         List<String> pNamesList = Arrays.asList("name", "course_id", "module_id", "action", "topic_id", "thread_id", "response_id", "search_string", "method", "current_time", "language", "component", "device_orientation", "code", "app_name");
 
+
         String csv = eventName;
 
-        int idx = 0;
         for (String pName : pNamesList) {
             if (eventBundle.get(pName) != null) {
                 csv += "," + pName + "," + eventBundle.get(pName);
@@ -53,7 +53,7 @@ public class FirebaseAnalytics implements Analytics {
             }
         }
 
-        Log.d(, csv);
+        Log.d(FirebaseAnalytics.class.getName(), csv);
         tracker.logEvent(eventName, eventBundle);
     }
 
@@ -71,7 +71,7 @@ public class FirebaseAnalytics implements Analytics {
                                 @Nullable Map<String, String> values) {
         final FirebaseEvent event = new FirebaseEvent(screenName);
         if (!TextUtils.isEmpty(action)) {
-            event.putString(Keys.ACTION, action);
+            event.putString(Keys.ACTION.getValue(), action);
         }
         if (!TextUtils.isEmpty(courseId)) {
             event.putCourseId(courseId);
@@ -127,10 +127,10 @@ public class FirebaseAnalytics implements Analytics {
         newTime = JavaUtil.formatDoubleValue(newTime, 3);
         Double skipInterval = newTime - oldTime;
         skipInterval = JavaUtil.formatDoubleValue(skipInterval, 3);
-        event.putDouble(Keys.OLD_TIME, oldTime);
-        event.putDouble(Keys.NEW_TIME, newTime);
+        event.putDouble(Keys.OLD_TIME.getValue(), oldTime);
+        event.putDouble(Keys.NEW_TIME.getValue(), newTime);
         if (skipSeek) {
-            event.putString(Keys.SEEK_TYPE, Values.SKIP);
+            event.putString(Keys.SEEK_TYPE.getValue(), Values.SKIP);
         } else {
             event.putString(Keys.SEEK_TYPE, Values.SLIDE);
         }
