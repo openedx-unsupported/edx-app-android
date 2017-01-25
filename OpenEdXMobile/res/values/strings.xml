@@ -152,7 +152,7 @@
 
     <!-- My Courses -->
     <!-- Row of course on dashboard screen -->
-    <string name="courseware_title">Courseware</string>
+    <string name="courseware_title">Course</string>
     <!-- Row of course on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="courseware_subtitle">Access videos and assignments</string>
@@ -192,7 +192,7 @@
     <!-- Button for last accessed course section. Will be followed by course name -->
     <string name="last_accessed">Last Accessed</string>
     <!-- Label shown when no courseware content is available -->
-    <string name="no_chapter_text">No courseware is currently available.</string>
+    <string name="no_chapter_text">No course content is currently available.</string>
     <!-- Label shown when user is enrolled in no courses -->
     <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
     <!-- Label shown when no announcements are available for a course -->
