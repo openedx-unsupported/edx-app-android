@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Switch;
 
 import org.edx.mobile.R;
@@ -19,6 +24,7 @@ import org.edx.mobile.core.EdxEnvironment;
 import org.edx.mobile.view.SplashActivity;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,7 +63,7 @@ import static org.hamcrest.object.HasToString.hasToString;
  * Course discovery - Webview locks espresso
  * Course info - Webview locks espresso
  * Find Courses - Webview locks espresso
- *
+ * Video stopped - Need to let video play out
  */
 
 @RunWith(AndroidJUnit4.class)
@@ -72,20 +78,20 @@ public class TouchEachScreen {
     @Before
     public void setup() {
         // Ensure we are not logged in
-        final MainApplication application = MainApplication.instance();
-        environment = application.getInjector().getInstance(EdxEnvironment.class);
-        environment.getLoginPrefs().clear();
-        environment.getAnalyticsRegistry().resetIdentifyUser();
+//        final MainApplication application = MainApplication.instance();
+//        environment = application.getInjector().getInstance(EdxEnvironment.class);
+//        environment.getLoginPrefs().clear();
+//        environment.getAnalyticsRegistry().resetIdentifyUser();
 
         mActivityRule.launchActivity(new Intent());
     }
 
     @Test
     public void withNoTestAssertions_navigateToAllScreens() throws InterruptedException {
-        fromLaunchActivity_login();
-        fromMyCourses_navigateToAllSettingsScreens();
+//        fromLaunchActivity_login();
+//        fromMyCourses_navigateToAllSettingsScreens();
         fromMyCourses_navigateToAllCourseDashboardScreens();
-        fromMyCourses_navigateToAllProfileScreens();
+//        fromMyCourses_navigateToAllProfileScreens();
     }
 
     public void fromLaunchActivity_login() {
@@ -115,10 +121,10 @@ public class TouchEachScreen {
         DrawerActions.openDrawer(R.id.drawer_layout);
         onView(withId(R.id.drawer_option_my_courses)).perform(click());
         onView(withText(startsWith("Introduction to Clee"))).perform(click());
-        fromCourseDashboard_navigateToHandoutsAndAnnouncements();
-        fromCourseDashboard_navigateToAllDiscussionsScreens();
-        fromCourseDashboard_navigateToAllCertificateScreens();
-//        fromCourseDashboard_navigateToAllCoursewareScreens();
+//        fromCourseDashboard_navigateToHandoutsAndAnnouncements();
+//        fromCourseDashboard_navigateToAllDiscussionsScreens();
+//        fromCourseDashboard_navigateToAllCertificateScreens();
+        fromCourseDashboard_navigateToAllCoursewareScreens();
         pressBack();
     }
 
@@ -197,12 +203,46 @@ public class TouchEachScreen {
     public void fromCourseDashboard_navigateToAllCoursewareScreens() {
         onView(withText(startsWith("Courseware"))).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(1).onChildView(withId(R.id.bulk_download)).perform(click());
+        // Bulk Download Video
+        onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(1).onChildView(withId(R.id.bulk_download_layout)).perform(click());
+
+        // Select first subsection
         onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(1).perform(click());
 
-        onView(withId(R.id.bulk_download)).perform(click());
+        // Select first unit
+        onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(1).perform(click());
+        fromCourseUnitVideo_pushAllButtons();
+        pressBack();
 
+        // Select third subsection
+        onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(4).perform(click());
+
+        // Download single video
+        onData(anything()).inAdapterView(withId(R.id.outline_list)).atPosition(1).onChildView(withId(R.id.bulk_download_layout)).perform(click());
         pressBack();
     }
 
+    public void fromCourseUnitVideo_pushAllButtons(){
+        waitFor(500);
+        onView(withId(R.id.player_container)).perform(click());
+        onView(withId(R.id.pause)).perform(click());
+        waitFor(1000);
+        onView(withId(R.id.settings)).perform(click());
+        waitFor(1500);
+        onView(withText("Closed Captions")).perform(click());
+        onView(withText("English")).perform(click());
+        waitFor(1000);
+        onView(withId(R.id.player_container)).perform(click());
+        waitFor(500);
+        onView(withId(R.id.fullscreen)).perform(click());
+        pressBack();
+    }
+
+    public void waitFor(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
