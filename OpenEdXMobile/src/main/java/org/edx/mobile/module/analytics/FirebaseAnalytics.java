@@ -13,6 +13,8 @@ import com.google.inject.Singleton;
 import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
 
+import java.lang.reflect.Field;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.edx.mobile.module.analytics.Analytics.Util.getShareTypeValue;
@@ -34,10 +36,26 @@ public class FirebaseAnalytics implements Analytics {
      * This function is used to send the event to Firebase and log the output.
      */
     private void logFirebaseEvent(@NonNull String eventName, @NonNull Bundle eventBundle) {
+
         String csv = eventName;
-        for (String pName : eventBundle.keySet()) {
+
+        String other = "";
+
+        Field[] interfaceFields=Keys.class.getFields();
+        for(Field f:interfaceFields) {
+            String pName = null;
+            try {
+                pName = f.get(f.getName()).toString().replaceAll("[:\\-\\s]+", "_");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
             csv += "," + pName + "," + eventBundle.get(pName);
+
+            other += "'" + pName + "', ";
         }
+        Log.d(FirebaseAnalytics.class.getName(), other );
+
         Log.d(FirebaseAnalytics.class.getName(), csv);
         tracker.logEvent(eventName, eventBundle);
     }
