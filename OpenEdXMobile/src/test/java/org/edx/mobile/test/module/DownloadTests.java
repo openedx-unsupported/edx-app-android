@@ -62,9 +62,9 @@ public class DownloadTests extends BaseTestCase {
         print( "averageProgress=" + averageProgress);
 
         // test remove downloads
-        boolean removed = dm.removeDownload(dmid);
+        boolean removed = dm.removeDownloads(dmid) > 0;
         assertTrue("failed to remove dmid: " + dmid, removed);
-        removed = dm.removeDownload(dmid2);
+        removed = dm.removeDownloads(dmid2) > 0;
         assertTrue("failed to remove dmid: " + dmid2, removed);
         model = dm.getDownload(dmid);
         assertNull("download not removed, dmid: " +dmid, model);

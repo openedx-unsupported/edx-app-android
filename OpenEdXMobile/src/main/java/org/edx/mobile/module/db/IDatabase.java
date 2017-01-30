@@ -278,6 +278,19 @@ public interface IDatabase {
      */
     Integer deleteVideoByVideoId(VideoModel de, DataCallback<Integer> callback);
 
+    /**
+     * Marks given Video as online and sets dmid to -1 so that this video is identified as
+     * NOT_DOWNLOADED. File path for this video is made empty so as to avoid access to non-existing
+     * file.
+     * NOTE: If there are multiple videos with same URL that are marked as Downloaded,
+     * Only the reference should be removed and not the downloaded file
+     *
+     * @param video    - IVideoModel object
+     * @param callback
+     * @param username
+     * @return - the row ID of the newly inserted row, or -1 if an error occurred
+     */
+    Integer deleteVideoByVideoId(VideoModel video, DataCallback<Integer> callback, String username);
 
     /**
      * Returns if a IVideoModel with the same video URL is downloaded

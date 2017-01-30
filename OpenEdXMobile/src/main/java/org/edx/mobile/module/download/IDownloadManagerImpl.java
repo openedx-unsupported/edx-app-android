@@ -108,13 +108,12 @@ public class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public synchronized boolean removeDownload(long dmid) {
+    public synchronized int removeDownloads(long... dmids) {
         //Need to check first if the download manager service is enabled
-        if(isDownloadManagerEnabled()){
-            int count = dm.remove(dmid);
-            return (count == 1);
+        if (isDownloadManagerEnabled()) {
+            return dm.remove(dmids);
         }
-        return false;
+        return 0;
     }
 
     @Override
