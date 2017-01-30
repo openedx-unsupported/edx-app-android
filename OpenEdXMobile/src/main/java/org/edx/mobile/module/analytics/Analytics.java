@@ -378,9 +378,9 @@ public interface Analytics {
         String PROFILE_VIEW = "Profile View";
         String PROFILE_EDIT = "Profile Edit";
         String PROFILE_CROP_PHOTO = "Crop Photo";
-        String PROFILE_CHOOSE_BIRTH_YEAR = "Choose Form Value Birth Year";
+        String PROFILE_CHOOSE_BIRTH_YEAR = "Choose Form Value Birth year";
         String PROFILE_CHOOSE_LOCATION = "Choose Form Value Location";
-        String PROFILE_CHOOSE_LANGUAGE = "Choose Form Value Primary Language";
+        String PROFILE_CHOOSE_LANGUAGE = "Choose Form Value Primary language";
         String PROFILE_EDIT_TEXT_VALUE = "Edit Text Form Value";
     }
 
