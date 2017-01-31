@@ -14,6 +14,8 @@ import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -50,9 +52,30 @@ public class FirebaseAnalytics implements Analytics {
                 e.printStackTrace();
             }
 
-            csv += "," + pName + "," + eventBundle.get(pName);
+            List<String> stringList = new ArrayList<>();
+            stringList.add("category");
+            stringList.add("email_opt_in");
+            stringList.add("label");
+            stringList.add("Component_Viewed");
+            stringList.add("connection_type");
+            stringList.add("connection_speed");
+            stringList.add("cell_carrier");
+            stringList.add("cell_zero_rated");
+            stringList.add("target_url");
+            stringList.add("url");
+            stringList.add("provider");
+            stringList.add("data");
+            stringList.add("context");
+            stringList.add("open_in_browser_url");
+            stringList.add("supported");
 
-            other += "'" + pName + "', ";
+
+
+            if (!stringList.contains(pName)) {
+                csv += "," + pName + "," + eventBundle.get(pName);
+                other += pName + ",";
+            }
+
         }
         Log.d(FirebaseAnalytics.class.getName(), other );
 
