@@ -20,6 +20,7 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.event.AppUpdatedEvent;
 import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
@@ -117,10 +118,7 @@ public abstract class MainApplication extends MultiDexApplication {
             com.facebook.Settings.setApplicationId(config.getFacebookConfig().getFacebookAppId());
         }
 
-        if (needVersionUpgrade(this)) {
-            // try repair of download data if app version is updated
-            injector.getInstance(IStorage.class).repairDownloadCompletionData();
-        }
+        checkIfAppVersionUpgraded(this);
 
         // Register Font Awesome module in android-iconify library
         Iconify.with(new FontAwesomeModule());
@@ -132,16 +130,34 @@ public abstract class MainApplication extends MultiDexApplication {
         );
     }
 
-    private boolean needVersionUpgrade(Context context) {
-        boolean needVersionUpgrade = false;
-        PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
-        Long previousVersion = pmanager.getAppVersionCode();
-        final int curVersion = BuildConfig.VERSION_CODE;
-        if (previousVersion < curVersion) {
-            needVersionUpgrade = true;
-            pmanager.setAppVersionCode(curVersion);
+    private void checkIfAppVersionUpgraded(Context context) {
+        PrefManager.AppInfoPrefManager prefManager = new PrefManager.AppInfoPrefManager(context);
+        long previousVersionCode = prefManager.getAppVersionCode();
+        final long curVersionCode = BuildConfig.VERSION_CODE;
+        if (previousVersionCode < 0) {
+            // App opened first time after installation
+            // Save version code and name in preferences
+            prefManager.setAppVersionCode(curVersionCode);
+            prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
+            logger.debug("App opened first time, VersionCode:"+curVersionCode);
+        } else if (previousVersionCode < curVersionCode) {
+            final String previousVersionName = prefManager.getAppVersionName();
+            // Update version code and name in preferences
+            prefManager.setAppVersionCode(curVersionCode);
+            prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
+            logger.debug("App updated, VersionCode:"+previousVersionCode+"->"+curVersionCode);
+            // App updated
+            onAppUpdated(previousVersionCode, curVersionCode, previousVersionName, BuildConfig.VERSION_NAME);
         }
-        return needVersionUpgrade;
+    }
+
+    private void onAppUpdated(final long previousVersionCode, final long curVersionCode,
+                             final String previousVersionName, final String curVersionName) {
+        // Try repair of download data on updating of app version
+        injector.getInstance(IStorage.class).repairDownloadCompletionData();
+        // Fire app updated event
+        EventBus.getDefault().postSticky(new AppUpdatedEvent(previousVersionCode, curVersionCode,
+                previousVersionName, curVersionName));
     }
 
     public static class CrashlyticsCrashReportObserver {
