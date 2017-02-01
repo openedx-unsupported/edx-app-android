@@ -82,7 +82,7 @@ public class JavaUtil {
      */
     @NonNull
     public static String truncateString(@NonNull String string, int maxChars) {
-        if (string.length() > maxChars) {
+        if (string != null && string.length() > maxChars) {
             string = string.substring(0, maxChars);
         }
         return string;
