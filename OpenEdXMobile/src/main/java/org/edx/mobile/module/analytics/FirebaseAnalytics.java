@@ -14,11 +14,13 @@ import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.google.common.base.Charsets.UTF_8;
 import static org.edx.mobile.module.analytics.Analytics.Util.getShareTypeValue;
 
 /**
@@ -39,47 +41,56 @@ public class FirebaseAnalytics implements Analytics {
      */
     private void logFirebaseEvent(@NonNull String eventName, @NonNull Bundle eventBundle) {
 
-        String csv = eventName;
+        String csv = "Event name," + eventName +",\n";
 
         String other = "";
+//
+//        Field[] interfaceFields=Keys.class.getFields();
+//        for(Field f:interfaceFields) {
+//            String pName = null;
+//            try {
+//                pName = f.get(f.getName()).toString().replaceAll("[:\\-\\s]+", "_");
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//
+//            List<String> stringList = new ArrayList<>();
+//            stringList.add("category");
+//            stringList.add("email_opt_in");
+//            stringList.add("label");
+//            stringList.add("Component_Viewed");
+//            stringList.add("connection_type");
+//            stringList.add("connection_speed");
+//            stringList.add("cell_carrier");
+//            stringList.add("cell_zero_rated");
+//            stringList.add("target_url");
+//            stringList.add("url");
+//            stringList.add("provider");
+//            stringList.add("data");
+//            stringList.add("context");
+//            stringList.add("open_in_browser_url");
+//            stringList.add("supported");
+//
+//
+//
+//            if (!stringList.contains(pName)) {
+//                csv += "," + pName + "," + eventBundle.get(pName);
+//                other += pName + ",";
+//            }
+//
+//        }
+//
+        csv += "Parameters,";
 
-        Field[] interfaceFields=Keys.class.getFields();
-        for(Field f:interfaceFields) {
-            String pName = null;
-            try {
-                pName = f.get(f.getName()).toString().replaceAll("[:\\-\\s]+", "_");
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-            List<String> stringList = new ArrayList<>();
-            stringList.add("category");
-            stringList.add("email_opt_in");
-            stringList.add("label");
-            stringList.add("Component_Viewed");
-            stringList.add("connection_type");
-            stringList.add("connection_speed");
-            stringList.add("cell_carrier");
-            stringList.add("cell_zero_rated");
-            stringList.add("target_url");
-            stringList.add("url");
-            stringList.add("provider");
-            stringList.add("data");
-            stringList.add("context");
-            stringList.add("open_in_browser_url");
-            stringList.add("supported");
-
-
-
-            if (!stringList.contains(pName)) {
-                csv += "," + pName + "," + eventBundle.get(pName);
-                other += pName + ",";
-            }
-
+        for (String key : eventBundle.keySet()) {
+            csv += "\"" + key + "\"=\"" + eventBundle.get(key) + "\",";
         }
-        Log.d(FirebaseAnalytics.class.getName(), other );
+        csv += "\nHow to Trigger,";
 
-        Log.d(FirebaseAnalytics.class.getName(), csv);
+//        Log.d(FirebaseAnalytics.class.getName(), other );
+
+        Log.d(FirebaseAnalytics.class.getName(), csv.substring(0, csv.lastIndexOf(",")));
+
         tracker.logEvent(eventName, eventBundle);
     }
 

@@ -14,6 +14,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -241,7 +242,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     boolean isRotationOn = DeviceSettingUtil.isDeviceRotationON(getActivity());
                     if ( !isRotationOn && isLastRotationOn) {
                         // rotation just got turned OFF, so exit fullscreen
-                        exitFullScreen();
+                        exitFullScreen(false);
                     }
                     isLastRotationOn = isRotationOn;
                 }
@@ -289,7 +290,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 logger.debug("Locking to portrait as Device Screen Rotation is OFF");
                 // lock to portrait
                 if ( !isManualFullscreen) {
-                    exitFullScreen();
+                    exitFullScreen(false);
                 } else {
                     logger.debug("You are in manual fullscreen mode");
                 }
@@ -497,7 +498,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         isPrepared = false;
         // block to portrait while preparing
         if ( !isScreenLandscape()) {
-            exitFullScreen();
+            exitFullScreen(false);
         }
 
         // reset the player, so that pending play requests will be cancelled
@@ -861,16 +862,16 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (isPrepared) {
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
-                enterFullScreen();
+                enterFullScreen(true);
             } else {
-                exitFullScreen();
+                exitFullScreen(true);
             }
         } else {
             logger.debug("Player not prepared ?? full screen will NOT work!");
         }
     }
 
-    private void enterFullScreen() {
+    private void enterFullScreen(@NonNull Boolean toggleClicked) {
         try {
             if (getActivity() != null) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -889,16 +890,18 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     return;
                 }
 
-                environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
-                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                        true, videoEntry.eid, videoEntry.lmsUrl);
+                if (toggleClicked) {
+                    environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
+                            player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                            true, videoEntry.eid, videoEntry.lmsUrl);
+                }
             }
         } catch(Exception ex) {
             logger.error(ex);
         }
     }
 
-    private void exitFullScreen() {
+    private void exitFullScreen(@NonNull Boolean toggleClicked) {
         try {
             if (getActivity() != null) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -917,9 +920,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     return;
                 }
 
-                environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
-                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                        false, videoEntry.eid, videoEntry.lmsUrl);
+                if (toggleClicked) {
+                    environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
+                            player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                            false, videoEntry.eid, videoEntry.lmsUrl);
+                }
             }
         } catch(Exception ex) {
             logger.error(ex);
@@ -1044,9 +1049,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     public void lockOrientation() {
         orientationLocked = true;
         if (isScreenLandscape()) {
-            enterFullScreen();
+            enterFullScreen(false);
         } else {
-            exitFullScreen();
+            exitFullScreen(false);
         }
     }
 
