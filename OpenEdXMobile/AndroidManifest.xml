@@ -239,6 +239,7 @@
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

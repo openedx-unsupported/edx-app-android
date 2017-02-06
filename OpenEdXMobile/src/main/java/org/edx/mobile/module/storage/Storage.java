@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,6 +31,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.Sha1Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -92,7 +94,7 @@ public class Storage implements IStorage {
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
             long dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
-                    downloadPreference);
+                    downloadPreference, model.getTitle());
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager
                 return -1;
@@ -131,7 +133,7 @@ public class Storage implements IStorage {
         if (count <= 1) {
             // if only one video exists, then mark it as DELETED
             // Also, remove its downloaded file
-            dm.removeDownload(model.getDmId());
+            dm.removeDownloads(model.getDmId());
             deleteFile(model.getFilePath());
         }
 
@@ -139,6 +141,38 @@ public class Storage implements IStorage {
         int videosDeleted = db.deleteVideoByVideoId(model, null);
         EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
         return videosDeleted;
+    }
+
+    public void removeAllDownloads() {
+        final String username = loginPrefs.getUsername();
+        final String sha1Username;
+        if (TextUtils.isEmpty(username)) {
+            return;
+        } else {
+            sha1Username = Sha1Util.SHA1(username);
+        }
+
+        // Get all on going downloads
+        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>(false) {
+            @Override
+            public void onResult(List<VideoModel> result) {
+                // Remove all downloads from db
+                long [] videoIds = new long[result.size()];
+                VideoModel model;
+                for (int i=0; i<result.size(); i++) {
+                    model = result.get(i);
+                    db.deleteVideoByVideoId(model, null, sha1Username);
+                    videoIds[i] = model.getDmId();
+                }
+                // Remove all downloads from NativeDownloadManager
+                dm.removeDownloads(videoIds);
+                EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+            }
+
+            @Override
+            public void onFail(Exception ex) {
+            }
+        });
     }
 
     /**

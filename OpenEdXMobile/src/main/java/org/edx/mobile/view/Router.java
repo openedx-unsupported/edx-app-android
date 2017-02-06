@@ -22,6 +22,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SecurityUtil;
@@ -53,10 +54,19 @@ public class Router {
     private LoginAPI loginAPI;
     @Inject
     private LoginPrefs loginPrefs;
+    @Inject
+    private IStorage storage;
 
     public void showDownloads(Activity sourceActivity) {
         Intent downloadIntent = new Intent(sourceActivity, DownloadListActivity.class);
         sourceActivity.startActivity(downloadIntent);
+    }
+
+    public void showDownloads(Context context) {
+        Intent downloadIntent = new Intent(context, DownloadListActivity.class);
+        downloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        context.startActivity(downloadIntent);
     }
 
     public void showCourseInfo(Activity sourceActivity, String pathId) {
@@ -299,6 +309,8 @@ public class Router {
      * @see #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void performManualLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
+        // Remove all ongoing downloads first which requires username
+        storage.removeAllDownloads();
         loginAPI.logOut();
         forceLogout(context, analyticsRegistry, delegate);
         SecurityUtil.clearUserData(context);

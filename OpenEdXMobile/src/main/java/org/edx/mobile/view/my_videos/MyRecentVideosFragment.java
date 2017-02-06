@@ -494,8 +494,8 @@ public class MyRecentVideosFragment extends BaseFragment
         if (list != null) {
             for (SectionItemInterface section : list) {
                 if (section.isDownload()) {
-                    // TODO The removeDownload() triggers a callback upon video deletion.
-                    // Would be better if removeDownload() could take a list of videos to delete.
+                    // TODO The removeDownloads() triggers a callback upon video deletion.
+                    // Would be better if removeDownloads() could take a list of videos to delete.
                     DownloadEntry de = (DownloadEntry) section;
                     environment.getStorage().removeDownload(de);
                     deletedVideoCount++;

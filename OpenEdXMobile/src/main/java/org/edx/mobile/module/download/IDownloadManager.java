@@ -21,19 +21,21 @@ public interface IDownloadManager {
      * @param destFolder
      * @param url
      * @param wifiOnly
+     * @param title of video
      * @return
      */
-    long addDownload(File destFolder, String url, boolean wifiOnly);
-    
+    long addDownload(File destFolder, String url, boolean wifiOnly, String title);
+
     /**
-     * Removes download by given dmid. Returns true if download is cancelled 
-     * and removed successfully, false otherwise.
-     * Physical file, if it was partially or completely downloaded, is also removed. 
-     * @param dmid
-     * @return
+     * Cancel downloads and remove them from the download manager.  Each download will be stopped if
+     * it was running, and it will no longer be accessible through the download manager.
+     * If there is a downloaded file, partial or complete, it is deleted.
+     *
+     * @param dmids The IDs of the downloads to remove.
+     * @return The number of downloads actually removed.
      */
-    boolean removeDownload(long dmid);
-    
+    int removeDownloads(long... dmids);
+
     /**
      * Returns progress of download for given dmid.
      * Returns 0 (zero) if the download has not yet been started.

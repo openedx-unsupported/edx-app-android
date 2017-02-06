@@ -38,8 +38,8 @@ public class DownloadTests extends BaseTestCase {
         String url = "https://s3.amazonaws.com/edx-course-videos/edx-edx101/EDXSPCPJSP13-H010000_100.mp4";
 
         // test add new download
-        long dmid = dm.addDownload(dir, url, true);
-        long dmid2 = dm.addDownload(dir, url, false);
+        long dmid = dm.addDownload(dir, url, true, "Video 1 title");
+        long dmid2 = dm.addDownload(dir, url, false, "Video 2 title");
         assertTrue("invalid dmid=" + dmid, dmid > 0);
         assertTrue("invalid dmid2=" + dmid2, dmid2 > 0);
         print( "new download dmid: " + dmid);
@@ -62,9 +62,9 @@ public class DownloadTests extends BaseTestCase {
         print( "averageProgress=" + averageProgress);
 
         // test remove downloads
-        boolean removed = dm.removeDownload(dmid);
+        boolean removed = dm.removeDownloads(dmid) > 0;
         assertTrue("failed to remove dmid: " + dmid, removed);
-        removed = dm.removeDownload(dmid2);
+        removed = dm.removeDownloads(dmid2) > 0;
         assertTrue("failed to remove dmid: " + dmid2, removed);
         model = dm.getDownload(dmid);
         assertNull("download not removed, dmid: " +dmid, model);

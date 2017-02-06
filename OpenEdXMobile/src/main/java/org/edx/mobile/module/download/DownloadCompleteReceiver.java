@@ -22,49 +22,57 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
     @Inject
     private IEdxEnvironment environment;
 
-
     @Override
-    protected void handleReceive(final Context context, Intent data){
-        try {
-            if (data != null && data.hasExtra(DownloadManager.EXTRA_DOWNLOAD_ID)) {
-                long id = data.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                if (id != -1) {
-                    logger.debug("Received download notification for id: " + id);
+    protected void handleReceive(final Context context, final Intent data) {
+        if (data != null && data.getAction() != null) {
+            switch (data.getAction()) {
+                case DownloadManager.ACTION_DOWNLOAD_COMPLETE:
+                    handleDownloadCompleteIntent(data);
+                    break;
+                case DownloadManager.ACTION_NOTIFICATION_CLICKED:
+                    // Open downloads activity
+                    environment.getRouter().showDownloads(context);
+                    break;
+            }
+        }
+    }
 
-                    // check if download was SUCCESSFUL
-                    NativeDownloadModel nm = environment.getDownloadManager().getDownload(id);
+    private void handleDownloadCompleteIntent(final Intent data) {
+        if (data.hasExtra(DownloadManager.EXTRA_DOWNLOAD_ID)) {
+            long id = data.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            if (id != -1) {
+                logger.debug("Received download notification for id: " + id);
 
-                    if (nm == null || nm.status != DownloadManager.STATUS_SUCCESSFUL) {
-                        logger.debug("Download seems failed or cancelled for id : " + id);
-                        return;
-                    } else {
-                        logger.debug("Download successful for id : " + id);
+                // check if download was SUCCESSFUL
+                NativeDownloadModel nm = environment.getDownloadManager().getDownload(id);
+
+                if (nm == null || nm.status != DownloadManager.STATUS_SUCCESSFUL) {
+                    logger.debug("Download seems failed or cancelled for id : " + id);
+                    return;
+                } else {
+                    logger.debug("Download successful for id : " + id);
+                }
+
+                // mark download as completed
+                environment.getStorage().markDownloadAsComplete(id, new DataCallback<VideoModel>() {
+                    @Override
+                    public void onResult(VideoModel result) {
+                        if (result != null) {
+                            DownloadEntry download = (DownloadEntry) result;
+
+                            AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
+                            analyticsRegistry.trackDownloadComplete(download.videoId, download.eid,
+                                    download.lmsUrl);
+                        }
                     }
 
-                    // mark download as completed
-                    environment.getStorage().markDownloadAsComplete(id, new DataCallback<VideoModel>() {
-                        @Override
-                        public void onResult(VideoModel result) {
-                            if(result!=null){
-                                DownloadEntry download = (DownloadEntry) result;
-
-                                AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
-                                analyticsRegistry.trackDownloadComplete(download.videoId, download.eid,
-                                        download.lmsUrl);
-                            }
-                        }
-
-                        @Override
-                        public void onFail(Exception ex) {
-                            logger.error(ex);
-                        }
-                    });
-                }
+                    @Override
+                    public void onFail(Exception ex) {
+                        logger.error(ex);
+                    }
+                });
             }
-        } catch(Exception ex) {
-            logger.error(ex);
         }
-
     }
 
 }

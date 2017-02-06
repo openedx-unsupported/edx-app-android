@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -101,6 +102,31 @@ public class DownloadListActivity extends BaseFragmentActivity {
         super.onPause();
         observable.setObserver(null);
         handler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // If this activity was opened from notification
+                if (isTaskRoot()) {
+                    finish();
+                    environment.getRouter().showSplashScreen(this);
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // If this activity was opened from notification
+        if (isTaskRoot()) {
+            finish();
+            environment.getRouter().showSplashScreen(this);
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
