@@ -191,6 +191,13 @@ dependencies {
     // For the optional Nullable annotation
     compile 'com.android.support:support-annotations:25.3.1'
 
+    // Firebase
+    compile 'com.google.firebase:firebase-messaging:9.4.0'
+    compile 'com.google.firebase:firebase-core:9.4.0'
+
+    // Volley
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+
     // test project configuration
     testCompile 'junit:junit:4.12'
     testCompile ("org.mockito:mockito-core:1.10.19"){
@@ -374,6 +381,10 @@ android {
             if (project.hasProperty('APPLICATION_ID')) {
                 applicationId APPLICATION_ID
             }
+            if (project.hasProperty('VERSION_CODE')) {
+                versionCode VERSION_CODE.toInteger()
+                versionName VERSION_NAME
+            }
         }
         dev {
             minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
@@ -443,3 +454,5 @@ screenshots {
     testApkTarget = 'packageProdDebuggableAndroidTest'
     connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
 }
+
+apply plugin: 'com.google.gms.google-services'

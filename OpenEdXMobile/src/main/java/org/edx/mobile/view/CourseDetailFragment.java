@@ -86,6 +86,7 @@ public class CourseDetailFragment extends BaseFragment {
 
     private Button mEnrollButton;
     private boolean mEnrolled = false;
+    private boolean mInvitationOnly = false;
 
     boolean emailOptIn = true;
 
@@ -317,6 +318,7 @@ public class CourseDetailFragment extends BaseFragment {
             mEnrollButton.setText(R.string.view_course_button_text);
         } else if (courseDetail.invitation_only != null && courseDetail.invitation_only) {
             mEnrollButton.setText(R.string.invitation_only_button_text);
+            mEnrollButton.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_light));
             mEnrollButton.setEnabled(false);
         } else {
             mEnrollButton.setText(R.string.enroll_now_button_text);
