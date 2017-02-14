@@ -58,7 +58,7 @@
                         android:paddingLeft="44dp"
                         android:paddingRight="44dp">
 
-                        <android.support.design.widget.TextInputLayout
+                        <org.edx.mobile.view.custom.EdxTextInputLayout
                             android:id="@+id/usernameWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -76,9 +76,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
 
-                        </android.support.design.widget.TextInputLayout>
+                        </org.edx.mobile.view.custom.EdxTextInputLayout>
 
-                        <android.support.design.widget.TextInputLayout
+                        <org.edx.mobile.view.custom.EdxTextInputLayout
                             android:id="@+id/passwordWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
 
-                        </android.support.design.widget.TextInputLayout>
+                        </org.edx.mobile.view.custom.EdxTextInputLayout>
 
                         <TextView
                             android:id="@+id/forgot_password_tv"

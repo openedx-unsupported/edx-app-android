@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/registration_field_vertical_padding"
     android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
+    <org.edx.mobile.view.custom.EdxTextInputLayout
         android:id="@+id/register_edit_text_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
             android:id="@+id/register_edit_text_tilEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </android.support.design.widget.TextInputLayout>
+    </org.edx.mobile.view.custom.EdxTextInputLayout>
 
     <TextView
         android:id="@+id/input_instructions"
