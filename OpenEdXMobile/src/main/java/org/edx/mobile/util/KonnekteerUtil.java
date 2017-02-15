@@ -55,9 +55,7 @@ public class KonnekteerUtil {
                 @Override
                 protected Map<String, String> getParams() {
 
-                    SharedPreferences shared = context.getSharedPreferences("pushnotifications", 0);
-                    String token = shared.getString("token", "");
-
+                    String token = FirebaseInstanceId.getInstance().getToken();
                     String orgCode = environment.getConfig().getPushNotificationsConfig().getmKonnekteerOrgCode();
                     String apiKey = environment.getConfig().getPushNotificationsConfig().getmKonnekteerApiKey();
 
@@ -106,9 +104,7 @@ public class KonnekteerUtil {
                         params.put(KEY_TOPIC_TYPE, "organization");
                     }
 
-                    SharedPreferences shared = context.getSharedPreferences("pushnotifications", 0);
-                    String token = shared.getString("token", "");
-
+                    String token = FirebaseInstanceId.getInstance().getToken();
                     String apiKey = environment.getConfig().getPushNotificationsConfig().getmKonnekteerApiKey();
                     String username = environment.getLoginPrefs().getUsername();
                     String email = environment.getLoginPrefs().getLastAuthenticatedEmail();
