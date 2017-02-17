@@ -32,6 +32,7 @@ import org.edx.mobile.task.RestoreVideosCacheDataTask;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -257,7 +258,8 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
         footer.courseNotListedTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getRouter().showWebViewActivity((getActivity()), getString(R.string.course_not_listed_file_name), null);
+                AlertDialogFragment.newInstance(null, getString(R.string.cant_find_course_prompt), null)
+                        .show(getFragmentManager(), null);
             }
         });
     }
