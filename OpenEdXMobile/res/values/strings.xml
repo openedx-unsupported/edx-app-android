@@ -450,6 +450,8 @@
     <string name="email_client_not_present">No e-mail clients installed</string>
     <!-- Search for a course prompt -->
     <string name="search_for_courses">I want to learn about...</string>
+    <!-- A prompt message telling user that we're working hard to make courses mobile-friendly -->
+    <string name="cant_find_course_prompt">We’re working hard to make all of our courses mobile-friendly. If you can’t find a course, check back soon. We’re adding more courses every day!</string>
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->
