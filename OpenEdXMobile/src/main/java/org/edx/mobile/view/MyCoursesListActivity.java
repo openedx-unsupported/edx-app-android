@@ -16,7 +16,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.util.AppUpdateUtils;
+import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
 
 import java.util.ArrayList;
@@ -123,9 +123,9 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
             final Snackbar snackbar = Snackbar.make(coordinatorLayout,
                     newVersionAvailableEvent.getNotificationString(this),
                     Snackbar.LENGTH_INDEFINITE);
-            if (AppUpdateUtils.canUpdate(this)) {
+            if (AppStoreUtils.canUpdate(this)) {
                 snackbar.setAction(R.string.app_version_update_button,
-                        AppUpdateUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER);
+                        AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER);
             }
             snackbar.setCallback(new Snackbar.Callback() {
                         @Override

@@ -31,7 +31,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.user.UserService;
-import org.edx.mobile.util.AppUpdateUtils;
+import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -87,6 +87,6 @@ public class EdxDefaultModule extends AbstractModule {
         bind(IStorage.class).to(Storage.class);
 
         requestStaticInjection(CallUtil.class, BrowserUtil.class, MediaConsentUtils.class,
-                DiscussionTextUtils.class, AppUpdateUtils.class);
+                DiscussionTextUtils.class, AppStoreUtils.class);
     }
 }

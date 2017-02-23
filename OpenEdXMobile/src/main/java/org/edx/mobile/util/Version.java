@@ -142,4 +142,20 @@ public class Version implements Comparable<Version> {
             super("Token couldn't be parsed as a valid number.", location);
         }
     }
+
+    /**
+     * Compares this version with the specified version, to determine if minor versions'
+     * difference between both is greater than or equal to the specified value.
+     *
+     * @param otherVersion      The version to compare to this instance.
+     * @param minorVersionsDiff Value difference to compare between versions.
+     * @return {@code true} if difference is greater than or equal to the specified value,
+     * {@code false} otherwise.
+     */
+    public boolean isNMinorVersionsDiff(@NonNull Version otherVersion,
+                                        int minorVersionsDiff) {
+        // Difference in major version is consider to be valid for any minor versions difference
+        return Math.abs(this.getMajorVersion() - otherVersion.getMajorVersion()) >= 1 ||
+                Math.abs(this.getMinorVersion() - otherVersion.getMinorVersion()) >= minorVersionsDiff;
+    }
 }

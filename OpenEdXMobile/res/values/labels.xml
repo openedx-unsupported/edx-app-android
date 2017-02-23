@@ -30,4 +30,12 @@
     <string name="label_close">Close</string>
     <!-- Alert dialog continue confirmation button -->
     <string name="label_continue">Continue</string>
+    <!-- Alert dialog submit button -->
+    <string name="label_submit">Submit</string>
+    <!-- Alert dialog send feedback button -->
+    <string name="label_send_feedback">Send Feedback</string>
+    <!-- Alert dialog maybe later button -->
+    <string name="label_maybe_later">Maybe Later</string>
+    <!-- Alert dialog rate the app button -->
+    <string name="label_rate_the_app">Rate The App</string>
 </resources>

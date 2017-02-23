@@ -208,6 +208,22 @@ public class PrefManager {
         public void setIsVideosCacheRestored(boolean restored) {
             super.put(Key.VIDEOS_CACHE_RESTORED, restored);
         }
+
+        public float getAppRating() {
+            return getFloat(Key.APP_RATING);
+        }
+
+        public void setAppRating(float appRating) {
+            super.put(Key.APP_RATING, appRating);
+        }
+
+        public String getLastRatedVersion() {
+            return getString(Key.LAST_RATED_VERSION);
+        }
+
+        public void setLastRatedVersion(String versionName) {
+            super.put(Key.LAST_RATED_VERSION, versionName);
+        }
     }
 
     /**
@@ -265,7 +281,10 @@ public class PrefManager {
          */
         public static final String VIDEOS_CACHE_RESTORED = "VideosCacheRestored";
 
-
+        // Preference to save user app rating
+        public static final String APP_RATING = "APP_RATING";
+        // Preference to save app version when user rated last time
+        public static final String LAST_RATED_VERSION = "LAST_RATED_VERSION";
     }
 
     public static final class Value {

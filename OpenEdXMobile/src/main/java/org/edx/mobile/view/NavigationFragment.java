@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,7 +39,6 @@ import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
@@ -216,15 +214,7 @@ public class NavigationFragment extends BaseFragment {
         drawerNavigationBinding.drawerOptionSubmitFeedback.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String to = environment.getConfig().getFeedbackEmailAddress();
-                String subject = getString(R.string.email_subject);
-
-                String osVersionText = String.format("%s %s", getString(R.string.android_os_version), android.os.Build.VERSION.RELEASE);
-                String appVersionText = String.format("%s %s", getString(R.string.app_version), BuildConfig.VERSION_NAME);
-                String deviceModelText = String.format("%s %s", getString(R.string.android_device_model), Build.MODEL);
-                String feedbackText = getString(R.string.insert_feedback);
-                String body = osVersionText + "\n" + appVersionText + "\n" + deviceModelText + "\n\n" + feedbackText;
-                EmailUtil.openEmailClient(getActivity(), to, subject, body, environment.getConfig());
+                environment.getRouter().showFeedbackScreen(getActivity(), getString(R.string.email_subject));
             }
         });
 

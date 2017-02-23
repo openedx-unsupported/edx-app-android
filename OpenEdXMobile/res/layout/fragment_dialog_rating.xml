@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dialog_padding_material"
+        android:paddingRight="@dimen/dialog_padding_material"
+        android:paddingTop="@dimen/dialog_padding_top_material">
+
+        <TextView
+            android:id="@+id/tv_description"
+            style="@style/regular_grey_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rating_dialog_message"
+            android:textSize="@dimen/edx_large" />
+
+        <org.edx.mobile.view.custom.EdxRatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_padding_material"
+            android:numStars="5"
+            android:stepSize="1.0" />
+
+    </LinearLayout>
+</layout>

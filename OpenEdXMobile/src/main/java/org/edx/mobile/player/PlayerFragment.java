@@ -38,8 +38,10 @@ import android.widget.TextView;
 import com.facebook.widget.FacebookDialog;
 import com.google.inject.Inject;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.logger.Logger;
@@ -48,6 +50,7 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
@@ -55,12 +58,15 @@ import org.edx.mobile.util.ListUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.Version;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
+import org.edx.mobile.view.dialog.RatingDialogFragment;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -854,6 +860,34 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }catch(Exception e){
             logger.error(e);
         }
+        if (!environment.getConfig().getAppStoreUris().isEmpty() &&
+                environment.getConfig().isAppReviewsEnabled() &&
+                NetworkUtil.isConnected(getContext())) {
+            final PrefManager.UserPrefManager userPrefs = new PrefManager.UserPrefManager(MainApplication.application);
+            final float appRating = userPrefs.getAppRating();
+            // If user has not given rating yet, open dialog
+            // consider not rated if rating is 0 or less (default is -1)
+            if (appRating <= AppConstants.APP_NOT_RATED_THRESHOLD) {
+                showRatingDialog();
+            } else if (appRating <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
+                try {
+                    final Version oldVersion = new Version(userPrefs.getLastRatedVersion());
+                    final Version curVersion = new Version(BuildConfig.VERSION_NAME);
+                    if (oldVersion.isNMinorVersionsDiff(curVersion, AppConstants.MINOR_VERSIONS_DIFF_REQUIRED_FOR_NEGATIVE_RATERS)) {
+                        // App updated to 2 minor versions
+                        showRatingDialog();
+                    }
+                } catch (ParseException e) {
+                    /** Build version number doesn't correspond to the schema, its a build
+                     configuration error **/
+                    logger.error(e, true);
+                }
+            }
+        }
+    }
+
+    public void showRatingDialog() {
+        RatingDialogFragment.newInstance().show(getFragmentManager(), null);
     }
 
     @Override

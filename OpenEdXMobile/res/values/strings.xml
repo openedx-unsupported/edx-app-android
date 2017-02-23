@@ -509,6 +509,8 @@
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
     <string name="email_subject">Customer Feedback</string>
+    <!--  Email subject line when a user attempts to submit a review using the app review workflow -->
+    <string name="review_email_subject">Customer Review</string>
     <!--  Submit Feedback app version text -->
     <string name="app_version">App Version: </string>
     <!--  Submit Feedback android version text -->
@@ -606,5 +608,14 @@
     <string name="share_accomplishment_button">Share your accomplishment</string>
     <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
     <string name="share_accomplishment_message">I just earned a badge on {platform_name}! Check it out: {badge_url}</string>
-
+    <!-- Question on the app rating dialog -->
+    <string name="rating_dialog_message">How would you rate the app?</string>
+    <!-- Dialog title for positive app review -->
+    <string name="rate_app_dialog_title">Rate the app</string>
+    <!-- Dialog message for positive app review -->
+    <string name="rate_app_dialog_message">Tell others what you think of the {platform_name} app by writing a quick review</string>
+    <!-- Dialog title for negative app review -->
+    <string name="feedback_dialog_title">Send Feedback?</string>
+    <!-- Dialog message for negative app review -->
+    <string name="feedback_dialog_message">Help us improve!</string>
 </resources>
