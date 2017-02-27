@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -17,19 +18,22 @@ import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginTask;
 import org.edx.mobile.databinding.ActivityLoginBinding;
-import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.dialog.ResetPasswordDialogFragment;
 import org.edx.mobile.view.login.LoginPresenter;
 
@@ -229,14 +233,14 @@ public class LoginActivity
 
                 @Override
                 public void onException(Exception ex) {
-                    if (ex instanceof AuthException) {
+                    if (ex instanceof HttpStatusException &&
+                            ((HttpStatusException) ex).getStatusCode() == HttpStatus.UNAUTHORIZED) {
                         onUserLoginFailure(new LoginException(new LoginErrorMessage(
                                 getString(R.string.login_error),
                                 getString(R.string.login_failed))), null, null);
                     } else {
-                        super.onException(ex);
+                        onUserLoginFailure(ex, null, null);
                     }
-                    tryToSetUIInteraction(true);
                 }
             };
             tryToSetUIInteraction(false);
@@ -293,17 +297,25 @@ public class LoginActivity
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
         tryToSetUIInteraction(true);
 
-
-        // handle if this is a LoginException
         if (ex != null && ex instanceof LoginException) {
-            LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
-
+            LoginErrorMessage errorMessage = (((LoginException) ex).getLoginErrorMessage());
             showAlertDialog(
-                    error.getMessageLine1(),
-                    (error.getMessageLine2() != null) ?
-                            error.getMessageLine2() : getString(R.string.login_failed));
+                    errorMessage.getMessageLine1(),
+                    (errorMessage.getMessageLine2() != null) ?
+                            errorMessage.getMessageLine2() : getString(R.string.login_failed));
+        } else if (ex != null && ex instanceof HttpStatusException &&
+                ((HttpStatusException) ex).getStatusCode() == HttpStatus.UPGRADE_REQUIRED) {
+            LoginActivity.this.showAlertDialog(null,
+                    getString(R.string.app_version_unsupported_login_msg),
+                    getString(R.string.label_update),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AppStoreUtils.openAppInAppStore(LoginActivity.this);
+                        }
+                    }, getString(android.R.string.cancel), null);
         } else {
-            showAlertDialog(getString(R.string.login_error), getString(R.string.error_unknown));
+            showAlertDialog(getString(R.string.login_error), ErrorUtils.getErrorMessage(ex, LoginActivity.this));
             logger.error(ex);
         }
     }

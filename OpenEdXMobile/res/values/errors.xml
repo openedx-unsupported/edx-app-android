@@ -70,8 +70,6 @@
     <string name="app_version_deprecated" translatable="false">@string/app_version_outdated</string>
     <!-- Snackbar notification shown when the current version of the app is outdated -->
     <string name="app_version_outdated">A new version of the app is available.</string>
-    <!-- Snackbar action button label for opening an app store to upgrade the app to the latest version -->
-    <string name="app_version_update_button">Update</string>
     <!-- Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated -->
@@ -93,5 +91,11 @@
 
     <!-- Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums -->
     <string name="action_not_completed">Your action could not be completed.</string>
+
+    <!-- Error dialog message shown when the user try to log in in app with un-supported version  -->
+    <string name="app_version_unsupported_login_msg">Your version of the app is no longer supported. Update to the latest version to log in.</string>
+
+    <!-- Error dialog message shown when the user try to register in app with un-supported version -->
+    <string name="app_version_unsupported_register_msg">Your version of the app is no longer supported. Update to the latest version to register.</string>
 
 </resources>

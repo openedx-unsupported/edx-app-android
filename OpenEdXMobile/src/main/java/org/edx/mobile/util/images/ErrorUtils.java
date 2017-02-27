@@ -35,6 +35,9 @@ public enum ErrorUtils {
                 case HttpStatus.INTERNAL_SERVER_ERROR:
                     errorMessage = context.getString(R.string.action_not_completed);
                     break;
+                case HttpStatus.UPGRADE_REQUIRED:
+                    errorMessage = context.getString(R.string.app_version_unsupported);
+                    break;
             }
         }
         if (null == errorMessage) {

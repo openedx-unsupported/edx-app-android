@@ -564,6 +564,15 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
     }
 
+    public void showAlertDialog(@Nullable String title, @NonNull String message,
+                                @NonNull String  positiveButtonText,
+                                @Nullable DialogInterface.OnClickListener onPositiveClick,
+                                @Nullable String  negativeButtonText,
+                                @Nullable DialogInterface.OnClickListener onNegativeClick) {
+        AlertDialogFragment.newInstance(title, message, positiveButtonText, onPositiveClick, negativeButtonText, onNegativeClick)
+                .show(getSupportFragmentManager(), null);
+    }
+
     @Override
     public boolean tryToSetUIInteraction(boolean enable) {
         return false;

@@ -26,6 +26,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
@@ -41,6 +43,7 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
@@ -311,7 +314,21 @@ public class RegisterActivity extends BaseFragmentActivity
                         return; // Return here to avoid falling back to the generic error handler.
                     }
                 }
-                RegisterActivity.this.showAlertDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
+                // If app version is un-supported
+                if (ex instanceof HttpStatusException &&
+                        ((HttpStatusException) ex).getStatusCode() == HttpStatus.UPGRADE_REQUIRED) {
+                    RegisterActivity.this.showAlertDialog(null,
+                            getString(R.string.app_version_unsupported_register_msg),
+                            getString(R.string.label_update),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AppStoreUtils.openAppInAppStore(RegisterActivity.this);
+                                }
+                            }, getString(android.R.string.cancel), null);
+                } else {
+                    RegisterActivity.this.showAlertDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
+                }
             }
         };
         task.execute();
