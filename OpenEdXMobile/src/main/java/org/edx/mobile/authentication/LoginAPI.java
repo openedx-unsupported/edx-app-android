@@ -8,10 +8,9 @@ import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.constants.ApiConstants;
-import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
@@ -82,14 +81,10 @@ public class LoginAPI {
     public AuthResponse logInUsingEmail(@NonNull String email, @NonNull String password) throws Exception {
         final Response<AuthResponse> response = getAccessToken(email, password);
         if (!response.isSuccessful()) {
-            throw new AuthException(response.message());
+            throw new HttpStatusException(response);
         }
-        final AuthResponse data = response.body();
-        if (!data.isSuccess()) {
-            throw new AuthException(data.error);
-        }
-        finishLogIn(data, LoginPrefs.AuthBackend.PASSWORD, email.trim());
-        return data;
+        finishLogIn(response.body(), LoginPrefs.AuthBackend.PASSWORD, email.trim());
+        return response.body();
     }
 
     @NonNull

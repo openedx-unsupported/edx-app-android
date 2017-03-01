@@ -124,7 +124,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
                     newVersionAvailableEvent.getNotificationString(this),
                     Snackbar.LENGTH_INDEFINITE);
             if (AppStoreUtils.canUpdate(this)) {
-                snackbar.setAction(R.string.app_version_update_button,
+                snackbar.setAction(R.string.label_update,
                         AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER);
             }
             snackbar.setCallback(new Snackbar.Callback() {

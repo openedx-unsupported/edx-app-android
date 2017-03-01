@@ -38,4 +38,6 @@
     <string name="label_maybe_later">Maybe Later</string>
     <!-- Alert dialog rate the app button -->
     <string name="label_rate_the_app">Rate The App</string>
+    <!-- Alert dialog and snackbar button for opening an app store to update the app to the latest version -->
+    <string name="label_update">Update</string>
 </resources>
