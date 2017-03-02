@@ -863,15 +863,15 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (!environment.getConfig().getAppStoreUris().isEmpty() &&
                 environment.getConfig().isAppReviewsEnabled() &&
                 NetworkUtil.isConnected(getContext())) {
-            final PrefManager.UserPrefManager userPrefs = new PrefManager.UserPrefManager(MainApplication.application);
-            final float appRating = userPrefs.getAppRating();
+            final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
+            final float appRating = appPrefs.getAppRating();
             // If user has not given rating yet, open dialog
             // consider not rated if rating is 0 or less (default is -1)
             if (appRating <= AppConstants.APP_NOT_RATED_THRESHOLD) {
                 showRatingDialog();
             } else if (appRating <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
                 try {
-                    final Version oldVersion = new Version(userPrefs.getLastRatedVersion());
+                    final Version oldVersion = new Version(appPrefs.getLastRatedVersion());
                     final Version curVersion = new Version(BuildConfig.VERSION_NAME);
                     if (oldVersion.isNMinorVersionsDiff(curVersion, AppConstants.MINOR_VERSIONS_DIFF_REQUIRED_FOR_NEGATIVE_RATERS)) {
                         // App updated to 2 minor versions

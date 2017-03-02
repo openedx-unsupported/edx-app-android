@@ -193,21 +193,6 @@ public class PrefManager {
         public void setPrevNotificationHashKey(String code) {
             super.put(Key.AppNotificationPushHash, code);
         }
-    }
-
-    public static class UserPrefManager extends PrefManager {
-
-        public UserPrefManager(Context context) {
-            super(context, Pref.USER_PREF);
-        }
-
-        public boolean isVideosCacheRestored() {
-            return getBoolean(Key.VIDEOS_CACHE_RESTORED, false);
-        }
-
-        public void setIsVideosCacheRestored(boolean restored) {
-            super.put(Key.VIDEOS_CACHE_RESTORED, restored);
-        }
 
         public float getAppRating() {
             return getFloat(Key.APP_RATING);
@@ -223,6 +208,20 @@ public class PrefManager {
 
         public void setLastRatedVersion(String versionName) {
             super.put(Key.LAST_RATED_VERSION, versionName);
+        }
+    }
+
+    public static class UserPrefManager extends PrefManager {
+        public UserPrefManager(Context context) {
+            super(context, Pref.USER_PREF);
+        }
+
+        public boolean isVideosCacheRestored() {
+            return getBoolean(Key.VIDEOS_CACHE_RESTORED, false);
+        }
+
+        public void setIsVideosCacheRestored(boolean restored) {
+            super.put(Key.VIDEOS_CACHE_RESTORED, restored);
         }
     }
 

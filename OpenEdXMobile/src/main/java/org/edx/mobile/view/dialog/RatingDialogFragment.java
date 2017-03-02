@@ -65,11 +65,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     }
 
     public void submit() {
-        final Dialog dialog = getDialog();
-        // Persist rating and current version name
-        PrefManager.UserPrefManager userPrefs = new PrefManager.UserPrefManager(MainApplication.application);
-        userPrefs.setAppRating(binding.ratingBar.getRating());
-        userPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
+        persistRating();
         // Next action
         if (binding.ratingBar.getRating() <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
             showFeedbackDialog(getActivity());
@@ -77,7 +73,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             showRateTheAppDialog();
         }
         // Close dialog
-        dialog.dismiss();
+        getDialog().dismiss();
     }
 
     public void showFeedbackDialog(final FragmentActivity activity) {
@@ -124,5 +120,12 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         } else {
             positiveButton.setEnabled(false);
         }
+    }
+
+    public void persistRating() {
+        // Persist rating and current version name
+        final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
+        appPrefs.setAppRating(binding.ratingBar.getRating());
+        appPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
     }
 }
