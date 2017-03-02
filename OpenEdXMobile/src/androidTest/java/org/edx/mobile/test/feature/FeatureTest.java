@@ -29,9 +29,9 @@ public abstract class FeatureTest {
         environment.getLoginPrefs().clear();
         environment.getAnalyticsRegistry().resetIdentifyUser();
     }
+
     @After
-    public void removeMocks()
-    {
+    public void removeMocks() {
         RoboGuice.Util.reset();
     }
 }

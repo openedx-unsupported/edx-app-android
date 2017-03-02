@@ -29,12 +29,7 @@ public class LogInScreenInteractor {
     public LogInScreenInteractor observeLogInScreen() {
         final MainApplication app = MainApplication.instance();
         final CharSequence title = app.getResources().getString(R.string.login_title);
-        onView(
-                allOf(
-                        isInActionBar(),
-                        withText(title.toString())))
-                .check(matches(isCompletelyDisplayed()));
-
+        onView(allOf(isInActionBar(),withText(title.toString()))).check(matches(isCompletelyDisplayed()));
         onUsernameView().check(matches(isDisplayed()));
         onPasswordView().check(matches(isDisplayed()));
         onLogInButton().check(matches(isDisplayed()));

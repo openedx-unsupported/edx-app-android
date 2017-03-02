@@ -43,7 +43,7 @@ public class MockOverrideModule extends AbstractModule {
 
         try {
             when(mockLoginAPI.logInUsingEmail(TestValues.ACTIVE_USER_CREDENTIALS.email,
-                            TestValues.ACTIVE_USER_CREDENTIALS.password))
+                    TestValues.ACTIVE_USER_CREDENTIALS.password))
                     .thenAnswer(new Answer<AuthResponse>() {
                         public AuthResponse answer(InvocationOnMock invocation) throws Throwable {
                             EdxEnvironment environment = MainApplication.instance().getInjector().getInstance(EdxEnvironment.class);
@@ -56,7 +56,7 @@ public class MockOverrideModule extends AbstractModule {
             when(mockLoginAPI.registerUsingEmail(any(Bundle.class)))
                     .thenAnswer(new Answer<AuthResponse>() {
                         public AuthResponse answer(InvocationOnMock invocation) throws Throwable {
-                            Bundle bundle = invocation.getArgumentAt(0,Bundle.class);
+                            Bundle bundle = invocation.getArgumentAt(0, Bundle.class);
                             EdxEnvironment environment = MainApplication.instance().getInjector().getInstance(EdxEnvironment.class);
                             environment.getLoginPrefs().storeAuthTokenResponse(TestValues.VALID_AUTH_TOKEN_RESPONSE, LoginPrefs.AuthBackend.PASSWORD);
                             ProfileModel profile = new ProfileModel();
@@ -73,7 +73,7 @@ public class MockOverrideModule extends AbstractModule {
             when(mockCourseAPI.getCourseList(anyInt()))
                     .thenReturn(Calls.response(TestValues.BASIC_COURSE_LIST));
 
-            when (mockUserAPI.getUserEnrolledCourses(anyString(),anyString(),anyBoolean())).thenReturn(TestValues.BASIC_USER_ENROLLED_COURSES);
+            when(mockCourseAPI.getEnrolledCourses()).thenReturn(Calls.response(TestValues.BASIC_USER_ENROLLED_COURSES));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,9 +81,9 @@ public class MockOverrideModule extends AbstractModule {
 
     @Override
     protected void configure() {
-
         bind(LoginAPI.class).toInstance(mockLoginAPI);
         bind(CourseAPI.class).toInstance(mockCourseAPI);
         bind(UserAPI.class).toInstance(mockUserAPI);
     }
 }
+
