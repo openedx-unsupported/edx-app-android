@@ -1,0 +1,12 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transcript_item"
+    style="@style/regular_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/transcript_row_height"
+    android:paddingBottom="@dimen/widget_margin"
+    android:paddingEnd="@dimen/widget_margin_double"
+    android:paddingStart="@dimen/widget_margin_double"
+    android:paddingTop="@dimen/widget_margin"
+    android:textSize="@dimen/edx_base" />
