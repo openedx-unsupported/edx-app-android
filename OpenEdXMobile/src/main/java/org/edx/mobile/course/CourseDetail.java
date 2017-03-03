@@ -24,6 +24,7 @@ public class CourseDetail implements Parcelable {
     public String effort;
     public String overview;
     public Boolean invitation_only;
+    public Float minimum_age;
 
     public static class Media implements Parcelable {
         public Image course_image;
@@ -143,6 +144,7 @@ public class CourseDetail implements Parcelable {
         effort = in.readString();
         overview = in.readString();
         invitation_only = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        minimum_age = (Float) in.readValue(Boolean.class.getClassLoader());
     }
 
     @Override
@@ -168,6 +170,7 @@ public class CourseDetail implements Parcelable {
         dest.writeString(effort);
         dest.writeString(overview);
         dest.writeValue(invitation_only);
+        dest.writeValue(minimum_age);
     }
 
     @SuppressWarnings("unused")

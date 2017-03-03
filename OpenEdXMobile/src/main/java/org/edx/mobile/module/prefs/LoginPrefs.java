@@ -135,6 +135,20 @@ public class LoginPrefs {
         return null == profileModel ? null : profileModel.username;
     }
 
+    public void setYearOfBirth(@NonNull String username, @Nullable Integer yearOfBirth) {
+        if (username.equals(getUsername())) {
+            ProfileModel profileModel = getCurrentUserProfile();
+            profileModel.year_of_birth = yearOfBirth;
+            this.storeUserProfile(profileModel);
+        }
+    }
+
+    @Nullable
+    public Integer getYearOfBirth() {
+        final ProfileModel profileModel = getCurrentUserProfile();
+        return null == profileModel ? null : profileModel.year_of_birth;
+    }
+
     @Nullable
     public String getAuthBackendKeyForSegment() {
         return pref.getString(PrefManager.Key.ANALYTICS_KEY_BACKEND);

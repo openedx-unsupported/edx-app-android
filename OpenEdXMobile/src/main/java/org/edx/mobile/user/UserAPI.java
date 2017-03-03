@@ -63,8 +63,9 @@ public class UserAPI {
         @Override
         protected void onResponse(@NonNull final Account account) {
             EventBus.getDefault().post(new AccountDataLoadedEvent(account));
-            // Store the logged in user's ProfileImage
+            // Store the logged in user's ProfileImage and YearOfBirth
             loginPrefs.setProfileImage(username, account.getProfileImage());
+            loginPrefs.setYearOfBirth(username, account.getYearOfBirth());
         }
     }
 

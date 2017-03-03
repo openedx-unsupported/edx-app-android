@@ -43,13 +43,13 @@ public class KonnekteerUtil {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            logger.debug(response);
+                            // logger.debug(response);
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // logger.debug(new String(error.networkResponse.data));
-                    logger.error(error);
+                    // logger.error(error);
                 }
             }) {
                 @Override
@@ -83,13 +83,13 @@ public class KonnekteerUtil {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            logger.debug(response);
+                            // logger.debug(response);
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // logger.debug(new String(error.networkResponse.data));
-                    logger.error(error);
+                    // logger.error(error);
                 }
             }) {
                 @Override
