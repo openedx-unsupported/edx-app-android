@@ -866,7 +866,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
             final float appRating = appPrefs.getAppRating();
             // If user has not given rating yet, open dialog
-            // consider not rated if rating is 0 or less (default is -1)
+            // consider not rated if rating is -1 or less (default is -1)
             if (appRating <= AppConstants.APP_NOT_RATED_THRESHOLD) {
                 showRatingDialog();
             } else if (appRating <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {

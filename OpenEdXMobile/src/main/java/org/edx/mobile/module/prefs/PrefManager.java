@@ -116,14 +116,14 @@ public class PrefManager {
     }
 
     /**
-     * Returns float value for the given key, -1 if no value is found.
+     * Returns float value for the given key, -1.0 if no value is found.
      *
      * @param key
      * @return float
      */
     public float getFloat(String key) {
         return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getFloat(key, -1);
+                .getFloat(key, -1.0f);
     }
 
     /**

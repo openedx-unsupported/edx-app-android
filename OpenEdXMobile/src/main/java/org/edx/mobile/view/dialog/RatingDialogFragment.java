@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -49,12 +50,23 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                         submit();
                     }
                 })
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int id) {
+                        persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                    }
+                })
                 .setView(binding.getRoot())
                 .create();
         mAlertDialog.setCanceledOnTouchOutside(false);
         mAlertDialog.setOnShowListener(this);
         return mAlertDialog;
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialogInterface) {
+        super.onCancel(dialogInterface);
+        persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
     }
 
     @Override
@@ -65,7 +77,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     }
 
     public void submit() {
-        persistRating();
+        persistRatingAndAppVersion(binding.ratingBar.getRating());
         // Next action
         if (binding.ratingBar.getRating() <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
             showFeedbackDialog(getActivity());
@@ -82,15 +94,26 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         builder.setMessage(R.string.feedback_dialog_message);
         builder.setPositiveButton(R.string.label_send_feedback, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialogInterface, int which) {
                 // Submit feedback
                 mRouter.showFeedbackScreen(activity, activity.getString(R.string.review_email_subject));
             }
         });
-        builder.setNegativeButton(R.string.label_maybe_later, null);
+        builder.setNegativeButton(R.string.label_maybe_later, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+                persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+            }
+        });
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+            }
+        });
     }
 
     public void showRateTheAppDialog() {
@@ -101,15 +124,26 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                 "platform_name", getString(R.string.platform_name)));
         builder.setPositiveButton(R.string.label_rate_the_app, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialogInterface, int which) {
                 // Open app in store for rating
-                AppStoreUtils.openAppInAppStore(((Dialog) dialog).getContext());
+                AppStoreUtils.openAppInAppStore(((Dialog) dialogInterface).getContext());
             }
         });
-        builder.setNegativeButton(R.string.label_maybe_later, null);
+        builder.setNegativeButton(R.string.label_maybe_later, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+                persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+            }
+        });
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+            }
+        });
     }
 
     @Override
@@ -122,10 +156,10 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         }
     }
 
-    public void persistRating() {
-        // Persist rating and current version name
+    public void persistRatingAndAppVersion(final float rating) {
+        // Persist rating and current app version name
         final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
-        appPrefs.setAppRating(binding.ratingBar.getRating());
+        appPrefs.setAppRating(rating);
         appPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
     }
 }
