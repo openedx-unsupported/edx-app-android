@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 import android.widget.RatingBar;
-import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -17,11 +16,16 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.databinding.FragmentDialogRatingBinding;
+import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.fragment.RoboDialogFragment;
 
@@ -29,6 +33,8 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         RatingBar.OnRatingBarChangeListener {
     @Inject
     private Router mRouter;
+    @Inject
+    private AnalyticsRegistry analyticsRegistry;
     private AlertDialog mAlertDialog;
     @NonNull
     private FragmentDialogRatingBinding binding;
@@ -54,6 +60,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                     @Override
                     public void onClick(DialogInterface dialogInterface, int id) {
                         persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                        analyticsRegistry.trackAppRatingDialogCancelled(BuildConfig.VERSION_NAME);
                     }
                 })
                 .setView(binding.getRoot())
@@ -67,6 +74,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     public void onCancel(DialogInterface dialogInterface) {
         super.onCancel(dialogInterface);
         persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+        analyticsRegistry.trackAppRatingDialogCancelled(BuildConfig.VERSION_NAME);
     }
 
     @Override
@@ -74,6 +82,11 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         if (binding.ratingBar.getRating() <= 0.0f) {
             mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         }
+        // Send rating dialog viewed analytics
+        final Map<String, String> values = new HashMap<>();
+        values.put(Analytics.Keys.APP_VERSION, BuildConfig.VERSION_NAME);
+        analyticsRegistry.trackScreenView(Analytics.Screens.APP_REVIEWS_VIEW_RATING, null, null, values);
+        analyticsRegistry.trackAppRatingDialogViewed(BuildConfig.VERSION_NAME);
     }
 
     public void submit() {
@@ -81,9 +94,12 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         // Next action
         if (binding.ratingBar.getRating() <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
             showFeedbackDialog(getActivity());
+            analyticsRegistry.trackUserSubmitNegativeRating(BuildConfig.VERSION_NAME,
+                    (int) binding.ratingBar.getRating());
         } else {
             showRateTheAppDialog();
         }
+        analyticsRegistry.trackUserSubmitRating(BuildConfig.VERSION_NAME, (int) binding.ratingBar.getRating());
         // Close dialog
         getDialog().dismiss();
     }
@@ -103,6 +119,8 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
                 persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                analyticsRegistry.trackUserMayReviewLater(BuildConfig.VERSION_NAME,
+                        (int) binding.ratingBar.getRating());
             }
         });
         AlertDialog dialog = builder.create();
@@ -127,12 +145,16 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             public void onClick(DialogInterface dialogInterface, int which) {
                 // Open app in store for rating
                 AppStoreUtils.openAppInAppStore(((Dialog) dialogInterface).getContext());
+                analyticsRegistry.trackRateTheAppClicked(BuildConfig.VERSION_NAME,
+                        (int) binding.ratingBar.getRating());
             }
         });
         builder.setNegativeButton(R.string.label_maybe_later, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
                 persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                analyticsRegistry.trackUserMayReviewLater(BuildConfig.VERSION_NAME,
+                        (int) binding.ratingBar.getRating());
             }
         });
         AlertDialog dialog = builder.create();

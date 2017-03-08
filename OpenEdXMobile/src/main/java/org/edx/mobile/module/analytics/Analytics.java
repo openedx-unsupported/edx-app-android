@@ -232,6 +232,53 @@ public interface Analytics {
      */
     void resetIdentifyUser();
 
+    /**
+     * This function is used to track if user views the App Rating view.
+     *
+     * @param versionName Version name of app.
+     */
+    void trackAppRatingDialogViewed(String versionName);
+
+    /**
+     * This function is used to track if user cancels the App Rating view.
+     *
+     * @param versionName Version name of app.
+     */
+    void trackAppRatingDialogCancelled(String versionName);
+
+    /**
+     * This function is used to track if user submits rating on the App Rating view.
+     *
+     * @param versionName Version name of app.
+     * @param rating Rating given by user.
+     */
+    void trackUserSubmitRating(String versionName, int rating);
+
+    /**
+     * This function is used to track if user gives negative rating on the App Rating view.
+     *
+     * @param versionName Version name of app.
+     * @param rating Rating given by user.
+     */
+    void trackUserSubmitNegativeRating(String versionName, int rating);
+
+    /**
+     * This function is used to track if user rates the app and then selects Maybe Later,
+     * could be either from Feedback dialog or Rate The App dialog.
+     *
+     * @param versionName Version name of app.
+     * @param rating Rating given by user.
+     */
+    void trackUserMayReviewLater(String versionName, int rating);
+
+    /**
+     * This function is used to track if user gives positive rating and selects Rate The App option.
+     *
+     * @param versionName Version name of app.
+     * @param rating Rating given by user.
+     */
+    void trackRateTheAppClicked(String versionName, int rating);
+
     interface Keys {
         String NAME = "name";
         String OLD_TIME = "old_time";
@@ -277,6 +324,9 @@ public interface Analytics {
         String RESPONSE_ID = "response_id";
 
         String COMPONENT_VIEWED = "Component Viewed";
+
+        String APP_VERSION = "app_version";
+        String RATING = "rating";
     }
 
     interface Values {
@@ -346,6 +396,14 @@ public interface Analytics {
         String CELL_DATA = "cell_data";
         String POSTS_ALL = "all_posts";
         String POSTS_FOLLOWING = "posts_following";
+        // App review event values
+        String APP_REVIEWS_CATEGORY = "app-reviews";
+        String APP_REVIEWS_VIEW_RATING = "edx.bi.app.app_reviews.view_rating";
+        String APP_REVIEWS_DISMISS_RATING = "edx.bi.app.app_reviews.dismiss_rating";
+        String APP_REVIEWS_SUBMIT_RATING = "edx.bi.app.app_reviews.submit_rating";
+        String APP_REVIEWS_SEND_FEEDBACK = "edx.bi.app.app_reviews.send_feedback";
+        String APP_REVIEWS_MAYBE_LATER = "edx.bi.app.app_reviews.maybe_later";
+        String APP_REVIEWS_RATE_THE_APP = "edx.bi.app.app_reviews.rate_the_app";
     }
 
     interface Screens {
@@ -382,6 +440,7 @@ public interface Analytics {
         String PROFILE_CHOOSE_LOCATION = "Choose Form Value Location";
         String PROFILE_CHOOSE_LANGUAGE = "Choose Form Value Primary language";
         String PROFILE_EDIT_TEXT_VALUE = "Edit Text Form Value";
+        String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
     }
 
     interface Events {
@@ -415,6 +474,13 @@ public interface Analytics {
         String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
         String PROFILE_VIEWED = "Viewed a profile";
         String PROFILE_PHOTO_SET = "Set a profile picture";
+        // App review events
+        String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
+        String APP_REVIEWS_DISMISS_RATING = "AppReviews: Dismiss Rating";
+        String APP_REVIEWS_SUBMIT_RATING = "AppReviews: Submit Rating";
+        String APP_REVIEWS_SEND_FEEDBACK = "AppReviews: Send Feedback";
+        String APP_REVIEWS_MAYBE_LATER = "AppReviews: Maybe Later";
+        String APP_REVIEWS_RATE_THE_APP = "AppReviews: Rate The App";
     }
 
     /**

@@ -1,7 +1,6 @@
 package org.edx.mobile.module.analytics;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -13,8 +12,8 @@ import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.JavaUtil;
@@ -628,5 +627,63 @@ public class SegmentAnalytics implements Analytics {
             aEvent.data.putValue(Keys.CURRENT_TIME, currentTime);
         }
         return aEvent;
+    }
+
+    @Override
+    public void trackAppRatingDialogViewed(String versionName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.APP_REVIEWS_VIEW_RATING);
+        aEvent.data.putValue(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        trackSegmentEvent(Events.APP_REVIEWS_VIEW_RATING, aEvent.properties);
+    }
+
+    @Override
+    public void trackAppRatingDialogCancelled(String versionName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.APP_REVIEWS_DISMISS_RATING);
+        aEvent.data.putValue(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        trackSegmentEvent(Events.APP_REVIEWS_DISMISS_RATING, aEvent.properties);
+    }
+
+    @Override
+    public void trackUserSubmitRating(String versionName, int rating) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.APP_REVIEWS_SUBMIT_RATING);
+        aEvent.data.putValue(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        aEvent.data.putValue(Keys.RATING, rating);
+        trackSegmentEvent(Events.APP_REVIEWS_SUBMIT_RATING, aEvent.properties);
+    }
+
+    @Override
+    public void trackUserSubmitNegativeRating(String versionName, int rating) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.APP_REVIEWS_SEND_FEEDBACK);
+        aEvent.data.putValue(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        aEvent.data.putValue(Keys.RATING, rating);
+        trackSegmentEvent(Events.APP_REVIEWS_SEND_FEEDBACK, aEvent.properties);
+    }
+
+    @Override
+    public void trackUserMayReviewLater(String versionName, int rating) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.APP_REVIEWS_MAYBE_LATER);
+        aEvent.data.putValue(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        aEvent.data.putValue(Keys.RATING, rating);
+        trackSegmentEvent(Events.APP_REVIEWS_MAYBE_LATER, aEvent.properties);
+    }
+
+    @Override
+    public void trackRateTheAppClicked(String versionName, int rating) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.APP_REVIEWS_RATE_THE_APP);
+        aEvent.data.putValue(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        aEvent.data.putValue(Keys.RATING, rating);
+        trackSegmentEvent(Events.APP_REVIEWS_RATE_THE_APP, aEvent.properties);
     }
 }

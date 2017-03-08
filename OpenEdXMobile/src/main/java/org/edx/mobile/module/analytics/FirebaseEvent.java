@@ -193,6 +193,18 @@ public class FirebaseEvent {
     }
 
     /**
+     * Utility method to apply Firebase's restrictions on String key and Int value
+     * before putting them in {@link #bundle}.
+     *
+     * @param key   The key.
+     * @param value The value.
+     */
+    public void putInt(@NonNull String key, int value) {
+        if (isSkippableKey(key)) return;
+        bundle.putInt(applyRestrictions(key, PARAM_NAME_MAX_CHARS), value);
+    }
+
+    /**
      * Utility method to apply Firebase's restrictions on String key and Boolean value
      * before putting them in {@link #bundle}.
      *
