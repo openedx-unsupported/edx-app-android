@@ -393,4 +393,62 @@ public class FirebaseAnalytics implements Analytics {
     public void resetIdentifyUser() {
         tracker.setUserId(null);
     }
+
+    @Override
+    public void trackAppRatingDialogViewed(String versionName) {
+        final FirebaseEvent event = new FirebaseEvent(Events.APP_REVIEWS_VIEW_RATING,
+                Values.APP_REVIEWS_VIEW_RATING);
+        event.putString(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackAppRatingDialogCancelled(String versionName) {
+        final FirebaseEvent event = new FirebaseEvent(Events.APP_REVIEWS_DISMISS_RATING,
+                Values.APP_REVIEWS_DISMISS_RATING);
+        event.putString(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackUserSubmitRating(String versionName, int rating) {
+        final FirebaseEvent event = new FirebaseEvent(Events.APP_REVIEWS_SUBMIT_RATING,
+                Values.APP_REVIEWS_SUBMIT_RATING);
+        event.putString(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putInt(Keys.RATING, rating);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackUserSubmitNegativeRating(String versionName, int rating) {
+        final FirebaseEvent event = new FirebaseEvent(Events.APP_REVIEWS_SEND_FEEDBACK,
+                Values.APP_REVIEWS_SEND_FEEDBACK);
+        event.putString(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putInt(Keys.RATING, rating);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackUserMayReviewLater(String versionName, int rating) {
+        final FirebaseEvent event = new FirebaseEvent(Events.APP_REVIEWS_MAYBE_LATER,
+                Values.APP_REVIEWS_MAYBE_LATER);
+        event.putString(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putInt(Keys.RATING, rating);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackRateTheAppClicked(String versionName, int rating) {
+        final FirebaseEvent event = new FirebaseEvent(Events.APP_REVIEWS_RATE_THE_APP,
+                Values.APP_REVIEWS_RATE_THE_APP);
+        event.putString(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putInt(Keys.RATING, rating);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

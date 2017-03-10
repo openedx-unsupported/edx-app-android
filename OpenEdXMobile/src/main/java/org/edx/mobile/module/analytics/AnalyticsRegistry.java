@@ -276,4 +276,46 @@ public class AnalyticsRegistry implements Analytics {
             service.resetIdentifyUser();
         }
     }
+
+    @Override
+    public void trackAppRatingDialogViewed(String versionName) {
+        for (Analytics service : services) {
+            service.trackAppRatingDialogViewed(versionName);
+        }
+    }
+
+    @Override
+    public void trackAppRatingDialogCancelled(String versionName) {
+        for (Analytics service : services) {
+            service.trackAppRatingDialogCancelled(versionName);
+        }
+    }
+
+    @Override
+    public void trackUserSubmitRating(String versionName, int rating) {
+        for (Analytics service : services) {
+            service.trackUserSubmitRating(versionName, rating);
+        }
+    }
+
+    @Override
+    public void trackUserSubmitNegativeRating(String versionName, int rating) {
+        for (Analytics service : services) {
+            service.trackUserSubmitNegativeRating(versionName, rating);
+        }
+    }
+
+    @Override
+    public void trackUserMayReviewLater(String versionName, int rating) {
+        for (Analytics service : services) {
+            service.trackUserMayReviewLater(versionName, rating);
+        }
+    }
+
+    @Override
+    public void trackRateTheAppClicked(String versionName, int rating) {
+        for (Analytics service : services) {
+            service.trackRateTheAppClicked(versionName, rating);
+        }
+    }
 }
