@@ -59,6 +59,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:divider="@null"
+        android:importantForAccessibility="noHideDescendants"
         android:paddingBottom="@dimen/widget_margin_half"
         android:paddingTop="@dimen/widget_margin_half" />
 
