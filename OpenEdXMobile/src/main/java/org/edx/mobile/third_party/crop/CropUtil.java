@@ -40,20 +40,6 @@ import java.io.OutputStream;
  * Modified from https://github.com/jdamcd/android-crop which was itself modified from AOSP
  */
 public class CropUtil {
-
-    public static int getExifOrientationFromRotation(int rotation) {
-        switch (rotation) {
-            case 90:
-                return ExifInterface.ORIENTATION_ROTATE_90;
-            case 180:
-                return ExifInterface.ORIENTATION_ROTATE_180;
-            case 270:
-                return ExifInterface.ORIENTATION_ROTATE_270;
-            default:
-                return ExifInterface.ORIENTATION_UNDEFINED;
-        }
-    }
-
     public static int getRotationFromExifOrientation(int rotation) {
         switch (rotation) {
             case ExifInterface.ORIENTATION_ROTATE_90:
@@ -64,14 +50,6 @@ public class CropUtil {
                 return 270;
             default:
                 return 0;
-        }
-    }
-
-    public static void setExifOrientation(int rotation, @NonNull File destFile) throws IOException {
-        ExifInterface exif = new ExifInterface(destFile.getAbsolutePath());
-        if (rotation != 0) {
-            exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(getExifOrientationFromRotation(rotation)));
-            exif.saveAttributes();
         }
     }
 
@@ -119,6 +97,8 @@ public class CropUtil {
                 if (rect.width() > outWidth || rect.height() > outHeight) {
                     Matrix matrix = new Matrix();
                     matrix.postScale((float) outWidth / rect.width(), (float) outHeight / rect.height());
+                    // Rotate image according to exif tag to keep final jpg image upright (normal orientation)
+                    matrix.postRotate(rotation);
                     croppedImage = Bitmap.createBitmap(croppedImage, 0, 0, croppedImage.getWidth(), croppedImage.getHeight(), matrix, true);
                 }
             } catch (IllegalArgumentException e) {
@@ -141,18 +121,13 @@ public class CropUtil {
         try {
             final OutputStream outputStream = new FileOutputStream(file);
             try {
-                croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+                croppedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             } finally {
                 outputStream.close();
             }
         } finally {
             croppedImage.recycle();
         }
-
-        CropUtil.setExifOrientation(
-                rotation,
-                file
-        );
     }
 
     public static int getOrientationFromUri(@NonNull String path) {
