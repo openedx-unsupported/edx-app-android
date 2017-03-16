@@ -29,7 +29,6 @@ import android.view.accessibility.CaptioningManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
@@ -54,12 +53,10 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
-import org.edx.mobile.util.ListUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.Version;
-import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.RatingDialogFragment;
@@ -87,6 +84,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE
     }
 
+    private static final Logger logger = new Logger(PlayerFragment.class.getName());
     private static final String KEY_PLAYER = "player";
     private static final String KEY_VIDEO = "video";
     private static final String KEY_PREPARED = "isPrepared";
@@ -97,6 +95,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private static final int MSG_TYPE_TICK = 2014;
     private static final int DELAY_TIME_MS = 1000;
     private static final int UNFREEZE_DELAY_MS = 300;
+    private static final int SUBTITLES_DISPLAY_DELAY_MS = 100;
 
     @Inject
     IEdxEnvironment environment;
@@ -108,6 +107,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private boolean orientationLocked = false;
     private transient OrientationDetector orientationDetector;
     private transient IPlayerEventCallback callback;
+    @Nullable
+    private transient TranscriptListener transcriptListener;
     private View.OnClickListener nextListner;
     private View.OnClickListener prevListner;
     private AudioManager audioManager;
@@ -119,7 +120,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private PopupWindow cc_popup;
     private LinkedHashMap<String, TimedTextObject> srtList;
     private LinkedHashMap<String, String> langList;
-    private TimedTextObject srt;
+    private TimedTextObject subtitlesObj;
     private LayoutInflater layoutInflater;
     @Inject
     private TranscriptManager transcriptManager;
@@ -132,10 +133,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private boolean isManualFullscreen = false;
     private int currentPosition = 0;
 
-    private final Logger logger = new Logger(getClass().getName());
-
     private IUiLifecycleHelper uiHelper;
     private boolean pauseDueToDialog;
+    private boolean closedCaptionsEnabled = false;
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
@@ -166,6 +166,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     public void setCallback(IPlayerEventCallback callback) {
         this.callback = callback;
+    }
+
+    public void setTranscriptCallback(TranscriptListener listener) {
+        this.transcriptListener = listener;
     }
 
     @Override
@@ -1133,34 +1137,35 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      * This runnable handles the displaying of
      * Subtitles on the screen per 100 mili seconds
      */
-    private Runnable subtitleProcessesor = new Runnable() {
+    private Runnable SUBTITLES_PROCESSOR_RUNNABLE = new Runnable() {
         @Override
         public void run() {
-            try{
-                //This has been reset so that previous cc will not be displayed
-                resetClosedCaptioning();
-                if (player != null && (player.isPlaying() || player.isPaused())) {
-                    int currentPos = player.getCurrentPosition();
-                    if(srt!=null){
-                        Collection<Caption> subtitles = srt.captions.values();
-                        for (Caption caption : subtitles) {
-                            int startMillis = caption.start.getMseconds();
-                            int endMillis = caption.end.getMseconds();
-                            if (currentPos >= startMillis && currentPos <= endMillis) {
-                                setClosedCaptionData(caption);
-                                break;
-                            } else if (currentPos > endMillis) {
-                                setClosedCaptionData(null);
+            //This has been reset so that previous cc will not be displayed
+            resetClosedCaptioning();
+            if (player != null && (player.isPlaying() || player.isPaused())) {
+                int currentPos = player.getCurrentPosition();
+                if (subtitlesObj != null) {
+                    Collection<Caption> subtitles = subtitlesObj.captions.values();
+                    int currentSubtitleIndex = 0;
+                    for (Caption subtitle : subtitles) {
+                        int startMillis = subtitle.start.getMseconds();
+                        int endMillis = subtitle.end.getMseconds();
+                        if (currentPos >= startMillis && currentPos <= endMillis) {
+                            setClosedCaptionData(closedCaptionsEnabled ? subtitle : null);
+                            if (transcriptListener != null) {
+                                transcriptListener.updateSelection(currentSubtitleIndex);
                             }
+                            break;
+                        } else if (currentPos > endMillis) {
+                            setClosedCaptionData(null);
                         }
-                    }else{
-                        setClosedCaptionData(null);
+                        currentSubtitleIndex++;
                     }
+                } else {
+                    setClosedCaptionData(null);
                 }
-                subtitleDisplayHandler.postDelayed(this, 100);
-            }catch(Exception e){
-                logger.error(e);
             }
+            subtitleDisplayHandler.postDelayed(this, SUBTITLES_DISPLAY_DELAY_MS);
         }
     };
 
@@ -1337,29 +1342,16 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         if (subtitleDisplayHandler != null)
         {
-            subtitleDisplayHandler.removeCallbacks(subtitleProcessesor);
+            subtitleDisplayHandler.removeCallbacks(SUBTITLES_PROCESSOR_RUNNABLE);
             subtitleDisplayHandler = null;
             hideClosedCaptioning();
-            srt = null;
+            subtitlesObj = null;
             srtList = null;
         }
         if (subtitleFetchHandler != null)
         {
             subtitleFetchHandler.removeCallbacks(subtitleFetchProcessesor);
             subtitleFetchHandler = null;
-        }
-    }
-
-    /**
-     * This removes the subtitle display callback
-     */
-    private void removeSubtitleDisplayCallBack() {
-
-        if (subtitleDisplayHandler != null)
-        {
-            subtitleDisplayHandler.removeCallbacks(subtitleProcessesor);
-            subtitleDisplayHandler = null;
-            hideClosedCaptioning();
         }
     }
 
@@ -1481,13 +1473,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 {
                     tv_closedCaption.setBackgroundResource(R.drawable.white_rounded_selector);
                     tv_closedCaption.setOnClickListener(new View.OnClickListener(){
-                        public void onClick(View paramAnonymousView)
-                        {
-                            if(player.isFullScreen()) {
-                                showClosedCaptionLandscapePopup(p);
-                            }else{
-                                showCCFragmentPopup();
-                            }
+                        public void onClick(View paramAnonymousView) {
+                            showCCFragmentPopup();
                         }
                     });
                 }else{
@@ -1495,135 +1482,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     tv_closedCaption.setOnClickListener(null);
                 }
             }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    /**
-     * This function is used to show popup in landscape mode and
-     * the Point defines the current position of Settings button
-     * @param p {@link android.graphics.Point}
-     */
-    private void showClosedCaptionLandscapePopup(Point p){
-        try{
-            LinkedHashMap<String, String> languageList = getLanguageList();
-            float popupHeight = UiUtil.getParamsInDP(getResources(),220);
-            float popupWidth = UiUtil.getParamsInDP(getResources(),250);
-
-            // Inflate the popup_layout.xml
-            LinearLayout viewGroup = (LinearLayout) getActivity()
-                    .findViewById(R.id.cc_layout_popup);
-
-            View layout = layoutInflater.inflate(R.layout.panel_cc_popup, viewGroup);
-
-            // Creating the PopupWindow for CC
-            cc_popup = new PopupWindow(getActivity());
-            cc_popup.setContentView(layout);
-            cc_popup.setWidth((int)popupWidth);
-            cc_popup.setHeight((int)popupHeight);
-            cc_popup.setFocusable(true);
-            cc_popup.setOnDismissListener(new OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    hideSettingsPopUp();
-                }
-            });
-
-            ListView lv_ccLang = (ListView) layout.findViewById(R.id.cc_list);
-            ClosedCaptionAdapter ccAdaptor = new
-                    ClosedCaptionAdapter(getActivity(), environment) {
-                        @Override
-                        public void onItemClicked(HashMap<String, String> lang) {
-                            try{
-                                final String languageSubtitle = lang.keySet().toArray()[0].toString();
-                                setSubtitleLanguage(languageSubtitle);
-                                try{
-                                    if(player!=null){
-                                        environment.getAnalyticsRegistry().trackTranscriptLanguage(videoEntry.videoId,
-                                                player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                                languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
-                                    }
-                                }catch(Exception e){
-                                    logger.error(e);
-                                }
-
-                                displaySrtData();
-                                cc_popup.dismiss();
-                                if(player!=null){
-                                    player.getController().setSettingsBtnDrawable(false);
-                                    player.getController().setAutoHide(true);
-                                }
-                            }catch(Exception e){
-                                logger.error(e);
-                            }
-                        }
-                    };
-            lv_ccLang.setAdapter(ccAdaptor);
-            lv_ccLang.setOnItemClickListener(ccAdaptor);
-
-            if(languageList!=null && languageList.size()>0){
-                HashMap<String, String> lang;
-                for(int i=0; i<languageList.size();i++){
-                    lang = new HashMap<>();
-                    lang.put(languageList.keySet().toArray()[i].toString(),
-                            languageList.values().toArray()[i].toString());
-                    ccAdaptor.add(lang);
-                }
-            }
-            final String languageSubtitle = getSubtitleLanguage();
-            ccAdaptor.selectedLanguage = languageSubtitle;
-            ccAdaptor.notifyDataSetChanged();
-
-            // for less number of list rows, update height to fit contents
-            // also add height NONE option and TITLE of the popup
-            int fullHeightInDp = ListUtil.getFullHeightofListView(lv_ccLang)
-                    + (ListUtil.getSingleRowHeight(lv_ccLang) * 2)
-                    + (lv_ccLang.getDividerHeight() * 4);
-            if (fullHeightInDp < popupHeight) {
-                popupHeight = fullHeightInDp;
-                cc_popup.setHeight(fullHeightInDp);
-            }
-
-            // Clear the default translucent background
-            cc_popup.setBackgroundDrawable(new BitmapDrawable());
-
-            // Displaying the popup at the specified location, + offsets.
-            cc_popup.showAtLocation(layout, Gravity.NO_GRAVITY,
-                    p.x + 10 -(int)popupWidth, p.y + 10 - (int)popupHeight);
-
-            TextView tv_none = (TextView) layout.findViewById(R.id.tv_cc_cancel);
-            if (languageSubtitle != null) {
-                tv_none.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
-            } else {
-                tv_none.setBackgroundResource(R.color.cyan_text_navigation_20);
-            }
-            tv_none.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        removeSubtitleDisplayCallBack();
-                        hideCCPopUp();
-                        setSubtitleLanguage(null);
-                        try{
-                            if(player!=null){
-                                environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.videoId,
-                                        player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                        videoEntry.eid, videoEntry.lmsUrl);
-                            }
-                        }catch(Exception e){
-                            logger.error(e);
-                        }
-
-                        if(player!=null){
-                            player.getController().setSettingsBtnDrawable(false);
-                            player.getController().setAutoHide(true);
-                        }
-                    }catch(Exception e){
-                        logger.error(e);
-                    }
-                }
-            });
         }catch(Exception e){
             logger.error(e);
         }
@@ -1651,53 +1509,38 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             ccFragment = CCLanguageDialogFragment.getInstance(getLanguageList(),new IListDialogCallback() {
                 @Override
                 public void onItemClicked(HashMap<String, String> lang) {
-                    try{
-                        final String languageSubtitle = lang.keySet().toArray()[0].toString();
-                        try{
-                            setSubtitleLanguage(languageSubtitle);
-                            if(player!=null){
-                                environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
-                                        player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                        videoEntry.eid, videoEntry.lmsUrl);
-                                environment.getAnalyticsRegistry().trackTranscriptLanguage(videoEntry.videoId,
-                                        player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                        languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
-                            }
-                        }catch(Exception e){
-                            logger.error(e);
-                        }
-                        displaySrtData();
-                        if(player!=null){
-                            player.getController().setSettingsBtnDrawable(false);
-                            player.getController().setAutoHide(true);
-                        }
-                    }catch(Exception e){
-                        logger.error(e);
+                    closedCaptionsEnabled = true;
+                    final String languageSubtitle = lang.keySet().toArray()[0].toString();
+                    setSubtitleLanguage(languageSubtitle);
+                    if (player != null) {
+                        environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
+                                player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                                videoEntry.eid, videoEntry.lmsUrl);
+                        environment.getAnalyticsRegistry().trackTranscriptLanguage(videoEntry.videoId,
+                                player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                                languageSubtitle, videoEntry.eid, videoEntry.lmsUrl);
+                    }
+                    displaySrtData();
+                    if (player != null) {
+                        player.getController().setSettingsBtnDrawable(false);
+                        player.getController().setAutoHide(true);
                     }
                 }
 
                 @Override
                 public void onCancelClicked() {
-                    try{
-                        removeSubtitleDisplayCallBack();
-                        try{
-                            setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
-                            if(player!=null){
-                                environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.videoId,
-                                        player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                        videoEntry.eid, videoEntry.lmsUrl);
-                            }
-                        }catch(Exception e){
-                            logger.error(e);
-                        }
-                        if(player!=null){
-                            player.getController().setAutoHide(true);
-                            player.getController().setSettingsBtnDrawable(false);
-                        }
-                    }catch(Exception e){
-                        logger.error(e);
+                    closedCaptionsEnabled = false;
+                    hideClosedCaptioning();
+                    setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
+                    if (player != null) {
+                        environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.videoId,
+                                player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                                videoEntry.eid, videoEntry.lmsUrl);
                     }
-
+                    if (player != null) {
+                        player.getController().setAutoHide(true);
+                        player.getController().setSettingsBtnDrawable(false);
+                    }
                 }
             }, getSubtitleLanguage());
 
@@ -1746,15 +1589,15 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     private void displaySrtData() {
         if (subtitleDisplayHandler != null) {
-            subtitleDisplayHandler.removeCallbacks(subtitleProcessesor);
+            subtitleDisplayHandler.removeCallbacks(SUBTITLES_PROCESSOR_RUNNABLE);
         }
         resetClosedCaptioning();
         if (srtList != null && srtList.size() > 0) {
             String languageSubtitle = getSubtitleLanguage();
 
+            // Check if captioning is enabled in accessibility settings and set the captioning language implicitly
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (languageSubtitle == null) {
-                    // Check if captioning is enabled in accessibility settings and set the captioning language implicitly
                     final CaptioningManager cManager = (CaptioningManager) getContext().getSystemService(Context.CAPTIONING_SERVICE);
                     if (cManager.isEnabled()) {
                         final String defaultCcLanguage;
@@ -1775,22 +1618,30 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             }
 
             if (languageSubtitle != null) {
-                srt = srtList.get(languageSubtitle);
-                if (srt != null) {
-                    try {
-                        if (player != null) {
-                            environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
-                                    player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                                    videoEntry.eid, videoEntry.lmsUrl);
-                        }
-                    } catch (Exception e) {
-                        logger.error(e);
+                subtitlesObj = srtList.get(languageSubtitle);
+                if (subtitlesObj != null) {
+                    closedCaptionsEnabled = true;
+                    if (player != null) {
+                        environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
+                                player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                                videoEntry.eid, videoEntry.lmsUrl);
                     }
-                    if (subtitleDisplayHandler == null) {
-                        subtitleDisplayHandler = new Handler();
-                    }
-                    subtitleDisplayHandler.post(subtitleProcessesor);
                 }
+            }
+
+            if (transcriptListener != null) {
+                if (subtitlesObj == null) {
+                    subtitlesObj = srtList.entrySet().iterator().next().getValue();
+                }
+                transcriptListener.updateTranscript(subtitlesObj);
+            }
+
+            // Run the subtitle handler if any among transcripts or closed captions is enabled
+            if (subtitlesObj != null || transcriptListener != null) {
+                if (subtitleDisplayHandler == null) {
+                    subtitleDisplayHandler = new Handler();
+                }
+                subtitleDisplayHandler.post(SUBTITLES_PROCESSOR_RUNNABLE);
             }
         }
     }
@@ -1936,5 +1787,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         player.setFullScreen(isLandscape);
         updateController("orientation change");
         player.requestAccessibilityFocusPausePlay();
+    }
+
+    /**
+     * Utility for seeking the video player to specified {@link Caption}.
+     *
+     * @param caption The caption to seek to.
+     */
+    public void seekToCaption(@NonNull Caption caption) {
+        player.seekTo(caption.start.getMseconds());
     }
 }
