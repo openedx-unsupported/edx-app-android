@@ -338,7 +338,7 @@ public class CourseDetailFragment extends BaseFragment {
             mEnrollButton.setEnabled(false);
         } else if (!is_old_enough){
             mEnrollButton.setText(R.string.not_old_enough_button_text);
-            mEnrollButton.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_light));
+            mEnrollButton.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_back));
             mEnrollButton.setEnabled(false);
         } else {
             mEnrollButton.setText(R.string.enroll_now_button_text);
