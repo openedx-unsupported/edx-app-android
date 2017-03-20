@@ -255,12 +255,12 @@ public interface Analytics {
     void trackUserSubmitRating(String versionName, int rating);
 
     /**
-     * This function is used to track if user gives negative rating on the App Rating view.
+     * This function is used to track if user selects Send Feedback after rating the app.
      *
      * @param versionName Version name of app.
      * @param rating Rating given by user.
      */
-    void trackUserSubmitNegativeRating(String versionName, int rating);
+    void trackUserSendFeedback(String versionName, int rating);
 
     /**
      * This function is used to track if user rates the app and then selects Maybe Later,
