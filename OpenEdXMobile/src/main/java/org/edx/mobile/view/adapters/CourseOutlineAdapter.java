@@ -441,7 +441,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.row_subtitle);
         holder.rowSubtitleIcon = (IconImageView) convertView
                 .findViewById(R.id.row_subtitle_icon);
-        holder.rowSubtitleIcon.setIconColorResource(R.color.edx_brand_gray_back);
+        holder.rowSubtitleIcon.setIconColorResource(R.color.edx_brand_primary_base);
         holder.noOfVideos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
         holder.bulkDownload = (IconImageView) convertView

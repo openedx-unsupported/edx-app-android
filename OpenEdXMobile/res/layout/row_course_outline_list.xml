@@ -61,13 +61,13 @@
                 style="@style/regular_grey_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/row_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/edx_brand_gray_accent"
@@ -78,14 +78,13 @@
 
                 <org.edx.mobile.view.custom.IconImageViewXml
                     android:id="@+id/row_subtitle_icon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/fa_large"
+                    android:layout_height="@dimen/fa_large"
                     android:baselineAlignBottom="true"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="2dp"
-                    android:paddingStart="2dp"
+                    android:layout_marginLeft="@dimen/x_small_icon_margin"
+                    android:layout_marginStart="@dimen/x_small_icon_margin"
                     android:visibility="gone"
-                    app:iconName="fa-check" />
+                    app:iconName="fa-edit" />
             </LinearLayout>
 
         </LinearLayout>
