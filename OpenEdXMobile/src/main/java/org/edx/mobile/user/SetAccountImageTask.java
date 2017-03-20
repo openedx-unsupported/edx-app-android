@@ -29,7 +29,7 @@ public class SetAccountImageTask extends
     private final String username;
 
     @NonNull
-    private final Uri uri;
+    private Uri uri;
 
     @NonNull
     private final Rect cropRect;
@@ -46,6 +46,7 @@ public class SetAccountImageTask extends
         final File cropped = new File(context.getExternalCacheDir(), "cropped-image" + System.currentTimeMillis() + ".jpg");
         CropUtil.crop(getContext(), uri, cropRect, 500, 500, cropped);
         userAPI.setProfileImage(username, cropped).execute();
+        uri = Uri.fromFile(cropped);
         return null;
     }
 

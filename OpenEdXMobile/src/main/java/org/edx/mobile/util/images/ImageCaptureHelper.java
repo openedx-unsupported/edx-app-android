@@ -39,6 +39,14 @@ public class ImageCaptureHelper {
         // Support using Camera
         final Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+        // Adding extras to open front camera by default. Officially, there's no intent that targets
+        // the front-facing camera, its just a hack not all device camera apps support these extras.
+        // TODO: For complete solution we can build a custom camera interface and add the functionality.
+        intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT);
+        intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+        intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+
         return intent;
     }
 
