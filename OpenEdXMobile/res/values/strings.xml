@@ -429,17 +429,13 @@
     <!-- Button label to bring up course finder -->
     <string name="find_course_text">Looking for a new challenge?</string>
     <!-- Button label to bring up course finder -->
-    <string name="find_course_btn_text">Find a mobile-friendly course</string>
+    <string name="find_course_btn_text">Find a Course</string>
     <!-- Message between sign in button and social login buttons -->
     <string name="or_sign_in_with">Or sign in with</string>
     <!-- Facebook login method -->
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
     <string name="google_text">Google</string>
-    <!-- Message on course list -->
-    <string name="course_not_listed_text">Can’t find one of your courses?</string>
-    <!-- Accessible content description of course not listed button on Course list screen -->
-    <string name="course_not_listed_btn">Can’t find one of your courses button</string>
     <!-- Title of find course screen -->
     <string name="find_courses_title">Find Courses</string>
     <!-- Message shown when attempting to find courses with no Internet connection -->
@@ -450,8 +446,6 @@
     <string name="email_client_not_present">No e-mail clients installed</string>
     <!-- Search for a course prompt -->
     <string name="search_for_courses">I want to learn about...</string>
-    <!-- A prompt message telling user that we're working hard to make courses mobile-friendly -->
-    <string name="cant_find_course_prompt">We’re working hard to make all of our courses mobile-friendly. If you can’t find a course, check back soon. We’re adding more courses every day!</string>
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->

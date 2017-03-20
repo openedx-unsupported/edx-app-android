@@ -246,7 +246,8 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
     }
 
     private void addFindCoursesFooter() {
-        final PanelFindCourseBinding footer = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.panel_find_course, binding.myCourseList, false);
+        final PanelFindCourseBinding footer = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
+                R.layout.panel_find_course, binding.myCourseList, false);
         binding.myCourseList.addFooterView(footer.getRoot(), null, false);
         footer.courseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,13 +256,5 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
                 environment.getRouter().showFindCourses(getActivity());
             }
         });
-        footer.courseNotListedTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialogFragment.newInstance(null, getString(R.string.cant_find_course_prompt), null)
-                        .show(getFragmentManager(), null);
-            }
-        });
     }
-
 }

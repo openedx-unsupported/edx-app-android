@@ -35,22 +35,8 @@
                 style="@style/edX.Widget.BrandPillButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/find_course_btn_text" />
-
-            <TextView
-                android:id="@+id/course_not_listed_tv"
-                style="@style/semibold_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin"
-                android:contentDescription="@string/course_not_listed_btn"
-                android:gravity="center"
-                android:background="@drawable/selectable_rounded_box_overlay"
-                android:padding="@dimen/edx_box_radius"
-                android:text="@string/course_not_listed_text"
-                android:layout_marginBottom="@dimen/widget_margin"
-                android:textColor="@color/text_navigation"
-                android:textSize="@dimen/edx_small" />
+                android:text="@string/find_course_btn_text"
+                android:layout_marginBottom="@dimen/edx_margin" />
 
         </LinearLayout>
     </FrameLayout>
