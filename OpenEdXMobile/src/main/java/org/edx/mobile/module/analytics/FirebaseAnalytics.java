@@ -423,7 +423,7 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackUserSubmitNegativeRating(String versionName, int rating) {
+    public void trackUserSendFeedback(String versionName, int rating) {
         final FirebaseEvent event = new FirebaseEvent(Events.APP_REVIEWS_SEND_FEEDBACK,
                 Values.APP_REVIEWS_SEND_FEEDBACK);
         event.putString(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);

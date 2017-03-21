@@ -299,9 +299,9 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackUserSubmitNegativeRating(String versionName, int rating) {
+    public void trackUserSendFeedback(String versionName, int rating) {
         for (Analytics service : services) {
-            service.trackUserSubmitNegativeRating(versionName, rating);
+            service.trackUserSendFeedback(versionName, rating);
         }
     }
 

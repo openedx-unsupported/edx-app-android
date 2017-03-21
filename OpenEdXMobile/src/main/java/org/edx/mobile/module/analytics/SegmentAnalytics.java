@@ -658,7 +658,7 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackUserSubmitNegativeRating(String versionName, int rating) {
+    public void trackUserSendFeedback(String versionName, int rating) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.APP_REVIEWS_SEND_FEEDBACK);
         aEvent.data.putValue(Keys.CATEGORY, Values.APP_REVIEWS_CATEGORY);

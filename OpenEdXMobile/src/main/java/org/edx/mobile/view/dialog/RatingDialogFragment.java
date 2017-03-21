@@ -94,8 +94,6 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         // Next action
         if (binding.ratingBar.getRating() <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
             showFeedbackDialog(getActivity());
-            analyticsRegistry.trackUserSubmitNegativeRating(BuildConfig.VERSION_NAME,
-                    (int) binding.ratingBar.getRating());
         } else {
             showRateTheAppDialog();
         }
@@ -113,6 +111,8 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             public void onClick(DialogInterface dialogInterface, int which) {
                 // Submit feedback
                 mRouter.showFeedbackScreen(activity, activity.getString(R.string.review_email_subject));
+                analyticsRegistry.trackUserSendFeedback(BuildConfig.VERSION_NAME,
+                        (int) binding.ratingBar.getRating());
             }
         });
         builder.setNegativeButton(R.string.label_maybe_later, new DialogInterface.OnClickListener() {
