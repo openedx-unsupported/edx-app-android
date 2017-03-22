@@ -23,6 +23,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.CourseDiscussionInfo;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
@@ -33,6 +34,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.TimePeriod;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
@@ -43,6 +45,7 @@ import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -126,9 +129,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        checkIfDiscussionsBlackedOut();
+
         if (discussionTopic == null) {
-            // Hide the button for adding new posts until the topic is loaded.
-            createNewPostLayout.setVisibility(View.GONE);
             // Either we are coming from a deep link or courseware's inline discussion
             fetchDiscussionTopic();
         } else {
@@ -439,5 +442,41 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         for (DiscussionTopic child : dTopic.getChildren()) {
             appendTopicIds(child, ids);
         }
+    }
+
+    /**
+     * Query server to check if discussions on this course are blacked out.
+     */
+    private void checkIfDiscussionsBlackedOut() {
+        createNewPostLayout.setVisibility(View.GONE);
+
+        discussionService.getCourseDiscussionInfo(courseData.getCourse().getId())
+                .enqueue(new ErrorHandlingCallback<CourseDiscussionInfo>(
+                        getContext(), CallTrigger.LOADING_UNCACHED, null, null) {
+                    @Override
+                    public void onFailure(@NonNull Call<CourseDiscussionInfo> call, @NonNull Throwable t) {
+                        markAsBlackedOut(false);
+                    }
+
+                    @Override
+                    protected void onResponse(@NonNull CourseDiscussionInfo discussionInfo) {
+                        final Date today = new Date();
+                        final List<TimePeriod> blackoutTimesList = discussionInfo.getBlackoutList();
+                        for (TimePeriod timePeriod : blackoutTimesList) {
+                            if (today.after(timePeriod.getStart()) &&
+                                    today.before(timePeriod.getEnd())) {
+                                markAsBlackedOut(true);
+                                return;
+                            }
+                        }
+                        markAsBlackedOut(false);
+                    }
+
+                    private void markAsBlackedOut(boolean isBlackedOut) {
+                        courseData.setDiscussionBlackedOut(isBlackedOut);
+                        createNewPostLayout.setEnabled(!isBlackedOut);
+                        createNewPostLayout.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 }

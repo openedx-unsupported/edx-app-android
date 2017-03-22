@@ -232,8 +232,9 @@ public class Router {
         activity.startActivity(addPostIntent);
     }
 
-    public void showCourseDiscussionComments(Context context, DiscussionComment comment, DiscussionThread discussionThread) {
+    public void showCourseDiscussionComments(Context context, DiscussionComment comment, DiscussionThread discussionThread, EnrolledCoursesResponse courseData) {
         Intent commentListIntent = new Intent(context, CourseDiscussionCommentsActivity.class);
+        commentListIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         commentListIntent.putExtra(Router.EXTRA_DISCUSSION_COMMENT, comment);
         commentListIntent.putExtra(Router.EXTRA_DISCUSSION_THREAD, discussionThread);
         commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
