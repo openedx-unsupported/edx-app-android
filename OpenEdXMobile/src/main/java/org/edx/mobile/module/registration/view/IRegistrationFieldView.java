@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 
@@ -32,8 +31,8 @@ public interface IRegistrationFieldView {
      */
     boolean setRawValue(String value);
 
-    public static interface IActionListener {
-        void onClickAgreement(RegistrationAgreement agreement);
+    interface IActionListener {
+        void onClickAgreement();
     }
 
     /**
@@ -68,11 +67,10 @@ public interface IRegistrationFieldView {
                 return new RegistrationSelectView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
-                if (field.getAgreement() != null) {
+                if (field.getSupplementalLink() != null) {
                     View view = inflater.inflate(R.layout.view_register_agreement, null);
                     return new RegistrationAgreementView(field, view);
-                }
-                else {
+                } else {
                     View view = inflater.inflate(R.layout.view_register_checkbox, null);
                     return new RegistrationCheckBoxView(field, view);
                 }

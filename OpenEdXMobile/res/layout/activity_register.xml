@@ -3,120 +3,134 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical"
-    android:paddingBottom="8dp"
-    android:background="@android:color/white">
+    android:paddingBottom="@dimen/widget_margin">
 
-    <ScrollView
-        android:id="@+id/scrollview"
+    <FrameLayout
+        android:id="@+id/registration_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <LinearLayout
-            android:id="@+id/registrationLayout"
+        <ScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/message_layout"
+                android:id="@+id/registrationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_marginLeft="@dimen/widget_margin_double"
+                android:layout_marginRight="@dimen/widget_margin_double"
+                android:orientation="vertical">
 
-                <include layout="@layout/panel_message_with_check" />
-            </LinearLayout>
-
-            <org.edx.mobile.view.custom.DividerWithTextView
-                android:id="@+id/signup_with_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/social_auth_bottom_margin"
-                android:text="@string/register_with" />
-
-            <include layout="@layout/panel_social_auth" />
-
-            <org.edx.mobile.view.custom.DividerWithTextView
-                android:id="@+id/or_signup_with_email_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/or_register_with_email" />
-
-            <LinearLayout
-                android:id="@+id/required_fields_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp"/>
-
-            <LinearLayout
-                android:id="@+id/field_seperator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/optional_field_tv"
-                    style="@style/semibold_text"
+                <LinearLayout
+                    android:id="@+id/message_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/edx_x_small"
-                    android:layout_marginStart="@dimen/edx_x_small"
-                    android:layout_marginRight="@dimen/edx_x_small"
-                    android:layout_marginEnd="@dimen/edx_x_small"
-                    android:focusable="true"
-                    android:text="@string/show_optional_text"
-                    android:textSize="@dimen/edx_small" />
-            </LinearLayout>
+                    android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/optional_fields_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" />
+                    <include layout="@layout/panel_message_with_check" />
+                </LinearLayout>
 
-            <FrameLayout
-                style="@style/edX.Widget.SignInButtonLayout"
-                android:focusable="true"
-                android:id="@+id/createAccount_button_layout"
-                android:contentDescription="@string/create_account_btn">
+                <org.edx.mobile.view.custom.DividerWithTextView
+                    android:id="@+id/signup_with_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/social_auth_bottom_margin"
+                    android:text="@string/register_with" />
+
+                <include layout="@layout/panel_social_auth" />
+
+                <org.edx.mobile.view.custom.DividerWithTextView
+                    android:id="@+id/or_signup_with_email_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/or_register_with_email" />
+
+                <LinearLayout
+                    android:id="@+id/required_fields_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/widget_margin_half"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/field_seperator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/edx_margin"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/optional_field_tv"
+                        style="@style/semibold_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/edx_x_small"
+                        android:layout_marginLeft="@dimen/edx_x_small"
+                        android:layout_marginRight="@dimen/edx_x_small"
+                        android:layout_marginStart="@dimen/edx_x_small"
+                        android:focusable="true"
+                        android:text="@string/show_optional_text"
+                        android:textSize="@dimen/edx_small" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/optional_fields_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/createAccount_button_layout"
+                    style="@style/edX.Widget.SignInButtonLayout"
+                    android:contentDescription="@string/create_account_btn"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/create_account_tv"
+                        style="@style/edX.Widget.SignInButton"
+                        android:text="@string/create_account_text" />
+
+                    <include layout="@layout/button_progress_indicator" />
+                </FrameLayout>
 
                 <TextView
-                    style="@style/edX.Widget.SignInButton"
-                    android:id="@+id/create_account_tv"
-                    android:text="@string/create_account_text" />
+                    android:id="@+id/by_creating_account_tv"
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/widget_margin"
+                    android:gravity="center"
+                    android:textColor="@color/grey_redirected_txt"
+                    android:textSize="@dimen/edx_xx_small"
+                    tools:text="@string/by_creating_account" />
 
-                <include layout="@layout/button_progress_indicator" />
-            </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/layout_agreement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
-            <TextView
-                android:id="@+id/by_creating_account_tv"
-                style="@style/regular_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                tools:text="@string/by_creating_account"
-                android:textColor="@color/grey_redirected_txt"
-                android:textSize="11sp" />
+            </LinearLayout>
+        </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/layout_agreement"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+    </FrameLayout>
 
-        </LinearLayout>
-    </ScrollView>
     <TextView
-        android:id="@+id/flying_message"
-        style="@style/flying_message"
-        android:text="@string/started_downloading"
-        android:layout_marginTop="50dp"
+        android:id="@+id/content_unavailable_error_text"
+        style="@style/content_unavailable_error_text"
+        android:text="@string/reset_no_network_message"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/loadingIndicator"
+        layout="@layout/loading_indicator"
         android:visibility="gone" />
+
 </RelativeLayout>

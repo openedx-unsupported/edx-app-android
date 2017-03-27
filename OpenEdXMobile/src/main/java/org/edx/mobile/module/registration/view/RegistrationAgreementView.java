@@ -1,5 +1,6 @@
 package org.edx.mobile.module.registration.view;
 
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.google.gson.JsonPrimitive;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
+import org.edx.mobile.util.ResourceUtil;
 
 class RegistrationAgreementView implements IRegistrationFieldView {
 
@@ -33,13 +35,14 @@ class RegistrationAgreementView implements IRegistrationFieldView {
 
         // display label as HTML and text to be centered horizontally
         mInputView.setGravity(Gravity.CENTER_HORIZONTAL);
-        mInputView.setText(mField.getAgreement().getText());
+        final Resources resources = view.getResources();
+        mInputView.setText(ResourceUtil.getFormattedString(resources, R.string.licensing_agreement,
+                "platform_name", resources.getString(R.string.platform_name)).toString());
         mInputView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (actionListener != null) {
-                    actionListener.onClickAgreement(mField.getAgreement());
+                    actionListener.onClickAgreement();
                 }
             }
         });

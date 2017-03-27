@@ -34,14 +34,22 @@ class RegistrationSelectView implements IRegistrationFieldView {
         // set prompt
         mInputView.setPrompt(mField.getLabel());
 
-        RegistrationOption defaultOption = null;
+        // Remove JSON defined default value, which is appropriate for web but not for mobile.
+        // e.g. server sends "--" as the default value for a select box, but on mobile we want
+        // the default value to be the label of select box like Gender, Country etc.
         for (RegistrationOption option : mField.getOptions()) {
             if (option.isDefaultValue()) {
-                defaultOption = option;
+                mField.getOptions().remove(option);
                 break;
             }
         }
-        mInputView.setItems(mField.getOptions(),defaultOption);
+        // Create default option using label text
+        RegistrationOption defaultOption = new RegistrationOption();
+        defaultOption.setName(mField.getLabel());
+        defaultOption.setDefaultValue(true);
+        mField.getOptions().add(0, defaultOption);
+
+        mInputView.setItems(mField.getOptions(), defaultOption);
 
         setInstructions(field.getInstructions());
 
