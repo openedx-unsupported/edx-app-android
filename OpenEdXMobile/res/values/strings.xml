@@ -612,4 +612,8 @@
     <string name="feedback_dialog_title">Send Feedback?</string>
     <!-- Dialog message for negative app review -->
     <string name="feedback_dialog_message">Help us improve!</string>
+    <!-- accessibility label for rating bar -->
+    <string name="rating_bar">Rating control</string>
+    <!-- accessibility label for rating selection on rating bar -->
+    <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
 </resources>
