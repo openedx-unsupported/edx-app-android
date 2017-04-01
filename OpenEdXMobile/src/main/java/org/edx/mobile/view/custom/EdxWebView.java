@@ -19,6 +19,7 @@ public class EdxWebView extends WebView {
         settings.setBuiltInZoomControls(false);
         settings.setSupportZoom(true);
         settings.setLoadsImagesAutomatically(true);
+        settings.setDomStorageEnabled(true);
         settings.setUserAgentString(
                 settings.getUserAgentString() + " " +
                         context.getString(R.string.app_name) + "/" +
