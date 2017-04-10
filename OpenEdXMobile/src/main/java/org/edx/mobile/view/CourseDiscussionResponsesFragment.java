@@ -94,7 +94,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 discussionThread.getType() == DiscussionThread.ThreadType.QUESTION);
 
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
-                getActivity(), this, discussionThread);
+                getActivity(), this, discussionThread, courseData);
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
                 discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
@@ -125,6 +125,8 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                         router.showCourseDiscussionAddResponse(getActivity(), discussionThread);
                     }
                 });
+
+        addResponseLayout.setEnabled(!courseData.isDiscussionBlackedOut());
     }
 
     @Override
@@ -183,7 +185,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
     @Override
     public void onClickViewComments(@NonNull DiscussionComment response) {
-        router.showCourseDiscussionComments(getActivity(), response, discussionThread);
+        router.showCourseDiscussionComments(getActivity(), response, discussionThread, courseData);
     }
 
     private static class ResponsesLoader implements

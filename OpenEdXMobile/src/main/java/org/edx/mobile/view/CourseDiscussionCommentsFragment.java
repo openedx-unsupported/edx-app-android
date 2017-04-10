@@ -26,6 +26,7 @@ import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
@@ -64,6 +65,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
     private DiscussionComment discussionResponse;
+
+    @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
+    private EnrolledCoursesResponse courseData;
 
     @Inject
     private DiscussionService discussionService;
@@ -122,6 +126,8 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                         router.showCourseDiscussionAddComment(context, discussionResponse, discussionThread);
                     }
                 });
+
+        createNewCommentLayout.setEnabled(!courseData.isDiscussionBlackedOut());
     }
 
     protected void getCommentsList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {

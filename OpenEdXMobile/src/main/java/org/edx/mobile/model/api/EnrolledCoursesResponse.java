@@ -11,6 +11,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     private String mode;
     private boolean is_active;
     private CourseEntry course;
+    private boolean isDiscussionBlackedOut = false;
     
     private CertificateModel certificate;
 
@@ -91,5 +92,13 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     public boolean isCertificateEarned() {
         return this.certificate != null && !TextUtils.isEmpty(this.certificate.certificateURL);
 
+    }
+
+    public boolean isDiscussionBlackedOut() {
+        return isDiscussionBlackedOut;
+    }
+
+    public void setDiscussionBlackedOut(boolean discussionBlackedOut) {
+        isDiscussionBlackedOut = discussionBlackedOut;
     }
 }

@@ -28,6 +28,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
@@ -72,6 +73,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     @NonNull
     private DiscussionThread discussionThread;
 
+    @NonNull
+    private EnrolledCoursesResponse courseData;
+
     private final List<DiscussionComment> discussionResponses = new ArrayList<>();
 
     private boolean progressVisible = false;
@@ -84,10 +88,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         static final int PROGRESS = 2;
     }
 
-    public CourseDiscussionResponsesAdapter(@NonNull Context context, @NonNull Listener listener, @NonNull DiscussionThread discussionThread) {
+    public CourseDiscussionResponsesAdapter(@NonNull Context context, @NonNull Listener listener, @NonNull DiscussionThread discussionThread, @NonNull EnrolledCoursesResponse courseData) {
         this.context = context;
         this.discussionThread = discussionThread;
         this.listener = listener;
+        this.courseData = courseData;
         RoboGuice.getInjector(context).injectMembers(this);
     }
 
@@ -304,6 +309,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         if (discussionThread.isClosed() && comment.getChildCount() == 0) {
             holder.addCommentLayout.setEnabled(false);
+        } else if (courseData.isDiscussionBlackedOut() && comment.getChildCount() == 0) {
+            holder.addCommentLayout.setEnabled(false);
         } else {
             holder.addCommentLayout.setEnabled(true);
             holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
@@ -379,7 +386,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         int numChildren = response == null ? 0 : response.getChildCount();
 
         if (response.getChildCount() == 0) {
-            if (discussionThread.isClosed()) {
+            if (discussionThread.isClosed() || courseData.isDiscussionBlackedOut()) {
                 text = context.getString(R.string.discussion_add_comment_disabled_title);
                 icon = FontAwesomeIcons.fa_lock;
             } else {
