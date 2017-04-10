@@ -903,6 +903,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             } else {
                 exitFullScreen();
             }
+            environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
+                    player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                    isFullScreen, videoEntry.eid, videoEntry.lmsUrl);
         } else {
             logger.debug("Player not prepared ?? full screen will NOT work!");
         }
@@ -926,10 +929,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     logger.warn("video model instance is null, cannot capture event enterFullScreen");
                     return;
                 }
-
-                environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
-                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                        true, videoEntry.eid, videoEntry.lmsUrl);
             }
         } catch(Exception ex) {
             logger.error(ex);
@@ -954,10 +953,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     logger.warn("video model instance is null, cannot capture event exitFullScreen");
                     return;
                 }
-
-                environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
-                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                        false, videoEntry.eid, videoEntry.lmsUrl);
             }
         } catch(Exception ex) {
             logger.error(ex);
