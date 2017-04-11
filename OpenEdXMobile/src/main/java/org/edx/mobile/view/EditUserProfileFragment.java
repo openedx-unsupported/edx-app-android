@@ -56,6 +56,7 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ImageCaptureHelper;
+import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.Collections;
@@ -396,8 +397,14 @@ public class EditUserProfileFragment extends BaseFragment {
         }
         switch (requestCode) {
             case CAPTURE_PHOTO_REQUEST: {
-                final Uri imageUri = helper.getImageUriFromResult();
+                Uri imageUri = helper.getImageUriFromResult();
                 if (null != imageUri) {
+                    // Rotate image according to exif tag, because exif rotation is creating rotation issues
+                    // in thirdparty libraries used for zooming and cropping in this project. [MA-3175]
+                    final Uri rotatedImageUri = ImageUtils.rotateImageAccordingToExifTag(getContext(), imageUri);
+                    if (null != rotatedImageUri) {
+                        imageUri = rotatedImageUri;
+                    }
                     startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, true), CROP_PHOTO_REQUEST);
                 }
                 break;
