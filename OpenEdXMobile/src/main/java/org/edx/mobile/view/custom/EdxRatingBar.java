@@ -6,9 +6,14 @@ import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.RatingBar;
 
 import org.edx.mobile.R;
+import org.edx.mobile.util.ResourceUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EdxRatingBar extends RatingBar {
     @ColorInt
@@ -39,5 +44,19 @@ public class EdxRatingBar extends RatingBar {
         stars.getDrawable(0).setColorFilter(UNSELECTED_STAR_COLOR, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(SELECTED_STAR_COLOR_DARK, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(2).setColorFilter(SELECTED_STAR_COLOR, PorterDuff.Mode.SRC_ATOP);
+        // Set accessibility label
+        setContentDescription(getResources().getString(R.string.rating_bar));
+    }
+
+    @Override
+    public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
+        super.onInitializeAccessibilityEvent(event);
+        if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_SELECTED) {
+            final Map<String, CharSequence> map = new HashMap<>();
+            map.put("rating", String.valueOf((int) getRating()));
+            map.put("num_of_stars", String.valueOf(getNumStars()));
+            event.setContentDescription(ResourceUtil.getFormattedString(getResources(),
+                    R.string.rating_bar_selection, map));
+        }
     }
 }
