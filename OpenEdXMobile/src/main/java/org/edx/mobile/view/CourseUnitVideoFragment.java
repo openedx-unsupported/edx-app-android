@@ -670,19 +670,22 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Override
     public void updateTranscript(@NonNull TimedTextObject subtitles) {
-        transcriptAdapter.clear();
-        List<Caption> transcript = new ArrayList<>();
-        for (Map.Entry<Integer, Caption> entry : subtitles.captions.entrySet()) {
-            transcript.add(entry.getValue());
+        if (transcriptAdapter != null) {
+            transcriptAdapter.clear();
+            List<Caption> transcript = new ArrayList<>();
+            for (Map.Entry<Integer, Caption> entry : subtitles.captions.entrySet()) {
+                transcript.add(entry.getValue());
+            }
+            transcriptAdapter.addAll(transcript);
+            transcriptAdapter.notifyDataSetChanged();
+            updateUI(getResources().getConfiguration().orientation);
         }
-        transcriptAdapter.addAll(transcript);
-        transcriptAdapter.notifyDataSetChanged();
-        updateUI(getResources().getConfiguration().orientation);
     }
 
     @Override
     public void updateSelection(final int subtitleIndex) {
-        if (!isTranscriptScrolling && !transcriptAdapter.isSelected(subtitleIndex)) {
+        if (transcriptAdapter != null && !isTranscriptScrolling
+                && !transcriptAdapter.isSelected(subtitleIndex)) {
             transcriptAdapter.unselectAll();
             transcriptAdapter.select(subtitleIndex);
             transcriptAdapter.notifyDataSetChanged();
