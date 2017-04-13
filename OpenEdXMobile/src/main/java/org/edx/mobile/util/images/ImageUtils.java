@@ -32,6 +32,7 @@ public class ImageUtils {
      */
     @Nullable
     public static Uri rotateImageAccordingToExifTag(@NonNull Context context, @NonNull Uri imageUri) {
+        System.gc();
         final String imagePath = imageUri.getPath().toString();
         final int requiredRotation = CropUtil.getOrientationFromUri(imagePath);
 
@@ -53,10 +54,20 @@ public class ImageUtils {
             return null;
         }
 
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        final Matrix matrix = new Matrix();
-        matrix.postRotate(requiredRotation);
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeFile(imagePath);
+            final Matrix matrix = new Matrix();
+            matrix.postRotate(requiredRotation);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
+            // Catch memory error for low memory devices and return null in fallback scenario
+            logger.error(e);
+            if (bitmap != null) {
+                bitmap.recycle();
+            }
+            return null;
+        }
 
         final FileOutputStream fileOutputStream;
         try {
@@ -64,6 +75,8 @@ public class ImageUtils {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
             fileOutputStream.flush();
             fileOutputStream.close();
+            bitmap.recycle();
+            System.gc();
             return Uri.fromFile(file);
         } catch (IOException e) {
             logger.error(e);
