@@ -90,29 +90,35 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                     @Override
                     public void onReceivedError(WebView view, int errorCode,
                                                 String description, String failingUrl) {
-                        didReceiveError = true;
-                        hideLoadingProgress();
-                        pageIsLoaded = false;
-                        ViewPagerDownloadManager.instance.done(CourseUnitWebViewFragment.this, false);
-                        showErrorMessage(R.string.network_error_message,
-                                FontAwesomeIcons.fa_exclamation_circle);
+                        // If error occurred for web page request
+                        if (failingUrl != null && failingUrl.equals(view.getUrl())) {
+                            didReceiveError = true;
+                            hideLoadingProgress();
+                            pageIsLoaded = false;
+                            ViewPagerDownloadManager.instance.done(CourseUnitWebViewFragment.this, false);
+                            showErrorMessage(R.string.network_error_message,
+                                    FontAwesomeIcons.fa_exclamation_circle);
+                        }
                     }
 
                     @Override
                     @TargetApi(Build.VERSION_CODES.M)
                     public void onReceivedHttpError(WebView view, WebResourceRequest request,
                                                     WebResourceResponse errorResponse) {
-                        didReceiveError = true;
-                        switch (errorResponse.getStatusCode()) {
-                            case HttpStatus.FORBIDDEN:
-                            case HttpStatus.UNAUTHORIZED:
-                            case HttpStatus.NOT_FOUND:
-                                EdxCookieManager.getSharedInstance(getContext())
-                                        .tryToRefreshSessionCookie();
-                                break;
+                        // If error occurred for web page request
+                        if (request.getUrl().toString().equals(view.getUrl())) {
+                            didReceiveError = true;
+                            switch (errorResponse.getStatusCode()) {
+                                case HttpStatus.FORBIDDEN:
+                                case HttpStatus.UNAUTHORIZED:
+                                case HttpStatus.NOT_FOUND:
+                                    EdxCookieManager.getSharedInstance(getContext())
+                                            .tryToRefreshSessionCookie();
+                                    break;
+                            }
+                            showErrorMessage(R.string.network_error_message,
+                                    FontAwesomeIcons.fa_exclamation_circle);
                         }
-                        showErrorMessage(R.string.network_error_message,
-                                FontAwesomeIcons.fa_exclamation_circle);
                     }
 
                     public void onPageFinished(WebView view, String url) {
@@ -124,6 +130,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                             //we load a local empty html page to release the memory
                         } else {
                             pageIsLoaded = true;
+                            hideErrorMessage();
                         }
 
                         //TODO -disable it for now. as it causes some issues for assessment
@@ -255,12 +262,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 map.put("Authorization", token);
             }
 
-            // Requery the session cookie if unavailable or expired if we are on
-            // an API level lesser than Marshmallow (which provides HTTP error
-            // codes in the error callback for WebViewClient).
+            // Requery the session cookie if unavailable or expired.
             final EdxCookieManager cookieManager = EdxCookieManager.getSharedInstance(getContext());
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M &&
-                    cookieManager.isSessionCookieMissingOrExpired()) {
+            if (cookieManager.isSessionCookieMissingOrExpired()) {
                 cookieManager.tryToRefreshSessionCookie();
             } else {
                 webView.loadUrl(unit.getBlockUrl(), map);
