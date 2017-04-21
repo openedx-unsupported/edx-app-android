@@ -76,7 +76,7 @@
     <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/edx_brand_primary_base</item>
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
-        <item name="colorAccent">@color/edx_brand_primary_accent</item>
+        <item name="colorAccent">@color/dialog_button_selector</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->

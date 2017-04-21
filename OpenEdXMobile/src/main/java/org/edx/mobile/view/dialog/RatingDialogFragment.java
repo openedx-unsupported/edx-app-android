@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.widget.Button;
@@ -38,9 +39,23 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     private AlertDialog mAlertDialog;
     @NonNull
     private FragmentDialogRatingBinding binding;
+    @Nullable
+    private OnCancelListener onCancelListener;
 
-    public static RatingDialogFragment newInstance() {
-        return new RatingDialogFragment();
+    public static RatingDialogFragment newInstance(@Nullable OnCancelListener onCancelListener) {
+        RatingDialogFragment fragment = new RatingDialogFragment();
+        fragment.setOnCancelListener(onCancelListener);
+        return fragment;
+    }
+
+    public void setOnCancelListener(@NonNull OnCancelListener onCancelListener) {
+        this.onCancelListener = onCancelListener;
+    }
+
+    private void callCancelListener() {
+        if (onCancelListener != null) {
+            onCancelListener.onCancel();
+        }
     }
 
     @Override
@@ -60,6 +75,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                     @Override
                     public void onClick(DialogInterface dialogInterface, int id) {
                         persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                        callCancelListener();
                         analyticsRegistry.trackAppRatingDialogCancelled(BuildConfig.VERSION_NAME);
                     }
                 })
@@ -74,6 +90,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     public void onCancel(DialogInterface dialogInterface) {
         super.onCancel(dialogInterface);
         persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+        callCancelListener();
         analyticsRegistry.trackAppRatingDialogCancelled(BuildConfig.VERSION_NAME);
     }
 
@@ -119,6 +136,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
                 persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                callCancelListener();
                 analyticsRegistry.trackUserMayReviewLater(BuildConfig.VERSION_NAME,
                         (int) binding.ratingBar.getRating());
             }
@@ -130,6 +148,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                callCancelListener();
             }
         });
     }
@@ -153,6 +172,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
                 persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                callCancelListener();
                 analyticsRegistry.trackUserMayReviewLater(BuildConfig.VERSION_NAME,
                         (int) binding.ratingBar.getRating());
             }
@@ -164,6 +184,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 persistRatingAndAppVersion(AppConstants.APP_ZERO_RATING);
+                callCancelListener();
             }
         });
     }
@@ -183,5 +204,13 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
         appPrefs.setAppRating(rating);
         appPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
+    }
+
+    public interface OnCancelListener {
+        /**
+         * This callback will be called when the user will close the rating dialog without performing
+         * any action (i.e. open play store for rating or giving feedback).
+         */
+        void onCancel();
     }
 }

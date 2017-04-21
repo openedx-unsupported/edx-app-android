@@ -891,7 +891,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     public void showRatingDialog() {
-        RatingDialogFragment.newInstance().show(getFragmentManager(), null);
+        RatingDialogFragment.newInstance(
+                new RatingDialogFragment.OnCancelListener() {
+                    @Override
+                    public void onCancel() {
+                        handler.postDelayed(requestAccessibilityFocusCallback, 2 * UNFREEZE_DELAY_MS);
+                    }
+                }
+        ).show(getFragmentManager(), null);
     }
 
     @Override
@@ -1004,12 +1011,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 handler.sendEmptyMessage(MSG_TYPE_TICK);
             }
 
-            // as before, request accessibility focus after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
-            // some devices take little time to be ready
             handler.postDelayed(requestAccessibilityFocusCallback, UNFREEZE_DELAY_MS);
         }
     };
 
+    /**
+     * Request accessibility focus after 300 milli seconds, so that it works on some devices like
+     * HTC One, Nexus5, S4, S5 that take some time to be ready.
+     */
     private Runnable requestAccessibilityFocusCallback = new Runnable() {
         @Override
         public void run() {
