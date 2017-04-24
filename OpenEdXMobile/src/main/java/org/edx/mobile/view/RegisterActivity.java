@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,22 +18,26 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import com.joanzapata.iconify.Icon;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
+import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.callback.CallTrigger;
+import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
@@ -45,16 +48,17 @@ import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import retrofit2.Call;
 
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
@@ -66,14 +70,22 @@ public class RegisterActivity extends BaseFragmentActivity
     private TextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
+    private View loadingIndicator;
+    private View registrationForm;
     private View facebookButton;
     private View googleButton;
+    private TextView errorTextView;
 
     @Inject
     LoginPrefs loginPrefs;
+    @Inject
+    private LoginAPI loginAPI;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
+
+    @Inject
+    private LoginService loginService;
 
     @NonNull
     public static Intent newIntent() {
@@ -89,7 +101,12 @@ public class RegisterActivity extends BaseFragmentActivity
 
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.REGISTER);
 
+        loadingIndicator = findViewById(R.id.loadingIndicator);
+        registrationForm = findViewById(R.id.registration_form);
+
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
+
+        errorTextView = (TextView) findViewById(R.id.content_unavailable_error_text);
 
         boolean isSocialEnabled = false;
         facebookButton = findViewById(R.id.facebook_button);
@@ -144,46 +161,67 @@ public class RegisterActivity extends BaseFragmentActivity
             }
         });
 
-        setupRegistrationForm();
+        getRegistrationForm();
+
         hideSoftKeypad();
         tryToSetUIInteraction(true);
     }
 
-    public void showAgreement(RegistrationAgreement agreement) {
-        boolean isInAppEULALink = false;
-        try {
-            Uri uri = Uri.parse(agreement.getLink());
-            if (uri.getScheme().equals("edxapp")
-                    && uri.getHost().equals("show_eula")) {
-                isInAppEULALink = true;
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
-
-        if (isInAppEULALink) {
-            // show EULA license that is shipped with app
-            environment.getRouter().showWebViewActivity(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
-        } else {
-            // for any other link, open agreement link in a webview container
-            environment.getRouter().showWebViewActivity(this, agreement.getLink(), agreement.getText());
-        }
+    private void showErrorMessage(String errorMsg, @NonNull Icon errorIcon) {
+        errorTextView.setVisibility(View.VISIBLE);
+        errorTextView.setText(errorMsg);
+        errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
+                new IconDrawable(this, errorIcon)
+                        .sizeRes(this, R.dimen.content_unavailable_error_icon_size)
+                        .colorRes(this, R.color.edx_brand_gray_back),
+                null, null
+        );
     }
 
-    private void setupRegistrationForm() {
-        try {
-            Gson gson = new Gson();
-            InputStream in = getAssets().open("config/registration_form.json");
-            RegistrationDescription form = gson.fromJson(new InputStreamReader(in),
-                    RegistrationDescription.class);
+    public void getRegistrationForm() {
+        if (!NetworkUtil.isConnected(this)) {
+            showErrorMessage(getString(R.string.reset_no_network_message),
+                    FontAwesomeIcons.fa_wifi);
+            return;
+        }
 
+        tryToSetUIInteraction(false);
+        loadingIndicator.setVisibility(View.VISIBLE);
+
+        final Call<RegistrationDescription> getRegistrationFormCall = loginService.getRegistrationForm();
+        getRegistrationFormCall.enqueue(new ErrorHandlingCallback<RegistrationDescription>(
+            this, CallTrigger.LOADING_UNCACHED) {
+            @Override
+            protected void onResponse(@NonNull RegistrationDescription registrationDescription) {
+                updateUI(true);
+                setupRegistrationForm(registrationDescription);
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                updateUI(false);
+                showErrorMessage(ErrorUtils.getErrorMessage(error, RegisterActivity.this),
+                        FontAwesomeIcons.fa_exclamation_circle);
+                logger.error(error);
+            }
+
+            private void updateUI(boolean isSuccess) {
+                tryToSetUIInteraction(true);
+                registrationForm.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
+                loadingIndicator.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void setupRegistrationForm(RegistrationDescription form) {
+        try {
             LayoutInflater inflater = getLayoutInflater();
 
             List<RegistrationFormField> agreements = new ArrayList<>();
 
             for (RegistrationFormField field : form.getFields()) {
                 if (field.getFieldType().equals(RegistrationFieldType.CHECKBOX)
-                        && field.getAgreement() != null) {
+                        && field.getSupplementalLink() != null) {
                     // this is agreement field
                     // this must be added at the end of the form
                     // hold on it
@@ -208,8 +246,10 @@ public class RegisterActivity extends BaseFragmentActivity
                 IRegistrationFieldView agreementView = IRegistrationFieldView.Factory.getInstance(inflater, agreement);
                 agreementView.setActionListener(new IRegistrationFieldView.IActionListener() {
                     @Override
-                    public void onClickAgreement(RegistrationAgreement agreement) {
-                        showAgreement(agreement);
+                    public void onClickAgreement() {
+                        // show EULA license that is shipped with app
+                        environment.getRouter().showWebViewActivity(RegisterActivity.this,
+                                getString(R.string.eula_file_link), getString(R.string.end_user_title));
                     }
                 });
                 agreementLayout.addView(agreementView.getView());
@@ -219,6 +259,12 @@ public class RegisterActivity extends BaseFragmentActivity
             requiredFieldsLayout.requestLayout();
             optionalFieldsLayout.requestLayout();
             agreementLayout.requestLayout();
+
+            // Set focus to first form field
+            final IRegistrationFieldView fieldView = mFieldViews.get(0);
+            if (fieldView != null) {
+                fieldView.getView().requestFocus();
+            }
 
             // enable all the views
             tryToSetUIInteraction(true);
@@ -382,12 +428,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 }
             });
         }
-    }
-
-    // make sure that on the login activity, all errors show up as a dialog as opposed to a flying snackbar
-    @Override
-    public void showAlertDialog(String header, String message) {
-        super.showAlertDialog(header, message);
     }
 
     @Override

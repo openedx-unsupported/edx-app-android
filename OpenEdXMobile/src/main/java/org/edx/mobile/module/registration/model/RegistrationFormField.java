@@ -17,7 +17,8 @@ public class RegistrationFormField {
     private @SerializedName("label")            String label;
     private @SerializedName("options")          List<RegistrationOption> options; // may be empty
     private @SerializedName("defaultOption")    RegistrationOption defaultOption; // may be nil
-    private @SerializedName("agreement")        RegistrationAgreement agreement;
+    private @SerializedName("supplementalText") String supplementalText;
+    private @SerializedName("supplementalLink") String supplementalLink;
 
     public boolean isRequired() {
         return required;
@@ -66,7 +67,11 @@ public class RegistrationFormField {
         return defaultValue;
     }
 
-    public RegistrationAgreement getAgreement() {
-        return agreement;
+    public String getSupplementalText() {
+        return supplementalText;
+    }
+
+    public String getSupplementalLink() {
+        return supplementalLink;
     }
 }
