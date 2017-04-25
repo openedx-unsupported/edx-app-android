@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_error_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <SearchView
-        android:id="@+id/discussion_topics_searchview"
-        style="@style/discussion_topics_search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <View style="@style/gray_separator" />
-
-    <ListView
-        android:id="@+id/discussion_topics_listview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:listitem="@layout/row_discussion_topic" />
+        android:orientation="vertical">
 
-</LinearLayout>
+        <SearchView
+            android:id="@+id/discussion_topics_searchview"
+            style="@style/discussion_topics_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View style="@style/gray_separator" />
+
+        <ListView
+            android:id="@+id/discussion_topics_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            tools:listitem="@layout/row_discussion_topic" />
+
+    </LinearLayout>
+
+    <include layout="@layout/content_error" />
+</FrameLayout>

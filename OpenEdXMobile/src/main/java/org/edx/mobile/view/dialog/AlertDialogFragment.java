@@ -19,9 +19,9 @@ import roboguice.fragment.RoboDialogFragment;
  */
 public class AlertDialogFragment extends RoboDialogFragment {
     protected static final String ARG_TITLE = "ARG_TITLE";
-    protected static final String ARG_TITLE_RES = "titleRes";
+    protected static final String ARG_TITLE_RES = "ARG_TITLE_RES";
     protected static final String ARG_MESSAGE = "ARG_MESSAGE";
-    protected static final String ARG_MESSAGE_RES = "messageRes";
+    protected static final String ARG_MESSAGE_RES = "ARG_MESSAGE_RES";
     protected static final String ARG_POSITIVE_ATTR = "ARG_POSITIVE_ATTR";
     protected static final String ARG_NEGATIVE_ATTR = "ARG_NEGATIVE_ATTR";
 
@@ -59,12 +59,13 @@ public class AlertDialogFragment extends RoboDialogFragment {
         return fragment;
     }
 
-    public static AlertDialogFragment newInstance(@StringRes int titleResId, @StringRes int messageResId, @Nullable final DialogInterface.OnClickListener onPositiveClick) {
+    public static AlertDialogFragment newInstance(@StringRes int titleResId,
+                                                  @StringRes int messageResId,
+                                                  @Nullable final DialogInterface.OnClickListener onPositiveClick) {
         final AlertDialogFragment fragment = new AlertDialogFragment();
         final Bundle arguments = new Bundle();
-        Bundle args = new Bundle();
-        args.putInt(ARG_TITLE_RES, titleResId);
-        args.putInt(ARG_MESSAGE_RES, messageResId);
+        arguments.putInt(ARG_TITLE_RES, titleResId);
+        arguments.putInt(ARG_MESSAGE_RES, messageResId);
         arguments.putParcelable(ARG_POSITIVE_ATTR, new ButtonAttribute() {
             @NonNull
             @Override
@@ -78,7 +79,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
                 return onPositiveClick;
             }
         });
-        fragment.setArguments(args);
+        fragment.setArguments(arguments);
         return fragment;
     }
 
@@ -138,18 +139,18 @@ public class AlertDialogFragment extends RoboDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        int titleResId = args.getInt(ARG_TITLE_RES);
-        int messageResId = args.getInt(ARG_MESSAGE_RES);
-        CharSequence title = titleResId != 0 ?
+        final Bundle args = getArguments();
+        final int titleResId = args.getInt(ARG_TITLE_RES);
+        final int messageResId = args.getInt(ARG_MESSAGE_RES);
+        final CharSequence title = titleResId != 0 ?
                 getText(titleResId) : args.getString(ARG_TITLE);
-        CharSequence message = messageResId != 0 ?
+        final CharSequence message = messageResId != 0 ?
                 getText(messageResId) : args.getString(ARG_MESSAGE);
 
-        ButtonAttribute positiveButtonAttr = getArguments().getParcelable(ARG_POSITIVE_ATTR);
-        ButtonAttribute negativeButtonAttr = getArguments().getParcelable(ARG_NEGATIVE_ATTR);
+        final ButtonAttribute positiveButtonAttr = getArguments().getParcelable(ARG_POSITIVE_ATTR);
+        final ButtonAttribute negativeButtonAttr = getArguments().getParcelable(ARG_NEGATIVE_ATTR);
 
-        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
                 .setPositiveButton(positiveButtonAttr.getText(), positiveButtonAttr.getOnClickListener())
                 .create();

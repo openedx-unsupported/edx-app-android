@@ -35,12 +35,13 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TimePeriod;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 
 import java.io.Serializable;
@@ -223,15 +224,15 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     private void fetchDiscussionTopic() {
         String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
+        final Activity activity = getActivity();
+        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         discussionService.getSpecificCourseTopics(courseData.getCourse().getId(),
                 Collections.singletonList(topicId))
-                .enqueue(new ErrorHandlingCallback<CourseTopics>(getContext(),
-                        new ProgressViewController(loadingIndicator),
-                        new OverlayErrorNotification(discussionPostsListView)) {
+                .enqueue(new ErrorHandlingCallback<CourseTopics>(activity,
+                        new ProgressViewController(loadingIndicator), mCallback, CallTrigger.LOADING_UNCACHED) {
                     @Override
                     protected void onResponse(@NonNull final CourseTopics courseTopics) {
                         discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
-                        Activity activity = getActivity();
                         if (activity != null &&
                                 !getArguments().getBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME)) {
                             // We only need to set the title here when coming from a deep link
@@ -348,15 +349,15 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     courseData.getCourse().getId(), postsFilter.getQueryParamValue(),
                     postsSort.getQueryParamValue(), nextPage, requestedFields);
         }
+
+        final Activity activity = getActivity();
+        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         final boolean isRefreshingSilently = callback.isRefreshingSilently();
-        getThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(getActivity(),
+        getThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(activity,
                 // Initially we need to show the spinner at the center of the screen. After that,
                 // the ListView will start showing a footer-based loading indicator.
                 nextPage > 1 || isRefreshingSilently ? null :
-                        new ProgressViewController(loadingIndicator),
-                isRefreshingSilently ? null : (nextPage > 1 ?
-                        new SnackbarErrorNotification(discussionPostsListView) :
-                        new OverlayErrorNotification(discussionPostsListView))) {
+                        new ProgressViewController(loadingIndicator),mCallback, CallTrigger.LOADING_UNCACHED) {
             @Override
             protected void onResponse(@NonNull final Page<DiscussionThread> threadsPage) {
                 if (getView() == null) return;
@@ -455,7 +456,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         createNewPostLayout.setVisibility(View.GONE);
 
         discussionService.getCourseDiscussionInfo(courseData.getCourse().getId())
-                .enqueue(new ErrorHandlingCallback<CourseDiscussionInfo>(getContext(), null, null) {
+                .enqueue(new ErrorHandlingCallback<CourseDiscussionInfo>(getContext(), (TaskProgressCallback) null) {
                     @Override
                     public void onFailure(@NonNull Call<CourseDiscussionInfo> call, @NonNull Throwable t) {
                         markAsBlackedOut(false);

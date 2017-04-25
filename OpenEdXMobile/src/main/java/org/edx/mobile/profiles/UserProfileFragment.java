@@ -20,14 +20,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.joanzapata.iconify.Icon;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
+import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.PresenterFragment;
@@ -40,7 +45,9 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 
-public class UserProfileFragment extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface> implements UserProfileBioTabParent, ScrollingPreferenceParent {
+public class UserProfileFragment
+        extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface>
+        implements UserProfileBioTabParent, ScrollingPreferenceParent, RefreshListener {
 
     @NonNull
     public static UserProfileFragment newInstance(@NonNull String username) {
@@ -61,6 +68,8 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
     private Router router;
 
     protected final Logger logger = new Logger(getClass().getName());
+
+    private SnackbarErrorNotification snackbarErrorNotification;
 
     @Nullable
     @Override
@@ -124,6 +133,8 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
     protected UserProfilePresenter.ViewInterface createView() {
         viewHolder = DataBindingUtil.getBinding(getView());
 
+        snackbarErrorNotification = new SnackbarErrorNotification(viewHolder.getRoot());
+
         viewHolder.profileSectionPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -173,6 +184,8 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.VISIBLE);
+                viewHolder.profileHeader.setVisibility(View.VISIBLE);
+                onFinish();
             }
 
             @Override
@@ -183,6 +196,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.VISIBLE);
+                viewHolder.profileHeader.setVisibility(View.GONE);
             }
 
             @Override
@@ -192,8 +206,26 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
+
+                final Icon errorIcon = ErrorUtils.getErrorIcon(error);
                 viewHolder.contentError.getRoot().setVisibility(View.VISIBLE);
+                if (errorIcon != null) {
+                    viewHolder.contentError.contentErrorIcon.setIcon(errorIcon);
+                }
                 viewHolder.contentError.contentErrorText.setText(ErrorUtils.getErrorMessage(error, getContext()));
+                viewHolder.contentError.contentErrorAction.setText(R.string.lbl_reload);
+                viewHolder.contentError.contentErrorAction.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (NetworkUtil.isConnected(getContext())) {
+                                    onRefresh();
+                                }
+                            }
+                        });
+                viewHolder.contentError.contentErrorAction.setVisibility(View.VISIBLE);
+                viewHolder.profileHeader.setVisibility(View.GONE);
+                onFinish();
             }
 
             @Override
@@ -233,6 +265,12 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
             public void navigateToProfileEditor(@NonNull String username) {
                 router.showUserProfileEditor(getActivity(), username);
             }
+
+            private void onFinish() {
+                if (!EventBus.getDefault().isRegistered(UserProfileFragment.this)) {
+                    EventBus.getDefault().registerSticky(UserProfileFragment.this);
+                }
+            }
         };
     }
 
@@ -265,5 +303,33 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
             pages.add(new StaticFragmentPagerAdapter.Item(tab.getFragmentClass(), resources.getString(tab.getDisplayName())));
         }
         return pages;
+    }
+
+    @Override
+    public void onRefresh() {
+        view.showLoading();
+        presenter.onRefresh();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(NetworkConnectivityChangeEvent event) {
+        if (!NetworkUtil.isConnected(getContext())) {
+            if (viewHolder.contentError.getRoot().getVisibility() != View.VISIBLE) {
+                snackbarErrorNotification.showOfflineError(this);
+            }
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onRevisit() {
+        if (NetworkUtil.isConnected(getActivity())) {
+            snackbarErrorNotification.hideError();
+        }
     }
 }

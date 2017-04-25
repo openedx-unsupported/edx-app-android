@@ -110,6 +110,16 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
+    <style name="content_unavailable_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="content_unavailable_error_text" parent="bold_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

@@ -1,31 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
+        android:id="@+id/content_error_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/no_course_tv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <org.edx.mobile.view.custom.IconImageViewXml
-                android:layout_width="@dimen/large_indicator_icon_width"
-                android:layout_height="@dimen/large_indicator_icon_height"
-                android:layout_margin="@dimen/edx_margin"
-                app:iconColor="@color/edx_brand_gray_back"
-                app:iconName="fa-exclamation-circle" />
-
-            <TextView
-                style="@style/content_unavailable_error_text"
-                android:text="@string/no_courses_to_display"
-                android:visibility="visible" />
-        </LinearLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_container"
@@ -47,6 +27,8 @@
         <include
             android:id="@+id/loading_indicator"
             layout="@layout/loading_indicator" />
+
+        <include layout="@layout/content_error" />
 
     </FrameLayout>
 </layout>

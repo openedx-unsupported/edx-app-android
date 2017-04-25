@@ -7,20 +7,16 @@ import android.support.annotation.StringRes;
 import android.view.View;
 
 import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.AppStoreUtils;
-import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.images.ErrorUtils;
 
 import java.io.IOException;
 
 /**
- * A user notification of errors while loading content from, or submitting content to, a remote
- * server.
+ * A notification to show errors while loading content from or submitting content to a remote server.
  */
 public abstract class ErrorNotification {
     /**
@@ -39,34 +35,32 @@ public abstract class ErrorNotification {
      *              thrown unexpectedly while creating the request or processing the response.
      */
     public void showError(@NonNull final Context context, @NonNull final Throwable error) {
+        showError(context, error, 0, null);
+    }
+
+
+    /**
+     * Show the error notification with the message appropriate for the provided error.
+     *
+     * @param context The Context, to be used for checking connectivity status.
+     * @param error The error that occurred while attempting to retrieve from or deliver to the
+     *              remote server. This may be an {@link IOException} if the request failed due to a
+     *              network failure, an {HttpResponseStatusException} if the failure was due to
+     *              receiving an error code, or any {@link Throwable} implementation if one was
+     *              thrown unexpectedly while creating the request or processing the response.
+     * @param actionTextResId The resource ID of the action button text.
+     * @param actionListener The callback to be invoked when the action button is clicked.
+     */
+    public void showError(@NonNull final Context context, @NonNull final Throwable error,
+                          @StringRes int actionTextResId,
+                          @Nullable View.OnClickListener actionListener) {
         @StringRes
-        int errorResId = R.string.error_unknown;
-        Icon icon = null;
-        @StringRes
-        int actionTextResId = 0;
-        View.OnClickListener actionListener = null;
-        if (error instanceof IOException) {
-            icon = FontAwesomeIcons.fa_wifi;
-            if (NetworkUtil.isConnected(context)) {
-                errorResId = R.string.network_connected_error;
-            } else {
-                errorResId = R.string.reset_no_network_message;
-            }
-        } else if (error instanceof HttpStatusException) {
-            switch (((HttpStatusException) error).getStatusCode()) {
-                case HttpStatus.SERVICE_UNAVAILABLE:
-                    errorResId = R.string.network_service_unavailable;
-                    break;
-                case HttpStatus.UPGRADE_REQUIRED:
-                    errorResId = R.string.app_version_unsupported;
-                    actionTextResId = R.string.label_update;
-                    actionListener = AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER;
-                    break;
-            }
-        }
-        if (errorResId == R.string.error_unknown) {
-            // Submit crash report since this is an unknown type of error
-            logger.error(error, true);
+        final int errorResId = ErrorUtils.getErrorMessageRes(context, error);
+        final Icon icon = ErrorUtils.getErrorIcon(error);
+
+        if (errorResId == R.string.app_version_unsupported) {
+            actionTextResId = R.string.label_update;
+            actionListener = AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER;
         }
         showError(errorResId, icon, actionTextResId, actionListener);
     }
@@ -79,8 +73,8 @@ public abstract class ErrorNotification {
      * @param actionTextResId The resource ID of the action button text.
      * @param actionListener The callback to be invoked when the action button is clicked.
      */
-    protected abstract void showError(@StringRes final int errorResId,
-                                      @NonNull final Icon icon,
-                                      @StringRes final int actionTextResId,
-                                      @Nullable final View.OnClickListener actionListener);
+    public abstract void showError(@StringRes final int errorResId,
+                                   @Nullable final Icon icon,
+                                   @StringRes final int actionTextResId,
+                                   @Nullable final View.OnClickListener actionListener);
 }

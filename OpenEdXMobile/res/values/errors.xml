@@ -53,11 +53,6 @@
         \n Please connect to a Wi-Fi network or change your download settings.</string>
     
     <!-- Offline Access -->
-    <!-- Label shown when user attempts to view a course section that hasn't been synced -->
-    <string name="section_offline_header">This section is not available in offline mode</string>
-    <!-- Label shown when user attempts to view a course section that hasn't been synced -->
-    <string name="section_offline_message">If you’ve downloaded content for a different section, 
-        \ngo to that section to view the content.</string>
     <!-- Alert dialog title shown when user attempts to view a video that hasn't been synced -->
     <string name="video_offline_header">This video is not available offline.</string>
     <!-- Alert dialog content shown when user attempts to view a video that hasn't been synced -->

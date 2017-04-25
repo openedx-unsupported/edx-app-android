@@ -36,9 +36,7 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
      * Testing options menu initialization
      */
     @Test
-    @Override
     public void initializeOptionsMenuTest() {
-        super.initializeOptionsMenuTest();
         BaseVideosDownloadStateActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).setup().get();

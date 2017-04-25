@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.callback.Callback;
+import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
@@ -14,32 +15,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UserProfileTabsInteractor {
+public class UserProfileTabsInteractor implements RefreshListener {
 
     @NonNull
     private final String username;
 
+    @NonNull
+    private final UserService userService;
+
+    private final boolean isBadgesEnabled;
 
     @NonNull
     private final CachingObservable<List<UserProfileTab>> tabs = new CachingObservable<>();
 
     public UserProfileTabsInteractor(@NonNull String username, @NonNull final UserService userService, @NonNull Config config) {
         this.username = username;
+        this.userService = userService;
         tabs.onData(builtInTabs());
-        if (config.isBadgesEnabled()) {
-            userService.getBadges(UserProfileTabsInteractor.this.username, 1)
-                    .enqueue(new Callback<Page<BadgeAssertion>>() {
-                        @Override
-                        protected void onResponse(@NonNull Page<BadgeAssertion> badges) {
-                            handleBadgesLoaded(badges);
-                        }
-
-                        @Override
-                        protected void onFailure(@NonNull Throwable error) {
-                            // do nothing. Better to just deal show what we can
-                        }
-                    });
-        }
+        isBadgesEnabled = config.isBadgesEnabled();
+        onRefresh();
     }
 
     @NonNull
@@ -60,5 +54,23 @@ public class UserProfileTabsInteractor {
         knownTabs.addAll(builtInTabs());
         knownTabs.add(new UserProfileTab(R.string.profile_tab_accomplishment, UserProfileAccomplishmentsFragment.class));
         tabs.onData(knownTabs);
+    }
+
+    @Override
+    public void onRefresh() {
+        if (isBadgesEnabled) {
+            userService.getBadges(UserProfileTabsInteractor.this.username, 1)
+                    .enqueue(new Callback<Page<BadgeAssertion>>() {
+                        @Override
+                        protected void onResponse(@NonNull Page<BadgeAssertion> badges) {
+                            handleBadgesLoaded(badges);
+                        }
+
+                        @Override
+                        protected void onFailure(@NonNull Throwable error) {
+                            // do nothing. Better to just deal show what we can
+                        }
+                    });
+        }
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.social.SocialFactory;
@@ -49,7 +48,7 @@ public class GoogleProvider implements SocialProvider {
                 .get()
                 .build())
                 .enqueue(new ErrorHandlingOkCallback<GoogleUserProfile>(context,
-                        GoogleUserProfile.class, CallTrigger.LOADING_UNCACHED) {
+                        GoogleUserProfile.class, null) {
                     @Override
                     protected void onResponse(@NonNull GoogleUserProfile userProfile) {
                         String name = userProfile.name;
