@@ -16,14 +16,14 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.MessageType;
+import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
@@ -80,7 +80,12 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
 
     @Override
     public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
+        final Activity activity = getActivity();
+        final TaskProgressCallback progressCallback = activity instanceof TaskProgressCallback ? (TaskProgressCallback) activity : null;
+        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
+        if (mCallback != null) {
+            mCallback.onMessage(MessageType.EMPTY, "");
+        }
         if (searchThreadListCall != null) {
             searchThreadListCall.cancel();
         }
@@ -88,23 +93,17 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                 DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
         searchThreadListCall = discussionService.searchThreadList(
                 courseData.getCourse().getId(), searchQuery, nextPage, requestedFields);
-        final Activity activity = getActivity();
-        final TaskProgressCallback progressCallback = activity instanceof TaskProgressCallback ?
-                (TaskProgressCallback) activity : null;
         final boolean isRefreshingSilently = callback.isRefreshingSilently();
         searchThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(
                 activity,
                 // Initially we need to show the spinner at the center of the screen. After that,
                 // the ListView will start showing a footer-based loading indicator.
                 nextPage > 1 || isRefreshingSilently ? null : progressCallback,
-                isRefreshingSilently ? null : (nextPage > 1 ?
-                        new SnackbarErrorNotification(discussionPostsListView) :
-                        new OverlayErrorNotification(discussionPostsListView))) {
+                mCallback, CallTrigger.LOADING_UNCACHED) {
             @Override
             protected void onResponse(@NonNull final Page<DiscussionThread> threadsPage) {
                 ++nextPage;
                 callback.onPageLoaded(threadsPage);
-                Activity activity = getActivity();
                 if (activity instanceof TaskProcessCallback) {
                     if (discussionPostsAdapter.getCount() == 0) {
                         String escapedTitle = TextUtils.htmlEncode(searchQuery);

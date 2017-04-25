@@ -35,14 +35,16 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.course.CourseService;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
+import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -219,8 +221,11 @@ public class CourseDetailFragment extends BaseFragment {
      */
     private void populateAboutThisCourse() {
         getCourseDetailCall = courseApi.getCourseDetail(courseDetail.course_id);
-        getCourseDetailCall.enqueue(new ErrorHandlingCallback<CourseDetail>(
-                getActivity(), new SnackbarErrorNotification(courseAbout)) {
+        final Activity activity = getActivity();
+        final TaskProgressCallback pCallback = activity instanceof TaskProgressCallback ? (TaskProgressCallback) activity : null;
+        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
+        getCourseDetailCall.enqueue(new ErrorHandlingCallback<CourseDetail>(getActivity(),
+                pCallback, mCallback, CallTrigger.LOADING_CACHED) {
             @Override
             protected void onResponse(@NonNull final CourseDetail courseDetail) {
                 if (courseDetail.overview != null && !courseDetail.overview.isEmpty()) {

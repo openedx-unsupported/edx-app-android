@@ -6,67 +6,61 @@
     android:fillViewport="true"
     tools:context="org.edx.mobile.view.CourseCombinedInfoFragment">
 
-    <LinearLayout
-        android:id="@+id/announcement_layout"
+    <FrameLayout
+        android:id="@+id/content_error_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/common_course_display_margin_side"
-        android:paddingRight="@dimen/common_course_display_margin_side"
-        android:orientation="vertical">
-
-        <!-- Announcement container is populated with announcements via code found in the CourseCombinedInfoFragment -->
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/notification_setting_row"
+            android:id="@+id/announcement_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/common_course_display_margin_side"
+            android:paddingRight="@dimen/common_course_display_margin_side">
 
-            <TextView
-                android:id="@+id/settingsText"
-                style="@style/regular_grey_text"
-                android:layout_width="0dp"
+            <!-- Announcement container is populated with announcements via code found in the CourseCombinedInfoFragment -->
+
+            <LinearLayout
+                android:id="@+id/notification_setting_row"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:paddingBottom="@dimen/notification_settings_margin"
-                android:paddingTop="@dimen/notification_settings_margin"
-                android:text="@string/notification_toggle"
-                android:textSize="16sp"
-                tools:targetApi="17" />
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-            <Switch
-                android:id="@+id/notification_switch"
-                style="@style/edX.Widget.Switch"
-                android:checked="true" />
+                <TextView
+                    android:id="@+id/settingsText"
+                    style="@style/regular_grey_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/notification_settings_margin"
+                    android:paddingTop="@dimen/notification_settings_margin"
+                    android:text="@string/notification_toggle"
+                    android:textSize="16sp"
+                    tools:targetApi="17" />
+
+                <Switch
+                    android:id="@+id/notification_switch"
+                    style="@style/edX.Widget.Switch"
+                    android:checked="true" />
+            </LinearLayout>
+
+            <org.edx.mobile.view.custom.EdxWebView
+                android:id="@+id/announcement_webview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_course_display_margin_top"
+                android:orientation="vertical"
+                android:scrollbars="none" />
+
         </LinearLayout>
 
+        <include layout="@layout/content_error" />
 
-        <TextView
-            android:id="@+id/no_announcement_tv"
-            style="@style/content_unavailable_error_text"
-            android:text="@string/no_announcements_to_display"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <include layout="@layout/loading_indicator" />
 
-        <org.edx.mobile.view.custom.EdxWebView
-            android:id="@+id/announcement_webview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_course_display_margin_top"
-            android:orientation="vertical"
-            android:scrollbars="none" />
-
-        <include
-            layout="@layout/loading_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
-
-    </LinearLayout>
-
-
-
+    </FrameLayout>
 </ScrollView>

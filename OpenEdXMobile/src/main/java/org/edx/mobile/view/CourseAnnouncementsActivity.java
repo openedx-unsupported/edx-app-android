@@ -1,23 +1,22 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 
 
-public class CourseAnnouncementsActivity extends BaseFragmentActivity {
+public class CourseAnnouncementsActivity extends BaseSingleFragmentActivity {
 
     @Inject
     CourseAPI api;
 
-    private CourseCombinedInfoFragment fragment;
     private EnrolledCoursesResponse courseData;
 
 
@@ -100,33 +99,16 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
         finish();
     }
 
-
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            try {
+    public Fragment getFirstFragment() {
+        CourseCombinedInfoFragment fragment = new CourseCombinedInfoFragment();
 
-                fragment = new CourseCombinedInfoFragment();
+        if (courseData != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+            fragment.setArguments(bundle);
 
-                if (courseData != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-                    fragment.setArguments(bundle);
-
-                }
-                //this activity will only ever hold this lone fragment, so we
-                // can afford to retain the instance during activity recreation
-                fragment.setRetainInstance(true);
-
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(android.R.id.content, fragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
-
-            } catch (Exception e) {
-                logger.error(e);
-            }
         }
+        return fragment;
     }
 }

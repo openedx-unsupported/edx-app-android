@@ -190,7 +190,8 @@
         <activity
             android:name=".view.CourseAnnouncementsActivity"
             android:label="@string/announcement_title"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.CertificateActivity"

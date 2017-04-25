@@ -40,35 +40,6 @@ public class UiUtil {
     }
 
     /**
-     * Call this method to inform user about going  offline
-     */
-    public static void showOfflineAccessMessage(View root) {
-        if (root == null) {
-            logger.warn("cannot show message, no views available");
-            return;
-        }
-        try {
-            ViewAnimationUtil.showMessageBar(root.findViewById(R.id.offline_access_panel));
-        } catch (Exception e) {
-            logger.error(e);
-        }
-    }
-
-    //Hide the offline access message
-    public static void hideOfflineAccessMessage(View root) {
-        if (root == null) {
-            logger.warn("cannot show message, no views available");
-            return;
-        }
-        View v = root.findViewById(R.id.offline_access_panel);
-        if (v != null) {
-            v.setVisibility(View.GONE);
-        } else {
-            logger.warn("cannot hide message, cannot find offline_access_panel");
-        }
-    }
-
-    /**
      * This function is used to return the passed Value in Display Metrics form
      * @param point width/height as int
      * @return float

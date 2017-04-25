@@ -1,5 +1,6 @@
 package org.edx.mobile.view.dialog;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,12 +16,12 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.view.adapters.FindCoursesListAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+import org.edx.mobile.view.common.TaskMessageCallback;
 
 import retrofit2.Call;
 
@@ -50,13 +51,14 @@ public class NativeFindCoursesFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final Activity activity = getActivity();
         this.viewHolder = new ViewHolder(view);
         viewHolder.listView.setVisibility(View.GONE);
         viewHolder.loadingIndicator.setVisibility(View.VISIBLE);
-        final FindCoursesListAdapter adapter = new FindCoursesListAdapter(getActivity(), environment) {
+        final FindCoursesListAdapter adapter = new FindCoursesListAdapter(activity, environment) {
             @Override
             public void onItemClicked(CourseDetail model) {
-                environment.getRouter().showCourseDetail(getActivity(), model);
+                environment.getRouter().showCourseDetail(activity, model);
             }
         };
         // Add empty views to cause a dividers to render at the top and bottom of the list
@@ -69,9 +71,10 @@ public class NativeFindCoursesFragment extends BaseFragment {
                     call.cancel();
                 }
                 call = courseAPI.getCourseList(nextPage);
-                call.enqueue(new ErrorHandlingCallback<Page<CourseDetail>>(getActivity(), null,
-                        nextPage > 1 ? new SnackbarErrorNotification(viewHolder.listView) :
-                                new OverlayErrorNotification(viewHolder.listView)) {
+
+                final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
+                call.enqueue(new ErrorHandlingCallback<Page<CourseDetail>>(activity, null,
+                        mCallback, CallTrigger.LOADING_UNCACHED) {
                     @Override
                     protected void onResponse(@NonNull final Page<CourseDetail> coursesPage) {
                         callback.onPageLoaded(coursesPage);

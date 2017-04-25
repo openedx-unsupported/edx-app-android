@@ -29,9 +29,9 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.discussion.ThreadBody;
+import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
@@ -236,7 +236,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
         }
         getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
         getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(
-                getActivity(), new SnackbarErrorNotification(topicsSpinner)) {
+                getActivity(), null, null, CallTrigger.LOADING_CACHED) {
             @Override
             protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 final ArrayList<DiscussionTopic> allTopics = new ArrayList<>();

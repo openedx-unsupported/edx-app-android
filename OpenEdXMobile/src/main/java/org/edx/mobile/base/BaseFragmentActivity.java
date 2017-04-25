@@ -12,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -42,12 +41,13 @@ import de.greenrobot.event.EventBus;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI, OnActivityResultListener {
+    private final Handler handler = new Handler();
+    protected final Logger logger = new Logger(getClass().getName());
 
-    protected ActionBarDrawerToggle mDrawerToggle;
-    //FIXME - we should not set a separate flag to indicate the status of UI component
-    private boolean isUiOnline = true;
     private boolean isConnectedToWifi = false;
     private boolean isActivityStarted = false;
+    protected ActionBarDrawerToggle mDrawerToggle;
+
     @Inject
     protected IEdxEnvironment environment;
     private List<NetworkObserver> networkObservers = new ArrayList<>();
@@ -78,9 +78,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
-    private final Handler handler = new Handler();
-    protected final Logger logger = new Logger(getClass().getName());
-
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -89,6 +86,16 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             bar.setDisplayShowHomeEnabled(true);
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setIcon(android.R.color.transparent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (!NetworkUtil.isConnected(this)) {
+            // Currently we are sending this event again, so that offline SnackBar can appear
+            // when we return to a screen.
+            EventBus.getDefault().post(new NetworkConnectivityChangeEvent());
         }
     }
 
@@ -352,16 +359,12 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
         logger.debug("network state changed");
         if (NetworkUtil.isConnected(this)) {
-            if (!isUiOnline) {
-                // only notify if previous state was NOT same
-                isUiOnline = true;
-                handler.post(new Runnable() {
-                    public void run() {
-                        onOnline();
-                        notifyNetworkConnect();
-                    }
-                });
-            }
+            handler.post(new Runnable() {
+                public void run() {
+                    onOnline();
+                    notifyNetworkConnect();
+                }
+            });
 
             if (NetworkUtil.isConnectedWifi(this)) {
                 if (!isConnectedToWifi) {
@@ -385,15 +388,13 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                 }
             }
         } else {
-            if (isUiOnline) {
-                isUiOnline = false;
-                handler.post(new Runnable() {
-                    public void run() {
-                        onOffline();
-                        notifyNetworkDisconnect();
-                    }
-                });
-            }
+            handler.post(new Runnable() {
+                public void run() {
+                    onOffline();
+                    notifyNetworkDisconnect();
+                }
+            });
+
         }
     }
 

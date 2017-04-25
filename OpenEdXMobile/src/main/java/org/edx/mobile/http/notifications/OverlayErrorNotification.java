@@ -21,7 +21,7 @@ import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
- * An overlay notification error message on top of the content area.
+ * A full screen error notification message on top of the content area.
  */
 public class OverlayErrorNotification extends ErrorNotification {
     /**
@@ -29,6 +29,12 @@ public class OverlayErrorNotification extends ErrorNotification {
      */
     @NonNull
     private final View view;
+
+    /**
+     * The error content view.
+     */
+    @Nullable
+    private ViewGroup errorLayout;
 
     /**
      * Construct a new instance of the notification.
@@ -55,25 +61,24 @@ public class OverlayErrorNotification extends ErrorNotification {
      * @param actionListener The callback to be invoked when the action button is clicked.
      */
     @Override
-    protected void showError(@StringRes final int errorResId,
-                             @Nullable final Icon icon,
-                             @StringRes final int actionTextResId,
-                             @Nullable final View.OnClickListener actionListener) {
+    public void showError(@StringRes final int errorResId,
+                          @Nullable final Icon icon,
+                          @StringRes final int actionTextResId,
+                          @Nullable final View.OnClickListener actionListener) {
         final ViewGroup root = findSuitableAncestorLayout();
         if (root == null) return;
 
-        final ViewGroup layout;
         final View layoutView = root.findViewById(R.id.content_error);
         if (layoutView instanceof ViewGroup) {
-            layout = (ViewGroup) layoutView;
+            errorLayout = (ViewGroup) layoutView;
         } else {
             final LayoutInflater layoutInflater = LayoutInflater.from(view.getContext());
-            layout = (ViewGroup) layoutInflater.inflate(R.layout.content_error, root, false);
-            root.addView(layout);
+            errorLayout = (ViewGroup) layoutInflater.inflate(R.layout.content_error, root, false);
+            root.addView(errorLayout);
         }
-        final TextView messageView = (TextView) layout.findViewById(R.id.content_error_text);
-        final Button actionButton = (Button) layout.findViewById(R.id.content_error_action);
-        final IconImageView iconView = (IconImageView) layout.findViewById(R.id.content_error_icon);
+        final TextView messageView = (TextView) errorLayout.findViewById(R.id.content_error_text);
+        final Button actionButton = (Button) errorLayout.findViewById(R.id.content_error_action);
+        final IconImageView iconView = (IconImageView) errorLayout.findViewById(R.id.content_error_icon);
 
         messageView.setText(errorResId);
         if (icon == null) {
@@ -87,10 +92,30 @@ public class OverlayErrorNotification extends ErrorNotification {
         } else {
             actionButton.setVisibility(VISIBLE);
             actionButton.setText(actionTextResId);
+            actionButton.setOnClickListener(actionListener);
         }
 
         view.setVisibility(GONE);
-        layout.setVisibility(VISIBLE);
+        errorLayout.setVisibility(VISIBLE);
+    }
+
+    /**
+     * Hides the currently displayed error and shows the content that was previously hidden.
+     */
+    public void hideError() {
+        if (errorLayout != null) {
+            errorLayout.setVisibility(View.GONE);
+        }
+        view.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Tells if the error is currently visible or not.
+     *
+     * @return <code>true</code> if the error is visible, <code>false</code> otherwise.
+     */
+    public boolean isShowing() {
+        return errorLayout != null && errorLayout.getVisibility() == View.VISIBLE;
     }
 
     /**

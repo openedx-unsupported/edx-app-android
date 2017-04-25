@@ -9,6 +9,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.ErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
+import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.Page;
@@ -178,6 +181,16 @@ public class CourseAPI {
                                           @NonNull final String courseId,
                                           @Nullable final TaskProgressCallback progressCallback) {
             super(context, progressCallback);
+            this.courseId = courseId;
+        }
+
+        public GetCourseStructureCallback(@NonNull final Context context,
+                                          @NonNull final String courseId,
+                                          @Nullable final TaskProgressCallback progressCallback,
+                                          @Nullable final ErrorNotification errorNotification,
+                                          @Nullable final SnackbarErrorNotification snackbarErrorNotification,
+                                          @Nullable final RefreshListener refreshListener) {
+            super(context, progressCallback, errorNotification, snackbarErrorNotification, refreshListener);
             this.courseId = courseId;
         }
 
