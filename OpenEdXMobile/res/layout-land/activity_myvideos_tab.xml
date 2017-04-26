@@ -3,22 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Don't show tabs in landscape. -->
+    <org.edx.mobile.view.custom.DisableableViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar" />
-
-        <!-- Don't show tabs in landscape. -->
-        <org.edx.mobile.view.custom.DisableableViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:enabled="false" />
-    </LinearLayout>
+        android:enabled="false" />
 
     <TextView
         android:id="@+id/flying_message"

@@ -6,18 +6,6 @@
     android:baselineAligned="false"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/top_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar"
-            android:visibility="gone" />
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >

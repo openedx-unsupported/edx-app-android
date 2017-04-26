@@ -11,20 +11,6 @@
         android:text="@string/no_videos_to_display" />
 
     <LinearLayout
-        android:id="@+id/top_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
-
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,8 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:visibility="gone"
-        android:orientation="vertical"
-        android:layout_below="@id/top_panel" > 
+        android:orientation="vertical" >
     </LinearLayout>
 
     <ListView
