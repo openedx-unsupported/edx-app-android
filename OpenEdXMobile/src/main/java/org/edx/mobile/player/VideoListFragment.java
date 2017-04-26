@@ -46,8 +46,6 @@ import java.util.Map;
 
 public class VideoListFragment extends BaseFragment {
 
-    public static View offlineBar;
-    private boolean isLandscape = false;
     private VideoBaseAdapter<SectionItemInterface> adapter;
     private ListView videoListView;
     private boolean isActivityStarted;
@@ -108,26 +106,10 @@ public class VideoListFragment extends BaseFragment {
         videoListView = (ListView) getView().findViewById(R.id.list_video);
 
         if (videoListView != null) {
-            isLandscape = false;
-
             videoListView.setEmptyView(getView().findViewById(
                     R.id.empty_list_view));
-            offlineBar = getView().findViewById(R.id.offline_bar);
-
-            if (!(NetworkUtil.isConnected(getActivity()))) {
-                if (offlineBar != null)
-                    offlineBar.setVisibility(View.VISIBLE);
-                showDeletePanel(getView());
-            } else {
-                if (offlineBar != null) {
-                    offlineBar.setVisibility(View.GONE);
-                }
-            }
-
             setAdaptertoVideoList();
-
         } else {
-            isLandscape = true;
             // probably the landscape player view, so hide action bar
             ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             if (bar != null) {
@@ -268,28 +250,12 @@ public class VideoListFragment extends BaseFragment {
         }
     }
 
-    public void onOffline() {
-        if (!isLandscape) {
-            if (offlineBar != null) {
-                offlineBar.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     public void handleDeleteView() {
         if (isPlayerVisible()) {
             hideDeletePanel(getView());
         } else {
             if (downloadAvailable) {
                 showDeletePanel(getView());
-            }
-        }
-    }
-
-    public void onOnline() {
-        if (!isLandscape) {
-            if (offlineBar != null) {
-                offlineBar.setVisibility(View.GONE);
             }
         }
     }

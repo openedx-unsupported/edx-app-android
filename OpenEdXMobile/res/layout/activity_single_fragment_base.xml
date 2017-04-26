@@ -39,20 +39,13 @@
                     <include layout="@layout/panel_error_message_with_title"/>
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/offline_bar"
-                    style="@style/offline_bar"
-                    android:layout_alignParentTop="true"
-                    android:visibility="gone" />
+                <RelativeLayout
+                    android:id="@+id/my_groups_list_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1">
 
-                    <RelativeLayout
-                        android:id="@+id/my_groups_list_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="0px"
-                        android:layout_below="@id/offline_bar"
-                        android:layout_weight="1">
-
-                    </RelativeLayout>
+                </RelativeLayout>
 
                 <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
             </LinearLayout>

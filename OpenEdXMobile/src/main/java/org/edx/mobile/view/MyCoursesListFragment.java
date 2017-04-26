@@ -18,8 +18,8 @@ import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.loader.AsyncTaskResult;
@@ -30,9 +30,7 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.task.RestoreVideosCacheDataTask;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
-import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,12 +174,6 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        hideOfflinePanel();
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
@@ -205,17 +197,13 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
 
     @Override
     public void onOnline() {
-        if (binding.offlineBar != null && binding.swipeContainer != null) {
-            binding.offlineBar.setVisibility(View.GONE);
-            hideOfflinePanel();
+        if (binding.swipeContainer != null) {
             binding.swipeContainer.setEnabled(true);
         }
     }
 
     @Override
     public void onOffline() {
-        binding.offlineBar.setVisibility(View.VISIBLE);
-        showOfflinePanel();
         //Disable swipe functionality and hide the loading view
         binding.swipeContainer.setEnabled(false);
         binding.swipeContainer.setRefreshing(false);
@@ -232,17 +220,6 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
             binding.noCourseTv.setVisibility(View.GONE);
         }
         getLoaderManager().restartLoader(MY_COURSE_LOADER_ID, null, this);
-    }
-
-    private void showOfflinePanel() {
-        ViewAnimationUtil.showMessageBar(binding.offlinePanel);
-    }
-
-    private void hideOfflinePanel() {
-        ViewAnimationUtil.stopAnimation(binding.offlinePanel);
-        if (binding.offlinePanel.getVisibility() == View.VISIBLE) {
-            binding.offlinePanel.setVisibility(View.GONE);
-        }
     }
 
     private void addFindCoursesFooter() {

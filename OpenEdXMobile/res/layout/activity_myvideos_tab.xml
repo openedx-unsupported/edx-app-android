@@ -24,10 +24,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <View
-                    android:id="@+id/offline_bar"
-                    style="@style/offline_bar" />
-
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tabs"
                     style="@style/edX.Widget.TabLayout"

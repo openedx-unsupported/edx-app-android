@@ -15,7 +15,6 @@ import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
 
 public class MyVideosActivity extends BaseVideosDownloadStateActivity {
 
-    private View offlineBar;
     private StaticFragmentPagerAdapter adapter;
 
     @Override
@@ -34,8 +33,6 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
         configureDrawer();
-
-        offlineBar = findViewById(R.id.offline_bar);
 
         // now init the tabs
         initializeTabs();
@@ -71,17 +68,5 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onOffline() {
-        super.onOffline();
-        offlineBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onOnline() {
-        super.onOnline();
-        offlineBar.setVisibility(View.GONE);
     }
 }

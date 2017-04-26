@@ -35,9 +35,6 @@ import roboguice.inject.InjectView;
 @ContentView(R.layout.activity_course_base)
 public abstract  class CourseBaseActivity  extends BaseFragmentActivity implements TaskProcessCallback{
 
-    @InjectView(R.id.offline_bar)
-    View offlineBar;
-
     @InjectView(R.id.last_accessed_bar)
     View lastAccessBar;
 
@@ -137,14 +134,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     }
 
     @Override
-    protected void onOnline() {
-        offlineBar.setVisibility(View.GONE);
-        hideOfflineMessage();
-    }
-
-    @Override
     protected void onOffline() {
-        offlineBar.setVisibility(View.VISIBLE);
         hideLoadingProgress();
     }
 
@@ -152,24 +142,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-    }
-
-    /**
-     * This function shows the offline mode message
-     */
-    private void showOfflineMessage(){
-        if(offlineBar!=null){
-            offlineBar.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * This function hides the offline mode message
-     */
-    private void hideOfflineMessage() {
-        if(offlineBar!=null){
-            offlineBar.setVisibility(View.GONE);
-        }
     }
 
     /**

@@ -22,10 +22,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
 
     public static final String FIRST_FRAG_TAG = "first_frag";
 
-    @InjectView(R.id.offline_bar)
-    @Nullable
-    View offlineBar;
-
     @InjectView(R.id.loading_indicator)
     @Nullable
     ProgressBar progressSpinner;
@@ -81,30 +77,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     }
 
     public abstract Fragment getFirstFragment();
-
-    @Override
-    protected void onOnline() {
-        super.onOnline();
-        hideOfflineBar();
-    }
-
-    @Override
-    protected void onOffline() {
-        super.onOffline();
-        showOfflineBar();
-    }
-
-    private void showOfflineBar(){
-        if(offlineBar!=null){
-            offlineBar.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void hideOfflineBar(){
-        if(offlineBar!=null){
-            offlineBar.setVisibility(View.GONE);
-        }
-    }
 
     protected void showLoadingProgress(){
         if ( progressSpinner != null ){

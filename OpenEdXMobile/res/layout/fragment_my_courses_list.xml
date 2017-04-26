@@ -7,11 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar"
-            android:visibility="visible" />
-
         <LinearLayout
             android:id="@+id/no_course_tv"
             android:layout_width="match_parent"
@@ -52,16 +47,6 @@
         <include
             android:id="@+id/loading_indicator"
             layout="@layout/loading_indicator" />
-
-        <LinearLayout
-            android:id="@+id/offline_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <include layout="@layout/panel_offline_mode" />
-        </LinearLayout>
 
     </FrameLayout>
 </layout>

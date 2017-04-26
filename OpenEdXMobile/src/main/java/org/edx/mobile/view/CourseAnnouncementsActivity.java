@@ -1,17 +1,13 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 
@@ -27,9 +23,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
 
     public static String TAG = CourseAnnouncementsActivity.class.getCanonicalName();
 
-    private View offlineBar;
-
-
     Bundle bundle;
     String activityTitle;
 
@@ -38,7 +31,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
 
         bundle = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
-        offlineBar = findViewById(R.id.offline_bar);
 
         courseData = (EnrolledCoursesResponse) bundle
                 .getSerializable(Router.EXTRA_COURSE_DATA);
@@ -96,37 +88,9 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     }
 
     @Override
-    protected void onOffline() {
-        super.onOffline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.VISIBLE);
-        }
-
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof NetworkObserver) {
-                ((NetworkObserver) fragment).onOffline();
-            }
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-    }
-
-    @Override
-    protected void onOnline() {
-        super.onOnline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.GONE);
-        }
-
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof NetworkObserver) {
-                ((NetworkObserver) fragment).onOnline();
-            }
-        }
     }
 
 

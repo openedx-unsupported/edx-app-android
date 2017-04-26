@@ -24,29 +24,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <!--To be removed in https://openedx.atlassian.net/browse/MA-2412-->
-                <LinearLayout
-                    android:id="@+id/offline_bar"
-                    style="@style/offline_msg_bar"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="left|start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="@string/offline_text"
-                        android:textColor="@color/edx_brand_secondary_base"
-                        tools:targetApi="17" />
-
-                    <View style="@style/red_separator" />
-                </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/last_accessed_bar"
                     android:layout_width="match_parent"
@@ -109,7 +86,6 @@
                     android:id="@+id/fragment_container"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_below="@+id/offline_bar"
                     android:layout_weight="1" />
 
                 <LinearLayout

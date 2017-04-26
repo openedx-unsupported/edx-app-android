@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +45,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
-    private View offlineBar;
     private EdxWebView webview;
     private boolean isWebViewLoaded;
     private ProgressBar progressWheel;
@@ -75,7 +73,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
 
         webview = (EdxWebView) findViewById(R.id.webview);
-        offlineBar = findViewById(R.id.offline_bar);
         progressWheel = (ProgressBar) findViewById(R.id.loading_indicator);
 
         webview.getSettings().setDomStorageEnabled(true);
@@ -131,7 +128,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     protected void onOnline() {
         if (!isWebViewLoaded) {
             super.onOnline();
-            offlineBar.setVisibility(View.GONE);
             hideOfflineMessage();
         }
     }
@@ -141,7 +137,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         // If the WebView is not loaded, then show the offline mode message
         if (!isWebViewLoaded) {
             super.onOffline();
-            offlineBar.setVisibility(View.VISIBLE);
             showOfflineMessage();
             hideLoadingProgress();
         }
