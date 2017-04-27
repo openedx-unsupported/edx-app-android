@@ -66,9 +66,4 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
         super.onResume();
         presenter.onResume();
     }
-
-    @Override
-    protected boolean createOptionsMenu(Menu menu) {
-        return false; // Disable menu inherited from BaseFragmentActivity
-    }
 }

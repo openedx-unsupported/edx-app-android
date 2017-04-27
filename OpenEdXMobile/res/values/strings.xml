@@ -360,7 +360,7 @@
     <!-- Title of recent videos section -->
     <string name="my_recent_videos">Recent Videos</string>
     <!-- Label indicating user has no Internet connection -->
-    <string name="offline_text">Offline Mode</string>
+    <string name="offline_text">Offline</string>
     <!-- Label shown in videos section when user has no videos downloaded -->
     <string name="no_videos_to_display">You haven’t downloaded any videos.</string>
     <!-- Cancel video download -->

@@ -43,7 +43,6 @@ import de.greenrobot.event.EventBus;
 public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI, OnActivityResultListener {
 
-    private MenuItem offlineMenuItem;
     protected ActionBarDrawerToggle mDrawerToggle;
     //FIXME - we should not set a separate flag to indicate the status of UI component
     private boolean isUiOnline = true;
@@ -209,40 +208,11 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu) | createOptionsMenu(menu);
-    }
-
-    /**
-     * Initialize the options menu. This is called from
-     * {@link #onCreateOptionsMenu(Menu)}, so that subclasses can override
-     * the base menu implementation while still calling back to the system
-     * implementation. The selection handling for menu items defined here
-     * should be performed in {@link #handleOptionsItemSelected(MenuItem)},
-     * and any these methods should both be overriden together.
-     *
-     * @param menu The options menu.
-     * @return Return true if the menu should be displayed.
-     */
-    protected boolean createOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        offlineMenuItem = menu.findItem(R.id.offline);
-        offlineMenuItem.setVisible(!NetworkUtil.isConnected(this));
-        return true;
-    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Toggle navigation drawer when the app icon or title on the action bar
         // is clicked
         if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        if (handleOptionsItemSelected(item)) {
             return true;
         }
 
@@ -254,21 +224,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Handle options menu item selection. This is called from
-     * {@link #onOptionsItemSelected(MenuItem)} to provide a menu
-     * selection handler that can be overridden by subclass that override
-     * {@link #createOptionsMenu(Menu)}, and should only be used to handle
-     * selections of the menu items that are initialized from that method.
-     *
-     * @param item The menu item that was selected.
-     * @return boolean Return false to allow normal menu processing to
-     * proceed, true to consume it here.
-     */
-    protected boolean handleOptionsItemSelected(MenuItem item) {
-        return false;
     }
 
     public void setActionBarVisible(boolean visible) {
@@ -471,9 +426,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * Sub-classes may override this method to handle connected state.
      */
     protected void onOnline() {
-        if (offlineMenuItem != null) {
-            offlineMenuItem.setVisible(false);
-        }
         logger.debug("You are now online");
     }
 
@@ -481,9 +433,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * Sub-classes may override this method to handle disconnected state.
      */
     protected void onOffline() {
-        if (offlineMenuItem != null) {
-            offlineMenuItem.setVisible(true);
-        }
         logger.debug("You are now offline");
     }
 

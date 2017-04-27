@@ -47,9 +47,4 @@ public class LaunchActivity extends BaseFragmentActivity {
             environment.getRouter().showMyCourses(this);
         }
     }
-
-    @Override
-    protected boolean createOptionsMenu(Menu menu) {
-        return false; // Disable menu inherited from BaseFragmentActivity
-    }
 }

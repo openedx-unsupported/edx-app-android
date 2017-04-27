@@ -429,12 +429,6 @@ public class RegisterActivity extends BaseFragmentActivity
         }
     }
 
-    @Override
-    public boolean createOptionsMenu(Menu menu) {
-        // Register screen doesn't have any menu
-        return true;
-    }
-
     /**
      * we can create enum for strong type, but lose the extensibility.
      *
