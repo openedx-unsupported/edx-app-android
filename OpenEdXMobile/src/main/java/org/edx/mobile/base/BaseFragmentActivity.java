@@ -3,7 +3,6 @@ package org.edx.mobile.base;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -13,12 +12,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -88,7 +85,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        updateActionBarShadow();
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayShowHomeEnabled(true);
@@ -118,33 +114,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             }
         }
     }
-
-
-    private void updateActionBarShadow() {
-        //Check for JellyBeans version
-        if (Build.VERSION.SDK_INT == 18) {
-            // Get the content view
-            View contentView = findViewById(android.R.id.content);
-
-            // Make sure it's a valid instance of a FrameLayout
-            if (contentView instanceof FrameLayout) {
-                TypedValue tv = new TypedValue();
-
-                // Get the windowContentOverlay value of the current theme
-                if (getTheme().resolveAttribute(
-                        android.R.attr.windowContentOverlay, tv, true)) {
-
-                    // If it's a valid resource, set it as the foreground drawable
-                    // for the content view
-                    if (tv.resourceId != 0) {
-                        ((FrameLayout) contentView).setForeground(
-                                getResources().getDrawable(tv.resourceId));
-                    }
-                }
-            }
-        }
-    }
-
 
     @Override
     protected void onStop() {

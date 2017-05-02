@@ -71,7 +71,7 @@ public class CustomTypefaceSpan extends ReplacementSpan {
 
     public CustomTypefaceSpan(@NonNull TextView view, @NonNull Icon icon,
             @NonNull Typeface type, @Size float iconSizePx,
-            @FloatRange(from = 0f, to = 1f) float iconSizeRatio,
+            @FloatRange(from = -1f, to = 1f) float iconSizeRatio,
             @ColorInt int iconColor, @NonNull Animation animation,
             boolean baselineAligned) {
         this.view = view;
