@@ -23,7 +23,6 @@
     <dimen name="drawer_app_version_text">12sp</dimen>
 
     <!-- Popup Spinner -->
-    <dimen name="popup_menu_icon_default_size">16dp</dimen>
     <dimen name="popup_spinner_border">1dp</dimen>
     <dimen name="popup_spinner_min_height">34dp</dimen>
 
@@ -42,7 +41,7 @@
     <dimen name="course_card_height">190dp</dimen>
     <dimen name="course_card_play_icon_size">60dp</dimen>
     <dimen name="course_detail_card_height">70dp</dimen>
-    <dimen name="course_detail_share_icon_size">36dp</dimen>
+    <dimen name="course_detail_share_icon_size">50dp</dimen>
 
     <!-- Course Dashboard-->
     <dimen name="dashboard_nav_element_height">85dp</dimen>

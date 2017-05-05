@@ -6,14 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
-
-import org.edx.mobile.R;
-import org.edx.mobile.view.custom.popup.SizedDrawable;
 
 import java.util.List;
 
@@ -27,16 +24,15 @@ public enum ShareUtils {
                 .setType("text/plain");
     }
 
-    public static void showShareMenu(@NonNull Intent shareIntent, @NonNull View anchor, final @NonNull ShareMenuItemListener listener, @StringRes int menu_title) {
+    public static void showShareMenu(@NonNull Intent shareIntent, @NonNull View anchor,
+                                     final @NonNull ShareMenuItemListener listener) {
         final Context context = anchor.getContext();
         final PopupMenu popupMenu = new PopupMenu(context, anchor);
-        final SubMenu subMenu = popupMenu.getMenu().addSubMenu(menu_title);
         final PackageManager packageManager = context.getPackageManager();
-        final int iconSize = context.getResources().getDimensionPixelSize(R.dimen.popup_menu_icon_default_size);
         final List<ResolveInfo> resolveInfoList = packageManager.queryIntentActivities(shareIntent, 0);
         for (final ResolveInfo resolveInfo : resolveInfoList) {
-            final MenuItem shareItem = subMenu.add(resolveInfo.loadLabel(packageManager));
-            shareItem.setIcon(new SizedDrawable(resolveInfo.loadIcon(packageManager), iconSize, iconSize));
+            final MenuItem shareItem = popupMenu.getMenu().add(resolveInfo.loadLabel(packageManager));
+            shareItem.setIcon(resolveInfo.loadIcon(packageManager));
             shareItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -46,7 +42,10 @@ public enum ShareUtils {
                 }
             });
         }
-        popupMenu.show();
+        // As PopupMenu doesn't support to show icons in main menu, use MenuPopupHelper for it
+        final MenuPopupHelper menuHelper = new MenuPopupHelper(context, (MenuBuilder) popupMenu.getMenu(), anchor);
+        menuHelper.setForceShowIcon(true);
+        menuHelper.show();
     }
 
     public interface ShareMenuItemListener {
@@ -63,6 +62,7 @@ public enum ShareUtils {
     private static ShareType getShareTypeFromComponentName(@NonNull ComponentName componentName) {
         switch (componentName.getPackageName()) {
             case "com.facebook.katana":
+            case "com.facebook.lite":
                 return ShareType.FACEBOOK;
             case "com.twitter.android":
                 return ShareType.TWITTER;

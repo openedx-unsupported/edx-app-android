@@ -33,8 +33,6 @@
 
     <!-- Description of button that will open the share course menu -->
     <string name="share_course_button">Share your course</string>
-    <!-- Share menu title -->
-    <string name="share_course_popup_header">Share this course via&#8230;</string>
     <!-- Share course -->
     <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
 
@@ -51,8 +49,6 @@
     <string name="share_certificate_message">I just earned a Certificate on {platform_name}! Check it out: {certificate_url}</string>
     <!-- Tab of tab for certicate for finished course -->
     <string name="tab_label_certificate">Certificate</string>
-    <!-- Header for popup list of share targets -->
-    <string name="share_certificate_popup_header">Share your certificate via…</string>
 
     <!-- Data Usage Dialog -->
     <!-- Alert dialog error message shown when using a feature with a required Internet connection -->
