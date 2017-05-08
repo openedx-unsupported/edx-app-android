@@ -11,7 +11,8 @@ buildscript {
 }
 
 project.ext {
-    BUILD_TOOLS_VERSION = "23.0.3"
+    BUILD_TOOLS_VERSION = "25.0.3"
+    COMPILE_SDK_VERSION = 25
 
     // dummy keystore configuration if not already defined
     if ( !project.properties.containsKey("RELEASE_STORE_FILE")) {

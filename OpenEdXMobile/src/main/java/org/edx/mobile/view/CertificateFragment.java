@@ -15,10 +15,11 @@ import android.webkit.WebView;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.R;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
@@ -27,7 +28,6 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 
 public class CertificateFragment extends BaseFragment {
@@ -74,8 +74,7 @@ public class CertificateFragment extends BaseFragment {
                                 intent.setComponent(componentName);
                                 startActivity(intent);
                             }
-                        },
-                R.string.share_certificate_popup_header);
+                        });
                 return true;
             }
             default: {

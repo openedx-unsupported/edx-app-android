@@ -89,35 +89,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     }
 
     /**
-     * Testing window content overlay hack for API level 18
-     */
-    @Test
-    @Config(sdk = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public void updateActionBarShadowTest() {
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().get();
-
-        // Get the content view
-        View contentView = activity.findViewById(android.R.id.content);
-
-        // Make sure it's a valid instance of a FrameLayout
-        assumeThat(contentView, instanceOf(FrameLayout.class));
-        TypedValue tv = new TypedValue();
-
-        // Get the windowContentOverlay value of the current theme
-        assumeTrue(activity.getTheme().resolveAttribute(
-                android.R.attr.windowContentOverlay, tv, true));
-
-        // If it's a valid resource, confirm that is has been set as
-        // the foreground drawable for the content view
-        assumeTrue(tv.resourceId != 0);
-        Drawable contentForeground = ((FrameLayout) contentView).getForeground();
-        assertEquals(tv.resourceId, Shadows.shadowOf(
-                contentForeground).getCreatedFromResId());
-    }
-
-    /**
      * Generic method for asserting pending transition animation
      *
      * @param shadowActivity The shadow activity

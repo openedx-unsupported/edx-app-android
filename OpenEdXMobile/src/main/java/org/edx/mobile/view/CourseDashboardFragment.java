@@ -219,8 +219,7 @@ public class CourseDashboardFragment extends BaseFragment {
                         intent.setComponent(componentName);
                         startActivity(intent);
                     }
-                },
-                R.string.share_course_popup_header);
+                });
     }
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent) {
