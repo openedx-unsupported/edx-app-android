@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
@@ -53,9 +54,21 @@ public enum ShareUtils {
     }
 
     public enum ShareType {
-        TWITTER,
-        FACEBOOK,
-        UNKNOWN
+        TWITTER("twitter"),
+        FACEBOOK("facebook"),
+        UNKNOWN(null)
+        ;
+
+        private String utmParamKey;
+
+        ShareType(@Nullable String key) {
+            utmParamKey = key;
+        }
+
+        @Nullable
+        public String getUtmParamKey() {
+            return utmParamKey;
+        }
     }
 
     @NonNull

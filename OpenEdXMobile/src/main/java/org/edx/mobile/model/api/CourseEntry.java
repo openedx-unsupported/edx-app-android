@@ -11,6 +11,7 @@ import org.edx.mobile.util.images.CourseCardUtils;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("serial")
 public class CourseEntry implements Serializable {
@@ -35,6 +36,7 @@ public class CourseEntry implements Serializable {
     private String discussion_url;
     private SocialURLModel social_urls;
     private CoursewareAccess courseware_access;
+    @Nullable private Map<String, String> course_sharing_utm_parameters;
 
     public LatestUpdateModel getLatest_updates() {
         return latest_updates;
@@ -220,4 +222,8 @@ public class CourseEntry implements Serializable {
         return CourseCardUtils.getDescription(org, number, CourseCardUtils.getFormattedDate(context, this));
     }
 
+    @Nullable
+    public String getCourseSharingUtmParams(@NonNull String sharingPlatformKey) {
+        return course_sharing_utm_parameters == null ? null : course_sharing_utm_parameters.get(sharingPlatformKey);
+    }
 }

@@ -19,6 +19,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
@@ -27,8 +28,6 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
-
-import org.edx.mobile.base.BaseFragment;
 
 public class CourseDashboardFragment extends BaseFragment {
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
@@ -203,21 +202,36 @@ public class CourseDashboardFragment extends BaseFragment {
                     @Override
                     public void onMenuItemClick(@NonNull ComponentName componentName, @NonNull ShareUtils.ShareType shareType) {
                         final String shareText;
-                        final String twitterTag = environment.getConfig().getTwitterConfig().getHashTag();
-                        if (shareType == ShareUtils.ShareType.TWITTER && !TextUtils.isEmpty(twitterTag)) {
-                            shareText = ResourceUtil.getFormattedString(
-                                    getResources(),
-                                    R.string.share_course_message,
-                                    "platform_name",
-                                    twitterTag).toString() + "\n" + courseData.getCourse().getCourse_about();
-
-                        } else {
+                        if (shareType == ShareUtils.ShareType.UNKNOWN) {
                             shareText = shareTextWithPlatformName;
+                        } else {
+                            shareText = getSharingText(shareType);
                         }
                         analyticsRegistry.courseDetailShared(courseData.getCourse().getId(), shareText, shareType);
                         final Intent intent = ShareUtils.newShareIntent(shareText);
                         intent.setComponent(componentName);
                         startActivity(intent);
+                    }
+
+                    @NonNull
+                    private String getSharingText(@NonNull ShareUtils.ShareType shareType) {
+                        String courseUrl = courseData.getCourse().getCourse_about();
+                        if (!TextUtils.isEmpty(shareType.getUtmParamKey())) {
+                            final String utmParams = courseData.getCourse().getCourseSharingUtmParams(shareType.getUtmParamKey());
+                            if (!TextUtils.isEmpty(utmParams)) {
+                                courseUrl += "?" + utmParams;
+                            }
+                        }
+                        final String platform;
+                        final String twitterTag = environment.getConfig().getTwitterConfig().getHashTag();
+                        if (shareType == ShareUtils.ShareType.TWITTER && !TextUtils.isEmpty(twitterTag)) {
+                            platform = twitterTag;
+                        } else {
+                            platform = getString(R.string.platform_name);
+                        }
+                        return ResourceUtil.getFormattedString(
+                                getResources(), R.string.share_course_message, "platform_name", platform).toString() +
+                                "\n" + courseUrl;
                     }
                 });
     }
