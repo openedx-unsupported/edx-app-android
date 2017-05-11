@@ -35,6 +35,15 @@ public class AnalyticsRegistry implements Analytics {
     @Override
     public void trackScreenView(@NonNull String screenName, @Nullable String courseId,
                                 @Nullable String action, @Nullable Map<String, String> values) {
+        // Remove a key-value pair, if the value for a key is null
+        if (values != null) {
+            for (Map.Entry<String, String> entry : values.entrySet()) {
+                if (entry.getValue() == null) {
+                    values.remove(entry.getKey());
+                }
+            }
+        }
+
         for (Analytics service : services) {
             service.trackScreenView(screenName, courseId, action, values);
         }
