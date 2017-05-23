@@ -14,6 +14,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -332,7 +335,13 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     }
 
     @Override
-    public void onPageLoadError() {
+    public void onPageLoadError(WebView view, int errorCode, String description, String failingUrl) {
+        isWebViewLoaded = false;
+        showOfflineMessage();
+    }
+
+    @Override
+    public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
         isWebViewLoaded = false;
         showOfflineMessage();
     }

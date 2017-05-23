@@ -441,6 +441,7 @@ public interface Analytics {
         String COURSE_OUTLINE = "Course Outline";
         String COURSE_HANDOUTS = "Course Handouts";
         String COURSE_ANNOUNCEMENTS = "Course Announcements";
+        String COURSE_DATES = "Course Dates";
         String SECTION_OUTLINE = "Section Outline";
         String UNIT_DETAIL = "Unit Detail";
         String CERTIFICATE = "View Certificate";

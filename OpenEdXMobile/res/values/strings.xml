@@ -98,6 +98,8 @@
     <string name="open_profile_button">Open your profile</string>
     <!-- Title of user's course list screen -->
     <string name="label_my_courses">My Courses</string>
+    <!-- Title of important course dates screen -->
+    <string name="label_course_dates">Course Dates and Deadlines</string>
     <!-- Title of user's downloaded videos list screen -->
     <string name="label_my_videos">My Videos</string>
     <!-- Title of Find Courses screen -->
@@ -164,9 +166,13 @@
     <string name="handouts_subtitle">Find important course information</string>
     <!-- Row of announcement on dashboard screen -->
     <string name="announcement_title">Announcements</string>
+    <!-- Title text for the important dates section on the course dashboard  -->
+    <string name="course_dates_title">Important Dates</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
+    <!-- Subtitle text describing the important dates section on the course dashboard -->
+    <string name="course_dates_subtitle">Keep track of deadlines and stay on track</string>
     <!-- Accessible content description of school code label a course -->
     <string name="school_code">School Code</string>
     <!-- Accessible content description of course name label field -->
@@ -195,6 +201,8 @@
     <string name="no_announcements_to_display">There are currently no announcements for this course.</string>
     <!-- Label shown when no handouts are available for a course -->
     <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
+    <!-- Label shown when no important dates are available for a course -->
+    <string name="no_course_dates_to_display">Course dates are not currently available.</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->
