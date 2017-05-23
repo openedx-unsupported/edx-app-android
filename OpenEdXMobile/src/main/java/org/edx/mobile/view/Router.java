@@ -381,6 +381,10 @@ public class Router {
         activity.startActivity(WebViewActivity.newIntent(activity, url, title));
     }
 
+    public void showCourseDatesActivity(@NonNull Activity activity, @NonNull EnrolledCoursesResponse model) {
+        activity.startActivity(CourseDatesActivity.newIntent(activity, model));
+    }
+
     public void showWhatsNewActivity(@NonNull Activity activity) {
         activity.startActivity(WhatsNewActivity.newIntent(activity));
     }

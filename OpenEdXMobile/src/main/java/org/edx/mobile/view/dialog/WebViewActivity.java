@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -51,7 +53,12 @@ public class WebViewActivity extends BaseFragmentActivity {
             }
 
             @Override
-            public void onPageLoadError() {
+            public void onPageLoadError(WebView view, int errorCode, String description, String failingUrl) {
+                progress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
                 progress.setVisibility(View.GONE);
             }
 

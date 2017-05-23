@@ -5,7 +5,6 @@ import android.webkit.WebView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -20,7 +19,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CourseUnitWebViewFragmentTest extends UiTest {
     /**
@@ -61,7 +61,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
         View view = fragment.getView();
         assertNotNull(view);
 
-        View courseUnitWebView = view.findViewById(R.id.course_unit_webView);
+        View courseUnitWebView = view.findViewById(R.id.webview);
         assertNotNull(courseUnitWebView);
         assertThat(courseUnitWebView).isInstanceOf(WebView.class);
         WebView webView = (WebView) courseUnitWebView;
