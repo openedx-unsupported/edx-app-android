@@ -317,6 +317,10 @@ public class Storage implements IStorage {
             if(videoCount>0){
                 enrolledCoursesResponse.videoCount = videoCount;
                 enrolledCoursesResponse.size = db.getDownloadedVideosSizeByCourse(
+                        enrolledCoursesResponse.getCourse().getId(),null);
+                downloadedCourseList.add(enrolledCoursesResponse);
+            }
+        }
 
         return downloadedCourseList;
     }

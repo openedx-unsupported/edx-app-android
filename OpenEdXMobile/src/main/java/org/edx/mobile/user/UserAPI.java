@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.gson.Gson;
@@ -33,6 +35,7 @@ import retrofit2.Response;
 
 @Singleton
 public class UserAPI {
+
     @Inject
     private UserService userService;
 
@@ -135,7 +138,7 @@ public class UserAPI {
         if (tryCache) {
             try {
                 json = cache.get(cacheKey);
-            } catch (IOException | NoSuchAlgorithmException e) {
+            } catch (Exception e) {
                 logger.debug(e.toString());
             }
         }
@@ -148,22 +151,22 @@ public class UserAPI {
                 // cache result
                 try {
                     cache.put(cacheKey, json);
-                } catch (IOException | NoSuchAlgorithmException e) {
+                } catch (IOException e) {
                     logger.debug(e.toString());
                 }
             } else {
                 // Cache has already been checked, and connectivity
                 // can't be established, so throw an exception.
-                if (tryCache) throw new HttpResponseStatusException(response.code());
+                if (tryCache) throw new HttpStatusException(response);
                 // Otherwise fall back to fetching from the cache
                 try {
                     json = cache.get(cacheKey);
-                } catch (IOException | NoSuchAlgorithmException e) {
+                } catch (Exception e) {
                     logger.debug(e.toString());
-                    throw new HttpResponseStatusException(response.code());
+                    throw new HttpStatusException(response);
                 }
                 // If the cache is empty, then throw an exception.
-                if (json == null) throw new HttpResponseStatusException(response.code());
+                if (json == null) throw new HttpStatusException(response);
             }
         }
 
