@@ -15,6 +15,7 @@ import org.edx.mobile.util.Sha1Util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
@@ -69,6 +70,18 @@ public class CacheManager {
         return file != null && file.exists();
     }
 
+    public void put(String url, String response) throws IOException {
+        final File cacheDir = getCacheDir();
+        if (cacheDir == null) throw new IOException("Cache directory not found");
+
+        String hash = Sha1Util.SHA1(url);
+        File file = new File(cacheDir, hash);
+        FileOutputStream out = new FileOutputStream(file);
+        out.write(response.getBytes());
+        out.close();
+        logger.debug("Cache.put = " + hash);
+    }
+
     /**
      * Get the cached response body for the provided URL.
      *
@@ -86,6 +99,17 @@ public class CacheManager {
             } catch (IOException e) {
                 logger.error(e, true);
             }
+        }
+        return null;
+    }
+
+    @Nullable
+    private File getCacheDir() {
+        final File appDir = context.getFilesDir();
+        if (appDir != null) {
+            final File cacheDir = new File(appDir, "http-cache");
+            cacheDir.mkdirs();
+            return cacheDir;
         }
         return null;
     }

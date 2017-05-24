@@ -49,7 +49,7 @@ public class KonnekteerUtil {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // logger.debug(new String(error.networkResponse.data));
-                    // logger.error(error);
+                    logger.error(error);
                 }
             }) {
                 @Override
@@ -89,7 +89,7 @@ public class KonnekteerUtil {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // logger.debug(new String(error.networkResponse.data));
-                    // logger.error(error);
+                    logger.error(error);
                 }
             }) {
                 @Override

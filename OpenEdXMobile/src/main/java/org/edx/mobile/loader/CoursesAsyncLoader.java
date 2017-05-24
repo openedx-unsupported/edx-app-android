@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
@@ -32,9 +33,6 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     private Config config;
 
     @Inject
-    CourseAPI api;
-
-    @Inject
     UserAPI api;
 
     @Inject
@@ -48,6 +46,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
+        ProfileModel profile = loginPrefs.getCurrentUserProfile();
         List<EnrolledCoursesResponse> enrolledCoursesResponse = null;
 
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
