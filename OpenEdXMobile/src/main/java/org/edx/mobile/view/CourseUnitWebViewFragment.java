@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -38,6 +39,27 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_authenticated_webview, container, false);
+    }
+
+    public class WebViewInterface {
+        Context mContext;
+
+        WebViewInterface(Context c) {
+            mContext = c;
+        }
+
+        @JavascriptInterface
+        public void saveAs(String data) {
+            String filename = "recap.pdf";
+            FileOutputStream outputStream;
+            try {
+                outputStream = mContext.openFileOutput(filename, Context.MODE_PRIVATE);
+                outputStream.write(data.getBytes());
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
