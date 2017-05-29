@@ -1,0 +1,27 @@
+[
+  {
+    "image": "screen_1",
+    "title": "All Courses Available on Mobile",
+    "message": "We've heard you! All courses on platform_name will now be available on mobile."
+  },
+  {
+    "image": "screen_2",
+    "title": "Videos Being Downloaded",
+    "message": "Notification bar will now show the videos being downloaded."
+  },
+  {
+    "image": "screen_3",
+    "title": "Transcript for Videos",
+    "message": "If subtitles are available for a video, it will be shown as a scrollable transcript below the video."
+  },
+  {
+    "image": "screen_4",
+    "title": "App Feedback",
+    "message": "We would love to hear your feedback so now we ask you about how you would rate the platform_name app."
+  },
+  {
+    "image": "screen_5",
+    "title": "Landscape Support",
+    "message": "Video player improvements for landscape mode."
+  }
+]

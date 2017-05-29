@@ -209,6 +209,14 @@ public class PrefManager {
         public void setLastRatedVersion(String versionName) {
             super.put(Key.LAST_RATED_VERSION, versionName);
         }
+
+        public boolean isWhatsNewShown() {
+            return getBoolean(Key.WHATS_NEW_SHOWN, false);
+        }
+
+        public void setWhatsNewShown(boolean isShown) {
+            super.put(Key.WHATS_NEW_SHOWN, isShown);
+        }
     }
 
     public static class UserPrefManager extends PrefManager {
@@ -242,7 +250,7 @@ public class PrefManager {
 
         public static String[] getAllPreferenceFileNames() {
             String[] preferencesFilesList = PrefManager.Pref.getAll();
-            for (int i=0; i<preferencesFilesList.length; i++) {
+            for (int i = 0; i < preferencesFilesList.length; i++) {
                 preferencesFilesList[i] += ".xml";
             }
             return preferencesFilesList;
@@ -284,6 +292,8 @@ public class PrefManager {
         public static final String APP_RATING = "APP_RATING";
         // Preference to save app version when user rated last time
         public static final String LAST_RATED_VERSION = "LAST_RATED_VERSION";
+        // Preference to keep track if Whats New feature has been shown or not
+        public static final String WHATS_NEW_SHOWN = "WHATS_NEW_SHOWN";
     }
 
     public static final class Value {

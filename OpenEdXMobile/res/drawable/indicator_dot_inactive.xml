@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="@dimen/widget_margin_half"
+        android:right="@dimen/widget_margin_half">
+        <shape android:shape="oval">
+            <solid android:color="@color/white" />
+            <size
+                android:width="@dimen/fa_xxx_small"
+                android:height="@dimen/fa_xxx_small" />
+        </shape>
+    </item>
+</layer-list>

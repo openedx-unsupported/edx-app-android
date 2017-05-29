@@ -16,6 +16,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.notification.NotificationDelegate;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
 
@@ -43,9 +44,20 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initWhatsNew();
         configureDrawer();
         setTitle(getString(R.string.label_my_courses));
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
+    }
+
+    private void initWhatsNew() {
+        if (environment.getConfig().isWhatsNewEnabled()) {
+            final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(this);
+            if (!appPrefs.isWhatsNewShown()) {
+                environment.getRouter().showWhatsNewActivity(this);
+            }
+        }
     }
 
     @Override
@@ -128,11 +140,11 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
                         AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER);
             }
             snackbar.setCallback(new Snackbar.Callback() {
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event) {
-                            newVersionAvailableEvent.markAsConsumed();
-                        }
-                    });
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    newVersionAvailableEvent.markAsConsumed();
+                }
+            });
             snackbar.show();
         }
     }
