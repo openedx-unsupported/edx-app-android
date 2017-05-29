@@ -233,6 +233,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:name=".whatsnew.WhatsNewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name=".view.dialog.WebViewActivity"
             android:screenOrientation="portrait" />
 

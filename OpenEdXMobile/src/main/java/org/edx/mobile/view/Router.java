@@ -33,6 +33,7 @@ import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
+import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import de.greenrobot.event.EventBus;
 
@@ -378,6 +379,10 @@ public class Router {
 
     public void showWebViewActivity(@NonNull Activity activity, @NonNull String url, @Nullable String title) {
         activity.startActivity(WebViewActivity.newIntent(activity, url, title));
+    }
+
+    public void showWhatsNewActivity(@NonNull Activity activity) {
+        activity.startActivity(WhatsNewActivity.newIntent(activity));
     }
 
     /**

@@ -511,8 +511,7 @@
     <string name="insert_feedback">Feedback: </string>
 
     <!-- Message indicating num of video deleted. {video_count} is a number of videos deleted, like "3".  -->
-    <plurals
-        name="deleted_video">
+    <plurals name="deleted_video">
         <item quantity="one">{video_count} video deleted </item>
         <item quantity="other">{video_count} videos deleted</item>
     </plurals>
@@ -612,4 +611,6 @@
     <string name="rating_bar">Rating control</string>
     <!-- accessibility label for rating selection on rating bar -->
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
+    <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
+    <string name="whats_new_title">Version {version_number} New Features</string>
 </resources>

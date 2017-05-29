@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/edx_brand_primary_base"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/screen_title"
+                style="@style/semibold_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/edx_double_margin"
+                android:layout_marginRight="@dimen/edx_double_margin"
+                android:gravity="center"
+                android:padding="@dimen/widget_margin"
+                android:textColor="@color/edx_white"
+                android:textSize="@dimen/edx_base"
+                tools:text="Version 2.8.1 New Features" />
+
+            <com.joanzapata.iconify.widget.IconButton
+                android:id="@+id/close_btn"
+                style="@style/semibold_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right|end"
+                android:background="@drawable/selectable_box_overlay"
+                android:contentDescription="@string/label_close"
+                android:padding="@dimen/widget_margin"
+                android:text="{fa-close}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/edx_x_large"
+                tools:targetApi="JELLY_BEAN_MR1" />
+        </FrameLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/indicator_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:padding="@dimen/widget_margin" />
+
+            <Button
+                android:id="@+id/done_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right|end"
+                android:background="@drawable/selectable_box_overlay"
+                android:padding="@dimen/widget_margin"
+                android:text="@string/label_done"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                tools:targetApi="JELLY_BEAN_MR1"
+                tools:visibility="visible" />
+        </FrameLayout>
+    </LinearLayout>
+</layout>
