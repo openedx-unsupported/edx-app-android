@@ -374,7 +374,7 @@
 
     <style name="edX.Widget.EnrollButton" parent="edX.Widget.Button">
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/edx_white</item>
+        <item name="android:textColor">@drawable/edx_enroll_button_text_color</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:background">@drawable/edx_enroll_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
