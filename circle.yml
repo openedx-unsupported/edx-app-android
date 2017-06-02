@@ -31,8 +31,8 @@ test:
     override:
         - sleep 10
     post:
-        - cp -r VideoLocker/build/reports $CIRCLE_ARTIFACTS
-        - cp -r VideoLocker/build/outputs $CIRCLE_ARTIFACTS
+        - cp -r OpenEdXMobile/build/reports $CIRCLE_ARTIFACTS
+        - cp -r OpenEdXMobile/build/outputs $CIRCLE_ARTIFACTS
 
 # https://github.com/Triple-T/gradle-play-publisher
 deployment:
