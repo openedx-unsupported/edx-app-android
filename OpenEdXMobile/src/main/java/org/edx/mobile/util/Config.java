@@ -70,6 +70,7 @@ public class Config {
     private static final String FIREBASE_ENABLED = "FIREBASE_ENABLED";
     private static final String APP_REVIEWS_ENABLED = "APP_REVIEWS_ENABLED";
     private static final String VIDEO_TRANSCRIPT_ENABLED = "VIDEO_TRANSCRIPT_ENABLED";
+    private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
 
 
     public static class ZeroRatingConfig {
@@ -523,6 +524,10 @@ public class Config {
 
     public boolean isVideoTranscriptEnabled() {
         return getBoolean(VIDEO_TRANSCRIPT_ENABLED, false);
+    }
+
+    public boolean isWhatsNewEnabled() {
+        return getBoolean(WHATS_NEW_ENABLED, false);
     }
 
     @NonNull

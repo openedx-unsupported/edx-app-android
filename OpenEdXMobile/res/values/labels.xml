@@ -40,4 +40,6 @@
     <string name="label_rate_the_app">Rate The App</string>
     <!-- Alert dialog and snackbar button for opening an app store to update the app to the latest version -->
     <string name="label_update">Update</string>
+    <!-- Done button label -->
+    <string name="label_done">Done</string>
 </resources>

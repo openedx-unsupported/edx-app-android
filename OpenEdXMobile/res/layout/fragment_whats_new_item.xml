@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:background="@drawable/whats_new_gradient">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:paddingLeft="@dimen/whats_new_image_horizontal_margin"
+                android:paddingRight="@dimen/whats_new_image_horizontal_margin"
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/screen_1" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:background="@color/edx_brand_primary_base"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/edx_margin"
+            android:paddingRight="@dimen/edx_margin"
+            android:paddingTop="@dimen/edx_margin">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/semibold_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/edx_white"
+                android:textSize="@dimen/edx_base"
+                tools:text="App Feedback" />
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/widget_margin"
+                android:textColor="@color/edx_white"
+                android:textSize="@dimen/edx_base"
+                tools:text="This is the description." />
+        </LinearLayout>
+    </LinearLayout>
+</layout>
