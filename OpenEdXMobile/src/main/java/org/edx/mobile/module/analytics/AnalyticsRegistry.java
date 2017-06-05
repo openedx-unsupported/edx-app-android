@@ -327,4 +327,18 @@ public class AnalyticsRegistry implements Analytics {
             service.trackRateTheAppClicked(versionName, rating);
         }
     }
+
+    @Override
+    public void trackWhatsNewClosed(@NonNull String versionName, int totalViewed, int currentlyViewed, int totalScreens) {
+        for (Analytics service : services) {
+            service.trackWhatsNewClosed(versionName, totalViewed, currentlyViewed, totalScreens);
+        }
+    }
+
+    @Override
+    public void trackWhatsNewSeen(@NonNull String versionName, int totalScreens) {
+        for (Analytics service : services) {
+            service.trackWhatsNewSeen(versionName, totalScreens);
+        }
+    }
 }

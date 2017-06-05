@@ -12,7 +12,6 @@ import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
-import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
@@ -685,5 +684,27 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.APP_VERSION, versionName);
         aEvent.data.putValue(Keys.RATING, rating);
         trackSegmentEvent(Events.APP_REVIEWS_RATE_THE_APP, aEvent.properties);
+    }
+
+    @Override
+    public void trackWhatsNewClosed(@NonNull String versionName, int totalViewed, int currentlyViewed, int totalScreens) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.WHATS_NEW_CLOSE);
+        aEvent.data.putValue(Keys.CATEGORY, Values.WHATS_NEW_CATEGORY);
+        aEvent.data.putValue(Keys.TOTAL_VIEWED, totalViewed);
+        aEvent.data.putValue(Keys.CURRENTLY_VIEWED, currentlyViewed);
+        aEvent.data.putValue(Keys.TOTAL_SCREENS, totalScreens);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        trackSegmentEvent(Events.WHATS_NEW_CLOSE, aEvent.properties);
+    }
+
+    @Override
+    public void trackWhatsNewSeen(@NonNull String versionName, int totalScreens) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.WHATS_NEW_DONE);
+        aEvent.data.putValue(Keys.CATEGORY, Values.WHATS_NEW_CATEGORY);
+        aEvent.data.putValue(Keys.TOTAL_SCREENS, totalScreens);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        trackSegmentEvent(Events.WHATS_NEW_DONE, aEvent.properties);
     }
 }

@@ -451,4 +451,24 @@ public class FirebaseAnalytics implements Analytics {
         event.putInt(Keys.RATING, rating);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackWhatsNewClosed(@NonNull String versionName, int totalViewed, int currentlyViewed, int totalScreens) {
+        final FirebaseEvent event = new FirebaseEvent(Events.WHATS_NEW_CLOSE, Values.WHATS_NEW_CLOSE);
+        event.putString(Keys.CATEGORY, Values.WHATS_NEW_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putInt(Keys.TOTAL_VIEWED, totalViewed);
+        event.putInt(Keys.CURRENTLY_VIEWED, currentlyViewed);
+        event.putInt(Keys.TOTAL_SCREENS, totalScreens);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackWhatsNewSeen(@NonNull String versionName, int totalScreens) {
+        final FirebaseEvent event = new FirebaseEvent(Events.WHATS_NEW_DONE, Values.WHATS_NEW_DONE);
+        event.putString(Keys.CATEGORY, Values.WHATS_NEW_CATEGORY);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putInt(Keys.TOTAL_SCREENS, totalScreens);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

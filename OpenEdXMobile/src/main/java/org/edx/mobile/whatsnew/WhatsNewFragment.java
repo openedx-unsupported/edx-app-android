@@ -22,13 +22,16 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentWhatsNewBinding;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.custom.IndicatorController;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WhatsNewFragment extends BaseFragment {
     private final Logger logger = new Logger(getClass().getName());
@@ -41,6 +44,7 @@ public class WhatsNewFragment extends BaseFragment {
     private IndicatorController indicatorController;
 
     private int noOfPages = 0;
+    private int totalPagesViewed = 1;
 
     @Nullable
     @Override
@@ -63,6 +67,11 @@ public class WhatsNewFragment extends BaseFragment {
         initViewPager();
         initButtons();
         initProgressIndicator();
+
+        final Map<String, String> map = new HashMap<>();
+        map.put(Analytics.Keys.APP_VERSION, BuildConfig.VERSION_NAME);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.WHATS_NEW, null,
+                null, map);
     }
 
     private void initViewPager() {
@@ -87,6 +96,11 @@ public class WhatsNewFragment extends BaseFragment {
                     } else {
                         binding.doneBtn.setVisibility(View.GONE);
                     }
+
+                    final int pageNumber = position + 1;
+                    if (pageNumber >= totalPagesViewed) {
+                        totalPagesViewed = pageNumber;
+                    }
                 }
 
                 @Override
@@ -105,6 +119,8 @@ public class WhatsNewFragment extends BaseFragment {
         binding.closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                environment.getAnalyticsRegistry().trackWhatsNewClosed(BuildConfig.VERSION_NAME,
+                        totalPagesViewed, binding.viewPager.getCurrentItem() + 1, noOfPages);
                 getActivity().finish();
             }
         });
@@ -112,6 +128,7 @@ public class WhatsNewFragment extends BaseFragment {
         binding.doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                environment.getAnalyticsRegistry().trackWhatsNewSeen(BuildConfig.VERSION_NAME, noOfPages);
                 getActivity().finish();
             }
         });
