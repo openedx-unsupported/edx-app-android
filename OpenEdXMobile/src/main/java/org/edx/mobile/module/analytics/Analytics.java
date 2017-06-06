@@ -279,6 +279,24 @@ public interface Analytics {
      */
     void trackRateTheAppClicked(String versionName, int rating);
 
+    /**
+     * This function is used to track if user presses the cross button on WhatsNew screen.
+     *
+     * @param versionName     Version name of app.
+     * @param totalViewed     The total number of screens a user viewed.
+     * @param currentlyViewed The screen being currently viewed.
+     * @param totalScreens    Total number of screens.
+     */
+    void trackWhatsNewClosed(@NonNull String versionName, int totalViewed, int currentlyViewed, int totalScreens);
+
+    /**
+     * This function is used to track if user presses the done button on WhatsNew screen.
+     *
+     * @param versionName  Version name of app.
+     * @param totalScreens Total number of screens.
+     */
+    void trackWhatsNewSeen(@NonNull String versionName, int totalScreens);
+
     interface Keys {
         String NAME = "name";
         String OLD_TIME = "old_time";
@@ -327,6 +345,10 @@ public interface Analytics {
 
         String APP_VERSION = "app_version";
         String RATING = "rating";
+        // WhatsNew keys
+        String TOTAL_VIEWED = "total_viewed";
+        String CURRENTLY_VIEWED = "currently_viewed";
+        String TOTAL_SCREENS = "total_screens";
     }
 
     interface Values {
@@ -404,6 +426,10 @@ public interface Analytics {
         String APP_REVIEWS_SEND_FEEDBACK = "edx.bi.app.app_reviews.send_feedback";
         String APP_REVIEWS_MAYBE_LATER = "edx.bi.app.app_reviews.maybe_later";
         String APP_REVIEWS_RATE_THE_APP = "edx.bi.app.app_reviews.rate_the_app";
+        // WhatsNew event values
+        String WHATS_NEW_CATEGORY = "whats-new";
+        String WHATS_NEW_CLOSE = "edx.bi.app.whats_new.close";
+        String WHATS_NEW_DONE = "edx.bi.app.whats_new.done";
     }
 
     interface Screens {
@@ -441,6 +467,7 @@ public interface Analytics {
         String PROFILE_CHOOSE_LANGUAGE = "Choose Form Value Primary language";
         String PROFILE_EDIT_TEXT_VALUE = "Edit Text Form Value";
         String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
+        String WHATS_NEW = "WhatsNew: Whats New";
     }
 
     interface Events {
@@ -481,6 +508,9 @@ public interface Analytics {
         String APP_REVIEWS_SEND_FEEDBACK = "AppReviews: Send Feedback";
         String APP_REVIEWS_MAYBE_LATER = "AppReviews: Maybe Later";
         String APP_REVIEWS_RATE_THE_APP = "AppReviews: Rate The App";
+        // WhatsNew events
+        String WHATS_NEW_CLOSE = "WhatsNew: Close";
+        String WHATS_NEW_DONE = "WhatsNew: Done";
     }
 
     /**
