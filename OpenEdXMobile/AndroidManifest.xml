@@ -14,9 +14,6 @@
     <!-- Required by app for preventing screen lock while playing a video -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Required by app for performing downloads without showing download notification -->
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-
     <!-- Required by app for storing downloaded videos to the external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
