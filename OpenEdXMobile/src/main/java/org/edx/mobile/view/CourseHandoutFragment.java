@@ -18,7 +18,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.interfaces.RefreshListener;
@@ -54,7 +54,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     @InjectView(R.id.webview)
     private WebView webview;
 
-    private OverlayErrorNotification errorNotification;
+    private FullScreenErrorNotification errorNotification;
 
     private SnackbarErrorNotification snackbarErrorNotification;
 
@@ -74,7 +74,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorNotification = new OverlayErrorNotification(webview);
+        errorNotification = new FullScreenErrorNotification(webview);
         snackbarErrorNotification = new SnackbarErrorNotification(webview);
         new URLInterceptorWebViewClient(getActivity(), webview).setAllLinksAsExternal(true);
         loadData();

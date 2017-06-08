@@ -23,7 +23,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 /**
  * A full screen error notification message on top of the content area.
  */
-public class OverlayErrorNotification extends ErrorNotification {
+public class FullScreenErrorNotification extends ErrorNotification {
     /**
      * The content view.
      */
@@ -41,24 +41,24 @@ public class OverlayErrorNotification extends ErrorNotification {
      *
      * @param view The content view, on which the notification will be overlaid.
      */
-    public OverlayErrorNotification(@NonNull final View view) {
+    public FullScreenErrorNotification(@NonNull final View view) {
         this.view = view;
     }
 
     /**
      * Show the error notification as an overlay message on top of the content area, according to
      * the provided details.
-     *
+     * <p>
      * The root view will be determined by walking up the view tree to see if there is any view with
      * the ID of {@link R.id#content_error R.id.content_error}. If one is found, then that would be
      * used as the root. If not, then if the content view's parent is already a FrameLayout, then
      * that would be used; otherwise a new one will be created, inserted as the new parent, and used
      * as the root.
      *
-     * @param errorResId The resource ID of the error message.
-     * @param icon The error icon.
+     * @param errorResId      The resource ID of the error message.
+     * @param icon            The error icon.
      * @param actionTextResId The resource ID of the action button text.
-     * @param actionListener The callback to be invoked when the action button is clicked.
+     * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
     public void showError(@StringRes final int errorResId,
@@ -121,7 +121,7 @@ public class OverlayErrorNotification extends ErrorNotification {
     /**
      * Find a suitable layout among the ancestors of the content view to serve as the root view on
      * which the notification can be added, or attempt to create one if not found.
-     *
+     * <p>
      * The root view will be determined by walking up the view tree to see if there is any view with
      * the ID of {@link R.id#content_error R.id.content_error}. If one is found, then that would be
      * used as the root. If not, then if the content view's parent is already a FrameLayout, then
@@ -133,7 +133,7 @@ public class OverlayErrorNotification extends ErrorNotification {
      */
     @Nullable
     private ViewGroup findSuitableAncestorLayout() {
-        for (View ancestor = view; view.getId() != android.R.id.content;) {
+        for (View ancestor = view; view.getId() != android.R.id.content; ) {
             if (ancestor instanceof ViewGroup && ancestor.getId() == R.id.content_error_root) {
                 return (ViewGroup) ancestor;
             }

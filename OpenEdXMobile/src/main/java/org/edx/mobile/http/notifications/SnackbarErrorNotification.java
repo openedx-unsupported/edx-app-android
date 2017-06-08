@@ -46,11 +46,11 @@ public class SnackbarErrorNotification extends ErrorNotification {
     /**
      * Show the error notification as a persistent Snackbar, according to the provided details.
      *
-     * @param errorResId The resource ID of the error message.
-     * @param icon The error icon. This is ignored here, since Snackbar doesn't really support
-     *             icons.
+     * @param errorResId      The resource ID of the error message.
+     * @param icon            The error icon. This is ignored here, since Snackbar doesn't really support
+     *                        icons.
      * @param actionTextResId The resource ID of the action button text.
-     * @param actionListener The callback to be invoked when the action button is clicked.
+     * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
     public void showError(@StringRes final int errorResId,

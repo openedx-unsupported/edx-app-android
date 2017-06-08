@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -65,7 +65,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
 
     protected abstract void onLoadData();
 
-    private OverlayErrorNotification errorNotification;
+    private FullScreenErrorNotification errorNotification;
 
     private SnackbarErrorNotification snackbarErrorNotification;
 
@@ -83,7 +83,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setIcon(android.R.color.transparent);
         }
-        errorNotification = new OverlayErrorNotification(contentLayout);
+        errorNotification = new FullScreenErrorNotification(contentLayout);
         snackbarErrorNotification = new SnackbarErrorNotification(contentLayout);
 
         Bundle bundle = arg0;
