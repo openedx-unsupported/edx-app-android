@@ -22,7 +22,7 @@ import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
@@ -61,7 +61,7 @@ public class MyCoursesListFragment extends BaseFragment
     @Inject
     private LoginPrefs loginPrefs;
 
-    private OverlayErrorNotification errorNotification;
+    private FullScreenErrorNotification errorNotification;
 
     private SnackbarErrorNotification snackbarErrorNotification;
 
@@ -93,7 +93,7 @@ public class MyCoursesListFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_courses_list, container, false);
-        errorNotification = new OverlayErrorNotification(binding.myCourseList);
+        errorNotification = new FullScreenErrorNotification(binding.myCourseList);
         snackbarErrorNotification = new SnackbarErrorNotification(binding.getRoot());
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

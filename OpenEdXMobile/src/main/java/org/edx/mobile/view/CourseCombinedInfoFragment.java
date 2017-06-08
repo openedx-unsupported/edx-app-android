@@ -22,7 +22,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.interfaces.RefreshListener;
@@ -63,7 +63,7 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
     @Inject
     private OkHttpClientProvider okHttpClientProvider;
 
-    private OverlayErrorNotification errorNotification;
+    private FullScreenErrorNotification errorNotification;
 
     private SnackbarErrorNotification snackbarErrorNotification;
 
@@ -102,7 +102,7 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorNotification = new OverlayErrorNotification(announcementWebView);
+        errorNotification = new FullScreenErrorNotification(announcementWebView);
         snackbarErrorNotification = new SnackbarErrorNotification(announcementWebView);
     }
 

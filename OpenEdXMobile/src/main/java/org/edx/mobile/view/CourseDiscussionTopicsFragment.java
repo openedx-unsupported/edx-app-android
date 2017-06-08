@@ -25,7 +25,7 @@ import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
-import org.edx.mobile.http.notifications.OverlayErrorNotification;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
@@ -65,7 +65,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
 
     private Call<CourseTopics> getTopicListCall;
 
-    private OverlayErrorNotification errorNotification;
+    private FullScreenErrorNotification errorNotification;
 
     private SnackbarErrorNotification snackbarErrorNotification;
 
@@ -78,7 +78,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorNotification = new OverlayErrorNotification((View) discussionTopicsListView.getParent());
+        errorNotification = new FullScreenErrorNotification((View) discussionTopicsListView.getParent());
         snackbarErrorNotification = new SnackbarErrorNotification(discussionTopicsListView);
 
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
