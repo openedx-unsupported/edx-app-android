@@ -13,8 +13,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -167,21 +165,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
             activity.finish();
         }
         assertThat(activity).isFinishing();
-    }
-
-    /**
-     * Testing options menu initialization
-     */
-    @Test
-    public void initializeOptionsMenuTest() {
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        Menu menu = Shadows.shadowOf(activity).getOptionsMenu();
-        assertNotNull(menu);
-        MenuItem offlineItem = menu.findItem(R.id.offline);
-        assertNotNull(offlineItem);
-        assertThat(offlineItem).hasTitle(activity.getText(R.string.offline_text));
     }
 
     /**

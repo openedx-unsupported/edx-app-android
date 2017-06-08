@@ -133,7 +133,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
             return;
         }
 
-        callback.onMessage(getMessageType(), ErrorUtils.getErrorMessage(ex, context));
+        callback.onMessage(getMessageType(), ErrorUtils.getErrorMessage(ex, callTrigger, context));
     }
 
     /**

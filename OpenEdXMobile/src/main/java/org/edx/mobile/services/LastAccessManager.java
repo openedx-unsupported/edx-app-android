@@ -7,7 +7,6 @@ import android.view.View;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
@@ -59,7 +58,7 @@ public class LastAccessManager {
                 callback.showLastAccessedView(prefModuleId, courseId, view);
                 courseApi.getLastAccessedSubsection(courseId).enqueue(
                         new ErrorHandlingCallback<SyncLastAccessedSubsectionResponse>(
-                                MainApplication.instance(), CallTrigger.LOADING_CACHED) {
+                                MainApplication.instance()) {
                             @Override
                             protected void onResponse(@NonNull final SyncLastAccessedSubsectionResponse result) {
                                 syncWithServerOnSuccess(result, prefModuleId, prefManager, courseId, callback, view);
@@ -118,7 +117,7 @@ public class LastAccessManager {
                                             final LastAccessManagerCallback callback) {
         courseApi.syncLastAccessedSubsection(courseId, prefModuleId).enqueue(
                 new ErrorHandlingCallback<SyncLastAccessedSubsectionResponse>(
-                        MainApplication.instance(), CallTrigger.LOADING_UNCACHED) {
+                        MainApplication.instance()) {
                     @Override
                     protected void onResponse(@NonNull final SyncLastAccessedSubsectionResponse result) {
                         if (result.getLastVisitedModuleId() != null) {

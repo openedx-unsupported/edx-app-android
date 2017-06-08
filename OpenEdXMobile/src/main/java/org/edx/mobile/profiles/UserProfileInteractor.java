@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.callback.Callback;
+import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
@@ -16,21 +17,21 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.observer.CachingObservable;
 import org.edx.mobile.util.observer.Observable;
-import org.edx.mobile.util.observer.Observer;
-
-import java.util.concurrent.Callable;
 
 import de.greenrobot.event.EventBus;
 
 /**
  * Exposes a given user's profile data and photo as a pair of observable view models
  */
-public class UserProfileInteractor {
+public class UserProfileInteractor implements RefreshListener {
     @NonNull
     private final String username;
 
     @NonNull
     private final EventBus eventBus;
+
+    @NonNull
+    private final UserService userService;
 
     private final boolean viewingOwnProfile;
 
@@ -46,23 +47,13 @@ public class UserProfileInteractor {
     public UserProfileInteractor(@NonNull final String username, @NonNull final UserService userService, @NonNull EventBus eventBus, @NonNull UserPrefs userPrefs) {
         this.username = username;
         this.eventBus = eventBus;
+        this.userService = userService;
 
         final ProfileModel model = userPrefs.getProfile();
         viewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
 
         eventBus.register(this);
-
-        userService.getAccount(username).enqueue(new Callback<Account>() {
-            @Override
-            protected void onResponse(@NonNull Account account) {
-                handleNewAccount(account);
-            }
-
-            @Override
-            protected void onFailure(@NonNull Throwable error) {
-                profileObservable.onError(error);
-            }
-        });
+        onRefresh();
     }
 
     @NonNull
@@ -152,4 +143,18 @@ public class UserProfileInteractor {
         photo.onData(new UserProfileImageViewModel(accountResponse.getProfileImage().hasImage() ? Uri.parse(accountResponse.getProfileImage().getImageUrlFull()) : null, true));
     }
 
+    @Override
+    public void onRefresh() {
+        userService.getAccount(username).enqueue(new Callback<Account>() {
+            @Override
+            protected void onResponse(@NonNull Account account) {
+                handleNewAccount(account);
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                profileObservable.onError(error);
+            }
+        });
+    }
 }

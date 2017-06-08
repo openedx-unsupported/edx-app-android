@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,12 +26,15 @@ import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.ErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.Collections;
@@ -88,13 +92,14 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final Activity activity = getActivity();
 
-        responsesLoader = new ResponsesLoader(getActivity(),
+        responsesLoader = new ResponsesLoader(activity,
                 discussionThread.getIdentifier(),
                 discussionThread.getType() == DiscussionThread.ThreadType.QUESTION);
 
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
-                getActivity(), this, discussionThread, courseData);
+                activity, getChildFragmentManager(), this, discussionThread, courseData);
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
                 discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
@@ -103,11 +108,12 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         if (getAndReadThreadCall != null) {
             getAndReadThreadCall.cancel();
         }
+        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         getAndReadThreadCall = discussionService.setThreadRead(
                 discussionThread.getIdentifier(), new ReadBody(true));
         // Setting a thread's "read" state gives us back the updated Thread object.
-        getAndReadThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(getContext(),
-                CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
+        getAndReadThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(
+                activity, null, mCallback, CallTrigger.LOADING_UNCACHED) {
             @Override
             protected void onResponse(@NonNull final DiscussionThread discussionThread) {
                 courseDiscussionResponsesAdapter.updateDiscussionThread(discussionThread);
@@ -122,7 +128,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        router.showCourseDiscussionAddResponse(getActivity(), discussionThread);
+                        router.showCourseDiscussionAddResponse(activity, discussionThread);
                     }
                 });
 
@@ -230,8 +236,10 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 getResponsesListCall = discussionService.getResponsesList(
                         threadId, nextPage, requestedFields);
             }
-            getResponsesListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionComment>>(context,
-                    CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
+
+            final TaskMessageCallback mCallback = context instanceof TaskMessageCallback ? (TaskMessageCallback) context : null;
+            getResponsesListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionComment>>(
+                    context, null, mCallback, CallTrigger.LOADING_UNCACHED) {
                 @Override
                 protected void onResponse(
                         @NonNull final Page<DiscussionComment> threadResponsesPage) {

@@ -275,10 +275,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
     @Override
-    protected void onOnline() {
-    }
-
-    @Override
     protected void onOffline() {
     }
 }

@@ -1,35 +1,32 @@
 package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
+import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -39,7 +36,7 @@ import okhttp3.Request;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseHandoutFragment extends BaseFragment {
+public class CourseHandoutFragment extends BaseFragment implements RefreshListener {
     protected final Logger logger = new Logger(getClass().getName());
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)
@@ -57,10 +54,9 @@ public class CourseHandoutFragment extends BaseFragment {
     @InjectView(R.id.webview)
     private WebView webview;
 
-    @InjectView(R.id.no_coursehandout_tv)
-    private TextView errorTextView;
+    private FullScreenErrorNotification errorNotification;
 
-    private boolean isHandoutFetched;
+    private SnackbarErrorNotification snackbarErrorNotification;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +67,6 @@ public class CourseHandoutFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_handout, container, false);
     }
 
@@ -79,18 +74,10 @@ public class CourseHandoutFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        errorNotification = new FullScreenErrorNotification(webview);
+        snackbarErrorNotification = new SnackbarErrorNotification(webview);
         new URLInterceptorWebViewClient(getActivity(), webview).setAllLinksAsExternal(true);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (!(NetworkUtil.isConnected(getActivity()))) {
-            showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
-        } else {
-            loadData();
-        }
+        loadData();
     }
 
     private void loadData() {
@@ -99,7 +86,7 @@ public class CourseHandoutFragment extends BaseFragment {
                 .get()
                 .build())
                 .enqueue(new ErrorHandlingOkCallback<HandoutModel>(getActivity(),
-                        HandoutModel.class, CallTrigger.LOADING_CACHED) {
+                        HandoutModel.class, errorNotification, snackbarErrorNotification, this) {
                     @Override
                     protected void onResponse(@NonNull final HandoutModel result) {
                         if (getActivity() == null) {
@@ -109,10 +96,9 @@ public class CourseHandoutFragment extends BaseFragment {
                         if (!TextUtils.isEmpty(result.handouts_html)) {
                             populateHandouts(result);
                         } else {
-                            CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
-                                    FontAwesomeIcons.fa_exclamation_circle);
+                            errorNotification.showError(R.string.no_handouts_to_display,
+                                    FontAwesomeIcons.fa_exclamation_circle, 0, null);
                         }
-                        isHandoutFetched = true;
                     }
 
                     @Override
@@ -122,10 +108,13 @@ public class CourseHandoutFragment extends BaseFragment {
                         if (getActivity() == null) {
                             return;
                         }
+                    }
 
-                        isHandoutFetched = false;
-                        CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
-                                FontAwesomeIcons.fa_exclamation_circle);
+                    @Override
+                    protected void onFinish() {
+                        if (!EventBus.getDefault().isRegistered(CourseHandoutFragment.this)) {
+                            EventBus.getDefault().registerSticky(CourseHandoutFragment.this);
+                        }
                     }
                 });
     }
@@ -147,45 +136,36 @@ public class CourseHandoutFragment extends BaseFragment {
 
     }
 
+    private void hideErrorMessage() {
+        webview.setVisibility(View.VISIBLE);
+        errorNotification.hideError();
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(NetworkConnectivityChangeEvent event) {
-        if (!isHandoutFetched) {
-            if (NetworkUtil.isConnected(getContext())) {
-                hideErrorMessage();
-                loadData();
-            } else {
-                showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
+        if (!NetworkUtil.isConnected(getContext())) {
+            if (!errorNotification.isShowing()) {
+                snackbarErrorNotification.showOfflineError(this);
             }
         }
     }
 
-    /**
-     * Shows the error message with and optional top icon, if the web page failed to load
-     *
-     * @param errorMsg  The error message to show
-     * @param errorIcon The error icon to show with the error message
-     */
-    private void showErrorMessage(@StringRes int errorMsg, @NonNull Icon errorIcon) {
-        webview.setVisibility(View.GONE);
-        Context context = getContext();
-        errorTextView.setVisibility(View.VISIBLE);
-        errorTextView.setText(errorMsg);
-        errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
-                new IconDrawable(context, errorIcon)
-                        .sizeRes(context, R.dimen.content_unavailable_error_icon_size)
-                        .colorRes(context, R.color.edx_brand_gray_back),
-                null, null
-        );
-    }
-
-    private void hideErrorMessage() {
-        webview.setVisibility(View.VISIBLE);
-        errorTextView.setVisibility(View.GONE);
+    @Override
+    public void onRefresh() {
+        errorNotification.hideError();
+        loadData();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDetach() {
+        super.onDetach();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onRevisit() {
+        if (NetworkUtil.isConnected(getActivity())) {
+            snackbarErrorNotification.hideError();
+        }
     }
 }

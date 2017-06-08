@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.ErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
+import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.Page;
@@ -38,7 +40,6 @@ import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.ArrayList;
@@ -119,34 +120,15 @@ public class CourseAPI {
         private final String courseId;
 
         public GetCourseByIdCallback(@NonNull final Context context,
-                                     @NonNull final String courseId,
-                                     @NonNull final CallTrigger type) {
-            super(context, type);
+                                     @NonNull final String courseId) {
+            super(context);
             this.courseId = courseId;
         }
 
         public GetCourseByIdCallback(@NonNull final Context context,
                                      @NonNull final String courseId,
-                                     @NonNull final CallTrigger type,
                                      @Nullable final TaskProgressCallback progressCallback) {
-            super(context, type, progressCallback);
-            this.courseId = courseId;
-        }
-
-        public GetCourseByIdCallback(@NonNull final Context context,
-                                     @NonNull final String courseId,
-                                     @NonNull final CallTrigger type,
-                                     @Nullable final TaskMessageCallback messageCallback) {
-            super(context, type, messageCallback);
-            this.courseId = courseId;
-        }
-
-        public GetCourseByIdCallback(@NonNull final Context context,
-                                     @NonNull final String courseId,
-                                     @NonNull final CallTrigger type,
-                                     @Nullable final TaskProgressCallback progressCallback,
-                                     @Nullable final TaskMessageCallback messageCallback) {
-            super(context, type, progressCallback, messageCallback);
+            super(context, progressCallback);
             this.courseId = courseId;
         }
 
@@ -197,33 +179,18 @@ public class CourseAPI {
 
         public GetCourseStructureCallback(@NonNull final Context context,
                                           @NonNull final String courseId,
-                                          @NonNull final CallTrigger callTrigger) {
-            super(context, callTrigger);
-            this.courseId = courseId;
-        }
-
-        public GetCourseStructureCallback(@NonNull final Context context,
-                                          @NonNull final String courseId,
-                                          @NonNull final CallTrigger callTrigger,
                                           @Nullable final TaskProgressCallback progressCallback) {
-            super(context, callTrigger, progressCallback);
+            super(context, progressCallback);
             this.courseId = courseId;
         }
 
         public GetCourseStructureCallback(@NonNull final Context context,
                                           @NonNull final String courseId,
-                                          @NonNull final CallTrigger callTrigger,
-                                          @Nullable final TaskMessageCallback messageCallback) {
-            super(context, callTrigger, messageCallback);
-            this.courseId = courseId;
-        }
-
-        public GetCourseStructureCallback(@NonNull final Context context,
-                                          @NonNull final String courseId,
-                                          @NonNull final CallTrigger callTrigger,
                                           @Nullable final TaskProgressCallback progressCallback,
-                                          @Nullable final TaskMessageCallback messageCallback) {
-            super(context, callTrigger, progressCallback, messageCallback);
+                                          @Nullable final ErrorNotification errorNotification,
+                                          @Nullable final SnackbarErrorNotification snackbarErrorNotification,
+                                          @Nullable final RefreshListener refreshListener) {
+            super(context, progressCallback, errorNotification, snackbarErrorNotification, refreshListener);
             this.courseId = courseId;
         }
 

@@ -33,7 +33,6 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         implements VideoListCallback, IPlayerEventCallback {
 
     private MenuItem selectAllMenuItem;
-    private View offlineBar;
     private PlayerFragment playerFragment;
     private VideoListFragment listFragment;
     private final Handler playHandler = new Handler();
@@ -63,8 +62,6 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
                 logger.error(ex);
             }
         }
-
-        offlineBar = findViewById(R.id.offline_bar);
 
         listFragment = (VideoListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.list_fragment);
@@ -268,15 +265,8 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
     @Override
     protected void onOffline() {
         super.onOffline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.VISIBLE);
-        }
         if (playerFragment != null) {
             playerFragment.onOffline();
-        }
-
-        if (listFragment != null) {
-            listFragment.onOffline();
         }
 
         if (playerFragment != null && listFragment != null) {
@@ -302,14 +292,10 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
     @Override
     protected void onOnline() {
         super.onOnline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.GONE);
-        }
         AppConstants.videoListDeleteMode = false;
         if (playerFragment != null) {
             playerFragment.onOnline();
         }
-        listFragment.onOnline();
         if (playerFragment != null && listFragment != null) {
             playerFragment.setNextPreviousListeners(listFragment.getNextListener(),
                     listFragment.getPreviousListener());

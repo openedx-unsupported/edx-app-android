@@ -2,62 +2,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_act_background"
-    android:orientation="vertical" >
-    
+    android:background="@color/grey_act_background">
+
     <TextView
         android:id="@+id/empty_list_view"
         style="@style/content_unavailable_error_text"
         android:text="@string/no_videos_to_display" />
 
-    <LinearLayout
-        android:id="@+id/top_panel"
+    <!-- Without this dummy view the ListView (list_video) for some reason moves to center of
+     the screen initially -->
+    <View
+        android:id="@+id/dummy"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
-
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar"
-            android:visibility="gone" />
-
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
         android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/delete_button_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <include layout="@layout/panel_delete_video_btns" />
         </LinearLayout>
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/container_player"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:visibility="gone"
+        android:layout_height="@dimen/video_player_height"
+        android:layout_below="@id/dummy"
         android:orientation="vertical"
-        android:layout_below="@id/top_panel" > 
-    </LinearLayout>
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/list_video"
+        style="@style/default_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/bottom_panel"
         android:layout_below="@id/container_player"
-        style="@style/default_list"
-        android:transcriptMode="disabled"/>
+        android:transcriptMode="disabled" />
 
     <TextView
         android:id="@+id/flying_message"

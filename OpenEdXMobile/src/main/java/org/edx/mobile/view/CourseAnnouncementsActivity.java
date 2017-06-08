@@ -2,33 +2,25 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 
 
-public class CourseAnnouncementsActivity extends BaseFragmentActivity {
+public class CourseAnnouncementsActivity extends BaseSingleFragmentActivity {
 
     @Inject
     CourseAPI api;
 
-    private CourseCombinedInfoFragment fragment;
     private EnrolledCoursesResponse courseData;
 
 
     public static String TAG = CourseAnnouncementsActivity.class.getCanonicalName();
-
-    private View offlineBar;
-
 
     Bundle bundle;
     String activityTitle;
@@ -38,7 +30,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
 
         bundle = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
-        offlineBar = findViewById(R.id.offline_bar);
 
         courseData = (EnrolledCoursesResponse) bundle
                 .getSerializable(Router.EXTRA_COURSE_DATA);
@@ -96,37 +87,9 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     }
 
     @Override
-    protected void onOffline() {
-        super.onOffline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.VISIBLE);
-        }
-
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof NetworkObserver) {
-                ((NetworkObserver) fragment).onOffline();
-            }
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-    }
-
-    @Override
-    protected void onOnline() {
-        super.onOnline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.GONE);
-        }
-
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof NetworkObserver) {
-                ((NetworkObserver) fragment).onOnline();
-            }
-        }
     }
 
 
@@ -136,33 +99,16 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
         finish();
     }
 
-
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            try {
+    public Fragment getFirstFragment() {
+        CourseCombinedInfoFragment fragment = new CourseCombinedInfoFragment();
 
-                fragment = new CourseCombinedInfoFragment();
+        if (courseData != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+            fragment.setArguments(bundle);
 
-                if (courseData != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-                    fragment.setArguments(bundle);
-
-                }
-                //this activity will only ever hold this lone fragment, so we
-                // can afford to retain the instance during activity recreation
-                fragment.setRetainInstance(true);
-
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(android.R.id.content, fragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
-
-            } catch (Exception e) {
-                logger.error(e);
-            }
         }
+        return fragment;
     }
 }

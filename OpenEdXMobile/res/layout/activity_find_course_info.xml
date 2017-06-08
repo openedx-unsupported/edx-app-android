@@ -13,17 +13,10 @@
         android:background="@color/grey_act_background"
         android:orientation="vertical">
 
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar"
-            android:layout_alignParentTop="true"
-            android:visibility="gone" />
-
         <org.edx.mobile.view.custom.EdxWebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/offline_bar"
             android:background="@color/grey_act_background" />
 
         <include layout="@layout/loading_indicator" />

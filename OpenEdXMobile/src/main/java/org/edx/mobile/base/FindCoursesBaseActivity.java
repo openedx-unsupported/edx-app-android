@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
@@ -47,7 +45,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
-    private View offlineBar;
     private EdxWebView webview;
     private boolean isWebViewLoaded;
     private ProgressBar progressWheel;
@@ -76,7 +73,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
 
         webview = (EdxWebView) findViewById(R.id.webview);
-        offlineBar = findViewById(R.id.offline_bar);
         progressWheel = (ProgressBar) findViewById(R.id.loading_indicator);
 
         webview.getSettings().setDomStorageEnabled(true);
@@ -132,7 +128,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     protected void onOnline() {
         if (!isWebViewLoaded) {
             super.onOnline();
-            offlineBar.setVisibility(View.GONE);
             hideOfflineMessage();
         }
     }
@@ -142,7 +137,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         // If the WebView is not loaded, then show the offline mode message
         if (!isWebViewLoaded) {
             super.onOffline();
-            offlineBar.setVisibility(View.VISIBLE);
             showOfflineMessage();
             hideLoadingProgress();
         }
@@ -242,7 +236,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         courseService.enrollInACourse(new CourseService.EnrollBody(courseId, emailOptIn))
                 .enqueue(new CourseService.EnrollCallback(
                         FindCoursesBaseActivity.this,
-                        CallTrigger.USER_ACTION,
                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                     @Override
                     protected void onResponse(@NonNull final ResponseBody responseBody) {
@@ -256,7 +249,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
                                 courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
                                         FindCoursesBaseActivity.this,
                                         courseId,
-                                        CallTrigger.USER_ACTION,
                                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                                     @Override
                                     protected void onResponse(@NonNull final EnrolledCoursesResponse course) {

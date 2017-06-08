@@ -8,6 +8,7 @@
     tools:context="org.edx.mobile.view.CourseHandoutActivity">
 
     <RelativeLayout
+        android:id="@+id/content_error_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -24,10 +25,7 @@
 
         <include layout="@layout/loading_indicator" />
 
-        <TextView
-            android:id="@+id/no_coursehandout_tv"
-            style="@style/content_unavailable_error_text"
-            android:text="@string/no_handouts_to_display" />
+        <include layout="@layout/content_error" />
 
     </RelativeLayout>
 </ScrollView>

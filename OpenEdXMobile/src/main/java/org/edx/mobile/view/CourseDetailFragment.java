@@ -30,6 +30,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
@@ -42,12 +43,12 @@ import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
+import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import java.util.List;
-
-import org.edx.mobile.base.BaseFragment;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -220,8 +221,11 @@ public class CourseDetailFragment extends BaseFragment {
      */
     private void populateAboutThisCourse() {
         getCourseDetailCall = courseApi.getCourseDetail(courseDetail.course_id);
-        getCourseDetailCall.enqueue(new ErrorHandlingCallback<CourseDetail>(
-                getActivity(), CallTrigger.LOADING_UNCACHED) {
+        final Activity activity = getActivity();
+        final TaskProgressCallback pCallback = activity instanceof TaskProgressCallback ? (TaskProgressCallback) activity : null;
+        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
+        getCourseDetailCall.enqueue(new ErrorHandlingCallback<CourseDetail>(getActivity(),
+                pCallback, mCallback, CallTrigger.LOADING_CACHED) {
             @Override
             protected void onResponse(@NonNull final CourseDetail courseDetail) {
                 if (courseDetail.overview != null && !courseDetail.overview.isEmpty()) {
@@ -337,9 +341,7 @@ public class CourseDetailFragment extends BaseFragment {
         }
         environment.getAnalyticsRegistry().trackEnrollClicked(courseDetail.course_id, emailOptIn);
         courseService.enrollInACourse(new CourseService.EnrollBody(courseDetail.course_id, emailOptIn))
-                .enqueue(new CourseService.EnrollCallback(
-                        getActivity(),
-                        CallTrigger.USER_ACTION) {
+                .enqueue(new CourseService.EnrollCallback(getActivity()) {
                     @Override
                     protected void onResponse(@NonNull final ResponseBody responseBody) {
                         super.onResponse(responseBody);
@@ -353,8 +355,7 @@ public class CourseDetailFragment extends BaseFragment {
                             public void run() {
                                 courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
                                         getActivity(),
-                                        courseDetail.course_id,
-                                        CallTrigger.USER_ACTION) {
+                                        courseDetail.course_id) {
                                     @Override
                                     protected void onResponse(@NonNull EnrolledCoursesResponse course) {
                                         environment.getRouter().showMyCourses(getActivity());

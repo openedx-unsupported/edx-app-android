@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -25,13 +26,14 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
-import org.edx.mobile.view.common.TaskProgressCallback;
+import org.edx.mobile.view.common.TaskMessageCallback;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -138,8 +140,10 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
         getCommentsListCall = discussionService.getCommentsList(
                 discussionResponse.getIdentifier(), nextPage, requestedFields);
-        getCommentsListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionComment>>(
-                getActivity(), CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
+        final Activity activity = getActivity();
+        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
+        getCommentsListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionComment>>(activity,
+                null, mCallback, CallTrigger.LOADING_UNCACHED) {
             @Override
             protected void onResponse(@NonNull final Page<DiscussionComment> threadCommentsPage) {
                 ++nextPage;
@@ -198,7 +202,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         setCommentFlaggedCall = discussionService.setCommentFlagged(
                 comment.getIdentifier(), new FlagBody(!comment.isAbuseFlagged()));
         setCommentFlaggedCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                context, CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
+                context, null, new DialogErrorNotification(getChildFragmentManager())) {
             @Override
             protected void onResponse(@NonNull final DiscussionComment comment) {
                 discussionCommentsAdapter.updateComment(comment);

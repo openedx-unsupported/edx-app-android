@@ -189,8 +189,7 @@ public class RegisterActivity extends BaseFragmentActivity
         loadingIndicator.setVisibility(View.VISIBLE);
 
         final Call<RegistrationDescription> getRegistrationFormCall = loginService.getRegistrationForm();
-        getRegistrationFormCall.enqueue(new ErrorHandlingCallback<RegistrationDescription>(
-            this, CallTrigger.LOADING_UNCACHED) {
+        getRegistrationFormCall.enqueue(new ErrorHandlingCallback<RegistrationDescription>(this) {
             @Override
             protected void onResponse(@NonNull RegistrationDescription registrationDescription) {
                 updateUI(true);
@@ -428,12 +427,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 }
             });
         }
-    }
-
-    @Override
-    public boolean createOptionsMenu(Menu menu) {
-        // Register screen doesn't have any menu
-        return true;
     }
 
     /**

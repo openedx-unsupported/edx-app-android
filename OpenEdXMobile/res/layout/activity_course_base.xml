@@ -7,191 +7,177 @@
     android:fitsSystemWindows="true"
     android:splitMotionEvents="false">
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/toolbar" />
-
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <include layout="@layout/toolbar" />
+
+            <FrameLayout
+                android:id="@+id/content_error_root"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <!--To be removed in https://openedx.atlassian.net/browse/MA-2412-->
-                <LinearLayout
-                    android:id="@+id/offline_bar"
-                    style="@style/offline_msg_bar"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="left|start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="@string/offline_text"
-                        android:textColor="@color/edx_brand_secondary_base"
-                        tools:targetApi="17" />
-
-                    <View style="@style/red_separator" />
-                </LinearLayout>
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <LinearLayout
-                    android:id="@+id/last_accessed_bar"
+                    android:id="@+id/content_area"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/last_accessed_bar_height"
-                    android:background="@color/edx_brand_primary_back"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/last_accessed_bar"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="@dimen/last_accessed_bar_left_margin"
-                        android:layout_marginStart="@dimen/last_accessed_bar_left_margin"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        tools:targetApi="17">
+                        android:layout_height="@dimen/last_accessed_bar_height"
+                        android:background="@color/edx_brand_primary_back"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="@dimen/last_accessed_bar_left_margin"
+                            android:layout_marginStart="@dimen/last_accessed_bar_left_margin"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            tools:targetApi="17">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/bold_edx_brand_primary_base_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/last_accessed"
+                                    android:textSize="@dimen/last_accessed_header_text_size"
+                                    tools:targetApi="17" />
+
+                                <TextView
+                                    android:id="@+id/last_accessed_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textSize="@dimen/last_accessed_unit_text_size"
+                                    tools:targetApi="17"
+                                    tools:text="Course Name" />
+                            </LinearLayout>
 
                             <TextView
-                                style="@style/bold_edx_brand_primary_base_text"
+                                android:id="@+id/last_accessed_button"
+                                style="@style/bold_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/last_accessed"
-                                android:textSize="@dimen/last_accessed_header_text_size"
-                                tools:targetApi="17" />
+                                android:padding="@dimen/last_accessed_button_margin"
+                                android:text="@string/view_button_text"
+                                android:textColor="@color/edx_brand_primary_base"
+                                android:textSize="@dimen/last_accessed_button_text_size" />
 
-                            <TextView
-                                android:id="@+id/last_accessed_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:textSize="@dimen/last_accessed_unit_text_size"
-                                tools:targetApi="17"
-                                tools:text="Course Name" />
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/last_accessed_button"
-                            style="@style/bold_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/last_accessed_button_margin"
-                            android:text="@string/view_button_text"
-                            android:textColor="@color/edx_brand_primary_base"
-                            android:textSize="@dimen/last_accessed_button_text_size" />
-
+                        <View style="@style/blue_separator" />
                     </LinearLayout>
 
-                    <View style="@style/blue_separator" />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/fragment_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_below="@+id/offline_bar"
-                    android:layout_weight="1" />
-
-                <LinearLayout
-                    android:id="@+id/course_unit_nav_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/course_unit_nav_bar_height"
-                    android:layout_weight="0"
-                    android:background="@drawable/rectangle_with_top_border"
-                    android:gravity="center"
-                    android:measureWithLargestChild="true"
-                    android:orientation="horizontal"
-                    android:paddingEnd="@dimen/course_unit_nav_bar_padding_left"
-                    android:paddingLeft="@dimen/course_unit_nav_bar_padding_left"
-                    android:paddingRight="@dimen/course_unit_nav_bar_padding_right"
-                    android:paddingStart="@dimen/course_unit_nav_bar_padding_right"
-                    android:visibility="gone"
-                    tools:targetApi="17"
-                    tools:visibility="visible">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        tools:targetApi="17">
-
-                        <Button
-                            android:id="@+id/goto_prev"
-                            style="@style/edX.Widget.DisableableButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/course_unit_nav_bar_btn_height"
-                            android:text="@string/assessment_previous"
-                            tools:targetApi="17" />
-
-                        <TextView
-                            android:id="@+id/prev_unit_title"
-                            style="@style/section_lbl"
-                            android:visibility="gone" />
-
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="0px"
-                        android:layout_height="0px"
+                    <RelativeLayout
+                        android:id="@+id/fragment_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:orientation="vertical"
-                        tools:targetApi="17">
+                        android:id="@+id/course_unit_nav_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/course_unit_nav_bar_height"
+                        android:layout_weight="0"
+                        android:background="@drawable/rectangle_with_top_border"
+                        android:gravity="center"
+                        android:measureWithLargestChild="true"
+                        android:orientation="horizontal"
+                        android:paddingEnd="@dimen/course_unit_nav_bar_padding_left"
+                        android:paddingLeft="@dimen/course_unit_nav_bar_padding_left"
+                        android:paddingRight="@dimen/course_unit_nav_bar_padding_right"
+                        android:paddingStart="@dimen/course_unit_nav_bar_padding_right"
+                        android:visibility="gone"
+                        tools:targetApi="17"
+                        tools:visibility="visible">
 
-                        <Button
-                            android:id="@+id/goto_next"
-                            style="@style/edX.Widget.DisableableButton"
+                        <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/course_unit_nav_bar_btn_height"
-                            android:text="@string/assessment_next"
-                            tools:targetApi="17" />
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            tools:targetApi="17">
 
-                        <TextView
-                            android:id="@+id/next_unit_title"
-                            style="@style/section_lbl"
-                            android:visibility="gone" />
+                            <Button
+                                android:id="@+id/goto_prev"
+                                style="@style/edX.Widget.DisableableButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                                android:text="@string/assessment_previous"
+                                tools:targetApi="17" />
 
+                            <TextView
+                                android:id="@+id/prev_unit_title"
+                                style="@style/section_lbl"
+                                android:visibility="gone" />
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="0px"
+                            android:layout_height="0px"
+                            android:layout_weight="1" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:orientation="vertical"
+                            tools:targetApi="17">
+
+                            <Button
+                                android:id="@+id/goto_next"
+                                style="@style/edX.Widget.DisableableButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                                android:text="@string/assessment_next"
+                                tools:targetApi="17" />
+
+                            <TextView
+                                android:id="@+id/next_unit_title"
+                                style="@style/section_lbl"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
                     </LinearLayout>
+
+
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/flying_message"
+                    style="@style/flying_message"
+                    android:text="@string/started_downloading"
+                    android:visibility="gone" />
 
-            </LinearLayout>
+                <include layout="@layout/content_error" />
 
-            <TextView
-                android:id="@+id/flying_message"
-                style="@style/flying_message"
-                android:text="@string/started_downloading"
-                android:visibility="gone" />
+                <include layout="@layout/loading_indicator" />
 
-            <include layout="@layout/loading_indicator" />
-
-        </FrameLayout>
-    </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <include layout="@layout/navigation_drawer_container" />
 

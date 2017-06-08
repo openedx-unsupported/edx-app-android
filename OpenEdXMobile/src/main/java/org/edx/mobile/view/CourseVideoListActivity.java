@@ -119,16 +119,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     @Override
     public abstract  void updateListUI();
 
-    protected boolean isOnCourseOutline(){
-        if (courseComponentId == null) return true;
-        CourseComponent outlineComp = courseManager.getComponentById(
-                courseData.getCourse().getId(), courseComponentId);
-        BlockPath outlinePath = outlineComp.getPath();
-        int outlinePathSize = outlinePath.getPath().size();
-
-        return outlinePathSize <= 1;
-    }
-
 }
 
 

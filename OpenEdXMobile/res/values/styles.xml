@@ -116,21 +116,6 @@
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
 
-    <style name="offline_bar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">3dp</item>
-        <item name="android:background">@color/edx_brand_secondary_base</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="offline_msg_bar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">45dp</item>
-        <item name="android:background">@color/edx_brand_secondary_back</item>
-        <item name="android:textColor">@color/edx_brand_secondary_base</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
     <style name="separator_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
