@@ -73,6 +73,7 @@ public class Config {
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String MY_VIDEOS_ENABLED = "MY_VIDEOS_ENABLED";
+    private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
 
 
     public static class ZeroRatingConfig {
@@ -528,6 +529,10 @@ public class Config {
         return getBoolean(VIDEO_TRANSCRIPT_ENABLED, false);
     }
 
+    public boolean isCourseDatesEnabled() {
+        return getBoolean(COURSE_DATES_ENABLED, false);
+    }
+
     public boolean isWhatsNewEnabled() {
         return getBoolean(WHATS_NEW_ENABLED, false);
     }
@@ -536,8 +541,8 @@ public class Config {
         return getBoolean(MY_VIDEOS_ENABLED, false);
     }
 
-    public boolean isCourseDatesEnabled() {
-        return getBoolean(COURSE_DATES_ENABLED, false);
+    public boolean isCourseVideosEnabled() {
+        return getBoolean(COURSE_VIDEOS_ENABLED, false);
     }
 
     @NonNull
