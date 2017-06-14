@@ -154,6 +154,10 @@
     <!-- Row of course on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="courseware_subtitle">Access videos and assignments</string>
+    <!-- Row title of videos on dashboard screen -->
+    <string name="videos_title">Videos</string>
+    <!-- Row subtitle of videos on dashboard screen -->
+    <string name="videos_subtitle">Watch course videos</string>
     <!-- Row of Discussion on dashboard screen -->
     <string name="discussion_title">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
@@ -195,6 +199,8 @@
     <string name="last_accessed">Last Accessed</string>
     <!-- Label shown when no courseware content is available -->
     <string name="no_chapter_text">No course content is currently available.</string>
+    <!-- Label shown when no mobile-friendly videos are available in a course -->
+    <string name="no_videos_text">This course does not include any videos.</string>
     <!-- Label shown when user is enrolled in no courses -->
     <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
     <!-- Label shown when no announcements are available for a course -->

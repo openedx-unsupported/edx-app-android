@@ -225,7 +225,14 @@ public class CourseComponent implements IBlock, IPathNode {
     /**
      * return all videos blocks under this node
      */
-    public List<VideoBlockModel> getVideos(){
+    public List<VideoBlockModel> getVideos() {
+        return (List<VideoBlockModel>) (List) getVideos(false);
+    }
+
+    /**
+     * return all the downloadable videos blocks under this node
+     */
+    public List<CourseComponent> getVideos(boolean downloadableOnly) {
         List<CourseComponent> videos = new ArrayList<>();
         fetchAllLeafComponents(videos, EnumSet.of(BlockType.VIDEO));
         // Confirm that these are actually VideoBlockModel instances.
@@ -234,13 +241,16 @@ public class CourseComponent implements IBlock, IPathNode {
         // the type is video. This should not actually happen in practice
         // though; this is just a safeguard to handle that unlikely case.
         for (Iterator<CourseComponent> videosIterator = videos.iterator();
-             videosIterator.hasNext();) {
+             videosIterator.hasNext(); ) {
             CourseComponent videoComponent = videosIterator.next();
-            if (!(videoComponent instanceof VideoBlockModel)) {
+            if (!(videoComponent instanceof VideoBlockModel) ||
+                    downloadableOnly && videoComponent.getDownloadableVideosCount() == 0) {
+                // Remove a video component if its not downloadable when we're only looking for the
+                // ones that are downloadable
                 videosIterator.remove();
             }
         }
-        return (List<VideoBlockModel>)(List)videos;
+        return videos;
     }
 
     /**

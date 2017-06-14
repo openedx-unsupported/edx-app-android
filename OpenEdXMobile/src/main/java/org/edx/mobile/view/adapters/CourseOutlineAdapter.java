@@ -55,13 +55,15 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private IStorage storage;
     private DownloadListener mDownloadListener;
     private Config config;
+    private boolean isVideoMode;
 
     public CourseOutlineAdapter(Context context, Config config, IDatabase dbStore, IStorage storage,
-                                DownloadListener listener) {
+                                DownloadListener listener, boolean isVideoMode) {
         this.config = config;
         this.dbStore = dbStore;
         this.storage = storage;
         this.mDownloadListener = listener;
+        this.isVideoMode = isVideoMode;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = new ArrayList();
     }
@@ -155,11 +157,16 @@ public class CourseOutlineAdapter extends BaseAdapter {
             List<IBlock> children = rootComponent.getChildren();
             for (IBlock block : children) {
                 CourseComponent comp = (CourseComponent) block;
+                if (isVideoMode && comp.getDownloadableVideosCount() == 0)
+                    continue;
                 if (comp.isContainer()) {
                     SectionRow header = new SectionRow(SectionRow.SECTION, comp);
                     mData.add(header);
                     for (IBlock childBlock : comp.getChildren()) {
                         CourseComponent child = (CourseComponent) childBlock;
+                        // In videos only mode, we only need to show the videos that are downloadable
+                        if (isVideoMode && child.getDownloadableVideosCount() == 0)
+                            continue;
                         SectionRow row = new SectionRow(SectionRow.ITEM, false, child);
                         mData.add(row);
                     }
