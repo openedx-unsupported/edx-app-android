@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
 import com.google.inject.Inject;
@@ -102,7 +104,12 @@ public class CertificateFragment extends BaseFragment {
             }
 
             @Override
-            public void onPageLoadError() {
+            public void onPageLoadError(WebView view, int errorCode, String description, String failingUrl) {
+                loadingIndicator.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
                 loadingIndicator.setVisibility(View.GONE);
             }
 

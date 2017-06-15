@@ -10,6 +10,8 @@ public enum AppConstants {
 
     public static final String VIDEOLIST_BACK_PRESSED = "offline_video_back_pressed";
 
+    public final static String EMPTY_HTML = "<html><body></body></html>";
+
     public static final double MILLISECONDS_PER_SECOND = 1000.00;
     // A rating value to mark user has given rating and didn't give review/feedback so don't ask for rating again till next version
     public static final float APP_ZERO_RATING = 0.0f;
