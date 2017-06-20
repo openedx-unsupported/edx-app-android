@@ -23,6 +23,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
+import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
@@ -249,6 +250,11 @@ public class CourseOutlineFragment extends BaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
+        adapter.notifyDataSetChanged();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(DownloadedVideoDeletedEvent e) {
         adapter.notifyDataSetChanged();
     }
 }
