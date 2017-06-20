@@ -18,6 +18,7 @@ import javax.inject.Inject;
 public class CourseOutlineActivity extends CourseVideoListActivity {
 
     private CourseOutlineFragment fragment;
+    private boolean isVideoMode = false;
 
     @Inject
     CourseManager courseManager;
@@ -32,6 +33,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_OUTLINE, courseData.getCourse().getId(), null);
         }
+        if (getIntent() != null) {
+            isVideoMode = getIntent().getBooleanExtra(Router.EXTRA_IS_VIDEOS_MODE, false);
+        }
     }
 
     public void onResume(){
@@ -39,7 +43,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
         if (isOnCourseOutline()) {
             setTitle(courseData.getCourse().getName());
-            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
+            if (!isVideoMode) {
+                lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
+            }
         }
     }
 
@@ -56,8 +62,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
             bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
-            bundle.putString(Router.EXTRA_LAST_ACCESSED_ID
-                    , getIntent().getStringExtra(Router.EXTRA_LAST_ACCESSED_ID));
+            bundle.putString(Router.EXTRA_LAST_ACCESSED_ID,
+                    getIntent().getStringExtra(Router.EXTRA_LAST_ACCESSED_ID));
+            bundle.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideoMode);
             fragment.setArguments(bundle);
             //this activity will only ever hold this lone fragment, so we
             // can afford to retain the instance during activity recreation
@@ -70,7 +77,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         }
 
         if (isOnCourseOutline()) {
-            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
+            if (!isVideoMode) {
+                lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
+            }
         } else {
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());

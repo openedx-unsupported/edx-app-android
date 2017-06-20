@@ -112,6 +112,20 @@ public class CourseDashboardFragment extends BaseFragment {
                 }
             });
 
+            if (environment.getConfig().isCourseVideosEnabled()) {
+                holder = createViewHolder(inflater, parent);
+
+                holder.typeView.setIcon(FontAwesomeIcons.fa_film);
+                holder.titleView.setText(R.string.videos_title);
+                holder.subtitleView.setText(R.string.videos_subtitle);
+                holder.rowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        environment.getRouter().showCourseContainerOutline(getActivity(),
+                                courseData, true);
+                    }
+                });
+            }
 
             if (courseData != null
                     && !TextUtils.isEmpty(courseData.getCourse().getDiscussionUrl())

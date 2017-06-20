@@ -225,8 +225,15 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
 
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
+        boolean isVideoMode = false;
+        if (getIntent() != null) {
+            isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
+        }
+        if (isVideoMode) {
+            leaves = selectedUnit.getRoot().getVideos(true);
+        } else {
+            selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
+        }
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
 

@@ -23,6 +23,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
+import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
@@ -45,7 +46,7 @@ public class CourseOutlineFragment extends BaseFragment {
     private TaskProcessCallback taskProcessCallback;
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
-
+    private boolean isVideoMode;
 
     @Inject
     CourseManager courseManager;
@@ -65,6 +66,11 @@ public class CourseOutlineFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        final Bundle bundle = getArguments();
+        courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
+        courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
+        isVideoMode = bundle.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
+
         View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView)view.findViewById(R.id.outline_list);
         initializeAdapter();
@@ -77,10 +83,10 @@ public class CourseOutlineFragment extends BaseFragment {
                 CourseComponent comp = row.component;
                 if (comp.isContainer()) {
                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), null);
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), null, isVideoMode);
                 } else {
                     environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), isVideoMode);
                 }
             }
         });
@@ -92,14 +98,8 @@ public class CourseOutlineFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         restore(savedInstanceState);
-        final Bundle bundle = getArguments();
-        if( courseData == null ) {
-            courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
-            courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
-        }
         loadData(getView());
-
-        updateRowSelection(bundle.getString(Router.EXTRA_LAST_ACCESSED_ID));
+        updateRowSelection(getArguments().getString(Router.EXTRA_LAST_ACCESSED_ID));
     }
 
     public void setTaskProcessCallback(TaskProcessCallback callback){
@@ -118,16 +118,17 @@ public class CourseOutlineFragment extends BaseFragment {
         adapter.setData(courseComponent);
         updateMessageView(view);
     }
-    public void updateMessageView(View view){
-        if (view == null )
+
+    public void updateMessageView(View view) {
+        if (view == null)
             view = getView();
-        if ( view == null )
+        if (view == null)
             return;
         TextView messageView = (TextView) view.findViewById(R.id.no_chapter_tv);
-        if(adapter.getCount()==0){
+        if (adapter.getCount() == 0) {
             messageView.setVisibility(View.VISIBLE);
-            messageView.setText(R.string.no_chapter_text);
-        }else{
+            messageView.setText(isVideoMode ? R.string.no_videos_text : R.string.no_chapter_text);
+        } else {
             messageView.setVisibility(View.GONE);
         }
     }
@@ -159,7 +160,7 @@ public class CourseOutlineFragment extends BaseFragment {
                         public void viewDownloadsStatus() {
                             environment.getRouter().showDownloads(getActivity());
                         }
-                    });
+                    }, isVideoMode);
         }
     }
 
@@ -227,8 +228,10 @@ public class CourseOutlineFragment extends BaseFragment {
                             } else {
                                 for (int i = outlinePathSize + 1; i < leafPathSize - 1; i += 2) {
                                     CourseComponent nextComp = leafPath.get(i);
-                                    environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
-                                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, nextComp.getId(), leafCompId);
+                                    environment.getRouter().showCourseContainerOutline(
+                                            CourseOutlineFragment.this,
+                                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData,
+                                            nextComp.getId(), leafCompId, isVideoMode);
                                 }
                             }
                         }
@@ -247,6 +250,11 @@ public class CourseOutlineFragment extends BaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
+        adapter.notifyDataSetChanged();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(DownloadedVideoDeletedEvent e) {
         adapter.notifyDataSetChanged();
     }
 }
