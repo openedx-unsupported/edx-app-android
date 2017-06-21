@@ -337,6 +337,7 @@ public class AuthenticatedWebView extends FrameLayout {
                             @Override
                             public void run() {
                                 didReceiveError = true;
+                                webView.setVisibility(View.GONE);
                                 showErrorView(errorMsg, FontAwesomeIcons.fa_exclamation_circle);
                             }
                         }
