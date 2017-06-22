@@ -391,6 +391,15 @@
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
     </style>
 
+    <style name="edX.Widget.RegularButton" parent="edX.Widget.Button">
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:textColor">@color/edx_brand_gray_base</item>
+        <item name="android:background">@drawable/gray_bordered_button_background</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
+    </style>
+
     <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
         <!-- We're using the default appcompat spinner background, but the margin beside the dropdown arrow is to small -->
         <!-- Add [edX widget_margin of 10dp] minus [AppCompat background's built-in padding of 7dp] -->

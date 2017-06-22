@@ -5,7 +5,8 @@
     <FrameLayout
         android:id="@+id/content_error_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/grey_act_background">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_container"

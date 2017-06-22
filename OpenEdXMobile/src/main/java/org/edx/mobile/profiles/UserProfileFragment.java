@@ -185,6 +185,7 @@ public class UserProfileFragment
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.VISIBLE);
                 viewHolder.profileHeader.setVisibility(View.VISIBLE);
+
                 onFinish();
             }
 
@@ -225,6 +226,7 @@ public class UserProfileFragment
                         });
                 viewHolder.contentError.contentErrorAction.setVisibility(View.VISIBLE);
                 viewHolder.profileHeader.setVisibility(View.GONE);
+
                 onFinish();
             }
 
