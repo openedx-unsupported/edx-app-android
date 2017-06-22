@@ -297,6 +297,19 @@ public interface Analytics {
      */
     void trackWhatsNewSeen(@NonNull String versionName, int totalScreens);
 
+    /**
+     * This function is used to track if the user clicks on a thread to view it in the
+     * discussion forums.
+     *
+     * @param threadId  ID of the viewed thread.
+     * @param courseId  ID of the course in which the viewed thread was posted.
+     * @param title     Title of the viewed thread.
+     * @param topicId   Topic under which the viewed thread was posted.
+     * @param author    Author of the viewed thread. Null if anonymous.
+     */
+    void trackForumThreadViewed(@NonNull String threadId, @Nullable String courseId,
+                                @Nullable String title, @NonNull String topicId, @Nullable String author);
+
     interface Keys {
         String NAME = "name";
         String OLD_TIME = "old_time";
@@ -349,6 +362,13 @@ public interface Analytics {
         String TOTAL_VIEWED = "total_viewed";
         String CURRENTLY_VIEWED = "currently_viewed";
         String TOTAL_SCREENS = "total_screens";
+
+        // Thread viewed keys
+        String THREAD_VIEWED_THREAD_ID = "id";
+        String THREAD_VIEWED_COURSE_ID = "course_id";
+        String THREAD_VIEWED_TITLE = "title";
+        String THREAD_VIEWED_TOPIC_ID = "topic_id";
+        String THREAD_VIEWED_AUTHOR = "target_username";
     }
 
     interface Values {
@@ -430,6 +450,8 @@ public interface Analytics {
         String WHATS_NEW_CATEGORY = "whats-new";
         String WHATS_NEW_CLOSE = "edx.bi.app.whats_new.close";
         String WHATS_NEW_DONE = "edx.bi.app.whats_new.done";
+
+        String THREAD_VIEWED = "edx.forum.thread.viewed";
     }
 
     interface Screens {
@@ -512,6 +534,7 @@ public interface Analytics {
         // WhatsNew events
         String WHATS_NEW_CLOSE = "WhatsNew: Close";
         String WHATS_NEW_DONE = "WhatsNew: Done";
+        String THREAD_VIEWED = "Forum: View Thread (Research Event)";
     }
 
     /**

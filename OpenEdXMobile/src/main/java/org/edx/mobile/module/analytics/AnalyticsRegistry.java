@@ -341,4 +341,12 @@ public class AnalyticsRegistry implements Analytics {
             service.trackWhatsNewSeen(versionName, totalScreens);
         }
     }
+
+    @Override
+    public void trackForumThreadViewed(@NonNull String threadId, @Nullable String courseId,
+                                       @Nullable String title, @NonNull String topicId, @Nullable String author) {
+        for (Analytics service : services) {
+            service.trackForumThreadViewed(threadId, courseId, title, topicId, author);
+        }
+    }
 }

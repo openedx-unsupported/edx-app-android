@@ -471,4 +471,10 @@ public class FirebaseAnalytics implements Analytics {
         event.putInt(Keys.TOTAL_SCREENS, totalScreens);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackForumThreadViewed(@NonNull String threadId, @Nullable String courseId,
+                                       @Nullable String title, @NonNull String topicId, @Nullable String author) {
+        // Not implemented for Firebase
+    }
 }

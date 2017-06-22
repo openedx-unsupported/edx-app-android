@@ -707,4 +707,17 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.APP_VERSION, versionName);
         trackSegmentEvent(Events.WHATS_NEW_DONE, aEvent.properties);
     }
+
+    @Override
+    public void trackForumThreadViewed(@NonNull String threadId, @Nullable String courseId,
+                                       @Nullable String title, @NonNull String topicId, @Nullable String author) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.THREAD_VIEWED);
+        aEvent.data.putValue(Keys.THREAD_VIEWED_THREAD_ID, threadId);
+        if (courseId != null) aEvent.data.putValue(Keys.THREAD_VIEWED_COURSE_ID, courseId);
+        if (title != null) aEvent.data.putValue(Keys.THREAD_VIEWED_TITLE, title);
+        aEvent.data.putValue(Keys.THREAD_VIEWED_TOPIC_ID, topicId);
+        if (author != null) aEvent.data.putValue(Keys.THREAD_VIEWED_AUTHOR, author);
+        trackSegmentEvent(Events.THREAD_VIEWED, aEvent.properties);
+    }
 }

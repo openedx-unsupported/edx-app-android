@@ -12,6 +12,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
+import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
@@ -113,5 +114,15 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
                 setTitle(discussionTopic.getName());
             }
         }
+    }
+
+    void trackThreadViewed(DiscussionThread thread) {
+        environment.getAnalyticsRegistry().trackForumThreadViewed(
+            thread.getIdentifier(),
+            thread.getCourseId(),
+            thread.getTitle(),
+            thread.getTopicId(),
+            thread.getAuthor()
+        );
     }
 }

@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
@@ -51,6 +52,7 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getContext();
                 DiscussionThread thread = discussionPostsAdapter.getItem(position);
+                ((CourseDiscussionPostsActivity) getActivity()).trackThreadViewed(thread);
                 router.showCourseDiscussionResponses(context, thread, courseData);
 
                 if (!thread.isRead()) {
