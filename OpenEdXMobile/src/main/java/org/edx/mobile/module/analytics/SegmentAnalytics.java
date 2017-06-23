@@ -714,7 +714,7 @@ public class SegmentAnalytics implements Analytics {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.THREAD_VIEWED);
         aEvent.data.putValue(Keys.THREAD_VIEWED_THREAD_ID, threadId);
-        if (courseId != null) aEvent.data.putValue(Keys.THREAD_VIEWED_COURSE_ID, courseId);
+        if (courseId != null) aEvent.setCourseContext(courseId, null, null);
         if (title != null) aEvent.data.putValue(Keys.THREAD_VIEWED_TITLE, title);
         aEvent.data.putValue(Keys.THREAD_VIEWED_TOPIC_ID, topicId);
         if (author != null) aEvent.data.putValue(Keys.THREAD_VIEWED_AUTHOR, author);

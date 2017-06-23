@@ -365,9 +365,8 @@ public interface Analytics {
 
         // Thread viewed keys
         String THREAD_VIEWED_THREAD_ID = "id";
-        String THREAD_VIEWED_COURSE_ID = "course_id";
         String THREAD_VIEWED_TITLE = "title";
-        String THREAD_VIEWED_TOPIC_ID = "topic_id";
+        String THREAD_VIEWED_TOPIC_ID = "commentable_id";
         String THREAD_VIEWED_AUTHOR = "target_username";
     }
 
