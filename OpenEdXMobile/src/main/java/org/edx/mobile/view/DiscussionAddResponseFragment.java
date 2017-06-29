@@ -84,6 +84,9 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         Map<String, String> values = new HashMap<>();
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
         values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
+        if (!discussionThread.isAuthorAnonymous()) {
+            values.put(Analytics.Keys.AUTHOR, discussionThread.getAuthor());
+        }
         analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_ADD_RESPONSE,
                 discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }
