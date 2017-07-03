@@ -39,16 +39,17 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
     public void attachView(@NonNull final ViewInterface view) {
         super.attachView(view);
         view.setUsername(userProfileInteractor.getUsername());
-        view.setEditProfileMenuButtonVisible(userProfileInteractor.isViewingOwnProfile());
         view.showLoading();
         observeOnView(userProfileInteractor.observeProfile()).subscribe(new Observer<UserProfileViewModel>() {
             @Override
             public void onData(@NonNull UserProfileViewModel account) {
+                view.setEditProfileMenuButtonVisible(userProfileInteractor.isViewingOwnProfile());
                 view.showProfile(account);
             }
 
             @Override
             public void onError(@NonNull Throwable error) {
+                view.setEditProfileMenuButtonVisible(false);
                 view.showError(error);
             }
         });

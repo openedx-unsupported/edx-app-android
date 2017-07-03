@@ -3,6 +3,7 @@ package org.edx.mobile.http.notifications;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Button;
@@ -69,13 +70,17 @@ public class SnackbarErrorNotification extends ErrorNotification {
                     }
                 });
             }
+            snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    super.onDismissed(transientBottomBar, event);
+                    snackbar = null;
+                }
+            });
             // By applying the listener to the button like we have done below, the Snackbar
             // doesn't automatically dismiss and we have to manually dismiss it.
             final Button actionButton = (Button) snackbar.getView().findViewById(android.support.design.R.id.snackbar_action);
             actionButton.setOnClickListener(actionListener);
-        }
-
-        if (!snackbar.isShown()) {
             snackbar.show();
         }
     }
@@ -104,6 +109,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
     public void hideError() {
         if (snackbar != null) {
             snackbar.dismiss();
+            snackbar = null;
         }
     }
 }

@@ -23,11 +23,9 @@
 
         <Button
             android:id="@+id/content_error_action"
-            style="@style/edX.Widget.DisableableButton"
+            style="@style/edX.Widget.RegularButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selectable_box_overlay"
-            android:padding="@dimen/widget_margin"
             android:visibility="gone"
             tools:text="Reload"
             tools:visibility="visible" />
