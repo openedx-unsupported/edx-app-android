@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -307,6 +308,9 @@ public class CourseDetailFragment extends BaseFragment {
 
         if (mEnrolled) {
             mEnrollButton.setText(R.string.view_course_button_text);
+        } else if (courseDetail.invitation_only != null && courseDetail.invitation_only) {
+            mEnrollButton.setText(R.string.invitation_only_button_text);
+            mEnrollButton.setEnabled(false);
         } else {
             mEnrollButton.setText(R.string.enroll_now_button_text);
         }

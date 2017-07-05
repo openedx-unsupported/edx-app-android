@@ -17,6 +17,8 @@
 
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
+    <!-- Invitation Only button text-->
+    <string name="invitation_only_button_text">Invitation only</string>
     <!-- Effort field name -->
     <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
