@@ -39,9 +39,7 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 
 public abstract class FindCoursesBaseActivity extends BaseFragmentActivity implements
-        URLInterceptorWebViewClient.IActionListener,
-        URLInterceptorWebViewClient.IPageStatusListener {
-
+        URLInterceptorWebViewClient.IActionListener {
     private static final int LOG_IN_REQUEST_CODE = 42;
     private static final String INSTANCE_COURSE_ID = "enrollCourseId";
     private static final String INSTANCE_EMAIL_OPT_IN = "enrollEmailOptIn";
@@ -124,7 +122,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         client.setAllLinksAsExternal(isAllLinksExternal());
 
         client.setActionListener(this);
-        client.setPageStatusListener(this);
+        client.setPageStatusListener(pageStatusListener);
     }
 
     @Override
@@ -278,18 +276,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
                 });
     }
 
-    @Override
-    public void onPageStarted() {
-        showLoadingProgress();
-        isWebViewLoaded = false;
-    }
-
-    @Override
-    public void onPageFinished() {
-        hideLoadingProgress();
-        isWebViewLoaded = true;
-    }
-
     //Broadcast Receiver to notify all activities to finish if user logs out
     private BroadcastReceiver courseEnrollReceiver = new BroadcastReceiver() {
         @Override
@@ -334,18 +320,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         }
     }
 
-    @Override
-    public void onPageLoadError(WebView view, int errorCode, String description, String failingUrl) {
-        isWebViewLoaded = false;
-        showOfflineMessage();
-    }
-
-    @Override
-    public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-        isWebViewLoaded = false;
-        showOfflineMessage();
-    }
-
     /**
      * By default, all links will not be treated as external.
      * Depends on host, as long as the links have same host, they are treated as non-external links.
@@ -356,8 +330,41 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         return false;
     }
 
-    @Override
-    public void onPagePartiallyLoaded() {
-        hideLoadingProgress();
-    }
+    /*
+     * In order to avoid reflection issues of public functions in event bus especially those that
+     * aren't available on a certain api level, this listener has been refactored to a class
+     * variable which is better explained in following references:
+     * https://github.com/greenrobot/EventBus/issues/149
+     * http://greenrobot.org/eventbus/documentation/faq/
+     */
+    private URLInterceptorWebViewClient.IPageStatusListener pageStatusListener = new URLInterceptorWebViewClient.IPageStatusListener() {
+        @Override
+        public void onPageStarted() {
+            showLoadingProgress();
+            isWebViewLoaded = false;
+        }
+
+        @Override
+        public void onPageFinished() {
+            hideLoadingProgress();
+            isWebViewLoaded = true;
+        }
+
+        @Override
+        public void onPageLoadError(WebView view, int errorCode, String description, String failingUrl) {
+            isWebViewLoaded = false;
+            showOfflineMessage();
+        }
+
+        @Override
+        public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            isWebViewLoaded = false;
+            showOfflineMessage();
+        }
+
+        @Override
+        public void onPagePartiallyLoaded() {
+            hideLoadingProgress();
+        }
+    };
 }
