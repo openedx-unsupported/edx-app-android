@@ -3,6 +3,7 @@ package org.edx.mobile.view.custom;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +51,8 @@ public class TitleRowView extends LinearLayout {
         float fontSize = attrArray.getDimension(styleable.TitleRowView_titleFontSize, 12.0f);
         DecorationStyle decorationStyle =DecorationStyle.values()[attrArray.getInt(styleable.TitleRowView_decorationStyle, DecorationStyle.CENTER.ordinal())];
         int textColor = attrArray.getColor(styleable.TitleRowView_android_textColor, Color.BLACK);
-        int leftColor = attrArray.getColor(styleable.TitleRowView_leftColor, color.grey_act_background);
-        int rightColor = attrArray.getColor(styleable.TitleRowView_rightColor, color.grey_act_background);
+        int leftColor = attrArray.getColor(styleable.TitleRowView_leftColor, ContextCompat.getColor(context, color.grey_act_background));
+        int rightColor = attrArray.getColor(styleable.TitleRowView_rightColor, ContextCompat.getColor(context, color.grey_act_background));
 
         if ( decorationStyle !=  DecorationStyle.LEFT ) {
             View leftDashView = new View(context);

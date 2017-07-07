@@ -16,6 +16,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.R;
 import com.joanzapata.iconify.internal.Animation;
 
+@SuppressWarnings("AppCompatCustomView")
 public class IconImageButton extends ImageButton {
 
     @NonNull

@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.RatingBar;
@@ -15,7 +16,7 @@ import org.edx.mobile.util.ResourceUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EdxRatingBar extends RatingBar {
+public class EdxRatingBar extends AppCompatRatingBar {
     @ColorInt
     private final int UNSELECTED_STAR_COLOR = ContextCompat.getColor(getContext(), R.color.edx_brand_gray_back);
     @ColorInt

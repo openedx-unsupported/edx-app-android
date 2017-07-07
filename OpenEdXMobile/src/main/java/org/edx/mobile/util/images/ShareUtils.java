@@ -25,6 +25,7 @@ public enum ShareUtils {
                 .setType("text/plain");
     }
 
+    @SuppressWarnings("RestrictedApi")
     public static void showShareMenu(@NonNull Intent shareIntent, @NonNull View anchor,
                                      final @NonNull ShareMenuItemListener listener) {
         final Context context = anchor.getContext();
@@ -43,6 +44,8 @@ public enum ShareUtils {
                 }
             });
         }
+
+        // TODO: Find an alternative to following usage of support MenuPopupHelper which is hidden in the support package
         // As PopupMenu doesn't support to show icons in main menu, use MenuPopupHelper for it
         final MenuPopupHelper menuHelper = new MenuPopupHelper(context, (MenuBuilder) popupMenu.getMenu(), anchor);
         menuHelper.setForceShowIcon(true);
