@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Singleton
 public class TranscriptManager {
@@ -147,31 +148,14 @@ public class TranscriptManager {
      * This function starts downloading all the srt files in a Transcript model
      * @param transcript
      */
-    public void downloadTranscriptsForVideo(TranscriptModel transcript){
-        if(transcript==null){
+    public void downloadTranscriptsForVideo(TranscriptModel transcript) {
+        if (transcript == null) {
             return;
         }
-
-        if(transcript.chineseUrl!=null){
-            startTranscriptDownload(transcript.chineseUrl);
-        }
-        if(transcript.englishUrl!=null){
-            startTranscriptDownload(transcript.englishUrl);
-        }
-        if(transcript.frenchUrl!=null){
-            startTranscriptDownload(transcript.frenchUrl);
-        }
-        if(transcript.germanUrl!=null){
-            startTranscriptDownload(transcript.germanUrl);
-        }
-        if(transcript.portugueseUrl!=null){
-            startTranscriptDownload(transcript.portugueseUrl);
-        }
-        if(transcript.spanishUrl!=null){
-            startTranscriptDownload(transcript.spanishUrl);
-        }
-        if(transcript.arabicUrl!=null){
-            startTranscriptDownload(transcript.arabicUrl);
+        for (String value : transcript.values()) {
+            if (value != null) {
+                startTranscriptDownload(value);
+            }
         }
     }
 
@@ -181,51 +165,14 @@ public class TranscriptManager {
      * @param transcript - This model contains links of the srt files
      * @return ArrayList<String> which is the list of srt response strings
      */
-    public LinkedHashMap<String, InputStream> fetchTranscriptsForVideo(
-                TranscriptModel transcript, Context context){
-
-        LinkedHashMap<String, InputStream> transcriptList = new LinkedHashMap<String, InputStream>();
-        try{
-            if(transcript.chineseUrl!=null){
-                transcriptList.put(context.getString(R.string.cc_chinese_code),
-                        fetchTranscriptResponse(transcript.chineseUrl));
+    public LinkedHashMap<String, InputStream> fetchTranscriptsForVideo(TranscriptModel transcript) {
+        LinkedHashMap<String, InputStream> transcriptList = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : transcript.entrySet()) {
+            if (entry.getValue() != null) {
+                transcriptList.put(entry.getKey(), fetchTranscriptResponse(entry.getValue()));
             }
-
-            if(transcript.englishUrl!=null){
-                transcriptList.put(context.getString(R.string.cc_english_code),
-                        fetchTranscriptResponse(transcript.englishUrl));
-            }
-
-            if(transcript.frenchUrl!=null){
-                transcriptList.put(context.getString(R.string.cc_french_code),
-                        fetchTranscriptResponse(transcript.frenchUrl));
-            }
-
-            if(transcript.germanUrl!=null){
-                transcriptList.put(context.getString(R.string.cc_german_code),
-                        fetchTranscriptResponse(transcript.germanUrl));
-            }
-
-            if(transcript.portugueseUrl!=null){
-                transcriptList.put(context.getString(R.string.cc_portugal_code),
-                        fetchTranscriptResponse(transcript.portugueseUrl));
-            }
-
-            if(transcript.spanishUrl!=null){
-                transcriptList.put(context.getString(R.string.cc_spanish_code),
-                        fetchTranscriptResponse(transcript.spanishUrl));
-            }
-
-            if(transcript.arabicUrl!=null){
-                transcriptList.put(context.getString(R.string.lbl_cc_arabic_code),
-                        fetchTranscriptResponse(transcript.arabicUrl));
-            }
-
-            return transcriptList;
-        }catch(Exception e){
-            logger.error(e);
         }
-        return null;
+        return transcriptList;
     }
 
     /**

@@ -1188,7 +1188,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             try
             {
                 LinkedHashMap<String, InputStream> localHashMap = transcriptManager
-                        .fetchTranscriptsForVideo(transcript,getActivity());
+                        .fetchTranscriptsForVideo(transcript);
 
                 if (localHashMap != null){
                     for(String thisKey : localHashMap.keySet()){
@@ -1494,7 +1494,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     //Default Language List
     private LinkedHashMap<String, String> getLanguageList(){
         if(transcript!=null){
-            langList = transcript.getLanguageList(getActivity());
+            langList = transcript.getLanguageList();
             return langList;
         }
         return null;

@@ -23,6 +23,7 @@ public class SummaryModel implements Serializable {
     public boolean onlyOnWeb;
     private String id;
     private long size;
+    @SerializedName("transcripts")
     private TranscriptModel transcripts;
     private EncodingsModel encodings;
 

@@ -1,6 +1,6 @@
 [main]
-type = ANDROID
 host = https://www.transifex.com
+type = ANDROID
 
 [edx-mobile-apps.android-app-strings]
 file_filter = OpenEdXMobile/res/values-<lang>/strings.xml
@@ -17,12 +17,21 @@ file_filter = OpenEdXMobile/res/values-<lang>/labels.xml
 source_file = OpenEdXMobile/res/values/labels.xml
 source_lang = en
 
-[edx-mobile-apps.android-app-constants]
-file_filter = OpenEdXMobile/res/values-<lang>/constants.xml
-source_file = OpenEdXMobile/res/values/constants.xml
+[edx-mobile-apps.app-localizable-profiles]
+file_filter = OpenEdXMobile/res/raw-<lang>/profiles.json
+source_file = OpenEdXMobile/res/raw/profiles.json
 source_lang = en
+type = KEYVALUEJSON
 
-[edx-mobile-apps.android-app-locales]
-file_filter = OpenEdXMobile/res/values-<lang>/locales.xml
-source_file = OpenEdXMobile/res/values/locales.xml
+[edx-mobile-apps.app-localizable-countries]
+file_filter = OpenEdXMobile/res/raw-<lang>/countries.json
+source_file = OpenEdXMobile/res/raw/countries.json
 source_lang = en
+type = KEYVALUEJSON
+
+[edx-mobile-apps.app-localizable-languages]
+file_filter = OpenEdXMobile/res/raw-<lang>/languages.json
+source_file = OpenEdXMobile/res/raw/languages.json
+source_lang = en
+type = KEYVALUEJSON
+
