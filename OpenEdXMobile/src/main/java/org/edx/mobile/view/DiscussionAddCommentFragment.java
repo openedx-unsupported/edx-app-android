@@ -88,6 +88,9 @@ public class DiscussionAddCommentFragment extends BaseFragment {
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
         values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
         values.put(Analytics.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
+        if (!discussionResponse.isAuthorAnonymous()) {
+            values.put(Analytics.Keys.AUTHOR, discussionResponse.getAuthor());
+        }
         analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_ADD_RESPONSE_COMMENT,
                 discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }

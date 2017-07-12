@@ -143,6 +143,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         Map<String, String> values = new HashMap<>();
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
         values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
+        if (!discussionThread.isAuthorAnonymous()) {
+            values.put(Analytics.Keys.AUTHOR, discussionThread.getAuthor());
+        }
         analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_THREAD,
                 courseData.getCourse().getId(), discussionThread.getTitle(), values);
     }

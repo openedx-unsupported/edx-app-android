@@ -340,6 +340,7 @@ public interface Analytics {
         String TOPIC_ID = "topic_id";
         String THREAD_ID = "thread_id";
         String RESPONSE_ID = "response_id";
+        String AUTHOR = "author";
 
         String COMPONENT_VIEWED = "Component Viewed";
 
