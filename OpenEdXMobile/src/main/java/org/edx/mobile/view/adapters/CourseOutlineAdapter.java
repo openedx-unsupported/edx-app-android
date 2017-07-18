@@ -157,15 +157,14 @@ public class CourseOutlineAdapter extends BaseAdapter {
             List<IBlock> children = rootComponent.getChildren();
             for (IBlock block : children) {
                 CourseComponent comp = (CourseComponent) block;
-                if (isVideoMode && comp.getDownloadableVideosCount() == 0)
+                if (isVideoMode && comp.getVideos().size() == 0)
                     continue;
                 if (comp.isContainer()) {
                     SectionRow header = new SectionRow(SectionRow.SECTION, comp);
                     mData.add(header);
                     for (IBlock childBlock : comp.getChildren()) {
                         CourseComponent child = (CourseComponent) childBlock;
-                        // In videos only mode, we only need to show the videos that are downloadable
-                        if (isVideoMode && child.getDownloadableVideosCount() == 0)
+                        if (isVideoMode && child.getVideos().size() == 0)
                             continue;
                         SectionRow row = new SectionRow(SectionRow.ITEM, false, child);
                         mData.add(row);

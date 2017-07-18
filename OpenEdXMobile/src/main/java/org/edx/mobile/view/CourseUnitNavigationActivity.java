@@ -230,7 +230,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
         }
         if (isVideoMode) {
-            leaves = selectedUnit.getRoot().getVideos(true);
+            leaves = selectedUnit.getRoot().getVideos(false);
         } else {
             selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
         }
