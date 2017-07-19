@@ -357,9 +357,12 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         }
 
         @Override
-        public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-            isWebViewLoaded = false;
-            showOfflineMessage();
+        public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse,
+                                    boolean isMainRequestFailure) {
+            if (isMainRequestFailure) {
+                isWebViewLoaded = false;
+                showOfflineMessage();
+            }
         }
 
         @Override

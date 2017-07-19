@@ -129,10 +129,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     @Override
+    @TargetApi(Build.VERSION_CODES.M)
     public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
         super.onReceivedHttpError(view, request, errorResponse);
         if (pageStatusListener != null) {
-            pageStatusListener.onPageLoadError(view, request, errorResponse);
+            pageStatusListener.onPageLoadError(view, request, errorResponse,
+                    request.getUrl().toString().equals(view.getUrl()));
         }
     }
 
@@ -295,7 +297,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         /**
          * Callback that indicates error during page load.
          */
-        void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse);
+        void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse,
+                             boolean isMainRequestFailure);
 
         /**
          * Callback that indicates that the page is 50 percent loaded.
