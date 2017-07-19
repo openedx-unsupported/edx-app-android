@@ -64,8 +64,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
             @Override
             @TargetApi(Build.VERSION_CODES.M)
-            public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                if (request.getUrl().toString().equals(view.getUrl())) {
+            public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse,
+                                        boolean isMainRequestFailure) {
+                if (isMainRequestFailure) {
                     ViewPagerDownloadManager.instance.done(CourseUnitWebViewFragment.this, false);
                 }
             }
