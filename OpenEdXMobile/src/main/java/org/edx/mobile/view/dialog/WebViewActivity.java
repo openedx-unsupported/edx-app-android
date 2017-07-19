@@ -58,8 +58,11 @@ public class WebViewActivity extends BaseFragmentActivity {
             }
 
             @Override
-            public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                progress.setVisibility(View.GONE);
+            public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse,
+                                        boolean isMainRequestFailure) {
+                if (isMainRequestFailure) {
+                    progress.setVisibility(View.GONE);
+                }
             }
 
             @Override
