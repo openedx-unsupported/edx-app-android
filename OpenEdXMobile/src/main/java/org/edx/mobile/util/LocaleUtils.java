@@ -35,8 +35,10 @@ public class LocaleUtils {
         }
     }
 
-
-    // Copied from Locale.Builder in API 21
+    /*
+     * Copied from Locale.Builder in API 21
+     * https://github.com/google/j2objc/blob/master/jre_emul/android/platform/libcore/ojluni/src/main/java/java/util/Locale.java#L1766
+     */
     private static boolean isValidBcp47Alpha(String string, int lowerBound, int upperBound) {
         final int length = string.length();
         if (length < lowerBound || length > upperBound) {
