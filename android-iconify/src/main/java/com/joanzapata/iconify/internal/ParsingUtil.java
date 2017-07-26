@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
+import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
@@ -172,14 +173,14 @@ public final class ParsingUtil {
 
     @CheckResult
     public static float dpToPx(@NonNull Context context,
-            @IntRange(from = 0) float dp) {
+            @FloatRange(from = 0f) float dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
     }
 
     @CheckResult
     public static float spToPx(@NonNull Context context,
-            @IntRange(from = 0) float sp) {
+            @FloatRange(from = 0f) float sp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,
                 context.getResources().getDisplayMetrics());
     }

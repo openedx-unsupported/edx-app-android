@@ -14,7 +14,7 @@ buildscript {
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
 
-        classpath 'com.facebook.testing.screenshot:plugin:0.4'
+        classpath 'com.facebook.testing.screenshot:plugin:0.4.2'
 
     }
 }
@@ -162,10 +162,9 @@ dependencies {
     compile 'com.google.firebase:firebase-core:10.0.1'
 
     // Segment Library
-    compile('com.segment.analytics.android:analytics-core:3.4.0@aar') {
-        transitive = true
-    }
-    compile('com.segment.analytics.android:analytics-integration-google-analytics:3.4.0@aar') {
+    compile 'com.segment.analytics.android:analytics:4.2.6'
+
+    compile('com.segment.analytics.android.integrations:google-analytics:1.0.0') {
         exclude module: 'play-services-analytics'
         transitive = true
     }
@@ -355,6 +354,12 @@ android {
         showAll true
         warning 'TypographyQuotes', 'InvalidPackage'
         error 'StopShip', 'ContentDescription'
+        /**
+         * This is a bug that is fixed in the up-coming Android Studio 2.4 release.
+         * Link to issue: https://issuetracker.google.com/issues/37630182
+         */
+        //TODO: Remove the following line after we upgrade to Android Studio 2.4
+        disable 'GradleCompatible'
     }
 
     productFlavors {

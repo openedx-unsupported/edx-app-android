@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.Button;
 import com.joanzapata.iconify.Iconify;
 
+@SuppressWarnings("AppCompatCustomView")
 public class IconButton extends Button {
 
     public IconButton(Context context) {

@@ -3,16 +3,16 @@ package org.edx.mobile.module.registration.view;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import org.edx.mobile.R;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 
 import java.util.List;
 
-public class RegistrationOptionSpinner extends Spinner {
+public class RegistrationOptionSpinner extends AppCompatSpinner {
 
     private ArrayAdapter<RegistrationOption> adapter;
 

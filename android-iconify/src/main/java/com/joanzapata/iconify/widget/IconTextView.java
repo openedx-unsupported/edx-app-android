@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 import com.joanzapata.iconify.Iconify;
 
+@SuppressWarnings("AppCompatCustomView")
 public class IconTextView extends TextView {
 
     public IconTextView(Context context) {

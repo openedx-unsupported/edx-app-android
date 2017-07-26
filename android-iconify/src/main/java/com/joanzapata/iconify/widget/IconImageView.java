@@ -17,6 +17,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.R;
 import com.joanzapata.iconify.internal.Animation;
 
+@SuppressWarnings("AppCompatCustomView")
 public class IconImageView extends ImageView {
 
     static final int DEFAULT_COLOR = Color.BLACK;
