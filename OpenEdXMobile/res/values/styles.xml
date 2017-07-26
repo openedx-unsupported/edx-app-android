@@ -12,6 +12,7 @@
         <item name="actionMenuTextColor">@color/white</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
         <item name="actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
+        <item name="windowActionModeOverlay">true</item>
         <item name="android:actionButtonStyle">@style/MyActionBarButton</item>
         <item name="android:actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
         <item name="android:windowBackground">@color/edx_brand_gray_x_back</item>
