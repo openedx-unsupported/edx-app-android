@@ -76,7 +76,7 @@ public class WhatsNewFragment extends BaseFragment {
 
     private void initViewPager() {
         try {
-            final String whatsNewJson = FileUtil.loadTextFileFromAssets(getContext(), "whats_new.json");
+            final String whatsNewJson = FileUtil.loadTextFileFromResources(getContext(), R.raw.whats_new);
             final Type type = new TypeToken<List<WhatsNewModel>>() {
             }.getType();
             final List<WhatsNewModel> list = new Gson().fromJson(whatsNewJson, type);
