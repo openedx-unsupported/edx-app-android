@@ -3,6 +3,7 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RawRes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,9 +40,25 @@ public class FileUtil {
      * @param fileName The name of the file to load from assets folder
      * @return The text content of the file
      */
-    public static String loadTextFileFromAssets
-    (Context context, String fileName) throws IOException {
-        InputStream inputStream = context.getAssets().open(fileName);
+    public static String loadTextFileFromAssets(Context context, String fileName)
+            throws IOException {
+        return getStringFromInputStream(context.getAssets().open(fileName));
+    }
+
+    /**
+     * Returns the text of a file as a String object
+     *
+     * @param context The current context
+     * @param fileId  The resource id of a file to load
+     * @return The text content of the file
+     */
+    public static String loadTextFileFromResources(@NonNull Context context,
+                                                   @RawRes int fileId) throws IOException {
+        return getStringFromInputStream(context.getResources().openRawResource(fileId));
+    }
+
+    private static String getStringFromInputStream(@NonNull InputStream inputStream)
+            throws IOException {
         try {
             OutputStream outputStream = new ByteArrayOutputStream();
             try {
