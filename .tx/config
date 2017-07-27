@@ -40,9 +40,3 @@ file_filter = OpenEdXMobile/res/raw-<lang>/whats_new.json
 source_file = OpenEdXMobile/res/raw/whats_new.json
 source_lang = en
 type = KEYVALUEJSON
-
-[edx-mobile-apps.android-app-dummyTest]
-file_filter = OpenEdXMobile/res/raw-<lang>/dummy_test.json
-source_file = OpenEdXMobile/res/raw/dummy_test.json
-source_lang = en
-type = KEYVALUEJSON

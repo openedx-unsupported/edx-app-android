@@ -629,7 +629,4 @@
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">Version {version_number} New Features</string>
-    <!-- CHECKING TRANSIFEX INTEGRATION -->
-    <string name="dummy_string">CHECKING TRANSIFEX INTEGRATION</string>
-    <string name="dummy_string2" translatable="false">CHECKING TRANSIFEX INTEGRATION</string>
 </resources>
