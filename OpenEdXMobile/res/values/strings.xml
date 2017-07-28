@@ -143,6 +143,11 @@
         <item quantity="one">Are you sure you want to delete this video?</item>
         <item quantity="other">Are you sure you want to delete these videos?</item>
     </plurals>
+    <!-- Info message text for to let use know how many videos were deleted -->
+    <plurals name="delete_video_snackbar_msg">
+        <item quantity="one">%s video deleted</item>
+        <item quantity="other">%s videos deleted</item>
+    </plurals>
     <!-- Alert dialog title for users with zero rated data -->
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
@@ -211,6 +216,8 @@
     <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
     <!-- Label shown when no important dates are available for a course -->
     <string name="no_course_dates_to_display">Course dates are not currently available.</string>
+    <!-- Title of the screen where user can delete videos -->
+    <string name="delete_videos_title">Delete Videos</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->
