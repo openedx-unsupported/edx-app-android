@@ -21,6 +21,8 @@ public enum AppConstants {
     public static final float APP_NEGATIVE_RATING_THRESHOLD = 3.0f;
     // Minimum minor version changes required to ask negative raters to rate the app again
     public static final int MINOR_VERSIONS_DIFF_REQUIRED_FOR_NEGATIVE_RATERS = 2;
+    // Minimum minor version changes required to show whats new screens
+    public static final int MINOR_VERSIONS_DIFF_REQUIRED_FOR_WHATS_NEW = 1;
 
     /**
      * This class defines the names of various directories which are used for

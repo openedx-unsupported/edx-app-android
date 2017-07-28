@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseAppActivity;
 import org.edx.mobile.base.MainApplication;
@@ -36,6 +37,6 @@ public class WhatsNewActivity extends BaseAppActivity {
         fragmentTransaction.commit();
 
         final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
-        appPrefs.setWhatsNewShown(true);
+        appPrefs.setWhatsNewShown(BuildConfig.VERSION_NAME);
     }
 }
