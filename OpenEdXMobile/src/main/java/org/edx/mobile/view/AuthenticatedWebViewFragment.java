@@ -49,7 +49,7 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        authWebView.initWebView(getActivity());
+        authWebView.initWebView(getActivity(), false);
         if (getArguments() != null) {
             final String url = getArguments().getString(ARG_URL);
             final String javascript = getArguments().getString(ARG_JAVASCRIPT);

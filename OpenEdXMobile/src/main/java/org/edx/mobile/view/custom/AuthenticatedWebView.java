@@ -92,8 +92,15 @@ public class AuthenticatedWebView extends FrameLayout {
         return webViewClient;
     }
 
+    /**
+     * Initialize the webview (must call it before loading some url).
+     *
+     * @param fragmentActivity   Reference of fragment activity.
+     * @param isAllLinksExternal A flag to treat every link as external link and open in external
+     *                           web browser.
+     */
     @SuppressLint("SetJavaScriptEnabled")
-    public void initWebView(@NonNull FragmentActivity fragmentActivity) {
+    public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal) {
         webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webViewClient = new URLInterceptorWebViewClient(fragmentActivity, webView) {
@@ -158,7 +165,7 @@ public class AuthenticatedWebView extends FrameLayout {
             }
         };
 
-        webViewClient.setAllLinksAsExternal(true);
+        webViewClient.setAllLinksAsExternal(isAllLinksExternal);
     }
 
     public void loadUrl(boolean forceLoad, @NonNull String url) {

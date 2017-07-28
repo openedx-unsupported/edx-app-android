@@ -48,7 +48,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Inject
     Config config;
     /*
-    To help a few views (like Announcements) to treat every link as external link and open outside the view.
+    To help a few views (like Announcements) to treat every link as external link and open in
+    external web browser.
      */
     private boolean isAllLinksExternal = false;
 
@@ -187,17 +188,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
         return shouldInterceptRequest(view, request.getUrl().toString());
     }
-
-    /**
-     * Checks if the URL pattern matches with that of COURSE_INFO URL.
-     * Extracts path_id from the URL and gives a callback to the registered
-     * action listener with path_id parameter.
-     * Returns true if pattern matches with COURSE_INFO URL pattern and callback succeeds with
-     * extracted parameter, false otherwise.
-     *
-     * @param strUrl
-     * @return
-     */
 
     /**
      * Checks if {@param strUrl} is valid course info link and, if so,
