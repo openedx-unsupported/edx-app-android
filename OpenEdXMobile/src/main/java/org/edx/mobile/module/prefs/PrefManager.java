@@ -3,6 +3,7 @@ package org.edx.mobile.module.prefs;
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.edx.mobile.base.MainApplication;
 
@@ -210,12 +211,13 @@ public class PrefManager {
             super.put(Key.LAST_RATED_VERSION, versionName);
         }
 
-        public boolean isWhatsNewShown() {
-            return getBoolean(Key.WHATS_NEW_SHOWN, false);
+        @Nullable
+        public String getWhatsNewShownVersion() {
+            return getString(Key.WHATS_NEW_SHOWN_FOR_VERSION);
         }
 
-        public void setWhatsNewShown(boolean isShown) {
-            super.put(Key.WHATS_NEW_SHOWN, isShown);
+        public void setWhatsNewShown(@NonNull String version) {
+            super.put(Key.WHATS_NEW_SHOWN_FOR_VERSION, version);
         }
     }
 
@@ -292,8 +294,8 @@ public class PrefManager {
         public static final String APP_RATING = "APP_RATING";
         // Preference to save app version when user rated last time
         public static final String LAST_RATED_VERSION = "LAST_RATED_VERSION";
-        // Preference to keep track if Whats New feature has been shown or not
-        public static final String WHATS_NEW_SHOWN = "WHATS_NEW_SHOWN";
+        // Preference to keep track if Whats New feature has been shown for a specific version
+        public static final String WHATS_NEW_SHOWN_FOR_VERSION = "WHATS_NEW_SHOWN_FOR_VERSION";
     }
 
     public static final class Value {
