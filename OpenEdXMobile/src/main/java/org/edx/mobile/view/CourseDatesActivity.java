@@ -52,6 +52,12 @@ public class CourseDatesActivity extends BaseSingleFragmentActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+    }
+
+    @Override
     public Fragment getFirstFragment() {
         final StringBuilder courseInfoUrl = new StringBuilder(64);
         courseInfoUrl.append(environment.getConfig().getApiHostURL())
