@@ -22,8 +22,10 @@ public class AlertDialogFragment extends RoboDialogFragment {
     protected static final String ARG_TITLE_RES = "ARG_TITLE_RES";
     protected static final String ARG_MESSAGE = "ARG_MESSAGE";
     protected static final String ARG_MESSAGE_RES = "ARG_MESSAGE_RES";
-    protected static final String ARG_POSITIVE_ATTR = "ARG_POSITIVE_ATTR";
-    protected static final String ARG_NEGATIVE_ATTR = "ARG_NEGATIVE_ATTR";
+    @Nullable
+    protected ButtonAttribute positiveButtonAttr;
+    @Nullable
+    protected ButtonAttribute negativeButtonAttr;
 
     /**
      * Creates a new instance of simple dialog that shows message, could have title and will have
@@ -42,7 +44,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
         final Bundle arguments = new Bundle();
         arguments.putString(ARG_TITLE, title);
         arguments.putString(ARG_MESSAGE, message);
-        arguments.putParcelable(ARG_POSITIVE_ATTR, new ButtonAttribute() {
+        fragment.positiveButtonAttr = new ButtonAttribute() {
             @NonNull
             @Override
             public String getText() {
@@ -54,7 +56,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
             public DialogInterface.OnClickListener getOnClickListener() {
                 return onPositiveClick;
             }
-        });
+        };
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -66,7 +68,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
         final Bundle arguments = new Bundle();
         arguments.putInt(ARG_TITLE_RES, titleResId);
         arguments.putInt(ARG_MESSAGE_RES, messageResId);
-        arguments.putParcelable(ARG_POSITIVE_ATTR, new ButtonAttribute() {
+        fragment.positiveButtonAttr = new ButtonAttribute() {
             @NonNull
             @Override
             public String getText() {
@@ -78,7 +80,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
             public DialogInterface.OnClickListener getOnClickListener() {
                 return onPositiveClick;
             }
-        });
+        };
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -106,7 +108,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
         final Bundle arguments = new Bundle();
         arguments.putString(ARG_TITLE, title);
         arguments.putString(ARG_MESSAGE, message);
-        arguments.putParcelable(ARG_POSITIVE_ATTR, new ButtonAttribute() {
+        fragment.positiveButtonAttr =  new ButtonAttribute() {
             @NonNull
             @Override
             public String getText() {
@@ -118,8 +120,8 @@ public class AlertDialogFragment extends RoboDialogFragment {
             public DialogInterface.OnClickListener getOnClickListener() {
                 return onPositiveClick;
             }
-        });
-        arguments.putParcelable(ARG_NEGATIVE_ATTR, new ButtonAttribute() {
+        };
+        fragment.negativeButtonAttr = new ButtonAttribute() {
             @NonNull
             @Override
             public String getText() {
@@ -131,9 +133,21 @@ public class AlertDialogFragment extends RoboDialogFragment {
             public DialogInterface.OnClickListener getOnClickListener() {
                 return onNegativeClick;
             }
-        });
+        };
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        /*
+         * TODO: Its a quick fix of a crash mentioned in LEARNER-1987, we have to fix it properly
+         * which is explained and planned to implement in story LEARNER-2177
+         */
+        if (savedInstanceState != null) {
+            dismiss();
+        }
     }
 
     @NonNull
@@ -147,16 +161,16 @@ public class AlertDialogFragment extends RoboDialogFragment {
         final CharSequence message = messageResId != 0 ?
                 getText(messageResId) : args.getString(ARG_MESSAGE);
 
-        final ButtonAttribute positiveButtonAttr = getArguments().getParcelable(ARG_POSITIVE_ATTR);
-        final ButtonAttribute negativeButtonAttr = getArguments().getParcelable(ARG_NEGATIVE_ATTR);
-
         final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
-                .setPositiveButton(positiveButtonAttr.getText(), positiveButtonAttr.getOnClickListener())
                 .create();
         alertDialog.setCanceledOnTouchOutside(false);
         if (title != null) {
             alertDialog.setTitle(title);
+        }
+        if (positiveButtonAttr != null) {
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, positiveButtonAttr.getText(),
+                    positiveButtonAttr.getOnClickListener());
         }
         if (negativeButtonAttr != null) {
             alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, negativeButtonAttr.getText(),
@@ -165,20 +179,11 @@ public class AlertDialogFragment extends RoboDialogFragment {
         return alertDialog;
     }
 
-    public static abstract class ButtonAttribute implements Parcelable {
+    public static abstract class ButtonAttribute {
         @Nullable
         abstract String getText();
 
         @Nullable
         abstract DialogInterface.OnClickListener getOnClickListener();
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-        }
     }
 }
