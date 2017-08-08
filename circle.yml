@@ -48,4 +48,4 @@ deployment:
 
 notify:
   webhooks:
-    - url: https://consola-api/organizations/PRO/circleci/webhook?action=save_last_apk&repo=edx-app-android&authorization=e6005c3173671458fee3b322a73178ca2c900ab8b433c302dbd560ec0ed71570
+    - url: https://consola-api.proversity.org/organizations/PRO/circleci/webhook?action=save_last_apk&repo=edx-app-android&authorization=e6005c3173671458fee3b322a73178ca2c900ab8b433c302dbd560ec0ed71570
