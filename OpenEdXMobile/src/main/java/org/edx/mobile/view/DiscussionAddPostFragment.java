@@ -216,7 +216,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
         createThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(
                 getActivity(),
                 new ProgressViewController(addPostProgressBar),
-                new DialogErrorNotification(getChildFragmentManager())) {
+                new DialogErrorNotification(this)) {
             @Override
             protected void onResponse(@NonNull final DiscussionThread courseTopics) {
                 EventBus.getDefault().post(new DiscussionThreadPostedEvent(courseTopics));

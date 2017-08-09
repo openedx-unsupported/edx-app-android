@@ -480,7 +480,9 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     public void showAlertDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
-        AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
+        if (isInForeground) {
+            AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
+        }
     }
 
     public void showAlertDialog(@Nullable String title, @NonNull String message,
@@ -488,8 +490,10 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                                 @Nullable DialogInterface.OnClickListener onPositiveClick,
                                 @Nullable String  negativeButtonText,
                                 @Nullable DialogInterface.OnClickListener onNegativeClick) {
-        AlertDialogFragment.newInstance(title, message, positiveButtonText, onPositiveClick, negativeButtonText, onNegativeClick)
-                .show(getSupportFragmentManager(), null);
+        if (isInForeground) {
+            AlertDialogFragment.newInstance(title, message, positiveButtonText, onPositiveClick, negativeButtonText, onNegativeClick)
+                    .show(getSupportFragmentManager(), null);
+        }
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionService.FlagBody;
@@ -68,7 +69,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     private final Context context;
 
     @NonNull
-    private final FragmentManager fragmentManager;
+    private final BaseFragment baseFragment;
 
     @NonNull
     private final Listener listener;
@@ -92,11 +93,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     public CourseDiscussionResponsesAdapter(@NonNull Context context,
-                @NonNull FragmentManager fragmentManager, @NonNull Listener listener,
-                @NonNull DiscussionThread discussionThread,
-                @NonNull EnrolledCoursesResponse courseData) {
+                                            @NonNull BaseFragment baseFragment,
+                                            @NonNull Listener listener,
+                                            @NonNull DiscussionThread discussionThread,
+                                            @NonNull EnrolledCoursesResponse courseData) {
         this.context = context;
-        this.fragmentManager = fragmentManager;
+        this.baseFragment = baseFragment;
         this.discussionThread = discussionThread;
         this.listener = listener;
         this.courseData = courseData;
@@ -194,7 +196,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     discussionService.setThreadFlagged(discussionThread.getIdentifier(),
                             new FlagBody(!discussionThread.isAbuseFlagged()))
                             .enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                                    context, null, new DialogErrorNotification(fragmentManager)) {
+                                    context, null, new DialogErrorNotification(baseFragment)) {
                                 @Override
                                 protected void onResponse(@NonNull final DiscussionThread topicThread) {
                                     discussionThread = discussionThread.patchObject(topicThread);
@@ -218,7 +220,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 discussionService.setThreadVoted(discussionThread.getIdentifier(),
                         new VoteBody(!discussionThread.isVoted()))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                                context, null, new DialogErrorNotification(fragmentManager)) {
+                                context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
@@ -236,7 +238,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 discussionService.setThreadFollowed(discussionThread.getIdentifier(),
                         new FollowBody(!discussionThread.isFollowing()))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                                context, null, new DialogErrorNotification(fragmentManager)) {
+                                context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
@@ -340,7 +342,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     discussionService.setCommentFlagged(comment.getIdentifier(),
                             new FlagBody(!comment.isAbuseFlagged()))
                             .enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                                    context, null, new DialogErrorNotification(fragmentManager)) {
+                                    context, null, new DialogErrorNotification(baseFragment)) {
                                 @Override
                                 protected void onResponse(@NonNull final DiscussionComment comment) {
                                     discussionResponses.get(position - 1).patchObject(comment);
@@ -366,7 +368,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 discussionService.setCommentVoted(response.getIdentifier(),
                         new VoteBody(!response.isVoted()))
                         .enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                                context, null, new DialogErrorNotification(fragmentManager)) {
+                                context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionComment comment) {
                                 discussionResponses.get(position - 1).patchObject(comment);

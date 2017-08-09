@@ -452,7 +452,7 @@ public class EditUserProfileFragment extends BaseFragment {
         }
         userService.updateAccount(username, Collections.singletonMap(field.getName(), valueObject))
                 .enqueue(new AccountDataUpdatedCallback(getActivity(), username,
-                        new DialogErrorNotification(getChildFragmentManager())) {
+                        new DialogErrorNotification(this)) {
                     @Override
                     protected void onResponse(@NonNull final Account account) {
                         super.onResponse(account);

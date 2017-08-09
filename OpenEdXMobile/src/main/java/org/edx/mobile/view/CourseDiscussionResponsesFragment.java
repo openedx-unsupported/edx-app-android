@@ -99,7 +99,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 discussionThread.getType() == DiscussionThread.ThreadType.QUESTION);
 
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
-                activity, getChildFragmentManager(), this, discussionThread, courseData);
+                activity, this, this, discussionThread, courseData);
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
                 discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);

@@ -149,7 +149,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         createCommentCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
                 getActivity(),
                 new ProgressViewController(createCommentProgressBar),
-                new DialogErrorNotification(getChildFragmentManager())) {
+                new DialogErrorNotification(this)) {
             @Override
             protected void onResponse(@NonNull final DiscussionComment thread) {
                 logger.debug(thread.toString());
