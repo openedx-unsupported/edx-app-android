@@ -3,13 +3,25 @@ package org.edx.mobile.view.custom;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.LocaleUtils;
+
+import java.util.Locale;
+import java.util.Map;
+
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 public class EdxWebView extends WebView {
+    protected final Logger logger = new Logger(getClass().getName());
+
     @SuppressLint("SetJavaScriptEnabled")
     public EdxWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -26,5 +38,38 @@ public class EdxWebView extends WebView {
                         BuildConfig.APPLICATION_ID + "/" +
                         BuildConfig.VERSION_NAME
         );
+    }
+
+    @Override
+    public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
+        setLanguageCookie(url);
+        super.loadUrl(url, additionalHttpHeaders);
+    }
+
+    @Override
+    public void loadUrl(String url) {
+        setLanguageCookie(url);
+        super.loadUrl(url);
+    }
+
+    private void setLanguageCookie(final String url) {
+        /**
+         * Webview caches the previously loaded data and shows the cached data ignoring language
+         * change (if it happens), so its essential that we clear cache before loading a URL.
+         */
+        clearCache(true);
+        if (SDK_INT < LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookie();
+        } else {
+            CookieManager.getInstance().removeAllCookies(new ValueCallback<Boolean>() {
+                @Override
+                public void onReceiveValue(Boolean value) {
+                    logger.debug("Cookies clear status for URL: " + url + " = " + value);
+                }
+            });
+        }
+        final String languageCode = LocaleUtils.getLanguageCodeFromLocale(Locale.getDefault());
+        CookieManager.getInstance().setCookie(url,
+                String.format("%s=%s", LocaleUtils.WEB_VIEW_LANGUAGE_COOKIE_NAME, languageCode));
     }
 }

@@ -8,7 +8,6 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.BuildConfig;
-import org.edx.mobile.R;
 import org.edx.mobile.http.interceptor.CustomCacheQueryInterceptor;
 import org.edx.mobile.http.interceptor.JsonMergePatchInterceptor;
 import org.edx.mobile.http.interceptor.NewVersionBroadcastInterceptor;
@@ -17,7 +16,7 @@ import org.edx.mobile.http.interceptor.OauthHeaderRequestInterceptor;
 import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
 import org.edx.mobile.http.interceptor.StaleIfErrorHandlingInterceptor;
 import org.edx.mobile.http.interceptor.StaleIfErrorInterceptor;
-import org.edx.mobile.http.interceptor.UserAgentInterceptor;
+import org.edx.mobile.http.interceptor.RequestHeadersInterceptor;
 
 import java.io.File;
 import java.util.List;
@@ -83,11 +82,7 @@ public interface OkHttpClientProvider extends Provider<OkHttpClient> {
                     builder.networkInterceptors().add(new NoCacheHeaderStrippingInterceptor());
                 }
                 interceptors.add(new JsonMergePatchInterceptor());
-                interceptors.add(new UserAgentInterceptor(
-                        System.getProperty("http.agent") + " " +
-                                context.getString(R.string.app_name) + "/" +
-                                BuildConfig.APPLICATION_ID + "/" +
-                                BuildConfig.VERSION_NAME));
+                interceptors.add(new RequestHeadersInterceptor());
                 if (isOAuthBased) {
                     interceptors.add(new OauthHeaderRequestInterceptor(context));
                 }

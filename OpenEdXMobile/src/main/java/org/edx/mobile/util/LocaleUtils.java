@@ -5,6 +5,14 @@ import android.support.annotation.NonNull;
 import java.util.Locale;
 
 public class LocaleUtils {
+    /**
+     * Language code for Latin American Spanish.
+     */
+    public static final String SPANISH_LANGUAGE_CODE = "es-419";
+    /**
+     * Name of the language cookie on edX prod servers.
+     */
+    public static final String WEB_VIEW_LANGUAGE_COOKIE_NAME = "prod-edx-language-preference";
 
     public static String getCountryNameFromCode(@NonNull String countryCode) throws InvalidLocaleException {
         final String uppercaseRegion = countryCode.toUpperCase(Locale.ROOT);
@@ -52,5 +60,24 @@ public class LocaleUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * Get the language code from the {@link Locale} sent to this function.
+     *
+     * @param locale {@link Locale} for which we need the language code.
+     * @return The language code.
+     */
+    public static String getLanguageCodeFromLocale(@NonNull Locale locale) {
+        String languageCode = locale.getLanguage();
+        /*
+         * edX platform currently only supports Latin American Spanish, so we replace any Spanish
+         * variant's code to es-419.
+         */
+        //TODO: Revisit this when we support more variants of Spanish language
+        if (languageCode.startsWith("es")) {
+            return SPANISH_LANGUAGE_CODE;
+        }
+        return languageCode;
     }
 }
