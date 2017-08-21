@@ -205,7 +205,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         setCommentFlaggedCall = discussionService.setCommentFlagged(
                 comment.getIdentifier(), new FlagBody(!comment.isAbuseFlagged()));
         setCommentFlaggedCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                context, null, new DialogErrorNotification(getChildFragmentManager())) {
+                context, null, new DialogErrorNotification(this)) {
             @Override
             protected void onResponse(@NonNull final DiscussionComment comment) {
                 discussionCommentsAdapter.updateComment(comment);

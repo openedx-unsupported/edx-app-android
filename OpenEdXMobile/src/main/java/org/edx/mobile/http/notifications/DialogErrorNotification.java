@@ -4,12 +4,12 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.joanzapata.iconify.Icon;
 
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 /**
@@ -17,19 +17,19 @@ import org.edx.mobile.view.dialog.AlertDialogFragment;
  */
 public class DialogErrorNotification extends ErrorNotification {
     /**
-     * The Fragment manager of the concerned Activity.
+     * Reference of the {@link android.support.v4.app.Fragment} we will be displaying this error on.
      */
     @NonNull
-    private final FragmentManager fragmentManager;
+    private final BaseFragment baseFragment;
 
     /**
      * Construct a new instance of the notification.
      *
-     * @param fragmentManager The Fragment manager of the concerned Activity, to use for displaying
-     *                        the DialogFragment.
+     * @param baseFragment Reference of the {@link android.support.v4.app.Fragment} to use for
+     *                     displaying the {@link android.support.v4.app.DialogFragment}.
      */
-    public DialogErrorNotification(@NonNull final FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public DialogErrorNotification(@NonNull final BaseFragment baseFragment) {
+        this.baseFragment = baseFragment;
     }
 
     /**
@@ -45,14 +45,16 @@ public class DialogErrorNotification extends ErrorNotification {
                           @Nullable final Icon icon,
                           @StringRes final int actionTextResId,
                           @Nullable final View.OnClickListener actionListener) {
-        AlertDialogFragment.newInstance(0, errorResId,
-                actionListener == null ? null :
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                actionListener.onClick(((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE));
+        if (baseFragment.isResumed()) {
+            AlertDialogFragment.newInstance(0, errorResId,
+                    actionListener == null ? null :
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    actionListener.onClick(((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE));
+                                }
                             }
-                        }
-        ).show(fragmentManager, null);
+            ).show(baseFragment.getChildFragmentManager(), null);
+        }
     }
 }

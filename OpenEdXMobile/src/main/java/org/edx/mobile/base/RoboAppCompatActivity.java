@@ -51,6 +51,7 @@ import roboguice.util.RoboContext;
 public class RoboAppCompatActivity extends AppCompatActivity implements RoboContext {
     protected EventManager eventManager;
     protected HashMap<Key<?>, Object> scopedObjects = new HashMap<Key<?>, Object>();
+    protected boolean isInForeground = false;
 
     @Inject
     ContentViewListener ignored; // BUG find a better place to put this
@@ -85,12 +86,14 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
     @Override
     protected void onResume() {
         super.onResume();
+        isInForeground = true;
         eventManager.fire(new OnResumeEvent(this));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        isInForeground = false;
         eventManager.fire(new OnPauseEvent(this));
     }
 
