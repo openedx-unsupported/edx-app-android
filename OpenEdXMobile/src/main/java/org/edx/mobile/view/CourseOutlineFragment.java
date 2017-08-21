@@ -35,6 +35,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
+import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
@@ -51,6 +52,7 @@ public class CourseOutlineFragment extends BaseFragment {
     static public String TAG = CourseOutlineFragment.class.getCanonicalName();
     static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
+    private static final int SNACKBAR_SHOWTIME_MS = 5000;
 
     private CourseOutlineAdapter adapter;
     private ListView listView;
@@ -167,7 +169,7 @@ public class CourseOutlineFragment extends BaseFragment {
 
                     final Snackbar snackbar = Snackbar.make(listView,
                             getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
-                            Snackbar.LENGTH_SHORT);
+                            SNACKBAR_SHOWTIME_MS);
                     snackbar.setAction(R.string.label_undo, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -179,10 +181,20 @@ public class CourseOutlineFragment extends BaseFragment {
                         @Override
                         public void onDismissed(Snackbar transientBottomBar, int event) {
                             super.onDismissed(transientBottomBar, event);
+                            // SnackBar is being dismissed by any action other than its action button's press
                             if (event != DISMISS_EVENT_ACTION) {
+                                final IStorage storage = environment.getStorage();
                                 for (CourseComponent video : videos) {
-                                    VideoBlockModel videoBlockModel = (VideoBlockModel) video;
-                                    environment.getStorage().removeDownload(videoBlockModel.getDownloadEntry(environment.getStorage()));
+                                    final VideoBlockModel videoBlockModel = (VideoBlockModel) video;
+                                    final DownloadEntry downloadEntry = videoBlockModel.getDownloadEntry(storage);
+                                    if (downloadEntry.isDownloaded()) {
+                                        // This check is necessary because, this callback gets
+                                        // called multiple times when SnackBar is about to dismiss
+                                        // and the activity finishes
+                                        storage.removeDownload(downloadEntry);
+                                    } else {
+                                        return;
+                                    }
                                 }
                             }
                             adapter.notifyDataSetChanged();
