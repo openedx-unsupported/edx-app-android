@@ -422,6 +422,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 break;
         }
         row.numOfVideoAndDownloadArea.setOnClickListener(listener);
+        if (listener == null) {
+            row.numOfVideoAndDownloadArea.setClickable(false);
+        }
     }
 
     public View getHeaderView(int position, View convertView) {
