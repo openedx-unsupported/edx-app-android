@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionService;
@@ -151,8 +152,9 @@ public class DiscussionAddCommentFragment extends BaseFragment {
             createCommentCall.cancel();
         }
 
-        createCommentCall = discussionService.createComment(discussionResponse.getThreadId(),
-                editTextNewComment.getText().toString(), discussionResponse.getIdentifier());
+        createCommentCall = discussionService.createComment(new CommentBody(
+                discussionResponse.getThreadId(), editTextNewComment.getText().toString(),
+                discussionResponse.getIdentifier()));
         createCommentCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
                 getActivity(),
                 new ProgressViewController(createCommentProgressBar),

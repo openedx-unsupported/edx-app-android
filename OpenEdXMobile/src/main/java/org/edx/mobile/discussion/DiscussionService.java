@@ -25,8 +25,6 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
@@ -148,12 +146,9 @@ public interface DiscussionService {
     @POST("/api/discussion/v1/threads/")
     Call<DiscussionThread> createThread(@Body ThreadBody threadBody);
 
-    @FormUrlEncoded
     @Headers("Cache-Control: no-cache")
     @POST("/api/discussion/v1/comments/")
-    Call<DiscussionComment> createComment(@Field("thread_id") String threadId,
-                                          @Field("raw_body") String rawBody,
-                                          @Field("parent_id") String parentId);
+    Call<DiscussionComment> createComment(@Body CommentBody commentBody);
 
     final class FlagBody {
         private boolean abuseFlagged;
