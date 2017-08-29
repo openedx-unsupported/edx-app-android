@@ -120,7 +120,7 @@ public interface CourseService {
     @Headers("Cache-Control: max-stale=" + HOUR)
     @GET("/api/courses/v1/blocks/?" +
             "depth=all&" +
-            "requested_fields=graded,format,student_view_multi_device&" +
+            "requested_fields=graded,format,student_view_multi_device,due&" +
             "student_view_data=video,discussion&" +
             "block_counts=video&" +
             "nav_depth=3")
@@ -130,7 +130,7 @@ public interface CourseService {
     @Headers("Cache-Control: only-if-cached, max-stale")
     @GET("/api/courses/v1/blocks/?" +
             "depth=all&" +
-            "requested_fields=graded,format,student_view_multi_device&" +
+            "requested_fields=graded,format,student_view_multi_device,due&" +
             "student_view_data=video,discussion&" +
             "block_counts=video&" +
             "nav_depth=3")
