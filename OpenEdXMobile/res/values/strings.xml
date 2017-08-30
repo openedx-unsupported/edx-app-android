@@ -18,7 +18,7 @@
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
     <!-- Invitation Only button text-->
-    <string name="invitation_only_button_text">Invitation only</string>
+    <string name="invitation_only_button_text" translatable="false">Invitation only</string>
     <!-- Effort field name -->
     <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
@@ -101,7 +101,7 @@
     <!-- Title of user's course list screen -->
     <string name="label_my_courses">My Courses</string>
     <!-- Title of important course dates screen -->
-    <string name="label_course_dates">Course Dates and Deadlines</string>
+    <string name="label_course_dates" translatable="false">Course Dates and Deadlines</string>
     <!-- Title of user's downloaded videos list screen -->
     <string name="label_my_videos">My Videos</string>
     <!-- Title of Find Courses screen -->
@@ -162,9 +162,9 @@
     <!-- NOTE: TODO - not final one -->
     <string name="courseware_subtitle">Access videos and assignments</string>
     <!-- Row title of videos on dashboard screen -->
-    <string name="videos_title">Videos</string>
+    <string name="videos_title" translatable="false">Videos</string>
     <!-- Row subtitle of videos on dashboard screen -->
-    <string name="videos_subtitle">Watch course videos</string>
+    <string name="videos_subtitle" translatable="false">Watch course videos</string>
     <!-- Row of Discussion on dashboard screen -->
     <string name="discussion_title">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
@@ -178,12 +178,12 @@
     <!-- Row of announcement on dashboard screen -->
     <string name="announcement_title">Announcements</string>
     <!-- Title text for the important dates section on the course dashboard  -->
-    <string name="course_dates_title">Important Dates</string>
+    <string name="course_dates_title" translatable="false">Important Dates</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
     <!-- Subtitle text describing the important dates section on the course dashboard -->
-    <string name="course_dates_subtitle">Keep track of deadlines and stay on track</string>
+    <string name="course_dates_subtitle" translatable="false">Keep track of deadlines and stay on track</string>
     <!-- Accessible content description of school code label a course -->
     <string name="school_code">School Code</string>
     <!-- Accessible content description of course name label field -->
@@ -207,7 +207,7 @@
     <!-- Label shown when no courseware content is available -->
     <string name="no_chapter_text">No course content is currently available.</string>
     <!-- Label shown when no mobile-friendly videos are available in a course -->
-    <string name="no_videos_text">This course does not include any videos.</string>
+    <string name="no_videos_text" translatable="false">This course does not include any videos.</string>
     <!-- Label shown when user is enrolled in no courses -->
     <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
     <!-- Label shown when no announcements are available for a course -->
@@ -215,9 +215,9 @@
     <!-- Label shown when no handouts are available for a course -->
     <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
     <!-- Label shown when no important dates are available for a course -->
-    <string name="no_course_dates_to_display">Course dates are not currently available.</string>
+    <string name="no_course_dates_to_display" translatable="false">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
-    <string name="delete_videos_title">Delete Videos</string>
+    <string name="delete_videos_title" translatable="false">Delete Videos</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->

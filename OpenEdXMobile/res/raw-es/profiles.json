@@ -1,0 +1,59 @@
+{
+    "fields":[
+    {
+              "name" : "account_privacy",
+              "label" : "Otros estudiantes pueden ver mi:",
+              "type" : "switch",
+              "data_type" : "boolean",
+              "options" : {
+                "values" : [
+                            { "name" : "Perfil Completo", "value" : "all_users" },
+                            { "name" : "Perfil Limitado",  "value" : "privado" }
+                 ]
+              },
+              "instructions" : "Un perfil limitado comunica solo tu nombre de usuario y tu foto.  ",
+              "accessibility_hint" : "Cambia la información que es compartida con otras personas."
+    },
+    {
+              "name" : "year_of_birth",
+              "label" : "Año de nacimiento",
+              "type" : "select",
+              "options" : {
+                "range_min" : 1896,
+                "range_max" : 2015,
+                "allows_none" : true,
+                "none_label" : "Sin año de nacimiento"
+              },
+              "instructions" : "Debe especificar su año de nacimiento antes de que pueda compartir su perfil completo.",
+              "sub_instructions" : "Esto no sera desplegado en público"
+    },
+    {
+              "name" : "país",
+              "label" : "Ubicación",
+              "type" : "select",
+              "data_type" : "country",
+              "options" : {
+                "reference" : "countries",
+                "allows_none" : true,
+                "none_label" : "Sin ubicación"
+              }
+    },
+    {
+              "name" : "language_proficiencies",
+              "label" : "Idioma Primario",
+              "type" : "select",
+              "data_type" : "language",
+              "options" : {
+                "reference" : "languages",
+                "allows_none" : true,
+                "none_label" : "Sin idioma primario"
+              }
+    },
+    {
+              "name" : "bio",
+              "label" : "Acerca de mí",
+              "type" : "textarea",
+              "placeholder" : "Me gustaría aprender..."
+    }
+    ]
+}
