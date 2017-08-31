@@ -55,7 +55,7 @@ public abstract class ErrorNotification {
                           @StringRes int actionTextResId,
                           @Nullable View.OnClickListener actionListener) {
         @StringRes
-        final int errorResId = ErrorUtils.getErrorMessageRes(context, error);
+        final int errorResId = ErrorUtils.getErrorMessageRes(context, error, this);
         final Icon icon = ErrorUtils.getErrorIcon(error);
 
         if (errorResId == R.string.app_version_unsupported) {

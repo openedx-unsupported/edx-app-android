@@ -12,6 +12,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.CallTrigger;
+import org.edx.mobile.http.notifications.DialogErrorNotification;
+import org.edx.mobile.http.notifications.ErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -40,6 +42,15 @@ public enum ErrorUtils {
 
     @StringRes
     public static int getErrorMessageRes(@NonNull Context context, @NonNull Throwable error,
+                                         @NonNull ErrorNotification errorNotification) {
+        if (errorNotification instanceof DialogErrorNotification) {
+            return getErrorMessageRes(context, error, CallTrigger.USER_ACTION);
+        }
+        return getErrorMessageRes(context, error, CallTrigger.LOADING_UNCACHED);
+    }
+
+    @StringRes
+    public static int getErrorMessageRes(@NonNull Context context, @NonNull Throwable error,
                                          @NonNull CallTrigger callTrigger) {
         @StringRes
         int errorResId = R.string.error_unknown;
@@ -54,6 +65,7 @@ public enum ErrorUtils {
                 case HttpStatus.SERVICE_UNAVAILABLE:
                     errorResId = R.string.network_service_unavailable;
                     break;
+                case HttpStatus.BAD_REQUEST:
                 case HttpStatus.NOT_FOUND:
                     if (callTrigger == CallTrigger.USER_ACTION) {
                         errorResId = R.string.action_not_completed;
