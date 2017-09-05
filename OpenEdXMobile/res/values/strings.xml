@@ -218,6 +218,10 @@
     <string name="no_course_dates_to_display" translatable="false">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
     <string name="delete_videos_title" translatable="false">Delete Videos</string>
+    <!-- Label for a course item's due date for same day -->
+    <string name="due_date_today" translatable="false">due today at {due_date}</string>
+    <!-- Label for a course item's due date -->
+    <string name="due_date_past_future" translatable="false">due {due_date}</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->

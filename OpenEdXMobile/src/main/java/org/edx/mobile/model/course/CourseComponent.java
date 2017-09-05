@@ -33,6 +33,7 @@ public class CourseComponent implements IBlock, IPathNode {
     protected List<CourseComponent> children = new ArrayList<>();
     private String courseId;
     private String format;
+    private String dueDate;
 
     public CourseComponent(){}
 
@@ -51,6 +52,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.webUrl = blockModel.lmsWebUrl;
         this.multiDevice =  blockModel.studentViewMultiDevice;
         this.format = blockModel.format;
+        this.dueDate = blockModel.dueDate;
         this.blockCount = blockModel.blockCounts == null ? new BlockCount() : blockModel.blockCounts;
         this.parent = parent;
         if ( parent == null){
@@ -382,6 +384,10 @@ public class CourseComponent implements IBlock, IPathNode {
     @Override
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public String getDueDate() {
+        return dueDate;
     }
 
     @Override

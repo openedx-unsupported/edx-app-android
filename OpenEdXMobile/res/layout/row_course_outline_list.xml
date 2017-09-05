@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="wrap_content"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:orientation="vertical"
     android:paddingTop="4dp">
@@ -10,10 +10,9 @@
     <LinearLayout
         android:id="@+id/chapter_row_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_weight="1"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
         android:paddingBottom="8dp"
@@ -64,27 +63,46 @@
                 android:orientation="horizontal"
                 android:gravity="center">
 
-                <TextView
-                    android:id="@+id/row_subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/edx_brand_gray_accent"
-                    android:textDirection="locale"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    tools:text="Subtitle" />
-
                 <org.edx.mobile.view.custom.IconImageViewXml
                     android:id="@+id/row_subtitle_icon"
                     android:layout_width="@dimen/fa_large"
                     android:layout_height="@dimen/fa_large"
-                    android:baselineAlignBottom="true"
-                    android:layout_marginLeft="@dimen/x_small_icon_margin"
-                    android:layout_marginStart="@dimen/x_small_icon_margin"
+                    android:layout_gravity="top"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     app:iconName="fa-edit" />
+
+                <TextView
+                    android:id="@+id/row_subtitle"
+                    style="@style/bold_text"
+                    android:textColor="@color/edx_brand_gray_dark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textDirection="locale"
+                    android:textSize="@dimen/edx_small"
+                    android:layout_marginLeft="@dimen/widget_margin_half"
+                    android:layout_marginStart="@dimen/widget_margin_half"
+                    android:layout_gravity="top"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="Subtitle" />
+
+                <TextView
+                    android:id="@+id/row_subtitle_due_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/edx_brand_gray_accent"
+                    android:textDirection="locale"
+                    android:textSize="@dimen/edx_small"
+                    android:layout_marginLeft="@dimen/widget_margin_half"
+                    android:layout_marginStart="@dimen/widget_margin_half"
+                    android:layout_gravity="top"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="due today at 17:00 PKT" />
+
             </LinearLayout>
 
         </LinearLayout>
