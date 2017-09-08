@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">@string/platform_name</string>
     <string name="app_shortcut_name" translatable="false">@string/shortcut_name</string>
     <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>
@@ -18,7 +18,7 @@
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
     <!-- Invitation Only button text-->
-    <string name="invitation_only_button_text" translatable="false">Invitation only</string>
+    <string name="invitation_only_button_text" tools:ignore="MissingTranslation">Invitation only</string>
     <!-- Effort field name -->
     <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
@@ -101,7 +101,7 @@
     <!-- Title of user's course list screen -->
     <string name="label_my_courses">My Courses</string>
     <!-- Title of important course dates screen -->
-    <string name="label_course_dates" translatable="false">Course Dates and Deadlines</string>
+    <string name="label_course_dates" tools:ignore="MissingTranslation">Course Dates and Deadlines</string>
     <!-- Title of user's downloaded videos list screen -->
     <string name="label_my_videos">My Videos</string>
     <!-- Title of Find Courses screen -->
@@ -162,9 +162,9 @@
     <!-- NOTE: TODO - not final one -->
     <string name="courseware_subtitle">Access videos and assignments</string>
     <!-- Row title of videos on dashboard screen -->
-    <string name="videos_title" translatable="false">Videos</string>
+    <string name="videos_title" tools:ignore="MissingTranslation">Videos</string>
     <!-- Row subtitle of videos on dashboard screen -->
-    <string name="videos_subtitle" translatable="false">Watch course videos</string>
+    <string name="videos_subtitle" tools:ignore="MissingTranslation">Watch course videos</string>
     <!-- Row of Discussion on dashboard screen -->
     <string name="discussion_title">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
@@ -178,12 +178,12 @@
     <!-- Row of announcement on dashboard screen -->
     <string name="announcement_title">Announcements</string>
     <!-- Title text for the important dates section on the course dashboard  -->
-    <string name="course_dates_title" translatable="false">Important Dates</string>
+    <string name="course_dates_title" tools:ignore="MissingTranslation">Important Dates</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
     <!-- Subtitle text describing the important dates section on the course dashboard -->
-    <string name="course_dates_subtitle" translatable="false">Keep track of deadlines and stay on track</string>
+    <string name="course_dates_subtitle" tools:ignore="MissingTranslation">Keep track of deadlines and stay on track</string>
     <!-- Accessible content description of school code label a course -->
     <string name="school_code">School Code</string>
     <!-- Accessible content description of course name label field -->
@@ -207,7 +207,7 @@
     <!-- Label shown when no courseware content is available -->
     <string name="no_chapter_text">No course content is currently available.</string>
     <!-- Label shown when no mobile-friendly videos are available in a course -->
-    <string name="no_videos_text" translatable="false">This course does not include any videos.</string>
+    <string name="no_videos_text" tools:ignore="MissingTranslation">This course does not include any videos.</string>
     <!-- Label shown when user is enrolled in no courses -->
     <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
     <!-- Label shown when no announcements are available for a course -->
@@ -215,13 +215,13 @@
     <!-- Label shown when no handouts are available for a course -->
     <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
     <!-- Label shown when no important dates are available for a course -->
-    <string name="no_course_dates_to_display" translatable="false">Course dates are not currently available.</string>
+    <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
-    <string name="delete_videos_title" translatable="false">Delete Videos</string>
+    <string name="delete_videos_title" tools:ignore="MissingTranslation">Delete Videos</string>
     <!-- Label for a course item's due date for same day -->
-    <string name="due_date_today" translatable="false">due today at {due_date}</string>
+    <string name="due_date_today" tools:ignore="MissingTranslation">due today at {due_date}</string>
     <!-- Label for a course item's due date -->
-    <string name="due_date_past_future" translatable="false">due {due_date}</string>
+    <string name="due_date_past_future" tools:ignore="MissingTranslation">due {due_date}</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->
@@ -237,7 +237,7 @@
     <!--Label for creating a new post-->
     <string name="discussion_post_create_new_post">Create a new post</string>
     <!--Label for creating a new comment-->
-    <string name="discussion_post_create_new_comment" translatable="false">@string/discussion_add_comment_title</string>
+    <string name="discussion_post_create_new_comment" tools:ignore="MissingTranslation">@string/discussion_add_comment_title</string>
     <!--Discussion posts filter options-->
     <!--Discussion posts filter for all posts-->
     <string name="discussion_posts_filter_all_posts">All Posts</string>
@@ -275,7 +275,7 @@
     <!--Label for question type discussions that are unanswered-->
     <string name="course_discussion_unanswered_title">Unanswered Question</string>
     <!--Label for adding a discussion response-->
-    <string name="discussion_responses_add_response_button" translatable="false">@string/discussion_add_response_title</string>
+    <string name="discussion_responses_add_response_button" tools:ignore="MissingTranslation">@string/discussion_add_response_title</string>
     <!--Label for number of discussion responses-->
     <plurals name="number_responses_or_comments_responses_label">
         <item quantity="one">%s response</item>
@@ -287,7 +287,7 @@
         <item quantity="other">%s comments</item>
     </plurals>
     <!--Label for adding a new comment-->
-    <string name="number_responses_or_comments_add_comment_label" translatable="false">@string/discussion_add_comment_title</string>
+    <string name="number_responses_or_comments_add_comment_label" tools:ignore="MissingTranslation">@string/discussion_add_comment_title</string>
     <!--Label for indicating that a response is an answer-->
     <string name="discussion_responses_answer">Answer</string>
     <!--Label for indicating that a response is endorsed-->
@@ -321,7 +321,7 @@
     <!-- Add comment button description for accessibility in adding a new comment -->
     <string name="discussion_add_comment_button_description">Add comment button</string>
     <!-- Add your comment placeholder in adding a new comment -->
-    <string name="discussion_add_comment_hint" translatable="false">@string/discussion_add_comment_title</string>
+    <string name="discussion_add_comment_hint" tools:ignore="MissingTranslation">@string/discussion_add_comment_title</string>
 
     <!-- Title in adding a new response -->
     <string name="discussion_add_response_title">Add a response</string>
@@ -332,7 +332,7 @@
     <!-- Add response button description for accessibility in adding a new response -->
     <string name="discussion_add_response_button_description">Add response button</string>
     <!-- Add your response placeholder in adding a new response -->
-    <string name="discussion_add_response_hint" translatable="false">@string/discussion_add_response_title</string>
+    <string name="discussion_add_response_hint" tools:ignore="MissingTranslation">@string/discussion_add_response_title</string>
 
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
@@ -347,9 +347,9 @@
     <!-- Add post button content description for accessibility in adding a new post -->
     <string name="discussion_add_question_button_description">Post question button</string>
     <!-- Add your post placeholder in adding a new post -->
-    <string name="discussion_body_hint_discussion" translatable="false">@string/discussion_title</string>
+    <string name="discussion_body_hint_discussion" tools:ignore="MissingTranslation">@string/discussion_title</string>
     <!-- Add your post placeholder in adding a new post -->
-    <string name="discussion_body_hint_question" translatable="false">@string/discussion_question</string>
+    <string name="discussion_body_hint_question" tools:ignore="MissingTranslation">@string/discussion_question</string>
     <!-- Question text in adding a new post -->
     <string name="discussion_question">Question</string>
 
