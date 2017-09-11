@@ -451,7 +451,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 row.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
                 break;
             case ONLINE:
-                row.bulkDownload.setIcon(FontAwesomeIcons.fa_arrow_down);
+                row.bulkDownload.setIcon(FontAwesomeIcons.fa_download);
                 row.bulkDownload.setIconAnimation(Animation.NONE);
                 row.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
                 break;
