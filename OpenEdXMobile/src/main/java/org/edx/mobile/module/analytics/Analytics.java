@@ -297,6 +297,38 @@ public interface Analytics {
      */
     void trackWhatsNewSeen(@NonNull String versionName, int totalScreens);
 
+    /**
+     * Track deletion of all videos within a subsection.
+     *
+     * @param courseId     ID of the course.
+     * @param subsectionId ID of the subsection.
+     */
+    void trackSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId);
+
+    /**
+     * Track cancelling of all videos' deletion within a subsection.
+     *
+     * @param courseId     ID of the course.
+     * @param subsectionId ID of the subsection.
+     */
+    void trackUndoingSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId);
+
+    /**
+     * Track deletion of a video unit.
+     *
+     * @param courseId ID of the course.
+     * @param unitId   ID of the unit.
+     */
+    void trackUnitVideoDelete(@NonNull String courseId, @NonNull String unitId);
+
+    /**
+     * Track cancelling of a video unit's deletion.
+     *
+     * @param courseId ID of the course.
+     * @param unitId   ID of the unit.
+     */
+    void trackUndoingUnitVideoDelete(@NonNull String courseId, @NonNull String unitId);
+
     interface Keys {
         String NAME = "name";
         String OLD_TIME = "old_time";
@@ -323,6 +355,8 @@ public interface Analytics {
         String EMAIL_OPT_IN = "email_opt_in";
         String PROVIDER = "provider";
         String BLOCK_ID = "block_id";
+        String SUBSECTION_ID = "subsection_id";
+        String UNIT_ID = "unit_id";
         String SUPPORTED = "supported";
         String DEVICE_ORIENTATION = "device-orientation";
 
@@ -431,6 +465,11 @@ public interface Analytics {
         String WHATS_NEW_CATEGORY = "whats-new";
         String WHATS_NEW_CLOSE = "edx.bi.app.whats_new.close";
         String WHATS_NEW_DONE = "edx.bi.app.whats_new.done";
+        // Course Videos event values
+        String VIDEOS_SUBSECTION_DELETE = "edx.bi.app.video.delete.subsection";
+        String VIDEOS_UNDO_SUBSECTION_DELETE = "edx.bi.app.video.undo.subsection.delete";
+        String VIDEOS_UNIT_DELETE = "edx.bi.app.video.delete.unit";
+        String VIDEOS_UNDO_UNIT_DELETE = "edx.bi.app.video.undo.unit.delete";
     }
 
     interface Screens {
@@ -470,6 +509,7 @@ public interface Analytics {
         String PROFILE_EDIT_TEXT_VALUE = "Edit Text Form Value";
         String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
         String WHATS_NEW = "WhatsNew: Whats New";
+        String VIDEOS_COURSE_VIDEOS = "Videos: Course Videos";
     }
 
     interface Events {
@@ -513,6 +553,11 @@ public interface Analytics {
         // WhatsNew events
         String WHATS_NEW_CLOSE = "WhatsNew: Close";
         String WHATS_NEW_DONE = "WhatsNew: Done";
+        // Course Videos events
+        String VIDEOS_SUBSECTION_DELETE = "Videos: Subsection Delete";
+        String VIDEOS_UNDO_SUBSECTION_DELETE = "Videos: Undo Subsection Delete";
+        String VIDEOS_UNIT_DELETE = "Videos: Unit Delete";
+        String VIDEOS_UNDO_UNIT_DELETE = "Videos: Undo Unit Delete";
     }
 
     /**

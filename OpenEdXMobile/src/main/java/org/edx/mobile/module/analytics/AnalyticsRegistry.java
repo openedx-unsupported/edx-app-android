@@ -341,4 +341,32 @@ public class AnalyticsRegistry implements Analytics {
             service.trackWhatsNewSeen(versionName, totalScreens);
         }
     }
+
+    @Override
+    public void trackSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId) {
+        for (Analytics service : services) {
+            service.trackSubsectionVideosDelete(courseId, subsectionId);
+        }
+    }
+
+    @Override
+    public void trackUndoingSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId) {
+        for (Analytics service : services) {
+            service.trackUndoingSubsectionVideosDelete(courseId, subsectionId);
+        }
+    }
+
+    @Override
+    public void trackUnitVideoDelete(@NonNull String courseId, @NonNull String unitId) {
+        for (Analytics service : services) {
+            service.trackUnitVideoDelete(courseId, unitId);
+        }
+    }
+
+    @Override
+    public void trackUndoingUnitVideoDelete(@NonNull String courseId, @NonNull String unitId) {
+        for (Analytics service : services) {
+            service.trackUndoingUnitVideoDelete(courseId, unitId);
+        }
+    }
 }

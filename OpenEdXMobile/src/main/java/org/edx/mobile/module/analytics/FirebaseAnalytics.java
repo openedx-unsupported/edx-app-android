@@ -471,4 +471,36 @@ public class FirebaseAnalytics implements Analytics {
         event.putInt(Keys.TOTAL_SCREENS, totalScreens);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.VIDEOS_SUBSECTION_DELETE, Values.VIDEOS_SUBSECTION_DELETE);
+        event.putString(Keys.COURSE_ID, courseId);
+        event.putString(Keys.SUBSECTION_ID, subsectionId);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackUndoingSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.VIDEOS_UNDO_SUBSECTION_DELETE, Values.VIDEOS_UNDO_SUBSECTION_DELETE);
+        event.putString(Keys.COURSE_ID, courseId);
+        event.putString(Keys.SUBSECTION_ID, subsectionId);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackUnitVideoDelete(@NonNull String courseId, @NonNull String unitId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.VIDEOS_UNIT_DELETE, Values.VIDEOS_UNIT_DELETE);
+        event.putString(Keys.COURSE_ID, courseId);
+        event.putString(Keys.UNIT_ID, unitId);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackUndoingUnitVideoDelete(@NonNull String courseId, @NonNull String unitId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.VIDEOS_UNDO_UNIT_DELETE, Values.VIDEOS_UNDO_UNIT_DELETE);
+        event.putString(Keys.COURSE_ID, courseId);
+        event.putString(Keys.UNIT_ID, unitId);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

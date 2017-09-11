@@ -707,4 +707,40 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.APP_VERSION, versionName);
         trackSegmentEvent(Events.WHATS_NEW_DONE, aEvent.properties);
     }
+
+    @Override
+    public void trackSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.VIDEOS_SUBSECTION_DELETE);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.SUBSECTION_ID, subsectionId);
+        trackSegmentEvent(Events.VIDEOS_SUBSECTION_DELETE, aEvent.properties);
+    }
+
+    @Override
+    public void trackUndoingSubsectionVideosDelete(@NonNull String courseId, @NonNull String subsectionId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.VIDEOS_UNDO_SUBSECTION_DELETE);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.SUBSECTION_ID, subsectionId);
+        trackSegmentEvent(Events.VIDEOS_UNDO_SUBSECTION_DELETE, aEvent.properties);
+    }
+
+    @Override
+    public void trackUnitVideoDelete(@NonNull String courseId, @NonNull String unitId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.VIDEOS_UNIT_DELETE);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.UNIT_ID, unitId);
+        trackSegmentEvent(Events.VIDEOS_UNIT_DELETE, aEvent.properties);
+    }
+
+    @Override
+    public void trackUndoingUnitVideoDelete(@NonNull String courseId, @NonNull String unitId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.VIDEOS_UNDO_UNIT_DELETE);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.UNIT_ID, unitId);
+        trackSegmentEvent(Events.VIDEOS_UNDO_UNIT_DELETE, aEvent.properties);
+    }
 }
