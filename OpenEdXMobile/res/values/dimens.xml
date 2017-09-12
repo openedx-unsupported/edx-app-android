@@ -4,6 +4,7 @@
     <!-- Common margin for course data such as Handouts, Announcements, Course Detail, etc... -->
     <dimen name="common_course_display_margin_top">15dp</dimen>
     <dimen name="common_course_display_margin_side">20dp</dimen>
+    <dimen name="course_outline_list_item_min_height">64dp</dimen>
 
     <!-- Per Material Design Guidelines -->
     <dimen name="action_bar_icon_size">24dp</dimen>

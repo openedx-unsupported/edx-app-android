@@ -1,7 +1,9 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -366,6 +368,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
             holder.rowSubtitleIcon.setVisibility(View.VISIBLE);
             holder.rowSubtitle.setVisibility(View.VISIBLE);
             holder.rowSubtitle.setText(component.getFormat());
+            holder.rowSubtitle.setTypeface(holder.rowSubtitle.getTypeface(), Typeface.BOLD);
+            holder.rowSubtitle.setTextColor(ContextCompat.getColor(context,
+                    R.color.edx_brand_gray_dark));
             if (!TextUtils.isEmpty(component.getDueDate())) {
                 try {
                     holder.rowSubtitleDueDate.setText(getFormattedDueDate(component.getDueDate()));
@@ -421,7 +426,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             dateFormat = new SimpleDateFormat("HH:mm");
             String formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string.due_date_today,
                     "due_date", dateFormat.format(dueDate)).toString();
-            formattedDate += " " + TimeZoneUtils.getTimeZoneAbbreviation(TimeZone.getDefault().getID());
+            formattedDate += " " + TimeZoneUtils.getTimeZoneAbbreviation(TimeZone.getDefault());
             return formattedDate;
         } else {
             dateFormat = new SimpleDateFormat("MMM dd, yyyy");
