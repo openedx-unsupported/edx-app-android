@@ -160,7 +160,7 @@ public class CourseOutlineFragment extends BaseFragment {
                     final View rowView = listView.getChildAt(checkedItemPosition - listView.getFirstVisiblePosition());
                     if (rowView != null) {
                         // rowView will be null, if the user scrolls away from the checked item
-                        ((IconImageView) rowView.findViewById(R.id.bulk_download)).setIcon(FontAwesomeIcons.fa_arrow_down);
+                        ((IconImageView) rowView.findViewById(R.id.bulk_download)).setIcon(FontAwesomeIcons.fa_download);
                     }
 
                     final CourseOutlineAdapter.SectionRow rowItem = adapter.getItem(checkedItemPosition);
