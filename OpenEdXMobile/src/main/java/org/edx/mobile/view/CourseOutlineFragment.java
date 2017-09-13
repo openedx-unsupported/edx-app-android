@@ -60,6 +60,7 @@ public class CourseOutlineFragment extends BaseFragment {
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
     private boolean isVideoMode;
+    private boolean isOnCourseOutline;
     private ActionMode deleteMode;
 
     @Inject
@@ -84,6 +85,7 @@ public class CourseOutlineFragment extends BaseFragment {
         courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
         courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         isVideoMode = bundle.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
+        isOnCourseOutline = bundle.getBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE);
 
         View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView) view.findViewById(R.id.outline_list);
@@ -167,6 +169,14 @@ public class CourseOutlineFragment extends BaseFragment {
                     final List<CourseComponent> videos = rowItem.component.getVideos(true);
                     final int totalVideos = videos.size();
 
+                    if (isOnCourseOutline) {
+                        environment.getAnalyticsRegistry().trackSubsectionVideosDelete(
+                                courseData.getCourse().getId(), rowItem.component.getId());
+                    } else {
+                        environment.getAnalyticsRegistry().trackUnitVideoDelete(
+                                courseData.getCourse().getId(), rowItem.component.getId());
+                    }
+
                     final Snackbar snackbar = Snackbar.make(listView,
                             getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
                             SNACKBAR_SHOWTIME_MS);
@@ -195,6 +205,14 @@ public class CourseOutlineFragment extends BaseFragment {
                                     } else {
                                         return;
                                     }
+                                }
+                            } else {
+                                if (isOnCourseOutline) {
+                                    environment.getAnalyticsRegistry().trackUndoingSubsectionVideosDelete(
+                                            courseData.getCourse().getId(), rowItem.component.getId());
+                                } else {
+                                    environment.getAnalyticsRegistry().trackUndoingUnitVideoDelete(
+                                            courseData.getCourse().getId(), rowItem.component.getId());
                                 }
                             }
                             adapter.notifyDataSetChanged();

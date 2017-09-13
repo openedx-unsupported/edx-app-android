@@ -19,6 +19,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
     private CourseOutlineFragment fragment;
     private boolean isVideoMode = false;
+    private boolean isOnCourseOutline = false;
 
     @Inject
     CourseManager courseManager;
@@ -28,20 +29,22 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (isOnCourseOutline()) {
-            environment.getAnalyticsRegistry().trackScreenView(
-                    Analytics.Screens.COURSE_OUTLINE, courseData.getCourse().getId(), null);
-        }
+        isOnCourseOutline = isOnCourseOutline();
         if (getIntent() != null) {
             isVideoMode = getIntent().getBooleanExtra(Router.EXTRA_IS_VIDEOS_MODE, false);
+        }
+
+        if (isOnCourseOutline) {
+            environment.getAnalyticsRegistry().trackScreenView(
+                    isVideoMode ? Analytics.Screens.VIDEOS_COURSE_VIDEOS : Analytics.Screens.COURSE_OUTLINE,
+                    courseData.getCourse().getId(), null);
         }
     }
 
     public void onResume(){
         super.onResume();
 
-        if (isOnCourseOutline()) {
+        if (isOnCourseOutline) {
             setTitle(courseData.getCourse().getName());
             if (!isVideoMode) {
                 lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
@@ -65,6 +68,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             bundle.putString(Router.EXTRA_LAST_ACCESSED_ID,
                     getIntent().getStringExtra(Router.EXTRA_LAST_ACCESSED_ID));
             bundle.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideoMode);
+            bundle.putBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE, isOnCourseOutline);
             fragment.setArguments(bundle);
             //this activity will only ever hold this lone fragment, so we
             // can afford to retain the instance during activity recreation
@@ -76,7 +80,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             fragmentTransaction.commitAllowingStateLoss();
         }
 
-        if (isOnCourseOutline()) {
+        if (isOnCourseOutline) {
             if (!isVideoMode) {
                 lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
             }
