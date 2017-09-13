@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:orientation="vertical"
-    android:paddingTop="4dp">
+    android:minHeight="@dimen/course_outline_list_item_min_height"
+    android:paddingTop="@dimen/widget_margin_half">
 
     <LinearLayout
         android:id="@+id/chapter_row_layout"
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:layout_weight="1"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
         android:paddingBottom="8dp"
@@ -74,8 +76,7 @@
 
                 <TextView
                     android:id="@+id/row_subtitle"
-                    style="@style/bold_text"
-                    android:textColor="@color/edx_brand_gray_dark"
+                    android:textColor="@color/edx_brand_gray_accent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
