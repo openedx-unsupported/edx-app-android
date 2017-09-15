@@ -145,7 +145,7 @@
 
         <activity
             android:name=".view.WebViewFindCoursesActivity"
-            android:label="@string/find_courses_title"
+            android:label="@string/label_discover"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
@@ -157,19 +157,19 @@
 
         <activity
             android:name=".view.NativeFindCoursesActivity"
-            android:label="@string/find_courses_title"
+            android:label="@string/label_find_courses"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
-            android:label="@string/find_courses_title"
+            android:label="@string/label_discover"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="org.edx.mobile.view.CourseDetailActivity"
-            android:label="@string/find_courses_title"
+            android:label="@string/label_find_courses"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 

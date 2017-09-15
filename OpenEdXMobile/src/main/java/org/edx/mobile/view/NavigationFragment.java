@@ -192,6 +192,11 @@ public class NavigationFragment extends BaseFragment {
                     }
                 }
             });
+            if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
+                drawerNavigationBinding.drawerOptionFindCourses.setText(R.string.label_discover);
+            } else {
+                drawerNavigationBinding.drawerOptionFindCourses.setText(R.string.label_find_courses);
+            }
         } else {
             drawerNavigationBinding.drawerOptionFindCourses.setVisibility(View.GONE);
         }
