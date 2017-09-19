@@ -74,7 +74,7 @@
   <string name="dropdown_list_prefix">Lista desplegable.</string>
   <!--Navigation Drawer Labels-->
   <!--The accessibility description for the navigation header-->
-  <string name="navigation_header">Ha iniciado sesión como {username}, {email}</string>
+  <string name="navigation_header">Ha iniciado sesión como {username}</string>
   <!--Button to open drawer-->
   <string name="label_open_navigation_menu">Abrir Menú de Navegación</string>
   <!--Button to open drawer-->

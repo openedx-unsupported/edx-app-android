@@ -7,20 +7,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey_nav_background"
-        android:focusable="false"
         android:clickable="true"
+        android:focusable="false"
         android:importantForAccessibility="no">
 
         <FrameLayout
             android:id="@+id/navigation_header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:background="@color/grey_name_background">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/grey_name_background"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="@dimen/edx_margin">
@@ -36,32 +36,16 @@
                     app:civ_border_width="@dimen/drawer_profile_image_border_width"
                     tools:src="@drawable/profile_photo_placeholder" />
 
-                <LinearLayout
-                    android:id="@+id/user_info_layout"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/name_tv"
+                    style="@style/regular_white_text"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name_tv"
-                        style="@style/regular_white_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
-                        android:textSize="@dimen/drawer_username_text"
-                        tools:targetApi="17"
-                        tools:text="username" />
-
-                    <TextView
-                        android:id="@+id/email_tv"
-                        style="@style/regular_white_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/widget_margin"
-                        android:textSize="@dimen/drawer_email_text"
-                        android:importantForAccessibility="no"
-                        tools:text="user@domain.com" />
-                </LinearLayout>
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    android:textSize="@dimen/drawer_username_text"
+                    tools:targetApi="17"
+                    tools:text="username" />
             </LinearLayout>
         </FrameLayout>
 
@@ -70,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/navigation_header_layout"
-            android:divider="@drawable/navigation_drawer_divider"
+            android:divider="@drawable/edx_divider"
             android:dividerPadding="@dimen/edx_margin"
             android:orientation="vertical"
             android:paddingBottom="@dimen/widget_margin"
@@ -93,42 +77,9 @@
                 android:text="@string/label_find_courses" />
 
             <TextView
-                android:id="@+id/drawer_option_my_settings"
+                android:id="@+id/drawer_option_account"
                 style="@style/drawer_option"
-                android:text="@string/label_settings" />
-
-            <TextView
-                android:id="@+id/drawer_option_submit_feedback"
-                style="@style/drawer_option"
-                android:text="@string/label_submit_feedback" />
-
+                android:text="@string/title_account" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_version_no"
-            style="@style/regular_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="15dp"
-            android:gravity="center_horizontal"
-            android:text="@string/label_version"
-            android:textColor="@color/transparent_white_90"
-            android:textSize="@dimen/drawer_app_version_text" />
-
-        <Button
-            android:id="@+id/logout_button"
-            style="@style/regular_white_text"
-            android:layout_width="170dp"
-            android:layout_height="40dp"
-            android:layout_above="@id/tv_version_no"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/logout_bg_selector"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="@string/logout"
-            android:textAllCaps="true"
-            android:textSize="15sp" />
-
     </RelativeLayout>
 </layout>

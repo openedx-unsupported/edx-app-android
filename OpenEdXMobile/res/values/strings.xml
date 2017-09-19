@@ -89,7 +89,7 @@
 
     <!-- Navigation Drawer Labels -->
     <!-- The accessibility description for the navigation header -->
-    <string name="navigation_header">Currently signed in as {username}, {email}</string>
+    <string name="navigation_header">Currently signed in as {username}</string>
     <!-- Button to open drawer -->
     <string name="label_open_navigation_menu">Open Navigation Menu</string>
     <!-- Button to open drawer -->
@@ -121,7 +121,9 @@
     <!-- Settings screen version -->
     <string name="label_version">App Version</string>
     <!-- Button text to show user Settings screen -->
-    <string name="label_settings">My Settings</string>
+    <string name="label_settings">Settings</string>
+    <!-- Title of Account screen -->
+    <string name="title_account" tools:ignore="MissingTranslation">Account</string>
 
     <!-- Help Dialog Place Holder messages -->
     <!-- Reset password alert dialog title -->
