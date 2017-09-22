@@ -19,7 +19,6 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.google.inject.Inject;
 
-import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -40,9 +39,6 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -201,14 +197,14 @@ public class NavigationFragment extends BaseFragment {
             drawerNavigationBinding.drawerOptionFindCourses.setVisibility(View.GONE);
         }
 
-        drawerNavigationBinding.drawerOptionMySettings.setOnClickListener(new OnClickListener() {
+        drawerNavigationBinding.drawerOptionAccount.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Activity act = getActivity();
                 ((BaseFragmentActivity) act).closeDrawer();
 
-                if (!(act instanceof SettingsActivity)) {
-                    environment.getRouter().showSettings(act);
+                if (!(act instanceof AccountActivity)) {
+                    environment.getRouter().showAccountActivity(act);
 
                     if (!(act instanceof MyCoursesListActivity)) {
                         act.finish();
@@ -217,37 +213,14 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        drawerNavigationBinding.drawerOptionSubmitFeedback.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showFeedbackScreen(getActivity(), getString(R.string.email_subject));
-            }
-        });
-
-
         if (profile != null) {
             if (profile.name != null) {
                 drawerNavigationBinding.nameTv.setText(profile.name);
+                drawerNavigationBinding.nameTv.setContentDescription(
+                        ResourceUtil.getFormattedString(getResources(),
+                                R.string.navigation_header, "username", profile.name));
             }
-            if (profile.email != null) {
-                drawerNavigationBinding.emailTv.setText(profile.email);
-            }
-            Map<String, CharSequence> map = new HashMap<>();
-            map.put("username", profile.name);
-            map.put("email", profile.email);
-            drawerNavigationBinding.userInfoLayout.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.navigation_header, map));
         }
-
-        drawerNavigationBinding.logoutButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().performManualLogout(getActivity(), environment.getAnalyticsRegistry(), environment.getNotificationDelegate());
-            }
-        });
-
-        drawerNavigationBinding.tvVersionNo.setText(String.format("%s %s %s",
-                getString(R.string.label_version), BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));
 
         return drawerNavigationBinding.getRoot();
     }

@@ -12,7 +12,6 @@ public class SettingsActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.settings_txt));
-        configureDrawer();
     }
 
     @Override

@@ -404,6 +404,10 @@ public class Router {
         activity.startActivity(WhatsNewActivity.newIntent(activity));
     }
 
+    public void showAccountActivity(@NonNull Activity activity) {
+        activity.startActivity(AccountActivity.newIntent(activity));
+    }
+
     /**
      * Open an email client for user to write feedback
      *
