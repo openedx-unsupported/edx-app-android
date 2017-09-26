@@ -1,10 +1,12 @@
 package org.edx.mobile.base;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -18,7 +20,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -26,7 +27,13 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
+import org.edx.mobile.interfaces.WebViewStatusListener;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -36,28 +43,34 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
-public abstract class FindCoursesBaseActivity extends BaseFragmentActivity implements
-        URLInterceptorWebViewClient.IActionListener {
+public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivity
+        implements URLInterceptorWebViewClient.IActionListener, WebViewStatusListener {
     private static final int LOG_IN_REQUEST_CODE = 42;
     private static final String INSTANCE_COURSE_ID = "enrollCourseId";
     private static final String INSTANCE_EMAIL_OPT_IN = "enrollEmailOptIn";
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
-    private EdxWebView webview;
-    private boolean isWebViewLoaded;
+    private EdxWebView webView;
     private ProgressBar progressWheel;
     private boolean isTaskInProgress = false;
     private String lastClickEnrollCourseId;
     private boolean lastClickEnrollEmailOptIn;
+
+    private FullScreenErrorNotification errorNotification;
 
     @Inject
     private CourseService courseService;
 
     @Inject
     private CourseAPI courseApi;
+
+    @Inject
+    private OkHttpClientProvider okHttpClientProvider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,10 +86,11 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         }
 
 
-        webview = (EdxWebView) findViewById(R.id.webview);
+        webView = (EdxWebView) findViewById(R.id.webview);
         progressWheel = (ProgressBar) findViewById(R.id.loading_indicator);
+        errorNotification = new FullScreenErrorNotification(webView);
 
-        webview.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
 
         setupWebView();
         enableEnrollCallback();
@@ -90,13 +104,13 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     @Override
     public void onResume() {
         super.onResume();
-        webview.onResume();
+        webView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        webview.onPause();
+        webView.onPause();
     }
 
     @Override
@@ -108,15 +122,11 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        webview.destroy();
-    }
-
-    protected boolean isWebViewLoaded() {
-        return isWebViewLoaded;
+        webView.destroy();
     }
 
     private void setupWebView() {
-        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webview);
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webView);
 
         // if all the links are to be treated as external
         client.setAllLinksAsExternal(isAllLinksExternal());
@@ -125,68 +135,32 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         client.setPageStatusListener(pageStatusListener);
     }
 
+    /**
+     * Loads the given URL into {@link #webView}.
+     *
+     * @param url The URL to load.
+     */
+    protected void loadUrl(@NonNull String url) {
+        WebViewUtil.loadUrlBasedOnOsVersion(this, webView, url, this, errorNotification, okHttpClientProvider);
+    }
+
     @Override
-    protected void onOnline() {
-        if (!isWebViewLoaded) {
-            super.onOnline();
-            hideOfflineMessage();
-        }
-    }
-
-    @Override
-    protected void onOffline() {
-        // If the WebView is not loaded, then show the offline mode message
-        if (!isWebViewLoaded) {
-            super.onOffline();
-            showOfflineMessage();
-            hideLoadingProgress();
-        }
-    }
-
-    /**
-     * This function shows the offline mode message
-     */
-    private void showOfflineMessage() {
-        if (webview != null) {
-            webview.setVisibility(View.GONE);
-        }
-        TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
-        if (offlineModeTv != null) {
-            offlineModeTv.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * This function hides the offline mode message
-     */
-    private void hideOfflineMessage() {
-        if (webview != null) {
-            webview.setVisibility(View.VISIBLE);
-        }
-        TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
-        if (offlineModeTv != null) {
-            offlineModeTv.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * This function shows the loading progress wheel
-     * Show progress wheel while loading the web page
-     */
-    private void showLoadingProgress() {
+    public void showLoadingProgress() {
         if (progressWheel != null) {
             progressWheel.setVisibility(View.VISIBLE);
         }
     }
 
-    /**
-     * This function hides the loading progress wheel
-     * Hide progress wheel after the web page completes loading
-     */
-    private void hideLoadingProgress() {
+    @Override
+    public void hideLoadingProgress() {
         if (progressWheel != null) {
             progressWheel.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void clearWebView() {
+        WebViewUtil.clearWebviewHtml(webView);
     }
 
     @Override
@@ -236,31 +210,31 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         logger.debug("Email option - " + emailOptIn);
         courseService.enrollInACourse(new CourseService.EnrollBody(courseId, emailOptIn))
                 .enqueue(new CourseService.EnrollCallback(
-                        FindCoursesBaseActivity.this,
+                        BaseWebViewFindCoursesActivity.this,
                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                     @Override
                     protected void onResponse(@NonNull final ResponseBody responseBody) {
                         super.onResponse(responseBody);
                         logger.debug("Enrollment successful: " + courseId);
-                        Toast.makeText(FindCoursesBaseActivity.this, getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseWebViewFindCoursesActivity.this, getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
 
                         new Handler().post(new Runnable() {
                             @Override
                             public void run() {
                                 courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
-                                        FindCoursesBaseActivity.this,
+                                        BaseWebViewFindCoursesActivity.this,
                                         courseId,
                                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                                     @Override
                                     protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
-                                        environment.getRouter().showMyCourses(FindCoursesBaseActivity.this);
-                                        environment.getRouter().showCourseDashboardTabs(FindCoursesBaseActivity.this, environment.getConfig(), course, false);
+                                        environment.getRouter().showMyCourses(BaseWebViewFindCoursesActivity.this);
+                                        environment.getRouter().showCourseDashboardTabs(BaseWebViewFindCoursesActivity.this, environment.getConfig(), course, false);
                                     }
 
                                     @Override
                                     protected void onFailure(@NonNull final Throwable error) {
                                         isTaskInProgress = false;
-                                        Toast.makeText(FindCoursesBaseActivity.this, R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(BaseWebViewFindCoursesActivity.this, R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -341,33 +315,38 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         @Override
         public void onPageStarted() {
             showLoadingProgress();
-            isWebViewLoaded = false;
         }
 
         @Override
         public void onPageFinished() {
             hideLoadingProgress();
-            isWebViewLoaded = true;
         }
 
         @Override
-        public void onPageLoadError(WebView view, int errorCode, String description, String failingUrl) {
-            isWebViewLoaded = false;
-            showOfflineMessage();
+        public void onPageLoadError(WebView view, int errorCode, String description,
+                                    String failingUrl) {
+            errorNotification.showError(BaseWebViewFindCoursesActivity.this,
+                    new HttpStatusException(Response.error(HttpStatus.SERVICE_UNAVAILABLE,
+                            ResponseBody.create(MediaType.parse("text/plain"), description))));
+            clearWebView();
         }
 
         @Override
-        public void onPageLoadError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse,
+        @TargetApi(Build.VERSION_CODES.M)
+        public void onPageLoadError(WebView view, WebResourceRequest request,
+                                    WebResourceResponse errorResponse,
                                     boolean isMainRequestFailure) {
             if (isMainRequestFailure) {
-                isWebViewLoaded = false;
-                showOfflineMessage();
+                errorNotification.showError(BaseWebViewFindCoursesActivity.this,
+                        new HttpStatusException(Response.error(errorResponse.getStatusCode(),
+                                ResponseBody.create(MediaType.parse(errorResponse.getMimeType()),
+                                        errorResponse.getReasonPhrase()))));
+                clearWebView();
             }
         }
 
         @Override
         public void onPagePartiallyLoaded() {
-            hideLoadingProgress();
         }
     };
 }

@@ -2,11 +2,11 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_act_background"
     android:fitsSystemWindows="true"
     android:splitMotionEvents="false">
 
     <LinearLayout
+        android:id="@+id/content_error_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,24 +16,24 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/grey_act_background">
+            android:layout_weight="1">
 
             <org.edx.mobile.view.custom.EdxWebView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/grey_act_background" />
+                android:background="@color/grey_act_background"
+                android:visibility="gone" />
 
             <include layout="@layout/loading_indicator" />
 
-            <TextView
-                android:id="@+id/offline_mode_message"
-                style="@style/offline_mode_message" />
+            <include layout="@layout/content_error" />
 
         </RelativeLayout>
 
-        <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
+        <include
+            android:id="@+id/auth_panel"
+            layout="@layout/auth_panel" />
     </LinearLayout>
 
     <include layout="@layout/navigation_drawer_container" />

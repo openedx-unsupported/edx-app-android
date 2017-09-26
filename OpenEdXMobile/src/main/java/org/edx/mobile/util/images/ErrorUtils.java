@@ -63,6 +63,7 @@ public enum ErrorUtils {
         } else if (error instanceof HttpStatusException) {
             switch (((HttpStatusException) error).getStatusCode()) {
                 case HttpStatus.SERVICE_UNAVAILABLE:
+                case HttpStatus.INTERNAL_SERVER_ERROR:
                     errorResId = R.string.network_service_unavailable;
                     break;
                 case HttpStatus.BAD_REQUEST:

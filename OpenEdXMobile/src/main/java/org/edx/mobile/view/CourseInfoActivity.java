@@ -1,16 +1,15 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.webkit.WebView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.FindCoursesBaseActivity;
+import org.edx.mobile.base.BaseWebViewFindCoursesActivity;
 import org.edx.mobile.module.analytics.Analytics;
 
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_find_course_info)
-public class CourseInfoActivity extends FindCoursesBaseActivity {
+public class CourseInfoActivity extends BaseWebViewFindCoursesActivity {
 
     public static final String EXTRA_PATH_ID = "path_id";
 
@@ -24,12 +23,11 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     protected void onStart() {
         super.onStart();
 
-        String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
-        String url = environment.getConfig().getCourseDiscoveryConfig()
+        final String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
+        final String url = environment.getConfig().getCourseDiscoveryConfig()
                 .getCourseInfoUrlTemplate()
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
-        WebView webview = (WebView) findViewById(R.id.webview);
-        webview.loadUrl(url);
+        loadUrl(url);
     }
 
     @Override
