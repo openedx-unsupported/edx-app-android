@@ -170,8 +170,8 @@ public class VideoDownloadHelper {
             }
         };
 
-
         callback.showProgressDialog(downloadList.size());
+        downloadTask.setTaskProcessCallback(null);
         downloadTask.execute();
     }
 
