@@ -4,58 +4,28 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 public class WhatsNewModel implements Parcelable {
     @NonNull
-    private String title;
+    private String version;
     @NonNull
-    private String message;
-    @NonNull
-    private String image;
-
-    @NonNull
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(@NonNull String title) {
-        this.title = title;
-    }
-
-    @NonNull
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(@NonNull String message) {
-        this.message = message;
-    }
-
-    @NonNull
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(@NonNull String image) {
-        this.image = image;
-    }
+    private List<WhatsNewItemModel> messages;
 
     protected WhatsNewModel(Parcel in) {
-        title = in.readString();
-        message = in.readString();
-        image = in.readString();
+        this.version = in.readString();
+        this.messages = in.createTypedArrayList(WhatsNewItemModel.CREATOR);
     }
 
-    public static final Creator<WhatsNewModel> CREATOR = new Creator<WhatsNewModel>() {
-        @Override
-        public WhatsNewModel createFromParcel(Parcel in) {
-            return new WhatsNewModel(in);
-        }
+    @NonNull
+    public String getVersion() {
+        return version;
+    }
 
-        @Override
-        public WhatsNewModel[] newArray(int size) {
-            return new WhatsNewModel[size];
-        }
-    };
+    @NonNull
+    public List<WhatsNewItemModel> getWhatsNewItems() {
+        return messages;
+    }
 
     @Override
     public int describeContents() {
@@ -63,9 +33,20 @@ public class WhatsNewModel implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(title);
-        parcel.writeString(message);
-        parcel.writeString(image);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.version);
+        dest.writeTypedList(this.messages);
     }
+
+    public static final Creator<WhatsNewModel> CREATOR = new Creator<WhatsNewModel>() {
+        @Override
+        public WhatsNewModel createFromParcel(Parcel source) {
+            return new WhatsNewModel(source);
+        }
+
+        @Override
+        public WhatsNewModel[] newArray(int size) {
+            return new WhatsNewModel[size];
+        }
+    };
 }

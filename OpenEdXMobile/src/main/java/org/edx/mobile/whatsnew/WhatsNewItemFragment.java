@@ -21,7 +21,7 @@ public class WhatsNewItemFragment extends BaseFragment {
 
     private FragmentWhatsNewItemBinding binding;
 
-    public static WhatsNewItemFragment newInstance(@NonNull WhatsNewModel model) {
+    public static WhatsNewItemFragment newInstance(@NonNull WhatsNewItemModel model) {
         final WhatsNewItemFragment fragment = new WhatsNewItemFragment();
         final Bundle args = new Bundle();
         args.putParcelable(ARG_MODEL, model);
@@ -41,7 +41,7 @@ public class WhatsNewItemFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         final Bundle args = getArguments();
-        final WhatsNewModel model = args.getParcelable(ARG_MODEL);
+        final WhatsNewItemModel model = args.getParcelable(ARG_MODEL);
 
         binding.title.setText(escapePlatformName(model.getTitle()));
         binding.message.setText(escapePlatformName(model.getMessage()));
