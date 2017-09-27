@@ -59,7 +59,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sd_card_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -73,27 +72,23 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/download_location_text"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/setting_download_location_top"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
+                    android:text="@string/settings_download_to_sdcard_title"
                     android:textColor="@color/grey_6"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/edx_small"
                     tools:targetApi="17" />
 
                 <TextView
-                    android:id="@+id/download_location_text2"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/setting_download_location_detail"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
+                    android:text="@string/settings_download_to_sdcard_subtitle"
                     android:textColor="@color/grey_4"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/edx_xx_small"
                     tools:targetApi="17" />
             </LinearLayout>
 

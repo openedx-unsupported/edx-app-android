@@ -34,7 +34,7 @@ public class SettingsFragment extends BaseFragment {
     ExtensionRegistry extensionRegistry;
 
     private Switch wifiSwitch;
-    private Switch mSDCardSwitch;
+    private Switch sdCardSwitch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class SettingsFragment extends BaseFragment {
 
         final View layout = inflater.inflate(R.layout.fragment_settings, container, false);
         wifiSwitch = (Switch) layout.findViewById(R.id.wifi_setting);
-        mSDCardSwitch = (Switch) layout.findViewById(R.id.download_location_switch);
+        sdCardSwitch = (Switch) layout.findViewById(R.id.download_location_switch);
 
         updateWifiSwitch();
         updateSDCardSwitch();
@@ -79,21 +79,15 @@ public class SettingsFragment extends BaseFragment {
         });
     }
 
-
-
-    private void updateSDCardSwitch(){
+    private void updateSDCardSwitch() {
         final PrefManager prefManager =
                 new PrefManager(getActivity().getBaseContext(), PrefManager.Pref.SD_CARD);
         if (FileUtil.isRemovableStorageAvailable(getContext())) {
-            mSDCardSwitch.setEnabled(true);
+            sdCardSwitch.setEnabled(true);
 
-            mSDCardSwitch.setOnCheckedChangeListener(null);
-            mSDCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
-            if ( !prefManager.contains(PrefManager.Key.DOWNLOAD_TO_SDCARD)){
-                // Initialize the preference
-                prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, true);
-            }
-            mSDCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            sdCardSwitch.setOnCheckedChangeListener(null);
+            sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
+            sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, isChecked);
@@ -101,9 +95,8 @@ public class SettingsFragment extends BaseFragment {
             });
         } else {
             prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
-            mSDCardSwitch.setEnabled(false);
+            sdCardSwitch.setEnabled(false);
         }
-
     }
 
     protected void showWifiDialog() {

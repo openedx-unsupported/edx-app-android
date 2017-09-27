@@ -1,5 +1,6 @@
 package org.edx.mobile.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
@@ -24,28 +25,21 @@ public class FileUtil {
     }
 
     /**
-     * Utility method to determine is Removable storage (SD Cards) are available.
+     * Utility method to determine if any removable storage (such as an SD card) is available.
      * @param context The current context
      * @return True if there is removable storage available on the device.
      */
+    @TargetApi(21)
     public static boolean isRemovableStorageAvailable(@NonNull Context context){
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-            File[] fileList = context.getExternalFilesDirs("Android");
-            for (File extFile : fileList){
-                if (extFile != null && Environment.isExternalStorageRemovable(extFile)){
-                    return true;
-                }
-            }
-        }
-        return false;
+        return getRemovableStorageAppDir(context) != null;
     }
 
     @Nullable
+    @TargetApi(21)
     public static File getRemovableStorageAppDir(@NonNull Context context) {
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-            File[] fileList = context.getExternalFilesDirs("Android");
+            File[] fileList = context.getExternalFilesDirs(null);
             for (File extFile : fileList){
                 if (extFile != null && Environment.isExternalStorageRemovable(extFile)){
                     return extFile;
@@ -65,12 +59,6 @@ public class FileUtil {
     public static File getExternalAppDir(@NonNull Context context) {
         File externalFilesDir = context.getExternalFilesDir(null);
         return (externalFilesDir != null ? externalFilesDir.getParentFile() : null);
-    }
-
-    @Nullable
-    public static File getInternalAppDir(@NonNull Context context) {
-        File internalFileDir = context.getFilesDir();
-        return (internalFileDir != null ? internalFileDir.getParentFile() : null);
     }
 
     /**
