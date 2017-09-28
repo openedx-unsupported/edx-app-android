@@ -220,7 +220,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     @Override
     public void setDownloadInfo(NativeDownloadModel download) {
         dmId = download.dmid;
-        downloaded = DownloadedState.DOWNLOADING;
+        downloaded = DownloadedState.values()[(int)download.downloaded];
         filepath = download.filepath;
         size = download.size;
         // duration can't be updated here
