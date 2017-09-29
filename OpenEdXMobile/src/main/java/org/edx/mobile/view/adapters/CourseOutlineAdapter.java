@@ -2,6 +2,7 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -32,6 +33,7 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
 
@@ -287,10 +289,23 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.rowType.setIcon(FontAwesomeIcons.fa_film);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);
-
         viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
-        viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
-        viewHolder.rowSubtitle.setText(videoData.getDurationReadable());
+        if (videoData.getDuration() > 0L) {
+            viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
+            viewHolder.rowSubtitle.setText(videoData.getDurationReadable());
+        }
+        if (videoData.getSize() > 0L) {
+            viewHolder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
+            viewHolder.rowSubtitleDueDate.setText(MemoryUtil.format(context, videoData.getSize()));
+            // Set appropriate right margin of subtitle
+            final int rightMargin = (int) context.getResources().getDimension(R.dimen.widget_margin_double);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
+                    viewHolder.rowSubtitle.getLayoutParams();
+            params.setMargins(0, 0, rightMargin, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                params.setMarginEnd(rightMargin);
+            }
+        }
 
         dbStore.getWatchedStateForVideoId(videoData.videoId,
                 new DataCallback<DownloadEntry.WatchedState>(true) {
