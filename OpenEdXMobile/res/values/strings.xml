@@ -463,8 +463,6 @@
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
     <string name="google_text">Google</string>
-    <!-- Message shown when attempting to find courses with no Internet connection -->
-    <string name="find_courses_offline_text">You are in offline mode.\nTo find courses, connect to the Internet.</string>
     <!-- Prompt allowing user to choose email program -->
     <string name="email_chooser_header">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
