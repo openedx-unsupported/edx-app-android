@@ -406,9 +406,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
   <string name="google_text">Google</string>
-  <!--Message shown when attempting to find courses with no Internet connection-->
-  <string name="find_courses_offline_text">Usted está en modo sin conexión.
-Para encontrar cursos, debe estar conectado a Internet.</string>
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">Enviar email usando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->

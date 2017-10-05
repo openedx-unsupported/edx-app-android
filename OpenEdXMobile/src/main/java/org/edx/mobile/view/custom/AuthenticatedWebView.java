@@ -35,12 +35,13 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.WebViewUtil;
 
 import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 import roboguice.inject.InjectView;
 
-import static org.edx.mobile.util.AppConstants.EMPTY_HTML;
+import static org.edx.mobile.util.WebViewUtil.EMPTY_HTML;
 
 /**
  * A custom webview which authenticates the user before loading a page,
@@ -233,9 +234,7 @@ public class AuthenticatedWebView extends FrameLayout {
 
     public void tryToClearWebView() {
         pageIsLoaded = false;
-        if (webView != null) {
-            webView.loadData(EMPTY_HTML, "text/html", "UTF-8");
-        }
+        WebViewUtil.clearWebviewHtml(webView);
     }
 
     private void showLoadingProgress() {

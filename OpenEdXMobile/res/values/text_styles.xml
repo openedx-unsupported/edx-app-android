@@ -238,18 +238,6 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="offline_mode_message" parent="@style/bold_text">
-        <item name="android:textSize">20sp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:text">@string/find_courses_offline_text</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
     <!-- TextArea theme -->
     <style name="text_area_style" parent="@android:style/Widget.DeviceDefault.EditText">
         <item name="android:layout_width">match_parent</item>
