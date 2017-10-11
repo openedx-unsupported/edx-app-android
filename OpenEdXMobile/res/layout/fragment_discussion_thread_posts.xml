@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_error_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/edx_brand_gray_x_back">
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -76,5 +77,7 @@
     <include
         layout="@layout/loading_indicator"
         tools:visibility="visible" />
+
+    <include layout="@layout/content_error" />
 
 </FrameLayout>
