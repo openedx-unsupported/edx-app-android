@@ -158,4 +158,16 @@ public class Version implements Comparable<Version> {
         return Math.abs(this.getMajorVersion() - otherVersion.getMajorVersion()) >= 1 ||
                 Math.abs(this.getMinorVersion() - otherVersion.getMinorVersion()) >= minorVersionsDiff;
     }
+
+    /**
+     * Compares this version with the specified version and determine if both have same major and
+     * minor versions.
+     *
+     * @param otherVersion The version to compare to this instance.
+     * @return {@code true} if both have same major and minor versions, {@code false} otherwise.
+     */
+    public boolean hasSameMajorMinorVersion(@NonNull Version otherVersion) {
+        return this.getMajorVersion() == otherVersion.getMajorVersion() &&
+                this.getMinorVersion() == otherVersion.getMinorVersion();
+    }
 }
