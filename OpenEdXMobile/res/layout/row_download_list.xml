@@ -1,112 +1,98 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/downloads_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:padding="10dp">
+    android:orientation="horizontal"
+    android:padding="@dimen/edx_margin">
 
-    <TextView
-        android:id="@+id/downloads_name"
-        style="@style/semibold_text"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginRight="45dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="5dp"
-        android:ellipsize="end"
-        android:fadingEdge="horizontal"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxWidth="210dp"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        tools:text="Engaging in Interaction"
-        android:textColor="@color/grey_text_mycourse"
-        android:textSize="14sp"
-        tools:targetApi="17" />
+        android:layout_marginEnd="@dimen/widget_margin"
+        android:layout_marginRight="@dimen/widget_margin"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:targetApi="17">
 
-    <LinearLayout android:id="@+id/close_btn_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/progressBar"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:padding="5dp"
-        tools:targetApi="17" >
+        <TextView
+            android:id="@+id/downloads_name"
+            style="@style/semibold_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/grey_text_mycourse"
+            android:textSize="@dimen/edx_small"
+            tools:text="@string/download_pending" />
 
-        <ImageView
-            android:id="@+id/close_btn"
-            android:contentDescription="@string/cancel_download"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/ic_close" />
+        <LinearLayout
+            android:id="@+id/download_content_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/download_time"
+                style="@style/regular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/edx_margin"
+                android:layout_marginRight="@dimen/edx_margin"
+                android:singleLine="true"
+                android:textColor="@color/grey_video_size_text"
+                android:textSize="@dimen/edx_x_small"
+                tools:targetApi="17"
+                tools:text="53:59:21" />
+
+            <TextView
+                android:id="@+id/download_percentage"
+                style="@style/regular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/grey_video_size_text"
+                android:textSize="@dimen/edx_x_small"
+                tools:targetApi="17"
+                tools:text="45.20/200MB" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/CustomProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/widget_margin_half"
+            android:layout_marginTop="@dimen/widget_margin_half"
+            android:max="100"
+            android:progress="40"
+            tools:targetApi="17" />
+
+        <TextView
+            android:id="@+id/txtDownloadFailed"
+            style="@style/semibold_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/download_failed_text"
+            android:textColor="@color/edx_error_text"
+            android:textSize="@dimen/edx_x_small"
+            tools:targetApi="17" />
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/download_time"
-        style="@style/regular_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/downloads_name"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:lines="1"
-        android:singleLine="true"
-        tools:text="53:59:21"
-        android:textColor="@color/grey_video_size_text"
-        android:textSize="12sp"
+    <ImageView
+        android:id="@+id/close_btn"
+        android:layout_width="@dimen/fa_xxxx_large"
+        android:layout_height="@dimen/fa_xxxx_large"
+        android:background="@drawable/selectable_box_overlay"
+        android:layout_marginLeft="@dimen/widget_margin_half"
+        android:layout_marginStart="@dimen/widget_margin_half"
+        android:contentDescription="@string/cancel_download"
+        android:padding="@dimen/widget_margin"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_close"
         tools:targetApi="17" />
 
-    <TextView
-        android:id="@+id/download_percentage"
-        style="@style/regular_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/downloads_name"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_toRightOf="@+id/download_time"
-        android:layout_toEndOf="@+id/download_time"
-        android:lines="1"
-        android:singleLine="true"
-        tools:text="45.20/200MB"
-        android:textColor="@color/grey_video_size_text"
-        android:textSize="12sp"
-        tools:targetApi="17" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="@style/CustomProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/download_time"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginRight="45dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="4dp"
-        android:max="100"
-        android:progress="40"
-        tools:targetApi="17" />
-
-    <TextView
-        android:id="@+id/txtDownloadFailed"
-        style="@style/semibold_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:text="@string/download_failed_text"
-        android:textColor="@color/edx_error_text"
-        android:textSize="12sp"
-        tools:targetApi="17" />
-
-</RelativeLayout>
+</LinearLayout>

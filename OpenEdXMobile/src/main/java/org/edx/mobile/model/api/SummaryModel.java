@@ -118,12 +118,4 @@ public class SummaryModel implements Serializable {
     public int getDuration() {
         return (int)duration;
     }
-    
-    /**
-     * Returns duration in the format hh:mm:ss
-     * @return
-     */
-    public String getDurationString() {
-        return JavaUtil.getDurationString((long)duration);
-    }
 }
