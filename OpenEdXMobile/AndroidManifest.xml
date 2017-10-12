@@ -43,8 +43,14 @@
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="edx" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
@@ -282,6 +288,15 @@
 
         <!-- Setup Firebase -->
         <meta-data android:name="firebase_analytics_collection_enabled" android:value="${firebaseEnabled}" />
+
+        <!-- Branch -->
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="${branchKey}" />
+
+        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
 
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
     </application>

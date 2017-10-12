@@ -6,15 +6,24 @@ import android.os.Bundle;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.Config;
+import org.json.JSONObject;
+
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 // We are extending the normal Activity class here so that we can use Theme.NoDisplay, which does not support AppCompat activities
 public class SplashActivity extends Activity {
+    protected final Logger logger = new Logger(getClass().getName());
+    private Config config = new Config(MainApplication.instance());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        finish();
+        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+            finish();
+        }
 
         /*
         Recommended solution to avoid opening of multiple tasks of our app's launcher activity.
@@ -38,5 +47,40 @@ public class SplashActivity extends Activity {
         } else {
             environment.getRouter().showLaunchScreen(SplashActivity.this);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+            final Branch branch = Branch.getInstance(getApplicationContext());
+            branch.initSession(new Branch.BranchReferralInitListener() {
+                @Override
+                public void onInitFinished(JSONObject referringParams, BranchError error) {
+                    if (error == null) {
+                        // params are the deep linked params associated with the link that the user
+                        // clicked -> was re-directed to this app params will be empty if no data found
+                    } else {
+                        logger.error(new Exception("Branch not configured properly, error:\n"
+                                + error.getMessage()), true);
+                    }
+                }
+            }, this.getIntent().getData(), this);
+
+            finish();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+            Branch.getInstance().closeSession();
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
     }
 }

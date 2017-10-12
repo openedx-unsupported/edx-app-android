@@ -132,6 +132,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-plus:10.0.1'
     compile 'com.google.android.gms:play-services-analytics:10.0.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-ads:10.0.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'de.greenrobot:eventbus:2.4.1'
     compile 'com.squareup.phrase:phrase:1.1.0'
@@ -157,6 +158,11 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+    // Branch SDK
+    /* To support versions prior to API level 15 we have to use v1.14.5 of Branch SDK
+     * https://dev.branch.io/getting-started/sdk-integration-guide/advanced/android/#supporting-pre-15-android
+     */
+    compile 'io.branch.sdk.android:library:1.14.5'
 
     // Google Firebase
     compile 'com.google.firebase:firebase-core:10.0.1'
@@ -283,9 +289,6 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
 
-        manifestPlaceholders = [supportsRtl:"false",
-                                firebaseEnabled: config.get('FIREBASE_ENABLED')?: false]
-
         def platformName = config.get('PLATFORM_NAME')
         resValue "string", "platform_name", platformName
 
@@ -311,6 +314,23 @@ android {
                 resValue "bool", "com.crashlytics.RequireBuildId", "false"
             }
         }
+        def branchKey = ""
+        if (fabric != null) {
+            def kits = fabric.get('KITS')
+            if (null != kits) {
+                def branch = kits.get('BRANCH')
+                if (branch != null && branch.get('ENABLED')) {
+                    branchKey = branch.get('BRANCH_KEY')
+                    if (null == branchKey) {
+                        throw new GradleException("You must set BRANCH_KEY if Branch is enabled")
+                    }
+                }
+            }
+        }
+
+        manifestPlaceholders = [supportsRtl:"false",
+                                firebaseEnabled: config.get('FIREBASE_ENABLED')?: false,
+                                branchKey: branchKey]
     }
     sourceSets {
         main {
