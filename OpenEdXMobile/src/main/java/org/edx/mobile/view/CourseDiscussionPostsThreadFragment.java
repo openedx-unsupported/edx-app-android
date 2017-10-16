@@ -35,12 +35,11 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TimePeriod;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
-import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 
@@ -85,6 +84,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @Inject
     private DiscussionService discussionService;
 
+    private FullScreenErrorNotification errorNotification;
+
     private DiscussionPostsFilter postsFilter = DiscussionPostsFilter.ALL;
     private DiscussionPostsSort postsSort = DiscussionPostsSort.LAST_ACTIVITY_AT;
 
@@ -124,7 +125,10 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_discussion_thread_posts, container, false);
+        final View view = inflater.inflate(R.layout.fragment_discussion_thread_posts, container, false);
+        // Initializing errorNotification here, so that its non-null value can be used in the parent class's `onViewCreated` callback
+        errorNotification = new FullScreenErrorNotification(view.findViewById(R.id.content));
+        return view;
     }
 
     @Override
@@ -225,11 +229,10 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private void fetchDiscussionTopic() {
         String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
         final Activity activity = getActivity();
-        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         discussionService.getSpecificCourseTopics(courseData.getCourse().getId(),
                 Collections.singletonList(topicId))
                 .enqueue(new ErrorHandlingCallback<CourseTopics>(activity,
-                        new ProgressViewController(loadingIndicator), mCallback, CallTrigger.LOADING_UNCACHED) {
+                        new ProgressViewController(loadingIndicator), errorNotification) {
                     @Override
                     protected void onResponse(@NonNull final CourseTopics courseTopics) {
                         discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
@@ -245,7 +248,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                             }
 
                             // Now that we have the topic data, we can allow the user to add new posts.
-                            createNewPostLayout.setVisibility(View.VISIBLE);
+                            setCreateNewPostBtnVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -351,13 +354,14 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         }
 
         final Activity activity = getActivity();
-        final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         final boolean isRefreshingSilently = callback.isRefreshingSilently();
         getThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(activity,
                 // Initially we need to show the spinner at the center of the screen. After that,
                 // the ListView will start showing a footer-based loading indicator.
                 nextPage > 1 || isRefreshingSilently ? null :
-                        new ProgressViewController(loadingIndicator),mCallback, CallTrigger.LOADING_UNCACHED) {
+                        new ProgressViewController(loadingIndicator),
+                // We only require the error to appear if the first server call fails
+                nextPage == 1 ? errorNotification : null) {
             @Override
             protected void onResponse(@NonNull final Page<DiscussionThread> threadsPage) {
                 if (getView() == null) return;
@@ -453,7 +457,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
      * Query server to check if discussions on this course are blacked out.
      */
     private void checkIfDiscussionsBlackedOut() {
-        createNewPostLayout.setVisibility(View.GONE);
+        setCreateNewPostBtnVisibility(View.GONE);
 
         discussionService.getCourseDiscussionInfo(courseData.getCourse().getId())
                 .enqueue(new ErrorHandlingCallback<CourseDiscussionInfo>(getContext(), (TaskProgressCallback) null) {
@@ -479,8 +483,21 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     private void markAsBlackedOut(boolean isBlackedOut) {
                         courseData.setDiscussionBlackedOut(isBlackedOut);
                         createNewPostLayout.setEnabled(!isBlackedOut);
-                        createNewPostLayout.setVisibility(View.VISIBLE);
+                        setCreateNewPostBtnVisibility(View.VISIBLE);
                     }
                 });
+    }
+
+    /**
+     * Sets the visibility of Create New Post button.
+     *
+     * @param visibility The visibility to set.
+     */
+    private void setCreateNewPostBtnVisibility(int visibility) {
+        if (discussionTopic != null) {
+            createNewPostLayout.setVisibility(visibility);
+        } else {
+            createNewPostLayout.setVisibility(View.GONE);
+        }
     }
 }
