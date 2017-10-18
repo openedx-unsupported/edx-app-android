@@ -35,6 +35,7 @@ import org.edx.mobile.util.NetworkUtil;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import roboguice.RoboGuice;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -81,7 +82,7 @@ public abstract class MainApplication extends MultiDexApplication {
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
             Fabric.with(this, config.getFabricConfig().getKitsConfig().getEnabledKits());
 
-            if (config.getFabricConfig().getKitsConfig().isCrashlyticsEnabled())    {
+            if (config.getFabricConfig().getKitsConfig().isCrashlyticsEnabled()) {
                 EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
             }
         }
@@ -128,6 +129,11 @@ public abstract class MainApplication extends MultiDexApplication {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        // Init Branch
+        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+            Branch.getAutoInstance(this);
+        }
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
