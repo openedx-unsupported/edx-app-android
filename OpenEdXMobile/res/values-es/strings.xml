@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!--Certificates-->
   <!--Label congratulation user on finishing course-->
   <string name="course_details_congratulations">¡Felicidades!</string>
@@ -11,6 +11,7 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">Inscribirse ahora</string>
   <!--Invitation Only button text-->
+  <string name="invitation_only_button_text">Solo con invitación</string>
   <!--Effort field name-->
   <string name="effort_field_name">Esfuerzo:</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -86,10 +87,12 @@
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Mis cursos</string>
   <!--Title of important course dates screen-->
+  <string name="label_course_dates">Fechas y plazos del curso</string>
   <!--Title of user's downloaded videos list screen-->
   <string name="label_my_videos">Mis videos</string>
-  <!--Title of Find Courses screen-->
+  <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
+  <!--Title of webview based Find Courses Screen-->
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentario</string>
   <!--Toggle switch on state label-->
@@ -103,7 +106,8 @@
   <!--Settings screen version-->
   <string name="label_version">Versión de la aplicación</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings">Mis opciones</string>
+  <string name="label_settings">Configuración</string>
+  <!--Title of Account screen-->
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Restablecer contraseña</string>
@@ -154,10 +158,12 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">Anuncios</string>
   <!--Title text for the important dates section on the course dashboard-->
+  <string name="course_dates_title">Fechas importantes</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">Manténgase actualizado</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
+  <string name="course_dates_subtitle">Realice un seguimiento de los plazos y cumpla con lo planeado</string>
   <!--Accessible content description of school code label a course-->
   <string name="school_code">Código Escolar</string>
   <!--Accessible content description of course name label field-->
@@ -187,9 +193,10 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">No hay entregas para este curso.</string>
   <!--Label shown when no important dates are available for a course-->
+  <string name="no_course_dates_to_display">Las fechas del curso no están disponibles en este momento.</string>
   <!--Title of the screen where user can delete videos-->
-  <!--Label for course due date for same day-->
-  <!--Label for course due date-->
+  <!--Label for a course item's due date for same day-->
+  <!--Label for a course item's due date-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">Temas de discusión</string>

@@ -8,8 +8,8 @@
                             "android"
                             ],
               "image": "screen_1",
-              "title": "Updated Navigation",
-              "message": "A simplified main menu makes it easier to access and discover courses."
+              "title": "Navegación Actualizada ",
+              "message": "Un menú principal simplificado hace que sea más fácil acceder y descubrir cursos."
               },
               {
               "platforms": [
@@ -17,8 +17,8 @@
                             "android"
                             ],
               "image": "screen_2",
-              "title": "Assignment Due Dates",
-              "message": "You can now see due dates for assignments in the course outline."
+              "title": "Plazos de Asignación",
+              "message": "Ahora puede ver las fechas límites de las asignaciones en el esquema del curso."
               }
               ]
  },
@@ -32,23 +32,23 @@
                             ],
               "image": "screen_1",
               "title": "Videos",
-              "message": "The \"Videos\" tab in each course's menu replaces \"My Videos\" in the main menu. Now you can view all the videos in a course in one place!"
+              "message": "La pestaña \"Videos\" en el menú de cada curso reemplaza \"Mis Videos\" en el menú principal. Ahora puedes ver todos los videos de un curso en un solo lugar!"
               },
               {
               "platforms": [
                             "android"
                             ],
               "image": "screen_2",
-              "title": "Delete Videos",
-              "message": "In the list of downloaded course videos, use a long press to select videos that you want to delete."
+              "title": "Borrar Videos",
+              "message": "En la lista de videos de cursos descargados, pulse prolongadamente una vez para seleccionar los videos que desea eliminar."
               },
               {
               "platforms": [
                             "ios"
                             ],
               "image": "screen_2",
-              "title": "Delete Videos",
-              "message": "Swipe left to delete downloaded videos."
+              "title": "Borrar Videos",
+              "message": "Desliza hacia la izquierda para eliminar los videos descargados."
               }
               ]
  }
