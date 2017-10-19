@@ -4,10 +4,11 @@ import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,7 +26,12 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     public void render(BaseViewHolder tag, final Item item) {
         final ViewHolder holder = (ViewHolder) tag;
         holder.title.setText(item.getTitle());
-        holder.duration.setText(item.getDuration());
+        if (TextUtils.isEmpty(item.getDuration())) {
+            holder.duration.setVisibility(View.GONE);
+        } else {
+            holder.duration.setVisibility(View.VISIBLE);
+            holder.duration.setText(item.getDuration());
+        }
         holder.progress.setProgress(item.getPercent());
         @DrawableRes
         final int progressDrawable;
@@ -75,7 +81,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
             holder.error.setVisibility(View.VISIBLE);
         }
 
-        holder.cross_image_layout.setOnClickListener(new OnClickListener() {
+        holder.cross_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 onDeleteClicked(item);
@@ -102,7 +108,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
         final TextView title;
         final TextView duration;
         final TextView percent;
-        final LinearLayout cross_image_layout;
+        final ImageView cross_button;
         final TextView error;
         final ProgressBar progress;
 
@@ -116,8 +122,8 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                     .findViewById(R.id.txtDownloadFailed);
             progress = (ProgressBar) view
                     .findViewById(R.id.progressBar);
-            cross_image_layout = (LinearLayout) view
-                    .findViewById(R.id.close_btn_layout);
+            cross_button = (ImageView) view
+                    .findViewById(R.id.close_btn);
         }
     }
 

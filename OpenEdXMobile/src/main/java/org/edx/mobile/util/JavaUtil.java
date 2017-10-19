@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -43,12 +44,19 @@ public class JavaUtil {
         return String.format("%d MB", mb);
     }
 
+    /**
+     * Converts and returns the provided duration into a readable format i.e. hh:mm:ss. Returns null
+     * if duration is zero or negative.
+     *
+     * @param duration Video duration in seconds.
+     * @return Formatted duration.
+     */
+    @Nullable
     public static String getDurationString(long duration) {
-        if (duration == 0) {
-            return "00:00";
+        if (duration <= 0) {
+            return null;
         }
-
-        long d = (long) duration;
+        long d = duration;
         int hours = (int) (d / 3600f);
         d = d % 3600;
         int mins = (int) (d / 60f);
