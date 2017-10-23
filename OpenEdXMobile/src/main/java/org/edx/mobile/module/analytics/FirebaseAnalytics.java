@@ -258,9 +258,9 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackCreateAccountClicked(String appVersion, String source) {
+    public void trackCreateAccountClicked(@NonNull String appVersion, @Nullable String source) {
         final FirebaseEvent event = new FirebaseEvent(Events.CREATE_ACCOUNT_CLICKED,
-                Values.CREATE_ACCOUNT_CLICK);
+                Values.CREATE_ACCOUNT_CLICKED);
         if (!TextUtils.isEmpty(source))
             event.putString(Keys.PROVIDER, source);
 
@@ -270,11 +270,36 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackEnrollClicked(String courseId, boolean email_opt_in) {
-        final FirebaseEvent event = new FirebaseEvent(Events.ENROLL_COURSES,
-                Values.USER_COURSE_ENROLL);
+    public void trackRegistrationSuccess(@NonNull String appVersion, @Nullable String source) {
+        final FirebaseEvent event = new FirebaseEvent(Events.REGISTRATION_SUCCESS,
+                Values.USER_REGISTRATION_SUCCESS);
+        if (!TextUtils.isEmpty(source)) {
+            event.putString(Keys.PROVIDER, source);
+        }
+
+        //Add category for Google Analytics
+        event.addCategoryToBiEvents(Values.CONVERSION, appVersion);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackEnrollClicked(@NonNull String courseId, boolean email_opt_in) {
+        final FirebaseEvent event = new FirebaseEvent(Events.COURSE_ENROLL_CLICKED,
+                Values.USER_COURSE_ENROLL_CLICKED);
         event.putCourseId(courseId);
         event.putBoolean(Keys.EMAIL_OPT_IN, email_opt_in);
+
+        //Add category for Google Analytics
+        event.addCategoryToBiEvents(Values.CONVERSION, courseId);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackEnrolmentSuccess(@NonNull String courseId, boolean emailOptIn) {
+        final FirebaseEvent event = new FirebaseEvent(Events.COURSE_ENROLL_SUCCESS,
+                Values.USER_COURSE_ENROLL_SUCCESS);
+        event.putCourseId(courseId);
+        event.putBoolean(Keys.EMAIL_OPT_IN, emailOptIn);
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.CONVERSION, courseId);

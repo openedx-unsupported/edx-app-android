@@ -24,6 +24,7 @@ import org.edx.mobile.event.AppUpdatedEvent;
 import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.module.analytics.AnswersAnalytics;
 import org.edx.mobile.module.analytics.FirebaseAnalytics;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -84,6 +85,10 @@ public abstract class MainApplication extends MultiDexApplication {
 
             if (config.getFabricConfig().getKitsConfig().isCrashlyticsEnabled()) {
                 EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
+            }
+
+            if (config.getFabricConfig().getKitsConfig().isAnswersEnabled())  {
+                analyticsRegistry.addAnalyticsProvider(injector.getInstance(AnswersAnalytics.class));
             }
         }
 

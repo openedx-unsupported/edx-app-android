@@ -11,7 +11,6 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -30,7 +29,6 @@ import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
@@ -298,36 +296,30 @@ public class RegisterActivity extends BaseFragmentActivity
 
         //set parameter required by social registration
         final String access_token = loginPrefs.getSocialLoginAccessToken();
-        final String backstore = loginPrefs.getSocialLoginProvider();
+        final String provider = loginPrefs.getSocialLoginProvider();
         boolean fromSocialNet = !TextUtils.isEmpty(access_token);
         if (fromSocialNet) {
             parameters.putString("access_token", access_token);
-            parameters.putString("provider", backstore);
+            parameters.putString("provider", provider);
             parameters.putString("client_id", environment.getConfig().getOAuthClientId());
         }
-
 
         // do NOT proceed if validations are failed
         if (hasError) {
             return;
         }
 
-        try {
-            //Send app version in create event
-            String versionName = BuildConfig.VERSION_NAME;
-            String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
-
-            environment.getAnalyticsRegistry().trackCreateAccountClicked(appVersion, backstore);
-        } catch (Exception e) {
-            logger.error(e);
-        }
+        // Send analytics event for Create Account button click
+        final String appVersion = String.format("%s v%s", getString(R.string.android), BuildConfig.VERSION_NAME);
+        environment.getAnalyticsRegistry().trackCreateAccountClicked(appVersion, provider);
 
         showProgress();
 
-        final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backstore);
+        final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(provider);
         final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
             @Override
             public void onSuccess(AuthResponse auth) {
+                environment.getAnalyticsRegistry().trackRegistrationSuccess(appVersion, provider);
                 onUserLoginSuccess(auth.profile);
             }
 
