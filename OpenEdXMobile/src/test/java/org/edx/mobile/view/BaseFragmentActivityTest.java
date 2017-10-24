@@ -302,28 +302,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     }
 
     /**
-     * Testing show info method
-     */
-    @Test
-    public void showOfflineAccessMessage() {
-        final BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        View offlineView = new View(activity);
-        offlineView.setId(R.id.offline_access_panel);
-        offlineView.setVisibility(View.GONE);
-        activity.addContentView(offlineView, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        assertAnimateLayouts(offlineView, new Runnable() {
-            @Override
-            public void run() {
-                activity.showOfflineAccessMessage();
-            }
-        });
-    }
-
-    /**
      * Generic method for asserting next started activity along with
      * the custom transition animation override
      *

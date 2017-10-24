@@ -38,7 +38,6 @@ import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -145,28 +144,6 @@ public class NavigationFragment extends BaseFragment {
                 }
             }
         });
-
-        if (environment.getConfig().isMyVideosEnabled()) {
-            drawerNavigationBinding.drawerOptionMyVideos.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Activity act = getActivity();
-                    ((BaseFragmentActivity) act).closeDrawer();
-
-                    if (!(act instanceof MyVideosActivity)) {
-                        environment.getRouter().showMyVideos(act);
-                        //Finish need not be called if the current activity is MyCourseListing
-                        // as on returning back from FindCourses,
-                        // the student should be returned to the MyCourses screen
-                        if (!(act instanceof MyCoursesListActivity)) {
-                            act.finish();
-                        }
-                    }
-                }
-            });
-        } else {
-            drawerNavigationBinding.drawerOptionMyVideos.setVisibility(View.GONE);
-        }
 
         if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
             drawerNavigationBinding.drawerOptionFindCourses.setOnClickListener(new OnClickListener() {

@@ -168,7 +168,6 @@
                 <TextView
                     android:id="@+id/flying_message"
                     style="@style/flying_message"
-                    android:text="@string/started_downloading"
                     android:visibility="gone" />
 
                 <include layout="@layout/content_error" />

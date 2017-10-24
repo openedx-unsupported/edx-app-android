@@ -144,13 +144,6 @@
             android:screenOrientation="user"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
-
-        <activity
-            android:name=".view.my_videos.MyVideosActivity"
-            android:label="@string/label_my_videos"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
         <activity
             android:name="org.edx.mobile.view.DownloadListActivity"
             android:label="@string/title_download"
@@ -185,11 +178,6 @@
             android:label="@string/label_find_courses"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
-            android:name="org.edx.mobile.view.VideoListActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name="org.edx.mobile.view.CourseHandoutActivity"

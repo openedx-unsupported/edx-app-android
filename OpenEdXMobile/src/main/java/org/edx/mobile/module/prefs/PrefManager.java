@@ -221,20 +221,6 @@ public class PrefManager {
         }
     }
 
-    public static class UserPrefManager extends PrefManager {
-        public UserPrefManager(Context context) {
-            super(context, Pref.USER_PREF);
-        }
-
-        public boolean isVideosCacheRestored() {
-            return getBoolean(Key.VIDEOS_CACHE_RESTORED, false);
-        }
-
-        public void setIsVideosCacheRestored(boolean restored) {
-            super.put(Key.VIDEOS_CACHE_RESTORED, restored);
-        }
-    }
-
     /**
      * Contains preference name constants. These must be unique.
      */
@@ -283,12 +269,6 @@ public class PrefManager {
         public static final String AppNotificationPushHash = "AppNotificationPushHash";
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
-        /**
-         * For downloaded videos to appear in order on the My Videos screen, we need
-         * to have the videos' courses data cached. This is the key to a persistent
-         * flag which marks whether the cache has been restored
-         */
-        public static final String VIDEOS_CACHE_RESTORED = "VideosCacheRestored";
 
         // Preference to save user app rating
         public static final String APP_RATING = "APP_RATING";

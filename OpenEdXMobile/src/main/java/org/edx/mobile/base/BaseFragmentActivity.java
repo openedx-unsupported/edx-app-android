@@ -317,17 +317,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         return true;
     }
 
-    /**
-     * Call this method to inform user about going  offline
-     */
-    public void showOfflineAccessMessage() {
-        try {
-            animateLayouts(findViewById(R.id.offline_access_panel));
-        } catch (Exception e) {
-            logger.error(e);
-        }
-    }
-
     public boolean isActivityStarted() {
         return isActivityStarted;
     }

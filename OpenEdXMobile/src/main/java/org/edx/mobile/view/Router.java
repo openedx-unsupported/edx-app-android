@@ -32,7 +32,6 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.view.dialog.WebViewActivity;
-import org.edx.mobile.view.my_videos.MyVideosActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import de.greenrobot.event.EventBus;
@@ -81,12 +80,6 @@ public class Router {
         Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
         courseInfoIntent.putExtra(CourseInfoActivity.EXTRA_PATH_ID, pathId);
         sourceActivity.startActivity(courseInfoIntent);
-    }
-
-    public void showMyVideos(Activity sourceActivity) {
-        Intent myVideosIntent = new Intent(sourceActivity, MyVideosActivity.class);
-        myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        sourceActivity.startActivity(myVideosIntent);
     }
 
     public void showSettings(Activity sourceActivity) {

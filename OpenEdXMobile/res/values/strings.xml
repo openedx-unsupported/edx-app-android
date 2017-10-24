@@ -102,8 +102,6 @@
     <string name="label_my_courses">My Courses</string>
     <!-- Title of important course dates screen -->
     <string name="label_course_dates">Course Dates and Deadlines</string>
-    <!-- Title of user's downloaded videos list screen -->
-    <string name="label_my_videos">My Videos</string>
     <!-- Title of native Find Courses Screen -->
     <string name="label_find_courses">Find Courses</string>
     <!-- Title of webview based Find Courses Screen -->
@@ -141,12 +139,6 @@
     <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>
     <!-- Label explaining toggle for cellular data access -->
     <string name="wifi_dialog_message_help">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
-    <!-- Confirmation text for delete video dialog -->
-    <string name="delete_dialog_title_help">Confirm Delete</string>
-    <plurals name="delete_video_dialog_msg">
-        <item quantity="one">Are you sure you want to delete this video?</item>
-        <item quantity="other">Are you sure you want to delete these videos?</item>
-    </plurals>
     <!-- Info message text for to let use know how many videos were deleted -->
     <plurals name="delete_video_snackbar_msg">
         <item quantity="one">%s video deleted</item>
@@ -188,8 +180,6 @@
     <string name="announcement_subtitle">Keep up with the latest news</string>
     <!-- Subtitle text describing the important dates section on the course dashboard -->
     <string name="course_dates_subtitle">Keep track of deadlines and stay on track</string>
-    <!-- Accessible content description of school code label a course -->
-    <string name="school_code">School Code</string>
     <!-- Accessible content description of course name label field -->
     <string name="course_name">Course Name</string>
     <!-- Label indicating new course content has been downloaded -->
@@ -380,20 +370,11 @@
     <string name="assessment_open_on_youtube">View video on YouTube</string>
 
     <!-- Video List -->
-    <!-- Label shown to indicate video currently downloading -->
-    <string name="started_downloading">Downloading</string>
     <!-- Title of video download screen -->
     <string name="title_download">Downloads</string>
 
-    <!-- MyVideos -->
-    <!-- Title of all videos section -->
-    <string name="my_all_videos">All Videos</string>
-    <!-- Title of recent videos section -->
-    <string name="my_recent_videos">Recent Videos</string>
     <!-- Label indicating user has no Internet connection -->
     <string name="offline_text">Offline</string>
-    <!-- Label shown in videos section when user has no videos downloaded -->
-    <string name="no_videos_to_display">You haven’t downloaded any videos.</string>
     <!-- Cancel video download -->
     <string name="cancel_download">Cancel download</string>
 
@@ -536,12 +517,6 @@
     <string name="android_device_model">Device Model: </string>
     <!--  Submit Feedback feedback text -->
     <string name="insert_feedback">Feedback: </string>
-
-    <!-- Message indicating num of video deleted. {video_count} is a number of videos deleted, like "3".  -->
-    <plurals name="deleted_video">
-        <item quantity="one">{video_count} video deleted </item>
-        <item quantity="other">{video_count} videos deleted</item>
-    </plurals>
 
     <!-- Notification related -->
     <!-- toggle between subscribe and unsubscribe to course announcement -->

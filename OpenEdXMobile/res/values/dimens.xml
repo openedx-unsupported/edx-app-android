@@ -131,7 +131,6 @@
     <dimen name="course_unit_nav_bar_padding_left">15dp</dimen>
     <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
 
-    <!-- My Videos -->
     <dimen name="tab_indicator_unselected_height">1.5dp</dimen>
     <dimen name="tab_indicator_selected_height">6dp</dimen>
 
