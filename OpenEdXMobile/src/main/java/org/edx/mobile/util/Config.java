@@ -584,7 +584,7 @@ public class Config {
     }
 
     public boolean isCourseVideosEnabled() {
-        return getBoolean(COURSE_VIDEOS_ENABLED, false);
+        return getBoolean(COURSE_VIDEOS_ENABLED, true);
     }
 
     @NonNull
