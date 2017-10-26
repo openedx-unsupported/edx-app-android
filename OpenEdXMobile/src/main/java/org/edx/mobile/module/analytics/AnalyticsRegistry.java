@@ -115,9 +115,16 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackEnrollClicked(String courseId, boolean email_opt_in) {
+    public void trackEnrollClicked(@NonNull String courseId, boolean email_opt_in) {
         for (Analytics service : services) {
             service.trackEnrollClicked(courseId, email_opt_in);
+        }
+    }
+
+    @Override
+    public void trackEnrolmentSuccess(@NonNull String courseId, boolean email_opt_in) {
+        for (Analytics service : services) {
+            service.trackEnrolmentSuccess(courseId, email_opt_in);
         }
     }
 
@@ -234,9 +241,16 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackCreateAccountClicked(String appVersion, String source) {
+    public void trackCreateAccountClicked(@NonNull String appVersion, @Nullable String source) {
         for (Analytics service : services) {
             service.trackCreateAccountClicked(appVersion, source);
+        }
+    }
+
+    @Override
+    public void trackRegistrationSuccess(@NonNull String appVersion, @Nullable String source) {
+        for (Analytics service : services) {
+            service.trackRegistrationSuccess(appVersion, source);
         }
     }
 

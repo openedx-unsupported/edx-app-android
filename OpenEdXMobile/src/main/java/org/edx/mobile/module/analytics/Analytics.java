@@ -195,17 +195,36 @@ public interface Analytics {
     void trackUserFindsCourses();
 
     /**
-     * This function is used to track if user clicks on Create Account on registration screen
+     * Track if user clicks on Create Account button on Registration screen.
+     *
+     * @param appVersion Version of app.
+     * @param source     Source through which the user is going to register.
      */
-    void trackCreateAccountClicked(String appVersion, String source);
+    void trackCreateAccountClicked(@NonNull String appVersion, @Nullable String source);
 
     /**
-     * This function is used to track if user clicks on Enroll in the FindCourses Activity
+     * Track successful registration of a user.
      *
-     * @param courseId   - Course Id for which user selected enroll
-     * @param emailOptIn - Flag to show user wants to opt in for email notification
+     * @param appVersion Version of app.
+     * @param source     Source through which the user has completed registration.
      */
-    void trackEnrollClicked(String courseId, boolean emailOptIn);
+    void trackRegistrationSuccess(@NonNull String appVersion, @Nullable String source);
+
+    /**
+     * Track user's click on the Enroll button of Find Courses Detail screen.
+     *
+     * @param courseId   ID of the course for which user is going to enroll.
+     * @param emailOptIn Flag to represent if user wants to opt in for email notification.
+     */
+    void trackEnrollClicked(@NonNull String courseId, boolean emailOptIn);
+
+    /**
+     * Track user's successful enrollment in a course.
+     *
+     * @param courseId   ID of the course which user has enrolled in.
+     * @param emailOptIn Flag to represent if user wants to opt in for email notification.
+     */
+    void trackEnrolmentSuccess(@NonNull String courseId, boolean emailOptIn);
 
     void trackNotificationReceived(@Nullable String courseId);
 
@@ -416,8 +435,10 @@ public interface Analytics {
         String DISCOVER_COURSES_CLICK = "edx.bi.app.discover.courses.tapped";
         String EXPLORE_SUBJECTS_CLICK = "edx.bi.app.discover.explore.tapped";
         String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
-        String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register.clicked";
-        String USER_COURSE_ENROLL = "edx.bi.app.course.enroll.clicked";
+        String CREATE_ACCOUNT_CLICKED = "edx.bi.app.user.register.clicked";
+        String USER_REGISTRATION_SUCCESS = "edx.bi.app.user.register.success";
+        String USER_COURSE_ENROLL_CLICKED = "edx.bi.app.course.enroll.clicked";
+        String USER_COURSE_ENROLL_SUCCESS = "edx.bi.app.course.enroll.success";
         String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
         String CONVERSION = "conversion";
         String USER_ENGAGEMENT = "user-engagement";
@@ -531,7 +552,9 @@ public interface Analytics {
         String SIGN_UP = "Sign up Clicked";
         String FIND_COURSES = "Find Courses Clicked";
         String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
-        String ENROLL_COURSES = "Enroll Course Clicked";
+        String REGISTRATION_SUCCESS = "Registration Success";
+        String COURSE_ENROLL_CLICKED = "Course Enroll Clicked";
+        String COURSE_ENROLL_SUCCESS = "Course Enroll Success";
         String DISCOVER_COURSES = "Discover Courses";
         String EXPLORE_SUBJECTS = "Explore Subjects";
         String SPEED = "Connected Speed Report";
