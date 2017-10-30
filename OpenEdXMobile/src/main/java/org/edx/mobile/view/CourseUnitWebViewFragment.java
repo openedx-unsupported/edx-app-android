@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -18,12 +17,6 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
-
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 import roboguice.inject.InjectView;
 
@@ -47,71 +40,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         return inflater.inflate(R.layout.fragment_authenticated_webview, container, false);
     }
 
-    public class WebViewInterface {
-        Context mContext;
-
-        WebViewInterface(Context c) {
-            mContext = c;
-        }
-
-        @JavascriptInterface
-        public void saveAs(String data) {
-            String filename = "recap.pdf";
-            FileOutputStream outputStream;
-            try {
-                outputStream = mContext.openFileOutput(filename, Context.MODE_PRIVATE);
-                outputStream.write(data.getBytes());
-                outputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        webView.clearCache(true);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(new WebViewInterface(this.getContext()), "Android");
-        URLInterceptorWebViewClient client =
-                new URLInterceptorWebViewClient(getActivity(), webView) {
-                    private boolean didReceiveError = false;
-
-                    @Override
-                    public void onReceivedError(WebView view, int errorCode,
-                                                String description, String failingUrl) {
-                        // If error occurred for web page request
-                        if (failingUrl != null && failingUrl.equals(view.getUrl())) {
-                            didReceiveError = true;
-                            hideLoadingProgress();
-                            pageIsLoaded = false;
-                            ViewPagerDownloadManager.instance.done(CourseUnitWebViewFragment.this, false);
-                            showErrorMessage(R.string.network_error_message,
-                                    FontAwesomeIcons.fa_exclamation_circle);
-                        }
-                    }
-
-                    @Override
-                    @TargetApi(Build.VERSION_CODES.M)
-                    public void onReceivedHttpError(WebView view, WebResourceRequest request,
-                                                    WebResourceResponse errorResponse) {
-                        // If error occurred for web page request
-                        if (request.getUrl().toString().equals(view.getUrl())) {
-                            didReceiveError = true;
-                            switch (errorResponse.getStatusCode()) {
-                                case HttpStatus.FORBIDDEN:
-                                case HttpStatus.UNAUTHORIZED:
-                                case HttpStatus.NOT_FOUND:
-                                    EdxCookieManager.getSharedInstance(getContext())
-                                            .tryToRefreshSessionCookie();
-                                    break;
-                            }
-                            showErrorMessage(R.string.network_error_message,
-                                    FontAwesomeIcons.fa_exclamation_circle);
-                        }
-                    }
 
         authWebView.initWebView(getActivity(), true);
         authWebView.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {

@@ -92,9 +92,6 @@ public enum ErrorUtils {
             return FontAwesomeIcons.fa_exclamation_circle;
         } else {
             return null;
-        } else if (null == errorMessage) {
-            logger.error(ex, true /* Submit crash report since this is an unknown type of error */);
-            errorMessage = context.getString(R.string.error_unknown);
         }
     }
 }

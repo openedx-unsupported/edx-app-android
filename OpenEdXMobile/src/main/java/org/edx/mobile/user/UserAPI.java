@@ -5,28 +5,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
-
 import org.edx.mobile.http.notifications.ErrorNotification;
-import org.edx.mobile.http.HttpStatusException;
-import org.edx.mobile.http.cache.CacheManager;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,16 +33,11 @@ import retrofit2.Response;
 
 @Singleton
 public class UserAPI {
-    private Logger logger = new Logger(UserAPI.class.getName());
-
     @Inject
     private UserService userService;
 
     @Inject
     private Config config;
-
-    @Inject
-    private CacheManager cache;
 
     @Inject
     private Gson gson;
@@ -87,9 +76,8 @@ public class UserAPI {
         @Override
         protected void onResponse(@NonNull final Account account) {
             EventBus.getDefault().post(new AccountDataLoadedEvent(account));
-            // Store the logged in user's ProfileImage and YearOfBirth
+            // Store the logged in user's ProfileImage
             loginPrefs.setProfileImage(username, account.getProfileImage());
-            loginPrefs.setYearOfBirth(username, account.getYearOfBirth());
         }
     }
 
@@ -101,64 +89,6 @@ public class UserAPI {
                 RequestBody.create(MediaType.parse(mimeType), file));
     }
 
-    public static class ProfileImageUpdatedCallback extends ErrorHandlingCallback<ResponseBody> {
-        @Inject
-        private LoginPrefs loginPrefs;
-        @NonNull
-        private final String username;
-        @Nullable
-        private final Uri profileImageUri;
-
-        public ProfileImageUpdatedCallback(@NonNull final Context context,
-                                           @NonNull final String username,
-                                           @Nullable final File profileImageFile,
-                                           @NonNull final CallTrigger type) {
-            super(context, type);
-            this.username = username;
-            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
-        }
-
-        public ProfileImageUpdatedCallback(@NonNull final Context context,
-                                           @NonNull final String username,
-                                           @Nullable final File profileImageFile,
-                                           @NonNull final CallTrigger type,
-                                           @Nullable final TaskProgressCallback progressCallback) {
-            super(context, type, progressCallback);
-            this.username = username;
-            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
-        }
-
-        public ProfileImageUpdatedCallback(@NonNull final Context context,
-                                           @NonNull final String username,
-                                           @Nullable final File profileImageFile,
-                                           @NonNull final CallTrigger type,
-                                           @Nullable final TaskMessageCallback messageCallback) {
-            super(context, type, messageCallback);
-            this.username = username;
-            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
-        }
-
-        public ProfileImageUpdatedCallback(@NonNull final Context context,
-                                           @NonNull final String username,
-                                           @Nullable final File profileImageFile,
-                                           @NonNull final CallTrigger type,
-                                           @Nullable final TaskProgressCallback progressCallback,
-                                           @Nullable final TaskMessageCallback messageCallback) {
-            super(context, type, progressCallback, messageCallback);
-            this.username = username;
-            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
-        }
-
-        @Override
-        protected void onResponse(@NonNull final ResponseBody response) {
-            EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, profileImageUri));
-            if (profileImageUri == null) {
-                // Delete the logged in user's ProfileImage
-                loginPrefs.setProfileImage(username, null);
-            }
-        }
-    }
-
     public
     @NonNull
     String getUserEnrolledCoursesURL(@NonNull String username) {
@@ -167,44 +97,14 @@ public class UserAPI {
 
     public
     @NonNull
-    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, String org, boolean tryCache) throws Exception {
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, String org) throws Exception {
         String json = null;
-
-        final String cacheKey = getUserEnrolledCoursesURL(username);
-
-        // try to get from cache if we should
-        if (tryCache) {
-            try {
-                json = cache.get(cacheKey);
-            } catch (Exception e) {
-                logger.debug(e.toString());
-            }
-        }
 
         // if we don't have a json yet, get it from userService
         if (json == null) {
             Response<ResponseBody> response = userService.getUserEnrolledCourses(username, org).execute();
             if (response.isSuccessful()) {
                 json = userService.getUserEnrolledCourses(username, org).execute().body().string();
-                // cache result
-                try {
-                    cache.put(cacheKey, json);
-                } catch (IOException e) {
-                    logger.debug(e.toString());
-                }
-            } else {
-                // Cache has already been checked, and connectivity
-                // can't be established, so throw an exception.
-                if (tryCache) throw new HttpStatusException(response);
-                // Otherwise fall back to fetching from the cache
-                try {
-                    json = cache.get(cacheKey);
-                } catch (Exception e) {
-                    logger.debug(e.toString());
-                    throw new HttpStatusException(response);
-                }
-                // If the cache is empty, then throw an exception.
-                if (json == null) throw new HttpStatusException(response);
             }
         }
 
