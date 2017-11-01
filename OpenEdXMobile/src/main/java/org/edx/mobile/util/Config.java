@@ -58,6 +58,7 @@ public class Config {
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
 
     // Features
+    private static final String TABS_DASHBOARD_ENABLED = "TABS_DASHBOARD_ENABLED";
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
     private static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
     private static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
@@ -541,6 +542,10 @@ public class Config {
      */
     public boolean isSpeedTestEnabled() {
         return getBoolean(SPEED_TEST_ENABLED, false);
+    }
+
+    public boolean isTabsDashboardEnabled() {
+        return getBoolean(TABS_DASHBOARD_ENABLED, false);
     }
 
     public boolean isUserProfilesEnabled() {

@@ -119,8 +119,11 @@ public class Router {
 
     public void showCourseDashboardTabs(Activity activity, Config config, EnrolledCoursesResponse model,
                                         boolean announcements) {
-
-        showCourseDashboard(activity, model, announcements);
+        if (config.isTabsDashboardEnabled()) {
+            showCourseTabsDashboard(activity, model, announcements);
+        } else {
+            showCourseDashboard(activity, model, announcements);
+        }
     }
 
     /**
@@ -224,6 +227,11 @@ public class Router {
         courseDashboard.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDashboard);
 
+    }
+
+    public void showCourseTabsDashboard(Activity activity, EnrolledCoursesResponse model,
+                                    boolean announcements) {
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, announcements));
     }
 
     public void showCourseDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {

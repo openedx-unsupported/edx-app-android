@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,9 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
 
     @Inject
     private Router router;
+
+    @InjectView(R.id.loading_indicator)
+    ProgressBar progressSpinner;
 
     private Call<CourseTopics> getTopicListCall;
 
@@ -144,9 +149,11 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
         if (getTopicListCall != null) {
             getTopicListCall.cancel();
         }
+        final TaskProgressCallback.ProgressViewController progressViewController =
+                new TaskProgressCallback.ProgressViewController(progressSpinner);
         getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
         getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(
-                getActivity(), errorNotification, snackbarErrorNotification, this) {
+                getActivity(), progressViewController, errorNotification, snackbarErrorNotification, this) {
             @Override
             protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 logger.debug("GetTopicListTask success=" + courseTopics);
@@ -201,4 +208,5 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
             snackbarErrorNotification.hideError();
         }
     }
+
 }

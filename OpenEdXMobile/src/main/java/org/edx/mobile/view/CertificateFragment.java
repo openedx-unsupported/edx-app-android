@@ -66,6 +66,7 @@ public class CertificateFragment extends BaseFragment {
                 shareTextParams.put("certificate_url", courseData.getCertificateURL());
                 final String shareText = ResourceUtil.getFormattedString(getResources(), R.string.share_certificate_message, shareTextParams).toString();
                 ShareUtils.showShareMenu(
+                        getActivity(),
                         ShareUtils.newShareIntent(shareText),
                         getActivity().findViewById(R.id.menu_item_share),
                         new ShareUtils.ShareMenuItemListener() {
