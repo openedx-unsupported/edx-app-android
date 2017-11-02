@@ -5,7 +5,7 @@ general:
 
 machine:
     environment:
-        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx3584m -XX:+HeapDumpOnOutOfMemoryError"'
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
         RELEASE_PK12_FILE: "../config/release.p12"
 
 dependencies:
@@ -31,10 +31,9 @@ dependencies:
 
 test:
     pre:
-        - ./gradlew assembleProdRelease -PdisablePreDex
-        - ./gradlew testProdReleaseUnitTestCoverage -PdisablePreDex
+        - ./gradlew assembleProdRelease
     override:
-        - sleep 10
+        - ./gradlew testProdReleaseUnitTestCoverage
     post:
         - cp -r OpenEdXMobile/build/reports $CIRCLE_ARTIFACTS
         - cp -r OpenEdXMobile/build/outputs $CIRCLE_ARTIFACTS
