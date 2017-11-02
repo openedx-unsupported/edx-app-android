@@ -18,6 +18,10 @@ android:
    - extra-android-m2repository
    # The SDK version used to compile the project
    - android-25
+   - android-21
+  licenses:
+   - 'android-sdk-license-.+'
+   - '.+'
 
 # THIS IS MY TRAVIS FILE
 
@@ -66,7 +70,7 @@ before_install:
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
   - sdkmanager tools
-  - sdkmanager "system-images;android-19;default;armeabi-v7a"
+  - sdkmanager "system-images;android-21;default;armeabi-v7a"
 
 
 sudo: required
