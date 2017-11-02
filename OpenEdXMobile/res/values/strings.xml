@@ -3,6 +3,7 @@
     <string name="app_name" translatable="false">@string/platform_name</string>
     <string name="app_shortcut_name" translatable="false">@string/shortcut_name</string>
     <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>
+    <string name="eula_file_link">file:///android_asset/EULA.htm</string>
 
     <!-- Certificates -->
 
@@ -18,7 +19,7 @@
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
     <!-- Invitation Only button text-->
-    <string name="invitation_only_button_text" tools:ignore="MissingTranslation">Invitation only</string>
+    <string name="invitation_only_button_text">Invitation only</string>
     <!-- Not old enough button text-->
     <string name="not_old_enough_button_text">You are not old enough to enroll</string>
 

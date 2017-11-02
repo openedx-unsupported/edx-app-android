@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
+  <string name="eula_file_link">file:///android_asset/EULA.htm</string>
   <!--Certificates-->
   <!--Label congratulation user on finishing course-->
   <string name="course_details_congratulations">¡Felicidades!</string>
@@ -11,6 +12,9 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">Inscribirse ahora</string>
   <!--Invitation Only button text-->
+  <string name="invitation_only_button_text">Sólo con Invitación</string>
+  <!-- Not old enough button text-->
+  <string name="not_old_enough_button_text">No tienes la edad suficiente para inscribirte</string>
   <!--Effort field name-->
   <string name="effort_field_name">Esfuerzo:</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -114,7 +118,7 @@
   <!--Label for switch controlling whether users permit downloading using cellular data or only wifi-->
   <string name="wifi_dialog_title_help">Permitir descarga de datos móviles</string>
   <!--Password reset sent succesfully alert-->
-  <string name="success_dialog_message_help">Hemos enviado a su correo un mensaje con las instrucciones para restablecer su contraseña. 
+  <string name="success_dialog_message_help">Hemos enviado a su correo un mensaje con las instrucciones para restablecer su contraseña.
 Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">Ingrese la dirección de correo para su cuenta y le enviaremos instrucciones para restablecer su contraseña.</string>
