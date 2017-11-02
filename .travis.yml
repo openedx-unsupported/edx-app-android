@@ -1,7 +1,7 @@
 language: android
 jdk: oraclejdk8
 sudo: required
-dist: precise # For 7.5GB of memory since the emulator requires a big chunk.
+dist: trusty # For 7.5GB of memory since the emulator requires a big chunk.
 env:
   matrix:
     - ANDROID_TARGET=android-25
