@@ -306,51 +306,6 @@ public class Storage implements IStorage {
     }
 
     @Override
-    @NonNull
-    public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws Exception {
-        ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<>();
-
-        for (EnrolledCoursesResponse enrolledCoursesResponse :
-                executeStrict(api.getEnrolledCoursesFromCache())) {
-            int videoCount = db.getDownloadedVideoCountByCourse(
-                    enrolledCoursesResponse.getCourse().getId(),null);
-            if(videoCount>0){
-                enrolledCoursesResponse.videoCount = videoCount;
-                enrolledCoursesResponse.size = db.getDownloadedVideosSizeByCourse(
-                        enrolledCoursesResponse.getCourse().getId(),null);
-                downloadedCourseList.add(enrolledCoursesResponse);
-            }
-        }
-
-        return downloadedCourseList;
-    }
-
-    @Override
-    @NonNull
-    public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws Exception {
-        ArrayList<SectionItemInterface> recentVideolist = new ArrayList<>();
-
-        for (final EnrolledCoursesResponse course :
-                executeStrict(api.getEnrolledCoursesFromCache())) {
-            // add all videos to the list for this course
-            List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
-                    course.getCourse().getId(), null);
-
-            // ArrayList<IVideoModel> videos = new ArrayList<IVideoModel>();
-            if (videos != null && videos.size() > 0) {
-                // add course header to the list
-                recentVideolist.add(course);
-                for (VideoModel videoModel : videos) {
-                    //TODO : Need to check how SectionItemInterface can be converted to IVideoModel
-                    recentVideolist.add((SectionItemInterface) videoModel);
-                }
-            }
-        }
-
-        return recentVideolist;
-    }
-
-    @Override
     public DownloadEntry reloadDownloadEntry(DownloadEntry video) {
         try{
             DownloadEntry de = (DownloadEntry) db.getVideoEntryByVideoId(video.videoId, null);
@@ -383,63 +338,6 @@ public class Storage implements IStorage {
             logger.error(ex);
             callback.sendException(ex);
         }
-    }
-
-    @Override
-    public ArrayList<SectionItemInterface> getSortedOrganizedVideosByCourse(
-            String courseId) {
-        ArrayList<SectionItemInterface> list = new ArrayList<>();
-
-        ArrayList<VideoModel> downloadList = (ArrayList<VideoModel>) db
-                .getDownloadedVideoListForCourse(courseId, null);
-        if(downloadList==null||downloadList.size()==0){
-            return list;
-        }
-
-        try {
-            Map<String, SectionEntry> courseHeirarchyMap =
-                api.getCourseHierarchy(courseId);
-
-            // iterate chapters
-            for (Entry<String, SectionEntry> chapterentry : courseHeirarchyMap.entrySet()) {
-                boolean chapterAddedFlag=false;
-                // iterate lectures
-                for (Entry<String, ArrayList<VideoResponseModel>> lectureEntry : 
-                    chapterentry.getValue().sections.entrySet()) {
-                    boolean lectureAddedFlag=false;
-                    // iterate videos 
-                    for (VideoResponseModel v : lectureEntry.getValue()) {
-                        for(VideoModel de : downloadList){
-                            // identify the video
-                            if (de.getVideoId().equalsIgnoreCase(v.getSummary().getId())) {
-                                // add this chapter to the list
-                                if(!chapterAddedFlag){
-                                    ChapterModel chModel = new ChapterModel();
-                                    chModel.name = chapterentry.getKey();
-                                    list.add(chModel);
-                                    chapterAddedFlag = true;
-                                }
-                                if(!lectureAddedFlag){
-                                    SectionItemModel lectureModel = new SectionItemModel();
-                                    lectureModel.name = lectureEntry.getKey();
-                                    list.add(lectureModel);
-                                    lectureAddedFlag = true;
-                                }
-
-                                // add section below this chapter
-                                list.add((DownloadEntry)de);
-                                break;
-                            }   // If condition for videoId
-                        }       //for loop for downloadedvideos for CourseId
-                    }           // for loop for VRM
-                }               //  For loop for lectures
-            }                   // For loop for Chapters
-            return list;
-        } catch (Exception e) {
-            logger.error(e);
-        }
-        
-        return null;
     }
 
     @Override

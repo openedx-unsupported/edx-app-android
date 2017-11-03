@@ -19,8 +19,6 @@
   <string name="label_yes">Si</string>
   <!--Alert dialog delete confirmation button-->
   <string name="label_delete">Borrar</string>
-  <!--Alert dialog edit list confirmation button-->
-  <string name="label_edit">Editar</string>
   <!--Alert dialog okay button-->
   <string name="label_ok">OK</string>
   <!--Alert dialog close button-->

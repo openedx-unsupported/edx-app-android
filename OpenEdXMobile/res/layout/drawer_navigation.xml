@@ -67,11 +67,6 @@
                 android:text="@string/label_my_courses" />
 
             <TextView
-                android:id="@+id/drawer_option_my_videos"
-                style="@style/drawer_option"
-                android:text="@string/label_my_videos" />
-
-            <TextView
                 android:id="@+id/drawer_option_find_courses"
                 style="@style/drawer_option"
                 android:text="@string/label_find_courses" />

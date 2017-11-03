@@ -334,33 +334,6 @@ public interface IDatabase {
     Integer getVideosDownloadedCount(DataCallback<Integer> callback);
 
     /**
-     * Returns Count of number of Downloaded Videos in the Course by Course ID
-     *
-     * @param courseId
-     * @param callback
-     */
-    Integer getDownloadedVideoCountByCourse(String courseId, DataCallback<Integer> callback);
-
-
-    /**
-     * Returns Downloaded Videos in the Course by Course ID
-     *
-     * @param courseId
-     * @param callback
-     */
-    List<VideoModel> getDownloadedVideoListForCourse(String courseId,
-                                                     DataCallback<List<VideoModel>> callback);
-
-
-    /**
-     * Returns Size in bytes of Downloaded Videos in the Course by Course ID
-     *
-     * @param courseId
-     * @param callback
-     */
-    Long getDownloadedVideosSizeByCourse(String courseId, DataCallback<Long> callback);
-
-    /**
      * Returns IVideoModel object if entry exists with Video status set as
      * downloaded with the given URL
      */
@@ -430,12 +403,6 @@ public interface IDatabase {
     VideoModel getDownloadEntryByDmId(long dmId, DataCallback<VideoModel> callback);
 
     /**
-     * This function is used to getting all sorted Downloads based on Download date
-     */
-    List<VideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
-        DataCallback<List<VideoModel>> callback);
-
-    /**
      * This method gives the WatchedState stored in the DB for VideoID
      *
      * @param videoId
@@ -482,10 +449,5 @@ public interface IDatabase {
      * get assessment unit access status
      */
     boolean isUnitAccessed(DataCallback<Boolean> callback, String unitId);
-
-    /**
-     * Get the list of course ids for which a specific user has downloaded atleast 1 video.
-     */
-    List<String> getUniqueCourseIdsForDownloadedVideos(@Nullable DataCallback<List<String>> callback);
 
 }

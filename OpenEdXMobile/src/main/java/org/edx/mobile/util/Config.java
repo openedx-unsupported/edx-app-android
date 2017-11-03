@@ -72,7 +72,6 @@ public class Config {
     private static final String VIDEO_TRANSCRIPT_ENABLED = "VIDEO_TRANSCRIPT_ENABLED";
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
-    private static final String MY_VIDEOS_ENABLED = "MY_VIDEOS_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
 
 
@@ -584,12 +583,8 @@ public class Config {
         return getBoolean(WHATS_NEW_ENABLED, false);
     }
 
-    public boolean isMyVideosEnabled() {
-        return getBoolean(MY_VIDEOS_ENABLED, false);
-    }
-
     public boolean isCourseVideosEnabled() {
-        return getBoolean(COURSE_VIDEOS_ENABLED, false);
+        return getBoolean(COURSE_VIDEOS_ENABLED, true);
     }
 
     @NonNull
