@@ -58,7 +58,6 @@ public class Config {
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
 
     // Features
-    private static final String TABS_DASHBOARD_ENABLED = "TABS_DASHBOARD_ENABLED";
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
     private static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
     private static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
@@ -74,6 +73,7 @@ public class Config {
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
+    private static final String TABS_DASHBOARD_ENABLED = "TABS_DASHBOARD_ENABLED";
 
 
     public static class ZeroRatingConfig {
@@ -544,10 +544,6 @@ public class Config {
         return getBoolean(SPEED_TEST_ENABLED, false);
     }
 
-    public boolean isTabsDashboardEnabled() {
-        return getBoolean(TABS_DASHBOARD_ENABLED, false);
-    }
-
     public boolean isUserProfilesEnabled() {
         return getBoolean(USER_PROFILES_ENABLED, false);
     }
@@ -590,6 +586,10 @@ public class Config {
 
     public boolean isCourseVideosEnabled() {
         return getBoolean(COURSE_VIDEOS_ENABLED, true);
+    }
+
+    public boolean isTabsDashboardEnabled() {
+        return getBoolean(TABS_DASHBOARD_ENABLED, false);
     }
 
     @NonNull

@@ -7,17 +7,14 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
@@ -150,7 +147,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         // It will load all of the fragments on creation and will stay in memory till ViewPager's
         // life time, it will greatly improve our user experience as all fragments will be available
         // to view all the time. We can decrease the limit if it creates memory problems on low-end devices.
-        binding.viewPager.setOffscreenPageLimit(fragmentItems.size()-1);
+        binding.viewPager.setOffscreenPageLimit(fragmentItems.size() - 1);
     }
 
     @Override
@@ -231,8 +228,9 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     public List<FragmentItemModel> getFragmentItems() {
         ArrayList<FragmentItemModel> items = new ArrayList<>();
         // Add course outline tab
-        items.add(new FragmentItemModel(TestFragment.class, courseData.getCourse().getName(),
+        items.add(new FragmentItemModel(NewCourseOutlineFragment.class, courseData.getCourse().getName(),
                 FontAwesomeIcons.fa_list_alt,
+                NewCourseOutlineFragment.makeArguments(courseData, null, null, false),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {
@@ -242,8 +240,9 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                 }));
         // Add videos tab
         if (environment.getConfig().isCourseVideosEnabled()) {
-            items.add(new FragmentItemModel(TestFragment.class,
-                    getResources().getString(R.string.videos_title), FontAwesomeIcons.fa_film,
+            items.add(new FragmentItemModel(NewCourseOutlineFragment.class,
+                    getResources().getString(R.string.videos_title), FontAwesomeIcons.fa_film
+                    , NewCourseOutlineFragment.makeArguments(courseData, null, null, true),
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {
@@ -283,17 +282,5 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                 getResources().getString(R.string.additional_resources_title),
                 FontAwesomeIcons.fa_ellipsis_h, null));
         return items;
-    }
-
-    //TODO: Remove it once all tab fragments are available to attach
-    public static class TestFragment extends Fragment {
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            TextView tv = new TextView(getContext());
-            tv.setText("Content coming soon!");
-            tv.setGravity(Gravity.CENTER);
-            return tv;
-        }
     }
 }
