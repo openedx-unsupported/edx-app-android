@@ -378,8 +378,9 @@ android {
          * This is a bug that is fixed in the up-coming Android Studio 2.4 release.
          * Link to issue: https://issuetracker.google.com/issues/37630182
          */
-        //TODO: Remove the following line after we upgrade to Android Studio 2.4
-        disable 'GradleCompatible'
+        //TODO: Remove GradleCompatible after we upgrade to Android Studio 2.4
+        //TODO: Remove NewApi after this issue on Travis gets resolved: https://github.com/travis-ci/travis-ci/issues/8676
+        disable 'GradleCompatible', 'NewApi'
     }
 
     productFlavors {
