@@ -283,7 +283,7 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
 
-        manifestPlaceholders = [supportsRtl    : "false",
+        manifestPlaceholders = [supportsRtl    : "true",
                                 firebaseEnabled: config.get('FIREBASE_ENABLED') ?: false]
 
         def platformName = config.get('PLATFORM_NAME')
