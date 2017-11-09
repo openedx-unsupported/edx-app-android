@@ -41,27 +41,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         return inflater.inflate(R.layout.fragment_authenticated_webview, container, false);
     }
 
-    public class WebViewInterface {
-        Context mContext;
-
-        WebViewInterface(Context c) {
-            mContext = c;
-        }
-
-        @JavascriptInterface
-        public void saveAs(String data) {
-            String filename = "recap.pdf";
-            FileOutputStream outputStream;
-            try {
-                outputStream = mContext.openFileOutput(filename, Context.MODE_PRIVATE);
-                outputStream.write(data.getBytes());
-                outputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
