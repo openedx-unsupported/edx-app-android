@@ -221,11 +221,12 @@ public class CourseDashboardFragment extends BaseFragment {
      * Creates a dropdown menu with appropriate apps when the share button is clicked.
      */
     private void openShareMenu() {
+        final String baseUrl = courseData.getCourse().getCourse_about().replace("https://learn.proversity.org", environment.getConfig().getApiHostURL());
         final String shareTextWithPlatformName = ResourceUtil.getFormattedString(
                 getResources(),
                 R.string.share_course_message,
                 "platform_name",
-                getString(R.string.platform_name)).toString() + "\n" + courseData.getCourse().getCourse_about();
+                getString(R.string.platform_name)).toString() + "\n" + baseUrl;
         ShareUtils.showShareMenu(
                 ShareUtils.newShareIntent(shareTextWithPlatformName),
                 getActivity().findViewById(R.id.course_detail_share),
@@ -246,7 +247,7 @@ public class CourseDashboardFragment extends BaseFragment {
 
                     @NonNull
                     private String getSharingText(@NonNull ShareUtils.ShareType shareType) {
-                        String courseUrl = courseData.getCourse().getCourse_about();
+                        String courseUrl = baseUrl;
                         if (!TextUtils.isEmpty(shareType.getUtmParamKey())) {
                             final String utmParams = courseData.getCourse().getCourseSharingUtmParams(shareType.getUtmParamKey());
                             if (!TextUtils.isEmpty(utmParams)) {
