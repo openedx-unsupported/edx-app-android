@@ -157,22 +157,22 @@ public class CourseDashboardFragment extends BaseFragment {
                 });
             }
 
-            holder = createViewHolder(inflater, parent);
-
-            holder.typeView.setIcon(FontAwesomeIcons.fa_bullhorn);
-            holder.titleView.setText(R.string.announcement_title);
-            holder.subtitleView.setText(R.string.announcement_subtitle);
-            holder.rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (courseData != null)
-                        environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
-                }
-            });
+            if (environment.getConfig().isAnnoucementsEnabled()) {
+                holder = createViewHolder(inflater, parent);
+                holder.typeView.setIcon(FontAwesomeIcons.fa_bullhorn);
+                holder.titleView.setText(R.string.announcement_title);
+                holder.subtitleView.setText(R.string.announcement_subtitle);
+                holder.rowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (courseData != null)
+                            environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
+                    }
+                });
+            }
 
             if (environment.getConfig().isCourseDatesEnabled()) {
                 holder = createViewHolder(inflater, parent);
-
                 holder.typeView.setIcon(FontAwesomeIcons.fa_calendar);
                 holder.titleView.setText(R.string.course_dates_title);
                 holder.subtitleView.setText(R.string.course_dates_subtitle);
