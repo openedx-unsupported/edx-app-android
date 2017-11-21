@@ -194,12 +194,19 @@ public class Router {
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
-        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
-        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
+        final Intent intent;
+        {
+            if (config.isTabsDashboardEnabled()) {
+                intent = new Intent(activity, NewCourseOutlineActivity.class);
+            } else {
+                intent = new Intent(activity, CourseOutlineActivity.class);
+            }
+        }
+        intent.putExtra(EXTRA_BUNDLE, courseBundle);
+        intent.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
+        intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
-        return courseDetail;
+        return intent;
     }
 
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,

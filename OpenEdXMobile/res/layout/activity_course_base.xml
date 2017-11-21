@@ -79,7 +79,7 @@
                                 style="@style/bold_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="@dimen/last_accessed_button_margin"
+                                android:padding="@dimen/last_accessed_button_padding"
                                 android:text="@string/view_button_text"
                                 android:textColor="@color/edx_brand_primary_base"
                                 android:textSize="@dimen/last_accessed_button_text_size" />

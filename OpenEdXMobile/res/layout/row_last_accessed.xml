@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/last_accessed_bar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/last_accessed_bar_height"
+    android:background="@color/edx_brand_primary_back"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/last_accessed_bar_left_margin"
+        android:layout_marginStart="@dimen/last_accessed_bar_left_margin"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:targetApi="17">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/bold_edx_brand_primary_base_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/last_accessed_header_unit_vertical_margin"
+                android:text="@string/last_accessed"
+                android:textSize="@dimen/last_accessed_header_text_size"
+                tools:targetApi="17" />
+
+            <TextView
+                android:id="@+id/last_accessed_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/last_accessed_unit_text_size"
+                tools:targetApi="17"
+                tools:text="Course Name" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/last_accessed_button"
+            style="@style/bold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/last_accessed_button_right_margin"
+            android:layout_marginRight="@dimen/last_accessed_button_right_margin"
+            android:background="@drawable/selectable_box_overlay"
+            android:padding="@dimen/last_accessed_button_padding"
+            android:textAllCaps="true"
+            android:text="@string/view_button_text"
+            android:textColor="@color/edx_brand_primary_base"
+            android:textSize="@dimen/last_accessed_button_text_size" />
+
+    </LinearLayout>
+
+    <View style="@style/blue_separator" />
+</LinearLayout>

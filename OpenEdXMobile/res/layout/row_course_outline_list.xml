@@ -11,15 +11,16 @@
     <LinearLayout
         android:id="@+id/chapter_row_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/edx_margin"
+        android:layout_marginStart="@dimen/edx_margin"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/course_item_vertical_padding"
+        android:paddingLeft="@dimen/course_item_horizontal_padding"
+        android:paddingStart="@dimen/course_item_horizontal_padding"
+        android:paddingTop="@dimen/course_item_vertical_padding"
         tools:targetApi="17">
 
         <org.edx.mobile.view.custom.IconImageViewXml
@@ -152,8 +153,8 @@
     <View
         android:id="@+id/row_half_separator"
         style="@style/gray_separator"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp" />
+        android:layout_marginLeft="@dimen/course_item_half_separator_left_margin"
+        android:layout_marginStart="@dimen/course_item_half_separator_left_margin" />
 
     <View
         android:id="@+id/row_whole_separator"
