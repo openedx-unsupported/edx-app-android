@@ -74,6 +74,8 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String MY_VIDEOS_ENABLED = "MY_VIDEOS_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
+    private static final String ANNOUNCEMENTS_ENABLED = "ANNOUNCEMENTS_ENABLED";
+    private static final String JUMP_TO_LAST_ACCESSED_MODULE_ENABLED = "JUMP_TO_LAST_ACCESSED_MODULE_ENABLED";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -590,6 +592,14 @@ public class Config {
 
     public boolean isCourseVideosEnabled() {
         return getBoolean(COURSE_VIDEOS_ENABLED, false);
+    }
+
+    public boolean isAnnoucementsEnabled() {
+        return getBoolean(ANNOUNCEMENTS_ENABLED, false);
+    }
+
+    public boolean isJumpToLastAccessedModuleEnabled() {
+        return getBoolean(JUMP_TO_LAST_ACCESSED_MODULE_ENABLED, false);
     }
 
     @NonNull
