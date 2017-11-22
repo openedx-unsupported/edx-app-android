@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,12 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.services.LastAccessManager.LastAccessManagerCallback;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -46,6 +52,12 @@ public class CourseDashboardFragment extends BaseFragment {
 
     @Inject
     private AnalyticsRegistry analyticsRegistry;
+
+    @Inject
+    private LastAccessManager lastAccessManager;
+
+    @Inject
+    CourseManager courseManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,7 +120,47 @@ public class CourseDashboardFragment extends BaseFragment {
             holder.rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
+                environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
+
+                if(environment.getConfig().isJumpToLastAccessedModuleEnabled()) {
+
+                    Log.d("isJumpToLastAccessed", String.valueOf(environment.getConfig().isJumpToLastAccessedModuleEnabled()));
+
+                    lastAccessManager.fetchLastAccessed(new LastAccessManagerCallback() {
+                        private boolean isFetchingLastAccessed;
+
+                        @Override
+                        public boolean isFetchingLastAccessed() {
+                            return isFetchingLastAccessed;
+                        }
+
+                        @Override
+                        public void showLastAccessedView(String lastAccessedSubSectionId, String courseId, View view) {
+                            if (courseId != null && lastAccessedSubSectionId != null) {
+                                CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
+                                if (lastAccessComponent.getParent().isVertical()) {
+                                    if (lastAccessComponent.getParent().getParent().isSequential()) {
+                                        environment.getRouter().showCourseContainerOutline(
+                                                getActivity(), courseData, lastAccessComponent.getParent().getParent().getId());
+                                    }
+                                }
+
+                                if (lastAccessComponent.isContainer()) {
+                                    environment.getRouter().showCourseContainerOutline(
+                                            getActivity(), courseData, lastAccessComponent.getId());
+                                } else {
+                                    environment.getRouter().showCourseUnitDetail(
+                                            CourseDashboardFragment.this, 0, courseData, lastAccessComponent.getId(), false);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void setFetchingLastAccessed(boolean accessed) {
+                            this.isFetchingLastAccessed = accessed;
+                        }
+                    }, courseData.getCourse().getId());
+                }
                 }
             });
 
