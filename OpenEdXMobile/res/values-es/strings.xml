@@ -398,8 +398,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="email_chooser_header">Enviar email usando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">No hay apps de correo instaladas</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Quiero aprender sobre...</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">¿Ya tiene una cuenta? Inicie sesión</string>
