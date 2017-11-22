@@ -252,17 +252,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 agreementLayout.addView(agreementView.getView());
             }
 
-            // request rendering of the layouts
-            requiredFieldsLayout.requestLayout();
-            optionalFieldsLayout.requestLayout();
-            agreementLayout.requestLayout();
-
-            // Set focus to first form field
-            final IRegistrationFieldView fieldView = mFieldViews.get(0);
-            if (fieldView != null) {
-                fieldView.getView().requestFocus();
-            }
-
             // enable all the views
             tryToSetUIInteraction(true);
         } catch (Exception ex) {
