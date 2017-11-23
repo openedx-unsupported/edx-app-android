@@ -123,9 +123,6 @@ public class CourseDashboardFragment extends BaseFragment {
                 environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
 
                 if(environment.getConfig().isJumpToLastAccessedModuleEnabled()) {
-
-                    Log.d("isJumpToLastAccessed", String.valueOf(environment.getConfig().isJumpToLastAccessedModuleEnabled()));
-
                     lastAccessManager.fetchLastAccessed(new LastAccessManagerCallback() {
                         private boolean isFetchingLastAccessed;
 
@@ -138,19 +135,21 @@ public class CourseDashboardFragment extends BaseFragment {
                         public void showLastAccessedView(String lastAccessedSubSectionId, String courseId, View view) {
                             if (courseId != null && lastAccessedSubSectionId != null) {
                                 CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
-                                if (lastAccessComponent.getParent().isVertical()) {
-                                    if (lastAccessComponent.getParent().getParent().isSequential()) {
-                                        environment.getRouter().showCourseContainerOutline(
-                                                getActivity(), courseData, lastAccessComponent.getParent().getParent().getId());
+                                if(lastAccessComponent != null) {
+                                    if (lastAccessComponent.getParent().isVertical()) {
+                                        if (lastAccessComponent.getParent().getParent().isSequential()) {
+                                            environment.getRouter().showCourseContainerOutline(
+                                                    getActivity(), courseData, lastAccessComponent.getParent().getParent().getId());
+                                        }
                                     }
-                                }
 
-                                if (lastAccessComponent.isContainer()) {
-                                    environment.getRouter().showCourseContainerOutline(
-                                            getActivity(), courseData, lastAccessComponent.getId());
-                                } else {
-                                    environment.getRouter().showCourseUnitDetail(
-                                            CourseDashboardFragment.this, 0, courseData, lastAccessComponent.getId(), false);
+                                    if (lastAccessComponent.isContainer()) {
+                                        environment.getRouter().showCourseContainerOutline(
+                                                getActivity(), courseData, lastAccessComponent.getId());
+                                    } else {
+                                        environment.getRouter().showCourseUnitDetail(
+                                                CourseDashboardFragment.this, 0, courseData, lastAccessComponent.getId(), false);
+                                    }
                                 }
                             }
                         }
