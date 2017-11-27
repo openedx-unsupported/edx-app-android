@@ -3,10 +3,13 @@ package org.edx.mobile.module.registration.view;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.view.ViewCompat;
+import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,7 +20,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 
-class RegistrationEditTextView implements IRegistrationFieldView {
+public class RegistrationEditTextView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
     protected RegistrationFormField mField;
@@ -62,6 +65,40 @@ class RegistrationEditTextView implements IRegistrationFieldView {
 
         // This tag is necessary for End-to-End tests to work properly
         mTextInputLayout.setTag(mField.getName());
+
+        // Do a11y adjustment
+        mTextInputLayout.setContentDescription(String.format("%s. %s.", mField.getLabel(), field.getInstructions()));
+        mTextInputEditText.setContentDescription(mField.getLabel());
+        ViewCompat.setImportantForAccessibility(mInstructionsTextView, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+
+        // Add text change listener
+        mTextInputEditText.addTextChangedListener(new TextWatcher() {
+            /*
+             TextWatcher events also trigger at time of registration of this listener. Which we
+             don't want in this case. So, to handle it, a flag is required to check if the text
+             is being changed by the user or not.
+             This issue has also been discussed on stackoverflow through different questions.
+             e.g. https://stackoverflow.com/questions/33257937/edittext-addtextchangedlistener-only-for-user-input/33258065#33258065
+            */
+            private boolean isChangedByUser = false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!isChangedByUser) {
+                    isChangedByUser = true;
+                    return;
+                }
+                isValidInput();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     public boolean setRawValue(String value){
@@ -108,6 +145,10 @@ class RegistrationEditTextView implements IRegistrationFieldView {
             Spanned result = Html.fromHtml(error);
             mErrorTextView.setText(result);
             mErrorTextView.setVisibility(View.VISIBLE);
+            // Add error message in a11y content for mTextInputLayout
+            final String errorTag = mTextInputLayout.getResources().getString(R.string.label_error);
+            mTextInputLayout.setContentDescription(String.format("%s. %s. %s, %s.",
+                    mField.getLabel(), mField.getInstructions(), errorTag, error));
         }
         else {
             logger.warn("error message not provided, so not informing the user about this error");
@@ -118,6 +159,9 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     public boolean isValidInput() {
         // hide error as we are re-validating the input
         mErrorTextView.setVisibility(View.GONE);
+
+        // Update a11y content for mTextInputLayout
+        mTextInputLayout.setContentDescription(String.format("%s. %s.", mField.getLabel(), mField.getInstructions()));
 
         // check if this is required field and has an input value
         if (mField.isRequired() && !hasValue()) {
@@ -163,5 +207,15 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     @Override
     public void setActionListener(IActionListener actionListener) {
         // no actions for this field
+    }
+
+    public void setEditTextFocusable(boolean focusable) {
+        mTextInputEditText.setFocusable(focusable);
+        mTextInputEditText.setFocusableInTouchMode(focusable);
+    }
+
+    @Override
+    public View getOnErrorFocusView() {
+        return mTextInputLayout;
     }
 }

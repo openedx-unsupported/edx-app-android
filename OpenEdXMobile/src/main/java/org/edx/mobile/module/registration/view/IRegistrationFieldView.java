@@ -25,6 +25,13 @@ public interface IRegistrationFieldView {
     void setActionListener(IActionListener actionListener);
 
     /**
+     * Get the specific child view which should be focused when the error child view is visible.
+     *
+     * @return Child view which needs to be focused in case of error.
+     */
+    View getOnErrorFocusView();
+
+    /**
      * used to programmatically set the value
      * return false if not implemented yet, or can not set the value
      *

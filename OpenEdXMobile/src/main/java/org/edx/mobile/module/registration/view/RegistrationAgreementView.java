@@ -120,4 +120,9 @@ class RegistrationAgreementView implements IRegistrationFieldView {
     public void setActionListener(IActionListener actionListener) {
         this.actionListener = actionListener;
     }
+
+    @Override
+    public View getOnErrorFocusView() {
+        return mInputView;
+    }
 }
