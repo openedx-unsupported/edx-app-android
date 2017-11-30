@@ -412,8 +412,8 @@ public interface Analytics {
         String MOBILE = "mobile";
         String VIDEOPLAYER = "videoplayer";
         String PASSWORD = "Password";
-        String FACEBOOK = "Google";
-        String GOOGLE = "Facebook";
+        String FACEBOOK = "Facebook";
+        String GOOGLE = "Google";
         String DOWNLOAD_MODULE = "downloadmodule";
         String VIDEO_LOADED = "edx.video.loaded";
         String VIDEO_PLAYED = "edx.video.played";
