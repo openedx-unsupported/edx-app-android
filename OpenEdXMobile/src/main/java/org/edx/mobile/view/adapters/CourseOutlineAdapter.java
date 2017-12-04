@@ -36,6 +36,7 @@ import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
+import org.edx.mobile.util.VideoUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -242,9 +243,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.rowTitle.setText(unit.getDisplayName());
 
         if (row.component instanceof VideoBlockModel) {
-            final DownloadEntry videoData = ((VideoBlockModel) row.component).getDownloadEntry(storage);
+            final VideoBlockModel videoBlockModel = (VideoBlockModel) row.component;
+            final DownloadEntry videoData = videoBlockModel.getDownloadEntry(storage);
             if (null != videoData) {
-                updateUIForVideo(viewHolder, videoData);
+                updateUIForVideo(viewHolder, videoData, videoBlockModel);
                 return;
             }
         }
@@ -285,7 +287,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }, unit.getId());
     }
 
-    private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData) {
+    private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData,
+                                  @NonNull VideoBlockModel videoBlockModel) {
         viewHolder.rowType.setIcon(FontAwesomeIcons.fa_film);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);
@@ -324,7 +327,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     }
                 });
 
-        if (videoData.isVideoForWebOnly()) {
+        if (!VideoUtil.isVideoDownloadable(videoBlockModel.getData())) {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
         } else {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
