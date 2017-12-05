@@ -18,7 +18,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
@@ -91,9 +90,6 @@ public class MyCoursesListFragment extends BaseFragment
         };
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
         EventBus.getDefault().register(this);
-
-        // Restore cache of the courses for which the user has downloaded any videos
-        RestoreVideosCacheDataTask.executeInstanceIfNeeded(MainApplication.application);
     }
 
     @Override

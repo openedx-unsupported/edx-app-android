@@ -1,27 +1,55 @@
 [
-  {
-    "image": "screen_1",
-    "title": "All Courses Available on Mobile",
-    "message": "We've heard you! All courses on platform_name will now be available on mobile."
-  },
-  {
-    "image": "screen_2",
-    "title": "Videos Being Downloaded",
-    "message": "Notification bar will now show the videos being downloaded."
-  },
-  {
-    "image": "screen_3",
-    "title": "Transcript for Videos",
-    "message": "If subtitles are available for a video, it will be shown as a scrollable transcript below the video."
-  },
-  {
-    "image": "screen_4",
-    "title": "App Feedback",
-    "message": "We would love to hear your feedback so now we ask you about how you would rate the platform_name app."
-  },
-  {
-    "image": "screen_5",
-    "title": "Landscape Support",
-    "message": "Video player improvements for landscape mode."
-  }
-]
+ {
+ "version": "2.11",
+ "messages": [
+              {
+              "platforms": [
+                            "ios",
+                            "android"
+                            ],
+              "image": "screen_1",
+              "title": "Updated Navigation",
+              "message": "A simplified main menu makes it easier to access and discover courses."
+              },
+              {
+              "platforms": [
+                            "ios",
+                            "android"
+                            ],
+              "image": "screen_2",
+              "title": "Assignment Due Dates",
+              "message": "You can now see due dates for assignments in the course outline."
+              }
+              ]
+ },
+ {
+ "version": "2.10",
+ "messages": [
+              {
+              "platforms": [
+                            "ios",
+                            "android"
+                            ],
+              "image": "screen_1",
+              "title": "Videos",
+              "message": "The \"Videos\" tab in each course's menu replaces \"My Videos\" in the main menu. Now you can view all the videos in a course in one place!"
+              },
+              {
+              "platforms": [
+                            "android"
+                            ],
+              "image": "screen_2",
+              "title": "Delete Videos",
+              "message": "In the list of downloaded course videos, use a long press to select videos that you want to delete."
+              },
+              {
+              "platforms": [
+                            "ios"
+                            ],
+              "image": "screen_2",
+              "title": "Delete Videos",
+              "message": "Swipe left to delete downloaded videos."
+              }
+              ]
+ }
+ ]

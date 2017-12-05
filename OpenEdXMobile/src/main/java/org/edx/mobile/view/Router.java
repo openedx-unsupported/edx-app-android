@@ -32,7 +32,6 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.view.dialog.WebViewActivity;
-import org.edx.mobile.view.my_videos.MyVideosActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import de.greenrobot.event.EventBus;
@@ -83,12 +82,6 @@ public class Router {
         sourceActivity.startActivity(courseInfoIntent);
     }
 
-    public void showMyVideos(Activity sourceActivity) {
-        Intent myVideosIntent = new Intent(sourceActivity, MyVideosActivity.class);
-        myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        sourceActivity.startActivity(myVideosIntent);
-    }
-
     public void showSettings(Activity sourceActivity) {
         Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -126,8 +119,11 @@ public class Router {
 
     public void showCourseDashboardTabs(Activity activity, Config config, EnrolledCoursesResponse model,
                                         boolean announcements) {
-
-        showCourseDashboard(activity, model, announcements);
+        if (config.isTabsDashboardEnabled()) {
+            showCourseTabsDashboard(activity, model, announcements);
+        } else {
+            showCourseDashboard(activity, model, announcements);
+        }
     }
 
     /**
@@ -198,12 +194,19 @@ public class Router {
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
-        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
-        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
+        final Intent intent;
+        {
+            if (config.isTabsDashboardEnabled()) {
+                intent = new Intent(activity, NewCourseOutlineActivity.class);
+            } else {
+                intent = new Intent(activity, CourseOutlineActivity.class);
+            }
+        }
+        intent.putExtra(EXTRA_BUNDLE, courseBundle);
+        intent.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
+        intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
-        return courseDetail;
+        return intent;
     }
 
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
@@ -231,6 +234,11 @@ public class Router {
         courseDashboard.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDashboard);
 
+    }
+
+    public void showCourseTabsDashboard(Activity activity, EnrolledCoursesResponse model,
+                                    boolean announcements) {
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, announcements));
     }
 
     public void showCourseDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {

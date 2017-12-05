@@ -25,6 +25,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.WhatsNewUtil;
 import org.edx.mobile.view.custom.IndicatorController;
 
 import java.io.IOException;
@@ -77,12 +78,15 @@ public class WhatsNewFragment extends BaseFragment {
     private void initViewPager() {
         try {
             final String whatsNewJson = FileUtil.loadTextFileFromResources(getContext(), R.raw.whats_new);
-            final Type type = new TypeToken<List<WhatsNewModel>>() {
-            }.getType();
-            final List<WhatsNewModel> list = new Gson().fromJson(whatsNewJson, type);
-
-            noOfPages = list.size();
-            binding.viewPager.setAdapter(new WhatsNewAdapter(getFragmentManager(), list));
+            final Type type = new TypeToken<List<WhatsNewModel>>() {}.getType();
+            final List<WhatsNewModel> whatsNewModels = new Gson().fromJson(whatsNewJson, type);
+            final List<WhatsNewItemModel> items = WhatsNewUtil.getWhatsNewItems(BuildConfig.VERSION_NAME, whatsNewModels);
+            if (items == null) {
+                getActivity().finish();
+                return;
+            }
+            noOfPages = items.size();
+            binding.viewPager.setAdapter(new WhatsNewAdapter(getFragmentManager(), items));
             binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -142,9 +146,9 @@ public class WhatsNewFragment extends BaseFragment {
 
     private class WhatsNewAdapter extends FragmentStatePagerAdapter {
         @NonNull
-        final List<WhatsNewModel> list;
+        final List<WhatsNewItemModel> list;
 
-        public WhatsNewAdapter(@NonNull FragmentManager fm, @NonNull List<WhatsNewModel> list) {
+        public WhatsNewAdapter(@NonNull FragmentManager fm, @NonNull List<WhatsNewItemModel> list) {
             super(fm);
             this.list = list;
         }

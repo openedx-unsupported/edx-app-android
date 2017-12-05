@@ -218,6 +218,8 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
                         logger.debug("Enrollment successful: " + courseId);
                         Toast.makeText(BaseWebViewFindCoursesActivity.this, getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
 
+                        environment.getAnalyticsRegistry().trackEnrolmentSuccess(courseId, emailOptIn);
+
                         new Handler().post(new Runnable() {
                             @Override
                             public void run() {

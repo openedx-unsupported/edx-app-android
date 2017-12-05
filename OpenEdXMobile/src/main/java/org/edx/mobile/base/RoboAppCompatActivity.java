@@ -24,9 +24,12 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 
+import org.edx.mobile.util.Config;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import io.branch.referral.Branch;
 import roboguice.RoboGuice;
 import roboguice.activity.event.OnActivityResultEvent;
 import roboguice.activity.event.OnContentChangedEvent;
@@ -56,6 +59,9 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
     @Inject
     ContentViewListener ignored; // BUG find a better place to put this
 
+    @Inject
+    private Config config;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final RoboInjector injector = RoboGuice.getInjector(this);
@@ -81,6 +87,9 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
     protected void onStart() {
         super.onStart();
         eventManager.fire(new OnStartEvent<Activity>(this));
+        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+            Branch.getInstance(getApplicationContext()).initSession();
+        }
     }
 
     @Override
@@ -109,6 +118,9 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
             eventManager.fire(new OnStopEvent(this));
         } finally {
             super.onStop();
+        }
+        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+            Branch.getInstance().closeSession();
         }
     }
 

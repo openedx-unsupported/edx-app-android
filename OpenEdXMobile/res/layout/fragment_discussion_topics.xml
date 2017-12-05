@@ -28,5 +28,8 @@
 
     </LinearLayout>
 
+    <include layout="@layout/loading_indicator" />
+
     <include layout="@layout/content_error" />
+
 </FrameLayout>

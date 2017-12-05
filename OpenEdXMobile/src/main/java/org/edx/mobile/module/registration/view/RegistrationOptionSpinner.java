@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.ArrayAdapter;
 
 import org.edx.mobile.R;
@@ -72,6 +73,20 @@ public class RegistrationOptionSpinner extends AppCompatSpinner {
         setAdapter(adapter);
         if (defaultOption != null) {
             select(defaultOption.toString());
+        }
+    }
+
+    @Override
+    public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
+        /*
+        Whenever there's an AppCompatSpinner on screen, its read out by TalkBack even when its not
+        in focus. This workaround ensures that AppCompatSpinner's content is read only when its
+        in focus.
+        There's an open StackOverflow issue on this as well:
+        https://stackoverflow.com/questions/44708495/how-to-prevent-spinner-announcement-when-initialized
+         */
+        if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+            super.onInitializeAccessibilityEvent(event);
         }
     }
 }

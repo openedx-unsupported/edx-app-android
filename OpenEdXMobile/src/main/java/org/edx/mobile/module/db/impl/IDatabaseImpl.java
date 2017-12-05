@@ -525,62 +525,6 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Integer getDownloadedVideoCountByCourse(String courseId,
-                                                   final DataCallback<Integer> callback) {
-        DbOperationGetCount op = new DbOperationGetCount(true, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
-                DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "
-                        + DbStructure.Column.USERNAME + "=?",
-                new String[]{courseId, String.valueOf(DownloadedState.DOWNLOADED.ordinal()),
-                        username()}, null);
-        op.setCallback(callback);
-        return enqueue(op);
-    }
-
-
-    @Override
-    public List<VideoModel> getDownloadedVideoListForCourse(String courseId,
-                                                            final DataCallback<List<VideoModel>> callback) {
-        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
-                DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "
-                        + DbStructure.Column.USERNAME + "=?",
-                new String[]{courseId, String.valueOf(DownloadedState.DOWNLOADED.ordinal()),
-                        username()}, null);
-        op.setCallback(callback);
-        return enqueue(op);
-    }
-
-    @Override
-    public Long getDownloadedVideosSizeByCourse(String courseId,
-                                                final DataCallback<Long> callback) {
-        String sqlQuery = "SELECT SUM(" + DbStructure.Column.SIZE + ") FROM "
-                + DbStructure.Table.DOWNLOADS + " WHERE "
-                + DbStructure.Column.EID + "=? AND "
-                + DbStructure.Column.USERNAME + "=? AND "
-                + DbStructure.Column.DOWNLOADED + "=?";
-        DbOperationSingleValueByRawQuery<Long> op = new DbOperationSingleValueByRawQuery<Long>(
-                sqlQuery,
-                new String[]{courseId, username(),
-                        String.valueOf(DownloadedState.DOWNLOADED.ordinal())}, Long.class);
-        op.setCallback(callback);
-        return enqueue(op);
-    }
-
-
-    @Override
-    public List<VideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
-                                                                          DataCallback<List<VideoModel>> callback) {
-        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
-                DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "
-                        + DbStructure.Column.USERNAME + "=?",
-                new String[]{courseId, String.valueOf(
-                        DownloadedState.DOWNLOADED.ordinal()), username()},
-                DbStructure.Column.DOWNLOADED_ON + " DESC");
-        op.setCallback(callback);
-        return enqueue(op);
-    }
-
-    @Override
     public VideoModel getIVideoModelByVideoUrl(String videoUrl,
                                                final DataCallback<VideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false, DbStructure.Table.DOWNLOADS, null,
@@ -775,18 +719,6 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                         DbStructure.Column.DOWNLOADED + "=?",
                 new String[]{courseId, section, subSection, username(),
                         String.valueOf(DownloadedState.DOWNLOADING.ordinal())}, null);
-        op.setCallback(callback);
-        return enqueue(op);
-    }
-
-    @Override
-    public List<String> getUniqueCourseIdsForDownloadedVideos(@Nullable final DataCallback<List<String>> callback) {
-        DbOperationGetColumn<String> op = new DbOperationGetColumn<String>(true,
-                DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.EID},
-                DbStructure.Column.USERNAME + "=? AND " + DbStructure.Column.DOWNLOADED + "=?",
-                new String[]{username(), String.valueOf(DownloadedState.DOWNLOADED.ordinal())},
-                null, String.class);
         op.setCallback(callback);
         return enqueue(op);
     }

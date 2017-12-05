@@ -144,6 +144,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-plus:10.0.1'
     compile 'com.google.android.gms:play-services-analytics:10.0.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-ads:10.0.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'de.greenrobot:eventbus:2.4.1'
     compile 'com.squareup.phrase:phrase:1.1.0'
@@ -169,6 +170,13 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+
+    // Branch SDK
+    /* To support versions prior to API level 15 we have to use v1.14.5 of Branch SDK
+     * https://dev.branch.io/getting-started/sdk-integration-guide/advanced/android/#supporting-pre-15-android
+     */
+    compile 'io.branch.sdk.android:library:1.14.5'
+
     // Google Firebase
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
@@ -311,6 +319,23 @@ android {
                 resValue "bool", "com.crashlytics.RequireBuildId", "false"
             }
         }
+        def branchKey = ""
+        if (fabric != null) {
+            def kits = fabric.get('KITS')
+            if (null != kits) {
+                def branch = kits.get('BRANCH')
+                if (branch != null && branch.get('ENABLED')) {
+                    branchKey = branch.get('BRANCH_KEY')
+                    if (null == branchKey) {
+                        throw new GradleException("You must set BRANCH_KEY if Branch is enabled")
+                    }
+                }
+            }
+        }
+
+        manifestPlaceholders = [supportsRtl:"false",
+                                firebaseEnabled: config.get('FIREBASE_ENABLED')?: false,
+                                branchKey: branchKey]
     }
     sourceSets {
         main {
@@ -357,8 +382,9 @@ android {
          * This is a bug that is fixed in the up-coming Android Studio 2.4 release.
          * Link to issue: https://issuetracker.google.com/issues/37630182
          */
-        //TODO: Remove the following line after we upgrade to Android Studio 2.4
-        disable 'GradleCompatible'
+        //TODO: Remove GradleCompatible after we upgrade to Android Studio 2.4
+        //TODO: Remove NewApi after this issue on Travis gets resolved: https://github.com/travis-ci/travis-ci/issues/8676
+        disable 'GradleCompatible', 'NewApi'
     }
     productFlavors {
         prod {

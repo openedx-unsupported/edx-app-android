@@ -51,12 +51,6 @@
     but has chosen to only allow video downloads over wifi -->
     <string name="wifi_off_message">Your current download settings only allow downloads over Wi-Fi. 
         \n Please connect to a Wi-Fi network or change your download settings.</string>
-    
-    <!-- Offline Access -->
-    <!-- Alert dialog title shown when user attempts to view a video that hasn't been synced -->
-    <string name="video_offline_header">This video is not available offline.</string>
-    <!-- Alert dialog content shown when user attempts to view a video that hasn't been synced -->
-    <string name="video_offline_message">Please select a video that you’ve downloaded onto your device.</string>
 
     <!-- New version available -->
     <!-- Snackbar notification shown when the current version of the app is unsupported -->

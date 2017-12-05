@@ -554,11 +554,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     private boolean isPlayerVisible() {
-        if (getActivity() == null) {
-            return false;
-        }
-        View container = getActivity().findViewById(R.id.container_player);
-        return (container != null && container.getVisibility() == View.VISIBLE);
+        return getActivity() != null;
     }
 
     public void notifyAdapter() {

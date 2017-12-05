@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
-  <string name="eula_file_link">file:///android_asset/EULA.htm</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!--Certificates-->
   <!--Label congratulation user on finishing course-->
   <string name="course_details_congratulations">¡Felicidades!</string>
@@ -90,10 +89,10 @@
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Mis cursos</string>
   <!--Title of important course dates screen-->
-  <!--Title of user's downloaded videos list screen-->
-  <string name="label_my_videos">Mis videos</string>
-  <!--Title of Find Courses screen-->
+  <string name="label_course_dates">Fechas y plazos del curso</string>
+  <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
+  <!--Title of webview based Find Courses Screen-->
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentario</string>
   <!--Toggle switch on state label-->
@@ -107,7 +106,8 @@
   <!--Settings screen version-->
   <string name="label_version">Versión de la aplicación</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings">Mis opciones</string>
+  <string name="label_settings">Configuración</string>
+  <!--Title of Account screen-->
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Restablecer contraseña</string>
@@ -124,12 +124,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="confirm_dialog_message_help">Ingrese la dirección de correo para su cuenta y le enviaremos instrucciones para restablecer su contraseña.</string>
   <!--Label explaining toggle for cellular data access-->
   <string name="wifi_dialog_message_help">Permitir que su dispositivo descargue videos usando su conexión de datos móviles cuando no haya una red Wi-Fi disponible. Pueden aplicar cargos de datos.</string>
-  <!--Confirmation text for delete video dialog-->
-  <string name="delete_dialog_title_help">Confirmar borrado</string>
-  <plurals name="delete_video_dialog_msg">
-    <item quantity="one">¿Está seguro de querer borrar este video?</item>
-    <item quantity="other">¿Está seguro de querer borrar estos videos?</item>
-  </plurals>
   <!--Info message text for to let use know how many videos were deleted-->
   <!--Alert dialog title for users with zero rated data-->
   <string name="leaving_app_data_title">Saliendo de la app de {platform_name}</string>
@@ -158,12 +152,12 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">Anuncios</string>
   <!--Title text for the important dates section on the course dashboard-->
+  <string name="course_dates_title">Fechas importantes</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">Manténgase actualizado</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
-  <!--Accessible content description of school code label a course-->
-  <string name="school_code">Código Escolar</string>
+  <string name="course_dates_subtitle">Realice un seguimiento de los plazos y cumpla con lo planeado</string>
   <!--Accessible content description of course name label field-->
   <string name="course_name">Nombre del curso</string>
   <!--Label indicating new course content has been downloaded-->
@@ -191,9 +185,10 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">No hay entregas para este curso.</string>
   <!--Label shown when no important dates are available for a course-->
+  <string name="no_course_dates_to_display">Las fechas del curso no están disponibles en este momento.</string>
   <!--Title of the screen where user can delete videos-->
-  <!--Label for course due date for same day-->
-  <!--Label for course due date-->
+  <!--Label for a course item's due date for same day-->
+  <!--Label for a course item's due date-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">Temas de discusión</string>
@@ -332,19 +327,10 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">Ver video en YouTube</string>
   <!--Video List-->
-  <!--Label shown to indicate video currently downloading-->
-  <string name="started_downloading">Descargando</string>
   <!--Title of video download screen-->
   <string name="title_download">Descargas</string>
-  <!--MyVideos-->
-  <!--Title of all videos section-->
-  <string name="my_all_videos">Todos los videos</string>
-  <!--Title of recent videos section-->
-  <string name="my_recent_videos">Videos recientes</string>
   <!--Label indicating user has no Internet connection-->
   <string name="offline_text">Sin conexión</string>
-  <!--Label shown in videos section when user has no videos downloaded-->
-  <string name="no_videos_to_display">No ha descargado ningún video.</string>
   <!--Cancel video download-->
   <string name="cancel_download">Cancelar la descarga</string>
   <!--My Downloads-->
@@ -414,8 +400,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="email_chooser_header">Enviar email usando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">No hay apps de correo instaladas</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Quiero aprender sobre...</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">¿Ya tiene una cuenta? Inicie sesión</string>
@@ -477,11 +461,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="android_device_model">Dispositivo: {model}</string>
   <!--Submit Feedback feedback text-->
   <string name="insert_feedback">Comentario:</string>
-  <!--Message indicating num of video deleted. {video_count} is a number of videos deleted, like "3".-->
-  <plurals name="deleted_video">
-    <item quantity="one">{video_count} video borrado</item>
-    <item quantity="other">{video_count} videos borrados</item>
-  </plurals>
   <!--Notification related-->
   <!--toggle between subscribe and unsubscribe to course announcement-->
   <string name="notification_toggle">Permitir notificaciones</string>

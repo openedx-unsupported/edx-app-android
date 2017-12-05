@@ -97,21 +97,6 @@ public interface IStorage {
     NativeDownloadModel getNativeDownload(long dmId);
 
     /**
-     * Returns List of Courses having downloaded videos.
-     * The Course Model in this list contains the size of downloaded 
-     * videos and no videos downloaded in the course
-     * @return
-     */
-    @NonNull ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws Exception;
-
-    /**
-     * Returns list of all recently downloaded videos list
-     * The list contains local videos with only course header sorted based on Downloaded Date.
-     * @return
-     */
-    @NonNull ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws Exception;
-
-    /**
      * This DownloadEntry model is fetched and returned from the db
      * after reloading a few values from the DB
      * @param video
@@ -124,14 +109,6 @@ public interface IStorage {
      * @param dmId
      */
     void getDownloadProgressByDmid(long dmId, DataCallback<Integer> callback);
-
-    /**
-     * This method will return a list of all Downloaded videos with 
-     * Chapter and Section header in the Course in the order as being sent from the server
-     * @param courseId
-     * @return
-     */
-    ArrayList<SectionItemInterface> getSortedOrganizedVideosByCourse(String courseId);
 
     /**
      * Marks in the db as Download completed for dmid and sets values from 

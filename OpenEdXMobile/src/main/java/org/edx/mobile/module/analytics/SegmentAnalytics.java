@@ -433,9 +433,9 @@ public class SegmentAnalytics implements Analytics {
      * This function is used to track if user clicks on Create Account on registration screen
      */
     @Override
-    public void trackCreateAccountClicked(String appVersion, String source) {
+    public void trackCreateAccountClicked(@NonNull String appVersion, @Nullable String source) {
         SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
+        aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICKED);
         if (!TextUtils.isEmpty(source))
             aEvent.properties.putValue(Keys.PROVIDER, source);
 
@@ -445,6 +445,19 @@ public class SegmentAnalytics implements Analytics {
         trackSegmentEvent(Events.CREATE_ACCOUNT_CLICKED, aEvent.properties);
     }
 
+    @Override
+    public void trackRegistrationSuccess(@NonNull String appVersion, @Nullable String source) {
+        SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.USER_REGISTRATION_SUCCESS);
+        if (!TextUtils.isEmpty(source)) {
+            aEvent.properties.putValue(Keys.PROVIDER, source);
+        }
+
+        //Add category for Google Analytics
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, appVersion);
+        trackSegmentEvent(Events.REGISTRATION_SUCCESS, aEvent.properties);
+    }
+
     /**
      * This function is used to track if user clicks on Enroll in the FindCourses Activity
      *
@@ -452,15 +465,27 @@ public class SegmentAnalytics implements Analytics {
      * @param email_opt_in - Flag to show user wants to opt in for email notification
      */
     @Override
-    public void trackEnrollClicked(String courseId, boolean email_opt_in) {
+    public void trackEnrollClicked(@NonNull String courseId, boolean email_opt_in) {
         SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.EMAIL_OPT_IN, email_opt_in);
-        aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL);
+        aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL_CLICKED);
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, courseId);
-        trackSegmentEvent(Events.ENROLL_COURSES, aEvent.properties);
+        trackSegmentEvent(Events.COURSE_ENROLL_CLICKED, aEvent.properties);
+    }
+
+    @Override
+    public void trackEnrolmentSuccess(@NonNull String courseId, boolean emailOptIn) {
+        SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.EMAIL_OPT_IN, emailOptIn);
+        aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL_SUCCESS);
+
+        //Add category for Google Analytics
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, courseId);
+        trackSegmentEvent(Events.COURSE_ENROLL_SUCCESS, aEvent.properties);
     }
 
     //Tracking methods introduced by BNOTIONS

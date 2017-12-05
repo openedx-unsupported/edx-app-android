@@ -99,6 +99,11 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
         assertRow(coursewareRowView, FontAwesomeIcons.fa_list_alt,
                 R.string.courseware_title, R.string.courseware_subtitle);
 
+        if (config.isCourseVideosEnabled()) {
+            View videoRowView = rowsContainerGroup.getChildAt(rowNum++);
+            assertRow(videoRowView, FontAwesomeIcons.fa_film,
+                    R.string.videos_title, R.string.videos_subtitle);
+        }
         if (config.isDiscussionsEnabled()) {
             View discussionRowView = rowsContainerGroup.getChildAt(rowNum++);
             assertRow(discussionRowView, FontAwesomeIcons.fa_comments_o,

@@ -37,14 +37,10 @@
     <color name="grey_text_tab">#898B8E</color>
     <color name="white_list_clicked">#F1F1F2</color>
     <color name="transparent_download_bg">#E63E4247</color>
-    <color name="video_section_bg">#3E4247</color>
     <color name="tab_bg">#3E4247</color>
-    <color name="delete_panel_bg">#3E4247</color>
     <color name="switch_default_button_color">#C3C3C3</color>
     <color name="switch_default_bg_color">#3C4045</color>
     <color name="switch_disabled_bg_color_off">@color/grey_4</color>
-    <color name="delete_btn_disabled">#565A5F</color>
-    <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
 
     <color name="crop_circle_border_color">@color/white</color>

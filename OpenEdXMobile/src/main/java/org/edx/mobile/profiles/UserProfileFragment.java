@@ -28,6 +28,7 @@ import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
@@ -299,10 +300,10 @@ public class UserProfileFragment
 
     @NonNull
     @VisibleForTesting
-    public static List<StaticFragmentPagerAdapter.Item> pagerItemsFromProfileTabs(@NonNull List<UserProfileTab> tabs, @NonNull Resources resources) {
-        final List<StaticFragmentPagerAdapter.Item> pages = new LinkedList<>();
+    public static List<FragmentItemModel> pagerItemsFromProfileTabs(@NonNull List<UserProfileTab> tabs, @NonNull Resources resources) {
+        final List<FragmentItemModel> pages = new LinkedList<>();
         for (UserProfileTab tab : tabs) {
-            pages.add(new StaticFragmentPagerAdapter.Item(tab.getFragmentClass(), resources.getString(tab.getDisplayName())));
+            pages.add(new FragmentItemModel(tab.getFragmentClass(), resources.getString(tab.getDisplayName())));
         }
         return pages;
     }

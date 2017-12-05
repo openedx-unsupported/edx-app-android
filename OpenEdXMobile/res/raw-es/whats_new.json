@@ -1,0 +1,55 @@
+[
+ {
+ "version": "2.11",
+ "messages": [
+              {
+              "platforms": [
+                            "ios",
+                            "android"
+                            ],
+              "image": "screen_1",
+              "title": "Navegación Actualizada ",
+              "message": "Un menú principal simplificado hace que sea más fácil acceder y descubrir cursos."
+              },
+              {
+              "platforms": [
+                            "ios",
+                            "android"
+                            ],
+              "image": "screen_2",
+              "title": "Plazos de Asignación",
+              "message": "Ahora puede ver las fechas límites de las asignaciones en el esquema del curso."
+              }
+              ]
+ },
+ {
+ "version": "2.10",
+ "messages": [
+              {
+              "platforms": [
+                            "ios",
+                            "android"
+                            ],
+              "image": "screen_1",
+              "title": "Videos",
+              "message": "La pestaña \"Videos\" en el menú de cada curso reemplaza \"Mis Videos\" en el menú principal. Ahora puedes ver todos los videos de un curso en un solo lugar!"
+              },
+              {
+              "platforms": [
+                            "android"
+                            ],
+              "image": "screen_2",
+              "title": "Borrar Videos",
+              "message": "En la lista de videos de cursos descargados, pulse prolongadamente una vez para seleccionar los videos que desea eliminar."
+              },
+              {
+              "platforms": [
+                            "ios"
+                            ],
+              "image": "screen_2",
+              "title": "Borrar Videos",
+              "message": "Desliza hacia la izquierda para eliminar los videos descargados."
+              }
+              ]
+ }
+ ]
