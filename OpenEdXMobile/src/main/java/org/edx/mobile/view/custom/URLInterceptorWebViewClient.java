@@ -152,7 +152,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         } else if (parseEnrollLinkAndCallActionListener(url)) {
             // we handled this URL
             return true;
-        } else if (isAllLinksExternal || isExternalLink(url)) {
+        } else if (isExternalLink(url)) {
             // open URL in external web browser
             // return true means the host application handles the url
             // this should open the URL in the browser with user's confirmation

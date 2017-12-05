@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.gson.Gson;
@@ -33,6 +35,7 @@ import retrofit2.Response;
 
 @Singleton
 public class UserAPI {
+
     @Inject
     private UserService userService;
 
@@ -76,8 +79,9 @@ public class UserAPI {
         @Override
         protected void onResponse(@NonNull final Account account) {
             EventBus.getDefault().post(new AccountDataLoadedEvent(account));
-            // Store the logged in user's ProfileImage
+            // Store the logged in user's ProfileImage and YearOfBirth
             loginPrefs.setProfileImage(username, account.getProfileImage());
+            loginPrefs.setYearOfBirth(username, account.getYearOfBirth());
         }
     }
 

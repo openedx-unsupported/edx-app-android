@@ -43,7 +43,6 @@ public class KonnekteerUtil {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // logger.debug(response);
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -83,7 +82,6 @@ public class KonnekteerUtil {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // logger.debug(response);
                         }
                     }, new Response.ErrorListener() {
                 @Override
