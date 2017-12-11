@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 
 import com.google.inject.Inject;
 
@@ -77,8 +80,16 @@ public class LoginActivity
         activityLoginBinding.loginButtonLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check for Validation˜
+                // Check for Validation
                 callServerForLogin();
+            }
+        });
+
+        activityLoginBinding.bySigningUpTv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // open desktop application in browser
+                openAppInBrowser();
             }
         });
 
@@ -110,11 +121,10 @@ public class LoginActivity
         tryToSetUIInteraction(true);
 
         Config config = environment.getConfig();
-        setTitle(getString(R.string.login_title));
 
         String envDisplayName = config.getEnvironmentDisplayName();
         if (envDisplayName != null && envDisplayName.length() > 0) {
-            activityLoginBinding.versionEnvTv.setVisibility(View.VISIBLE);
+//            activityLoginBinding.versionEnvTv.setVisibility(View.VISIBLE);
             String versionName = BuildConfig.VERSION_NAME;
             String text = String.format("%s %s %s",
                     getString(R.string.label_version), versionName, envDisplayName);
@@ -343,5 +353,13 @@ public class LoginActivity
         activityLoginBinding.endUserAgreementTv.setEnabled(enable);
 
         return true;
+    }
+
+    private void openAppInBrowser(){
+        Config config = environment.getConfig();
+        String apiHostURL = config.getApiHostURL();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(apiHostURL));
+        startActivity(i);
     }
 }
