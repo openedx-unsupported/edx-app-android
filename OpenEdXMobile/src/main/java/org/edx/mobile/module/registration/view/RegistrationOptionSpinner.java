@@ -16,6 +16,7 @@ import java.util.List;
 public class RegistrationOptionSpinner extends AppCompatSpinner {
 
     private ArrayAdapter<RegistrationOption> adapter;
+    private RegistrationSelectView.OnSpinnerFocusedListener onSpinnerFocusedListener;
 
     public RegistrationOptionSpinner(Context context) {
         super(context);
@@ -45,11 +46,22 @@ public class RegistrationOptionSpinner extends AppCompatSpinner {
         }
     }
 
-    public @Nullable String getSelectedItemValue() {
+    @Nullable
+    public String getSelectedItemValue() {
         String value = null;
-        RegistrationOption selected = (RegistrationOption)getSelectedItem();
+        final RegistrationOption selected = (RegistrationOption) getSelectedItem();
         if (selected != null) {
             value = selected.getValue();
+        }
+        return value;
+    }
+
+    @NonNull
+    public String getSelectedItemName() {
+        String value = null;
+        final RegistrationOption selected = (RegistrationOption) getSelectedItem();
+        if (selected != null) {
+            value = selected.getName();
         }
         return value;
     }
@@ -76,6 +88,10 @@ public class RegistrationOptionSpinner extends AppCompatSpinner {
         }
     }
 
+    public void setOnSpinnerFocusedListener(@Nullable RegistrationSelectView.OnSpinnerFocusedListener onSpinnerFocusedListener) {
+        this.onSpinnerFocusedListener = onSpinnerFocusedListener;
+    }
+
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         /*
@@ -85,8 +101,16 @@ public class RegistrationOptionSpinner extends AppCompatSpinner {
         There's an open StackOverflow issue on this as well:
         https://stackoverflow.com/questions/44708495/how-to-prevent-spinner-announcement-when-initialized
          */
-        if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+        if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED
+                || event.getEventType() == AccessibilityEvent.TYPE_VIEW_FOCUSED) {
             super.onInitializeAccessibilityEvent(event);
+        }
+        if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED ||
+                event.getEventType() == AccessibilityEvent.TYPE_VIEW_FOCUSED ||
+                event.getEventType() == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+            if (onSpinnerFocusedListener != null) {
+                onSpinnerFocusedListener.onSpinnerFocused();
+            }
         }
     }
 }

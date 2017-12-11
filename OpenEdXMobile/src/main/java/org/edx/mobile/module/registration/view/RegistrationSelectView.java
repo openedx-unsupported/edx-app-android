@@ -1,8 +1,10 @@
 package org.edx.mobile.module.registration.view;
 
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -13,7 +15,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 
-class RegistrationSelectView implements IRegistrationFieldView {
+public class RegistrationSelectView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
     private RegistrationFormField mField;
@@ -21,6 +23,8 @@ class RegistrationSelectView implements IRegistrationFieldView {
     private RegistrationOptionSpinner mInputView;
     private TextView mInstructionsView;
     private TextView mErrorView;
+    @Nullable
+    private OnSpinnerItemSelectedListener onSpinnerItemSelectedListener;
 
     public RegistrationSelectView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
@@ -58,6 +62,38 @@ class RegistrationSelectView implements IRegistrationFieldView {
 
         // This tag is necessary for End-to-End tests to work properly
         mInputView.setTag(mField.getName());
+
+        // Do a11y adjustment
+        mInputView.setContentDescription(String.format("%s. %s.", mInputView.getSelectedItemName(), mField.getInstructions()));
+        ViewCompat.setImportantForAccessibility(mInstructionsView, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+
+        mInputView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private boolean isChangedByUser = false;
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!isChangedByUser) {
+                    isChangedByUser = true;
+                    return;
+                }
+                isValidInput();
+                if (onSpinnerItemSelectedListener != null) {
+                    onSpinnerItemSelectedListener.onSpinnerItemSelected();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void setOnSpinnerItemSelectedListener(@Nullable OnSpinnerItemSelectedListener onSpinnerItemSelectedListener) {
+        this.onSpinnerItemSelectedListener = onSpinnerItemSelectedListener;
+    }
+
+    public void setOnSpinnerFocusedListener(@Nullable OnSpinnerFocusedListener onSpinnerFocusedListener) {
+        this.mInputView.setOnSpinnerFocusedListener(onSpinnerFocusedListener);
     }
 
     @Override
@@ -106,6 +142,10 @@ class RegistrationSelectView implements IRegistrationFieldView {
         if (error != null && !error.isEmpty()) {
             mErrorView.setVisibility(View.VISIBLE);
             mErrorView.setText(error);
+
+            final String errorTag = mInputView.getResources().getString(R.string.label_error);
+            mInputView.setContentDescription(String.format("%s. %s. %s, %s.",
+                    mInputView.getSelectedItemName(), mField.getInstructions(), errorTag, error));
         }
         else {
             logger.warn("error message not provided, so not informing the user about this error");
@@ -116,6 +156,8 @@ class RegistrationSelectView implements IRegistrationFieldView {
     public boolean isValidInput() {
         // hide error as we are re-validating the input
         mErrorView.setVisibility(View.GONE);
+
+        mInputView.setContentDescription(String.format("%s. %s.", mInputView.getSelectedItemName(), mField.getInstructions()));
 
         // check if this is required field and has an input value
         if (mField.isRequired() && !hasValue()) {
@@ -141,5 +183,24 @@ class RegistrationSelectView implements IRegistrationFieldView {
     @Override
     public void setActionListener(IActionListener actionListener) {
         // no actions for this field
+    }
+
+    @Override
+    public View getOnErrorFocusView() {
+        return mInputView;
+    }
+
+    public interface OnSpinnerItemSelectedListener {
+        /**
+         * Callback method to be invoked when an item in the spinner has been selected.
+         */
+        void onSpinnerItemSelected();
+    }
+
+    public interface OnSpinnerFocusedListener {
+        /**
+         * Callback method to be invoked when the spinner has been focused.
+         */
+        void onSpinnerFocused();
     }
 }
