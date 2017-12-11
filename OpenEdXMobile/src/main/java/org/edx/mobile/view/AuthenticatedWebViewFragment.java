@@ -24,13 +24,15 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
     public static final String ARG_URL = "ARG_URL";
     public static final String ARG_JAVASCRIPT = "ARG_JAVASCRIPT";
+    public static final String ARG_IS_MANUALLY_RELOADABLE = "ARG_IS_MANUALLY_RELOADABLE";
 
     @InjectView(R.id.auth_webview)
-    private AuthenticatedWebView authWebView;
+    protected AuthenticatedWebView authWebView;
 
-    public static Bundle makeArguments(@NonNull String url, @Nullable String javascript) {
+    public static Bundle makeArguments(@NonNull String url, @Nullable String javascript, boolean isManuallyReloadable) {
         final Bundle args = new Bundle();
         args.putString(ARG_URL, url);
+        args.putBoolean(ARG_IS_MANUALLY_RELOADABLE, isManuallyReloadable);
         if (!TextUtils.isEmpty(javascript)) {
             args.putString(ARG_JAVASCRIPT, javascript);
         }
@@ -43,7 +45,13 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
 
     public static Fragment newInstance(@NonNull String url, @Nullable String javascript) {
         final Fragment fragment = new AuthenticatedWebViewFragment();
-        fragment.setArguments(makeArguments(url, javascript));
+        fragment.setArguments(makeArguments(url, javascript, false));
+        return fragment;
+    }
+
+    public static Fragment newInstance(@NonNull String url, @Nullable String javascript, boolean isManuallyReloadable) {
+        final Fragment fragment = new AuthenticatedWebViewFragment();
+        fragment.setArguments(makeArguments(url, javascript, isManuallyReloadable));
         return fragment;
     }
 
@@ -56,10 +64,12 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        authWebView.initWebView(getActivity(), false);
         if (getArguments() != null) {
             final String url = getArguments().getString(ARG_URL);
             final String javascript = getArguments().getString(ARG_JAVASCRIPT);
+            final boolean isManuallyReloadable = getArguments().getBoolean(ARG_IS_MANUALLY_RELOADABLE);
+
+            authWebView.initWebView(getActivity(), false, isManuallyReloadable);
             authWebView.loadUrlWithJavascript(true, url, javascript);
         }
     }

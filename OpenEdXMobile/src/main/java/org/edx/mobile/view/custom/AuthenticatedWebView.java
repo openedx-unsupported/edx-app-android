@@ -20,17 +20,18 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
+import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.services.EdxCookieManager;
@@ -47,7 +48,7 @@ import static org.edx.mobile.util.WebViewUtil.EMPTY_HTML;
  * A custom webview which authenticates the user before loading a page,
  * Javascript can also be passed in arguments for evaluation.
  */
-public class AuthenticatedWebView extends FrameLayout {
+public class AuthenticatedWebView extends FrameLayout implements RefreshListener {
     protected final Logger logger = new Logger(getClass().getName());
 
     @Inject
@@ -59,14 +60,13 @@ public class AuthenticatedWebView extends FrameLayout {
     @InjectView(R.id.webview)
     protected WebView webView;
 
-    @InjectView(R.id.error_text)
-    private TextView errorTextView;
-
+    private FullScreenErrorNotification fullScreenErrorNotification;
     private URLInterceptorWebViewClient webViewClient;
     private String url;
     private String javascript;
     private boolean pageIsLoaded;
     private boolean didReceiveError;
+    private boolean isManuallyReloadable;
 
     public AuthenticatedWebView(Context context) {
         super(context);
@@ -87,6 +87,7 @@ public class AuthenticatedWebView extends FrameLayout {
         inflate(getContext(), R.layout.authenticated_webview, this);
         RoboGuice.injectMembers(getContext(), this);
         RoboGuice.getInjector(getContext()).injectViewMembers(this);
+        fullScreenErrorNotification = new FullScreenErrorNotification(webView);
     }
 
     public URLInterceptorWebViewClient getWebViewClient() {
@@ -96,12 +97,16 @@ public class AuthenticatedWebView extends FrameLayout {
     /**
      * Initialize the webview (must call it before loading some url).
      *
-     * @param fragmentActivity   Reference of fragment activity.
-     * @param isAllLinksExternal A flag to treat every link as external link and open in external
-     *                           web browser.
+     * @param fragmentActivity     Reference of fragment activity.
+     * @param isAllLinksExternal   A flag to treat every link as external link and open in external
+     *                             web browser.
+     * @param isManuallyReloadable A flag that decides if we should give show/hide reload button
+     *                             with full screen error.
      */
     @SuppressLint("SetJavaScriptEnabled")
-    public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal) {
+    public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal,
+                            boolean isManuallyReloadable) {
+        this.isManuallyReloadable = isManuallyReloadable;
         webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webViewClient = new URLInterceptorWebViewClient(fragmentActivity, webView) {
@@ -268,22 +273,23 @@ public class AuthenticatedWebView extends FrameLayout {
     }
 
     private void showErrorView(@NonNull String errorMsg, @NonNull Icon errorIcon) {
-        final Context context = getContext();
-        errorTextView.setVisibility(View.VISIBLE);
-        errorTextView.setText(errorMsg);
-        errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
-                new IconDrawable(context, errorIcon)
-                        .sizeRes(context, R.dimen.content_unavailable_error_icon_size)
-                        .colorRes(context, R.color.edx_brand_gray_back),
-                null, null
-        );
+        if (isManuallyReloadable) {
+            fullScreenErrorNotification.showError(errorMsg, errorIcon, R.string.lbl_reload, new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRefresh();
+                }
+            });
+        } else {
+            fullScreenErrorNotification.showError(errorMsg, errorIcon, 0, null);
+        }
     }
 
     /**
      * Hides the error message view and reloads the web page if it wasn't already loaded
      */
     private void hideErrorMessage() {
-        errorTextView.setVisibility(View.GONE);
+        fullScreenErrorNotification.hideError();
         if (!pageIsLoaded || didReceiveError) {
             tryToLoadWebView(true);
         }
@@ -292,7 +298,10 @@ public class AuthenticatedWebView extends FrameLayout {
     @SuppressWarnings("unused")
     public void onEventMainThread(NetworkConnectivityChangeEvent event) {
         if (NetworkUtil.isConnected(getContext())) {
-            hideErrorMessage();
+            // If manual reloading is enabled, we don't want the error to disappear and screen to load automatically
+            if (!isManuallyReloadable) {
+                onRefresh();
+            }
         } else {
             showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
         }
@@ -305,6 +314,11 @@ public class AuthenticatedWebView extends FrameLayout {
         } else {
             hideLoadingProgress();
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CourseDashboardRefreshEvent event) {
+        onRefresh();
     }
 
     public void onResume() {
@@ -331,6 +345,12 @@ public class AuthenticatedWebView extends FrameLayout {
         }
     }
 
+    @Override
+    public void onRefresh() {
+        pageIsLoaded = false;
+        hideErrorMessage();
+    }
+
     /**
      * Javascript interface class to define android functions which could be called from javascript.
      */
@@ -350,5 +370,9 @@ public class AuthenticatedWebView extends FrameLayout {
                 );
             }
         }
+    }
+
+    public boolean isShowingError() {
+        return fullScreenErrorNotification != null && fullScreenErrorNotification.isShowing();
     }
 }

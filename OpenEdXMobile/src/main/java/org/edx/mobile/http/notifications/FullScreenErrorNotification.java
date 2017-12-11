@@ -65,6 +65,28 @@ public class FullScreenErrorNotification extends ErrorNotification {
                           @Nullable final Icon icon,
                           @StringRes final int actionTextResId,
                           @Nullable final View.OnClickListener actionListener) {
+        showError(view.getContext().getString(errorResId), icon, actionTextResId, actionListener);
+    }
+
+    /**
+     * Show the error notification as an overlay message on top of the content area, according to
+     * the provided details.
+     * <p>
+     * The root view will be determined by walking up the view tree to see if there is any view with
+     * the ID of {@link R.id#content_error R.id.content_error}. If one is found, then that would be
+     * used as the root. If not, then if the content view's parent is already a FrameLayout, then
+     * that would be used; otherwise a new one will be created, inserted as the new parent, and used
+     * as the root.
+     *
+     * @param errorMsg        The error message.
+     * @param icon            The error icon.
+     * @param actionTextResId The resource ID of the action button text.
+     * @param actionListener  The callback to be invoked when the action button is clicked.
+     */
+    public void showError(@NonNull final String errorMsg,
+                          @Nullable final Icon icon,
+                          @StringRes final int actionTextResId,
+                          @Nullable final View.OnClickListener actionListener) {
         final ViewGroup root = findSuitableAncestorLayout();
         if (root == null) return;
 
@@ -80,7 +102,7 @@ public class FullScreenErrorNotification extends ErrorNotification {
         final Button actionButton = (Button) errorLayout.findViewById(R.id.content_error_action);
         final IconImageView iconView = (IconImageView) errorLayout.findViewById(R.id.content_error_icon);
 
-        messageView.setText(errorResId);
+        messageView.setText(errorMsg);
         if (icon == null) {
             iconView.setVisibility(GONE);
         } else {

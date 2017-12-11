@@ -15,8 +15,10 @@ import com.joanzapata.iconify.widget.IconImageView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
+import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
 
 public class AdditionalResourcesFragment extends BaseFragment {
@@ -29,6 +31,7 @@ public class AdditionalResourcesFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        EventBus.getDefault().registerSticky(AdditionalResourcesFragment.this);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_additional_resources, container, false);
     }
@@ -85,5 +88,27 @@ public class AdditionalResourcesFragment extends BaseFragment {
         IconImageView typeView;
         TextView titleView;
         TextView subtitleView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        CourseTabsUtils.setUserVisibleHint(getActivity(), isVisibleToUser, false);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(NetworkConnectivityChangeEvent event) {
+        CourseTabsUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), false);
+    }
+
+    @Override
+    protected void onRevisit() {
+        CourseTabsUtils.onRevisit(getActivity());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
     }
 }
