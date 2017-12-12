@@ -39,6 +39,8 @@ public class WhatsNewItemModel implements Parcelable {
     @NonNull
     private String title;
     @NonNull
+    private String heading;
+    @NonNull
     private String message;
     @NonNull
     private String image;
@@ -50,6 +52,7 @@ public class WhatsNewItemModel implements Parcelable {
 
     protected WhatsNewItemModel(Parcel in) {
         this.title = in.readString();
+        this.heading = in.readString();
         this.message = in.readString();
         this.image = in.readString();
         this.platforms = in.createStringArrayList();
@@ -58,6 +61,11 @@ public class WhatsNewItemModel implements Parcelable {
     @NonNull
     public String getTitle() {
         return title;
+    }
+
+    @NonNull
+    public String getHeading() {
+        return heading;
     }
 
     @NonNull
@@ -96,6 +104,7 @@ public class WhatsNewItemModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.title);
+        dest.writeString(this.heading);
         dest.writeString(this.message);
         dest.writeString(this.image);
         dest.writeStringList(this.platforms);

@@ -6,7 +6,7 @@
         "platforms": [
           "android"
         ],
-        "image": "screen_1",
+        "image": "",
         "title": "Bienvenido",
         "heading": "Bienvenido a la aplicación Philanthropy University Content Viewer",
         "message": "Esta aplicación le permitirá descargar contenido del curso para continuar su experiencia de aprendizaje cuando no esté conectado a Internet."
@@ -15,7 +15,7 @@
         "platforms": [
           "android"
         ],
-        "image": "screen_2",
+        "image": "allowed",
         "title": "Sobre la aplicación",
         "heading": "Lo que puedes hacer",
         "message": "Puede descargar algunas o todas las lecturas, audio y video de cualquier curso en el que esté inscrito para verlo o escucharlo más tarde cuando no esté conectado a Internet."
@@ -24,7 +24,7 @@
         "platforms": [
           "android"
         ],
-        "image": "screen_3",
+        "image": "not_allowed",
         "title": "Sobre la aplicación",
         "heading": "Lo que no puedes hacer",
         "message": "Participe en la experiencia completa del curso, evaluaciones y discusiones. Para completar un curso, debe estar conectado y acceder al curso a través de un navegador web."

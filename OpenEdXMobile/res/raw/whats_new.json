@@ -6,7 +6,7 @@
                 "platforms": [
                               "android"
                               ],
-                "image": "screen_1",
+                "image": "",
                 "title": "Welcome",
                 "heading": "Welcome to Philanthropy University Content Viewer App",
                 "message": "This app will allow you to download course content to continue your learning experience when not connected to the internet."
@@ -15,7 +15,7 @@
                 "platforms": [
                               "android"
                               ],
-                "image": "screen_2",
+                "image": "allowed",
                 "title": "About the App",
                 "heading": "What you can do",
                 "message": "You can download some or all of the readings, audio, and video for any course you are enrolled in to later view or listen to when not connected to the internet."
@@ -24,7 +24,7 @@
                 "platforms": [
                               "android"
                               ],
-                "image": "screen_3",
+                "image": "not_allowed",
                 "title": "About the App",
                 "heading": "What you can&apos;t do",
                 "message": "Participate in the full course experience, assessments and discussions. To complete a course, you must be connected and access the course through a web browser."
