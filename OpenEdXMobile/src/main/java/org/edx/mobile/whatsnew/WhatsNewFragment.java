@@ -46,6 +46,7 @@ public class WhatsNewFragment extends BaseFragment {
 
     private int noOfPages = 0;
     private int totalPagesViewed = 1;
+    private boolean isLastPage;
 
     @Nullable
     @Override
@@ -86,6 +87,7 @@ public class WhatsNewFragment extends BaseFragment {
                 return;
             }
             noOfPages = items.size();
+            isLastPage = noOfPages == 1;
             binding.viewPager.setAdapter(new WhatsNewAdapter(getFragmentManager(), items));
             binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -95,10 +97,11 @@ public class WhatsNewFragment extends BaseFragment {
                 @Override
                 public void onPageSelected(int position) {
                     indicatorController.selectPosition(position);
-                    if (position == noOfPages - 1) {
-                        binding.doneBtn.setVisibility(View.VISIBLE);
+                    isLastPage = position == noOfPages - 1;
+                    if (isLastPage) {
+                        binding.doneBtn.setText(R.string.view_my_courses);
                     } else {
-                        binding.doneBtn.setVisibility(View.GONE);
+                        binding.doneBtn.setText(R.string.next);
                     }
 
                     final int pageNumber = position + 1;
@@ -132,8 +135,13 @@ public class WhatsNewFragment extends BaseFragment {
         binding.doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                environment.getAnalyticsRegistry().trackWhatsNewSeen(BuildConfig.VERSION_NAME, noOfPages);
-                getActivity().finish();
+                if(isLastPage) {
+                    environment.getAnalyticsRegistry().trackWhatsNewSeen(BuildConfig.VERSION_NAME, noOfPages);
+                    getActivity().finish();
+                }
+                else{
+                    binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem()+1);
+                }
             }
         });
     }

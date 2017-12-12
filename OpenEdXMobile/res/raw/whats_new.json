@@ -1,6 +1,6 @@
 [
  {
- "version": "1.00",
+ "version": "2.11",
  "messages": [
               {
                 "platforms": [
@@ -8,7 +8,7 @@
                               ],
                 "image": "",
                 "title": "Welcome",
-                "heading": "Welcome to Philanthropy University Content Viewer App",
+                "heading": "Welcome to Philanthropy \nUniversity Content Viewer App",
                 "message": "This app will allow you to download course content to continue your learning experience when not connected to the internet."
               },
               {
@@ -26,7 +26,7 @@
                               ],
                 "image": "not_allowed",
                 "title": "About the App",
-                "heading": "What you can&apos;t do",
+                "heading": "What you can't do",
                 "message": "Participate in the full course experience, assessments and discussions. To complete a course, you must be connected and access the course through a web browser."
               }
               ]

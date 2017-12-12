@@ -153,6 +153,9 @@
     <dimen name="edx_xx_small">11sp</dimen>
     <dimen name="edx_xxx_small">10sp</dimen>
 
+
+    <dimen name="custom_x_small">13sp</dimen>
+
     <!-- font awesome sizes -->
     <dimen name="fa_xxxx_large">38dp</dimen>
     <dimen name="fa_xxx_large">28dp</dimen>
@@ -164,6 +167,10 @@
     <dimen name="fa_x_small">12dp</dimen>
     <dimen name="fa_xx_small">11dp</dimen>
     <dimen name="fa_xxx_small">10dp</dimen>
+
+
+    <dimen name="view_pager_indicator_xx_small">6dp</dimen>
+    <dimen name="view_pager_indicator_xxx_small">4dp</dimen>
 
     <!-- Icons -->
     <dimen name="x_small_icon_margin">5dp</dimen>

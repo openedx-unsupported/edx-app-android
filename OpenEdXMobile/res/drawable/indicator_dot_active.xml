@@ -4,10 +4,10 @@
         android:left="@dimen/widget_margin_half"
         android:right="@dimen/widget_margin_half">
         <shape android:shape="oval">
-            <solid android:color="@color/transparent_white_30" />
+            <solid android:color="@color/edx_brand_primary_accent" />
             <size
-                android:width="@dimen/fa_xxx_small"
-                android:height="@dimen/fa_xxx_small" />
+                android:width="@dimen/view_pager_indicator_xx_small"
+                android:height="@dimen/view_pager_indicator_xx_small" />
         </shape>
     </item>
 </layer-list>

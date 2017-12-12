@@ -44,10 +44,19 @@ public class WhatsNewItemFragment extends BaseFragment {
         final WhatsNewItemModel model = args.getParcelable(ARG_MODEL);
 
         binding.title.setText(escapePlatformName(model.getTitle()));
+        binding.heading.setText(escapePlatformName(model.getHeading()));
         binding.message.setText(escapePlatformName(model.getMessage()));
 
+        if(!model.getImage().isEmpty())
+            loadImage(model.getImage());
+        else{
+            binding.device.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadImage(String imageName) {
         @DrawableRes
-        final int imageRes = UiUtil.getDrawable(getContext(), model.getImage());
+        final int imageRes = UiUtil.getDrawable(getContext(), imageName);
         binding.image.setImageResource(imageRes);
         // We need different scale types for portrait and landscape images
         final Drawable drawable = UiUtil.getDrawable(getContext(), imageRes);

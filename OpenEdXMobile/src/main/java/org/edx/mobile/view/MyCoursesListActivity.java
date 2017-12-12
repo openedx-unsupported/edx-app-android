@@ -56,7 +56,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
     }
 
     private void initWhatsNew() {
-        if (environment.getConfig().isWhatsNewEnabled()) {
+        if (true) {
             boolean shouldShowWhatsNew = false;
             final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(this);
             final String lastWhatsNewShownVersion = appPrefs.getWhatsNewShownVersion();
@@ -75,7 +75,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
                     logger.error(e);
                 }
             }
-            if (shouldShowWhatsNew) {
+            if (true) {
                 environment.getRouter().showWhatsNewActivity(this);
             }
         }

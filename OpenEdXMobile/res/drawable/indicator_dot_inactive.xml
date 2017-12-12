@@ -4,10 +4,11 @@
         android:left="@dimen/widget_margin_half"
         android:right="@dimen/widget_margin_half">
         <shape android:shape="oval">
-            <solid android:color="@color/white" />
+            <solid
+                android:color="@color/view_pager_indicator_color_inactive" />
             <size
-                android:width="@dimen/fa_xxx_small"
-                android:height="@dimen/fa_xxx_small" />
+                android:width="@dimen/view_pager_indicator_xxx_small"
+                android:height="@dimen/view_pager_indicator_xxx_small" />
         </shape>
     </item>
 </layer-list>

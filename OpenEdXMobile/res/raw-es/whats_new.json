@@ -1,6 +1,6 @@
 [
   {
-    "version": "1.00",
+    "version": "2.11",
     "messages": [
       {
         "platforms": [
@@ -8,7 +8,7 @@
         ],
         "image": "",
         "title": "Bienvenido",
-        "heading": "Bienvenido a la aplicación Philanthropy University Content Viewer",
+        "heading": "Bienvenido a la aplicación \nPhilanthropy University Content Viewer",
         "message": "Esta aplicación le permitirá descargar contenido del curso para continuar su experiencia de aprendizaje cuando no esté conectado a Internet."
       },
       {
