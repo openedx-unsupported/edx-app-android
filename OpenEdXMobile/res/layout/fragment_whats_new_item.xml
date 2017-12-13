@@ -60,9 +60,7 @@
             android:background="@color/edx_white"
             android:gravity="top|center_horizontal"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/edx_margin"
-            android:paddingRight="@dimen/edx_margin"
-            android:paddingTop="@dimen/widget_margin_double">
+            android:paddingTop="@dimen/widget_margin">
 
             <TextView
                 android:id="@+id/heading"
@@ -71,9 +69,9 @@
                 tools:text="App Feedback" />
 
             <ScrollView
-                android:layout_marginTop="@dimen/widget_margin"
-                android:paddingLeft="@dimen/widget_margin"
-                android:paddingRight="@dimen/widget_margin"
+                android:paddingTop="@dimen/widget_margin"
+                android:paddingLeft="@dimen/widget_margin_double"
+                android:paddingRight="@dimen/widget_margin_double"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
