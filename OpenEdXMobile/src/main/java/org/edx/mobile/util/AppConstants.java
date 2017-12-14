@@ -18,6 +18,9 @@ public enum AppConstants {
     // Minimum minor version changes required to show whats new screens
     public static final int MINOR_VERSIONS_DIFF_REQUIRED_FOR_WHATS_NEW = 1;
 
+    public static final String VIDEO_FORMAT_M3U8 = ".m3u8";
+    public static final String VIDEO_FORMAT_MP4 = ".mp4";
+
     /**
      * This class defines the names of various directories which are used for
      * storing application data.
