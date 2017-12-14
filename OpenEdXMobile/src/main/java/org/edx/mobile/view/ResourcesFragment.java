@@ -21,7 +21,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
 
-public class AdditionalResourcesFragment extends BaseFragment {
+public class ResourcesFragment extends BaseFragment {
     @Inject
     private IEdxEnvironment environment;
 
@@ -31,9 +31,9 @@ public class AdditionalResourcesFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        EventBus.getDefault().registerSticky(AdditionalResourcesFragment.this);
+        EventBus.getDefault().registerSticky(ResourcesFragment.this);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_additional_resources, container, false);
+        return inflater.inflate(R.layout.fragment_resources, container, false);
     }
 
     @Override
