@@ -24,14 +24,13 @@ import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -72,8 +71,6 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
 
     private FullScreenErrorNotification errorNotification;
 
-    private SnackbarErrorNotification snackbarErrorNotification;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,7 +81,6 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         errorNotification = new FullScreenErrorNotification((View) discussionTopicsListView.getParent());
-        snackbarErrorNotification = new SnackbarErrorNotification(discussionTopicsListView);
 
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
 
@@ -153,7 +149,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
                 new TaskProgressCallback.ProgressViewController(progressSpinner);
         getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
         getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(
-                getActivity(), progressViewController, errorNotification, snackbarErrorNotification, this) {
+                getActivity(), progressViewController, errorNotification, null, this) {
             @Override
             protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 logger.debug("GetTopicListTask success=" + courseTopics);
@@ -182,18 +178,31 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(NetworkConnectivityChangeEvent event) {
-        if (!NetworkUtil.isConnected(getContext())) {
-            if (!errorNotification.isShowing()) {
-                snackbarErrorNotification.showOfflineError(this);
-            }
-        }
+    public void onEvent(CourseDashboardRefreshEvent event) {
+        errorNotification.hideError();
+        getTopicList();
     }
 
     @Override
     public void onRefresh() {
-        errorNotification.hideError();
-        getTopicList();
+        EventBus.getDefault().post(new CourseDashboardRefreshEvent());
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        CourseTabsUtils.setUserVisibleHint(getActivity(), isVisibleToUser,
+                errorNotification !=null && errorNotification.isShowing());
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(NetworkConnectivityChangeEvent event) {
+        CourseTabsUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), errorNotification.isShowing());
+    }
+
+    @Override
+    protected void onRevisit() {
+        CourseTabsUtils.onRevisit(getActivity());
     }
 
     @Override
@@ -201,12 +210,4 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
         super.onDetach();
         EventBus.getDefault().unregister(this);
     }
-
-    @Override
-    protected void onRevisit() {
-        if (NetworkUtil.isConnected(getActivity())) {
-            snackbarErrorNotification.hideError();
-        }
-    }
-
 }
