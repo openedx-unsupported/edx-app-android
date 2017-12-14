@@ -278,8 +278,8 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                     }));
         }
         // Add additional resources tab
-        items.add(new FragmentItemModel(AdditionalResourcesFragment.class,
-                getResources().getString(R.string.additional_resources_title),
+        items.add(new FragmentItemModel(ResourcesFragment.class,
+                getResources().getString(R.string.resources_title),
                 FontAwesomeIcons.fa_ellipsis_h, null));
         return items;
     }
