@@ -70,6 +70,7 @@ public class Config {
     private static final String FIREBASE_ENABLED = "FIREBASE_ENABLED";
     private static final String APP_REVIEWS_ENABLED = "APP_REVIEWS_ENABLED";
     private static final String VIDEO_TRANSCRIPT_ENABLED = "VIDEO_TRANSCRIPT_ENABLED";
+    private static final String USING_VIDEO_PIPELINE = "USING_VIDEO_PIPELINE";
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
@@ -624,6 +625,10 @@ public class Config {
 
     public boolean isVideoTranscriptEnabled() {
         return getBoolean(VIDEO_TRANSCRIPT_ENABLED, false);
+    }
+
+    public boolean isUsingVideoPipeline() {
+        return getBoolean(USING_VIDEO_PIPELINE, true);
     }
 
     public boolean isCourseDatesEnabled() {

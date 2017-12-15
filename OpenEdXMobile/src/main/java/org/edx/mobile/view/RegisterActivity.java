@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -13,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -40,6 +42,8 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.view.IRegistrationFieldView;
+import org.edx.mobile.module.registration.view.RegistrationEditTextView;
+import org.edx.mobile.module.registration.view.RegistrationSelectView;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
@@ -48,6 +52,7 @@ import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
@@ -59,7 +64,10 @@ import javax.inject.Inject;
 import retrofit2.Call;
 
 public class RegisterActivity extends BaseFragmentActivity
-        implements SocialLoginDelegate.MobileLoginCallback {
+        implements SocialLoginDelegate.MobileLoginCallback,
+        RegistrationSelectView.OnSpinnerItemSelectedListener,
+        RegistrationSelectView.OnSpinnerFocusedListener {
+    private static final int ACCESSIBILITY_FOCUS_DELAY_MS = 500;
 
     private ViewGroup createAccountBtn;
     private LinearLayout requiredFieldsLayout;
@@ -136,6 +144,7 @@ public class RegisterActivity extends BaseFragmentActivity
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SoftKeyboardUtil.hide(RegisterActivity.this);
                 createAccount();
             }
         });
@@ -226,6 +235,12 @@ public class RegisterActivity extends BaseFragmentActivity
                 } else {
                     IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
                     if (fieldView != null) mFieldViews.add(fieldView);
+                    // Add item selected listener for spinner views
+                    if (field.getFieldType().equals(RegistrationFieldType.MULTI)) {
+                        RegistrationSelectView selectView = (RegistrationSelectView) fieldView;
+                        selectView.setOnSpinnerItemSelectedListener(this);
+                        selectView.setOnSpinnerFocusedListener(this);
+                    }
                 }
             }
 
@@ -273,7 +288,7 @@ public class RegisterActivity extends BaseFragmentActivity
                 if (!hasError) {
                     // this is the first input field with error,
                     // so focus on it after showing the popup
-                    showErrorPopup(v.getView());
+                    showErrorPopup(v.getOnErrorFocusView());
                 }
                 hasError = true;
             }
@@ -393,9 +408,19 @@ public class RegisterActivity extends BaseFragmentActivity
      * @param view
      */
     public static void scrollToView(final ScrollView scrollView, final View view) {
-
-        // View needs a focus
-        view.requestFocus();
+        /*
+        The delayed focus has been added so that TalkBack reads the proper view's description that
+        we want focus on. For example in case of {@link RegistrationEditText} we want accessibility
+        focus on TIL when an error is displayed instead of the EditText within it, which can only
+        be achieved through this delay.
+         */
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                view.requestFocus();
+                view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+            }
+        }, ACCESSIBILITY_FOCUS_DELAY_MS);
 
         // Determine if scroll needs to happen
         final Rect scrollBounds = new Rect();
@@ -619,5 +644,35 @@ public class RegisterActivity extends BaseFragmentActivity
         googleButton.setClickable(enable);
 
         return true;
+    }
+
+    @Override
+    public void onSpinnerItemSelected() {
+        /**
+         * After selection of an item from a spinner, OS shifts the focus to some
+         * {@link android.widget.EditText} available on the screen, to avoid that we are removing
+         * the focusability of {@link android.widget.EditText} fields for some milliseconds.
+         */
+        setAllEditTextsFocusable(false);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setAllEditTextsFocusable(true);
+            }
+        }, ACCESSIBILITY_FOCUS_DELAY_MS);
+    }
+
+    public void setAllEditTextsFocusable(final boolean focusable) {
+        for (IRegistrationFieldView fieldView : mFieldViews) {
+            if (fieldView instanceof RegistrationEditTextView) {
+                RegistrationEditTextView field = (RegistrationEditTextView) fieldView;
+                field.setEditTextFocusable(focusable);
+            }
+        }
+    }
+
+    @Override
+    public void onSpinnerFocused() {
+        SoftKeyboardUtil.hide(this);
     }
 }

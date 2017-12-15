@@ -30,8 +30,9 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.event.CourseDashboardRefreshEvent;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
@@ -76,8 +77,6 @@ public class NewCourseOutlineFragment extends BaseFragment
 
     private FullScreenErrorNotification errorNotification;
 
-    private SnackbarErrorNotification snackbarErrorNotification;
-
     @Inject
     private CourseManager courseManager;
 
@@ -109,12 +108,6 @@ public class NewCourseOutlineFragment extends BaseFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final Bundle bundle;
@@ -130,7 +123,6 @@ public class NewCourseOutlineFragment extends BaseFragment
         final View view = inflater.inflate(R.layout.fragment_course_outline_new, container, false);
         initListView(view);
         errorNotification = new FullScreenErrorNotification(listView);
-        snackbarErrorNotification = new SnackbarErrorNotification(listView);
         fetchCourseComponent(view);
 
         return view;
@@ -159,11 +151,18 @@ public class NewCourseOutlineFragment extends BaseFragment
             getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
                     new TaskProgressCallback.ProgressViewController(
                             view.findViewById(R.id.loading_indicator)), errorNotification,
-                    snackbarErrorNotification, this) {
+                    null, this) {
                 @Override
                 protected void onResponse(@NonNull final CourseComponent courseComponent) {
                     courseComponentId = courseComponent.getId();
                     loadData();
+                }
+
+                @Override
+                protected void onFinish() {
+                    if (!EventBus.getDefault().isRegistered(NewCourseOutlineFragment.this)) {
+                        EventBus.getDefault().registerSticky(NewCourseOutlineFragment.this);
+                    }
                 }
             });
         } else {
@@ -377,11 +376,6 @@ public class NewCourseOutlineFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        if (NetworkUtil.isConnected(getContext())) {
-            snackbarErrorNotification.hideError();
-        } else {
-            snackbarErrorNotification.showOfflineError(this);
-        }
 
         if (isOnCourseOutline) {
             if (!isVideoMode) {
@@ -484,6 +478,20 @@ public class NewCourseOutlineFragment extends BaseFragment
         adapter.notifyDataSetChanged();
     }
 
+    @SuppressWarnings("unused")
+    public void onEvent(CourseDashboardRefreshEvent e) {
+        errorNotification.hideError();
+        if (isOnCourseOutline()) {
+            if (getArguments() != null) {
+                restore(getArguments());
+                fetchCourseComponent(getView());
+            }
+        } else {
+            loadData();
+        }
+    }
+
+
     @Override
     public boolean isFetchingLastAccessed() {
         return isFetchingLastAccessed;
@@ -538,16 +546,6 @@ public class NewCourseOutlineFragment extends BaseFragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        if (getHierarchyCall != null) {
-            getHierarchyCall.cancel();
-            getHierarchyCall = null;
-        }
-    }
-
-    @Override
     public void onDownloadStarted(Long result) {
         reloadList();
     }
@@ -574,14 +572,33 @@ public class NewCourseOutlineFragment extends BaseFragment
 
     @Override
     public void onRefresh() {
-        errorNotification.hideError();
-        if (isOnCourseOutline()) {
-            if (getArguments() != null) {
-                restore(getArguments());
-                fetchCourseComponent(getView());
-            }
-        } else {
-            loadData();
+        EventBus.getDefault().post(new CourseDashboardRefreshEvent());
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        CourseTabsUtils.setUserVisibleHint(getActivity(), isVisibleToUser,
+                errorNotification !=null && errorNotification.isShowing());
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(NetworkConnectivityChangeEvent event) {
+        CourseTabsUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), errorNotification.isShowing());
+    }
+
+    @Override
+    protected void onRevisit() {
+        CourseTabsUtils.onRevisit(getActivity());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        if (getHierarchyCall != null) {
+            getHierarchyCall.cancel();
+            getHierarchyCall = null;
         }
     }
 }

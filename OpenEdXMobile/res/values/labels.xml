@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Divider between current time and total time. For example  "2:33/5:10" -->
 	<string name="lbl_slash">/</string>
     <!-- Button allowing user to open a web page corresponding to the current screen in a web browser -->
@@ -40,4 +40,6 @@
     <string name="label_done">Done</string>
     <!-- Undo button label -->
     <string name="label_undo">Undo</string>
+    <!-- Label denoting an error -->
+    <string name="label_error" tools:ignore="MissingTranslation">Error</string>
 </resources>
