@@ -1,4 +1,18 @@
 [
+  {
+    "version": "2.12",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Mejora de la Navegación del Curso",
+        "message": "Pase rápidamente a los videos del curso, a las discusiones y a las fechas importantes de su curso usando una nueva navegación en curso."
+      }
+    ]
+  },
  {
  "version": "2.11",
  "messages": [
@@ -17,7 +31,7 @@
                             "android"
                             ],
               "image": "screen_2",
-              "title": "Plazos de Asignación",
+              "title": "Fechas de Entrega Asignadas",
               "message": "Ahora puede ver las fechas límites de las asignaciones en el esquema del curso."
               }
               ]
@@ -40,7 +54,7 @@
                             ],
               "image": "screen_2",
               "title": "Borrar Videos",
-              "message": "En la lista de videos de cursos descargados, pulse prolongadamente una vez para seleccionar los videos que desea eliminar."
+              "message": "En la lista de videos descargados, pulse prolongadamente para seleccionar los videos que desea eliminar."
               },
               {
               "platforms": [

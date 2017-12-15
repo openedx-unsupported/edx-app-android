@@ -97,7 +97,7 @@
     <!-- Button text to show user Settings screen -->
     <string name="action_settings">Settings</string>
     <!-- Button text to show user current downloads screen -->
-    <string name="label_current_downloads" tools:ignore="MissingTranslation">View current downloads</string>
+    <string name="label_current_downloads">View current downloads</string>
     <!-- Content description for edit profile button -->
     <string name="open_profile_button">Open your profile</string>
     <!-- Title of user's course list screen -->
@@ -107,7 +107,7 @@
     <!-- Title of native Find Courses Screen -->
     <string name="label_find_courses">Find Courses</string>
     <!-- Title of webview based Find Courses Screen -->
-    <string name="label_discover" tools:ignore="MissingTranslation">Discover</string>
+    <string name="label_discover">Discover</string>
     <!-- Button allowing users to send an email for feedback -->
     <string name="label_submit_feedback">Submit Feedback</string>
     <!-- Toggle switch on state label -->
@@ -123,7 +123,7 @@
     <!-- Button text to show user Settings screen -->
     <string name="label_settings">Settings</string>
     <!-- Title of Account screen -->
-    <string name="title_account" tools:ignore="MissingTranslation">Account</string>
+    <string name="title_account">Account</string>
 
     <!-- Help Dialog Place Holder messages -->
     <!-- Reset password alert dialog title -->
@@ -160,9 +160,9 @@
     <!-- NOTE: TODO - not final one -->
     <string name="courseware_subtitle">Access videos and assignments</string>
     <!-- Row title of videos on dashboard screen -->
-    <string name="videos_title" tools:ignore="MissingTranslation">Videos</string>
+    <string name="videos_title">Videos</string>
     <!-- Row subtitle of videos on dashboard screen -->
-    <string name="videos_subtitle" tools:ignore="MissingTranslation">Watch course videos</string>
+    <string name="videos_subtitle">Watch course videos</string>
     <!-- Row of Discussion on dashboard screen -->
     <string name="discussion_title">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
@@ -178,7 +178,7 @@
     <!-- Title text for the important dates section on the course dashboard  -->
     <string name="course_dates_title">Important Dates</string>
     <!-- Title text for the additional resources section on the tabular course dashboard  -->
-    <string name="resources_title" tools:ignore="MissingTranslation">Resources</string>
+    <string name="resources_title">Resources</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
@@ -205,7 +205,7 @@
     <!-- Label shown when no courseware content is available -->
     <string name="no_chapter_text">No course content is currently available.</string>
     <!-- Label shown when no mobile-friendly videos are available in a course -->
-    <string name="no_videos_text" tools:ignore="MissingTranslation">This course does not include any videos.</string>
+    <string name="no_videos_text">This course does not include any videos.</string>
     <!-- Label shown when user is enrolled in no courses -->
     <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
     <!-- Label shown when no announcements are available for a course -->
@@ -215,11 +215,11 @@
     <!-- Label shown when no important dates are available for a course -->
     <string name="no_course_dates_to_display">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
-    <string name="delete_videos_title" tools:ignore="MissingTranslation">Delete Videos</string>
+    <string name="delete_videos_title">Delete Videos</string>
     <!-- Label for a course item's due date for same day -->
-    <string name="due_date_today" tools:ignore="MissingTranslation">due today at {due_date}</string>
+    <string name="due_date_today">due today at {due_date}</string>
     <!-- Label for a course item's due date -->
-    <string name="due_date_past_future" tools:ignore="MissingTranslation">due {due_date}</string>
+    <string name="due_date_past_future">due {due_date}</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->
@@ -453,7 +453,7 @@
     <!-- Error shown when user attempts to send email, but has no email app -->
     <string name="email_client_not_present">No e-mail clients installed</string>
     <!-- Search for a course prompt -->
-    <string name="search_for_courses" tools:ignore="MissingTranslation">Search for courses</string>
+    <string name="search_for_courses">Search for courses</string>
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->

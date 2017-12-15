@@ -1,4 +1,18 @@
 [
+  {
+    "version": "2.12",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Improved Course Navigation",
+        "message": "Quickly jump to course videos, discussions, and important dates in your course using new in-course navigation."
+      }
+    ]
+  },
  {
  "version": "2.11",
  "messages": [
