@@ -65,7 +65,7 @@
 
     <!-- Sign in dimensions-->
     <dimen name="login_edx_logo_height">125dp</dimen>
-    <dimen name="login_logo_margin_top">20dp</dimen>
+    <dimen name="login_logo_margin_top">40dp</dimen>
     <dimen name="login_logo_margin_bottom">15dp</dimen>
     <dimen name="login_social_divider_margin_top">20dp</dimen>
     <dimen name="login_social_divider_margin_bottom">15dp</dimen>
@@ -153,6 +153,9 @@
     <dimen name="edx_xx_small">11sp</dimen>
     <dimen name="edx_xxx_small">10sp</dimen>
 
+    <!--Custom edx typography-->
+    <dimen name="custom_edx_small">13sp</dimen>
+
     <!-- font awesome sizes -->
     <dimen name="fa_xxxx_large">38dp</dimen>
     <dimen name="fa_xxx_large">28dp</dimen>
@@ -176,6 +179,10 @@
     <dimen name="notification_settings_margin">12dp</dimen>
     <dimen name="fullscreen_message_max_width">240dp</dimen>
 
+    <!--Edx input layout style-->
+    <dimen name="edx_input_vertical_padding">20dp</dimen>
+    <dimen name="edx_input_horizontal_padding">20dp</dimen>
+
     <!-- Unorganized -->
     <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_line">3px</dimen>
@@ -189,8 +196,12 @@
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
+    <dimen name="edx_login_button_height">50dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
     <dimen name="divider_with_text_margin">12dp</dimen>
     <dimen name="transcript_row_height">50dp</dimen>
     <dimen name="whats_new_image_horizontal_margin">25dp</dimen>
+    <dimen name="icon_progress_bar_right_margin">10dp</dimen>
+    <dimen name="edx_login_box_margin">30dp</dimen>
+    <dimen name="login_input_box_radius">3dp</dimen>
 </resources>

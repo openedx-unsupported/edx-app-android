@@ -179,6 +179,10 @@
         <item name="fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
 
+    <style name="heading_text">
+        <item name="fontPath">fonts/TrioGrotesk-Bold.ttf</item>
+    </style>
+
      <style name="text_network_error" parent="@style/semibold_white_text">
         <item name="android:textSize">12sp</item>
         <item name="android:layout_width">match_parent</item>
