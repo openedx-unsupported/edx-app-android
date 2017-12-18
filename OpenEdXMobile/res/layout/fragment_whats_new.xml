@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
-            android:paddingTop="@dimen/widget_margin_double" />
+            android:paddingTop="@dimen/edx_margin" />
 
         <Button
             android:id="@+id/next_btn"
@@ -63,7 +63,7 @@
             android:layout_marginBottom="@dimen/widget_margin_double"
             android:layout_marginLeft="@dimen/edx_double_margin"
             android:layout_marginRight="@dimen/edx_double_margin"
-            android:layout_marginTop="@dimen/widget_margin_double"
+            android:layout_marginTop="@dimen/edx_margin"
             android:background="@drawable/edx_brand_button"
             android:padding="@dimen/edx_margin"
             android:text="@string/label_next"

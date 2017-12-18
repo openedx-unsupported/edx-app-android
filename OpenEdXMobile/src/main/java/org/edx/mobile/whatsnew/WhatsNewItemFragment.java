@@ -50,7 +50,7 @@ public class WhatsNewItemFragment extends BaseFragment {
         if (!model.getImage().isEmpty()) {
             loadImage(model.getImage());
         } else {
-            binding.image.setVisibility(View.GONE);
+            binding.image.setVisibility(View.INVISIBLE);
         }
     }
 

@@ -2,94 +2,103 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/edx_white">
+        android:orientation="vertical">
 
-        <!--Layout containing the division of colors in background-->
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:background="@color/edx_white">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:background="@color/edx_brand_primary_base">
-            </View>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_weight="0.5"></View>
-
-        </LinearLayout>
-
-        <!--Layout containing the content-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/whats_new_heading_text"
-                android:layout_marginTop="@dimen/edx_double_margin"
-                android:padding="@dimen/edx_double_margin" />
-
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                tools:ignore="ContentDescription"
-                tools:src="@drawable/allowed" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/edx_brand_primary_base" />
-
+            <!--Layout containing the division of colors in background-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.3"
-                android:background="@color/edx_white"
-                android:gravity="top|center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/widget_margin">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/heading"
-                    style="@style/whats_new_semibold_text"
-                    android:lines="2"
-                    tools:text="App Feedback" />
-
-                <ScrollView
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="@dimen/widget_margin_double"
-                    android:paddingRight="@dimen/widget_margin_double"
-                    android:paddingTop="@dimen/widget_margin">
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/edx_brand_primary_base" />
 
-                    <TextView
-                        android:id="@+id/message"
-                        style="@style/description_paragraph_regular_text"
-                        android:gravity="center_horizontal"
-                        tools:text="This is the long description." />
-
-                </ScrollView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5" />
 
             </LinearLayout>
 
+            <!--Layout containing the content-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/whats_new_heading_text"
+                    android:layout_marginTop="@dimen/whats_new_title_margin"
+                    android:padding="@dimen/edx_double_margin" />
+
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/allowed" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/edx_brand_primary_base" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="@color/edx_white"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/widget_margin">
+
+            <TextView
+                android:id="@+id/heading"
+                style="@style/whats_new_semibold_text"
+                android:lines="2"
+                tools:text="App Feedback" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/widget_margin_double"
+                android:paddingRight="@dimen/widget_margin_double"
+                android:paddingTop="@dimen/widget_margin">
+
+                <TextView
+                    android:id="@+id/message"
+                    style="@style/description_paragraph_regular_text"
+                    android:gravity="center_horizontal"
+                    tools:text="This is the long description." />
+
+            </ScrollView>
+
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
+
 
 </layout>
