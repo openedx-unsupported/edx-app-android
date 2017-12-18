@@ -195,6 +195,10 @@
     <string name="label_ended">Ended - {date}</string>
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending - {date}</string>
+    <!--Label for course that has not downloaded yet!-->
+    <string name="label_download_media">Save Course Media for Offline View</string>
+    <!--Label for course that has been downloaded, requires days passed to show. E.g. Media saved 1 week ago-->
+    <string name="label_downloaded_media">Media saved %s</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->

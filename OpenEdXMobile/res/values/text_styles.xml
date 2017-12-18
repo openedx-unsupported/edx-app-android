@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="section_title" parent="@style/regular_white_text">
         <item name="android:paddingLeft">15dp</item>
@@ -140,6 +139,18 @@
         <item name="android:textColor">@color/edx_brand_gray_accent</item>
     </style>
 
+    <style name="medium_philu_blue_dark_text" parent="@style/montserrat_medium_text">
+        <item name="android:textColor">@color/philu_dark_blue</item>
+    </style>
+
+    <style name="medium_philu_white_text" parent="@style/montserrat_medium_text">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="regular_philu_grey_light_text" parent="@style/montserrat_regular_text">
+        <item name="android:textColor">@color/philu_light_grey</item>
+    </style>
+
     <style name="drawer_option" parent="@style/regular_white_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_drawer_menu</item>
@@ -183,12 +194,20 @@
         <item name="fontPath">fonts/TrioGrotesk-Bold.ttf</item>
     </style>
 
-     <style name="text_network_error" parent="@style/semibold_white_text">
+    <style name="montserrat_medium_text">
+        <item name="fontPath">fonts/montserrat/Medium.otf</item>
+    </style>
+
+    <style name="montserrat_regular_text">
+        <item name="fontPath">fonts/montserrat/Regular.otf</item>
+    </style>
+
+    <style name="text_network_error" parent="@style/semibold_white_text">
         <item name="android:textSize">12sp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-     </style>
+    </style>
 
     <style name="avatar_overflow_style" parent="@style/semibold_text">
         <item name="android:textColor">@color/grey_4</item>
@@ -234,18 +253,38 @@
     </style>
 
     <!-- Course Card styles -->
-    <style name="course_card_title" parent="@style/regular_edx_black_text">
+    <style name="course_card_title" parent="@style/medium_philu_blue_dark_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">3dp</item>
-        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="course_card_course_run" parent="@style/regular_edx_gray_xdark_text">
+    <style name="course_card_course_run" parent="@style/regular_philu_grey_light_text">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">@dimen/edx_xxx_small</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
+    <style name="course_card_media_downloaded" parent="@style/medium_philu_blue_dark_text">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableLeft">@drawable/ic_done</item>
+        <item name="android:drawableStart">@drawable/ic_done</item>
+        <item name="android:text">@string/label_downloaded_media</item>
+    </style>
+
+    <style name="course_card_media_download" parent="@style/medium_philu_white_text">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableLeft">@drawable/ic_download_media</item>
+        <item name="android:drawableStart">@drawable/ic_download_media</item>
+        <item name="android:text">@string/label_download_media</item>
     </style>
 
     <style name="edX.TextAppearance.Switch" parent="@style/semibold_text">
@@ -259,7 +298,8 @@
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing</item>
+        <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing
+        </item>
     </style>
 
     <style name="discussion_title_text" parent="discussion_regular_text">

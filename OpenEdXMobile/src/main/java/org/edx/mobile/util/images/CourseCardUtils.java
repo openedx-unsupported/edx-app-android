@@ -70,7 +70,7 @@ public enum CourseCardUtils {
             }
         }
 
-        return formattedDate.toString().toUpperCase();
+        return formattedDate.toString();//.toUpperCase();
     }
 
     public static String getFormattedDate(@NonNull Context context, @NonNull CourseEntry course) {
