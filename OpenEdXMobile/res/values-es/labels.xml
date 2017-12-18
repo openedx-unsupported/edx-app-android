@@ -39,4 +39,6 @@
   <string name="label_done">Hecho</string>
   <!--Undo button label-->
   <string name="label_undo">Deshacer</string>
+    <!--Next button label-->
+    <string name="label_next">Siguiente</string>
 </resources>

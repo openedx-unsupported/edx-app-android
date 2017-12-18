@@ -9,9 +9,9 @@
         android:orientation="vertical">
 
         <FrameLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/screen_title"
@@ -56,20 +56,20 @@
             android:paddingTop="@dimen/widget_margin_double" />
 
         <Button
-            android:id="@+id/done_btn"
+            android:id="@+id/next_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:background="@drawable/edx_brand_button"
-            android:padding="@dimen/edx_margin"
-            android:textAllCaps="true"
-            android:textSize="@dimen/edx_x_small"
+            android:layout_marginBottom="@dimen/widget_margin_double"
             android:layout_marginLeft="@dimen/edx_double_margin"
             android:layout_marginRight="@dimen/edx_double_margin"
-            android:layout_marginBottom="@dimen/widget_margin_double"
             android:layout_marginTop="@dimen/widget_margin_double"
-            android:text="@string/next"
+            android:background="@drawable/edx_brand_button"
+            android:padding="@dimen/edx_margin"
+            android:text="@string/label_next"
+            android:textAllCaps="true"
             android:textColor="@color/white"
+            android:textSize="@dimen/edx_x_small"
             tools:targetApi="JELLY_BEAN_MR1" />
     </LinearLayout>
 </layout>

@@ -8,38 +8,21 @@ import android.text.TextUtils;
 import java.util.List;
 
 public class WhatsNewItemModel implements Parcelable {
-    public enum Platform {
-        ANDROID("android"),
-        IOS("ios")
-        ;
-
-        private final String key;
-
-        Platform(@NonNull String key) {
-            this.key = key;
+    public static final Creator<WhatsNewItemModel> CREATOR = new Creator<WhatsNewItemModel>() {
+        @Override
+        public WhatsNewItemModel createFromParcel(Parcel source) {
+            return new WhatsNewItemModel(source);
         }
 
-        public String getKey() {
-            return key;
+        @Override
+        public WhatsNewItemModel[] newArray(int size) {
+            return new WhatsNewItemModel[size];
         }
-
-        public static boolean isSupportedPlatform(@NonNull String platform) {
-            if (TextUtils.isEmpty(platform)) {
-                return false;
-            }
-            for (Platform supportedPlatform : Platform.values()) {
-                if (platform.trim().equalsIgnoreCase(supportedPlatform.key)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
+    };
     @NonNull
     private String title;
     @NonNull
-    private String heading;
+    private String messageTitle;
     @NonNull
     private String message;
     @NonNull
@@ -52,7 +35,7 @@ public class WhatsNewItemModel implements Parcelable {
 
     protected WhatsNewItemModel(Parcel in) {
         this.title = in.readString();
-        this.heading = in.readString();
+        this.messageTitle = in.readString();
         this.message = in.readString();
         this.image = in.readString();
         this.platforms = in.createStringArrayList();
@@ -64,8 +47,8 @@ public class WhatsNewItemModel implements Parcelable {
     }
 
     @NonNull
-    public String getHeading() {
-        return heading;
+    public String getMessageTitle() {
+        return messageTitle;
     }
 
     @NonNull
@@ -104,21 +87,36 @@ public class WhatsNewItemModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.title);
-        dest.writeString(this.heading);
+        dest.writeString(this.messageTitle);
         dest.writeString(this.message);
         dest.writeString(this.image);
         dest.writeStringList(this.platforms);
     }
 
-    public static final Creator<WhatsNewItemModel> CREATOR = new Creator<WhatsNewItemModel>() {
-        @Override
-        public WhatsNewItemModel createFromParcel(Parcel source) {
-            return new WhatsNewItemModel(source);
+    public enum Platform {
+        ANDROID("android"),
+        IOS("ios");
+
+        private final String key;
+
+        Platform(@NonNull String key) {
+            this.key = key;
         }
 
-        @Override
-        public WhatsNewItemModel[] newArray(int size) {
-            return new WhatsNewItemModel[size];
+        public static boolean isSupportedPlatform(@NonNull String platform) {
+            if (TextUtils.isEmpty(platform)) {
+                return false;
+            }
+            for (Platform supportedPlatform : Platform.values()) {
+                if (platform.trim().equalsIgnoreCase(supportedPlatform.key)) {
+                    return true;
+                }
+            }
+            return false;
         }
-    };
+
+        public String getKey() {
+            return key;
+        }
+    }
 }

@@ -2,39 +2,44 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/edx_brand_primary_base">
+        android:background="@color/edx_white">
 
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/whats_new_heading_text"
-            android:layout_marginTop="@dimen/edx_double_margin"
-            android:padding="@dimen/edx_double_margin" />
-
-        <FrameLayout
-            android:background="@color/edx_white"
+        <!--Layout containing the division of colors in background-->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.7">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <View
-                android:layout_gravity="top"
-                android:background="@color/edx_brand_primary_base"
                 android:layout_width="match_parent"
-                android:layout_height="80dp">
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/edx_brand_primary_base">
             </View>
 
-            <ImageView
-                android:id="@+id/device"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:src="@drawable/device"
-                tools:ignore="ContentDescription"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_weight="0.5"></View>
+
+        </LinearLayout>
+
+        <!--Layout containing the content-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/whats_new_heading_text"
+                android:layout_marginTop="@dimen/edx_double_margin"
+                android:padding="@dimen/edx_double_margin" />
 
 
             <ImageView
@@ -42,47 +47,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginTop="70dp"
-                android:layout_marginBottom="40dp"
                 tools:ignore="ContentDescription"
                 tools:src="@drawable/allowed" />
-        </FrameLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/edx_brand_primary_base" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:background="@color/edx_white"
-            android:gravity="top|center_horizontal"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/widget_margin">
-
-            <TextView
-                android:id="@+id/heading"
-                android:lines="2"
-                style="@style/whats_new_semibold_text"
-                tools:text="App Feedback" />
-
-            <ScrollView
-                android:paddingTop="@dimen/widget_margin"
-                android:paddingLeft="@dimen/widget_margin_double"
-                android:paddingRight="@dimen/widget_margin_double"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="2dp"
+                android:background="@color/edx_brand_primary_base" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+                android:background="@color/edx_white"
+                android:gravity="top|center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/widget_margin">
 
                 <TextView
-                    android:id="@+id/message"
-                    style="@style/description_paragraph_regular_text"
-                    android:gravity="center_horizontal"
-                    tools:text="This is the long description." />
+                    android:id="@+id/heading"
+                    style="@style/whats_new_semibold_text"
+                    android:lines="2"
+                    tools:text="App Feedback" />
 
-            </ScrollView>
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/widget_margin_double"
+                    android:paddingRight="@dimen/widget_margin_double"
+                    android:paddingTop="@dimen/widget_margin">
+
+                    <TextView
+                        android:id="@+id/message"
+                        style="@style/description_paragraph_regular_text"
+                        android:gravity="center_horizontal"
+                        tools:text="This is the long description." />
+
+                </ScrollView>
+
+            </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
+
+    </FrameLayout>
+
 </layout>

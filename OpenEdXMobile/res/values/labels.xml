@@ -40,4 +40,6 @@
     <string name="label_done">Done</string>
     <!-- Undo button label -->
     <string name="label_undo">Undo</string>
+    <!--Next button label-->
+    <string name="label_next">Next</string>
 </resources>

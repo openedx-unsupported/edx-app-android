@@ -46,7 +46,6 @@ public class WhatsNewFragment extends BaseFragment {
 
     private int noOfPages = 0;
     private int totalPagesViewed = 1;
-    private boolean isLastPage;
 
     @Nullable
     @Override
@@ -79,7 +78,8 @@ public class WhatsNewFragment extends BaseFragment {
     private void initViewPager() {
         try {
             final String whatsNewJson = FileUtil.loadTextFileFromResources(getContext(), R.raw.whats_new);
-            final Type type = new TypeToken<List<WhatsNewModel>>() {}.getType();
+            final Type type = new TypeToken<List<WhatsNewModel>>() {
+            }.getType();
             final List<WhatsNewModel> whatsNewModels = new Gson().fromJson(whatsNewJson, type);
             final List<WhatsNewItemModel> items = WhatsNewUtil.getWhatsNewItems(BuildConfig.VERSION_NAME, whatsNewModels);
             if (items == null) {
@@ -87,7 +87,6 @@ public class WhatsNewFragment extends BaseFragment {
                 return;
             }
             noOfPages = items.size();
-            isLastPage = noOfPages == 1;
             binding.viewPager.setAdapter(new WhatsNewAdapter(getFragmentManager(), items));
             binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -97,11 +96,10 @@ public class WhatsNewFragment extends BaseFragment {
                 @Override
                 public void onPageSelected(int position) {
                     indicatorController.selectPosition(position);
-                    isLastPage = position == noOfPages - 1;
-                    if (isLastPage) {
-                        binding.doneBtn.setText(R.string.view_my_courses);
+                    if (position == noOfPages - 1) {
+                        binding.nextBtn.setText(R.string.view_my_courses);
                     } else {
-                        binding.doneBtn.setText(R.string.next);
+                        binding.nextBtn.setText(R.string.label_next);
                     }
 
                     final int pageNumber = position + 1;
@@ -132,15 +130,15 @@ public class WhatsNewFragment extends BaseFragment {
             }
         });
 
-        binding.doneBtn.setOnClickListener(new View.OnClickListener() {
+        binding.nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isLastPage) {
+                // check if last page then end what's new activity
+                if (binding.viewPager.getCurrentItem() == noOfPages - 1) {
                     environment.getAnalyticsRegistry().trackWhatsNewSeen(BuildConfig.VERSION_NAME, noOfPages);
                     getActivity().finish();
-                }
-                else{
-                    binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem()+1);
+                } else {
+                    binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem() + 1);
                 }
             }
         });
