@@ -51,7 +51,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
         initWhatsNew();
         configureDrawer();
-        setTitle(getString(R.string.label_my_courses));
+        setTitle(getString(R.string.label_my_courses).toUpperCase());
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
     }
 
