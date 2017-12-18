@@ -52,7 +52,7 @@
     <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
     <color name="edx_brand_primary_dark">#065683</color>
     <color name="edx_brand_primary_base">#50c2a9</color>
-    <color name="edx_brand_primary_accent">#81c7ff</color>
+    <color name="edx_brand_primary_accent">#2991C3</color>
     <color name="edx_brand_primary_back">#CCE3F0</color>
     <color name="edx_brand_primary_x_back">#F2F8FB</color>
     <color name="edx_brand_secondary_dark">#982C62</color>
@@ -73,8 +73,9 @@
     <color name="edx_error_back">#FEECED</color>
     <color name="edx_warning_accent">#FFC01F</color>
     <color name="edx_warning_back">#FFF9EB</color>
+  
     <color name="view_pager_indicator_color_inactive">#282f3749</color>
-
-
     <color name="custom_dark_gray">#083954</color>
+    <color name="edx_input_border_color">#dbe0e9</color>
+    <color name="dark_blue">#083954</color>
 </resources>

@@ -339,8 +339,8 @@
 
     <style name="edX.Widget.SignInButtonLayout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/edx_button_height</item>
-        <item name="android:layout_marginTop">@dimen/edx_margin</item>
+        <item name="android:layout_height">@dimen/edx_login_button_height</item>
+        <item name="android:layout_marginTop">@dimen/edx_login_box_margin</item>
         <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
 
@@ -349,9 +349,11 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:textColor">@color/edx_brand_button_text</item>
         <item name="android:duplicateParentState">true</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.04</item>
     </style>
 
     <style name="edX.Widget.CreationButtonLayout">
@@ -521,4 +523,17 @@
     <style name="edX.Widget.TextInputLayout.HintTextAppearance" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textColor">@color/edx_brand_primary_base</item>
     </style>
+
+    <style name="edx_input_layout_style">
+        <item name="android:textColor">@color/edx_input_text_color</item>
+        <item name="android:textSize">@dimen/custom_edx_small</item>
+        <item name="android:background">@drawable/edx_custom_input</item>
+        <item name="android:paddingLeft">@dimen/edx_input_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/edx_input_horizontal_padding</item>
+        <item name="android:paddingBottom">@dimen/edx_input_vertical_padding</item>
+        <item name="android:paddingTop">@dimen/edx_input_vertical_padding</item>
+    </style>
+
+    <color name="edx_input_bg_white">#f9f9f9</color>
+    <color name="edx_input_text_color">#083954</color>
 </resources>

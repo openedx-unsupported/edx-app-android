@@ -8,6 +8,7 @@
         style="?android:attr/progressBarStyleInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/icon_progress_bar_right_margin"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"

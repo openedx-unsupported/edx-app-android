@@ -210,7 +210,7 @@
         <item name="android:textColor">@color/custom_dark_gray</item>
     </style>
 
-    <style name="text_network_error" parent="@style/semibold_white_text">
+     <style name="text_network_error" parent="@style/semibold_white_text">
         <item name="android:textSize">12sp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

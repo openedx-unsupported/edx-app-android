@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">@string/platform_name</string>
+    <string name="app_full_name" translatable="false">Philanthropy\nUniversity</string>
     <string name="app_shortcut_name" translatable="false">@string/shortcut_name</string>
     <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>
 
@@ -66,7 +67,7 @@
     <!-- Button text allowing user to reset their password -->
     <string name="forgot_password">Forgot your password?</string>
     <!-- Button initiating login process after user enters credentials like username and password -->
-    <string name="login">Sign In</string>
+    <string name="login">Log In</string>
     <!-- Accessible content description of sign in button on Log in screen -->
     <string name="login_btn">Sign in button</string>
     <!-- Message shown while waiting for action -->
@@ -79,7 +80,7 @@
     <string name="error_heading">The following error occurred while logging you in</string>
     <!-- Error during log in. -->
     <string name="login_failed">Please make sure that your user name or e-mail address and password are correct and try again.</string>
-    <string name="by_signing_up">By signing in to this app, you agree to the </string>
+    <string name="by_signing_up">Need an account? Go to the desktop version </string>
     <string name="licensing_agreement">{platform_name} Terms of Service and Honor Code</string>
     <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
@@ -622,4 +623,7 @@
 
     <string name="view_my_courses">View My Courses</string>
     <string name="next">Next</string>
+
+    <string name="app_tag_line">Offline Content Viewer</string>
+
 </resources>

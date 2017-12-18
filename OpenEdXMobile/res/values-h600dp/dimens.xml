@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="height_drawer_menu">60dp</dimen>
-    <dimen name="login_logo_margin_top">35dp</dimen>
+    <dimen name="login_logo_margin_top">45dp</dimen>
     <dimen name="login_logo_margin_bottom">30dp</dimen>
     <dimen name="login_edx_logo_height">140dp</dimen>
      <dimen name="login_social_divider_margin_top">20dp</dimen>
