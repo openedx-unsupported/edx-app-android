@@ -78,7 +78,8 @@ public class WhatsNewFragment extends BaseFragment {
     private void initViewPager() {
         try {
             final String whatsNewJson = FileUtil.loadTextFileFromResources(getContext(), R.raw.whats_new);
-            final Type type = new TypeToken<List<WhatsNewModel>>() {}.getType();
+            final Type type = new TypeToken<List<WhatsNewModel>>() {
+            }.getType();
             final List<WhatsNewModel> whatsNewModels = new Gson().fromJson(whatsNewJson, type);
             final List<WhatsNewItemModel> items = WhatsNewUtil.getWhatsNewItems(BuildConfig.VERSION_NAME, whatsNewModels);
             if (items == null) {
@@ -96,9 +97,9 @@ public class WhatsNewFragment extends BaseFragment {
                 public void onPageSelected(int position) {
                     indicatorController.selectPosition(position);
                     if (position == noOfPages - 1) {
-                        binding.doneBtn.setVisibility(View.VISIBLE);
+                        binding.nextBtn.setText(R.string.view_my_courses);
                     } else {
-                        binding.doneBtn.setVisibility(View.GONE);
+                        binding.nextBtn.setText(R.string.label_next);
                     }
 
                     final int pageNumber = position + 1;
@@ -129,11 +130,16 @@ public class WhatsNewFragment extends BaseFragment {
             }
         });
 
-        binding.doneBtn.setOnClickListener(new View.OnClickListener() {
+        binding.nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                environment.getAnalyticsRegistry().trackWhatsNewSeen(BuildConfig.VERSION_NAME, noOfPages);
-                getActivity().finish();
+                // check if last page then end what's new activity
+                if (binding.viewPager.getCurrentItem() == noOfPages - 1) {
+                    environment.getAnalyticsRegistry().trackWhatsNewSeen(BuildConfig.VERSION_NAME, noOfPages);
+                    getActivity().finish();
+                } else {
+                    binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem() + 1);
+                }
             }
         });
     }

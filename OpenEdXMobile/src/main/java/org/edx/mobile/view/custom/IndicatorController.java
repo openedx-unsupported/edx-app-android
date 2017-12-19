@@ -16,14 +16,11 @@ import java.util.List;
 
 public class IndicatorController {
     private static final int FIRST_PAGE_NUM = 0;
-    private static final int DEFAULT_COLOR = 1;
 
     private Context context;
     private LinearLayout dotLayout;
     private List<ImageView> dots;
     private int slideCount;
-    private int selectedDotColor = DEFAULT_COLOR;
-    private int unselectedDotColor = DEFAULT_COLOR;
 
     public View newInstance(@NonNull Context context) {
         this.context = context;
@@ -34,8 +31,6 @@ public class IndicatorController {
     public void initialize(int slideCount) {
         dots = new ArrayList<>();
         this.slideCount = slideCount;
-        selectedDotColor = -1;
-        unselectedDotColor = -1;
 
         for (int i = 0; i < slideCount; i++) {
             ImageView dot = new ImageView(context);
@@ -55,12 +50,8 @@ public class IndicatorController {
 
     public void selectPosition(int index) {
         for (int i = 0; i < slideCount; i++) {
-            int drawableId = (i == index) ? (R.drawable.indicator_dot_inactive) : (R.drawable.indicator_dot_active);
+            int drawableId = i == index ? (R.drawable.indicator_dot_active) : (R.drawable.indicator_dot_inactive);
             Drawable drawable = UiUtil.getDrawable(context, drawableId);
-            if (selectedDotColor != DEFAULT_COLOR && i == index)
-                drawable.mutate().setColorFilter(selectedDotColor, PorterDuff.Mode.SRC_IN);
-            if (unselectedDotColor != DEFAULT_COLOR && i != index)
-                drawable.mutate().setColorFilter(unselectedDotColor, PorterDuff.Mode.SRC_IN);
             dots.get(i).setImageDrawable(drawable);
         }
     }

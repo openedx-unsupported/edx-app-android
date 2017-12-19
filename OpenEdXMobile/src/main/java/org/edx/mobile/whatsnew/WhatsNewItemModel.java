@@ -8,19 +8,15 @@ import android.text.TextUtils;
 import java.util.List;
 
 public class WhatsNewItemModel implements Parcelable {
+
     public enum Platform {
         ANDROID("android"),
-        IOS("ios")
-        ;
+        IOS("ios");
 
         private final String key;
 
         Platform(@NonNull String key) {
             this.key = key;
-        }
-
-        public String getKey() {
-            return key;
         }
 
         public static boolean isSupportedPlatform(@NonNull String platform) {
@@ -34,10 +30,27 @@ public class WhatsNewItemModel implements Parcelable {
             }
             return false;
         }
+
+        public String getKey() {
+            return key;
+        }
     }
 
+    public static final Creator<WhatsNewItemModel> CREATOR = new Creator<WhatsNewItemModel>() {
+        @Override
+        public WhatsNewItemModel createFromParcel(Parcel source) {
+            return new WhatsNewItemModel(source);
+        }
+
+        @Override
+        public WhatsNewItemModel[] newArray(int size) {
+            return new WhatsNewItemModel[size];
+        }
+    };
     @NonNull
     private String title;
+    @NonNull
+    private String messageTitle;
     @NonNull
     private String message;
     @NonNull
@@ -50,6 +63,7 @@ public class WhatsNewItemModel implements Parcelable {
 
     protected WhatsNewItemModel(Parcel in) {
         this.title = in.readString();
+        this.messageTitle = in.readString();
         this.message = in.readString();
         this.image = in.readString();
         this.platforms = in.createStringArrayList();
@@ -58,6 +72,11 @@ public class WhatsNewItemModel implements Parcelable {
     @NonNull
     public String getTitle() {
         return title;
+    }
+
+    @NonNull
+    public String getMessageTitle() {
+        return messageTitle;
     }
 
     @NonNull
@@ -96,20 +115,9 @@ public class WhatsNewItemModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.title);
+        dest.writeString(this.messageTitle);
         dest.writeString(this.message);
         dest.writeString(this.image);
         dest.writeStringList(this.platforms);
     }
-
-    public static final Creator<WhatsNewItemModel> CREATOR = new Creator<WhatsNewItemModel>() {
-        @Override
-        public WhatsNewItemModel createFromParcel(Parcel source) {
-            return new WhatsNewItemModel(source);
-        }
-
-        @Override
-        public WhatsNewItemModel[] newArray(int size) {
-            return new WhatsNewItemModel[size];
-        }
-    };
 }

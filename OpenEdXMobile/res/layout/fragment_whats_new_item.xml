@@ -10,48 +10,95 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.7"
-            android:background="@drawable/whats_new_gradient">
+            android:layout_weight="0.75"
+            android:background="@color/edx_white">
 
-            <ImageView
-                android:id="@+id/image"
+            <!--Layout containing the division of colors in background-->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:paddingLeft="@dimen/whats_new_image_horizontal_margin"
-                android:paddingRight="@dimen/whats_new_image_horizontal_margin"
-                tools:ignore="ContentDescription"
-                tools:src="@drawable/screen_1" />
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/edx_brand_primary_base" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5" />
+
+            </LinearLayout>
+
+            <!--Layout containing the content-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/whats_new_heading_text"
+                    android:layout_marginTop="@dimen/whats_new_title_margin"
+                    android:padding="@dimen/edx_double_margin" />
+
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/allowed" />
+
+            </LinearLayout>
+
         </FrameLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/edx_brand_primary_base" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:background="@color/edx_brand_primary_base"
-            android:gravity="top|center_horizontal"
+            android:layout_weight="0.25"
+            android:background="@color/edx_white"
+            android:gravity="bottom|center_horizontal"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/edx_margin"
-            android:paddingRight="@dimen/edx_margin"
-            android:paddingTop="@dimen/edx_margin">
+            android:paddingTop="@dimen/widget_margin">
 
             <TextView
-                android:id="@+id/title"
-                style="@style/semibold_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/edx_white"
-                android:textSize="@dimen/edx_base"
+                android:id="@+id/heading"
+                style="@style/whats_new_semibold_text"
+                android:lines="2"
                 tools:text="App Feedback" />
 
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/widget_margin"
-                android:textColor="@color/edx_white"
-                android:textSize="@dimen/edx_base"
-                tools:text="This is the description." />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/widget_margin_double"
+                android:paddingRight="@dimen/widget_margin_double"
+                android:paddingTop="@dimen/widget_margin">
+
+                <TextView
+                    android:id="@+id/message"
+                    style="@style/description_paragraph_regular_text"
+                    android:gravity="center_horizontal"
+                    tools:text="This is the long description." />
+
+            </ScrollView>
+
         </LinearLayout>
+
     </LinearLayout>
+
+
 </layout>

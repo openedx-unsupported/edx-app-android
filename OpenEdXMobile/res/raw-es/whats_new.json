@@ -1,55 +1,34 @@
 [
- {
- "version": "2.11",
- "messages": [
-              {
-              "platforms": [
-                            "ios",
-                            "android"
-                            ],
-              "image": "screen_1",
-              "title": "Navegación Actualizada ",
-              "message": "Un menú principal simplificado hace que sea más fácil acceder y descubrir cursos."
-              },
-              {
-              "platforms": [
-                            "ios",
-                            "android"
-                            ],
-              "image": "screen_2",
-              "title": "Plazos de Asignación",
-              "message": "Ahora puede ver las fechas límites de las asignaciones en el esquema del curso."
-              }
-              ]
- },
- {
- "version": "2.10",
- "messages": [
-              {
-              "platforms": [
-                            "ios",
-                            "android"
-                            ],
-              "image": "screen_1",
-              "title": "Videos",
-              "message": "La pestaña \"Videos\" en el menú de cada curso reemplaza \"Mis Videos\" en el menú principal. Ahora puedes ver todos los videos de un curso en un solo lugar!"
-              },
-              {
-              "platforms": [
-                            "android"
-                            ],
-              "image": "screen_2",
-              "title": "Borrar Videos",
-              "message": "En la lista de videos de cursos descargados, pulse prolongadamente una vez para seleccionar los videos que desea eliminar."
-              },
-              {
-              "platforms": [
-                            "ios"
-                            ],
-              "image": "screen_2",
-              "title": "Borrar Videos",
-              "message": "Desliza hacia la izquierda para eliminar los videos descargados."
-              }
-              ]
- }
- ]
+  {
+    "version": "2.11",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "",
+        "title": "Bienvenido",
+        "messageTitle": "Bienvenido a la aplicación \nPhilanthropy University Content Viewer",
+        "message": "Esta aplicación le permitirá descargar contenido del curso para continuar su experiencia de aprendizaje cuando no esté conectado a Internet."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "allowed",
+        "title": "Sobre la aplicación",
+        "messageTitle": "Lo que puedes hacer",
+        "message": "Puede descargar algunas o todas las lecturas, audio y video de cualquier curso en el que esté inscrito para verlo o escucharlo más tarde cuando no esté conectado a Internet."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "not_allowed",
+        "title": "Sobre la aplicación",
+        "messageTitle": "Lo que no puedes hacer",
+        "message": "Participe en la experiencia completa del curso, evaluaciones y discusiones. Para completar un curso, debe estar conectado y acceder al curso a través de un navegador web."
+      }
+    ]
+  }
+]

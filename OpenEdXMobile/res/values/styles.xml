@@ -59,6 +59,7 @@
     </style>
 
     <style name="AppTheme.NoActionBar.TranslucentStatusBar"></style>
+    <style name="AppTheme.NoActionBar.Transparent" parent="AppTheme.NoActionBar"></style>
 
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>

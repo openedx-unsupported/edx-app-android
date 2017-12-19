@@ -3,52 +3,31 @@
  "version": "2.11",
  "messages": [
               {
-              "platforms": [
-                            "ios",
-                            "android"
-                            ],
-              "image": "screen_1",
-              "title": "Updated Navigation",
-              "message": "A simplified main menu makes it easier to access and discover courses."
+                "platforms": [
+                              "android"
+                              ],
+                "image": "",
+                "title": "Welcome",
+                "messageTitle": "Welcome to Philanthropy \nUniversity Content Viewer App",
+                "message": "This app will allow you to download course content to continue your learning experience when not connected to the internet."
               },
               {
-              "platforms": [
-                            "ios",
-                            "android"
-                            ],
-              "image": "screen_2",
-              "title": "Assignment Due Dates",
-              "message": "You can now see due dates for assignments in the course outline."
-              }
-              ]
- },
- {
- "version": "2.10",
- "messages": [
-              {
-              "platforms": [
-                            "ios",
-                            "android"
-                            ],
-              "image": "screen_1",
-              "title": "Videos",
-              "message": "The \"Videos\" tab in each course's menu replaces \"My Videos\" in the main menu. Now you can view all the videos in a course in one place!"
+                "platforms": [
+                              "android"
+                              ],
+                "image": "allowed",
+                "title": "About the App",
+                "messageTitle": "What you can do",
+                "message": "You can download some or all of the readings, audio, and video for any course you are enrolled in to later view or listen to when not connected to the internet."
               },
               {
-              "platforms": [
-                            "android"
-                            ],
-              "image": "screen_2",
-              "title": "Delete Videos",
-              "message": "In the list of downloaded course videos, use a long press to select videos that you want to delete."
-              },
-              {
-              "platforms": [
-                            "ios"
-                            ],
-              "image": "screen_2",
-              "title": "Delete Videos",
-              "message": "Swipe left to delete downloaded videos."
+                "platforms": [
+                              "android"
+                              ],
+                "image": "not_allowed",
+                "title": "About the App",
+                "messageTitle": "What you can't do",
+                "message": "Participate in the full course experience, assessments and discussions. To complete a course, you must be connected and access the course through a web browser."
               }
               ]
  }
