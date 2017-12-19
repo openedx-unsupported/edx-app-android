@@ -1,12 +1,11 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <item name="colorPrimary">@color/edx_brand_primary_base</item>
-        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
+        <item name="colorPrimary">@color/philu_primary</item>
+        <item name="colorPrimaryDark">@color/philu_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
         <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
         <item name="actionMenuTextColor">@color/white</item>
@@ -58,8 +57,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.TranslucentStatusBar"></style>
-    <style name="AppTheme.NoActionBar.Transparent" parent="AppTheme.NoActionBar"></style>
+    <style name="AppTheme.NoActionBar.TranslucentStatusBar" />
+
+    <style name="AppTheme.TransparentStatusBar" parent="AppTheme.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
@@ -89,7 +91,7 @@
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/edx_brand_primary_base</item>
+        <!--<item name="background">@color/philu_primary</item>-->
         <item name="titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="subtitleTextStyle">@style/MyActionBarTitleText</item>
         <item name="itemPadding">2dip</item>
@@ -115,7 +117,8 @@
     <!-- ActionBar title text -->
     <style name="MyActionBarTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
-        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
 
     <style name="separator_base">

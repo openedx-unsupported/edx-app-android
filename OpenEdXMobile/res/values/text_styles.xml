@@ -140,7 +140,7 @@
     </style>
 
     <style name="medium_philu_blue_dark_text" parent="@style/montserrat_medium_text">
-        <item name="android:textColor">@color/philu_dark_blue</item>
+        <item name="android:textColor">@color/philu_primary</item>
     </style>
 
     <style name="medium_philu_white_text" parent="@style/montserrat_medium_text">

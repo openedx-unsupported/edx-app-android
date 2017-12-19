@@ -80,7 +80,8 @@
     <color name="edx_input_border_color">#dbe0e9</color>
 
     <!-- Colors defined for PhilU App -->
-    <color name="philu_dark_blue">#083954</color>
+    <color name="philu_primary">#083954</color>
+    <color name="philu_primary_dark">#50c2a9</color>
     <color name="philu_light_grey">#b8bfd3</color>
     <color name="philu_bottom_bar_blue_bg">#81c7ff</color>
 </resources>
