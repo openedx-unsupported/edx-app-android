@@ -80,7 +80,7 @@ public abstract class MainApplication extends MultiDexApplication {
         injector.injectMembers(this);
 
         // initialize Fabric
-        if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
+        if (config.getFabricConfig().isEnabled() /*&& !BuildConfig.DEBUG*/) {
             Fabric.with(this, config.getFabricConfig().getKitsConfig().getEnabledKits());
 
             if (config.getFabricConfig().getKitsConfig().isCrashlyticsEnabled()) {

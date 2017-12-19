@@ -119,15 +119,15 @@ task(version) << {
 
 
 dependencies {
-    compile project (':android-iconify')
+    compile project(':android-iconify')
     // Note that we have the Font Awesome TTF file
     // in the local assets as well, to enable the
     // graphical layout editor to render it. Since
     // that is what will be compiled in the APK now,
     // we need to ensure that it's updated along
     // with module updates.
-    compile project (':android-iconify-fontawesome')
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':android-iconify-fontawesome')
+    compile fileTree(include: '*.jar', dir: 'libs')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.facebook.android:facebook-android-sdk:3.23.1'
     compile 'com.google.android.gms:play-services-plus:10.0.1'
@@ -140,14 +140,14 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     /* Exclude dependencies defined statically at the top-
-     * level, to prevent them from being resolved to the
-     * latest version as a result of dynamic version
-     * definitions in the transitive dependencies.
-     */
-    compile ('com.squareup.retrofit2:retrofit:2.1.0') {
+         * level, to prevent them from being resolved to the
+         * latest version as a result of dynamic version
+         * definitions in the transitive dependencies.
+         */
+    compile('com.squareup.retrofit2:retrofit:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    compile ('com.squareup.retrofit2:converter-gson:2.1.0') {
+    compile('com.squareup.retrofit2:converter-gson:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
@@ -161,66 +161,57 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     // Branch SDK
     /* To support versions prior to API level 15 we have to use v1.14.5 of Branch SDK
-     * https://dev.branch.io/getting-started/sdk-integration-guide/advanced/android/#supporting-pre-15-android
-     */
+         * https://dev.branch.io/getting-started/sdk-integration-guide/advanced/android/#supporting-pre-15-android
+         */
     compile 'io.branch.sdk.android:library:1.14.5'
-
     // Google Firebase
     compile 'com.google.firebase:firebase-core:10.0.1'
-
     // Segment Library
     compile 'com.segment.analytics.android:analytics:4.2.6'
-
     compile('com.segment.analytics.android.integrations:google-analytics:1.0.0') {
         exclude module: 'play-services-analytics'
         transitive = true
     }
-
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-
     //New Relic Integration
     compile 'com.newrelic.agent.android:android-agent:5.4.1'
-
     //Include DI framework
     compile 'org.roboguice:roboguice:3.0.1'
     provided 'org.roboguice:roboblender:3.0.1'
-
     // For the optional Nullable annotation
     compile 'com.android.support:support-annotations:25.3.1'
-
     // test project configuration
     testCompile 'junit:junit:4.12'
-    testCompile ("org.mockito:mockito-core:1.10.19"){
+    testCompile('org.mockito:mockito-core:1.10.19') {
         exclude group: 'org.hamcrest'
     }
-    testCompile "org.robolectric:robolectric:3.0"
-    testCompile "org.robolectric:shadows-support-v4:3.0"
-    testCompile "org.robolectric:shadows-multidex:3.0"
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.robolectric:shadows-support-v4:3.0'
+    testCompile 'org.robolectric:shadows-multidex:3.0'
     testCompile 'org.assertj:assertj-core:2.5.0'
-    testCompile ('com.squareup.assertj:assertj-android:1.1.1') {
+    testCompile('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
+    testCompile('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
+    testCompile('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
         exclude group: 'com.android.support'
     }
     testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
-    testCompile ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
+    testCompile('com.squareup.retrofit2:retrofit-mock:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile "com.crittercism.dexmaker:dexmaker:1.4"
-    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:1.4"
-    androidTestCompile ("org.mockito:mockito-core:1.10.19"){
+    androidTestCompile 'com.crittercism.dexmaker:dexmaker:1.4'
+    androidTestCompile 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
+    androidTestCompile('org.mockito:mockito-core:1.10.19') {
         exclude group: 'org.hamcrest'
     }
 }
@@ -261,50 +252,38 @@ android {
     }
 
     defaultConfig {
-        applicationId "org.edx.mobile"
+        applicationId 'org.philu.mobile'
         // minimum version is Android 4.0
         minSdkVersion 14
         targetSdkVersion 21
-
-        versionCode getVersionCode()
         versionName getVersionName()
-
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
-
         // test configuration
-        testApplicationId 'org.edx.mobile.test'
-
+        testApplicationId 'org.philu.mobile.test'
         if (project.gradle.startParameter.taskNames.contains("screenshotTests")) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("package", "org.edx.mobile.test.screenshot");
             setTestInstrumentationRunnerArguments map
         }
-
-        testInstrumentationRunner "org.edx.mobile.test.EdXTestRunner"
-
+        testInstrumentationRunner 'org.philu.mobile.test.EdXTestRunner'
         testHandleProfiling true
         testFunctionalTest true
         testBuildType "debuggable"
-
         // Enabling multidex support.
         multiDexEnabled true
-
         def platformName = config.get('PLATFORM_NAME')
         resValue "string", "platform_name", platformName
-
         def appShortcutName = config.get('APP_SHORTCUT_NAME')
         if (appShortcutName == null) {
             appShortcutName = platformName
         }
         resValue "string", "shortcut_name", appShortcutName
-
         def phoneticPlatformName = config.get('PHONETIC_PLATFORM_NAME')
         if (phoneticPlatformName == null) {
             phoneticPlatformName = platformName
         }
         resValue "string", "phonetic_platform_name", phoneticPlatformName
-
         def fabric = config.get('FABRIC')
         if (fabric?.get('ENABLED')) {
             def fabric_key = fabric?.get('FABRIC_KEY')
@@ -328,10 +307,9 @@ android {
                 }
             }
         }
-
-        manifestPlaceholders = [supportsRtl:"false",
-                                firebaseEnabled: config.get('FIREBASE_ENABLED')?: false,
-                                branchKey: branchKey]
+        manifestPlaceholders = [supportsRtl    : "false",
+                                firebaseEnabled: config.get('FIREBASE_ENABLED') ?: false,
+                                branchKey      : branchKey]
     }
     sourceSets {
         main {
@@ -391,7 +369,8 @@ android {
             }
         }
         dev {
-            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+            minSdkVersion 21
+            // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
         }
     }
 
