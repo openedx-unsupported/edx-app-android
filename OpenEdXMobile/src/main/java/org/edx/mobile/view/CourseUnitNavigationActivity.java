@@ -192,7 +192,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 mNextUnitLbl.setVisibility(View.GONE);
             } else {
                 mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getDisplayName());
-                mNextUnitLbl.setVisibility(View.VISIBLE);
+                mNextUnitLbl.setVisibility(View.GONE);
             }
         } else {
             // we have reached the end and next button is disabled
@@ -205,7 +205,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 mPreviousUnitLbl.setVisibility(View.GONE);
             } else {
                 mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getDisplayName());
-                mPreviousUnitLbl.setVisibility(View.VISIBLE);
+                mPreviousUnitLbl.setVisibility(View.GONE);
             }
         } else {
             // we have reached the start and previous button is disabled
