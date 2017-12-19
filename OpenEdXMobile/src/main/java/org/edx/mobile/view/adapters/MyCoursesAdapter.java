@@ -39,7 +39,6 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
             });
         } else {
             holder.setDescription(
-                    courseData.getDescription(),
                     CourseCardUtils.getFormattedDate(getContext(), courseData)
             );
         }
