@@ -214,5 +214,5 @@
     <dimen name="icon_progress_bar_right_margin">10dp</dimen>
     <dimen name="edx_login_box_margin">30dp</dimen>
     <dimen name="login_input_box_radius">3dp</dimen>
-    <dimen name="course_list_padding">16dp</dimen>
+    <dimen name="course_list_padding">20dp</dimen>
 </resources>

@@ -190,11 +190,11 @@
         <item name="fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
 
-    <style name="heading_text">
+    <style name="triogrotesk_bold_text">
         <item name="fontPath">fonts/TrioGrotesk-Bold.ttf</item>
     </style>
 
-    <style name="description_paragraph_regular_text" parent="@style/regular_text">
+    <style name="description_paragraph_regular_text" parent="@style/montserrat_regular_text">
         <item name="android:textSize">@dimen/custom_x_small</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -203,7 +203,7 @@
         <item name="android:textColor">@color/custom_dark_gray</item>
     </style>
 
-    <style name="whats_new_heading_text" parent="@style/heading_text">
+    <style name="whats_new_heading_text" parent="@style/triogrotesk_bold_text">
         <item name="android:textSize">@dimen/edx_base</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -212,13 +212,17 @@
         <item name="android:textColor">@color/edx_white</item>
     </style>
 
-    <style name="whats_new_semibold_text" parent="@style/semibold_text">
+    <style name="whats_new_semibold_text" parent="@style/montserrat_semi_bold_text">
         <item name="android:textSize">@dimen/edx_base</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/custom_dark_gray</item>
+    </style>
+
+    <style name="montserrat_semi_bold_text">
+        <item name="fontPath">fonts/montserrat/SemiBold.otf</item>
     </style>
 
     <style name="montserrat_medium_text">
