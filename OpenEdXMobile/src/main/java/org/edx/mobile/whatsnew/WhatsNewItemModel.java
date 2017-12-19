@@ -8,6 +8,34 @@ import android.text.TextUtils;
 import java.util.List;
 
 public class WhatsNewItemModel implements Parcelable {
+
+    public enum Platform {
+        ANDROID("android"),
+        IOS("ios");
+
+        private final String key;
+
+        Platform(@NonNull String key) {
+            this.key = key;
+        }
+
+        public static boolean isSupportedPlatform(@NonNull String platform) {
+            if (TextUtils.isEmpty(platform)) {
+                return false;
+            }
+            for (Platform supportedPlatform : Platform.values()) {
+                if (platform.trim().equalsIgnoreCase(supportedPlatform.key)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public String getKey() {
+            return key;
+        }
+    }
+
     public static final Creator<WhatsNewItemModel> CREATOR = new Creator<WhatsNewItemModel>() {
         @Override
         public WhatsNewItemModel createFromParcel(Parcel source) {
@@ -91,32 +119,5 @@ public class WhatsNewItemModel implements Parcelable {
         dest.writeString(this.message);
         dest.writeString(this.image);
         dest.writeStringList(this.platforms);
-    }
-
-    public enum Platform {
-        ANDROID("android"),
-        IOS("ios");
-
-        private final String key;
-
-        Platform(@NonNull String key) {
-            this.key = key;
-        }
-
-        public static boolean isSupportedPlatform(@NonNull String platform) {
-            if (TextUtils.isEmpty(platform)) {
-                return false;
-            }
-            for (Platform supportedPlatform : Platform.values()) {
-                if (platform.trim().equalsIgnoreCase(supportedPlatform.key)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public String getKey() {
-            return key;
-        }
     }
 }
