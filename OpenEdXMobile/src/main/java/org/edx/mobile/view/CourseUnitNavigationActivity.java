@@ -29,7 +29,9 @@ import org.edx.mobile.view.custom.IndicatorController;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -44,6 +46,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     protected Logger logger = new Logger(getClass().getSimpleName());
     @Inject
     LastAccessManager lastAccessManager;
+    Map<String, List<CourseComponent>> courseUnitBlockCounterMap = new HashMap<>();
     private DisableableViewPager pager;
     private CourseComponent selectedUnit;
     private List<CourseComponent> unitList = new ArrayList<>();
@@ -214,7 +217,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         int curIndex = pager.getCurrentItem();
 
         if (!selectedUnit.getParent().getId().equalsIgnoreCase(pagerAdapter.getUnit(curIndex).getParent().getId())) {
-            indicatorController.initialize(pagerAdapter.getUnit(curIndex).getParent().getChildren().size());
+            indicatorController.initialize(courseUnitBlockCounterMap.get(pagerAdapter.getUnit(curIndex).getParent().getId()).size());
         }
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
@@ -227,7 +230,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         setTitle(selectedUnit.getDisplayName());
 
-        indicatorController.selectPosition(selectedUnit.getParent().getChildren().indexOf(selectedUnit));
+        indicatorController.selectPosition(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).indexOf(selectedUnit));
 
         String currentSubsectionId = selectedUnit.getParent().getId();
         if (curIndex + 1 <= pagerAdapter.getCount() - 1) {
@@ -259,6 +262,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private void updateDataModel() {
         unitList.clear();
+        courseUnitBlockCounterMap.clear();
         if (selectedUnit == null || selectedUnit.getRoot() == null) {
             logger.warn("selectedUnit is null?");
             return;   //should not happen
@@ -278,8 +282,11 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         } else {
             selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
         }
+
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
+
+        updateUnitBlocksCounter();
 
         ViewPagerDownloadManager.instance.setMainComponent(selectedUnit, unitList);
 
@@ -289,11 +296,24 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             tryToUpdateForEndOfSequential();
         }
 
-        if (pagerAdapter != null)
+        if (pagerAdapter != null) {
             pagerAdapter.notifyDataSetChanged();
+        }
 
-        indicatorController.initialize(selectedUnit.getParent().getChildren().size());
+        // Initialize indicator layout for first opened unit
+        indicatorController.initialize(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).size());
+        indicatorController.selectPosition(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).indexOf(selectedUnit));
 
+    }
+
+    private void updateUnitBlocksCounter() {
+        for (CourseComponent courseComponent : unitList) {
+            List<CourseComponent> childComponents = courseUnitBlockCounterMap.get(courseComponent.getParent().getId());
+            if (childComponents == null)
+                childComponents = new ArrayList<>();
+            childComponents.add(courseComponent);
+            courseUnitBlockCounterMap.put(courseComponent.getParent().getId(), childComponents);
+        }
     }
 
     private void updateUIForOrientation() {
