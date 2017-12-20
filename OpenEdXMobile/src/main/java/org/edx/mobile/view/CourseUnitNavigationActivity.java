@@ -14,17 +14,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
+import org.edx.mobile.view.custom.IconImageViewXml;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -41,24 +40,24 @@ import roboguice.inject.InjectView;
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements CourseUnitVideoFragment.HasComponent {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
-
+    @Inject
+    LastAccessManager lastAccessManager;
     private DisableableViewPager pager;
     private CourseComponent selectedUnit;
-
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
-
     @InjectView(R.id.goto_next)
     private Button mNextBtn;
     @InjectView(R.id.goto_prev)
     private Button mPreviousBtn;
+    @InjectView(R.id.next_button_icon)
+    private IconImageViewXml mNextBtnIcon;
+    @InjectView(R.id.previous_button_icon)
+    private IconImageViewXml mPreviousBtnIcon;
     @InjectView(R.id.next_unit_title)
     private TextView mNextUnitLbl;
     @InjectView(R.id.prev_unit_title)
     private TextView mPreviousUnitLbl;
-
-    @Inject
-    LastAccessManager lastAccessManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,7 +178,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
         mPreviousBtn.setEnabled(curIndex > 0);
+        mPreviousBtnIcon.setEnabled(curIndex > 0);
         mNextBtn.setEnabled(curIndex < pagerAdapter.getCount() - 1);
+        mNextBtnIcon.setEnabled(curIndex < pagerAdapter.getCount() - 1);
 
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
