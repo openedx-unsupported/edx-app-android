@@ -87,4 +87,7 @@
     <color name="dark_blue">#083954</color>
     <color name="philu_course_navigation_bar_background">#849aa5</color>
     <color name="philu_disabled_white_text_color">#7FFFFFFF</color>
+
+    <color name="unit_view_pager_indicator_inactive">#7FFFFFFF</color>
+    <color name="unit_view_pager_indicator_active">#81c7ff</color>
 </resources>

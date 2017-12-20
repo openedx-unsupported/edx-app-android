@@ -1,7 +1,6 @@
 package org.edx.mobile.view.custom;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -22,6 +21,17 @@ public class IndicatorController {
     private List<ImageView> dots;
     private int slideCount;
 
+    private int indicatorDotActiveLayout = R.drawable.indicator_dot_active;
+    private int indicatorDotInactiveLayout = R.drawable.indicator_dot_inactive;
+
+    public IndicatorController() {
+    }
+
+    public IndicatorController(int indicatorDotActiveLayout, int indicatorDotInactiveLayout) {
+        this.indicatorDotActiveLayout = indicatorDotActiveLayout;
+        this.indicatorDotInactiveLayout = indicatorDotInactiveLayout;
+    }
+
     public View newInstance(@NonNull Context context) {
         this.context = context;
         dotLayout = (LinearLayout) View.inflate(context, R.layout.default_indicator, null);
@@ -32,9 +42,11 @@ public class IndicatorController {
         dots = new ArrayList<>();
         this.slideCount = slideCount;
 
+        dotLayout.removeAllViews();
+
         for (int i = 0; i < slideCount; i++) {
             ImageView dot = new ImageView(context);
-            dot.setImageDrawable(UiUtil.getDrawable(context, R.drawable.indicator_dot_active));
+            dot.setImageDrawable(UiUtil.getDrawable(context, indicatorDotActiveLayout));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -50,7 +62,7 @@ public class IndicatorController {
 
     public void selectPosition(int index) {
         for (int i = 0; i < slideCount; i++) {
-            int drawableId = i == index ? (R.drawable.indicator_dot_active) : (R.drawable.indicator_dot_inactive);
+            int drawableId = i == index ? indicatorDotActiveLayout : indicatorDotInactiveLayout;
             Drawable drawable = UiUtil.getDrawable(context, drawableId);
             dots.get(i).setImageDrawable(drawable);
         }

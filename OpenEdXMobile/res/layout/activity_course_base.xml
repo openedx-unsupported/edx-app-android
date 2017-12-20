@@ -100,7 +100,6 @@
                         android:id="@+id/course_unit_nav_bar"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/course_unit_nav_bar_height"
-                        android:layout_weight="0"
                         android:background="@color/philu_course_navigation_bar_background"
                         android:gravity="center"
                         android:measureWithLargestChild="true"
@@ -109,13 +108,13 @@
                         android:paddingLeft="@dimen/course_unit_nav_bar_padding_left"
                         android:paddingRight="@dimen/course_unit_nav_bar_padding_right"
                         android:paddingStart="@dimen/course_unit_nav_bar_padding_right"
-                        android:visibility="gone"
                         tools:targetApi="17"
                         tools:visibility="visible">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="horizontal"
                             tools:targetApi="17">
 
@@ -134,7 +133,7 @@
                                 android:id="@+id/goto_prev"
                                 style="@style/edX.Widget.DisableableButton"
                                 android:layout_width="wrap_content"
-                                android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                                android:layout_height="match_parent"
                                 android:text="@string/assessment_previous"
                                 android:textAllCaps="true"
                                 tools:targetApi="17" />
@@ -144,17 +143,19 @@
                                 style="@style/section_lbl"
                                 android:visibility="gone" />
 
-
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="0px"
-                            android:layout_height="0px"
-                            android:layout_weight="1" />
+                        <FrameLayout
+                            android:id="@+id/indicator_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom|center"
+                            android:layout_weight="0.75" />
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="end"
                             android:orientation="horizontal"
                             tools:targetApi="17">
@@ -163,7 +164,7 @@
                                 android:id="@+id/goto_next"
                                 style="@style/edX.Widget.DisableableButton"
                                 android:layout_width="wrap_content"
-                                android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                                android:layout_height="match_parent"
                                 android:text="@string/assessment_next"
                                 android:textAllCaps="true"
                                 tools:targetApi="17" >

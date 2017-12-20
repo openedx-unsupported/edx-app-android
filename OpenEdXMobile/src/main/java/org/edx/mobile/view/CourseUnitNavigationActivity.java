@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
 import org.edx.mobile.view.custom.IconImageViewXml;
+import org.edx.mobile.view.custom.IndicatorController;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -58,6 +60,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private TextView mNextUnitLbl;
     @InjectView(R.id.prev_unit_title)
     private TextView mPreviousUnitLbl;
+    @InjectView(R.id.indicator_container)
+    private FrameLayout mIndicatorContainer;
+
+    private IndicatorController indicatorController;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +121,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 navigateNextComponent();
             }
         });
+
+        initProgressIndicator();
+    }
+
+
+    private void initProgressIndicator() {
+        indicatorController = new IndicatorController(R.drawable.unit_indicator_dot_active, R.drawable.unit_indicator_dot_inactive);
+        mIndicatorContainer.addView(indicatorController.newInstance(this));
     }
 
     @Override
@@ -175,6 +189,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private void tryToUpdateForEndOfSequential() {
         int curIndex = pager.getCurrentItem();
+
+        if (!selectedUnit.getParent().getId().equalsIgnoreCase(pagerAdapter.getUnit(curIndex).getParent().getId())) {
+            indicatorController.initialize(pagerAdapter.getUnit(curIndex).getParent().getChildren().size());
+        }
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
         mPreviousBtn.setEnabled(curIndex > 0);
@@ -185,6 +203,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
         setTitle(selectedUnit.getDisplayName());
+
+        indicatorController.selectPosition(selectedUnit.getParent().getChildren().indexOf(selectedUnit));
 
         String currentSubsectionId = selectedUnit.getParent().getId();
         if (curIndex + 1 <= pagerAdapter.getCount() - 1) {
@@ -248,6 +268,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         if (pagerAdapter != null)
             pagerAdapter.notifyDataSetChanged();
+
+        indicatorController.initialize(selectedUnit.getParent().getChildren().size());
 
     }
 
