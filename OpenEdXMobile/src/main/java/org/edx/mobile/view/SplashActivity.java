@@ -39,7 +39,7 @@ public class SplashActivity extends Activity {
                 return;
             }
         }
-//        forceCrash();
+
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
         if (environment.getUserPrefs().getProfile() != null) {
             environment.getRouter().showMyCourses(SplashActivity.this);
@@ -49,11 +49,6 @@ public class SplashActivity extends Activity {
             environment.getRouter().showLaunchScreen(SplashActivity.this);
         }
     }
-
-    public void forceCrash() {
-        throw new RuntimeException("This is a testing crash");
-    }
-
 
     @Override
     public void onStart() {
