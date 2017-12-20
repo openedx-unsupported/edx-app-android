@@ -219,7 +219,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         if (!selectedUnit.getParent().getId().equalsIgnoreCase(pagerAdapter.getUnit(curIndex).getParent().getId())) {
             indicatorController.initialize(courseUnitBlockCounterMap.get(pagerAdapter.getUnit(curIndex).getParent().getId()).size());
         }
+
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
+
+        indicatorController.selectPosition(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).indexOf(selectedUnit));
 
         mPreviousBtn.setEnabled(curIndex > 0);
         mPreviousBtnIcon.setEnabled(curIndex > 0);
@@ -229,8 +232,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
         setTitle(selectedUnit.getDisplayName());
-
-        indicatorController.selectPosition(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).indexOf(selectedUnit));
 
         String currentSubsectionId = selectedUnit.getParent().getId();
         if (curIndex + 1 <= pagerAdapter.getCount() - 1) {
