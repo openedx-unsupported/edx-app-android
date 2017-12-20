@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="-2dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:layout_marginTop="8dp"
-    android:layout_marginBottom="0dp"
     android:descendantFocusability="blocksDescendants"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="6dp">
@@ -18,11 +18,11 @@
 
         <org.edx.mobile.view.custom.EdxAssessmentWebView
             android:id="@+id/webview"
-            android:overScrollMode="never"
-            android:scrollbarStyle="outsideOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white" />
+            android:background="@color/white"
+            android:overScrollMode="never"
+            android:scrollbarStyle="outsideOverlay" />
 
         <include layout="@layout/loading_indicator" />
 
