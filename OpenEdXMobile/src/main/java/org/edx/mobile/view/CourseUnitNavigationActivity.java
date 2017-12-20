@@ -125,12 +125,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         initProgressIndicator();
     }
 
-
-    private void initProgressIndicator() {
-        indicatorController = new IndicatorController(R.drawable.unit_indicator_dot_active, R.drawable.unit_indicator_dot_inactive);
-        mIndicatorContainer.addView(indicatorController.newInstance(this));
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -160,9 +154,38 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateUIForOrientation();
+        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
+                courseData.getCourse().getId(), selectedUnit.getBlockId());
+    }
+
+    public CourseComponent getComponent() {
+        return selectedUnit;
+    }
+
+
+    @Override
     protected void onLoadData() {
         selectedUnit = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
         updateDataModel();
+    }
+
+    @Override
+    protected void onOffline() {
+    }
+
+    protected void hideLastAccessedView(View v) {
+    }
+
+    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
+    }
+
+
+    private void initProgressIndicator() {
+        indicatorController = new IndicatorController(R.drawable.unit_indicator_dot_active, R.drawable.unit_indicator_dot_inactive);
+        mIndicatorContainer.addView(indicatorController.newInstance(this));
     }
 
     private void setCurrentUnit(CourseComponent component) {
@@ -273,14 +296,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        updateUIForOrientation();
-        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
-                courseData.getCourse().getId(), selectedUnit.getBlockId());
-    }
-
     private void updateUIForOrientation() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && CourseUnitPagerAdapter.isCourseUnitVideo(selectedUnit)) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -292,19 +307,5 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
         }
-    }
-
-    public CourseComponent getComponent() {
-        return selectedUnit;
-    }
-
-    protected void hideLastAccessedView(View v) {
-    }
-
-    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
-    }
-
-    @Override
-    protected void onOffline() {
     }
 }
