@@ -136,6 +136,10 @@ public class WhatsNewFragment extends BaseFragment {
                 getActivity().finish();
             }
         });
+
+        if (noOfPages == 1) {
+            binding.doneBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initProgressIndicator() {
