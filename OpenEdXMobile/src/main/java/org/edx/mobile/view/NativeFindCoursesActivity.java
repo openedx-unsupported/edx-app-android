@@ -21,7 +21,9 @@ public class NativeFindCoursesActivity extends BaseSingleFragmentActivity {
         super.onCreate(savedInstanceState);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
         if (environment.getLoginPrefs().getUsername() != null) {
-            configureDrawer();
+            if (!environment.getConfig().isTabsLayoutEnabled()) {
+                addDrawer();
+            }
         }
     }
 

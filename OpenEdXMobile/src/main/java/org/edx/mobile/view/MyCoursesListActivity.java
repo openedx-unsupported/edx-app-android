@@ -3,9 +3,15 @@ package org.edx.mobile.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -17,6 +23,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.notification.NotificationDelegate;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
@@ -29,7 +36,8 @@ import java.util.ArrayList;
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
-public class MyCoursesListActivity extends BaseSingleFragmentActivity {
+public class MyCoursesListActivity extends BaseSingleFragmentActivity implements
+                            MyCoursesListFragment.ToolbarCallbacks {
 
     @NonNull
     @InjectView(R.id.coordinator_layout)
@@ -37,6 +45,9 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
     @Inject
     NotificationDelegate notificationDelegate;
+
+    @Inject
+    private LoginPrefs loginPrefs;
 
     public static Intent newIntent() {
         // These flags will make it so we only have a single instance of this activity,
@@ -48,11 +59,88 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initWhatsNew();
-        configureDrawer();
-        setTitle(getString(R.string.label_my_courses));
+        if (!environment.getConfig().isTabsLayoutEnabled()) {
+            addDrawer();
+        } else {
+            addClickListenerOnProfileButton();
+        }
+        setTitle(R.string.label_my_courses);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
+    }
+
+    private void addClickListenerOnProfileButton() {
+        findViewById(R.id.toolbar_profile_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                environment.getRouter().showUserProfile(MyCoursesListActivity.this, loginPrefs.getUsername());
+            }
+        });
+    }
+
+    @Override
+    protected void configureActionBar() {
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            final boolean showHomeBtn = !environment.getConfig().isTabsLayoutEnabled();
+            bar.setDisplayShowHomeEnabled(showHomeBtn);
+            bar.setDisplayHomeAsUpEnabled(showHomeBtn);
+            bar.setIcon(android.R.color.transparent);
+        }
+    }
+
+    @Override
+    protected int getToolbarLayoutId() {
+        return environment.getConfig().isTabsLayoutEnabled() ?
+                R.layout.toolbar_with_profile_button :
+                super.getToolbarLayoutId();
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        setTitle(getResources().getString(titleId));
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        final View toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            final TextView titleView = getTitleView();
+            if (titleView != null) {
+                titleView.setText(title);
+            }
+        }
+        super.setTitle(title);
+    }
+
+    @Override
+    @Nullable
+    public SearchView getSearchView() {
+        final View searchView = findViewById(R.id.toolbar_search_view);
+        if (searchView != null && searchView instanceof SearchView) {
+            return (SearchView) searchView;
+        }
+        return null;
+    }
+
+    @Override
+    @Nullable
+    public TextView getTitleView() {
+        final View titleView = findViewById(R.id.toolbar_title_view);
+        if (titleView != null && titleView instanceof TextView) {
+            return (TextView) titleView;
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public ImageView getProfileView() {
+        final View profileView = findViewById(R.id.toolbar_profile_image);
+        if (profileView != null && profileView instanceof ImageView) {
+            return (ImageView) profileView;
+        }
+        return null;
     }
 
     private void initWhatsNew() {

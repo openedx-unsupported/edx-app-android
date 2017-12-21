@@ -1,13 +1,15 @@
 package org.edx.mobile.base;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,18 +32,35 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     @Nullable
     TextView centerMessageBox;
 
+    @InjectView(R.id.toolbar_container)
+    @NonNull
+    FrameLayout toolbarContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_fragment_base);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        addToolbar();
+        super.setToolbarAsActionBar();
+    }
 
-        ActionBar bar = getSupportActionBar();
-        if (bar != null) {
-            bar.setDisplayShowHomeEnabled(true);
-            bar.setDisplayHomeAsUpEnabled(true);
-            bar.setIcon(android.R.color.transparent);
-        }
+    /**
+     * It will add the custom toolbar in the activity's layout.
+     * <p>
+     * Toolbar addition will be done by finding a {@link FrameLayout} with id
+     * {@link R.id#toolbar_container R.id.toolbar_container} and then inflating a custom toolbar layout
+     * in it. Custom toolbar layout will be obtained from {@link BaseSingleFragmentActivity#getToolbarLayoutId()}
+     * function.
+     * </p>
+     */
+    private void addToolbar() {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(getToolbarLayoutId(), toolbarContainer);
+    }
+
+    @LayoutRes
+    protected int getToolbarLayoutId() {
+        return R.layout.toolbar;
     }
 
     @Override
