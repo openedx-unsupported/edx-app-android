@@ -70,9 +70,8 @@
             android:name="org.edx.mobile.view.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"
-            android:fitsSystemWindows="true"
-            android:theme="@style/AppTheme.TransparentStatusBar" />
+            android:theme="@style/AppTheme.NoActionBar.BlackStatusBar"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name="org.edx.mobile.view.MyCoursesListActivity"
