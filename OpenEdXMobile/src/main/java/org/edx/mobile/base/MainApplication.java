@@ -130,7 +130,7 @@ public abstract class MainApplication extends MultiDexApplication {
         Iconify.with(new FontAwesomeModule());
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/OpenSans-Regular.ttf")
+                .setDefaultFontPath("fonts/montserrat/Regular.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
