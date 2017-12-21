@@ -343,7 +343,7 @@ public class RegisterActivity extends BaseFragmentActivity
                                 if (!errorShown) {
                                     // this is the first input field with error,
                                     // so focus on it after showing the popup
-                                    showErrorPopup(fieldView.getView());
+                                    showErrorPopup(fieldView.getOnErrorFocusView());
                                     errorShown = true;
                                 }
                                 break;

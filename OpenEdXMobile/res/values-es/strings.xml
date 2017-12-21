@@ -84,15 +84,18 @@
   <string name="label_close_navigation_menu">Cerrar Menú de Navegación</string>
   <!--Button text to show user Settings screen-->
   <string name="action_settings">Opciones</string>
+  <!--Button text to show user current downloads screen-->
+  <string name="label_current_downloads">Ver descargas</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Abrir su perfil</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Mis cursos</string>
   <!--Title of important course dates screen-->
-  <string name="label_course_dates">Fechas y plazos del curso</string>
+  <string name="label_course_dates">Fechas y Plazos del Curso</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
   <!--Title of webview based Find Courses Screen-->
+  <string name="label_discover">Exploración</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentario</string>
   <!--Toggle switch on state label-->
@@ -108,6 +111,7 @@
   <!--Button text to show user Settings screen-->
   <string name="label_settings">Configuración</string>
   <!--Title of Account screen-->
+  <string name="title_account">Cuenta</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Restablecer contraseña</string>
@@ -138,7 +142,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--NOTE: TODO - not final one-->
   <string name="courseware_subtitle">Acceda a los videos y actividades</string>
   <!--Row title of videos on dashboard screen-->
+  <string name="videos_title">Videos</string>
   <!--Row subtitle of videos on dashboard screen-->
+  <string name="videos_subtitle">Ver videos del curso</string>
   <!--Row of Discussion on dashboard screen-->
   <string name="discussion_title">Discusión</string>
   <!--Row of Discussion on dashboard screen-->
@@ -152,7 +158,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">Anuncios</string>
   <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title">Fechas importantes</string>
+  <string name="course_dates_title">Fechas Importantes</string>
+  <!--Title text for the additional resources section on the tabular course dashboard-->
+  <string name="resources_title">Recursos</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">Manténgase actualizado</string>
@@ -178,6 +186,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">No hay ningún contenido del curso disponible en este momento.</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->
+  <string name="no_videos_text">Este curso no contiene videos.</string>
   <!--Label shown when user is enrolled in no courses-->
   <string name="no_courses_to_display">Parece que todavía no está inscrito en ningún curso.</string>
   <!--Label shown when no announcements are available for a course-->
@@ -187,8 +196,11 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label shown when no important dates are available for a course-->
   <string name="no_course_dates_to_display">Las fechas del curso no están disponibles en este momento.</string>
   <!--Title of the screen where user can delete videos-->
+  <string name="delete_videos_title">Borrar Videos</string>
   <!--Label for a course item's due date for same day-->
+  <string name="due_date_today">debido hoy a las {due_date}</string>
   <!--Label for a course item's due date-->
+  <string name="due_date_past_future">debido {due date}</string>
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">Temas de discusión</string>
@@ -400,6 +412,8 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="email_chooser_header">Enviar email usando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">No hay apps de correo instaladas</string>
+  <!--Search for a course prompt-->
+  <string name="search_for_courses">Buscar cursos</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">¿Ya tiene una cuenta? Inicie sesión</string>

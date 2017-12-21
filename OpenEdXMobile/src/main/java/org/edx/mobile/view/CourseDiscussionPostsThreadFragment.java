@@ -384,7 +384,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             @Override
             public void onFailure(@NonNull final Call<Page<DiscussionThread>> call,
                                   @NonNull final Throwable error) {
-                if (getView() == null) return;
+                if (getView() == null || call.isCanceled()) return;
                 // Don't display any error message if we're doing a silent
                 // refresh, as that would be confusing to the user.
                 if (!callback.isRefreshingSilently()) {
@@ -427,6 +427,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     }
 
     private void setScreenStateUponResult() {
+        errorNotification.hideError();
         centerMessageBox.setVisibility(View.GONE);
         spinnersContainerLayout.setVisibility(View.VISIBLE);
         discussionPostsListView.setVisibility(View.VISIBLE);
