@@ -89,7 +89,7 @@
     <TextView
         android:id="@+id/discussion_unread_replies_text"
         style="@style/discussion_title_text"
-        fontPath="fonts/OpenSans-Semibold.ttf"
+        fontPath="fonts/montserrat/SemiBold.otf"
         android:layout_marginLeft="@dimen/edx_margin"
         android:layout_marginRight="@dimen/edx_margin"
         android:layout_marginTop="@dimen/discussion_posts_icon_margin"

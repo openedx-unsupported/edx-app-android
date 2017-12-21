@@ -179,19 +179,19 @@
     </style>
 
     <style name="bold_text">
-        <item name="fontPath">fonts/montserrat/Bold.ttf</item>
+        <item name="fontPath">fonts/montserrat/Bold.otf</item>
     </style>
 
     <style name="semibold_text">
-        <item name="fontPath">fonts/montserrat/Semibold.ttf</item>
+        <item name="fontPath">fonts/montserrat/SemiBold.otf</item>
     </style>
 
     <style name="medium_text">
-        <item name="fontPath">fonts/montserrat/Medium.ttf</item>
+        <item name="fontPath">fonts/montserrat/Medium.otf</item>
     </style>
 
     <style name="regular_text">
-        <item name="fontPath">fonts/montserrat/Regular.ttf</item>
+        <item name="fontPath">fonts/montserrat/Regular.otf</item>
     </style>
 
     <style name="triogrotesk_bold_text">

@@ -45,7 +45,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         edx_grayscale_neutral_dark = context.getResources().getColor(R.color.edx_brand_gray_base);
         edx_brand_secondary_dark = context.getResources().getColor(R.color.edx_brand_secondary_dark);
         edx_utility_success_dark = context.getResources().getColor(R.color.edx_success_text);
-        openSansSemiBoldFont = TypefaceUtils.load(context.getAssets(), "fonts/OpenSans-Semibold.ttf");
+        openSansSemiBoldFont = TypefaceUtils.load(context.getAssets(), "fonts/montserrat/SemiBold.otf");
     }
 
     @Override

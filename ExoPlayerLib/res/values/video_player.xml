@@ -23,11 +23,11 @@
     
     <!-- styles -->
     <style name="regular_text">
-        <item name="font">OpenSans-Regular.ttf</item>
+        <item name="font">fonts/montserrat/Regular.otf</item>
     </style>
     
     <style name="bold_text">
-        <item name="font">OpenSans-Bold.ttf</item>
+        <item name="font">fonts/montserrat/Bold.otf</item>
     </style>
     
     <style name="bold_white_text" parent="@style/bold_text">
@@ -35,7 +35,7 @@
     </style>
     
     <style name="semibold_text">
-        <item name="font">OpenSans-Semibold.ttf</item>
+        <item name="font">fonts/montserrat/Bold.otf</item>
     </style>
     
     <style name="semibold_white_text" parent="@style/semibold_text">
