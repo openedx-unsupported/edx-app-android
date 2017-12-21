@@ -21,6 +21,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (!Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
             finish();
         }
