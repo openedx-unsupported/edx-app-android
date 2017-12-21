@@ -140,7 +140,7 @@ public class MyCoursesListFragment extends BaseFragment
             } else if (exception instanceof HttpStatusException) {
                 final HttpStatusException httpStatusException = (HttpStatusException) exception;
                 switch (httpStatusException.getStatusCode()) {
-                    case HttpStatus.UNAUTHORIZED:{
+                    case HttpStatus.UNAUTHORIZED: {
                         environment.getRouter().forceLogout(getContext(),
                                 environment.getAnalyticsRegistry(),
                                 environment.getNotificationDelegate());
@@ -288,7 +288,9 @@ public class MyCoursesListFragment extends BaseFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.my_courses, menu);
+        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+            inflater.inflate(R.menu.my_courses, menu);
+        }
     }
 
     @Override

@@ -72,7 +72,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"
             android:fitsSystemWindows="true"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+            android:theme="@style/AppTheme.TransparentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.MyCoursesListActivity"
@@ -248,7 +248,7 @@
         <activity
             android:name=".whatsnew.WhatsNewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Transparent" />
+            android:theme="@style/AppTheme.TransparentStatusBar" />
 
         <activity
             android:name=".view.CourseTabsDashboardActivity"

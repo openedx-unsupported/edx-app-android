@@ -44,7 +44,7 @@ public class WhatsNewItemFragment extends BaseFragment {
         final WhatsNewItemModel model = args.getParcelable(ARG_MODEL);
 
         binding.title.setText(escapePlatformName(model.getTitle()));
-        binding.heading.setText(escapePlatformName(model.getMessageTitle()));
+        binding.messageTitle.setText(escapePlatformName(model.getMessageTitle()));
         binding.message.setText(escapePlatformName(model.getMessage()));
 
         if (!model.getImage().isEmpty()) {

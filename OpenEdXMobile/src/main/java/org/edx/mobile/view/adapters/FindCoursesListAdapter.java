@@ -25,8 +25,7 @@ public abstract class FindCoursesListAdapter extends BaseListAdapter<CourseDetai
         final CourseCardViewHolder holder = (CourseCardViewHolder) tag;
         holder.setCourseTitle(courseDetail.name);
         holder.setCourseImage(courseDetail.media.course_image.getUri(environment.getConfig().getApiHostURL()));
-        holder.setDescription(CourseCardUtils.getDescription(courseDetail.org, courseDetail.number, null),
-                CourseCardUtils.getFormattedDate(getContext(), courseDetail));
+        holder.setDescription(CourseCardUtils.getFormattedDate(getContext(), courseDetail));
     }
 
     @Override
@@ -41,7 +40,7 @@ public abstract class FindCoursesListAdapter extends BaseListAdapter<CourseDetai
         final long currentTime = SystemClock.elapsedRealtime();
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
-            CourseDetail model = (CourseDetail)adapterView.getItemAtPosition(position);
+            CourseDetail model = (CourseDetail) adapterView.getItemAtPosition(position);
             if (model != null) onItemClicked(model);
         }
     }

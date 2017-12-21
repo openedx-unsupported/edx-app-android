@@ -6,7 +6,7 @@
         android:id="@+id/content_error_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_act_background">
+        android:background="@color/grey_1">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_container"
@@ -18,8 +18,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
+                android:paddingLeft="@dimen/edx_margin"
+                android:paddingRight="@dimen/edx_margin"
+                android:scrollbarStyle="outsideOverlay"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="@dimen/widget_margin"
+                android:dividerHeight="@dimen/widget_margin_double"
                 android:drawSelectorOnTop="false"
                 android:listSelector="@android:color/transparent"
                 tools:listitem="@layout/row_course_list" />

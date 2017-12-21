@@ -1,12 +1,11 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <item name="colorPrimary">@color/edx_brand_primary_base</item>
-        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
+        <item name="colorPrimary">@color/philu_primary</item>
+        <item name="colorPrimaryDark">@color/philu_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
         <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
         <item name="actionMenuTextColor">@color/white</item>
@@ -36,7 +35,8 @@
              any of the other sizes anywhere currently, it doesn't matter for now. -->
         <item name="android:progressBarStyle">@style/edX.Widget.ProgressBar</item>
         <item name="android:progressBarStyleSmall">@style/edX.Widget.ProgressBar.Small</item>
-        <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title</item>
+        <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title
+        </item>
         <item name="android:progressBarStyleLarge">@style/edX.Widget.ProgressBar.Large</item>
         <item name="android:progressBarStyleInverse">@style/edX.Widget.ProgressBar.Inverse</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
@@ -58,8 +58,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.TranslucentStatusBar"></style>
-    <style name="AppTheme.NoActionBar.Transparent" parent="AppTheme.NoActionBar"></style>
+    <style name="AppTheme.NoActionBar.TranslucentStatusBar" />
+
+    <style name="AppTheme.TransparentStatusBar" parent="AppTheme.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
@@ -89,7 +92,7 @@
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/edx_brand_primary_base</item>
+        <!--<item name="background">@color/philu_primary</item>-->
         <item name="titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="subtitleTextStyle">@style/MyActionBarTitleText</item>
         <item name="itemPadding">2dip</item>
@@ -115,7 +118,8 @@
     <!-- ActionBar title text -->
     <style name="MyActionBarTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
-        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="fontPath">fonts/montserrat/Medium.otf</item>
     </style>
 
     <style name="separator_base">
@@ -169,7 +173,9 @@
         <item name="android:layout_width">@dimen/video_player_top_control_width</item>
         <item name="android:layout_height">@dimen/video_player_top_control_height</item>
         <item name="android:layout_marginRight">@dimen/video_player_control_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_control_right_margin</item>
+        <item name="android:layout_marginEnd" tools:targetApi="17">
+            @dimen/video_player_control_right_margin
+        </item>
         <item name="iconColor">@color/white</item>
     </style>
 
@@ -177,7 +183,9 @@
         <item name="android:layout_width">@dimen/video_player_side_control_width</item>
         <item name="android:layout_height">@dimen/video_player_side_control_height</item>
         <item name="android:layout_marginRight">@dimen/video_player_control_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_control_right_margin</item>
+        <item name="android:layout_marginEnd" tools:targetApi="17">
+            @dimen/video_player_control_right_margin
+        </item>
         <item name="android:padding">@dimen/video_player_side_control_padding</item>
         <item name="android:background">@drawable/semi_transparent_gray_circle</item>
         <item name="iconColor">@color/white</item>
@@ -190,7 +198,9 @@
         <item name="android:minHeight">@dimen/video_player_seekbar_height</item>
         <item name="android:maxHeight">@dimen/video_player_seekbar_height</item>
         <item name="android:layout_marginRight">@dimen/video_player_seekbar_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_seekbar_right_margin</item>
+        <item name="android:layout_marginEnd" tools:targetApi="17">
+            @dimen/video_player_seekbar_right_margin
+        </item>
         <item name="android:progressDrawable">@drawable/player_seekbar_progress</item>
         <item name="android:thumb">@drawable/player_seekbar_thumb</item>
         <item name="android:thumbOffset">0dp</item>
@@ -205,9 +215,14 @@
         <item name="android:layout_width">@dimen/video_player_bottom_control_width</item>
         <item name="android:layout_height">@dimen/video_player_bottom_control_height</item>
         <item name="android:layout_marginLeft">@dimen/video_player_bottom_control_left_margin</item>
-        <item name="android:layout_marginStart" tools:targetApi="17">@dimen/video_player_bottom_control_left_margin</item>
-        <item name="android:layout_marginRight">@dimen/video_player_bottom_control_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_bottom_control_right_margin</item>
+        <item name="android:layout_marginStart" tools:targetApi="17">
+            @dimen/video_player_bottom_control_left_margin
+        </item>
+        <item name="android:layout_marginRight">@dimen/video_player_bottom_control_right_margin
+        </item>
+        <item name="android:layout_marginEnd" tools:targetApi="17">
+            @dimen/video_player_bottom_control_right_margin
+        </item>
         <item name="iconColor">@color/white</item>
     </style>
 
@@ -278,7 +293,9 @@
     <style name="discussion_thread_icon">
         <item name="android:layout_width">@dimen/edx_small</item>
         <item name="android:layout_height">@dimen/edx_small</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/discussion_posts_icon_margin</item>
+        <item name="android:layout_marginEnd" tools:targetApi="17">
+            @dimen/discussion_posts_icon_margin
+        </item>
         <item name="android:layout_marginRight">@dimen/discussion_posts_icon_margin</item>
         <item name="android:layout_marginTop">@dimen/discussion_posts_icon_margin</item>
         <item name="iconColor">@color/edx_brand_gray_base</item>
@@ -293,8 +310,11 @@
     <style name="discussion_action_bar_icon">
         <item name="android:layout_width">@dimen/edx_small</item>
         <item name="android:layout_height">@dimen/edx_small</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/discussion_responses_action_bar_icon_margin</item>
-        <item name="android:layout_marginRight">@dimen/discussion_responses_action_bar_icon_margin</item>
+        <item name="android:layout_marginEnd" tools:targetApi="17">
+            @dimen/discussion_responses_action_bar_icon_margin
+        </item>
+        <item name="android:layout_marginRight">@dimen/discussion_responses_action_bar_icon_margin
+        </item>
     </style>
 
     <style name="profile_image">

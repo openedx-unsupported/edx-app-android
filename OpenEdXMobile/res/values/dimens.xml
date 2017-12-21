@@ -41,7 +41,10 @@
     <dimen name="last_accessed_button_right_margin">14dp</dimen>
 
     <!-- Course Card -->
-    <dimen name="course_card_height">190dp</dimen>
+    <dimen name="course_card_height">150dp</dimen>
+    <dimen name="course_detail_layout_margin">16dp</dimen>
+    <dimen name="course_card_image_height">110dp</dimen>
+    <dimen name="course_card_image_width">100dp</dimen>
     <dimen name="course_card_play_icon_size">60dp</dimen>
     <dimen name="course_detail_card_height">70dp</dimen>
     <dimen name="course_detail_share_icon_size">50dp</dimen>
@@ -193,7 +196,7 @@
     <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_line">3px</dimen>
     <dimen name="edx_box_radius">5dp</dimen>
-    <dimen name="edx_margin">15dp</dimen>
+    <dimen name="edx_margin">16dp</dimen>
     <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="edx_quadruple_margin">60dp</dimen>
     <dimen name="widget_margin">10dp</dimen>
