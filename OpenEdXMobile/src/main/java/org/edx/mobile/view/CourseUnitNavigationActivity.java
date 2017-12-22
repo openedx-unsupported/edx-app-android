@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,6 +56,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private Button mNextBtn;
     @InjectView(R.id.goto_prev)
     private Button mPreviousBtn;
+    @InjectView(R.id.goto_next_container)
+    private LinearLayout mNextBtnContainer;
+    @InjectView(R.id.goto_prev_container)
+    private LinearLayout mPreviousBtnContainer;
     @InjectView(R.id.next_button_icon)
     private IconImageViewXml mNextBtnIcon;
     @InjectView(R.id.previous_button_icon)
@@ -112,13 +117,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
-        mPreviousBtn.setOnClickListener(new View.OnClickListener() {
+        mPreviousBtnContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navigatePreviousComponent();
             }
         });
-        mNextBtn.setOnClickListener(new View.OnClickListener() {
+        mNextBtnContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navigateNextComponent();
