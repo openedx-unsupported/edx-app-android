@@ -59,7 +59,7 @@
 
     <!-- Login Activity Place Holders -->
     <!-- Hint text for login field -->
-    <string name="email_username">User name or e-mail address</string>
+    <string name="email_username">Username or e-mail</string>
     <!-- Hint text for email address field in reset password dialog -->
     <string name="email">E-mail address</string>
     <!-- Hint text for password field -->
