@@ -58,15 +58,6 @@ public class WhatsNewItemFragment extends BaseFragment {
         @DrawableRes
         final int imageRes = UiUtil.getDrawable(getContext(), imageName);
         binding.image.setImageResource(imageRes);
-        // We need different scale types for portrait and landscape images
-        final Drawable drawable = UiUtil.getDrawable(getContext(), imageRes);
-        if (drawable != null) {
-            if (drawable.getIntrinsicHeight() > drawable.getIntrinsicWidth()) {
-                binding.image.setScaleType(ImageView.ScaleType.FIT_END);
-            } else {
-                binding.image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            }
-        }
     }
 
     private String escapePlatformName(@NonNull String input) {
