@@ -2,6 +2,7 @@ package org.edx.mobile.view.custom;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,13 +22,15 @@ public class IndicatorController {
     private List<ImageView> dots;
     private int slideCount;
 
+    @DrawableRes
     private int indicatorDotActiveLayout = R.drawable.indicator_dot_active;
+    @DrawableRes
     private int indicatorDotInactiveLayout = R.drawable.indicator_dot_inactive;
 
     public IndicatorController() {
     }
 
-    public IndicatorController(int indicatorDotActiveLayout, int indicatorDotInactiveLayout) {
+    public IndicatorController(@DrawableRes int indicatorDotActiveLayout, @DrawableRes int indicatorDotInactiveLayout) {
         this.indicatorDotActiveLayout = indicatorDotActiveLayout;
         this.indicatorDotInactiveLayout = indicatorDotInactiveLayout;
     }
