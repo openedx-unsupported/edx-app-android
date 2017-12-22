@@ -202,6 +202,7 @@
     <dimen name="widget_margin">10dp</dimen>
     <dimen name="widget_margin_half">5dp</dimen>
     <dimen name="widget_margin_double">20dp</dimen>
+    <dimen name="widget_margin_large">25dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
@@ -210,8 +211,6 @@
     <dimen name="divider_with_text_margin">12dp</dimen>
     <dimen name="transcript_row_height">50dp</dimen>
     <dimen name="whats_new_image_horizontal_margin">25dp</dimen>
-    <dimen name="whats_new_title_margin">25dp</dimen>
     <dimen name="icon_progress_bar_right_margin">10dp</dimen>
-    <dimen name="edx_login_box_margin">30dp</dimen>
     <dimen name="login_input_box_radius">3dp</dimen>
 </resources>

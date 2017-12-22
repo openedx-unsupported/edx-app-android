@@ -1,55 +1,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical">
 
-    <org.edx.mobile.view.custom.IconImageViewXml
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_margin="20dp"
-        app:iconColor="@color/edx_brand_gray_back"
-        app:iconName="fa-laptop" />
 
-    <TextView
-        android:id="@+id/not_available_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:gravity="center"
-        android:singleLine="false"
-        tools:text="@string/assessment_not_available"
-        android:textAlignment="center"
-        android:textColor="@color/edx_brand_gray_base"
-        android:textSize="@dimen/edx_base"
-        tools:targetApi="17" />
+        <ImageView
+            android:src="@drawable/alert"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/widget_margin_half"
+            android:scaleType="centerInside"
+            android:background="@color/grey"
+            android:contentDescription="@null" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:gravity="center"
-        android:singleLine="false"
-        android:text="@string/assessment_explore_on_web"
-        android:textAlignment="center"
-        android:textColor="@color/edx_brand_gray_base"
-        android:textSize="@dimen/edx_base"
-        tools:targetApi="17" />
+        <TextView
+            android:id="@+id/title"
+            style="@style/whats_new_semibold_text"
+            android:text="@string/course_on_web_title"
+            android:textSize="@dimen/custom_x_small"
+            android:letterSpacing="0.04"
+            android:lineSpacingExtra="6sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/widget_margin_large"
+            android:layout_marginLeft="@dimen/widget_margin_large"
+            android:layout_marginRight="@dimen/widget_margin_large"
+            />
 
-    <Button
-        android:id="@+id/view_on_web_button"
-        style="@style/edX.Widget.RegularButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/assessment_view_on_web" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/widget_margin"
+            android:layout_weight=".5"
+            android:overScrollMode="never"
+            android:layout_marginLeft="@dimen/widget_margin_large"
+            android:layout_marginRight="@dimen/widget_margin_large"
+            android:layout_marginBottom="@dimen/widget_margin">
+
+
+            <TextView
+                style="@style/description_paragraph_regular_text"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/edx_x_small"
+                android:gravity="center_horizontal"
+                android:text="@string/course_on_web_description" />
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/view_on_web_button"
+            style="@style/edX.Widget.SignInButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:letterSpacing="0.04"
+            android:layout_marginTop="@dimen/widget_margin"
+            android:layout_marginBottom="@dimen/widget_margin_large"
+            android:layout_marginRight="@dimen/widget_margin_large"
+            android:layout_marginLeft="@dimen/widget_margin_large"
+            android:text="@string/leave_app"
+            android:textAllCaps="true"
+            android:textColor="@color/edx_brand_button_text"
+            android:textSize="@dimen/edx_x_small" />
 
 </LinearLayout>
 
