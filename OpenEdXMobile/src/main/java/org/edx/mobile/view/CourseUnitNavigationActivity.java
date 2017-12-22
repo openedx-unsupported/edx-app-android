@@ -30,9 +30,7 @@ import org.edx.mobile.view.custom.IndicatorController;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -47,7 +45,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     protected Logger logger = new Logger(getClass().getSimpleName());
     @Inject
     LastAccessManager lastAccessManager;
-    Map<String, List<CourseComponent>> courseUnitBlockCounterMap = new HashMap<>();
     private DisableableViewPager pager;
     private CourseComponent selectedUnit;
     private List<CourseComponent> unitList = new ArrayList<>();
@@ -72,6 +69,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private FrameLayout mIndicatorContainer;
 
     private IndicatorController indicatorController;
+    private boolean isVideoMode;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,12 +220,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         int curIndex = pager.getCurrentItem();
 
         if (!selectedUnit.getParent().getId().equalsIgnoreCase(pagerAdapter.getUnit(curIndex).getParent().getId())) {
-            indicatorController.initialize(courseUnitBlockCounterMap.get(pagerAdapter.getUnit(curIndex).getParent().getId()).size());
+            indicatorController.initialize(getTotalComponentsCount(pagerAdapter.getUnit(curIndex)));
         }
 
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
-        indicatorController.selectPosition(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).indexOf(selectedUnit));
+        indicatorController.selectPosition(getCurrentComponentIndex());
 
         mPreviousBtn.setEnabled(curIndex > 0);
         mPreviousBtnIcon.setEnabled(curIndex > 0);
@@ -268,7 +266,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private void updateDataModel() {
         unitList.clear();
-        courseUnitBlockCounterMap.clear();
         if (selectedUnit == null || selectedUnit.getRoot() == null) {
             logger.warn("selectedUnit is null?");
             return;   //should not happen
@@ -279,7 +276,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
 
-        boolean isVideoMode = false;
+        isVideoMode = false;
         if (getIntent() != null) {
             isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
         }
@@ -291,8 +288,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
-
-        updateUnitBlocksCounter();
 
         ViewPagerDownloadManager.instance.setMainComponent(selectedUnit, unitList);
 
@@ -307,18 +302,24 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         }
 
         // Initialize indicator layout for first opened unit
-        indicatorController.initialize(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).size());
-        indicatorController.selectPosition(courseUnitBlockCounterMap.get(selectedUnit.getParent().getId()).indexOf(selectedUnit));
+        indicatorController.initialize(getTotalComponentsCount(selectedUnit));
+        indicatorController.selectPosition(getCurrentComponentIndex());
 
     }
 
-    private void updateUnitBlocksCounter() {
-        for (CourseComponent courseComponent : unitList) {
-            List<CourseComponent> childComponents = courseUnitBlockCounterMap.get(courseComponent.getParent().getId());
-            if (childComponents == null)
-                childComponents = new ArrayList<>();
-            childComponents.add(courseComponent);
-            courseUnitBlockCounterMap.put(courseComponent.getParent().getId(), childComponents);
+    private int getTotalComponentsCount(CourseComponent unit) {
+        if(isVideoMode){
+            return unit.getParent().getVideos().size();
+        }else{
+            return unit.getParent().getChildren().size();
+        }
+    }
+
+    private int getCurrentComponentIndex() {
+        if(isVideoMode){
+            return selectedUnit.getParent().getVideos().indexOf(selectedUnit);
+        }else{
+            return selectedUnit.getParent().getChildren().indexOf(selectedUnit);
         }
     }
 
