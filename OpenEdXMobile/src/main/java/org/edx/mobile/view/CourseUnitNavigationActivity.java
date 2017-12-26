@@ -86,7 +86,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         pager.setAdapter(pagerAdapter);
 
 
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -308,17 +308,17 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
     private int getTotalComponentsCount(CourseComponent unit) {
-        if(isVideoMode){
+        if (isVideoMode) {
             return unit.getParent().getVideos().size();
-        }else{
+        } else {
             return unit.getParent().getChildren().size();
         }
     }
 
     private int getCurrentComponentIndex() {
-        if(isVideoMode){
+        if (isVideoMode) {
             return selectedUnit.getParent().getVideos().indexOf(selectedUnit);
-        }else{
+        } else {
             return selectedUnit.getParent().getChildren().indexOf(selectedUnit);
         }
     }
