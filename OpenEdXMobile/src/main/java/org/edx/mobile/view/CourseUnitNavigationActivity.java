@@ -54,9 +54,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     @InjectView(R.id.goto_prev)
     private Button mPreviousBtn;
     @InjectView(R.id.goto_next_container)
-    private LinearLayout mNextBtnContainer;
+    private LinearLayout mBtnNextUnit;
     @InjectView(R.id.goto_prev_container)
-    private LinearLayout mPreviousBtnContainer;
+    private LinearLayout mBtnPreviousUnit;
     @InjectView(R.id.next_button_icon)
     private IconImageViewXml mNextBtnIcon;
     @InjectView(R.id.previous_button_icon)
@@ -115,13 +115,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
-        mPreviousBtnContainer.setOnClickListener(new View.OnClickListener() {
+        mBtnPreviousUnit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navigatePreviousComponent();
             }
         });
-        mNextBtnContainer.setOnClickListener(new View.OnClickListener() {
+        mBtnNextUnit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navigateNextComponent();
@@ -220,7 +220,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         int curIndex = pager.getCurrentItem();
 
         if (!selectedUnit.getParent().getId().equalsIgnoreCase(pagerAdapter.getUnit(curIndex).getParent().getId())) {
-            indicatorController.initialize(getTotalComponentsCount(pagerAdapter.getUnit(curIndex)));
+            indicatorController.setCount(getTotalComponentsCount(pagerAdapter.getUnit(curIndex)));
         }
 
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
@@ -302,7 +302,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         }
 
         // Initialize indicator layout for first opened unit
-        indicatorController.initialize(getTotalComponentsCount(selectedUnit));
+        indicatorController.setCount(getTotalComponentsCount(selectedUnit));
         indicatorController.selectPosition(getCurrentComponentIndex());
 
     }

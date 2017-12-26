@@ -41,7 +41,7 @@ public class IndicatorController {
         return dotLayout;
     }
 
-    public void initialize(int slideCount) {
+    public void setCount(int slideCount) {
         dots = new ArrayList<>();
         this.slideCount = slideCount;
 
