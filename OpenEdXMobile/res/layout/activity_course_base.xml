@@ -152,7 +152,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="bottom|center"
-                            android:layout_weight="0.75" />
+                            android:layout_weight="0.9" />
 
                         <LinearLayout
                             android:id="@+id/goto_next_container"
