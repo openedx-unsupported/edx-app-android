@@ -3,10 +3,17 @@ package org.edx.mobile.view;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
@@ -14,6 +21,8 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 
 public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
+
+    private static final String API_KEY = "AIzaSyC4KJEAYxstkKqFlpbfWsqzGoeLBPBpjUU";
 
     public static CourseUnitOnlyOnYoutubeFragment newInstance(CourseComponent unit) {
         CourseUnitOnlyOnYoutubeFragment fragment = new CourseUnitOnlyOnYoutubeFragment();
@@ -33,13 +42,30 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
-        ((TextView) v.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_only_on_youtube);
-        v.findViewById(R.id.view_on_youtube_button).setOnClickListener(new View.OnClickListener() {
+
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.youtube_fragment, youTubePlayerFragment).commit();
+
+        youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
+
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(((VideoBlockModel) unit).getData().encodedVideos.youtube.url));
-                startActivity(i);
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    String url = ((VideoBlockModel) unit).getData().encodedVideos.youtube.url;
+                    String videoId = url.split("v=")[1];
+                    player.loadVideo(videoId);
+                    player.play();
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+                String errorMessage = error.toString();
+                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                Log.d("errorMessage:", errorMessage);
             }
         });
         return v;
