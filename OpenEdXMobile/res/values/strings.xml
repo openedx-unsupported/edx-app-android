@@ -97,6 +97,8 @@
     <string name="label_close_navigation_menu">Close Navigation Menu</string>
     <!-- Button text to show user Settings screen -->
     <string name="action_settings">Settings</string>
+    <!-- Button text to download unit content -->
+    <string name="action_download">Download</string>
     <!-- Button text to show user current downloads screen -->
     <string name="label_current_downloads" tools:ignore="MissingTranslation">View current downloads</string>
     <!-- Content description for edit profile button -->

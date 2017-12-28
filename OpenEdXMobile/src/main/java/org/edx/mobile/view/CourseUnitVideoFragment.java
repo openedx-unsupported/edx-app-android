@@ -12,6 +12,9 @@ import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +114,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
         unit = getArguments() == null ? null :
                 (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
@@ -130,6 +134,24 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.download_content, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_item_download) {
+            Toast.makeText(getContext(), "Download not available yet", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
