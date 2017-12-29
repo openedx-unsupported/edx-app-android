@@ -124,6 +124,13 @@
         <item name="fontPath">fonts/montserrat/Medium.otf</item>
     </style>
 
+    <!-- ActionBar SUBtitle text -->
+    <style name="MyActionBarSubtitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="fontPath">fonts/montserrat/Regular.otf</item>
+    </style>
+
     <style name="separator_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>

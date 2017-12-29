@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -50,7 +51,9 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
@@ -63,6 +66,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private final static String HAS_PREV_UNIT_ID = "has_prev_unit";
     private final static int MSG_UPDATE_PROGRESS = 1022;
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
+    private final static String playbackTimeFormat = "(%02d:%02d)";
 
     VideoBlockModel unit;
     private PlayerFragment playerFragment;
@@ -71,21 +75,21 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private String chapterName;
     private LectureModel lecture;
     private EnrolledCoursesResponse enrollment;
-    private DownloadEntry videoModel;
 
+    private DownloadEntry videoModel;
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
     private CardView transcriptListViewUnit;
     private ListView transcriptListView;
+
     private TranscriptAdapter transcriptAdapter;
 
     private boolean hasNextUnit;
-
     private boolean hasPreviousUnit;
+
     // Defines if the user is scrolling the transcript listview
     private boolean isTranscriptScrolling = false;
-
     // Top offset to centralize the currently active transcript item in the listview
     private float topOffset = 0;
     @Inject
@@ -459,6 +463,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Override
     public void onStop() {
         super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
 
@@ -545,12 +550,21 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             DownloadEntry v = videoModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getPlaybackTime(offset));
                 DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).updateVideoLastPlayedOffset(v.videoId, offset,
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);
         }
+    }
+
+    private String getPlaybackTime(int millis) {
+        return String.format(playbackTimeFormat,
+                TimeUnit.MILLISECONDS.toMinutes(millis),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
     }
 
     @Override
