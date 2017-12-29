@@ -357,6 +357,7 @@
 
     <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">
         <item name="android:textColor">?attr/disableableButtonTextColor</item>
+        <item name="android:textSize">@dimen/edx_small</item>
     </style>
 
     <style name="edX.Widget.SignInButtonLayout">
