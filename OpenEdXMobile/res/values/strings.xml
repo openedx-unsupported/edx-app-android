@@ -176,7 +176,7 @@
     <!-- Row of announcement on dashboard screen -->
     <string name="announcement_title">Announcements</string>
     <!-- Title text for the important dates section on the course dashboard  -->
-    <string name="course_dates_title">Important Dates</string>
+    <string name="course_dates_title" tools:ignore="MissingTranslation">Dates</string>
     <!-- Title text for the additional resources section on the tabular course dashboard  -->
     <string name="resources_title">Resources</string>
     <!-- Row of announcement on dashboard screen -->
