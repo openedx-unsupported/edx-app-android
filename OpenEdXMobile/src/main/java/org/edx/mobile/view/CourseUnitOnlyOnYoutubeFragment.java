@@ -22,13 +22,14 @@ import org.edx.mobile.services.ViewPagerDownloadManager;
 
 public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
 
-    private static final String API_KEY = "AIzaSyC4KJEAYxstkKqFlpbfWsqzGoeLBPBpjUU";
+    private String youtubeApiKey;
 
-    public static CourseUnitOnlyOnYoutubeFragment newInstance(CourseComponent unit) {
+    public static CourseUnitOnlyOnYoutubeFragment newInstance(CourseComponent unit, String youtubeApiKey) {
         CourseUnitOnlyOnYoutubeFragment fragment = new CourseUnitOnlyOnYoutubeFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
         fragment.setArguments(args);
+        fragment.setYoutubeApiKey(youtubeApiKey);
 
         return fragment;
     }
@@ -48,7 +49,7 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.youtube_fragment, youTubePlayerFragment).commit();
 
-        youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
+        youTubePlayerFragment.initialize(youtubeApiKey, new YouTubePlayer.OnInitializedListener() {
 
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
@@ -81,5 +82,9 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
     @Override
     public void run() {
         ViewPagerDownloadManager.instance.done(this, true);
+    }
+
+    public void setYoutubeApiKey(String youtubeApiKey) {
+        this.youtubeApiKey = youtubeApiKey;
     }
 }
