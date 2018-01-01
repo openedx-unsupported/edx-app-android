@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"/>
 
     <org.edx.mobile.view.custom.IconTextViewXml
         android:id="@+id/no_chapter_tv"

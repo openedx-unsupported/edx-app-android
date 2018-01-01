@@ -632,4 +632,6 @@
     <string name="course_on_web_title" tools:ignore="MissingTranslation">You’re about to be redirected to a browser version of page you selected.</string>
     <string name="leave_app" tools:ignore="MissingTranslation">Leave App</string>
 
+    <string name="sub_topics_text" tools:ignore="MissingTranslation">Sub Topics</string>
+
 </resources>

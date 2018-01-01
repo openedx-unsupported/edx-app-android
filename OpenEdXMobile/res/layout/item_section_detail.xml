@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?><!--todo need some refactoring-->
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants">
+
+    <com.github.vipulasri.timelineview.TimelineView
+        android:id="@+id/subsection_timeline_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:line="@color/edx_input_border_color"
+        app:lineSize="0.5dp"
+        app:markerSize="8dp" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toRightOf="@id/subsection_timeline_marker"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/card_holder"
+            android:layout_alignTop="@+id/card_holder"
+            android:layout_marginBottom="-6dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/multiple_items_cv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0.5dp"
+                android:visibility="gone"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="4dp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/card_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/subsection_row_cv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:foreground="@drawable/course_outline_selector"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="4dp">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/block_container"
+                        android:layout_width="0dp"
+                        android:layout_height="75dp"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/course_availability_status_icon">
+
+                        <org.edx.mobile.view.custom.IconImageViewXml
+                            android:id="@+id/block_type_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            app:iconColor="@color/edx_brand_primary_base" />
+
+                        <RelativeLayout
+                            android:id="@+id/title_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/block_type_icon"
+                            android:paddingLeft="5dp">
+
+                            <TextView
+                                android:id="@+id/subsection_title_tv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:padding="5dp"
+                                android:textColor="@color/philu_light_grey"
+                                android:textSize="14sp"
+                                tools:text="Title" />
+
+                            <TextView
+                                android:id="@+id/subsection_desription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignLeft="@+id/subsection_title_tv"
+                                android:layout_below="@+id/subsection_title_tv"
+                                android:layout_marginBottom="6dp"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:paddingLeft="8dp"
+                                android:textColor="@color/philu_light_grey"
+                                android:textSize="12sp"
+                                tools:text="Description" />
+                        </RelativeLayout>
+                    </RelativeLayout>
+
+                    <org.edx.mobile.view.custom.IconImageViewXml
+                        android:id="@+id/course_availability_status_icon"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@color/philu_blue_bg"
+                        android:padding="25dp"
+                        android:scaleType="centerInside"
+                        app:iconColor="@color/white"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.v7.widget.CardView>
+        </FrameLayout>
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

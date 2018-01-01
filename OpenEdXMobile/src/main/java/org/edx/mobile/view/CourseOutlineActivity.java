@@ -22,9 +22,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
     private boolean isOnCourseOutline = false;
 
     @Inject
-    CourseManager courseManager;
-
-    @Inject
     LastAccessManager lastAccessManager;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +43,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
         if (isOnCourseOutline) {
             setTitle(courseData.getCourse().getName());
-            if (!isVideoMode) {
-                lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
-            }
         }
     }
 
@@ -80,16 +74,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             fragmentTransaction.commitAllowingStateLoss();
         }
 
-        if (isOnCourseOutline) {
-            if (!isVideoMode) {
-                lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
-            }
-        } else {
+        if (isOnCourseOutline && isVideoMode) {
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
-
-            // Update the last accessed item reference if we are in the course subsection view
-            lastAccessManager.setLastAccessed(courseComponent.getCourseId(), courseComponent.getId());
         }
     }
 

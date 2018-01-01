@@ -37,6 +37,7 @@ import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
@@ -46,7 +47,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class CourseOutlineFragment extends BaseFragment {
+public class CourseOutlineFragment extends BaseFragment implements LastAccessManager.LastAccessManagerCallback {
 
     protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseOutlineFragment.class.getCanonicalName();
@@ -62,6 +63,10 @@ public class CourseOutlineFragment extends BaseFragment {
     private boolean isVideoMode;
     private boolean isOnCourseOutline;
     private ActionMode deleteMode;
+    private String lastAccessedComponentId;
+
+    @Inject
+    LastAccessManager lastAccessManager;
 
     @Inject
     CourseManager courseManager;
@@ -86,6 +91,7 @@ public class CourseOutlineFragment extends BaseFragment {
         courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         isVideoMode = bundle.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
         isOnCourseOutline = bundle.getBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE);
+        loadLastAccessed();
 
         View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView) view.findViewById(R.id.outline_list);
@@ -97,8 +103,10 @@ public class CourseOutlineFragment extends BaseFragment {
                 if (deleteMode != null) {
                     deleteMode.finish();
                 }
+                adapter.clearSelectedItemPositions();
                 listView.clearChoices();
                 CourseOutlineAdapter.SectionRow row = adapter.getItem(position);
+                loadLastAccessed();
                 CourseComponent comp = row.component;
                 if (comp.isContainer()) {
                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
@@ -113,8 +121,11 @@ public class CourseOutlineFragment extends BaseFragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (((IconImageView) view.findViewById(R.id.bulk_download)).getIcon() == FontAwesomeIcons.fa_check) {
+                IconImageView mediaAvailabilityIcon = (IconImageView) view.findViewById(R.id.course_availability_status_icon);
+                // If the media would have been downloaded the tag of the icon would have been set to downloaded / null otherwise
+                if (mediaAvailabilityIcon.getTag() != null && mediaAvailabilityIcon.getTag().equals(CourseOutlineAdapter.DOWNLOAD_TAG)) {
                     ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
+                    adapter.addSelectedItemPosition(position);
                     listView.setItemChecked(position, true);
                     return true;
                 }
@@ -137,8 +148,8 @@ public class CourseOutlineFragment extends BaseFragment {
             inflater.inflate(R.menu.delete_contextual_menu, menu);
             menu.findItem(R.id.item_delete).setIcon(
                     new IconDrawable(getContext(), FontAwesomeIcons.fa_trash_o)
-                    .colorRes(getContext(), R.color.white)
-                    .actionBarSize(getContext())
+                            .colorRes(getContext(), R.color.white)
+                            .actionBarSize(getContext())
             );
             mode.setTitle(R.string.delete_videos_title);
             return true;
@@ -232,6 +243,7 @@ public class CourseOutlineFragment extends BaseFragment {
             deleteMode = null;
             listView.clearChoices();
             listView.requestLayout();
+            adapter.clearSelectedItemPositions();
         }
     };
 
@@ -301,7 +313,7 @@ public class CourseOutlineFragment extends BaseFragment {
                         public void viewDownloadsStatus() {
                             environment.getRouter().showDownloads(getActivity());
                         }
-                    }, isVideoMode);
+                    }, isVideoMode, lastAccessedComponentId);
         }
     }
 
@@ -324,6 +336,7 @@ public class CourseOutlineFragment extends BaseFragment {
     public void reloadList() {
         if (adapter != null) {
             adapter.reloadData();
+            loadLastAccessed();
         }
     }
 
@@ -397,5 +410,50 @@ public class CourseOutlineFragment extends BaseFragment {
     @SuppressWarnings("unused")
     public void onEvent(DownloadedVideoDeletedEvent e) {
         adapter.notifyDataSetChanged();
+    }
+
+    public void loadLastAccessed() {
+        if (courseData != null && courseData.getCourse() != null && !TextUtils.isEmpty(courseData.getCourse().getId()))
+            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
+    }
+
+    @Override
+    public boolean isFetchingLastAccessed() {
+        return false;
+    }
+
+    @Override
+    public void setFetchingLastAccessed(boolean accessed) {
+
+    }
+
+    @Override
+    public void showLastAccessedView(String lastAccessedSubSectionId, String courseId, View view) {
+        // TODO: 1/1/18 check this function
+        lastAccessedComponentId = lastAccessedSubSectionId;
+        if (courseId != null && lastAccessedSubSectionId != null) {
+            CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
+            if (lastAccessComponent != null) {
+                if (!lastAccessComponent.isContainer()) {
+                    // true means its a course unit
+                    // getting subsection
+                    if (lastAccessComponent.getParent() != null)
+                        lastAccessComponent = lastAccessComponent.getParent();
+                    lastAccessedComponentId = lastAccessComponent.getId();
+                } else {
+                    lastAccessedComponentId = lastAccessedSubSectionId;
+                    if (adapter != null && !lastAccessedSubSectionId.isEmpty()) {
+                        adapter.setLastAccessedId(lastAccessedSubSectionId);
+                    }
+                }
+            }
+            if (adapter != null && lastAccessComponent != null) {
+                adapter.setLastAccessedId(lastAccessComponent.getId());
+            } else if (adapter != null && !lastAccessedSubSectionId.isEmpty()) {
+                adapter.setLastAccessedId(lastAccessedSubSectionId);
+            }
+        }
+
+
     }
 }

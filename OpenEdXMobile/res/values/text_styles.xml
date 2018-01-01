@@ -317,12 +317,24 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <!-- Course Outline Styles -->
+    <style name="course_outline_title" parent="@style/medium_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/edx_brand_primary_base</item>
+        <item name="android:ellipsize">end</item>"
+        <item name="android:padding">@dimen/edx_margin</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+    </style>
+
     <!-- Discussion text styles -->
     <style name="discussion_regular_text" parent="regular_edx_gray_xdark_text">
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing</item>
+        <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing
+        </item>
     </style>
 
     <style name="discussion_title_text" parent="discussion_regular_text">

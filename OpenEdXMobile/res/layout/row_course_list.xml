@@ -50,7 +50,7 @@
             android:id="@+id/status_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/philu_bottom_bar_blue_bg"
+            android:background="@color/philu_blue_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
