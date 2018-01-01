@@ -22,6 +22,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.common.PageViewStateCallback;
@@ -39,7 +40,8 @@ import roboguice.inject.InjectView;
 /**
  *
  */
-public class CourseUnitNavigationActivity extends CourseBaseActivity implements CourseUnitVideoFragment.HasComponent {
+public class CourseUnitNavigationActivity extends CourseBaseActivity implements
+        CourseUnitVideoFragment.HasComponent, VideoDownloadHelper.DownloadManagerCallback {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
 
@@ -284,5 +286,25 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     @Override
     protected void onOffline() {
+    }
+
+    @Override
+    public void onDownloadStarted(Long result) {
+        updateListUI();
+    }
+
+    @Override
+    public void onDownloadFailedToStart() {
+        updateListUI();
+    }
+
+    @Override
+    public void showProgressDialog(int numDownloads) {
+        updateListUI();
+    }
+
+    @Override
+    public void updateListUI() {
+        invalidateOptionsMenu();
     }
 }

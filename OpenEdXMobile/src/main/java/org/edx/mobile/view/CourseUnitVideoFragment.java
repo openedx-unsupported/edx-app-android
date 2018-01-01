@@ -2,6 +2,10 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,12 +27,14 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -41,6 +47,7 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptListener;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -51,7 +58,6 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -92,8 +98,16 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private boolean isTranscriptScrolling = false;
     // Top offset to centralize the currently active transcript item in the listview
     private float topOffset = 0;
+
     @Inject
     private CourseAPI courseApi;
+
+    @Inject
+    VideoDownloadHelper downloadManager;
+
+    @Inject
+    protected IEdxEnvironment environment;
+    private DownloadEntry.DownloadedState unitDownloadState;
 
     /**
      * Create a new instance of fragment
@@ -119,10 +133,60 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+
         unit = getArguments() == null ? null :
                 (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
+    }
+
+    private void initializeActionabr(MenuItem menuItem) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
+        setVideoDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
+    }
+
+    private void setVideoDownloadStatusIndicator(DownloadEntry videoData, final MenuItem menuItem) {
+        environment.getDatabase().getDownloadedStateForVideoId(videoData.videoId,
+                new DataCallback<DownloadEntry.DownloadedState>(true) {
+                    @Override
+                    public void onResult(DownloadEntry.DownloadedState state) {
+                        if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
+                            // not yet downloaded
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
+                            Toast.makeText(getActivity(), R.string.download_started, Toast.LENGTH_SHORT).show();
+                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                            // may be download in progress
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
+                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
+                        }
+                        unitDownloadState = state;
+                    }
+
+                    @Override
+                    public void onFail(Exception ex) {
+                        logger.error(ex);
+                        unitDownloadState = DownloadEntry.DownloadedState.ONLINE;
+                    }
+                });
+    }
+
+    private void updateDownloadState(MenuItem menuItem, DownloadEntry.DownloadedState state) {
+        switch (state) {
+            case DOWNLOADING:
+                menuItem.setVisible(false);
+                break;
+            case DOWNLOADED:
+                menuItem.setVisible(true);
+                menuItem.setIcon(R.drawable.ic_done);
+                Drawable drawable = menuItem.getIcon();
+                drawable.setTint(Color.WHITE);
+                break;
+            case ONLINE:
+                menuItem.setVisible(true);
+                menuItem.setIcon(R.drawable.ic_download_media);
+                break;
+        }
     }
 
     /**
@@ -144,6 +208,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.download_content, menu);
+        MenuItem item = menu.findItem(R.id.menu_item_download);
+        initializeActionabr(item);
     }
 
     @Override
@@ -151,8 +217,14 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         int id = item.getItemId();
 
         if (id == R.id.menu_item_download) {
-            Toast.makeText(getContext(), "Download not available yet", Toast.LENGTH_SHORT).show();
+            if (unitDownloadState == DownloadEntry.DownloadedState.ONLINE) {
+                CourseUnitNavigationActivity activity = (CourseUnitNavigationActivity) getActivity();
+                if (NetworkUtil.verifyDownloadPossible(activity)) {
+                    downloadManager.downloadVideo(unit.getDownloadEntry(environment.getStorage()), activity, activity);
+                }
+            }
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -630,5 +630,6 @@
     <string name="view_my_courses">View My Courses</string>
 
     <string name="app_tag_line">Offline Content Viewer</string>
+    <string name="download_started">Download started</string>
 
 </resources>
