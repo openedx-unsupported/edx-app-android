@@ -161,4 +161,8 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
     public Map<Key<?>, Object> getScopedObjectMap() {
         return scopedObjects;
     }
+
+    public boolean isInForeground() {
+        return isInForeground;
+    }
 }

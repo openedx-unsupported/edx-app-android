@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.view.View;
 import android.webkit.WebView;
 
 import org.edx.mobile.http.HttpStatus;
@@ -83,8 +85,41 @@ public class WebViewUtil {
                                                @NonNull final WebViewStatusListener viewInterface,
                                                @NonNull final FullScreenErrorNotification errorNotification,
                                                @NonNull OkHttpClientProvider okHttpClientProvider) {
+        loadUrlBasedOnOsVersion(context, webView, url, viewInterface, errorNotification,
+                okHttpClientProvider, 0, null);
+    }
+
+    /**
+     * Simply loads a url within a WebView for Marshmallow & above and differently in case of
+     * Lollipop & below.<br/>
+     * WebViews prior to Marshmallow (API Level 23) don't provide a way to get the HTTP status
+     * codes if the url being loaded fails.<br/>
+     * This utility function solves this by making a server call using the url provided to query if
+     * an error is being return and show error or move on to load the url in WebView, if the server
+     * is responding correctly.
+     * <p>
+     * Inspiration for this solution has been taken from this link:
+     * https://stackoverflow.com/questions/11889020/get-http-status-code-in-android-webview/21609608#21609608
+     *
+     * @param context              Current context.
+     * @param webView              The WebView to load the URL into.
+     * @param url                  The URL to load.
+     * @param viewInterface        WebView's callbacks interface.
+     * @param errorNotification    The notification setup for showing/hiding errors.
+     * @param okHttpClientProvider The utility to make server calls.
+     * @param actionTextResId      The resource ID of the action button text.
+     * @param actionListener       The callback to be invoked when the action button is clicked.
+     */
+    public static void loadUrlBasedOnOsVersion(@NonNull final Context context,
+                                               @NonNull final WebView webView,
+                                               @NonNull final String url,
+                                               @NonNull final WebViewStatusListener viewInterface,
+                                               @NonNull final FullScreenErrorNotification errorNotification,
+                                               @NonNull OkHttpClientProvider okHttpClientProvider,
+                                               @StringRes final int actionTextResId,
+                                               @Nullable final View.OnClickListener actionListener) {
         if (!NetworkUtil.isConnected(context)) {
-            errorNotification.showError(context, new IOException());
+            errorNotification.showError(context, new IOException(), actionTextResId, actionListener);
         } else {
             errorNotification.hideError();
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -99,7 +134,7 @@ public class WebViewUtil {
                                 webView.post((new Runnable() {
                                     @Override
                                     public void run() {
-                                        errorNotification.showError(context, e);
+                                        errorNotification.showError(context, e, actionTextResId, actionListener);
                                         viewInterface.hideLoadingProgress();
                                         viewInterface.clearWebView();
                                     }
@@ -116,7 +151,8 @@ public class WebViewUtil {
                                             errorNotification.showError(context,
                                                     new HttpStatusException(Response.error(responseCode,
                                                             ResponseBody.create(MediaType.parse("text/plain"),
-                                                                    response.message()))));
+                                                                    response.message()))),
+                                                    actionTextResId, actionListener);
                                             viewInterface.hideLoadingProgress();
                                             viewInterface.clearWebView();
                                         } else {

@@ -19,7 +19,6 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTopic;
@@ -43,7 +42,8 @@ import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseDiscussionTopicsFragment extends BaseFragment implements RefreshListener {
+public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
+        implements RefreshListener {
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
 
     @InjectView(R.id.discussion_topics_searchview)
@@ -189,20 +189,13 @@ public class CourseDiscussionTopicsFragment extends BaseFragment implements Refr
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        CourseTabsUtils.setUserVisibleHint(getActivity(), isVisibleToUser,
-                errorNotification !=null && errorNotification.isShowing());
+    protected boolean isShowingFullScreenError() {
+        return errorNotification != null && errorNotification.isShowing();
     }
 
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
-        CourseTabsUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), errorNotification.isShowing());
-    }
-
-    @Override
-    protected void onRevisit() {
-        CourseTabsUtils.onRevisit(getActivity());
+        onNetworkConnectivityChangeEvent(event);
     }
 
     @Override

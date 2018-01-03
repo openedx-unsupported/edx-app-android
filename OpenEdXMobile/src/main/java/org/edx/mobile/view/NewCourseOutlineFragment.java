@@ -57,7 +57,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
-public class NewCourseOutlineFragment extends BaseFragment
+public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
         VideoDownloadHelper.DownloadManagerCallback {
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
@@ -575,21 +575,14 @@ public class NewCourseOutlineFragment extends BaseFragment
         EventBus.getDefault().post(new CourseDashboardRefreshEvent());
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        CourseTabsUtils.setUserVisibleHint(getActivity(), isVisibleToUser,
-                errorNotification !=null && errorNotification.isShowing());
-    }
-
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
-        CourseTabsUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), errorNotification.isShowing());
+        onNetworkConnectivityChangeEvent(event);
     }
 
     @Override
-    protected void onRevisit() {
-        CourseTabsUtils.onRevisit(getActivity());
+    protected boolean isShowingFullScreenError() {
+        return errorNotification != null && errorNotification.isShowing();
     }
 
     @Override
