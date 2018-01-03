@@ -76,7 +76,10 @@ public class MyCoursesListFragment extends BaseFragment
         adapter = new MyCoursesAdapter(getActivity(), environment) {
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
-                environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, false);
+//                environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, false);
+                // directly navigates to course outline screen
+                environment.getRouter().showCourseContainerOutline(getActivity(),
+                        model, false);
             }
 
             @Override

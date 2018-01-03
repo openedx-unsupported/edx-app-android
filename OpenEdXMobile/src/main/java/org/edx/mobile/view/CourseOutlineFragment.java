@@ -91,7 +91,6 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         isVideoMode = bundle.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
         isOnCourseOutline = bundle.getBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE);
-        loadLastAccessed();
 
         View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView) view.findViewById(R.id.outline_list);
@@ -134,6 +133,12 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadLastAccessed();
     }
 
     /**
@@ -429,7 +434,6 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
 
     @Override
     public void showLastAccessedView(String lastAccessedSubSectionId, String courseId, View view) {
-        // TODO: 1/1/18 check this function
         lastAccessedComponentId = lastAccessedSubSectionId;
         if (courseId != null && lastAccessedSubSectionId != null) {
             CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
@@ -438,8 +442,8 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                     // true means its a course unit
                     // getting subsection
                     if (lastAccessComponent.getParent() != null)
-                        lastAccessComponent = lastAccessComponent.getParent();
-                    lastAccessedComponentId = lastAccessComponent.getId();
+                        lastAccessComponent = lastAccessComponent.getParent().getParent();
+                    lastAccessedComponentId = lastAccessComponent != null ? lastAccessComponent.getId() : null;
                 } else {
                     lastAccessedComponentId = lastAccessedSubSectionId;
                     if (adapter != null && !lastAccessedSubSectionId.isEmpty()) {
@@ -453,7 +457,6 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                 adapter.setLastAccessedId(lastAccessedSubSectionId);
             }
         }
-
 
     }
 }

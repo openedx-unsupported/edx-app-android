@@ -6,14 +6,13 @@ import android.support.v4.app.FragmentTransaction;
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
 
 import javax.inject.Inject;
 
 
 /**
- *  Top level outline for the Course
+ * Top level outline for the Course
  */
 public class CourseOutlineActivity extends CourseVideoListActivity {
 
@@ -38,7 +37,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         }
     }
 
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         if (isOnCourseOutline) {
@@ -83,15 +82,15 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (savedInstanceState != null){
-             fragment = (CourseOutlineFragment)
-                 getSupportFragmentManager().findFragmentByTag(CourseOutlineFragment.TAG);
+        if (savedInstanceState != null) {
+            fragment = (CourseOutlineFragment)
+                    getSupportFragmentManager().findFragmentByTag(CourseOutlineFragment.TAG);
         }
     }
 
     @Override
     public void updateListUI() {
-        if( fragment != null ) {
+        if (fragment != null) {
             fragment.reloadList();
             fragment.updateMessageView(null);
         }

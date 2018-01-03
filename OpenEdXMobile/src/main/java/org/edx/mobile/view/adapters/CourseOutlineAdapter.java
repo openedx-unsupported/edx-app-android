@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.vipulasri.timelineview.LineType;
@@ -245,6 +244,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData);
                 return;
+            } else {
+                viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
             }
         } else if (row.component instanceof HtmlBlockModel) {
             viewHolder.blockTypeIcon.setIcon(FontAwesomeIcons.fa_text_height);
@@ -385,12 +386,12 @@ public class CourseOutlineAdapter extends BaseAdapter {
         //This block is used to handle timeline marker and row title text color for items before last accessed on base of last accessed item
         if (lastAccessedUnitPosition != -1 && position < lastAccessedUnitPosition) {
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.philu_primary));
-            viewHolder.timelineViewMarker.setMarkerSize(25);
+            viewHolder.timelineViewMarker.setMarkerSize((int) context.getResources().getDimension(R.dimen.timeline_marker_size_small));
         }
         //This block is used to handle timeline marker and row title text color if current item is last accessed
 
         if (!android.text.TextUtils.isEmpty(lastAccessedUnitId) && lastAccessedUnitId.equals(currentCourseComponent.getId())) {
-            viewHolder.timelineViewMarker.setMarkerSize(40);
+            viewHolder.timelineViewMarker.setMarkerSize((int) context.getResources().getDimension(R.dimen.timeline_marker_size_large));
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.philu_primary));
             viewHolder.subSectionTitleTV.setTypeface(null, Typeface.BOLD);
             hasLastAccessedUnitShown = true;
@@ -400,7 +401,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         else if (!hasLastAccessedUnitShown) {
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.philu_primary));
-            viewHolder.timelineViewMarker.setMarkerSize(25);
+            viewHolder.timelineViewMarker.setMarkerSize((int) context.getResources().getDimension(R.dimen.timeline_marker_size_small));
         }
 
         viewHolder.timelineViewMarker.setMarker(ContextCompat.getDrawable(context, R.drawable.ic_timeline_marker_filled));
@@ -535,13 +536,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
         ViewHolder holder = new ViewHolder();
         holder.sectionTitleTV = (TextView) convertView.findViewById(R.id.section_title);
         holder.subSectionTitleTV = (TextView) convertView.findViewById(R.id.subsection_title_tv);
-        holder.subSectionDescriptionTV = (TextView) convertView.findViewById(R.id.subsection_desription);
+        holder.subSectionDescriptionTV = (TextView) convertView.findViewById(R.id.subsection_description);
         holder.timelineViewMarker = (TimelineView) convertView.findViewById(R.id.subsection_timeline_marker);
         holder.courseAvailabilityStatusIcon = (IconImageViewXml) convertView.findViewById(R.id.course_availability_status_icon);
         holder.multipleItemsCV = (CardView) convertView.findViewById(R.id.multiple_items_cv);
         holder.blockTypeIcon = (IconImageViewXml) convertView.findViewById(R.id.block_type_icon);
-        holder.titlesContainer = (RelativeLayout) convertView.findViewById(R.id.title_container);
-        holder.blockContainer = (RelativeLayout) convertView.findViewById(R.id.block_container);
         holder.cardViewContainer = (FrameLayout) convertView.findViewById(R.id.card_holder);
         holder.rowCardView = (CardView) convertView.findViewById(R.id.subsection_row_cv);
 
@@ -553,7 +552,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         TimelineView timelineViewMarker;
         IconImageViewXml courseAvailabilityStatusIcon, blockTypeIcon;
         CardView multipleItemsCV;
-        RelativeLayout blockContainer, titlesContainer;
         FrameLayout cardViewContainer;
         CardView rowCardView;
     }
