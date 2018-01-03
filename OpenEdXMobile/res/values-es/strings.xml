@@ -157,8 +157,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="handouts_subtitle">Encuentre información importante del curso</string>
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">Anuncios</string>
-  <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title">Fechas Importantes</string>
   <!--Title text for the additional resources section on the tabular course dashboard-->
   <string name="resources_title">Recursos</string>
   <!--Row of announcement on dashboard screen-->
