@@ -15,7 +15,6 @@
             android:layout_width="@dimen/course_card_image_width"
             android:layout_height="@dimen/course_card_image_height"
             android:contentDescription="@null"
-            android:scaleType="centerInside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/edx_brand_primary_base" />
