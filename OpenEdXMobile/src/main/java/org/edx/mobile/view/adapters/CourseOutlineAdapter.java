@@ -239,7 +239,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }
 
         if (row.component instanceof VideoBlockModel) {
-            viewHolder.blockTypeIcon.setIcon(FontAwesomeIcons.fa_film);
+            viewHolder.blockTypeIcon.setImageResource(R.drawable.ic_video_media);
             final DownloadEntry videoData = ((VideoBlockModel) row.component).getDownloadEntry(storage);
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData);
@@ -248,7 +248,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
             }
         } else if (row.component instanceof HtmlBlockModel) {
-            viewHolder.blockTypeIcon.setIcon(FontAwesomeIcons.fa_text_height);
+            viewHolder.blockTypeIcon.setImageResource(R.drawable.ic_text_media);
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
         } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
             viewHolder.blockTypeIcon.setIcon(FontAwesomeIcons.fa_comments_o);

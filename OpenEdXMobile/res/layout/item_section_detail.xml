@@ -52,8 +52,8 @@
 
                 <org.edx.mobile.view.custom.IconImageViewXml
                     android:id="@+id/block_type_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_marginStart="16dp"
                     android:scaleType="center"
                     app:iconColor="@color/edx_brand_primary_base"
