@@ -321,11 +321,17 @@
     <style name="course_outline_title" parent="@style/medium_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/edx_brand_primary_base</item>
-        <item name="android:ellipsize">end</item>"
-        <item name="android:padding">@dimen/edx_margin</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/philu_light_grey</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+    </style>
+
+    <style name="course_outline_desc" parent="@style/medium_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/philu_light_grey</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
 
     <!-- Discussion text styles -->

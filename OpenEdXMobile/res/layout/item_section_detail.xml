@@ -39,23 +39,23 @@
             android:layout_marginBottom="@dimen/single_item_vertical_margin"
             android:layout_marginEnd="@dimen/edx_margin"
             android:layout_marginStart="@dimen/edx_margin"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/single_item_vertical_margin"
             android:foreground="@drawable/course_outline_selector"
             app:cardElevation="@dimen/single_item_cv_elevation">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="70dp"
                 android:gravity="center_vertical"
+                android:minHeight="@dimen/course_card_min_height"
                 android:orientation="horizontal">
 
                 <org.edx.mobile.view.custom.IconImageViewXml
                     android:id="@+id/block_type_icon"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="16dp"
-                    android:scaleType="center"
+                    android:layout_width="@dimen/block_type_icon_size"
+                    android:layout_height="@dimen/block_type_icon_size"
+                    android:layout_marginStart="@dimen/edx_margin"
+                    android:scaleType="fitCenter"
                     app:iconColor="@color/edx_brand_primary_base"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -65,10 +65,10 @@
                     android:id="@+id/title_container"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="@dimen/edx_margin"
+                    android:layout_marginEnd="@dimen/edx_margin"
+                    android:layout_marginStart="@dimen/edx_margin"
+                    android:layout_marginTop="@dimen/edx_margin"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/course_availability_status_icon"
@@ -77,27 +77,21 @@
 
                     <TextView
                         android:id="@+id/subsection_title_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/philu_light_grey"
-                        android:textSize="14sp"
+                        style="@style/course_outline_title"
                         tools:text="Title" />
 
                     <TextView
                         android:id="@+id/subsection_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/philu_light_grey"
-                        android:textSize="12sp"
+                        style="@style/course_outline_desc"
                         tools:text="Description" />
                 </LinearLayout>
 
                 <org.edx.mobile.view.custom.IconImageViewXml
                     android:id="@+id/course_availability_status_icon"
-                    android:layout_width="70dp"
+                    android:layout_width="@dimen/course_card_min_height"
                     android:layout_height="match_parent"
                     android:background="@color/philu_blue_bg"
-                    android:padding="20dp"
+                    android:padding="@dimen/widget_margin_double"
                     android:scaleType="centerInside"
                     app:iconColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"

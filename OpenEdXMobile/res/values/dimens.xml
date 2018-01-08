@@ -66,6 +66,7 @@
     <dimen name="course_item_half_separator_left_margin">@dimen/last_accessed_bar_left_margin</dimen>
 
     <!-- New Course Outline-->
+    <dimen name="course_card_min_height">70dp</dimen>
     <dimen name="timeline_line_width">1dp</dimen>
     <dimen name="timeline_marker_size_small">8dp</dimen>
     <dimen name="timeline_marker_size_large">14dp</dimen>
@@ -76,6 +77,7 @@
     <dimen name="multiple_items_cv_elevation">1.5dp</dimen>
     <dimen name="single_item_vertical_margin">10dp</dimen>
     <dimen name="single_item_cv_elevation">2dp</dimen>
+    <dimen name="block_type_icon_size">20dp</dimen>
 
     <!-- Sign in dimensions-->
     <dimen name="login_edx_logo_height">125dp</dimen>
