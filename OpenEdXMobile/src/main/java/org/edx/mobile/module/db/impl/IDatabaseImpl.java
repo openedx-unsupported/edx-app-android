@@ -264,6 +264,17 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
+    public int getDownloadedVideosCountForCourse(String enrollmentId) {
+        DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
+                new String[]{DbStructure.Column.DM_ID},
+                DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.EID + "=? AND "
+                        + DbStructure.Column.USERNAME + "=?",
+                new String[]{String.valueOf(DownloadedState.DOWNLOADED.ordinal()),
+                        enrollmentId, username()}, null);
+        return enqueue(op);
+    }
+
+    @Override
     public long[] getDownloadedVideoDmIdsForSection(String enrollmentId, String chapter,
                                                     String section,
                                                     final DataCallback<List<Long>> callback) {
@@ -770,5 +781,18 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         }
         List<Boolean> result = enqueue(op);
         return result != null && result.size() > 0 ? result.get(0) : false;
+    }
+
+    @Override
+    public Long getLastVideoDownloadTimeForCourse(String courseId) {
+        DbOperationGetColumn<Long> op = new DbOperationGetColumn<Long>(true,
+                DbStructure.Table.DOWNLOADS,
+                new String[]{DbStructure.Column.DOWNLOADED_ON},
+                DbStructure.Column.DOWNLOADED + "=? AND "
+                        + DbStructure.Column.EID + "=? AND "
+                        + DbStructure.Column.USERNAME + "=?",
+                new String[]{String.valueOf(DownloadedState.DOWNLOADED.ordinal()),
+                        courseId, username()}, DbStructure.Column.DOWNLOADED_ON + " DESC ", Long.class);
+        return enqueue(op).get(0);
     }
 }

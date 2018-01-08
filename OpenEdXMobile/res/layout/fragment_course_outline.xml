@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -10,10 +11,42 @@
         android:id="@+id/outline_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/status_layout"
         android:choiceMode="singleChoice"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:listSelector="@android:color/transparent"/>
+        android:listSelector="@android:color/transparent" />
+
+    <LinearLayout
+        android:id="@+id/status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/banner_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/philu_bottom_bar_blue_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:id="@+id/course_download_status_icon"
+            android:layout_width="23dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:baselineAlignBottom="true"
+            android:src="@drawable/ic_download_media" />
+
+        <TextView
+            android:id="@+id/course_download_status"
+            style="@style/course_card_media_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:targetApi="17"
+            tools:text="Media Download Status" />
+    </LinearLayout>
 
     <org.edx.mobile.view.custom.IconTextViewXml
         android:id="@+id/no_chapter_tv"

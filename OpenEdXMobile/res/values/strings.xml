@@ -633,5 +633,7 @@
     <string name="leave_app" tools:ignore="MissingTranslation">Leave App</string>
 
     <string name="sub_topics_text" tools:ignore="MissingTranslation">Sub Topics</string>
+    <string name="downloading" tools:ignore="MissingTranslation">Downloading</string>
+    <string name="media_saved_time_ago" tools:ignore="MissingTranslation">Media saved %s</string>
 
 </resources>

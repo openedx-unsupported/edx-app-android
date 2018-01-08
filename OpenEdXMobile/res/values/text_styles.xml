@@ -305,10 +305,8 @@
         <item name="android:singleLine">true</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:gravity">center</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:drawableLeft">@drawable/ic_download_media</item>
-        <item name="android:drawableStart">@drawable/ic_download_media</item>
         <item name="android:text">@string/label_download_media</item>
+        <item name="textColor">@color/white</item>
     </style>
 
     <style name="edX.TextAppearance.Switch" parent="@style/semibold_text">

@@ -1,13 +1,17 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,12 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
@@ -42,12 +48,14 @@ import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.edx.mobile.view.custom.IconImageViewXml;
 
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class CourseOutlineFragment extends BaseFragment implements LastAccessManager.LastAccessManagerCallback {
+public class CourseOutlineFragment extends BaseFragment implements LastAccessManager.LastAccessManagerCallback, VideoDownloadHelper.DownloadManagerCallback {
 
     protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseOutlineFragment.class.getCanonicalName();
@@ -56,7 +64,6 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
     private static final int SNACKBAR_SHOWTIME_MS = 5000;
 
     private CourseOutlineAdapter adapter;
-    private ListView listView;
     private TaskProcessCallback taskProcessCallback;
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
@@ -64,7 +71,6 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
     private boolean isOnCourseOutline;
     private ActionMode deleteMode;
     private String lastAccessedComponentId;
-
     @Inject
     LastAccessManager lastAccessManager;
 
@@ -76,6 +82,11 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
 
     @Inject
     protected IEdxEnvironment environment;
+
+    private ListView listView;
+    private LinearLayout courseStatusUnit;
+    private TextView courseDownloadStatus;
+    private IconImageViewXml courseDownloadStatusIcon;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +105,11 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
 
         View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView) view.findViewById(R.id.outline_list);
+
+        courseStatusUnit = (LinearLayout) view.findViewById(R.id.status_layout);
+        courseDownloadStatus = (TextView) view.findViewById(R.id.course_download_status);
+        courseDownloadStatusIcon = (IconImageViewXml) view.findViewById(R.id.course_download_status_icon);
+
         initializeAdapter();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -133,6 +149,47 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         });
 
         return view;
+    }
+
+    private void toggleCourseOutlineDowloadFooter(final CourseComponent courseComponent) {
+        if (isOnCourseOutline) {
+            final int totalDownloadableVideos = courseComponent.getDownloadableVideosCount();
+            // support video download for video type excluding the ones only viewable on web
+            if (totalDownloadableVideos > 0) {
+                int downloadedCount = environment.getDatabase().getDownloadedVideosCountForCourse(courseData.getCourse().getId());
+
+                if (downloadedCount == totalDownloadableVideos) {
+                    Long downloadTimeStamp = environment.getDatabase().getLastVideoDownloadTimeForCourse(courseData.getCourse().getId());
+                    String relativeTimeSpanString = getRelativeTimeStringFromNow(downloadTimeStamp);
+                    setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADED, relativeTimeSpanString, null);
+                } else if (environment.getDatabase().isAnyVideoDownloadingInCourse(null, courseData.getCourse().getId())) {
+                    setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADING, null,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View downloadView) {
+                                    environment.getRouter().showDownloads(getActivity());
+                                }
+                            });
+                } else {
+                    setRowStateOnDownload(DownloadEntry.DownloadedState.ONLINE, null,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View downloadView) {
+                                    CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
+                                    if (NetworkUtil.verifyDownloadPossible(activity)) {
+                                        downloadManager.downloadVideos(courseComponent.getVideos(), getActivity(),
+                                                (VideoDownloadHelper.DownloadManagerCallback) getActivity());
+                                    }
+                                }
+                            });
+                }
+            }
+        }
+    }
+
+    private void setRowStateOnDownload(DownloadEntry.DownloadedState state, String relativeTimeStamp, View.OnClickListener listener) {
+        courseStatusUnit.setVisibility(View.VISIBLE);
+        updateDownloadStatus(getContext(), state, listener, relativeTimeStamp);
     }
 
     @Override
@@ -275,6 +332,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         CourseComponent courseComponent = getCourseComponent();
         adapter.setData(courseComponent);
         updateMessageView(view);
+        toggleCourseOutlineDowloadFooter(courseComponent);
     }
 
     public void updateMessageView(View view) {
@@ -458,5 +516,70 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
             }
         }
 
+    }
+
+    @NonNull
+    private String getRelativeTimeStringFromNow(Long downloadTimeStamp) {
+        return DateUtils.getRelativeTimeSpanString(downloadTimeStamp, new Date().getTime(), 0).toString();
+    }
+
+    public void updateDownloadStatus(Context context, DownloadEntry.DownloadedState state, View.OnClickListener listener, String relativeTimeStamp) {
+        switch (state) {
+            case DOWNLOADING:
+                courseDownloadStatusIcon.setIcon(FontAwesomeIcons.fa_spinner);
+                courseDownloadStatusIcon.setIconAnimation(Animation.PULSE);
+                courseDownloadStatusIcon.setIconColorResource(R.color.black);
+                courseDownloadStatus.setText(R.string.downloading);
+                courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
+                courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
+                break;
+            case DOWNLOADED:
+                courseDownloadStatusIcon.setImageResource(R.drawable.ic_done);
+                courseDownloadStatusIcon.setIconAnimation(Animation.NONE);
+                courseDownloadStatusIcon.setIconColorResource(R.color.black);
+                courseDownloadStatus.setText(String.format(context.getString(R.string.media_saved_time_ago), relativeTimeStamp));
+                courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
+                courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
+                break;
+            case ONLINE:
+                courseDownloadStatusIcon.setImageResource(R.drawable.ic_download_media);
+                courseDownloadStatusIcon.setIconAnimation(Animation.NONE);
+                courseDownloadStatusIcon.setIconColorResource(R.color.white);
+                courseDownloadStatus.setText(R.string.label_download_media);
+                courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.white));
+                courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.philu_bottom_bar_blue_bg));
+                break;
+        }
+
+        courseStatusUnit.setOnClickListener(listener);
+        if (listener == null) {
+            courseStatusUnit.setClickable(false);
+        }
+    }
+
+    @Override
+    public void onDownloadStarted(Long result) {
+        updateListUI();
+    }
+
+    @Override
+    public void onDownloadFailedToStart() {
+        updateListUI();
+    }
+
+    @Override
+    public void showProgressDialog(int numDownloads) {
+
+    }
+
+    @Override
+    public void updateListUI() {
+        CourseComponent courseComponent = getCourseComponent();
+        toggleCourseOutlineDowloadFooter(courseComponent);
+    }
+
+    @Override
+    public boolean showInfoMessage(String message) {
+        return false;
     }
 }
