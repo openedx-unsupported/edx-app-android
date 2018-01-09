@@ -30,11 +30,11 @@
 
         <org.edx.mobile.view.custom.IconImageViewXml
             android:id="@+id/course_download_status_icon"
-            android:layout_width="23dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_height"
             android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="@dimen/input_padding_half"
+            android:layout_marginStart="@dimen/input_padding_half"
             android:baselineAlignBottom="true"
             android:src="@drawable/ic_download_media" />
 

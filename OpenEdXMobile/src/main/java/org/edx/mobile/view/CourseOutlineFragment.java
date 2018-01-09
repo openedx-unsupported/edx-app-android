@@ -12,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -188,8 +190,43 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
     }
 
     private void setRowStateOnDownload(DownloadEntry.DownloadedState state, String relativeTimeStamp, View.OnClickListener listener) {
+        listView.setOnScrollListener(onScrollListener());
         courseStatusUnit.setVisibility(View.VISIBLE);
         updateDownloadStatus(getContext(), state, listener, relativeTimeStamp);
+    }
+    public AbsListView.OnScrollListener onScrollListener() {
+        return new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    // check if we reached the top or bottom of the list
+                    View v = listView.getChildAt(0);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the top: visible header and footer
+                        Log.i(TAG, "top reached");
+                    }
+                } else if (totalItemCount - visibleItemCount == firstVisibleItem) {
+                    View v = listView.getChildAt(totalItemCount - 1);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the bottom: visible header and footer
+                        Log.i(TAG, "bottom reached!");
+                        courseStatusUnit.setVisibility(View.VISIBLE);
+                    }
+                } else if (totalItemCount - visibleItemCount > firstVisibleItem){
+                    // on scrolling
+                    courseStatusUnit.setVisibility(View.GONE);
+                    Log.i(TAG, "on scroll");
+                }
+            }
+        };
     }
 
     @Override
