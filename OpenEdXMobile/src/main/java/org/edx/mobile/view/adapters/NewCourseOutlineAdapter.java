@@ -620,16 +620,16 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     }
 
     /**
-     * Tells the appropriate place for a {@link SectionRow#LAST_ACCESSED_ITEM} to put in the adapters list.
+     * Tells the appropriate place for a {@link SectionRow#LAST_ACCESSED_ITEM} to put in the adapter's list.
      *
-     * @return list index (non-negative number) for a {@link SectionRow#LAST_ACCESSED_ITEM}.
+     * @return List index (non-negative number) for a {@link SectionRow#LAST_ACCESSED_ITEM}.
      */
     public int getLastAccessedItemPlace() {
         return isNonCourseWareItemExist(SectionRow.COURSE_CERTIFICATE) ? 2 : 1;
     }
 
     /**
-     * Tells if specified non-courseware item exist in adapter list or not.
+     * Tells if specified non-courseware item exists in the adapter's list or not.
      *
      * @param sectionType A non-courseware section type whose existence needs to be checked.
      * @return <code>true</code> if specified non-courseware item exist in adapter list,
@@ -640,10 +640,10 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     }
 
     /**
-     * Tells the place of a non-courseware item exist in adapter list.
+     * Tells the place of a non-courseware item which exists in adapter list.
      *
      * @param sectionType A non-courseware section type whose place needs to be identified.
-     * @return list index (non-negative number) of a specified non-courseware item, -1 in case item
+     * @return List index (non-negative number) of a specified non-courseware item, -1 in case item
      * doesn't exist.
      */
     public int getNonCourseWareItemPlace(int sectionType) {
