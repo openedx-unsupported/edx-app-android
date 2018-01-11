@@ -20,8 +20,6 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     public final TextView threadFollowTextView;
     public final View threadFollowContainer;
     private DiscussionThread discussionThread;
-    private boolean isVoted;
-    private boolean isFollowing;
 
     public DiscussionSocialLayoutViewHolder(View itemView) {
         super(itemView);
@@ -44,33 +42,19 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDiscussionThread(final DiscussionThread discussionThread) {
-        //todo clean this a little
-        this.discussionThread = discussionThread;
-        isVoted = discussionThread.isVoted();
-      isFollowing = discussionThread.isFollowing();
-        threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
-                threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
-        threadVoteIconImageView.setIconColorResource(discussionThread.isVoted() ?
-                R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
-
-        threadFollowContainer.setVisibility(View.VISIBLE);
-
-        if (discussionThread.isFollowing()) {
-            threadFollowTextView.setText(R.string.forum_unfollow);
-            threadFollowIconImageView.setIconColorResource(R.color.edx_brand_primary_base);
-        } else {
-            threadFollowTextView.setText(R.string.forum_follow);
-            threadFollowIconImageView.setIconColorResource(R.color.edx_brand_gray_base);
-        }
+      this.discussionThread = discussionThread;
+      setVote(discussionThread.isVoted());
+      setFollowing(discussionThread.isFollowing());
+      threadFollowContainer.setVisibility(View.VISIBLE);
     }
 
     public boolean toggleFollow(){
-        setFollowing(!isFollowing);
-        return isFollowing;
+        setFollowing(!discussionThread.isFollowing());
+        return discussionThread.isFollowing();
     }
 
     private void setFollowing(boolean follow){
-        isFollowing = follow;
+      discussionThread.setFollowing(follow);
         if (follow){
             addFollow();
         }else{
@@ -94,13 +78,13 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     }
 
     public boolean toggleVote(){
-        setVote(!isVoted);
-        return isVoted;
+        setVote(!discussionThread.isVoted());
+        return discussionThread.isVoted();
     }
 
 
     private void setVote(boolean vote){
-        isVoted = vote;
+      discussionThread.setVoted(vote);
         if (vote){
             addVote();
         }else{

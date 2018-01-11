@@ -277,7 +277,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
 
-    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, final int position) {
+    private void bindViewHolderToResponseRow(final DiscussionResponseViewHolder holder, final int position) {
         final DiscussionComment comment = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
         holder.authorLayoutViewHolder.populateViewHolder(config, comment,
@@ -350,14 +350,18 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             bindSocialView(holder.socialLayoutViewHolder, position, comment);
             holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
+                    boolean isReported = holder.discussionReportViewHolder.toggleReported();
                     discussionService.setCommentFlagged(comment.getIdentifier(),
-                            new FlagBody(!comment.isAbuseFlagged()))
+                            new FlagBody(isReported))
                             .enqueue(new ErrorHandlingCallback<DiscussionComment>(
                                     context, null, new DialogErrorNotification(baseFragment)) {
                                 @Override
                                 protected void onResponse(@NonNull final DiscussionComment comment) {
                                     discussionResponses.get(position - 1).patchObject(comment);
                                     discussionResponses.set(position - 1, comment);
+                                }
+                                @Override
+                                protected void onFailure(@NonNull final Throwable error) {
                                     notifyItemChanged(position);
                                 }
                             });
@@ -369,21 +373,25 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
+    private void bindSocialView(final DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
         holder.setDiscussionResponse(response);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                boolean isVoted = holder.toggleVote();
                 discussionService.setCommentVoted(response.getIdentifier(),
-                        new VoteBody(!response.isVoted()))
+                        new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionComment>(
                                 context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionComment comment) {
                                 discussionResponses.get(position - 1).patchObject(comment);
                                 discussionResponses.set(position - 1, comment);
+                            }
+                            @Override
+                            protected void onFailure(@NonNull final Throwable error) {
                                 notifyItemChanged(position);
                             }
                         });
