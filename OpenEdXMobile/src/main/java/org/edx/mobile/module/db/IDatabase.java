@@ -60,7 +60,7 @@ public interface IDatabase {
      *
      * @param callback
      */
-    List<VideoModel> getAllDeactivatedVideos(DataCallback<List<VideoModel>> callback);
+    List<DownloadEntry> getAllDeactivatedVideos(DataCallback<List<DownloadEntry>> callback);
 
 
     /**
@@ -214,8 +214,8 @@ public interface IDatabase {
      * @param callback     callback to return results to
      * @return Count of downloaded videos for a given section
      */
-    int getDownloadedVideosCountForSection(String enrollmentId, String chapter, String section,
-                                           final DataCallback<Integer> callback);
+    int getDownloadedMediaCountForSection(String enrollmentId, String chapter, String section,
+                                          final DataCallback<Integer> callback);
 
     /**
      * get number of videos marked as webOnly
@@ -255,7 +255,7 @@ public interface IDatabase {
      * @param callback
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
-    Long addMediaData(VideoModel de, DataCallback<Long> callback);
+    Long addMediaData(DownloadEntry de, DataCallback<Long> callback);
 
     /**
      * Returns VideoEntry for the passed VideoId
@@ -342,7 +342,7 @@ public interface IDatabase {
      *
      * @return
      */
-    List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
+    List<DownloadEntry> getListOfOngoingDownloads(DataCallback<List<DownloadEntry>> callback);
 
 
     /**
@@ -386,7 +386,7 @@ public interface IDatabase {
      *
      * @return
      */
-    List<VideoModel> getAllVideos(String username, DataCallback<List<VideoModel>> DataCallback);
+    List<DownloadEntry> getAllVideos(String username, DataCallback<List<DownloadEntry>> DataCallback);
 
     /**
      * Removes all records of given username from the database.

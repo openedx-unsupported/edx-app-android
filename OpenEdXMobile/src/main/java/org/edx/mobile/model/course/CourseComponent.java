@@ -224,11 +224,28 @@ public class CourseComponent implements IBlock, IPathNode {
         return null;
     }
 
+
     /**
      * return all videos blocks under this node
      */
-    public List<VideoBlockModel> getVideos() {
-        return (List<VideoBlockModel>) (List) getVideos(false);
+    public List<CourseComponent> getDownloadableMedia() {
+        List<CourseComponent> media = getVideos();
+        media.addAll(getAudios());
+        return media;
+    }
+
+    /**
+     * return all videos blocks under this node
+     */
+    public List<CourseComponent> getVideos() {
+        return getVideos(false);
+    }
+
+    /**
+     * return all audio blocks under this node
+     */
+    public List<CourseComponent> getAudios() {
+        return getAudios(false);
     }
 
     /**
@@ -246,7 +263,7 @@ public class CourseComponent implements IBlock, IPathNode {
              videosIterator.hasNext(); ) {
             CourseComponent videoComponent = videosIterator.next();
             if (!(videoComponent instanceof VideoBlockModel) ||
-                    downloadableOnly && videoComponent.getDownloadableVideosCount() == 0) {
+                    downloadableOnly && videoComponent.getDownloadableMediaCount() == 0) {
                 // Remove a video component if its not downloadable when we're only looking for the
                 // ones that are downloadable
                 videosIterator.remove();
@@ -256,14 +273,53 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
     /**
+     * return all the downloadable audio blocks under this node
+     */
+    public List<CourseComponent> getAudios(boolean downloadableOnly) {
+        List<CourseComponent> audios = new ArrayList<>();
+        fetchAllLeafComponents(audios, EnumSet.of(BlockType.AUDIO));
+        // Confirm that these are actually VideoBlockModel instances.
+        // This is necessary because if for some reason the data is null,
+        // then the block is represented as an HtmlBlockModel, even if
+        // the type is video. This should not actually happen in practice
+        // though; this is just a safeguard to handle that unlikely case.
+        for (Iterator<CourseComponent> audiosIterator = audios.iterator();
+             audiosIterator.hasNext(); ) {
+            CourseComponent audioComponent = audiosIterator.next();
+            if (!(audioComponent instanceof AudioBlockModel) ||
+                    downloadableOnly && audioComponent.getDownloadableMediaCount() == 0) {
+                // Remove a video component if its not downloadable when we're only looking for the
+                // ones that are downloadable
+                audiosIterator.remove();
+            }
+        }
+        return audios;
+    }
+
+    /**
      * @return count of videos that have encoded files available
      * and {@link VideoData#onlyOnWeb} set to <code>false</code>
      */
+    public int getDownloadableMediaCount() {
+        return getDownloadableVideosCount() + getDownloadableAudiosCount();
+    }
+
     public int getDownloadableVideosCount() {
         int downloadableCount = 0;
-        List<VideoBlockModel> videos = getVideos();
-        for (VideoBlockModel video : videos) {
-            if (video.getData().encodedVideos.getPreferredVideoInfo() != null && !video.getData().onlyOnWeb) {
+        List<CourseComponent> videos = getVideos();
+        for (CourseComponent video : videos) {
+            if (((VideoBlockModel) video).getData().encodedVideos.getPreferredVideoInfo() != null && !((VideoBlockModel) video).getData().onlyOnWeb) {
+                downloadableCount++;
+            }
+        }
+        return downloadableCount;
+    }
+
+    public int getDownloadableAudiosCount() {
+        int downloadableCount = 0;
+        List<CourseComponent> videos = getAudios();
+        for (CourseComponent video : videos) {
+            if (((AudioBlockModel) video).getData().encodedAudios.getPreferredPlaybackUrl() != null) {
                 downloadableCount++;
             }
         }

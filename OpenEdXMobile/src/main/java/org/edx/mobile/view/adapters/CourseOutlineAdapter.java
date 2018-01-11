@@ -55,7 +55,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private final Logger logger = new Logger(getClass().getName());
 
     public interface DownloadListener {
-        void download(List<? extends HasDownloadEntry> models);
+        void download(List<CourseComponent> models);
 
         void download(DownloadEntry videoData);
 
@@ -421,22 +421,22 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.rowCardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.philu_primary));
         }
 
-        final int totalDownloadableVideos = currentCourseComponent.getDownloadableVideosCount();
+        final int totalDownloadableMedia = currentCourseComponent.getDownloadableMediaCount();
         // support video download for video type excluding the ones only viewable on web
-        if (totalDownloadableVideos == 0) {
+        if (totalDownloadableMedia == 0) {
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
         } else {
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.VISIBLE);
 
-            Integer downloadedCount = dbStore.getDownloadedVideosCountForSection(courseId,
+            Integer downloadedCount = dbStore.getDownloadedMediaCountForSection(courseId,
                     chapterId, sequentialId, null);
 
-            if (downloadedCount == totalDownloadableVideos) {
+            if (downloadedCount == totalDownloadableMedia) {
                 viewHolder.courseAvailabilityStatusIcon.setVisibility(View.VISIBLE);
                 //                holder.noOfVideos.setVisibility(View.VISIBLE);
                 setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.DOWNLOADED, null);
             } else if (dbStore.getDownloadingVideosCountForSection(courseId, chapterId,
-                    sequentialId, null) + downloadedCount == totalDownloadableVideos) {
+                    sequentialId, null) + downloadedCount == totalDownloadableMedia) {
                 setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.DOWNLOADING,
                         new View.OnClickListener() {
                             @Override
@@ -449,7 +449,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View downloadView) {
-                                mDownloadListener.download(currentCourseComponent.getVideos());
+                                mDownloadListener.download(currentCourseComponent.getDownloadableMedia());
                             }
                         });
             }

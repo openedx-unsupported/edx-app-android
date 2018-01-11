@@ -234,15 +234,6 @@ public class DownloadEntry implements SectionItemInterface, VideoModel, AudioMod
     }
 
     @Override
-    public void setDownloadInfo(AudioModel audioByUrl) {
-        dmId = audioByUrl.getDmId();
-        downloaded = DownloadedState.values()[audioByUrl.getDownloadedStateOrdinal()];
-        filepath = audioByUrl.getFilePath();
-        size = audioByUrl.getSize();
-        duration = audioByUrl.getDuration();
-    }
-
-    @Override
     public void setDownloadingInfo(NativeDownloadModel download) {
         dmId = download.dmid;
         downloaded = DownloadedState.DOWNLOADING;
@@ -250,7 +241,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel, AudioMod
     }
 
     @Override
-    public void setDownloadInfo(VideoModel video) {
+    public void setDownloadInfo(DownloadEntry video) {
         dmId = video.getDmId();
         downloaded = DownloadedState.values()[video.getDownloadedStateOrdinal()];
         filepath = video.getFilePath();
@@ -281,5 +272,9 @@ public class DownloadEntry implements SectionItemInterface, VideoModel, AudioMod
         }
 
         return getVideoUrl();
+    }
+
+    public String getDownloadUrl(){
+        return url ==null ? url_mp3 == null ? url_ogg : url_mp3 :  url;
     }
 }

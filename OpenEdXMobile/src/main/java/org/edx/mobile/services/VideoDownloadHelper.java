@@ -9,7 +9,9 @@ import com.google.inject.Singleton;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
+import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.storage.IStorage;
@@ -52,7 +54,7 @@ public class VideoDownloadHelper {
     AnalyticsRegistry analyticsRegistry;
 
 
-    public void downloadVideos(final List<? extends HasDownloadEntry> model, final FragmentActivity activity,
+    public void downloadVideos(final List<CourseComponent> model, final FragmentActivity activity,
                                final DownloadManagerCallback callback) {
         if (model == null || model.isEmpty()) {
             return;
@@ -77,12 +79,12 @@ public class VideoDownloadHelper {
 
     }
 
-    private void startDownloadVideos(List<? extends HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
+    private void startDownloadVideos(List<CourseComponent> model, FragmentActivity activity, DownloadManagerCallback callback) {
         long downloadSize = 0;
         ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
         int downloadCount = 0;
-        for (HasDownloadEntry v : model) {
-            DownloadEntry de = v.getDownloadEntry(storage);
+        for (CourseComponent v : model) {
+            DownloadEntry de = ((HasDownloadEntry) v).getDownloadEntry(storage);
             if (null == de
                     || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
                     || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED

@@ -12,7 +12,7 @@ public final class DbStructure {
     // Updated to Version 5 to create a new table to record learning history for assessment
     // Updated to Version 6 to swap every occurrence of username field to its SHA1 hash
     // Updated to Version 7 to add support for downloading and playing audio block
-    public static final int VERSION = 7;
+    public static final int VERSION = 6;
 
     public static final class Table {
         public static final String DOWNLOADS = "downloads";

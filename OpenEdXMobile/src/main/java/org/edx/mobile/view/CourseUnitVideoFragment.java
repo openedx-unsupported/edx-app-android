@@ -143,7 +143,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     private void setVideoDownloadStatusIndicator(DownloadEntry videoData, final MenuItem menuItem) {
-        environment.getDatabase().getDownloadedStateForVideoId(videoData.videoId,
+        environment.getDatabase().getDownloadedStateForVideoId(videoData.blockId,
                 new DataCallback<DownloadEntry.DownloadedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.DownloadedState state) {

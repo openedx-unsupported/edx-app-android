@@ -58,12 +58,12 @@ public class Storage implements IStorage {
     private final Logger logger = new Logger(getClass().getName());
 
 
-    public long addDownload(VideoModel model) {
-        if(model.getVideoUrl()==null||model.getVideoUrl().length()<=0){
+    public long addDownload(DownloadEntry model) {
+        if(model.getDownloadUrl()==null||model.getDownloadUrl().length()<=0){
             return -1;
         }
 
-        VideoModel videoByUrl = db.getDownloadEntryByMediaUrl(model.getVideoUrl(), null);
+        DownloadEntry videoByUrl = db.getDownloadEntryByMediaUrl(model.getDownloadUrl(), null);
 
         db.addMediaData(model, null);
 
@@ -86,7 +86,7 @@ public class Storage implements IStorage {
 
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
-            long dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
+            long dmid = dm.addDownload(downloadDirectory, model.getDownloadUrl(),
                     downloadPreference, model.getTitle());
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager
@@ -146,9 +146,9 @@ public class Storage implements IStorage {
         }
 
         // Get all on going downloads
-        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>(false) {
+        db.getListOfOngoingDownloads(new DataCallback<List<DownloadEntry>>(false) {
             @Override
-            public void onResult(List<VideoModel> result) {
+            public void onResult(List<DownloadEntry> result) {
                 // Remove all downloads from db
                 long [] videoIds = new long[result.size()];
                 VideoModel model;
@@ -232,10 +232,10 @@ public class Storage implements IStorage {
     @Override
     public void getAverageDownloadProgress(final DataCallback<Integer> callback) {
         IDatabase db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
-        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
+        db.getListOfOngoingDownloads(new DataCallback<List<DownloadEntry>>() {
 
             @Override
-            public void onResult(List<VideoModel> result) {
+            public void onResult(List<DownloadEntry> result) {
                 long[] dmids = new long[result.size()];
                 for (int i=0; i< result.size(); i++) {
                     dmids[i] = result.get(i).getDmId();

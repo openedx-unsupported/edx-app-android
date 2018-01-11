@@ -23,7 +23,7 @@ public interface IStorage {
      * @param model
      * @return row id updated in the Database (0 if not added to download)
      */
-    long addDownload(VideoModel model);
+    long addDownload(DownloadEntry model);
     
     /**
      * Removes a Video from the database as well as NativeDownloadManager 

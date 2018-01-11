@@ -44,6 +44,8 @@ public class DatabaseModelFactory {
         de.url_high_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_HIGH_QUALITY));
         de.url_low_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_LOW_QUALITY));
         de.url_youtube = c.getString(c.getColumnIndex(DbStructure.Column.URL_YOUTUBE));
+        de.url_mp3 = c.getString(c.getColumnIndex(DbStructure.Column.URL_MP3));
+        de.url_ogg = c.getString(c.getColumnIndex(DbStructure.Column.URL_OGG));
         de.blockId = c.getString(c.getColumnIndex(DbStructure.Column.BLOCK_ID));
         de.watched = DownloadEntry.WatchedState.values()[c.getInt(c.getColumnIndex(DbStructure.Column.WATCHED))];
         de.eid = c.getString(c.getColumnIndex(DbStructure.Column.EID));

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.util.Log;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DbStructure;
@@ -49,6 +50,8 @@ class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.URL_HIGH_QUALITY + " TEXT, "
                 + DbStructure.Column.URL_LOW_QUALITY + " TEXT, "
                 + DbStructure.Column.URL_YOUTUBE + " TEXT, "
+                + DbStructure.Column.URL_MP3 + " TEXT, "
+                + DbStructure.Column.URL_OGG + " TEXT, "
                 + DbStructure.Column.WATCHED + " INTEGER, "
                 + DbStructure.Column.DOWNLOADED + " INTEGER, "
                 + DbStructure.Column.DM_ID + " INTEGER, "
@@ -136,6 +139,7 @@ class DbHelper extends SQLiteOpenHelper {
             try {
                 for (String query : upgradeToV7) {
                     db.execSQL(query);
+                    Log.e("Zohaib", "executing");
                 }
             } catch (SQLiteException e) {
                 logger.warn(e.getMessage());

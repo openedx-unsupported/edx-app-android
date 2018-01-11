@@ -10,7 +10,7 @@ import org.edx.mobile.module.db.DatabaseModelFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-class DbOperationGetVideos extends DbOperationSelect<List<VideoModel>> {
+class DbOperationGetVideos extends DbOperationSelect<List<DownloadEntry>> {
     
     DbOperationGetVideos(boolean distinct, String table, String[] columns,
             String whereClause, String[] whereArgs, String orderBy) {
@@ -18,13 +18,13 @@ class DbOperationGetVideos extends DbOperationSelect<List<VideoModel>> {
     }
     
     @Override
-    public List<VideoModel> execute(SQLiteDatabase db) {
-        List<VideoModel> list = new ArrayList<VideoModel>();
+    public List<DownloadEntry> execute(SQLiteDatabase db) {
+        List<DownloadEntry> list = new ArrayList<DownloadEntry>();
         
         Cursor c = getCursor(db);
         if (c.moveToFirst()) {
             do {
-                VideoModel video = DatabaseModelFactory.getModel(c);
+                DownloadEntry video = DatabaseModelFactory.getModel(c);
                 list.add(video);
             } while (c.moveToNext());
         }
@@ -34,8 +34,8 @@ class DbOperationGetVideos extends DbOperationSelect<List<VideoModel>> {
     }
     
     @Override
-    public List<VideoModel> getDefaultValue() {
-        return new ArrayList<VideoModel>();
+    public List<DownloadEntry> getDefaultValue() {
+        return new ArrayList<DownloadEntry>();
     }
     
 }

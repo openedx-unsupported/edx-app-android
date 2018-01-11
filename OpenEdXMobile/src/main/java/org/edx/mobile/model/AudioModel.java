@@ -1,6 +1,7 @@
 package org.edx.mobile.model;
 
 import org.edx.mobile.model.api.TranscriptModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 
 /**
@@ -62,8 +63,8 @@ public interface AudioModel {
      * Sets download information from the given video object.
      * @param audioByUrl
      */
-    void setDownloadInfo(AudioModel audioByUrl);
-    
+    void setDownloadInfo(DownloadEntry audioByUrl);
+
     /**
      * Sets downloading information from the given download object.
      * @param download

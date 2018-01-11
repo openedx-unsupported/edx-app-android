@@ -87,7 +87,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public List<VideoModel> getAllDeactivatedVideos(final DataCallback<List<VideoModel>> callback) {
+    public List<DownloadEntry> getAllDeactivatedVideos(final DataCallback<List<DownloadEntry>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.IS_COURSE_ACTIVE + "=? AND "
                         + DbStructure.Column.USERNAME + "=? ",
@@ -299,9 +299,9 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public int getDownloadedVideosCountForSection(String enrollmentId, String chapter,
-                                                  String section,
-                                                  final DataCallback<Integer> callback) {
+    public int getDownloadedMediaCountForSection(String enrollmentId, String chapter,
+                                                 String section,
+                                                 final DataCallback<Integer> callback) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
                 new String[]{DbStructure.Column.DM_ID},
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.EID + "=? AND "
@@ -373,7 +373,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public Long addMediaData(final VideoModel de, final DataCallback<Long> callback) {
+    public Long addMediaData(final DownloadEntry de, final DataCallback<Long> callback) {
         VideoModel result = getDownloadEntryByMediaId(de.getBlockId(), null);
         if (result == null) {
             ContentValues values = new ContentValues();
@@ -387,6 +387,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             values.put(DbStructure.Column.URL_HIGH_QUALITY, de.getHighQualityVideoUrl());
             values.put(DbStructure.Column.URL_LOW_QUALITY, de.getLowQualityVideoUrl());
             values.put(DbStructure.Column.URL_YOUTUBE, de.getYoutubeVideoUrl());
+            values.put(DbStructure.Column.URL_MP3, de.getMp3Url());
+            values.put(DbStructure.Column.URL_OGG, de.getOggUrl());
             values.put(DbStructure.Column.WATCHED, de.getWatchedStateOrdinal());
             values.put(DbStructure.Column.DOWNLOADED, de.getDownloadedStateOrdinal());
             values.put(DbStructure.Column.DM_ID, de.getDmId());
@@ -529,8 +531,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public List<VideoModel> getListOfOngoingDownloads(
-            final DataCallback<List<VideoModel>> callback) {
+    public List<DownloadEntry> getListOfOngoingDownloads(
+            final DataCallback<List<DownloadEntry>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username()},
@@ -595,8 +597,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public List<VideoModel> getAllVideos(String username,
-                                         final DataCallback<List<VideoModel>> callback) {
+    public List<DownloadEntry> getAllVideos(String username,
+                                         final DataCallback<List<DownloadEntry>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.USERNAME + "=?", new String[]{username()}, null);
         op.setCallback(callback);

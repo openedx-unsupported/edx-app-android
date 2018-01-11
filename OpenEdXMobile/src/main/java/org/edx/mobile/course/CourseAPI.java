@@ -406,7 +406,7 @@ public class CourseAPI {
     public VideoResponseModel getVideoById(@NonNull final CourseComponent courseComponent,
                                            @NonNull final String videoId)
             throws Exception {
-        for(HasDownloadEntry item : courseComponent.getVideos()) {
+        for(CourseComponent item : courseComponent.getVideos()) {
             VideoBlockModel model = (VideoBlockModel)item;
             if (model.getId().equals(videoId))
                 return mappingVideoResponseModelFrom((VideoBlockModel) item);
@@ -500,7 +500,7 @@ public class CourseAPI {
             @NonNull final CourseComponent courseComponent,
             @NonNull final Filter<VideoResponseModel> filter) {
         List<SectionItemInterface> items = new ArrayList<>();
-        for(HasDownloadEntry item : courseComponent.getVideos()){
+        for(CourseComponent item : courseComponent.getVideos()){
             VideoResponseModel model = mappingVideoResponseModelFrom((VideoBlockModel)item);
             if ( filter == null )
                 items.add( model );

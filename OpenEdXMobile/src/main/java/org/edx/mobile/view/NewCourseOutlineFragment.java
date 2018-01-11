@@ -209,7 +209,7 @@ public class NewCourseOutlineFragment extends BaseFragment
             adapter = new NewCourseOutlineAdapter(getActivity(), courseData, environment,
                     new NewCourseOutlineAdapter.DownloadListener() {
                         @Override
-                        public void download(List<? extends HasDownloadEntry> models) {
+                        public void download(List<CourseComponent> models) {
                             final BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
                             if (NetworkUtil.verifyDownloadPossible(activity)) {
                                 downloadManager.downloadVideos(models, activity, NewCourseOutlineFragment.this);

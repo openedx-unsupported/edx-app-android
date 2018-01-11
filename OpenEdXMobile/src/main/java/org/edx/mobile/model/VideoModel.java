@@ -1,6 +1,7 @@
 package org.edx.mobile.model;
 
 import org.edx.mobile.model.api.TranscriptModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 
 /**
@@ -68,7 +69,7 @@ public interface VideoModel {
      * Sets download information from the given video object.
      * @param videoByUrl
      */
-    void setDownloadInfo(VideoModel videoByUrl);
+    void setDownloadInfo(DownloadEntry videoByUrl);
     
     /**
      * Sets downloading information from the given download object.
