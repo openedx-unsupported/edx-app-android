@@ -29,7 +29,7 @@ def edXAppPluginSetup(url, ref) {
     grgit.checkout(branch : ref)
 }
 
-edXAppPluginSetup('git@github.com:edx/edx-app-gradle-plugin.git', '2e0516c8b3c4e0d60bff01491bc66c9f0f2eedf4')
+edXAppPluginSetup('https://github.com/edx/edx-app-gradle-plugin.git', '2e0516c8b3c4e0d60bff01491bc66c9f0f2eedf4')
 
 include ":edx-app-gradle-plugin"
 project(':edx-app-gradle-plugin').projectDir = new File(rootProject.projectDir, 'plugins/edx-app-gradle-plugin')

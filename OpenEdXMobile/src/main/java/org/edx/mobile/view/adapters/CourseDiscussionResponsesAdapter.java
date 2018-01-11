@@ -160,7 +160,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     }
 
-    private void bindViewHolderToThreadRow(DiscussionThreadViewHolder holder) {
+    private void bindViewHolderToThreadRow(final DiscussionThreadViewHolder holder) {
         holder.authorLayoutViewHolder.populateViewHolder(config, discussionThread,
                 discussionThread, initialTimeStampMs,
                 new Runnable() {
@@ -193,16 +193,20 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             bindSocialView(holder.socialLayoutViewHolder, discussionThread);
             holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
-                    discussionService.setThreadFlagged(discussionThread.getIdentifier(),
-                            new FlagBody(!discussionThread.isAbuseFlagged()))
+                  holder.discussionReportViewHolder.setReported(!holder.discussionReportViewHolder.getReported());
+                  discussionService.setThreadFlagged(discussionThread.getIdentifier(),
+                            new FlagBody(holder.discussionReportViewHolder.getReported()))
                             .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                     context, null, new DialogErrorNotification(baseFragment)) {
                                 @Override
                                 protected void onResponse(@NonNull final DiscussionThread topicThread) {
                                     discussionThread = discussionThread.patchObject(topicThread);
-                                    notifyItemChanged(0);
                                     EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
                                 }
+                              @Override
+                              protected void onFailure(@NonNull final Throwable error) {
+                                notifyItemChanged(0);
+                              }
                             });
                 }
             });
@@ -211,21 +215,25 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
+    private void bindSocialView(final DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
         holder.setDiscussionThread(thread);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                holder.toggleVote();
                 discussionService.setThreadVoted(discussionThread.getIdentifier(),
-                        new VoteBody(!discussionThread.isVoted()))
+                        new VoteBody(!holder.getIsVoted()))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                 context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                notifyItemChanged(0);
                                 EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                            }
+                            @Override
+                            protected void onFailure(@NonNull final Throwable error) {
+                                notifyItemChanged(0);
                             }
                         });
             }

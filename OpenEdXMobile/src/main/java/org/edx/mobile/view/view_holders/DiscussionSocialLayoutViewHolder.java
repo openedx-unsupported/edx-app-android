@@ -19,6 +19,8 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     public final IconImageView threadFollowIconImageView;
     public final TextView threadFollowTextView;
     public final View threadFollowContainer;
+    private DiscussionThread discussionThread;
+    private boolean isVoted;
 
     public DiscussionSocialLayoutViewHolder(View itemView) {
         super(itemView);
@@ -41,6 +43,9 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDiscussionThread(final DiscussionThread discussionThread) {
+        //todo clean this a little
+        this.discussionThread = discussionThread;
+        isVoted = discussionThread.isVoted();
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
         threadVoteIconImageView.setIconColorResource(discussionThread.isVoted() ?
@@ -56,6 +61,50 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
             threadFollowIconImageView.setIconColorResource(R.color.edx_brand_gray_base);
         }
     }
+
+    public void toggleVote(){
+        setVote(!isVoted);
+    }
+
+    public boolean getIsVoted(){
+        return isVoted;
+    }
+
+    public void setVote(boolean vote){
+        isVoted = vote;
+        if (vote){
+            addVote();
+        }else{
+            removeVote();
+        }
+    }
+
+    private void addVote(){
+        if (discussionThread!=null){
+            if (discussionThread.isVoted()){
+                threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
+                  threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
+            }else{
+                threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
+                  threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()+1));
+            }
+            threadVoteIconImageView.setIconColorResource(R.color.edx_brand_primary_base);
+        }
+    }
+
+    private void removeVote(){
+        if (discussionThread!=null){
+            if (discussionThread.isVoted()){
+                threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
+                  threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()-1));
+            }else {
+                threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
+                  threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
+            }
+            threadVoteIconImageView.setIconColorResource(R.color.edx_brand_gray_base);
+        }
+    }
+
 
     public void setDiscussionResponse(final DiscussionComment discussionResponse) {
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
