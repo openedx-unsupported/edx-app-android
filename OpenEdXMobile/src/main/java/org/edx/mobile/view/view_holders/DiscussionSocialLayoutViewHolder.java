@@ -21,6 +21,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     public final View threadFollowContainer;
     private DiscussionThread discussionThread;
     private boolean isVoted;
+    private boolean isFollowing;
 
     public DiscussionSocialLayoutViewHolder(View itemView) {
         super(itemView);
@@ -46,6 +47,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         //todo clean this a little
         this.discussionThread = discussionThread;
         isVoted = discussionThread.isVoted();
+      isFollowing = discussionThread.isFollowing();
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
         threadVoteIconImageView.setIconColorResource(discussionThread.isVoted() ?
@@ -62,15 +64,42 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void toggleVote(){
-        setVote(!isVoted);
+    public boolean toggleFollow(){
+        setFollowing(!isFollowing);
+        return isFollowing;
     }
 
-    public boolean getIsVoted(){
+    private void setFollowing(boolean follow){
+        isFollowing = follow;
+        if (follow){
+            addFollow();
+        }else{
+            removeFollow();
+        }
+    }
+
+    private void addFollow(){
+      if (discussionThread!=null) {
+        threadFollowTextView.setText(R.string.forum_unfollow);
+      }
+      threadFollowIconImageView.setIconColorResource(R.color.edx_brand_primary_base);
+
+    }
+
+    private void removeFollow(){
+      if (discussionThread!=null) {
+        threadFollowTextView.setText(R.string.forum_follow);
+      }
+      threadFollowIconImageView.setIconColorResource(R.color.edx_brand_gray_base);
+    }
+
+    public boolean toggleVote(){
+        setVote(!isVoted);
         return isVoted;
     }
 
-    public void setVote(boolean vote){
+
+    private void setVote(boolean vote){
         isVoted = vote;
         if (vote){
             addVote();

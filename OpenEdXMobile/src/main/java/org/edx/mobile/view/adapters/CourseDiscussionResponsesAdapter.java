@@ -193,9 +193,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             bindSocialView(holder.socialLayoutViewHolder, discussionThread);
             holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
-                  holder.discussionReportViewHolder.setReported(!holder.discussionReportViewHolder.getReported());
+                  boolean isReported = holder.discussionReportViewHolder.toggleReported();
                   discussionService.setThreadFlagged(discussionThread.getIdentifier(),
-                            new FlagBody(holder.discussionReportViewHolder.getReported()))
+                            new FlagBody(isReported))
                             .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                     context, null, new DialogErrorNotification(baseFragment)) {
                                 @Override
@@ -221,9 +221,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.toggleVote();
+                boolean isVoted = holder.toggleVote();
                 discussionService.setThreadVoted(discussionThread.getIdentifier(),
-                        new VoteBody(!holder.getIsVoted()))
+                        new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                 context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
@@ -242,16 +242,19 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.threadFollowContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                boolean isFollowing = holder.toggleFollow();
                 discussionService.setThreadFollowed(discussionThread.getIdentifier(),
-                        new FollowBody(!discussionThread.isFollowing()))
+                        new FollowBody(isFollowing))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                 context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                notifyItemChanged(0);
                                 EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                            }
+                            @Override
+                            protected void onFailure(@NonNull final Throwable error) {
+                                notifyItemChanged(0);
                             }
                         });
             }

@@ -30,9 +30,12 @@ public class DiscussionReportViewHolder {
         setUIReported(isReported);
     }
 
-    public boolean getReported(){
+
+    public boolean toggleReported(){
+        setReported(!isReported);
         return isReported;
     }
+
 
     private void setUIReported(boolean isReported){
         int reportStringResId = isReported ? R.string.discussion_responses_reported_label :
