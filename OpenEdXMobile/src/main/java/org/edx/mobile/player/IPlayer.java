@@ -30,7 +30,7 @@ public interface IPlayer extends Serializable {
     void setController(PlayerController controller);
     void freeze();
     void unfreeze();
-    void setVideoTitle(String title);
+    void setMediaTitle(String title);
     int getLastFreezePosition();
     void setAutoHideControls(boolean autoHide);
     boolean getAutoHideControls();

@@ -37,17 +37,17 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoPlaying(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackMediaPlaying(String videoId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackVideoPause(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackMediaPause(String videoId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackVideoStop(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackMediaStop(String videoId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
@@ -62,12 +62,12 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoLoading(String videoId, String courseId, String unitUrl) {
+    public void trackMediaLoading(String videoId, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackVideoSeek(String videoId, Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
+    public void trackMediaSeek(String videoId, Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
 
     }
 
@@ -102,12 +102,12 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackSingleVideoDownload(String videoId, String courseId, String unitUrl) {
+    public void trackSingleMediaDownload(String videoId, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackVideoOrientation(String videoId, Double currentTime, boolean isLandscape, String courseId, String unitUrl) {
+    public void trackMediaOrientation(String videoId, Double currentTime, boolean isLandscape, String courseId, String unitUrl) {
 
     }
 

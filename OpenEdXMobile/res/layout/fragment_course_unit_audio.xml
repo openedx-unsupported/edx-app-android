@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/course_unit_video"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:baselineAligned="false"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/player_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/video_player_height"
+        android:clickable="true"
+        android:contentDescription="@string/audio_player"
+        android:importantForAccessibility="no"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:id="@+id/message_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:background="@color/white"
+            android:rotation="90"
+            app:iconColor="@color/edx_brand_gray_back"
+            app:iconName="fa-mobile-phone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginStart="60dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:singleLine="false"
+            android:text="@string/assessment_rotate_for_fullscreen"
+            android:textAlignment="center"
+            android:textColor="@color/edx_brand_gray_base"
+            android:textSize="16sp"
+            tools:targetApi="17" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/transcript_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:importantForAccessibility="noHideDescendants"
+        android:paddingBottom="@dimen/widget_margin_half"
+        android:paddingTop="@dimen/widget_margin_half" />
+
+</LinearLayout>
+

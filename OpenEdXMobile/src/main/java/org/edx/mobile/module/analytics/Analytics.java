@@ -35,7 +35,7 @@ public interface Analytics {
      * @param unitUrl     - Page Url for that Video
      * @param courseId    - CourseId under which the video is present
      */
-    void trackVideoPlaying(String videoId, Double currentTime,
+    void trackMediaPlaying(String videoId, Double currentTime,
                            String courseId, String unitUrl);
 
     /**
@@ -46,7 +46,7 @@ public interface Analytics {
      * @param courseId    - CourseId under which the video is present
      * @param unitUrl     - Page Url for that Video
      */
-    void trackVideoPause(String videoId, Double currentTime,
+    void trackMediaPause(String videoId, Double currentTime,
                          String courseId, String unitUrl);
 
     /**
@@ -57,7 +57,7 @@ public interface Analytics {
      * @param courseId
      * @param unitUrl
      */
-    void trackVideoStop(String videoId, Double currentTime,
+    void trackMediaStop(String videoId, Double currentTime,
                         String courseId, String unitUrl);
 
     /**
@@ -89,7 +89,7 @@ public interface Analytics {
      * @param courseId
      * @param unitUrl
      */
-    void trackVideoLoading(String videoId, String courseId, String unitUrl);
+    void trackMediaLoading(String videoId, String courseId, String unitUrl);
 
     /**
      * This function is used to track 30 second rewind on Video
@@ -101,7 +101,7 @@ public interface Analytics {
      * @param unitUrl
      * @param skipSeek
      */
-    void trackVideoSeek(String videoId, Double oldTime, Double newTime,
+    void trackMediaSeek(String videoId, Double oldTime, Double newTime,
                         String courseId, String unitUrl, Boolean skipSeek);
 
     /* Events not mentioned in PDF */
@@ -165,7 +165,7 @@ public interface Analytics {
      * @param courseId
      * @param unitUrl
      */
-    void trackSingleVideoDownload(String videoId, String courseId,
+    void trackSingleMediaDownload(String videoId, String courseId,
                                   String unitUrl);
 
     /**
@@ -177,7 +177,7 @@ public interface Analytics {
      * @param courseId
      * @param unitUrl
      */
-    void trackVideoOrientation(String videoId, Double currentTime,
+    void trackMediaOrientation(String videoId, Double currentTime,
                                boolean isLandscape, String courseId, String unitUrl);
 
     void trackDiscoverCoursesClicked();

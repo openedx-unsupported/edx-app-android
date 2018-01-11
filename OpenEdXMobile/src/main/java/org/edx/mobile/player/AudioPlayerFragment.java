@@ -44,14 +44,13 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
@@ -76,17 +75,17 @@ import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
-public class PlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
+public class AudioPlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
         AudioManager.OnAudioFocusChangeListener, NetworkObserver {
 
-    private enum VideoNotPlayMessageType {
-        IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB,
+    private enum AudioNotPlayMessageType {
+        IS_CLEAR, IS_AUDIO_MESSAGE_DISPLAYED, IS_AUDIO_ONLY_ON_WEB,
         IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE
     }
 
-    private static final Logger logger = new Logger(PlayerFragment.class.getName());
+    private static final Logger logger = new Logger(AudioPlayerFragment.class.getName());
     private static final String KEY_PLAYER = "player";
-    private static final String KEY_VIDEO = "video";
+    private static final String KEY_AUDIO = "audio";
     private static final String KEY_PREPARED = "isPrepared";
     private static final String KEY_AUTOPLAY_DONE = "isAutoPlayDone";
     private static final String KEY_MESSAGE_DISPLAYED = "isMessageDisplayed";
@@ -109,8 +108,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private transient IPlayerEventCallback callback;
     @Nullable
     private transient TranscriptListener transcriptListener;
-    private View.OnClickListener nextListner;
-    private View.OnClickListener prevListner;
+    private OnClickListener nextListner;
+    private OnClickListener prevListner;
     private AudioManager audioManager;
     private boolean playOnFocusGain = false;
     private Handler subtitleDisplayHandler = new Handler();
@@ -125,10 +124,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Inject
     private TranscriptManager transcriptManager;
     private TranscriptModel transcript;
-    private DownloadEntry videoEntry;
+    private DownloadEntry audioEntry;
     private Object touchExplorationStateChangeListener;
 
-    private EnumSet<VideoNotPlayMessageType> curMessageTypes =  EnumSet.noneOf(VideoNotPlayMessageType.class);
+    private EnumSet<AudioNotPlayMessageType> curMessageTypes = EnumSet.noneOf(AudioNotPlayMessageType.class);
 
     private boolean isManualFullscreen = false;
     private int currentPosition = 0;
@@ -139,11 +138,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
+
         @Override
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    if(player!=null && player.isPlaying()) {
+                    if (player != null && player.isPlaying()) {
                         // mark last current position
                         int pos = player.getCurrentPosition();
                         if (pos > 0 && pos != lastSavedPosition) {
@@ -160,7 +160,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     };
 
-    public PlayerFragment() {
+    public AudioPlayerFragment() {
         curMessageTypes.clear();
     }
 
@@ -175,7 +175,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.panel_player, null);
+        View view = inflater.inflate(R.layout.panel_audio_player, null);
         this.layoutInflater = inflater;
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
@@ -208,12 +208,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             player = (IPlayer) savedInstanceState.get(KEY_PLAYER);
-            videoEntry = (DownloadEntry) savedInstanceState.get(KEY_VIDEO);
+            audioEntry = (DownloadEntry) savedInstanceState.get(KEY_AUDIO);
             isPrepared = savedInstanceState.getBoolean(KEY_PREPARED);
             isAutoPlayDone = savedInstanceState.getBoolean(KEY_AUTOPLAY_DONE);
             transcript = (TranscriptModel) savedInstanceState.get(KEY_TRANSCRIPT);
             if (savedInstanceState.getBoolean(KEY_MESSAGE_DISPLAYED)) {
-                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+                showAudioNotAvailable(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
             }
         } else {
             if (player == null) player = new Player();
@@ -238,6 +238,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
             orientationDetector = new OrientationDetector(getActivity()) {
                 private boolean isLastRotationOn = false;
+
                 @Override
                 protected void onChanged() {
                     if (isResumed()) {
@@ -249,36 +250,20 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 protected void onUpdate() {
                     super.onUpdate();
                     boolean isRotationOn = DeviceSettingUtil.isDeviceRotationON(getActivity());
-                    if ( !isRotationOn && isLastRotationOn) {
+                    if (!isRotationOn && isLastRotationOn) {
                         // rotation just got turned OFF, so exit fullscreen
                         exitFullScreen();
                     }
                     isLastRotationOn = isRotationOn;
                 }
             };
-            getView().findViewById(R.id.panel_video_only_on_web).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    final StringBuffer urlStringBuffer = new StringBuffer();
-                    if (! videoEntry.url.startsWith("http://") && ! videoEntry.url.startsWith("https://")) {
-                        urlStringBuffer.append("http://");
-                        urlStringBuffer.append( videoEntry.url);
-                    } else {
-                        urlStringBuffer.append( videoEntry.url);
-                    }
-                    BrowserUtil.open(getActivity(),
-                            urlStringBuffer.toString());
-                }
-
-            });
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
     private void allowSensorOrientationIfApplicable() {
-        try{
+        try {
             boolean isRotationOn = DeviceSettingUtil.isDeviceRotationON(getActivity());
             if (isRotationOn) {
                 // do UI operations only if the fragment is resumed
@@ -289,7 +274,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         allowSensorOrientation();
                     }
                 } else if (orientationDetector.isPortrait()) {
-                    if ( !isScreenLandscape()) {
+                    if (!isScreenLandscape()) {
                         logger.debug("Allowing sensor from portrait rotation");
                         isManualFullscreen = false;
                         allowSensorOrientation();
@@ -298,13 +283,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             } else {
                 logger.debug("Locking to portrait as Device Screen Rotation is OFF");
                 // lock to portrait
-                if ( !isManualFullscreen) {
+                if (!isManualFullscreen) {
                     exitFullScreen();
                 } else {
                     logger.debug("You are in manual fullscreen mode");
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -315,24 +300,25 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         logger.debug("Player fragment start");
 
         stateSaved = false;
-        try{
+        try {
             Preview preview = (Preview) getView().findViewById(R.id.preview);
-            if(player!=null){
+            if (player != null) {
                 player.setPreview(preview);
 
                 // setup the flat if player is fullscreen
                 player.setFullScreen(isScreenLandscape());
             }
-            if(curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB)) {
-                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
-            } if(curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
-                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
-            }else if(curMessageTypes.contains(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED)){
+            if (curMessageTypes.contains(AudioNotPlayMessageType.IS_AUDIO_ONLY_ON_WEB)) {
+                showAudioNotAvailable(AudioNotPlayMessageType.IS_AUDIO_ONLY_ON_WEB);
+            }
+            if (curMessageTypes.contains(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED)) {
+                showAudioNotAvailable(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
+            } else if (curMessageTypes.contains(AudioNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED)) {
                 showNetworkError();
-            } else if(curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE)){
+            } else if (curMessageTypes.contains(AudioNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE)) {
                 showWifiSettingsMessage();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -397,16 +383,16 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         });
     }
 
-    public void handleOnPause(){
+    public void handleOnPause() {
         uiHelper.onPause();
 
-        try{
+        try {
             orientationDetector.stop();
             handler.removeCallbacks(unfreezeCallback);
             handler.removeCallbacks(requestAccessibilityFocusCallback);
             freezePlayer();
             setTouchExploreChangeListener(null);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -417,10 +403,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         setTouchExploreChangeListener(null);
 
-        if(audioManager!=null) {
+        if (audioManager != null) {
             audioManager.abandonAudioFocus(this);
         }
-        if(player!=null){
+        if (player != null) {
             handler.removeMessages(MSG_TYPE_TICK);
             freezePlayer();
         }
@@ -432,7 +418,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         uiHelper.onDestroy();
 
         if (!stateSaved) {
-            if (player!=null) {
+            if (player != null) {
                 // reset player when user goes back, and there is no state saving happened
                 player.reset();
                 removeSubtitleCallBack();
@@ -447,13 +433,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     private void showProgress() {
         try {
-            if(player!=null){
+            if (player != null) {
                 player.hideController();
             }
-            if( this.curMessageTypes.isEmpty() ){
+            if (this.curMessageTypes.isEmpty()) {
                 getView().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
@@ -461,7 +447,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private void hideProgress() {
         try {
             getView().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
@@ -474,7 +460,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             freezePlayer();
             outState.putSerializable(KEY_PLAYER, player);
         }
-        outState.putSerializable(KEY_VIDEO, videoEntry);
+        outState.putSerializable(KEY_AUDIO, audioEntry);
         outState.putBoolean(KEY_PREPARED, isPrepared);
         outState.putBoolean(KEY_AUTOPLAY_DONE, isAutoPlayDone);
         //FIXME: ensure that prepare is called on all activity restarts and then this can be removed
@@ -485,13 +471,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     public synchronized void prepare(String path, int seekTo, String title,
-                                     TranscriptModel trModel, DownloadEntry video) {
-        playOrPrepare(path, seekTo, title, trModel, video, true);
+                                     TranscriptModel trModel, DownloadEntry audio) {
+        playOrPrepare(path, seekTo, title, trModel, audio, true);
     }
 
     public synchronized void play(String path, int seekTo, String title,
-                                  TranscriptModel trModel, DownloadEntry video) {
-        playOrPrepare(path, seekTo, title, trModel, video, false);
+                                  TranscriptModel trModel, DownloadEntry audio) {
+        playOrPrepare(path, seekTo, title, trModel, audio, false);
     }
 
     /**
@@ -500,13 +486,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      * @param path
      * @param seekTo
      * @param title
-     * @param prepareOnly  <code>true</code> player will be prepared but not start to play
+     * @param prepareOnly <code>true</code> player will be prepared but not start to play
      */
     public synchronized void playOrPrepare(String path, int seekTo, String title,
-                                           TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
+                                           TranscriptModel trModel, DownloadEntry audio, boolean prepareOnly) {
         isPrepared = false;
         // block to portrait while preparing
-        if ( !isScreenLandscape()) {
+        if (!isScreenLandscape()) {
             exitFullScreen();
         }
 
@@ -517,12 +503,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             logger.error(e);
         }
 
-        if(video!=null){
-            this.videoEntry = video;
+        if (audio != null) {
+            this.audioEntry = audio;
         }
 
-        if (trModel != null)
-        {
+        if (trModel != null) {
             this.transcript = trModel;
             transcriptManager.downloadTranscriptsForMedia(trModel);
             //initializeClosedCaptioning();
@@ -532,28 +517,23 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         requestAudioFocus();
 
         try {
-            if ( video.isVideoForWebOnly ){
-                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
-                path = "";
-            } else {
-                // show loading indicator as player will prepare now
-                showProgress();
+            // show loading indicator as player will prepare now
+            showProgress();
 
-                if (path == null || path.trim().length() == 0) {
-                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
-                    //return;
-                } else {
-                    hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
-                }
+            if (path == null || path.trim().length() == 0) {
+                showAudioNotAvailable(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
+                //return;
+            } else {
+                hideAudioNotPlayInfo(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
             }
 
             this.transcript = trModel;
-            player.setLMSUrl(video.lmsUrl);
+            player.setLMSUrl(audio.lmsUrl);
             player.setMediaTitle(title);
 
             logger.debug("playing [seek=" + seekTo + "]: " + path);
 
-            if( prepareOnly)
+            if (prepareOnly)
                 player.setUri(path, seekTo);
             else
                 player.setUriAndPlay(path, seekTo);
@@ -584,12 +564,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             player.setController(controller);
             reAttachPlayEventListener();
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
-    public void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev) {
+    public void setNextPreviousListeners(OnClickListener next, OnClickListener prev) {
         this.prevListner = prev;
         this.nextListner = next;
         updateNextPreviousListeners();
@@ -599,8 +579,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (player != null) {
             if (isScreenLandscape()) {
                 player.setNextPreviousListeners(nextListner, prevListner);
-            }
-            else {
+            } else {
                 player.setNextPreviousListeners(null, null);
             }
         }
@@ -620,8 +599,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     @Override
     public void onMediaLagging() {
-        if ( !NetworkUtil.isConnected(getActivity())) {
-            // no network and video lagging, might be network problem
+        if (!NetworkUtil.isConnected(getActivity())) {
+            // no network and audio lagging, might be network problem
             showNetworkError();
         }
     }
@@ -641,13 +620,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     public void onPlaybackPaused() {
         setScreenOnWhilePlaying(false);
 
-        try{
-            if(player!=null){
-                double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                environment.getAnalyticsRegistry().trackMediaPause(videoEntry.blockId, current_time,
-                        videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            if (player != null) {
+                double current_time = player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND;
+                environment.getAnalyticsRegistry().trackMediaPause(audioEntry.blockId, current_time,
+                        audioEntry.eid, audioEntry.lmsUrl);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
@@ -660,21 +639,21 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             unlockOrientation();
             View errorView = getView().findViewById(R.id.panel_network_error);
             errorView.setVisibility(View.GONE);
-            curMessageTypes.remove(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
-            curMessageTypes.remove(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
+            curMessageTypes.remove(AudioNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+            curMessageTypes.remove(AudioNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
 
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
     private void showNetworkError() {
         try {
-            if(player!=null){
-                if (player.isPlayingLocally() || player.isPlaying() ) {
+            if (player != null) {
+                if (player.isPlayingLocally() || player.isPlaying()) {
                     hideNetworkError();
                 } else {
-                    if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
+                    if (!curMessageTypes.contains(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED)) {
                         //This has been commented after Lou's suggestion
                         unlockOrientation();
                         //lockOrientation();
@@ -683,40 +662,40 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         player.hideController();
 
                         clearAllErrors();
-                        // if network is available , this must be video-corrupt-error
+                        // if network is available , this must be audio-corrupt-error
                         if (NetworkUtil.isConnected(getActivity())) {
-                            // video might be corrupt
-                            showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+                            // audio might be corrupt
+                            showAudioNotAvailable(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
                         } else {
                             View errorView = getView().findViewById(R.id.panel_network_error);
                             errorView.setVisibility(View.VISIBLE);
                         }
 
-                        curMessageTypes.add(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
+                        curMessageTypes.add(AudioNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
                         resetClosedCaptioning();
                     }
                 }
-            }else{
+            } else {
                 if (NetworkUtil.isConnected(getActivity())) {
-                    // video might be corrupt
-                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+                    // audio might be corrupt
+                    showAudioNotAvailable(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
                 } else {
                     View errorView = getView().findViewById(R.id.panel_network_error);
                     errorView.setVisibility(View.VISIBLE);
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
-    private void showVideoNotAvailable( VideoNotPlayMessageType reason ){
+    private void showAudioNotAvailable(AudioNotPlayMessageType reason) {
         try {
-            if(player!=null){
+            if (player != null) {
                 hideCCPopUp();
                 hideSettingsPopUp();
                 player.hideController();
-                // player got error, 
+                // player got error,
                 // mark player as prepared, because it is not in preparing state anymore
                 isPrepared = true;
 
@@ -727,30 +706,28 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 hideProgress();
 
                 View errorView;
-                if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
-                    errorView = getView().findViewById(R.id.panel_video_not_available);
-                else
-                    errorView = getView().findViewById(R.id.panel_video_only_on_web);
-                errorView.setVisibility(View.VISIBLE);
+                if (reason == AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED) {
+                    errorView = getView().findViewById(R.id.panel_audio_not_available);
+                    errorView.setVisibility(View.VISIBLE);
+                }
 
                 curMessageTypes.add(reason);
                 hideClosedCaptioning();
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
-    private void hideVideoNotPlayInfo(VideoNotPlayMessageType reason) {
+    private void hideAudioNotPlayInfo(AudioNotPlayMessageType reason) {
         try {
             View errorView;
-            if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
-                errorView = getView().findViewById(R.id.panel_video_not_available);
-            else
-                errorView = getView().findViewById(R.id.panel_video_only_on_web);
-            errorView.setVisibility(View.GONE);
+            if (reason == AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED) {
+                errorView = getView().findViewById(R.id.panel_audio_not_available);
+                errorView.setVisibility(View.GONE);
+            }
             curMessageTypes.remove(reason);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
@@ -758,8 +735,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     private void clearAllErrors() {
         hideNetworkError();
-        hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
-        hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
+        hideAudioNotPlayInfo(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
+        hideAudioNotPlayInfo(AudioNotPlayMessageType.IS_AUDIO_ONLY_ON_WEB);
         hideProgress();
     }
 
@@ -783,8 +760,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         clearAllErrors();
         initializeClosedCaptioning();
         handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
-        environment.getAnalyticsRegistry().trackMediaLoading(videoEntry.blockId, videoEntry.eid,
-                videoEntry.lmsUrl);
+        environment.getAnalyticsRegistry().trackMediaLoading(audioEntry.blockId, audioEntry.eid,
+                audioEntry.lmsUrl);
     }
 
     @Override
@@ -804,19 +781,19 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
 
         clearAllErrors();
-        if(langList!=null){
+        if (langList != null) {
             displaySrtData();
-        }else{
+        } else {
             initializeClosedCaptioning();
         }
 
-        try{
-            if(player!=null){
-                double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                environment.getAnalyticsRegistry().trackMediaPlaying(videoEntry.blockId, current_time
-                        , videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            if (player != null) {
+                double current_time = player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND;
+                environment.getAnalyticsRegistry().trackMediaPlaying(audioEntry.blockId, current_time
+                        , audioEntry.eid, audioEntry.lmsUrl);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -826,25 +803,24 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if (screenOn) {
                 getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 logger.debug("KEEP SCREEN ON is set while playing, flag added");
-            }
-            else {
+            } else {
                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 logger.debug("KEEP SCREEN ON is unset, flag removed");
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex, true);
         }
     }
 
     @Override
     public void onPlaybackComplete() {
-        try{
-            if(player!=null){
-                double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                environment.getAnalyticsRegistry().trackMediaStop(videoEntry.blockId,
-                        current_time, videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            if (player != null) {
+                double current_time = player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND;
+                environment.getAnalyticsRegistry().trackMediaStop(audioEntry.blockId,
+                        current_time, audioEntry.eid, audioEntry.lmsUrl);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
@@ -855,13 +831,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
         hideCCPopUp();
         hideSettingsPopUp();
-        try{
-            if(player!=null){
-                if(player.getController()!=null){
-                    player.getController().showSpecial( (getTouchExploreEnabled() ? 0L : 5000L) );
+        try {
+            if (player != null) {
+                if (player.getController() != null) {
+                    player.getController().showSpecial((getTouchExploreEnabled() ? 0L : 5000L));
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
         if (!environment.getConfig().getAppStoreUris().isEmpty() &&
@@ -910,9 +886,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             } else {
                 exitFullScreen();
             }
-            environment.getAnalyticsRegistry().trackMediaOrientation(videoEntry.blockId,
+            environment.getAnalyticsRegistry().trackMediaOrientation(audioEntry.blockId,
                     player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                    isFullScreen, videoEntry.eid, videoEntry.lmsUrl);
+                    isFullScreen, audioEntry.eid, audioEntry.lmsUrl);
         } else {
             logger.debug("Player not prepared ?? full screen will NOT work!");
         }
@@ -932,12 +908,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     logger.warn("player instance is null, cannot capture event enterFullScreen");
                     return;
                 }
-                if (videoEntry == null) {
-                    logger.warn("video model instance is null, cannot capture event enterFullScreen");
+                if (audioEntry == null) {
+                    logger.warn("audio model instance is null, cannot capture event enterFullScreen");
                     return;
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
@@ -956,12 +932,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     logger.warn("player instance is null, cannot capture event exitFullScreen");
                     return;
                 }
-                if (videoEntry == null) {
-                    logger.warn("video model instance is null, cannot capture event exitFullScreen");
+                if (audioEntry == null) {
+                    logger.warn("audio model instance is null, cannot capture event exitFullScreen");
                     return;
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
@@ -978,7 +954,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             int orientation = getResources().getConfiguration().orientation;
             logger.debug("Current orientation = " + orientation);
             return (orientation == Configuration.ORIENTATION_LANDSCAPE);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
         return false;
@@ -1039,33 +1015,33 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         showNetworkError();
     }
 
-    public void onConnectedToMobile(){
+    public void onConnectedToMobile() {
         boolean wifiPreference = environment.getUserPrefs().isDownloadOverWifiOnly();
-        if(!NetworkUtil.isOnZeroRatedNetwork(getActivity(), environment.getConfig()) && wifiPreference){
+        if (!NetworkUtil.isOnZeroRatedNetwork(getActivity(), environment.getConfig()) && wifiPreference) {
             //If the user is connected to a non zero rated mobile data network and his wifi preference is on,
             //then prompt user to set change his wifi settings
             showWifiSettingsMessage();
-        }else{
-            handleNetworkChangeVideoPlayback();
+        } else {
+            handleNetworkChangeAudioPlayback();
         }
     }
 
-    public void onConnectedToWifi(){
-        //Start playing video is user is connected to wifi
-        handleNetworkChangeVideoPlayback();
+    public void onConnectedToWifi() {
+        //Start playing audio is user is connected to wifi
+        handleNetworkChangeAudioPlayback();
     }
 
     /**
-     * This method handles video playback on network change callbacks
+     * This method handles audio playback on network change callbacks
      */
-    private void handleNetworkChangeVideoPlayback(){
+    private void handleNetworkChangeAudioPlayback() {
         hideNetworkError();
         try {
-            if(player!=null){
-                if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
-                    if((!player.isPaused()
+            if (player != null) {
+                if (!curMessageTypes.contains(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED)) {
+                    if ((!player.isPaused()
                             && !player.isPlaying() && !player.isPlayingLocally())
-                            || (player.isInError() || player.isReset())){
+                            || (player.isInError() || player.isReset())) {
                         showProgress();
                     }
                 }
@@ -1106,7 +1082,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     if (playOnFocusGain) {
                         // before we start playing, request focus on audio channel
                         requestAudioFocus();
-                        if(player!=null){
+                        if (player != null) {
                             player.start();
                             updateController("audio focus gained");
                         }
@@ -1114,7 +1090,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     playOnFocusGain = false;
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS:
-                    if(player!=null){
+                    if (player != null) {
                         // resume playback
                         if (player.isPlaying()) {
                             player.pause();
@@ -1126,13 +1102,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     }
                     break;
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
     private void requestAudioFocus() {
-        if(audioManager!=null) {
+        if (audioManager != null) {
             audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         }
     }
@@ -1176,25 +1152,21 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * This runnable is used the fetch the Subtitle in TimedTextObject
      */
-    private Runnable subtitleFetchProcessesor = new Runnable()
-    {
-        public void run()
-        {
-            if(srtList!=null){
+    private Runnable subtitleFetchProcessesor = new Runnable() {
+        public void run() {
+            if (srtList != null) {
                 srtList = null;
             }
 
             srtList = new LinkedHashMap<>();
-            try
-            {
+            try {
                 LinkedHashMap<String, InputStream> localHashMap = transcriptManager
                         .fetchTranscriptsForMedia(transcript);
 
-                if (localHashMap != null){
-                    for(String thisKey : localHashMap.keySet()){
+                if (localHashMap != null) {
+                    for (String thisKey : localHashMap.keySet()) {
                         InputStream localInputStream = localHashMap.get(thisKey);
-                        if (localInputStream != null)
-                        {
+                        if (localInputStream != null) {
                             TimedTextObject localTimedTextObject =
                                     new FormatSRT().parseFile("temp.srt", localInputStream);
                             srtList.put(thisKey, localTimedTextObject);
@@ -1204,13 +1176,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
                     if ((srtList == null) || (srtList.size() == 0)) {
                         subtitleFetchHandler.postDelayed(subtitleFetchProcessesor, 100);
-                    }else{
+                    } else {
                         displaySrtData();
                     }
-                }else{
+                } else {
                     subtitleFetchHandler.postDelayed(subtitleFetchProcessesor, DELAY_TIME_MS);
                 }
-            }catch (Exception localException) {
+            } catch (Exception localException) {
                 logger.error(localException);
             }
 
@@ -1220,16 +1192,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * Handler initialized for fetching Subtitles
      */
-    private void fetchSubtitlesTask(){
-        try
-        {
-            if (this.subtitleFetchHandler != null)
-            {
+    private void fetchSubtitlesTask() {
+        try {
+            if (this.subtitleFetchHandler != null) {
                 subtitleFetchHandler.removeCallbacks(this.subtitleFetchProcessesor);
                 subtitleFetchHandler = null;
             }
             LinkedHashMap<String, String> languageList = getLanguageList();
-            if(languageList!=null && languageList.size()>0){
+            if (languageList != null && languageList.size() > 0) {
                 subtitleFetchHandler = new Handler();
                 if (subtitleFetchProcessesor != null)
                     subtitleFetchHandler.post(this.subtitleFetchProcessesor);
@@ -1243,56 +1213,56 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * This function sets the closed caption data on the TextView
      */
-    private void setClosedCaptionData(Caption text){
-        try{
+    private void setClosedCaptionData(Caption text) {
+        try {
             RelativeLayout subTitlesLayout = (RelativeLayout) getActivity().findViewById(R.id.txtSubtitles);
             TextView subTitlesTv = (TextView) getActivity().findViewById(R.id.txtSubtitles_tv);
-            if(subTitlesTv!=null ){
-                if(text!=null){
-                    int margin_twenty_dp = (int) UiUtil.getParamsInDP(getResources(),20);
-                    int margin_ten_dp = (int) UiUtil.getParamsInDP(getResources(),10);
-                    if(player!=null){
+            if (subTitlesTv != null) {
+                if (text != null) {
+                    int margin_twenty_dp = (int) UiUtil.getParamsInDP(getResources(), 20);
+                    int margin_ten_dp = (int) UiUtil.getParamsInDP(getResources(), 10);
+                    if (player != null) {
                         LayoutParams lp = (LayoutParams) subTitlesLayout.getLayoutParams();
-                        if (player.getController()!=null && player.getController().isShown()){
-                            if(player.isFullScreen()){
+                        if (player.getController() != null && player.getController().isShown()) {
+                            if (player.isFullScreen()) {
                                 lp.setMargins(margin_twenty_dp, 0,
-                                        margin_twenty_dp, (int)UiUtil.getParamsInDP(getResources(),50));
-                            }else{
+                                        margin_twenty_dp, (int) UiUtil.getParamsInDP(getResources(), 50));
+                            } else {
                                 lp.setMargins(margin_twenty_dp, 0,
-                                        margin_twenty_dp,(int)UiUtil.getParamsInDP(getResources(),42));
+                                        margin_twenty_dp, (int) UiUtil.getParamsInDP(getResources(), 42));
                             }
                             subTitlesLayout.setLayoutParams(lp);
-                        }else{
-                            if(player.isFullScreen()){
+                        } else {
+                            if (player.isFullScreen()) {
                                 lp.setMargins(margin_twenty_dp, 0,
                                         margin_twenty_dp, margin_ten_dp);
-                            }else{
+                            } else {
                                 lp.setMargins(margin_twenty_dp, 0,
-                                        margin_twenty_dp,(int)UiUtil.getParamsInDP(getResources(),5));
+                                        margin_twenty_dp, (int) UiUtil.getParamsInDP(getResources(), 5));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }
                     }
-                    subTitlesTv.setPadding(margin_ten_dp, (int)UiUtil.getParamsInDP(getResources(),2),
-                            margin_ten_dp,(int)UiUtil.getParamsInDP(getResources(),2) );
+                    subTitlesTv.setPadding(margin_ten_dp, (int) UiUtil.getParamsInDP(getResources(), 2),
+                            margin_ten_dp, (int) UiUtil.getParamsInDP(getResources(), 2));
                     subTitlesTv.setText("");
                     //This has been done because text.content contains <br />
                     //in the end of each message
                     String temp = text.content;
-                    if(temp.endsWith("<br />")){
-                        temp = temp.substring(0, temp.length()-6);
+                    if (temp.endsWith("<br />")) {
+                        temp = temp.substring(0, temp.length() - 6);
                     }
-                    if(temp.length()==0){
+                    if (temp.length() == 0) {
                         subTitlesTv.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         subTitlesTv.setText(temp);
                         subTitlesTv.setVisibility(View.VISIBLE);
                     }
-                }else{
+                } else {
                     subTitlesTv.setVisibility(View.GONE);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1300,13 +1270,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * Hide the Closed Captioning TextView
      */
-    private void hideClosedCaptioning(){
-        try{
+    private void hideClosedCaptioning() {
+        try {
             TextView subTitlesTv = (TextView) getActivity().findViewById(R.id.txtSubtitles_tv);
-            if(subTitlesTv!=null){
+            if (subTitlesTv != null) {
                 subTitlesTv.setVisibility(View.GONE);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1314,14 +1284,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * This resets the Closed Captioning to blank/empty
      */
-    private void resetClosedCaptioning(){
-        try{
+    private void resetClosedCaptioning() {
+        try {
             TextView subTitlesTv = (TextView) getActivity().findViewById(R.id.txtSubtitles_tv);
-            if(subTitlesTv!=null){
+            if (subTitlesTv != null) {
                 subTitlesTv.setText("");
                 subTitlesTv.setVisibility(View.INVISIBLE);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1329,12 +1299,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * Initialiaze and reset Closed Captioning handlers
      */
-    private void initializeClosedCaptioning(){
-        try{
+    private void initializeClosedCaptioning() {
+        try {
             removeSubtitleCallBack();
             hideClosedCaptioning();
             fetchSubtitlesTask();
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1344,16 +1314,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     private void removeSubtitleCallBack() {
 
-        if (subtitleDisplayHandler != null)
-        {
+        if (subtitleDisplayHandler != null) {
             subtitleDisplayHandler.removeCallbacks(SUBTITLES_PROCESSOR_RUNNABLE);
             subtitleDisplayHandler = null;
             hideClosedCaptioning();
             subtitlesObj = null;
             srtList = null;
         }
-        if (subtitleFetchHandler != null)
-        {
+        if (subtitleFetchHandler != null) {
             subtitleFetchHandler.removeCallbacks(subtitleFetchProcessesor);
             subtitleFetchHandler = null;
         }
@@ -1361,27 +1329,27 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     @Override
     public void callSettings(Point p) {
-        try{
+        try {
             ImageView iv = (ImageView) getActivity().findViewById(R.id.iv_transparent_bg);
             iv.setVisibility(View.VISIBLE);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
         showSettingsPopup(p);
     }
 
     public void hideTransparentImage() {
-        try{
+        try {
             ImageView iv = (ImageView) getActivity().findViewById(R.id.iv_transparent_bg);
             iv.setVisibility(View.GONE);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     @Nullable
     private AccessibilityManager getAccessibilityManager() {
-        return (AccessibilityManager)getActivity().getSystemService(Context.ACCESSIBILITY_SERVICE);
+        return (AccessibilityManager) getActivity().getSystemService(Context.ACCESSIBILITY_SERVICE);
     }
 
     /**
@@ -1390,7 +1358,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private boolean getTouchExploreEnabled() {
         boolean ret = false;
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             AccessibilityManager am = getAccessibilityManager();
             if (am != null && am.isTouchExplorationEnabled()) {
                 ret = true;
@@ -1402,6 +1370,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     /**
      * Sets the current touch explore state change listener and removes the previous one if necessary
+     *
      * @param listener Null value unregisters the current listener, non-null unregisters previous one and registers new one
      *                 If the current listener is the same as the previous one, no operation is performed.
      */
@@ -1432,16 +1401,16 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     //The method that displays the popup.
     private void showSettingsPopup(final Point p) {
-        try{
-            if(player!=null){
+        try {
+            if (player != null) {
                 player.getController().setAutoHide(!getTouchExploreEnabled());
                 Activity context = getActivity();
                 Resources r = getResources();
                 float popupHeight = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 40 , r.getDisplayMetrics());
+                        TypedValue.COMPLEX_UNIT_DIP, 40, r.getDisplayMetrics());
 
                 float popupWidth = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 150 , r.getDisplayMetrics());
+                        TypedValue.COMPLEX_UNIT_DIP, 150, r.getDisplayMetrics());
 
                 // Inflate the popup_layout.xml
                 LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.setting_popup);
@@ -1452,14 +1421,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 // Creating the PopupWindow
                 settingPopup = new PopupWindow(context);
                 settingPopup.setContentView(layout);
-                settingPopup.setWidth((int)popupWidth);
-                settingPopup.setHeight((int)popupHeight);
+                settingPopup.setWidth((int) popupWidth);
+                settingPopup.setHeight((int) popupHeight);
                 settingPopup.setFocusable(true);
                 settingPopup.setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         hideTransparentImage();
-                        if(player!=null){
+                        if (player != null) {
                             player.getController().setSettingsBtnDrawable(false);
                             player.getController().setAutoHide(!getTouchExploreEnabled());
                         }
@@ -1470,30 +1439,29 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 settingPopup.setBackgroundDrawable(new BitmapDrawable());
 
                 // Displaying the popup at the specified location, + offsets.
-                settingPopup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x-(int)popupWidth, p.y-(int)popupHeight);
+                settingPopup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x - (int) popupWidth, p.y - (int) popupHeight);
 
                 TextView tv_closedCaption = (TextView) layout.findViewById(R.id.tv_closedcaption);
-                if ((langList != null) && (langList.size() > 0))
-                {
+                if ((langList != null) && (langList.size() > 0)) {
                     tv_closedCaption.setBackgroundResource(R.drawable.white_rounded_selector);
-                    tv_closedCaption.setOnClickListener(new View.OnClickListener(){
+                    tv_closedCaption.setOnClickListener(new OnClickListener() {
                         public void onClick(View paramAnonymousView) {
                             showCCFragmentPopup();
                         }
                     });
-                }else{
+                } else {
                     tv_closedCaption.setBackgroundResource(R.drawable.grey_roundedbg);
                     tv_closedCaption.setOnClickListener(null);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     //Default Language List
-    private LinkedHashMap<String, String> getLanguageList(){
-        if(transcript!=null){
+    private LinkedHashMap<String, String> getLanguageList() {
+        if (transcript != null) {
             langList = transcript.getLanguageList();
             return langList;
         }
@@ -1503,26 +1471,26 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     // 
 
     /**
-     *This function is used to show Dialog fragment of
-     *language list in potrait mode
+     * This function is used to show Dialog fragment of
+     * language list in potrait mode
      */
     protected void showCCFragmentPopup() {
-        try{
+        try {
             hideSettingsPopUp();
 
-            ccFragment = CCLanguageDialogFragment.getInstance(getLanguageList(),new IListDialogCallback() {
+            ccFragment = CCLanguageDialogFragment.getInstance(getLanguageList(), new IListDialogCallback() {
                 @Override
                 public void onItemClicked(HashMap<String, String> lang) {
                     closedCaptionsEnabled = true;
                     final String languageSubtitle = lang.keySet().toArray()[0].toString();
                     setSubtitleLanguage(languageSubtitle);
                     if (player != null) {
-                        environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.blockId,
+                        environment.getAnalyticsRegistry().trackShowTranscript(audioEntry.blockId,
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                                videoEntry.eid, videoEntry.lmsUrl);
-                        environment.getAnalyticsRegistry().trackTranscriptLanguage(videoEntry.blockId,
+                                audioEntry.eid, audioEntry.lmsUrl);
+                        environment.getAnalyticsRegistry().trackTranscriptLanguage(audioEntry.blockId,
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                                languageSubtitle, videoEntry.eid, videoEntry.lmsUrl);
+                                languageSubtitle, audioEntry.eid, audioEntry.lmsUrl);
                     }
                     displaySrtData();
                     if (player != null) {
@@ -1537,9 +1505,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     hideClosedCaptioning();
                     setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
                     if (player != null) {
-                        environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.blockId,
+                        environment.getAnalyticsRegistry().trackHideTranscript(audioEntry.blockId,
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                                videoEntry.eid, videoEntry.lmsUrl);
+                                audioEntry.eid, audioEntry.lmsUrl);
                     }
                     if (player != null) {
                         player.getController().setAutoHide(true);
@@ -1551,7 +1519,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             ccFragment.setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_Holo_Dialog);
             ccFragment.show(getFragmentManager(), "dialog");
             ccFragment.setCancelable(true);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1560,13 +1528,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * This function hides the Settings popup and overlay
      */
-    private void hideSettingsPopUp(){
-        try{
+    private void hideSettingsPopUp() {
+        try {
             hideTransparentImage();
-            if(settingPopup!=null){
+            if (settingPopup != null) {
                 settingPopup.dismiss();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1574,16 +1542,16 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * This function hides the CC popup and overlay
      */
-    private void hideCCPopUp(){
-        try{
-            if(cc_popup!=null){
+    private void hideCCPopUp() {
+        try {
+            if (cc_popup != null) {
                 cc_popup.dismiss();
             }
-            if(ccFragment!=null && ccFragment.isVisible()){
+            if (ccFragment != null && ccFragment.isVisible()) {
                 ccFragment.dismiss();
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1626,9 +1594,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 if (subtitlesObj != null) {
                     closedCaptionsEnabled = true;
                     if (player != null) {
-                        environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.blockId,
+                        environment.getAnalyticsRegistry().trackShowTranscript(audioEntry.blockId,
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                                videoEntry.eid, videoEntry.lmsUrl);
+                                audioEntry.eid, audioEntry.lmsUrl);
                     }
                 }
             }
@@ -1664,22 +1632,22 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     @Override
     public void callPlayerSeeked(long lastPostion, long newPosition, boolean isRewindClicked) {
-        try{
+        try {
             if (callback != null) {
                 // mark last seeked position
                 callback.saveCurrentPlaybackPosition((int) newPosition);
                 logger.debug("Current position saved: " + newPosition);
             }
 
-            if(isRewindClicked){
+            if (isRewindClicked) {
                 resetClosedCaptioning();
             }
-            environment.getAnalyticsRegistry().trackMediaSeek(videoEntry.blockId,
-                    lastPostion/AppConstants.MILLISECONDS_PER_SECOND,
-                    newPosition/AppConstants.MILLISECONDS_PER_SECOND,
-                    videoEntry.eid, videoEntry.lmsUrl,
+            environment.getAnalyticsRegistry().trackMediaSeek(audioEntry.blockId,
+                    lastPostion / AppConstants.MILLISECONDS_PER_SECOND,
+                    newPosition / AppConstants.MILLISECONDS_PER_SECOND,
+                    audioEntry.eid, audioEntry.lmsUrl,
                     isRewindClicked);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1701,10 +1669,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     /**
-     * @return the video model that this fragment is supposed to play.
+     * @return the audio model that this fragment is supposed to play.
      */
-    public VideoModel getPlayingVideo() {
-        return videoEntry;
+    public AudioModel getPlayingAudio() {
+        return audioEntry;
     }
 
     /**
@@ -1715,9 +1683,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     /**
-     * Returns true if video player is in frozen state
+     * Returns true if audio player is in frozen state
      *
-     * @return <code>true</code> if the video player is frozen
+     * @return <code>true</code> if the audio player is frozen
      */
     @SuppressWarnings("unused")
     public boolean isFrozen() {
@@ -1727,7 +1695,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     public void freezePlayer() {
         setScreenOnWhilePlaying(false);
 
-        if (player!=null) {
+        if (player != null) {
             if (callback != null && player.isPlaying()) {
                 int pos = player.getCurrentPosition();
                 if (pos > 0) {
@@ -1741,7 +1709,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     /**
      * This method is called when we need to notify the user during playback that he has
-     * switched to mobile network and his current download settings is not allowed to download videos
+     * switched to mobile network and his current download settings is not allowed to download audios
      */
     private void showWifiSettingsMessage() {
         try {
@@ -1749,12 +1717,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 if (player.isPlayingLocally()) {
                     hideNetworkError();
                 } else {
-                    if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED) && !player.isInError()){
+                    if (!curMessageTypes.contains(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED) && !player.isInError()) {
                         unlockOrientation();
                         hideCCPopUp();
                         hideSettingsPopUp();
-                        if ( !player.isReset()) {
-                            if ( !player.isInError()) {
+                        if (!player.isReset()) {
+                            if (!player.isInError()) {
                                 currentPosition = player.getCurrentPosition();
                             }
                             player.reset();
@@ -1767,7 +1735,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         TextView errorHeaderTextView = (TextView) errorView.findViewById(R.id.error_header);
                         errorHeaderTextView.setText(getString(R.string.wifi_off_message));
                         errorView.findViewById(R.id.error_message).setVisibility(View.GONE);
-                        curMessageTypes.add(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+                        curMessageTypes.add(AudioNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
                     }
                     resetClosedCaptioning();
                 }
@@ -1780,8 +1748,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * @return true if message is displayed on player to change wifi settings.
      */
-    public boolean isShownWifiSettingsMessage(){
-        return curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+    public boolean isShownWifiSettingsMessage() {
+        return curMessageTypes.contains(AudioNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
     }
 
     @Override
@@ -1794,7 +1762,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     /**
-     * Utility for seeking the video player to specified {@link Caption}.
+     * Utility for seeking the audio player to specified {@link Caption}.
      *
      * @param caption The caption to seek to.
      */

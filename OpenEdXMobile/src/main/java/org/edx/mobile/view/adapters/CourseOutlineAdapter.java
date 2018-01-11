@@ -19,6 +19,7 @@ import com.joanzapata.iconify.internal.Animation;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -234,12 +235,19 @@ public class CourseOutlineAdapter extends BaseAdapter {
             } else {
                 viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
             }
+        } else if (row.component instanceof AudioBlockModel) {
+            viewHolder.blockTypeIcon.setIcon(FontAwesomeIcons.fa_volume_up);
+            final DownloadEntry audioData = ((AudioBlockModel) row.component).getDownloadEntry(storage);
+            if (null != audioData) {
+                updateUIForVideo(viewHolder, audioData);
+            } else {
+                viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
+            }
         } else if (row.component instanceof HtmlBlockModel) {
             viewHolder.blockTypeIcon.setImageResource(R.drawable.ic_text_media);
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
         } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
             viewHolder.blockTypeIcon.setIcon(FontAwesomeIcons.fa_comments_o);
-            viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
             checkAccessStatus(viewHolder, unit);
         } else if (!unit.isMultiDevice()) {
             // If we reach here & the type is VIDEO, it means the video is webOnly
@@ -304,7 +312,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     MemoryUtil.format(context, videoData.getSize())));
         }
 
-        dbStore.getWatchedStateForVideoId(videoData.videoId,
+        dbStore.getWatchedStateForVideoId(videoData.blockId,
                 new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
@@ -325,7 +333,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
         } else {
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.VISIBLE);
-            dbStore.getDownloadedStateForVideoId(videoData.videoId,
+            dbStore.getDownloadedStateForVideoId(videoData.blockId,
                     new DataCallback<DownloadEntry.DownloadedState>(true) {
                         @Override
                         public void onResult(DownloadEntry.DownloadedState state) {

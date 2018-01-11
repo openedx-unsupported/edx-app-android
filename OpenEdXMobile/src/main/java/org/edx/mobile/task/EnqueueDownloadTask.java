@@ -28,7 +28,7 @@ public abstract class EnqueueDownloadTask extends Task<Long> {
         for (DownloadEntry de : downloadList) {
             if (environment.getStorage().addDownload(de) != -1) {
                 count++;
-                transcriptManager.downloadTranscriptsForVideo(de.transcript);
+                transcriptManager.downloadTranscriptsForMedia(de.transcript);
             }
         }
         return (long) count;

@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DatabaseModelFactory;
 
 import java.util.ArrayList;

@@ -5,8 +5,8 @@ import android.graphics.Point;
 public interface IPlayerListener {
 
     public void onError();
-    public void onVideoLagging();
-    public void onVideoNotSeekable();
+    public void onMediaLagging();
+    public void onMediaNotSeekable();
     public void onPreparing();
     public void onPrepared();
     public void onPlaybackPaused();

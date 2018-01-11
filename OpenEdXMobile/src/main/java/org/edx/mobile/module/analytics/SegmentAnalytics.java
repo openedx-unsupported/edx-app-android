@@ -116,7 +116,7 @@ public class SegmentAnalytics implements Analytics {
      * @param unitUrl
      */
     @Override
-    public void trackVideoLoading(String videoId, String courseId, String unitUrl) {
+    public void trackMediaLoading(String videoId, String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonProperties(videoId, Values.VIDEO_LOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         trackSegmentEvent(Events.LOADED_VIDEO, aEvent.properties);
@@ -131,7 +131,7 @@ public class SegmentAnalytics implements Analytics {
      * @param courseId    -     CourseId under which the video is present
      */
     @Override
-    public void trackVideoPlaying(String videoId, Double currentTime,
+    public void trackMediaPlaying(String videoId, Double currentTime,
                                   String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PLAYED);
@@ -149,7 +149,7 @@ public class SegmentAnalytics implements Analytics {
      * @param unitUrl     -   Page Url for that Video
      */
     @Override
-    public void trackVideoPause(String videoId,
+    public void trackMediaPause(String videoId,
                                 Double currentTime, String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PAUSED);
@@ -166,7 +166,7 @@ public class SegmentAnalytics implements Analytics {
      * @param unitUrl
      */
     @Override
-    public void trackVideoStop(String videoId, Double currentTime, String courseId,
+    public void trackMediaStop(String videoId, Double currentTime, String courseId,
                                String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_STOPPED);
@@ -186,7 +186,7 @@ public class SegmentAnalytics implements Analytics {
      * @param skipSeek
      */
     @Override
-    public void trackVideoSeek(String videoId,
+    public void trackMediaSeek(String videoId,
                                Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
         SegmentEvent aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -303,7 +303,7 @@ public class SegmentAnalytics implements Analytics {
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public void trackSingleVideoDownload(String videoId, String courseId,
+    public void trackSingleMediaDownload(String videoId, String courseId,
                                          String unitUrl) {
         SegmentEvent aEvent = getCommonProperties(videoId,
                 Values.SINGLE_VIDEO_DOWNLOAD);
@@ -323,7 +323,7 @@ public class SegmentAnalytics implements Analytics {
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public void trackVideoOrientation(String videoId, Double currentTime,
+    public void trackMediaOrientation(String videoId, Double currentTime,
                                       boolean isLandscape, String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.FULLSREEN_TOGGLED);

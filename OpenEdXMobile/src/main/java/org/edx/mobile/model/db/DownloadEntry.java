@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EncodingsModel;
 import org.edx.mobile.model.api.TranscriptModel;
@@ -15,10 +16,10 @@ import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.JavaUtil;
 
-public class DownloadEntry implements SectionItemInterface, VideoModel {
+public class DownloadEntry implements SectionItemInterface, VideoModel, AudioModel {
 
-    public static enum WatchedState { UNWATCHED, PARTIALLY_WATCHED, WATCHED}
-    public static enum DownloadedState { DOWNLOADING, DOWNLOADED, ONLINE }
+    public enum WatchedState { UNWATCHED, PARTIALLY_WATCHED, WATCHED}
+    public enum DownloadedState { DOWNLOADING, DOWNLOADED, ONLINE }
 
     public int id;
     public String username;
@@ -30,11 +31,13 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public WatchedState watched = WatchedState.UNWATCHED;
     // default not_downloaded
     public DownloadedState downloaded = DownloadedState.ONLINE;
-    public String videoId;
+    public String blockId;
     public String url;
     public String url_high_quality;
     public String url_low_quality;
     public String url_youtube;
+    public String url_ogg;
+    public String url_mp3;
     public long dmId = -1;
     // enrollment id
     public String eid;
@@ -114,8 +117,8 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     }
 
     @Override
-    public String getVideoId() {
-        return videoId;
+    public String getBlockId() {
+        return blockId;
     }
 
     @Override
@@ -207,6 +210,16 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     }
 
     @Override
+    public String getOggUrl() {
+        return url_ogg;
+    }
+
+    @Override
+    public String getMp3Url() {
+        return url_mp3;
+    }
+
+    @Override
     public TranscriptModel getTranscripts() {
         return transcript;
     }
@@ -219,7 +232,16 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         size = download.size;
         // duration can't be updated here
     }
-    
+
+    @Override
+    public void setDownloadInfo(AudioModel audioByUrl) {
+        dmId = audioByUrl.getDmId();
+        downloaded = DownloadedState.values()[audioByUrl.getDownloadedStateOrdinal()];
+        filepath = audioByUrl.getFilePath();
+        size = audioByUrl.getSize();
+        duration = audioByUrl.getDuration();
+    }
+
     @Override
     public void setDownloadingInfo(NativeDownloadModel download) {
         dmId = download.dmid;

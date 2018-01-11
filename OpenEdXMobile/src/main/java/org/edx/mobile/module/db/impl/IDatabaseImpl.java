@@ -8,7 +8,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.DataCallback;
@@ -103,7 +105,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.DOWNLOADED, DownloadedState.ONLINE.ordinal());
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{videoId, username()});
         op.setCallback(callback);
         return enqueue(op);
@@ -113,7 +115,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     @Override
     public Integer getVideoCountBydmId(long dmId, final DataCallback<Integer> callback) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.DM_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{String.valueOf(dmId), username()}, null);
         op.setCallback(callback);
@@ -125,7 +127,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                               String chapter,
                                               final DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME
                         + "=?", new String[]{chapter, enrollmentId,
@@ -139,7 +141,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public Integer getVideosCountByChapter(String enrollmentId, String chapter,
                                            final DataCallback<Integer> callback) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.DOWNLOADED + "!=? AND " + DbStructure.Column.USERNAME
                         + "=?", new String[]{chapter, enrollmentId,
@@ -152,7 +154,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public Integer getWebOnlyVideosCountByChapter(String enrollmentId, String chapter,
                                                   final DataCallback<Integer> callback) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.VIDEO_FOR_WEB_ONLY + "==1 AND "
                         + DbStructure.Column.USERNAME + "=?",
@@ -166,7 +168,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                                String chapter,
                                                final DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME
                         + "=?", new String[]{chapter, enrollmentId,
@@ -196,7 +198,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                                String chapter, String section,
                                                final DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.SECTION + "=? AND " + DbStructure.Column.CHAPTER + "=? AND "
                         + DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED
                         + "=? AND " + DbStructure.Column.USERNAME + "=?",
@@ -252,7 +254,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                               String chapter, String section,
                                               final DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.SECTION + "=? AND " + DbStructure.Column.CHAPTER + "=? AND "
                         + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.DOWNLOADED + "=? AND "
@@ -316,7 +318,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public Integer getVideosCountBySection(String enrollmentId, String chapter,
                                            String section, final DataCallback<Integer> callback) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.SECTION + "=? AND " + DbStructure.Column.CHAPTER + "=? AND "
                         + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.DOWNLOADED + "!=? AND "
@@ -332,7 +334,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                                   String section,
                                                   final DataCallback<Integer> callback) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.SECTION + "=? AND " + DbStructure.Column.CHAPTER + "=? AND "
                         + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.VIDEO_FOR_WEB_ONLY + "==1 AND "
@@ -343,27 +345,27 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Integer updateVideoWatchedState(String videoId, WatchedState status,
-                                           final DataCallback<Integer> callback) {
+    public Integer updatePlayableMediaWatchedState(String blockId, WatchedState status,
+                                                   final DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.WATCHED, status.ordinal());
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{videoId, username()});
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{blockId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
 
 
     @Override
-    public Integer updateVideoLastPlayedOffset(String videoId, int offset,
+    public Integer updateMediaLastPlayedOffset(String videoId, int offset,
                                                final DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.LAST_PLAYED_OFFSET, offset);
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{videoId, username()});
         op.setCallback(callback);
         return enqueue(op);
@@ -371,13 +373,13 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public Long addVideoData(final VideoModel de, final DataCallback<Long> callback) {
-        VideoModel result = getVideoEntryByVideoId(de.getVideoId(), null);
+    public Long addMediaData(final VideoModel de, final DataCallback<Long> callback) {
+        VideoModel result = getDownloadEntryByMediaId(de.getBlockId(), null);
         if (result == null) {
             ContentValues values = new ContentValues();
             values.put(DbStructure.Column.USERNAME, username());
             values.put(DbStructure.Column.TITLE, de.getTitle());
-            values.put(DbStructure.Column.VIDEO_ID, de.getVideoId());
+            values.put(DbStructure.Column.BLOCK_ID, de.getBlockId());
             values.put(DbStructure.Column.SIZE, de.getSize());
             values.put(DbStructure.Column.DURATION, de.getDuration());
             values.put(DbStructure.Column.FILEPATH, de.getFilePath());
@@ -413,22 +415,37 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     /**
      * Returns download entry for given video id.
      *
-     * @param videoId
+     * @param mediaId
      * @return
      */
-    public VideoModel getVideoEntryByVideoId(String videoId,
-                                             final DataCallback<VideoModel> callback) {
-        DbOperationGetVideo op = new DbOperationGetVideo(false, DbStructure.Table.DOWNLOADS, null,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{videoId, username()}, null);
+    public DownloadEntry getDownloadEntryByMediaId(String mediaId,
+                                             final DataCallback<DownloadEntry> callback) {
+        DbOperationGetDownloadEntry op = new DbOperationGetDownloadEntry(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{mediaId, username()}, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+
+    /**
+     * Returns download entry for given audio id.
+     *
+     * @param audioId
+     * @return
+     */
+    public AudioModel getAudioEntryByAudioId(String audioId, DataCallback<AudioModel> callback) {
+        DbOperationGetAudio op = new DbOperationGetAudio(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{audioId, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
 
     @Override
-    public VideoModel getVideoByVideoUrl(String videoUrl,
-                                         DataCallback<VideoModel> callback) {
-        DbOperationGetVideo op = new DbOperationGetVideo(false, DbStructure.Table.DOWNLOADS, null,
+    public DownloadEntry getDownloadEntryByMediaUrl(String videoUrl,
+                                         DataCallback<DownloadEntry> callback) {
+        DbOperationGetDownloadEntry op = new DbOperationGetDownloadEntry(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.URL + "=? AND " + DbStructure.Column.DOWNLOADED + "!=? AND "
                         + DbStructure.Column.USERNAME + "=?",
                 new String[]{videoUrl, String.valueOf(DownloadedState.ONLINE.ordinal()),
@@ -445,8 +462,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.FILEPATH, "");
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{video.getVideoId(), username()});
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{video.getBlockId(), username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -460,8 +477,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.FILEPATH, "");
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{video.getVideoId(), username});
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{video.getBlockId(), username});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -490,8 +507,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.IS_COURSE_ACTIVE, model.isCourseActive());
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{model.getVideoId(), username()});
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{model.getBlockId(), username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -505,8 +522,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.DOWNLOADED, DownloadedState.DOWNLOADING.ordinal());
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{model.getVideoId(), username()});
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{model.getBlockId(), username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -536,11 +553,11 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public VideoModel getIVideoModelByVideoUrl(String videoUrl,
-                                               final DataCallback<VideoModel> callback) {
-        DbOperationGetVideo op = new DbOperationGetVideo(false, DbStructure.Table.DOWNLOADS, null,
+    public VideoModel getIDownloadEntryByMediaUrl(String mediaUrl,
+                                                  final DataCallback<DownloadEntry> callback) {
+        DbOperationGetDownloadEntry op = new DbOperationGetDownloadEntry(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.URL + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{videoUrl, username()}, null);
+                new String[]{mediaUrl, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -606,7 +623,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetColumn<Integer> op = new DbOperationGetColumn<Integer>(false,
                 DbStructure.Table.DOWNLOADS,
                 new String[]{DbStructure.Column.WATCHED},
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{videoId, username()}, null, Integer.class);
         op.setCallback(new DataCallback<List<Integer>>() {
             @Override
@@ -633,7 +650,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     @Override
     public Integer getVideoCountByVideoUrl(String videoUrl, DataCallback<Integer> callback) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
-                new String[]{DbStructure.Column.VIDEO_ID},
+                new String[]{DbStructure.Column.BLOCK_ID},
                 DbStructure.Column.URL + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{videoUrl, username()}, null);
         op.setCallback(callback);
@@ -641,9 +658,9 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public VideoModel getDownloadEntryByDmId(long dmId,
-                                             DataCallback<VideoModel> callback) {
-        DbOperationGetVideo op = new DbOperationGetVideo(false, DbStructure.Table.DOWNLOADS, null,
+    public DownloadEntry getDownloadEntryByDmId(long dmId,
+                                             DataCallback<DownloadEntry> callback) {
+        DbOperationGetDownloadEntry op = new DbOperationGetDownloadEntry(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.DM_ID + "=? AND " + DbStructure.Column.DOWNLOADED + "=?",
                 new String[]{String.valueOf(dmId), String.valueOf(DownloadedState
                         .DOWNLOADING.ordinal())}, null);
@@ -652,14 +669,14 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     /*@Override
-    public Boolean isVideoDownloadingByVideoId(String videoId,
+    public Boolean isVideoDownloadingByVideoId(String blockId,
                                                DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false, DbStructure.Table.DOWNLOADS,
                 new String[]{DbStructure.Column.VIDEO_ID},
                 DbStructure.Column.VIDEO_ID + "=? "
                         + DbStructure.Column.DOWNLOADED + "=? AND "
                         + DbStructure.Column.USERNAME + "=?",
-                new String[]{videoId, String.valueOf(DownloadedState.DOWNLOADING.ordinal())
+                new String[]{blockId, String.valueOf(DownloadedState.DOWNLOADING.ordinal())
                         , username()}, null);
         op.setCallback(callback);
         return enqueue(op);
@@ -670,7 +687,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                                         final DataCallback<DownloadedState> dataCallback) {
         DbOperationGetColumn<Integer> op = new DbOperationGetColumn<Integer>(false,
                 DbStructure.Table.DOWNLOADS, new String[]{DbStructure.Column.DOWNLOADED},
-                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{videoId, username()}, null, Integer.class);
         op.setCallback(new DataCallback<List<Integer>>() {
             @Override

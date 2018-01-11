@@ -4,14 +4,14 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
 
 /**
- * Any video model should implement this interface.
+ * Any audio model should implement this interface.
  * Database model should also implement this interface.
- * @author rohan
+ * @author zohaib
  *
  *
  */
 
-public interface VideoModel {
+public interface AudioModel {
 
     String getUsername();
 
@@ -25,13 +25,9 @@ public interface VideoModel {
 
     String getFilePath();
 
-    String getVideoUrl();
+    String getOggUrl();
 
-    String getHighQualityVideoUrl();
-
-    String getLowQualityVideoUrl();
-
-    String getYoutubeVideoUrl();
+    String getMp3Url();
 
     int getWatchedStateOrdinal();
 
@@ -48,13 +44,11 @@ public interface VideoModel {
     int getLastPlayedOffset();
 
     String getLmsUrl();
-    
+
     boolean isCourseActive();
 
-    boolean isVideoForWebOnly();
-
     long getDownloadedOn();
-    
+
     TranscriptModel getTranscripts();
     //TODO: write all required method of the video model
 
@@ -66,9 +60,9 @@ public interface VideoModel {
 
     /**
      * Sets download information from the given video object.
-     * @param videoByUrl
+     * @param audioByUrl
      */
-    void setDownloadInfo(VideoModel videoByUrl);
+    void setDownloadInfo(AudioModel audioByUrl);
     
     /**
      * Sets downloading information from the given download object.

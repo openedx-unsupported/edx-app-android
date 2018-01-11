@@ -6,12 +6,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.view.CourseUnitAudioFragment;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
 import org.edx.mobile.view.CourseUnitFragment;
@@ -60,7 +62,9 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         CourseComponent unit = getUnit(pos);
         CourseUnitFragment unitFragment;
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
-        if (isCourseUnitVideo(unit)) {
+        if (unit instanceof AudioBlockModel) {
+            unitFragment = CourseUnitAudioFragment.newInstance((AudioBlockModel) unit, (pos < unitList.size()), (pos > 0));
+        } else if (isCourseUnitVideo(unit)) {
             unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit, (pos < unitList.size()), (pos > 0));
         } else if (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit, config.getYoutubeApiKey());

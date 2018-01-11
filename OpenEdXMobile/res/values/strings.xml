@@ -404,6 +404,8 @@
     <string name="msg_video_not_downloaded">"Unable to download video"</string>
     <!-- Error shown when video download fails -->
     <string name="msg_video_not_available">This video is currently unavailable.\nCheck back again later.</string>
+    <!-- Error shown when audio download fails -->
+    <string name="msg_audio_not_available">This audio is currently unavailable.\nCheck back again later.</string>
     <!-- Error shown when video has flag to indicate it is not available for mobile app -->
     <string name="video_only_on_web_label">This video is currently only on web. Click to view on web.</string>
     <!-- Message to indicate the it is not available for mobile app  -->
@@ -639,5 +641,6 @@
     <string name="sub_topics_text" tools:ignore="MissingTranslation">Sub Topics</string>
     <string name="downloading" tools:ignore="MissingTranslation">Downloading</string>
     <string name="media_saved_time_ago" tools:ignore="MissingTranslation">Media saved %s</string>
+    <string name="audio_player" tools:ignore="MissingTranslation">Audio Player</string>
 
 </resources>

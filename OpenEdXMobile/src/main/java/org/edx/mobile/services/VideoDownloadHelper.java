@@ -148,7 +148,7 @@ public class VideoDownloadHelper {
         List<DownloadEntry> downloadEntries = new ArrayList<>();
         downloadEntries.add(downloadEntry);
         startDownload(downloadEntries, activity, callback);
-        analyticsRegistry.trackSingleVideoDownload(downloadEntry.getVideoId(),
+        analyticsRegistry.trackSingleMediaDownload(downloadEntry.getBlockId(),
                 downloadEntry.getEnrollmentId(), downloadEntry.getVideoUrl());
     }
 

@@ -7,7 +7,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseVideosDownloadStateActivity;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.util.AppConstants;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.Shadows;
@@ -74,7 +73,7 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
         DownloadEntry de = new DownloadEntry();
         de.username = "unittest";
         de.title = "title";
-        de.videoId = "videoId-" + System.currentTimeMillis();
+        de.blockId = "blockId-" + System.currentTimeMillis();
         de.size = 1024;
         de.duration = 3600;
         de.filepath = "/fakepath";
@@ -86,7 +85,7 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
         de.lmsUrl = "http://fake/lms/url";
         de.isCourseActive = 1;
         de.downloaded = DownloadEntry.DownloadedState.DOWNLOADING;
-        Long rowId = db.addVideoData(de, null);
+        Long rowId = db.addMediaData(de, null);
         assertNotNull(rowId);
         assertThat(rowId).isGreaterThan(0);
         assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())

@@ -3,9 +3,11 @@ package org.edx.mobile.module.storage;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -90,6 +92,13 @@ public interface IStorage {
     VideoModel getDownloadEntryFromVideoModel(VideoBlockModel block);
 
     /**
+     * Returns DownloadEntry Model after converting it from AudioBlockModel
+     * @param block - AudioBlockModel
+     * @return
+     */
+    AudioModel getDownloadEntryFromAudioModel(AudioBlockModel block);
+
+    /**
      * Returns NativeDownload Entry for the given DMID
      * @param dmId
      * @return
@@ -123,7 +132,7 @@ public interface IStorage {
      * @param videoModel
      * @param watchedStateCallback
      */
-    void markVideoPlaying(DownloadEntry videoModel, DataCallback<Integer> watchedStateCallback);
+    void markMediaPlaying(DownloadEntry videoModel, DataCallback<Integer> watchedStateCallback);
 
     void repairDownloadCompletionData();
 }

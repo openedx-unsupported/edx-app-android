@@ -352,7 +352,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             }
         }
 
-        dbStore.getWatchedStateForVideoId(videoData.videoId,
+        dbStore.getWatchedStateForVideoId(videoData.blockId,
                 new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
@@ -373,7 +373,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
         } else {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
-            dbStore.getDownloadedStateForVideoId(videoData.videoId,
+            dbStore.getDownloadedStateForVideoId(videoData.blockId,
                     new DataCallback<DownloadEntry.DownloadedState>(true) {
                         @Override
                         public void onResult(DownloadEntry.DownloadedState state) {

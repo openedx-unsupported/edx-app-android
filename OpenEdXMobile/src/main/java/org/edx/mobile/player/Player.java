@@ -189,7 +189,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
         if (what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
             isSeekable = false;
             if (callback != null) {
-                callback.onVideoNotSeekable();
+                callback.onMediaNotSeekable();
             }
             logger.debug("Track not seekable");
         } else if (what == MediaPlayer.MEDIA_INFO_METADATA_UPDATE) {
@@ -199,7 +199,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
         } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) {
             state = PlayerState.LAGGING;
             if (callback != null) {
-                callback.onVideoLagging();
+                callback.onMediaLagging();
             }
             logger.debug("Video track lagging");
         }
@@ -535,7 +535,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public void setVideoTitle(String title) {
+    public void setMediaTitle(String title) {
         this.videoTitle = title;
     }
 

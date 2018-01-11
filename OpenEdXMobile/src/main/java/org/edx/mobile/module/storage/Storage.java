@@ -3,22 +3,18 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
-import org.edx.mobile.model.api.ChapterModel;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -35,10 +31,7 @@ import org.edx.mobile.util.Sha1Util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import de.greenrobot.event.EventBus;
 
@@ -70,14 +63,14 @@ public class Storage implements IStorage {
             return -1;
         }
 
-        VideoModel videoByUrl = db.getVideoByVideoUrl(model.getVideoUrl(), null);
+        VideoModel videoByUrl = db.getDownloadEntryByMediaUrl(model.getVideoUrl(), null);
 
-        db.addVideoData(model, null);
+        db.addMediaData(model, null);
 
         if(model.isVideoForWebOnly())
             return -1;  //we may need to return different error code.
                         //but for now we show same generic error message
-        //IVideoModel videoById = db.getVideoEntryByVideoId(model.getVideoId(), null);
+        //IVideoModel videoById = db.getVideoEntryByVideoId(model.getBlockId(), null);
 
         if (videoByUrl == null || videoByUrl.getDmId() < 0) {
             boolean downloadPreference = pref.isDownloadOverWifiOnly();
@@ -281,7 +274,7 @@ public class Storage implements IStorage {
     @Override
     public VideoModel getDownloadEntryfromVideoResponseModel(
             VideoResponseModel vrm) {
-        VideoModel video = db.getVideoEntryByVideoId(vrm.getSummary().getId(), null);
+        VideoModel video = db.getDownloadEntryByMediaId(vrm.getSummary().getId(), null);
         if (video != null) {
             // we have a db entry, so return it
             return video;
@@ -292,9 +285,19 @@ public class Storage implements IStorage {
 
     @Override
     public VideoModel getDownloadEntryFromVideoModel(VideoBlockModel block){
-        VideoModel video = db.getVideoEntryByVideoId(block.getId(), null);
+        VideoModel video = db.getDownloadEntryByMediaId(block.getId(), null);
         if (video != null) {
             return video;
+        }
+
+        return DatabaseModelFactory.getModel(block.getData(), block);
+    }
+
+    @Override
+    public AudioModel getDownloadEntryFromAudioModel(AudioBlockModel block){
+        AudioModel audio = db.getAudioEntryByAudioId(block.getId(), null);
+        if (audio != null) {
+            return audio;
         }
 
         return DatabaseModelFactory.getModel(block.getData(), block);
@@ -308,7 +311,7 @@ public class Storage implements IStorage {
     @Override
     public DownloadEntry reloadDownloadEntry(DownloadEntry video) {
         try{
-            DownloadEntry de = (DownloadEntry) db.getVideoEntryByVideoId(video.videoId, null);
+            DownloadEntry de = (DownloadEntry) db.getDownloadEntryByMediaId(video.blockId, null);
             if (de != null) {
                 video.lastPlayedOffset = de.lastPlayedOffset;
                 video.watched = de.watched;
@@ -433,7 +436,7 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public void markVideoPlaying(DownloadEntry videoModel, final DataCallback<Integer> watchedStateCallback) {
+    public void markMediaPlaying(DownloadEntry videoModel, final DataCallback<Integer> watchedStateCallback) {
         try {
             final DownloadEntry v = videoModel;
             if (v != null) {
@@ -441,12 +444,12 @@ public class Storage implements IStorage {
                     videoModel.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
 
                     // video entry might not exist in the database, add it
-                    db.addVideoData(videoModel, new DataCallback<Long>() {
+                    db.addMediaData(videoModel, new DataCallback<Long>() {
                         @Override
                         public void onResult(Long result) {
                             try {
                                 // mark this as partially watches, as playing has started
-                                db.updateVideoWatchedState(v.getVideoId(), DownloadEntry.WatchedState.PARTIALLY_WATCHED,
+                                db.updatePlayableMediaWatchedState(v.getBlockId(), DownloadEntry.WatchedState.PARTIALLY_WATCHED,
                                         watchedStateCallback);
                             } catch (Exception ex) {
                                 logger.error(ex);

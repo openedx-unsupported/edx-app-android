@@ -26,6 +26,8 @@ import org.edx.mobile.model.api.SummaryModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.AudioBlockModel;
+import org.edx.mobile.model.course.AudioData;
 import org.edx.mobile.model.course.BlockModel;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -343,11 +345,11 @@ public class CourseAPI {
     }
 
     @Nullable
-    public TranscriptModel getTranscriptsOfVideo(@NonNull final String enrollmentId,
-                                                 @NonNull final String videoId)
+    public TranscriptModel getTranscriptsOfMedia(@NonNull final String enrollmentId,
+                                                 @NonNull final String mediaId)
             throws Exception {
         TranscriptModel transcript;
-        VideoResponseModel vidModel = getVideoById(enrollmentId, videoId);
+        VideoResponseModel vidModel = getVideoById(enrollmentId, mediaId);
         if (vidModel != null) {
             if (vidModel.getSummary() != null) {
                 transcript = vidModel.getSummary().getTranscripts();
@@ -477,6 +479,8 @@ public class CourseAPI {
         } else {
             if (BlockType.VIDEO == block.type && block.data instanceof VideoData) {
                 new VideoBlockModel(block, parent);
+            } else if (BlockType.AUDIO == block.type && block.data instanceof AudioData) {
+                new AudioBlockModel(block, parent);
             } else if (BlockType.DISCUSSION == block.type && block.data instanceof DiscussionData) {
                 new DiscussionBlockModel(block, parent);
             } else { //everything else.. we fallback to html component

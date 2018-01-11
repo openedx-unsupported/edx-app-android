@@ -11,7 +11,8 @@ public final class DbStructure {
     // Updated to Version 4 to add flag to indicate that video is only available for web
     // Updated to Version 5 to create a new table to record learning history for assessment
     // Updated to Version 6 to swap every occurrence of username field to its SHA1 hash
-    public static final int VERSION = 6;
+    // Updated to Version 7 to add support for downloading and playing audio block
+    public static final int VERSION = 7;
 
     public static final class Table {
         public static final String DOWNLOADS = "downloads";
@@ -31,7 +32,9 @@ public final class DbStructure {
         public static final String URL_LOW_QUALITY = "video_url_low_quality";
         public static final String URL_HIGH_QUALITY = "video_url_high_quality";
         public static final String URL_YOUTUBE = "video_url_youtube";
-        public static final String VIDEO_ID = "video_id";
+        public static final String URL_OGG = "audio_url_ogg";
+        public static final String URL_MP3 = "audio_url_mp3";
+        public static final String BLOCK_ID = "video_id"; // generally it contains block id of any downloadable media
         public static final String DM_ID = "download_manager_id";
         public static final String EID = "enrollment_id";
         public static final String CHAPTER = "chatper_name";

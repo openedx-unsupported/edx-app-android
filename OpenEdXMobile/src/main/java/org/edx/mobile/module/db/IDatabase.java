@@ -2,7 +2,9 @@ package org.edx.mobile.module.db;
 
 import android.support.annotation.Nullable;
 
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
@@ -233,8 +235,8 @@ public interface IDatabase {
      * @param videoId - Id of video for which status needs to change
      * @param state   - Status flag to be set for changing Video watched state
      */
-    Integer updateVideoWatchedState(String videoId, WatchedState state,
-                                    DataCallback<Integer> callback);
+    Integer updatePlayableMediaWatchedState(String videoId, WatchedState state,
+                                            DataCallback<Integer> callback);
 
 
     /**
@@ -243,7 +245,7 @@ public interface IDatabase {
      * @param videoId - Id of video for which status needs to change
      * @param offset  - Last Played offset
      */
-    Integer updateVideoLastPlayedOffset(String videoId, int offset, DataCallback<Integer> callback);
+    Integer updateMediaLastPlayedOffset(String videoId, int offset, DataCallback<Integer> callback);
 
 
     /**
@@ -253,25 +255,34 @@ public interface IDatabase {
      * @param callback
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
-    Long addVideoData(VideoModel de, DataCallback<Long> callback);
+    Long addMediaData(VideoModel de, DataCallback<Long> callback);
 
     /**
      * Returns VideoEntry for the passed VideoId
      *
-     * @param videoId
+     * @param mediaId
      * @param callback
      */
-    VideoModel getVideoEntryByVideoId(String videoId, DataCallback<VideoModel> callback);
+    DownloadEntry getDownloadEntryByMediaId(String mediaId, DataCallback<DownloadEntry> callback);
+
+
+    /**
+     * Returns AudioEntry for the passed AudioId
+     *
+     * @param audioId
+     * @param callback
+     */
+    AudioModel getAudioEntryByAudioId(String audioId, DataCallback<AudioModel> callback);
 
     /**
      * Returns {@link org.edx.mobile.model.VideoModel} which is downloaded or download is in
      * progress for given videoUrl.
      *
-     * @param videoUrl
+     * @param mediaUrl
      * @param callback
      * @return
      */
-    VideoModel getVideoByVideoUrl(String videoUrl, DataCallback<VideoModel> callback);
+    DownloadEntry getDownloadEntryByMediaUrl(String mediaUrl, DataCallback<DownloadEntry> callback);
 
 
     /**
@@ -346,8 +357,8 @@ public interface IDatabase {
      * Returns IVideoModel object if entry exists with Video status set as
      * downloaded with the given URL
      */
-    VideoModel getIVideoModelByVideoUrl(String videoUrl,
-                                        DataCallback<VideoModel> callback);
+    VideoModel getIDownloadEntryByMediaUrl(String mediaUrl,
+                                           DataCallback<DownloadEntry> callback);
 
 
     /**
@@ -409,7 +420,7 @@ public interface IDatabase {
      * @param callback
      * @return
      */
-    VideoModel getDownloadEntryByDmId(long dmId, DataCallback<VideoModel> callback);
+    DownloadEntry getDownloadEntryByDmId(long dmId, DataCallback<DownloadEntry> callback);
 
     /**
      * This method gives the WatchedState stored in the DB for VideoID

@@ -4,8 +4,11 @@ import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.webkit.URLUtil;
 
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.AudioBlockModel;
+import org.edx.mobile.model.course.AudioData;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -26,7 +29,7 @@ public class DatabaseModelFactory {
      * @param c
      * @return
      */
-    public static VideoModel getModel(Cursor c) {
+    public static DownloadEntry getModel(Cursor c) {
         DownloadEntry de = new DownloadEntry();
 
         de.dmId = c.getLong(c.getColumnIndex(DbStructure.Column.DM_ID));
@@ -41,7 +44,7 @@ public class DatabaseModelFactory {
         de.url_high_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_HIGH_QUALITY));
         de.url_low_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_LOW_QUALITY));
         de.url_youtube = c.getString(c.getColumnIndex(DbStructure.Column.URL_YOUTUBE));
-        de.videoId = c.getString(c.getColumnIndex(DbStructure.Column.VIDEO_ID));
+        de.blockId = c.getString(c.getColumnIndex(DbStructure.Column.BLOCK_ID));
         de.watched = DownloadEntry.WatchedState.values()[c.getInt(c.getColumnIndex(DbStructure.Column.WATCHED))];
         de.eid = c.getString(c.getColumnIndex(DbStructure.Column.EID));
         de.chapter = c.getString(c.getColumnIndex(DbStructure.Column.CHAPTER));
@@ -73,7 +76,7 @@ public class DatabaseModelFactory {
         e.url_high_quality = vrm.getSummary().getHighEncoding();
         e.url_low_quality = vrm.getSummary().getLowEncoding();
         e.url_youtube = vrm.getSummary().getYoutubeLink();
-        e.videoId = vrm.getSummary().getId();
+        e.blockId = vrm.getSummary().getId();
         e.transcript = vrm.getSummary().getTranscripts();
         e.lmsUrl = vrm.getUnitUrl();
 
@@ -105,7 +108,7 @@ public class DatabaseModelFactory {
         e.url_high_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileHigh);
         e.url_low_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileLow);
         e.url_youtube = getVideoNetworkUrlOrNull(vrm.encodedVideos.youtube);
-        e.videoId = block.getId();
+        e.blockId = block.getId();
         e.transcript = vrm.transcripts;
         e.lmsUrl = block.getBlockUrl();
         e.isVideoForWebOnly = vrm.onlyOnWeb;
@@ -115,5 +118,29 @@ public class DatabaseModelFactory {
     @Nullable
     private static String getVideoNetworkUrlOrNull(@Nullable VideoInfo videoInfo) {
         return videoInfo != null && URLUtil.isNetworkUrl(videoInfo.url) ? videoInfo.url : null;
+    }
+
+    public static AudioModel getModel(AudioData data, AudioBlockModel block) {
+        DownloadEntry e = new DownloadEntry();
+        //FIXME - current database schema is not suitable for arbitary level of course structure tree
+        //solution - store the navigation path info in into one column field in the database,
+        //rather than individual column fields.
+        BlockPath path = block.getPath();
+        e.chapter = path.get(1) == null ? "" : path.get(1).getDisplayName();
+        e.section = path.get(2) == null ? "" : path.get(2).getDisplayName();
+        IBlock root = block.getRoot();
+        e.eid = root.getCourseId();
+        final String preferredVideoInfo = data.encodedAudios.getPreferredPlaybackUrl();
+        e.title = block.getDisplayName();
+        e.url_mp3 = getVideoNetworkUrlOrNull(data.encodedAudios.mp3Url);
+        e.url_ogg = getVideoNetworkUrlOrNull(data.encodedAudios.oggUrl);
+        e.blockId = block.getId();
+        e.transcript = data.getTranscripts();
+        e.lmsUrl = block.getBlockUrl();
+        return e;
+    }
+
+    private static String getVideoNetworkUrlOrNull(String url) {
+        return URLUtil.isNetworkUrl(url) ? url : null;
     }
 }
