@@ -221,7 +221,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isVoted = holder.toggleVote();
+                boolean isVoted = holder.toggleVote(discussionThread.isVoted() ? discussionThread.getVoteCount()-1: discussionThread.getVoteCount());
                 discussionService.setThreadVoted(discussionThread.getIdentifier(),
                         new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
@@ -380,7 +380,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             @Override
             public void onClick(View view) {
 
-                boolean isVoted = holder.toggleVote();
+                boolean isVoted = holder.toggleVote(discussionThread.isVoted() ? discussionThread.getVoteCount()-1: discussionThread.getVoteCount());
                 discussionService.setCommentVoted(response.getIdentifier(),
                         new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionComment>(

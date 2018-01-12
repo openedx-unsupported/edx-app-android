@@ -207,15 +207,6 @@ public class DiscussionThread implements Serializable, IAuthorData, ProfileImage
         }
     }
 
-
-    public void setVoted(boolean voted){
-        this.voted = voted;
-    }
-
-    public void setFollowing(boolean following){
-        this.following = following;
-    }
-
     public void incrementCommentCount() {
         ++commentCount;
     }

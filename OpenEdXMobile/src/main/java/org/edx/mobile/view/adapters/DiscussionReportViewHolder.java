@@ -13,7 +13,6 @@ public class DiscussionReportViewHolder {
     ViewGroup reportLayout;
     private IconImageView reportIconImageView;
     private TextView reportTextView;
-    private boolean isReported;
 
     public DiscussionReportViewHolder(View itemView) {
         reportLayout = (ViewGroup) itemView.
@@ -22,22 +21,17 @@ public class DiscussionReportViewHolder {
                 findViewById(R.id.discussion_responses_action_bar_report_icon_view);
         reportTextView = (TextView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_report_text_view);
-
-    }
-
-    public void setReported(boolean isReported) {
-        this.isReported = isReported;
-        setUIReported(isReported);
     }
 
 
     public boolean toggleReported(){
-        setReported(!isReported);
-        return isReported;
+        setReported(!reportLayout.isSelected());
+        return reportLayout.isSelected();
     }
 
 
-    private void setUIReported(boolean isReported){
+    public void setReported(boolean isReported) {
+        reportLayout.setSelected(isReported);
         int reportStringResId = isReported ? R.string.discussion_responses_reported_label :
           R.string.discussion_responses_report_label;
         reportTextView.setText(reportTextView.getResources().getString(reportStringResId));
