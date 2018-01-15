@@ -59,7 +59,7 @@
 
     <!-- Login Activity Place Holders -->
     <!-- Hint text for login field -->
-    <string name="email_username">User name or e-mail address</string>
+    <string name="email_username">Username or e-mail</string>
     <!-- Hint text for email address field in reset password dialog -->
     <string name="email">E-mail address</string>
     <!-- Hint text for password field -->
@@ -625,7 +625,7 @@
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">Version {version_number} New Features</string>
 
-    <string name="view_my_courses">View My Courses</string>
+    <string name="view_my_courses" tools:ignore="MissingTranslation">View My Courses</string>
 
     <string name="app_tag_line" tools:ignore="MissingTranslation">Offline Content Viewer</string>
     <string name="course_on_web_description" tools:ignore="MissingTranslation">The content viewer app does not support the content you are trying to see at the moment. You can view it in the browser version of Philanthropy University platform by clicking on “Go to Browser” bellow or stay in the app and explore other parts of this course.</string>

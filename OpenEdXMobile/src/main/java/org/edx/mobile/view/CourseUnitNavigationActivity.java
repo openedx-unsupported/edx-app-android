@@ -10,21 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
+import org.edx.mobile.view.custom.IconImageViewXml;
+import org.edx.mobile.view.custom.IndicatorController;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -41,24 +43,33 @@ import roboguice.inject.InjectView;
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements CourseUnitVideoFragment.HasComponent {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
-
+    @Inject
+    LastAccessManager lastAccessManager;
     private DisableableViewPager pager;
     private CourseComponent selectedUnit;
-
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
-
     @InjectView(R.id.goto_next)
     private Button mNextBtn;
     @InjectView(R.id.goto_prev)
     private Button mPreviousBtn;
+    @InjectView(R.id.goto_next_container)
+    private LinearLayout mBtnNextUnit;
+    @InjectView(R.id.goto_prev_container)
+    private LinearLayout mBtnPreviousUnit;
+    @InjectView(R.id.next_button_icon)
+    private IconImageViewXml mNextBtnIcon;
+    @InjectView(R.id.previous_button_icon)
+    private IconImageViewXml mPreviousBtnIcon;
     @InjectView(R.id.next_unit_title)
     private TextView mNextUnitLbl;
     @InjectView(R.id.prev_unit_title)
     private TextView mPreviousUnitLbl;
+    @InjectView(R.id.indicator_container)
+    private FrameLayout mIndicatorContainer;
 
-    @Inject
-    LastAccessManager lastAccessManager;
+    private IndicatorController indicatorController;
+    private boolean isVideoMode;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +86,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         pager.setAdapter(pagerAdapter);
 
 
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -104,18 +115,20 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
-        mPreviousBtn.setOnClickListener(new View.OnClickListener() {
+        mBtnPreviousUnit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navigatePreviousComponent();
             }
         });
-        mNextBtn.setOnClickListener(new View.OnClickListener() {
+        mBtnNextUnit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navigateNextComponent();
             }
         });
+
+        initProgressIndicator();
     }
 
     @Override
@@ -147,9 +160,38 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateUIForOrientation();
+        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
+                courseData.getCourse().getId(), selectedUnit.getBlockId());
+    }
+
+    public CourseComponent getComponent() {
+        return selectedUnit;
+    }
+
+
+    @Override
     protected void onLoadData() {
         selectedUnit = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
         updateDataModel();
+    }
+
+    @Override
+    protected void onOffline() {
+    }
+
+    protected void hideLastAccessedView(View v) {
+    }
+
+    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
+    }
+
+
+    private void initProgressIndicator() {
+        indicatorController = new IndicatorController(R.drawable.unit_indicator_dot_active, R.drawable.unit_indicator_dot_inactive);
+        mIndicatorContainer.addView(indicatorController.newInstance(this));
     }
 
     private void setCurrentUnit(CourseComponent component) {
@@ -176,10 +218,19 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private void tryToUpdateForEndOfSequential() {
         int curIndex = pager.getCurrentItem();
+
+        if (!selectedUnit.getParent().getId().equalsIgnoreCase(pagerAdapter.getUnit(curIndex).getParent().getId())) {
+            indicatorController.setCount(getTotalComponentsCount(pagerAdapter.getUnit(curIndex)));
+        }
+
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
+        indicatorController.selectPosition(getCurrentComponentIndex());
+
         mPreviousBtn.setEnabled(curIndex > 0);
+        mPreviousBtnIcon.setEnabled(curIndex > 0);
         mNextBtn.setEnabled(curIndex < pagerAdapter.getCount() - 1);
+        mNextBtnIcon.setEnabled(curIndex < pagerAdapter.getCount() - 1);
 
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
@@ -192,7 +243,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 mNextUnitLbl.setVisibility(View.GONE);
             } else {
                 mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getDisplayName());
-                mNextUnitLbl.setVisibility(View.VISIBLE);
+                mNextUnitLbl.setVisibility(View.GONE);
             }
         } else {
             // we have reached the end and next button is disabled
@@ -205,7 +256,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 mPreviousUnitLbl.setVisibility(View.GONE);
             } else {
                 mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getDisplayName());
-                mPreviousUnitLbl.setVisibility(View.VISIBLE);
+                mPreviousUnitLbl.setVisibility(View.GONE);
             }
         } else {
             // we have reached the start and previous button is disabled
@@ -225,7 +276,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
 
-        boolean isVideoMode = false;
+        isVideoMode = false;
         if (getIntent() != null) {
             isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
         }
@@ -234,6 +285,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         } else {
             selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
         }
+
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
 
@@ -245,17 +297,30 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             tryToUpdateForEndOfSequential();
         }
 
-        if (pagerAdapter != null)
+        if (pagerAdapter != null) {
             pagerAdapter.notifyDataSetChanged();
+        }
+
+        // Initialize indicator layout for first opened unit
+        indicatorController.setCount(getTotalComponentsCount(selectedUnit));
+        indicatorController.selectPosition(getCurrentComponentIndex());
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        updateUIForOrientation();
-        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
-                courseData.getCourse().getId(), selectedUnit.getBlockId());
+    private int getTotalComponentsCount(CourseComponent unit) {
+        if (isVideoMode) {
+            return unit.getParent().getVideos().size();
+        } else {
+            return unit.getParent().getChildren().size();
+        }
+    }
+
+    private int getCurrentComponentIndex() {
+        if (isVideoMode) {
+            return selectedUnit.getParent().getVideos().indexOf(selectedUnit);
+        } else {
+            return selectedUnit.getParent().getChildren().indexOf(selectedUnit);
+        }
     }
 
     private void updateUIForOrientation() {
@@ -269,19 +334,5 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
         }
-    }
-
-    public CourseComponent getComponent() {
-        return selectedUnit;
-    }
-
-    protected void hideLastAccessedView(View v) {
-    }
-
-    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
-    }
-
-    @Override
-    protected void onOffline() {
     }
 }

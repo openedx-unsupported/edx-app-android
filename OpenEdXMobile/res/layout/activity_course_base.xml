@@ -1,4 +1,5 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -99,8 +100,7 @@
                         android:id="@+id/course_unit_nav_bar"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/course_unit_nav_bar_height"
-                        android:layout_weight="0"
-                        android:background="@drawable/rectangle_with_top_border"
+                        android:background="@color/philu_course_navigation_bar_background"
                         android:gravity="center"
                         android:measureWithLargestChild="true"
                         android:orientation="horizontal"
@@ -113,17 +113,31 @@
                         tools:visibility="visible">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/goto_prev_container"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
                             tools:targetApi="17">
+
+
+                            <org.edx.mobile.view.custom.IconImageViewXml
+                                android:id="@+id/previous_button_icon"
+                                android:layout_width="@dimen/fa_xxx_small"
+                                android:layout_height="@dimen/fa_xx_large"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="5dp"
+                                android:baselineAlignBottom="true"
+                                app:iconColor="@color/disableable_button_text"
+                                app:iconName="fa-angle-left" />
 
                             <Button
                                 android:id="@+id/goto_prev"
                                 style="@style/edX.Widget.DisableableButton"
                                 android:layout_width="wrap_content"
-                                android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                                android:layout_height="match_parent"
                                 android:text="@string/assessment_previous"
+                                android:textAllCaps="true"
                                 tools:targetApi="17" />
 
                             <TextView
@@ -131,28 +145,45 @@
                                 style="@style/section_lbl"
                                 android:visibility="gone" />
 
-
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="0px"
-                            android:layout_height="0px"
-                            android:layout_weight="1" />
+                        <FrameLayout
+                            android:id="@+id/indicator_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom|center"
+                            android:layout_weight="0.9" />
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/goto_next_container"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="end"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
                             tools:targetApi="17">
 
                             <Button
                                 android:id="@+id/goto_next"
                                 style="@style/edX.Widget.DisableableButton"
                                 android:layout_width="wrap_content"
-                                android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                                android:layout_height="match_parent"
                                 android:text="@string/assessment_next"
-                                tools:targetApi="17" />
+                                android:textAllCaps="true"
+                                tools:targetApi="17" >
+                            </Button>
+
+
+
+                            <org.edx.mobile.view.custom.IconImageViewXml
+                                android:id="@+id/next_button_icon"
+                                android:layout_width="@dimen/fa_xxx_small"
+                                android:layout_height="@dimen/fa_xx_large"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="5dp"
+                                android:baselineAlignBottom="true"
+                                app:iconColor="@color/disableable_button_text"
+                                app:iconName="fa-angle-right" />
 
                             <TextView
                                 android:id="@+id/next_unit_title"
