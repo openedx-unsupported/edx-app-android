@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical">
@@ -20,9 +21,10 @@
             android:id="@+id/title"
             style="@style/whats_new_semibold_text"
             android:text="@string/course_on_web_title"
+            tools:text="@string/course_on_web_title"
             android:textSize="@dimen/custom_x_small"
             android:letterSpacing="0.04"
-            android:lineSpacingExtra="6sp"
+            android:lineSpacingExtra="@dimen/title_text_line_spacing"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/widget_margin_large"
@@ -47,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/edx_x_small"
                 android:gravity="center_horizontal"
-                android:text="@string/course_on_web_description" />
+                android:text="@string/course_on_web_description"
+                tools:text="@string/course_on_web_description" />
 
         </ScrollView>
 
@@ -55,7 +58,7 @@
             android:id="@+id/view_on_web_button"
             style="@style/edX.Widget.SignInButtonLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/edx_action_button_height"
             android:letterSpacing="0.04"
             android:layout_marginTop="@dimen/widget_margin"
             android:layout_marginBottom="@dimen/widget_margin_large"
