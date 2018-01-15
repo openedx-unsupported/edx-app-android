@@ -643,4 +643,6 @@
     <string name="media_saved_time_ago" tools:ignore="MissingTranslation">Media saved %s</string>
     <string name="audio_player" tools:ignore="MissingTranslation">Audio Player</string>
 
+    <string name="download_started" tools:ignore="MissingTranslation">Download started</string>
+
 </resources>

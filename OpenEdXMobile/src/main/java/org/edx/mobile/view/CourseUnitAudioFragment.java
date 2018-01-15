@@ -2,15 +2,21 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +29,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -35,6 +42,7 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.AudioPlayerFragment;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.TranscriptListener;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -86,6 +94,14 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
     @Inject
     private CourseAPI courseApi;
 
+
+    @Inject
+    VideoDownloadHelper downloadManager;
+
+    @Inject
+    protected IEdxEnvironment environment;
+    private DownloadEntry.DownloadedState unitDownloadState;
+
     /**
      * Create a new instance of fragment
      */
@@ -109,11 +125,62 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
         unit = getArguments() == null ? null :
                 (AudioBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
+
+
+    private void initializeActionabr(MenuItem menuItem) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
+        setVideoDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
+    }
+
+    private void setVideoDownloadStatusIndicator(DownloadEntry videoData, final MenuItem menuItem) {
+        environment.getDatabase().getDownloadedStateForVideoId(videoData.blockId,
+                new DataCallback<DownloadEntry.DownloadedState>(true) {
+                    @Override
+                    public void onResult(DownloadEntry.DownloadedState state) {
+                        if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
+                            // not yet downloaded
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
+                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                            // may be download in progress
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
+                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
+                        }
+                        unitDownloadState = state;
+                    }
+
+                    @Override
+                    public void onFail(Exception ex) {
+                        logger.error(ex);
+                        unitDownloadState = DownloadEntry.DownloadedState.ONLINE;
+                    }
+                });
+    }
+
+    private void updateDownloadState(MenuItem menuItem, DownloadEntry.DownloadedState state) {
+        switch (state) {
+            case DOWNLOADING:
+                menuItem.setVisible(false);
+                break;
+            case DOWNLOADED:
+                menuItem.setVisible(true);
+                menuItem.setIcon(R.drawable.ic_done);
+                Drawable drawable = menuItem.getIcon();
+                drawable.setTint(Color.WHITE);
+                break;
+            case ONLINE:
+                menuItem.setVisible(true);
+                menuItem.setIcon(R.drawable.ic_download_media);
+                break;
+        }
+    }
+
 
     /**
      * The Fragment's UI is just a simple text view showing its
@@ -127,6 +194,32 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.download_content, menu);
+        MenuItem item = menu.findItem(R.id.menu_item_download);
+        initializeActionabr(item);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_item_download) {
+            if (unitDownloadState == DownloadEntry.DownloadedState.ONLINE) {
+                CourseUnitNavigationActivity activity = (CourseUnitNavigationActivity) getActivity();
+                if (NetworkUtil.verifyDownloadPossible(activity)) {
+                    downloadManager.downloadVideo(unit.getDownloadEntry(environment.getStorage()), activity, activity);
+                }
+            }
+            return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
