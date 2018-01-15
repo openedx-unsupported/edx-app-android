@@ -24,12 +24,6 @@ public class DiscussionReportViewHolder {
     }
 
 
-    public boolean toggleReported(){
-        setReported(!reportLayout.isSelected());
-        return reportLayout.isSelected();
-    }
-
-
     public void setReported(boolean isReported) {
         reportLayout.setSelected(isReported);
         int reportStringResId = isReported ? R.string.discussion_responses_reported_label :
@@ -38,5 +32,10 @@ public class DiscussionReportViewHolder {
 
         int iconColor = isReported ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_base;
         reportIconImageView.setIconColorResource(iconColor);
+    }
+
+    public boolean toggleReported(){
+        setReported(!reportLayout.isSelected());
+        return reportLayout.isSelected();
     }
 }

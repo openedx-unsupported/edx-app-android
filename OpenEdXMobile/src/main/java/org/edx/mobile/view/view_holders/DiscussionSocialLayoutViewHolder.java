@@ -68,6 +68,14 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
+  private void setVote(boolean vote, int otherUserVotes){
+    if (vote){
+      addVote(otherUserVotes);
+    }else{
+      removeVote(otherUserVotes);
+    }
+  }
+
   private void addFollow(){
     if (!threadFollowContainer.isSelected()) {
       threadFollowContainer.setSelected(true);
@@ -81,14 +89,6 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
       threadFollowContainer.setSelected(false);
       threadFollowTextView.setText(R.string.forum_follow);
       threadFollowIconImageView.setIconColorResource(R.color.edx_brand_gray_base);
-    }
-  }
-
-  private void setVote(boolean vote, int otherUserVotes){
-    if (vote){
-      addVote(otherUserVotes);
-    }else{
-      removeVote(otherUserVotes);
     }
   }
 
