@@ -43,7 +43,7 @@
                 <TextView
                     android:id="@+id/title"
                     style="@style/whats_new_heading_text"
-                    android:layout_marginTop="@dimen/whats_new_title_margin"
+                    android:layout_marginTop="@dimen/widget_margin_large"
                     android:padding="@dimen/edx_double_margin" />
 
 

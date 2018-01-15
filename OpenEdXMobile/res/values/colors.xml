@@ -6,6 +6,8 @@
     <color name="grey_2">#e6e6e6</color>
     <color name="grey_1">#eeeeee</color>
 
+    <color name="grey">#f9f9f9</color>
+
     <color name="edx_white">#fafafa</color>
 
     <color name="white">@android:color/white</color>

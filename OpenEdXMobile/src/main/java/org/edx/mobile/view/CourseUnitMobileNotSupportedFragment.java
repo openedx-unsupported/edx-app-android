@@ -47,8 +47,6 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_grade, container, false);
-        ((TextView) v.findViewById(R.id.not_available_message)).setText(
-                unit.getType() == BlockType.VIDEO ? R.string.video_only_on_web_short : R.string.assessment_not_available);
         v.findViewById(R.id.view_on_web_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
