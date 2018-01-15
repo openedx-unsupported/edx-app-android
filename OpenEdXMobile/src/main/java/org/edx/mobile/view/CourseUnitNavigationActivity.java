@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -290,6 +291,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public void onDownloadStarted(Long result) {
+        Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show();
         updateListUI();
     }
 

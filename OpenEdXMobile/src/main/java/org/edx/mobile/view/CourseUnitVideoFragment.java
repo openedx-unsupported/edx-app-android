@@ -2,9 +2,7 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +25,6 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -153,7 +150,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                         if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
                             // not yet downloaded
                             updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
-                            Toast.makeText(getActivity(), R.string.download_started, Toast.LENGTH_SHORT).show();
                         } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
                             // may be download in progress
                             updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
