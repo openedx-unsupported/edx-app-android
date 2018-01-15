@@ -122,8 +122,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == RowType.THREAD) {
             View discussionThreadRow = LayoutInflater.
-                    from(parent.getContext()).
-                    inflate(R.layout.row_discussion_responses_thread, parent, false);
+              from(parent.getContext()).
+              inflate(R.layout.row_discussion_responses_thread, parent, false);
 
             return new DiscussionThreadViewHolder(discussionThreadRow);
         }
@@ -132,8 +132,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
 
         View discussionResponseRow = LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.row_discussion_responses_response, parent, false);
+          from(parent.getContext()).
+          inflate(R.layout.row_discussion_responses_response, parent, false);
         // CardView adds extra padding on pre-lollipop devices for shadows
         // Since, we've set cardUseCompatPadding to true in the layout file
         // so we need to deduct the extra padding from margins in any case to get the desired results
@@ -160,15 +160,15 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     }
 
-    private void bindViewHolderToThreadRow(DiscussionThreadViewHolder holder) {
+    private void bindViewHolderToThreadRow(final DiscussionThreadViewHolder holder) {
         holder.authorLayoutViewHolder.populateViewHolder(config, discussionThread,
-                discussionThread, initialTimeStampMs,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onClickAuthor(discussionThread.getAuthor());
-                    }
-                });
+          discussionThread, initialTimeStampMs,
+          new Runnable() {
+              @Override
+              public void run() {
+                  listener.onClickAuthor(discussionThread.getAuthor());
+              }
+          });
 
         holder.threadTitleTextView.setText(discussionThread.getTitle());
 
@@ -179,8 +179,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             holder.threadVisibilityTextView.setText(R.string.discussion_post_visibility_everyone);
         } else {
             holder.threadVisibilityTextView.setText(ResourceUtil.getFormattedString(
-                    context.getResources(), R.string.discussion_post_visibility_cohort,
-                    "cohort", groupName));
+              context.getResources(), R.string.discussion_post_visibility_cohort,
+              "cohort", groupName));
         }
 
         bindNumberResponsesView(holder.numberResponsesViewHolder);
@@ -193,17 +193,21 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             bindSocialView(holder.socialLayoutViewHolder, discussionThread);
             holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
+                    boolean isReported = holder.discussionReportViewHolder.toggleReported();
                     discussionService.setThreadFlagged(discussionThread.getIdentifier(),
-                            new FlagBody(!discussionThread.isAbuseFlagged()))
-                            .enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                                    context, null, new DialogErrorNotification(baseFragment)) {
-                                @Override
-                                protected void onResponse(@NonNull final DiscussionThread topicThread) {
-                                    discussionThread = discussionThread.patchObject(topicThread);
-                                    notifyItemChanged(0);
-                                    EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
-                                }
-                            });
+                      new FlagBody(isReported))
+                      .enqueue(new ErrorHandlingCallback<DiscussionThread>(
+                        context, null, new DialogErrorNotification(baseFragment)) {
+                          @Override
+                          protected void onResponse(@NonNull final DiscussionThread topicThread) {
+                              discussionThread = discussionThread.patchObject(topicThread);
+                              EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                          }
+                          @Override
+                          protected void onFailure(@NonNull final Throwable error) {
+                              notifyItemChanged(0);
+                          }
+                      });
                 }
             });
 
@@ -211,41 +215,48 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
+    private void bindSocialView(final DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
         holder.setDiscussionThread(thread);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean isVoted = holder.toggleVote(discussionThread.isVoted() ? discussionThread.getVoteCount()-1: discussionThread.getVoteCount());
                 discussionService.setThreadVoted(discussionThread.getIdentifier(),
-                        new VoteBody(!discussionThread.isVoted()))
-                        .enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                                context, null, new DialogErrorNotification(baseFragment)) {
-                            @Override
-                            protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
-                                discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                notifyItemChanged(0);
-                                EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
-                            }
-                        });
+                  new VoteBody(isVoted))
+                  .enqueue(new ErrorHandlingCallback<DiscussionThread>(
+                    context, null, new DialogErrorNotification(baseFragment)) {
+                      @Override
+                      protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
+                          discussionThread = discussionThread.patchObject(updatedDiscussionThread);
+                          EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                      }
+                      @Override
+                      protected void onFailure(@NonNull final Throwable error) {
+                          notifyItemChanged(0);
+                      }
+                  });
             }
         });
 
         holder.threadFollowContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                boolean isFollowing = holder.toggleFollow();
                 discussionService.setThreadFollowed(discussionThread.getIdentifier(),
-                        new FollowBody(!discussionThread.isFollowing()))
-                        .enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                                context, null, new DialogErrorNotification(baseFragment)) {
-                            @Override
-                            protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
-                                discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                notifyItemChanged(0);
-                                EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
-                            }
-                        });
+                  new FollowBody(isFollowing))
+                  .enqueue(new ErrorHandlingCallback<DiscussionThread>(
+                    context, null, new DialogErrorNotification(baseFragment)) {
+                      @Override
+                      protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
+                          discussionThread = discussionThread.patchObject(updatedDiscussionThread);
+                          EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                      }
+                      @Override
+                      protected void onFailure(@NonNull final Throwable error) {
+                          notifyItemChanged(0);
+                      }
+                  });
             }
         });
     }
@@ -258,7 +269,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         } else {
             holder.numberResponsesOrCommentsLabel.setVisibility(View.VISIBLE);
             holder.numberResponsesOrCommentsLabel.setText(holder.numberResponsesOrCommentsLabel.getResources().getQuantityString(
-                    R.plurals.number_responses_or_comments_responses_label, responsesCount, responsesCount));
+              R.plurals.number_responses_or_comments_responses_label, responsesCount, responsesCount));
         }
     }
 
@@ -266,17 +277,17 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
 
-    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, final int position) {
+    private void bindViewHolderToResponseRow(final DiscussionResponseViewHolder holder, final int position) {
         final DiscussionComment comment = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
         holder.authorLayoutViewHolder.populateViewHolder(config, comment,
-                comment, initialTimeStampMs,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onClickAuthor(comment.getAuthor());
-                    }
-                });
+          comment, initialTimeStampMs,
+          new Runnable() {
+              @Override
+              public void run() {
+                  listener.onClickAuthor(comment.getAuthor());
+              }
+          });
 
         if (comment.isEndorsed()) {
             holder.authorLayoutViewHolder.answerTextView.setVisibility(View.VISIBLE);
@@ -297,13 +308,13 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             }
             holder.authorLayoutViewHolder.answerTextView.setText(endorsementTypeStringRes);
             DiscussionTextUtils.setAuthorAttributionText(holder.responseAnswerAuthorTextView,
-                    authorAttributionLabel, comment.getEndorserData(), initialTimeStampMs,
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.onClickAuthor(comment.getEndorsedBy());
-                        }
-                    });
+              authorAttributionLabel, comment.getEndorserData(), initialTimeStampMs,
+              new Runnable() {
+                  @Override
+                  public void run() {
+                      listener.onClickAuthor(comment.getEndorsedBy());
+                  }
+              });
         } else {
             holder.authorLayoutViewHolder.answerTextView.setVisibility(View.GONE);
             holder.responseAnswerAuthorTextView.setVisibility(View.GONE);
@@ -339,17 +350,21 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             bindSocialView(holder.socialLayoutViewHolder, position, comment);
             holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
+                    boolean isReported = holder.discussionReportViewHolder.toggleReported();
                     discussionService.setCommentFlagged(comment.getIdentifier(),
-                            new FlagBody(!comment.isAbuseFlagged()))
-                            .enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                                    context, null, new DialogErrorNotification(baseFragment)) {
-                                @Override
-                                protected void onResponse(@NonNull final DiscussionComment comment) {
-                                    discussionResponses.get(position - 1).patchObject(comment);
-                                    discussionResponses.set(position - 1, comment);
-                                    notifyItemChanged(position);
-                                }
-                            });
+                      new FlagBody(isReported))
+                      .enqueue(new ErrorHandlingCallback<DiscussionComment>(
+                        context, null, new DialogErrorNotification(baseFragment)) {
+                          @Override
+                          protected void onResponse(@NonNull final DiscussionComment comment) {
+                              discussionResponses.get(position - 1).patchObject(comment);
+                              discussionResponses.set(position - 1, comment);
+                          }
+                          @Override
+                          protected void onFailure(@NonNull final Throwable error) {
+                              notifyItemChanged(position);
+                          }
+                      });
                 }
             });
 
@@ -358,24 +373,28 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
+    private void bindSocialView(final DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
         holder.setDiscussionResponse(response);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                boolean isVoted = holder.toggleVote(discussionThread.isVoted() ? discussionThread.getVoteCount()-1: discussionThread.getVoteCount());
                 discussionService.setCommentVoted(response.getIdentifier(),
-                        new VoteBody(!response.isVoted()))
-                        .enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                                context, null, new DialogErrorNotification(baseFragment)) {
-                            @Override
-                            protected void onResponse(@NonNull final DiscussionComment comment) {
-                                discussionResponses.get(position - 1).patchObject(comment);
-                                discussionResponses.set(position - 1, comment);
-                                notifyItemChanged(position);
-                            }
-                        });
+                  new VoteBody(isVoted))
+                  .enqueue(new ErrorHandlingCallback<DiscussionComment>(
+                    context, null, new DialogErrorNotification(baseFragment)) {
+                      @Override
+                      protected void onResponse(@NonNull final DiscussionComment comment) {
+                          discussionResponses.get(position - 1).patchObject(comment);
+                          discussionResponses.set(position - 1, comment);
+                      }
+                      @Override
+                      protected void onFailure(@NonNull final Throwable error) {
+                          notifyItemChanged(position);
+                      }
+                  });
             }
         });
     }
@@ -396,17 +415,17 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             }
         } else {
             text = context.getResources().getQuantityString(
-                    R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren);
+              R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren);
             icon = FontAwesomeIcons.fa_comment;
         }
 
         holder.numberResponsesOrCommentsLabel.setText(text);
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                holder.numberResponsesOrCommentsLabel,
-                new IconDrawable(context, icon)
-                        .colorRes(context, R.color.edx_brand_gray_base)
-                        .sizeRes(context, R.dimen.edx_small),
-                null, null, null);
+          holder.numberResponsesOrCommentsLabel,
+          new IconDrawable(context, icon)
+            .colorRes(context, R.color.edx_brand_gray_base)
+            .sizeRes(context, R.dimen.edx_small),
+          null, null, null);
     }
 
     @Override
@@ -495,11 +514,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
             actionsBar = itemView.findViewById(R.id.discussion_actions_bar);
             threadTitleTextView = (TextView) itemView.
-                    findViewById(R.id.discussion_responses_thread_row_title_text_view);
+              findViewById(R.id.discussion_responses_thread_row_title_text_view);
             threadBodyTextView = (TextView) itemView.
-                    findViewById(R.id.discussion_responses_thread_row_body_text_view);
+              findViewById(R.id.discussion_responses_thread_row_body_text_view);
             threadVisibilityTextView = (TextView) itemView.
-                    findViewById(R.id.discussion_responses_thread_row_visibility_text_view);
+              findViewById(R.id.discussion_responses_thread_row_visibility_text_view);
 
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView.findViewById(R.id.discussion_user_profile_row));
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
