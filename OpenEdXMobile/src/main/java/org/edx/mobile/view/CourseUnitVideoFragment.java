@@ -137,7 +137,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
 
-    private void initializeActionabr(MenuItem menuItem) {
+    private void initializeActionBar(MenuItem menuItem) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
         setVideoDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
     }
@@ -147,14 +147,14 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 new DataCallback<DownloadEntry.DownloadedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.DownloadedState state) {
-                        if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
-                            // not yet downloaded
-                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
-                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                        if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
                             // may be download in progress
                             updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
                         } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
                             updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
+                        }else {
+                            // not yet downloaded
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
                         }
                         unitDownloadState = state;
                     }
@@ -205,7 +205,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.download_content, menu);
         MenuItem item = menu.findItem(R.id.menu_item_download);
-        initializeActionabr(item);
+        initializeActionBar(item);
     }
 
     @Override
