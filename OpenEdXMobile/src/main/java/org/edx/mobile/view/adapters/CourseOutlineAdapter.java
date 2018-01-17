@@ -70,20 +70,18 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private IStorage storage;
     private DownloadListener mDownloadListener;
     private Config config;
-    private boolean isVideoMode;
 
     private String lastAccessedUnitId;
     private int lastAccessedUnitPosition = -1;
     public Integer selectedItemPosition;
 
     public CourseOutlineAdapter(Context context, Config config, IDatabase dbStore, IStorage storage,
-                                DownloadListener listener, boolean isVideoMode, String lastAccessedUnitId) {
+                                DownloadListener listener, String lastAccessedUnitId) {
         this.context = context;
         this.config = config;
         this.dbStore = dbStore;
         this.storage = storage;
         this.mDownloadListener = listener;
-        this.isVideoMode = isVideoMode;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = new ArrayList();
         this.lastAccessedUnitId = lastAccessedUnitId;
@@ -178,15 +176,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
         if (rootComponent != null) {
             for (IBlock block : rootComponent.getChildren()) {
                 CourseComponent comp = (CourseComponent) block;
-                if (isVideoMode && comp.getVideos().size() == 0)
-                    continue;
                 if (comp.isContainer()) {
                     SectionRow header = new SectionRow(SectionRow.SECTION, comp);
                     mData.add(header);
                     for (IBlock childBlock : comp.getChildren()) {
                         CourseComponent child = (CourseComponent) childBlock;
-                        if (isVideoMode && child.getVideos().size() == 0)
-                            continue;
                         SectionRow row = new SectionRow(SectionRow.ITEM, false, child);
                         mData.add(row);
                     }

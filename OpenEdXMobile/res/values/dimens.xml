@@ -230,4 +230,9 @@
     <dimen name="banner_height">50dp</dimen>
     <dimen name="icon_height">24dp</dimen>
     <dimen name="icon_width">23dp</dimen>
+    <dimen name="download_media_icon_height">26dp</dimen>
+    <dimen name="download_media_icon_width">25dp</dimen>
+    <dimen name="video_icon_size">24dp</dimen>
+    <dimen name="text_icon_size">13dp</dimen>
+    <dimen name="timeline_marker_empty_size">24dp</dimen>
 </resources>

@@ -17,7 +17,6 @@ import javax.inject.Inject;
 public class CourseOutlineActivity extends CourseVideoListActivity {
 
     private CourseOutlineFragment fragment;
-    private boolean isVideoMode = false;
     private boolean isOnCourseOutline = false;
 
     @Inject
@@ -26,13 +25,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isOnCourseOutline = isOnCourseOutline();
-        if (getIntent() != null) {
-            isVideoMode = getIntent().getBooleanExtra(Router.EXTRA_IS_VIDEOS_MODE, false);
-        }
 
         if (isOnCourseOutline) {
-            environment.getAnalyticsRegistry().trackScreenView(
-                    isVideoMode ? Analytics.Screens.VIDEOS_COURSE_VIDEOS : Analytics.Screens.COURSE_OUTLINE,
+            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_OUTLINE,
                     courseData.getCourse().getId(), null);
         }
     }
@@ -60,7 +55,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
             bundle.putString(Router.EXTRA_LAST_ACCESSED_ID,
                     getIntent().getStringExtra(Router.EXTRA_LAST_ACCESSED_ID));
-            bundle.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideoMode);
             bundle.putBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE, isOnCourseOutline);
             fragment.setArguments(bundle);
             //this activity will only ever hold this lone fragment, so we
@@ -73,7 +67,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             fragmentTransaction.commitAllowingStateLoss();
         }
 
-        if (isOnCourseOutline && isVideoMode) {
+        if (isOnCourseOutline) {
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
         }

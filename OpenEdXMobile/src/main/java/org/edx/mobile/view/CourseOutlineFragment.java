@@ -69,7 +69,6 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
     private TaskProcessCallback taskProcessCallback;
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
-    private boolean isVideoMode;
     private boolean isOnCourseOutline;
     private ActionMode deleteMode;
     private String lastAccessedComponentId;
@@ -102,7 +101,6 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         final Bundle bundle = getArguments();
         courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
         courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
-        isVideoMode = bundle.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
         isOnCourseOutline = bundle.getBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE);
 
         View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
@@ -127,10 +125,10 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                 CourseComponent comp = row.component;
                 if (comp.isContainer()) {
                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), null, isVideoMode);
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), null);
                 } else {
                     environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), isVideoMode);
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
                 }
             }
         });
@@ -375,7 +373,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         TextView messageView = (TextView) view.findViewById(R.id.no_chapter_tv);
         if (adapter.getCount() == 0) {
             messageView.setVisibility(View.VISIBLE);
-            messageView.setText(isVideoMode ? R.string.no_videos_text : R.string.no_chapter_text);
+            messageView.setText(R.string.no_chapter_text);
         } else {
             messageView.setVisibility(View.GONE);
         }
@@ -408,7 +406,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                         public void viewDownloadsStatus() {
                             environment.getRouter().showDownloads(getActivity());
                         }
-                    }, isVideoMode, lastAccessedComponentId);
+                    }, lastAccessedComponentId);
         }
     }
 
@@ -478,7 +476,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                                     environment.getRouter().showCourseContainerOutline(
                                             CourseOutlineFragment.this,
                                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData,
-                                            nextComp.getId(), leafCompId, isVideoMode);
+                                            nextComp.getId(), leafCompId);
                                 }
                             }
                         }

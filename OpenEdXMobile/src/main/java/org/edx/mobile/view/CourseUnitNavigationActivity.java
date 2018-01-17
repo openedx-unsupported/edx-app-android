@@ -69,7 +69,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private FrameLayout mIndicatorContainer;
 
     private IndicatorController indicatorController;
-    private boolean isVideoMode;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -276,15 +275,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
 
-        isVideoMode = false;
-        if (getIntent() != null) {
-            isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
-        }
-        if (isVideoMode) {
-            leaves = selectedUnit.getRoot().getVideos(false);
-        } else {
-            selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
-        }
+        selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
 
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
@@ -308,19 +299,11 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
     private int getTotalComponentsCount(CourseComponent unit) {
-        if (isVideoMode) {
-            return unit.getParent().getVideos().size();
-        } else {
-            return unit.getParent().getChildren().size();
-        }
+        return unit.getParent().getChildren().size();
     }
 
     private int getCurrentComponentIndex() {
-        if (isVideoMode) {
-            return selectedUnit.getParent().getVideos().indexOf(selectedUnit);
-        } else {
-            return selectedUnit.getParent().getChildren().indexOf(selectedUnit);
-        }
+        return selectedUnit.getParent().getChildren().indexOf(selectedUnit);
     }
 
     private void updateUIForOrientation() {
