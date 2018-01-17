@@ -67,10 +67,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 }
             });
         }
-        // Init view pager
-        final FragmentItemPagerAdapter adapter = new FragmentItemPagerAdapter(this.getActivity().getSupportFragmentManager(), fragmentItems);
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+
+        // Init page change listener
+        final TabLayout.TabLayoutOnPageChangeListener pageChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -80,11 +79,30 @@ public abstract class TabsBaseFragment extends BaseFragment {
                     item.getListener().onFragmentSelected();
                 }
             }
-        });
-        // It will load all of the fragments on creation and will stay in memory till ViewPager's
-        // life time, it will greatly improve our user experience as all fragments will be available
-        // to view all the time. We can decrease the limit if it creates memory problems on low-end devices.
+        };
+
+        // Init view pager
+        final FragmentItemPagerAdapter adapter = new FragmentItemPagerAdapter(this.getActivity().getSupportFragmentManager(), fragmentItems);
+        binding.viewPager.setAdapter(adapter);
+        binding.viewPager.addOnPageChangeListener(pageChangeListener);
+        /*
+         It will load all of the fragments on creation and will stay in memory till ViewPager's
+         life time, it will greatly improve our user experience as all fragments will be available
+         to view all the time. We can decrease the limit if it creates memory problems on low-end devices.
+         */
         binding.viewPager.setOffscreenPageLimit(fragmentItems.size() - 1);
+
+        /*
+         ViewPager doesn't call the onPageSelected for its first item, so we have to explicitly
+         call it ourselves.
+         Inspiration for this solution: https://stackoverflow.com/a/16074152/1402616
+         */
+        binding.viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                pageChangeListener.onPageSelected(binding.viewPager.getCurrentItem());
+            }
+        });
     }
 
     protected TabLayout.Tab createTab(TabLayout tabLayout, FragmentItemModel fragmentItem) {
