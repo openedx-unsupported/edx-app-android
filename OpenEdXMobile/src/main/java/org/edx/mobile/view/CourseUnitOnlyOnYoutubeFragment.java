@@ -2,10 +2,10 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
@@ -16,7 +16,9 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
 
     private String youtubeApiKey;
     private YouTubeMediaPlayerSupportFragment youTubePlayerFragment;
-    private boolean startVideoWhileInitializingYoutubeVideo;
+
+    // Flag to handle video playback while
+    private boolean initializePlayBack;
 
     public static CourseUnitOnlyOnYoutubeFragment newInstance(CourseComponent unit, String youtubeApiKey) {
         CourseUnitOnlyOnYoutubeFragment fragment = new CourseUnitOnlyOnYoutubeFragment();
@@ -45,14 +47,14 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
         super.onViewCreated(view, savedInstanceState);
         // If youtube fragment is first page in viewPager, being stated that "onPageShow" isn't called.
         // We have to handle the initial play for first youtube fragment ourselves
-        if (startVideoWhileInitializingYoutubeVideo)
+        if (initializePlayBack)
             initializeYoutubePlayer();
     }
 
     @Override
-    public void setInitialPage() {
-        super.setInitialPage();
-        startVideoWhileInitializingYoutubeVideo = true;
+    public void onFirstPageLoad() {
+        super.onFirstPageLoad();
+        initializePlayBack = true;
     }
 
     @Override
@@ -82,11 +84,17 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
     }
 
     private void initializeYoutubePlayer() {
-        String url = ((VideoBlockModel) unit).getData().encodedVideos.youtube.url;
-        String videoId = url.split("v=")[1];
-        youTubePlayerFragment = YouTubeMediaPlayerSupportFragment.newInstance(youtubeApiKey, videoId);
+        try {
+            String url = ((VideoBlockModel) unit).getData().encodedVideos.youtube.url;
+            String videoId = url.contains("v=") ? url.split("v=")[1] : null;
+            youTubePlayerFragment = YouTubeMediaPlayerSupportFragment.newInstance(youtubeApiKey, videoId);
 
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.youtube_fragment, youTubePlayerFragment).commit();
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.youtube_fragment, youTubePlayerFragment)
+                    .commit();
+        } catch (IllegalStateException ex) {
+            ex.printStackTrace();
+            Toast.makeText(getContext(), R.string.youtube_playback_failure, Toast.LENGTH_SHORT).show();
+        }
     }
 }

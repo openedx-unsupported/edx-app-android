@@ -8,7 +8,7 @@ package org.edx.mobile.view.common;
  * to automatically load the video after the fragment is initialized) going along with above reason.
  */
 public interface PageViewStateCallback {
-    void setInitialPage();
+    void onFirstPageLoad();
     void onPageShow();
     void onPageDisappear();
 }

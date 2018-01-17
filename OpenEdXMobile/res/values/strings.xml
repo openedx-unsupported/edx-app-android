@@ -628,5 +628,6 @@
     <string name="view_my_courses" tools:ignore="MissingTranslation">View My Courses</string>
 
     <string name="app_tag_line" tools:ignore="MissingTranslation">Offline Content Viewer</string>
+    <string name="youtube_playback_failure">Failed to load youtube video</string>
 
 </resources>

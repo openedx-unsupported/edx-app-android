@@ -245,7 +245,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             pager.setCurrentItem(index);
             currentVisiblePage = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
             if (currentVisiblePage != null)
-                currentVisiblePage.setInitialPage();
+                currentVisiblePage.onFirstPageLoad();
             tryToUpdateForEndOfSequential();
         }
 
