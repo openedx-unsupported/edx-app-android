@@ -41,7 +41,6 @@ import org.edx.mobile.view.custom.IconImageViewXml;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -73,11 +72,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private Config config;
     private boolean isVideoMode;
 
-
     private String lastAccessedUnitId;
-    private boolean hasLastAccessedUnitShown = false;
     private int lastAccessedUnitPosition = -1;
-    public HashSet<Integer> selectedItemPositions;
+    public Integer selectedItemPosition;
 
     public CourseOutlineAdapter(Context context, Config config, IDatabase dbStore, IStorage storage,
                                 DownloadListener listener, boolean isVideoMode, String lastAccessedUnitId) {
@@ -90,7 +87,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = new ArrayList();
         this.lastAccessedUnitId = lastAccessedUnitId;
-        selectedItemPositions = new HashSet<>();
+        selectedItemPosition = -1;
     }
 
     @Override
@@ -179,8 +176,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         this.rootComponent = component;
         mData.clear();
         if (rootComponent != null) {
-            List<IBlock> children = rootComponent.getChildren();
-            for (IBlock block : children) {
+            for (IBlock block : rootComponent.getChildren()) {
                 CourseComponent comp = (CourseComponent) block;
                 if (isVideoMode && comp.getVideos().size() == 0)
                     continue;
@@ -231,7 +227,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.subSectionDescriptionTV.setVisibility(View.GONE);
         viewHolder.timelineViewMarker.setVisibility(View.GONE);
         viewHolder.blockTypeIcon.setVisibility(View.VISIBLE);
-        if (selectedItemPositions.contains(position)) {
+        if (selectedItemPosition == position) {
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.white));
             viewHolder.rowCardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.philu_primary));
         } else {
@@ -384,24 +380,15 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }
 
         //This block is used to handle timeline marker and row title text color for items before last accessed on base of last accessed item
-        if (lastAccessedUnitPosition != -1 && position < lastAccessedUnitPosition) {
+
+        //This block is used to handle timeline marker and row title text color if current item is last accessed
+        if (lastAccessedUnitPosition > position){
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.philu_primary));
             viewHolder.timelineViewMarker.setMarkerSize((int) context.getResources().getDimension(R.dimen.timeline_marker_size_small));
-        }
-        //This block is used to handle timeline marker and row title text color if current item is last accessed
-
-        if (!android.text.TextUtils.isEmpty(lastAccessedUnitId) && lastAccessedUnitId.equals(currentCourseComponent.getId())) {
+        } else if (lastAccessedUnitPosition == position) {
             viewHolder.timelineViewMarker.setMarkerSize((int) context.getResources().getDimension(R.dimen.timeline_marker_size_large));
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.philu_primary));
             viewHolder.subSectionTitleTV.setTypeface(null, Typeface.BOLD);
-            hasLastAccessedUnitShown = true;
-            lastAccessedUnitPosition = position;
-        }
-        //This block is used to handle timeline marker and row title text color for items before last accessed on base of last accessed item
-
-        else if (!hasLastAccessedUnitShown) {
-            viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.philu_primary));
-            viewHolder.timelineViewMarker.setMarkerSize((int) context.getResources().getDimension(R.dimen.timeline_marker_size_small));
         }
 
         viewHolder.timelineViewMarker.setMarker(ContextCompat.getDrawable(context, R.drawable.ic_timeline_marker_filled));
@@ -411,7 +398,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.timelineViewMarker.initLine(markerType);
 
         // This check will check if item is selected through long item click on list and mark view changes
-        if (selectedItemPositions.contains(position)) {
+        if (selectedItemPosition == position) {
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.white));
             viewHolder.rowCardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.philu_primary));
         }
@@ -586,33 +573,36 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     public void setLastAccessedId(String lastAccessedId) {
         this.lastAccessedUnitId = lastAccessedId;
-        this.lastAccessedUnitPosition = -1;
-        this.hasLastAccessedUnitShown = false;
+        updateLastAccessedUnitPosition();
         notifyDataSetChanged();
     }
 
-    //This function will be used to add the selected items to be marked on ListView item long click(Only downloaded media/Videos)
-    public void addSelectedItemPosition(int position) {
-        if (selectedItemPositions != null) {
-            selectedItemPositions.add(position);
-            notifyDataSetChanged();
+    private void updateLastAccessedUnitPosition() {
+        if (!android.text.TextUtils.isEmpty(lastAccessedUnitId)) {
+            for (SectionRow row : mData) {
+                if (row.component.getId().equals(lastAccessedUnitId)) {
+                    lastAccessedUnitPosition = mData.indexOf(row);
+                }
+            }
         }
+    }
+
+    //This function will be used to add the selected items to be marked on ListView item long click(Only downloaded media/Videos)
+    public void selectItemAtPosition(int position) {
+        selectedItemPosition = position;
+        notifyDataSetChanged();
     }
     //This function will be used to remove the selected items to be unmarked on ListView item long click(Only downloaded media/Videos)
 
-    public void removeSelectedItemPosition(int position) {
-        if (selectedItemPositions != null && selectedItemPositions.size() > 0) {
-            selectedItemPositions.remove(position);
-            notifyDataSetChanged();
-        }
+    public void removeSelectedItemAtPosition(int position) {
+        selectedItemPosition = -1;
+        notifyDataSetChanged();
     }
 
     //This function will remove all selected items to be unmarked/unselected on ListView (on ActionItemView dismissal)
-    public void clearSelectedItemPositions() {
-        if (selectedItemPositions != null && selectedItemPositions.size() > 0) {
-            selectedItemPositions.clear();
-            notifyDataSetChanged();
-        }
+    public void clearSelectedItemPosition() {
+        selectedItemPosition = -1;
+        notifyDataSetChanged();
 
     }
 }

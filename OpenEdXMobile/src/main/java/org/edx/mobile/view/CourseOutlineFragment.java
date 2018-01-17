@@ -120,7 +120,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                 if (deleteMode != null) {
                     deleteMode.finish();
                 }
-                adapter.clearSelectedItemPositions();
+                adapter.clearSelectedItemPosition();
                 listView.clearChoices();
                 CourseOutlineAdapter.SectionRow row = adapter.getItem(position);
                 loadLastAccessed();
@@ -142,7 +142,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                 // If the media would have been downloaded the tag of the icon would have been set to downloaded / null otherwise
                 if (mediaAvailabilityIcon.getTag() != null && mediaAvailabilityIcon.getTag().equals(CourseOutlineAdapter.DOWNLOAD_TAG)) {
                     ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
-                    adapter.addSelectedItemPosition(position);
+                    adapter.selectItemAtPosition(position);
                     listView.setItemChecked(position, true);
                     return true;
                 }
@@ -180,7 +180,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                                     CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
                                     if (NetworkUtil.verifyDownloadPossible(activity)) {
                                         downloadManager.downloadVideos(courseComponent.getVideos(), getActivity(),
-                                                (VideoDownloadHelper.DownloadManagerCallback) getActivity());
+                                                CourseOutlineFragment.this);
                                     }
                                 }
                             });
@@ -194,6 +194,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         courseStatusUnit.setVisibility(View.VISIBLE);
         updateDownloadStatus(getContext(), state, listener, relativeTimeStamp);
     }
+
     public AbsListView.OnScrollListener onScrollListener() {
         return new AbsListView.OnScrollListener() {
 
@@ -220,7 +221,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                         Log.i(TAG, "bottom reached!");
                         courseStatusUnit.setVisibility(View.VISIBLE);
                     }
-                } else if (totalItemCount - visibleItemCount > firstVisibleItem){
+                } else if (totalItemCount - visibleItemCount > firstVisibleItem) {
                     // on scrolling
                     courseStatusUnit.setVisibility(View.GONE);
                     Log.i(TAG, "on scroll");
@@ -233,6 +234,8 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
     public void onResume() {
         super.onResume();
         loadLastAccessed();
+        CourseComponent courseComponent = getCourseComponent();
+        toggleCourseOutlineDowloadFooter(courseComponent);
     }
 
     /**
@@ -267,15 +270,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.item_delete:
-                    final int checkedItemPosition = listView.getCheckedItemPosition();
-                    // Change the icon to download icon immediately
-                    final View rowView = listView.getChildAt(checkedItemPosition - listView.getFirstVisiblePosition());
-                    if (rowView != null) {
-                        // rowView will be null, if the user scrolls away from the checked item
-                        ((IconImageView) rowView.findViewById(R.id.bulk_download)).setIcon(FontAwesomeIcons.fa_download);
-                    }
-
-                    final CourseOutlineAdapter.SectionRow rowItem = adapter.getItem(checkedItemPosition);
+                    final CourseOutlineAdapter.SectionRow rowItem = adapter.getItem(listView.getCheckedItemPosition());
                     final List<CourseComponent> videos = rowItem.component.getVideos(true);
                     final int totalVideos = videos.size();
 
@@ -325,7 +320,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                                             courseData.getCourse().getId(), rowItem.component.getId());
                                 }
                             }
-                            adapter.notifyDataSetChanged();
+                            reloadList();
                         }
                     });
                     snackbar.show();
@@ -342,7 +337,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
             deleteMode = null;
             listView.clearChoices();
             listView.requestLayout();
-            adapter.clearSelectedItemPositions();
+            adapter.clearSelectedItemPosition();
         }
     };
 
@@ -420,7 +415,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
-            courseComponentId = (String) savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
+            courseComponentId = savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         }
     }
 
@@ -434,10 +429,8 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
     }
 
     public void reloadList() {
-        if (adapter != null) {
-            adapter.reloadData();
-            loadLastAccessed();
-        }
+        loadData(getView());
+        loadLastAccessed();
     }
 
     private void updateRowSelection(String lastAccessedId) {
@@ -611,8 +604,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
 
     @Override
     public void updateListUI() {
-        CourseComponent courseComponent = getCourseComponent();
-        toggleCourseOutlineDowloadFooter(courseComponent);
+        reloadList();
     }
 
     @Override
