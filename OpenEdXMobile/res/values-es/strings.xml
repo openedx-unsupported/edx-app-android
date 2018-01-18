@@ -86,8 +86,6 @@
   <string name="label_current_downloads">Ver descargas</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Abrir su perfil</string>
-  <!--Title of user's course list screen-->
-  <string name="label_my_courses">Mis cursos</string>
   <!--Title of important course dates screen-->
   <string name="label_course_dates">Fechas y Plazos del Curso</string>
   <!--Title of native Find Courses Screen-->

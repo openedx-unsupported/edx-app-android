@@ -31,16 +31,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:gravity="end">
 
+        <!--
+        When SearchView is added through menu.xml file and it expands upon tapping the icon,
+        the toolbar's overall layout gets messed up.
+        -->
         <android.support.v7.widget.SearchView
             android:id="@+id/toolbar_search_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginLeft="@dimen/courses_profile_icon_left_margin"
-            android:layout_marginStart="@dimen/courses_profile_icon_left_margin" />
+            android:layout_marginStart="@dimen/courses_profile_icon_left_margin"
+            android:visibility="gone" />
     </LinearLayout>
 
 </android.support.v7.widget.Toolbar>

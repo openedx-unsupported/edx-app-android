@@ -114,7 +114,11 @@ public class Router {
     }
 
     public void showMyCourses(Activity sourceActivity) {
-        sourceActivity.startActivity(MyCoursesListActivity.newIntent());
+        if (config.isTabsLayoutEnabled()) {
+            sourceActivity.startActivity(MainDashboardActivity.newIntent());
+        } else {
+            sourceActivity.startActivity(MyCoursesListActivity.newIntent());
+        }
     }
 
     public void showCourseDashboardTabs(Activity activity, Config config, EnrolledCoursesResponse model,

@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -17,13 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.databinding.FragmentCourseTabsDashboardBinding;
 import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.FragmentItemModel;
@@ -33,7 +29,6 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.images.ShareUtils;
-import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 import org.edx.mobile.view.custom.ProgressWheel;
 
 import java.util.ArrayList;
@@ -41,16 +36,11 @@ import java.util.List;
 
 import roboguice.inject.InjectExtra;
 
-public class CourseTabsDashboardFragment extends BaseFragment {
+public class CourseTabsDashboardFragment extends TabsBaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
 
     @Nullable
-    private FragmentCourseTabsDashboardBinding binding;
-    @Nullable
     private FragmentDashboardErrorLayoutBinding errorLayoutBinding;
-
-    @Inject
-    private IEdxEnvironment environment;
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
@@ -90,64 +80,12 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (courseData.getCourse().getCoursewareAccess().hasAccess()) {
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_course_tabs_dashboard, container, false);
-            initializeTabs();
-            return binding.getRoot();
+            return super.onCreateView(inflater, container, savedInstanceState);
         } else {
             errorLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard_error_layout, container, false);
             errorLayoutBinding.errorMsg.setText(R.string.course_not_started);
             return errorLayoutBinding.getRoot();
         }
-    }
-
-    public void initializeTabs() {
-        // Get fragment items list
-        final List<FragmentItemModel> fragmentItems = getFragmentItems();
-        // Init tabs
-        final TabLayout tabLayout = binding.tabLayout;
-        TabLayout.Tab tab;
-        for (FragmentItemModel fragmentItem : fragmentItems) {
-            tab = tabLayout.newTab();
-            IconDrawable iconDrawable = new IconDrawable(getContext(), fragmentItem.getIcon());
-            iconDrawable.colorRes(getContext(), R.color.edx_brand_primary_base);
-            tab.setIcon(iconDrawable);
-            tab.setContentDescription(fragmentItem.getTitle());
-            tabLayout.addTab(tab);
-        }
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                binding.viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        // Init view pager
-        final FragmentItemPagerAdapter adapter = new FragmentItemPagerAdapter(this.getActivity().getSupportFragmentManager(), fragmentItems);
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                final FragmentItemModel item = fragmentItems.get(position);
-                getActivity().setTitle(item.getTitle());
-                if (item.getListener() != null) {
-                    item.getListener().onFragmentSelected();
-                }
-            }
-        });
-        // It will load all of the fragments on creation and will stay in memory till ViewPager's
-        // life time, it will greatly improve our user experience as all fragments will be available
-        // to view all the time. We can decrease the limit if it creates memory problems on low-end devices.
-        binding.viewPager.setOffscreenPageLimit(fragmentItems.size() - 1);
     }
 
     @Override
@@ -225,6 +163,12 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         }
     }
 
+    @Override
+    protected boolean showTitleInTabs() {
+        return false;
+    }
+
+    @Override
     public List<FragmentItemModel> getFragmentItems() {
         ArrayList<FragmentItemModel> items = new ArrayList<>();
         // Add course outline tab
