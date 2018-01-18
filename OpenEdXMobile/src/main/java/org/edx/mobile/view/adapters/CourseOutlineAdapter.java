@@ -233,7 +233,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
             final DownloadEntry videoData = ((VideoBlockModel) row.component).getDownloadEntry(storage);
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData);
-                return;
             } else {
                 viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
             }
@@ -257,6 +256,25 @@ public class CourseOutlineAdapter extends BaseAdapter {
             }
             checkAccessStatus(viewHolder, unit);
         }
+
+        addRequiredPadding(viewHolder.cardViewContainer, position);
+    }
+
+    private void addRequiredPadding(FrameLayout view, int position) {
+        int padding = (int) context.getResources().getDimension(R.dimen.widget_margin );
+        view.setPadding(view.getPaddingLeft(),
+                shouldAddTopPadding(position) ? padding : 0,
+                view.getPaddingRight(),
+                shouldAddBottomPadding(position) ? padding : 0);
+    }
+
+    private boolean shouldAddBottomPadding(int position) {
+        return position < mData.size() &&
+                (position == mData.size() - 1 || getItemViewType(position + 1) == SectionRow.SECTION);
+    }
+
+    private boolean shouldAddTopPadding(int position) {
+        return position > 0 && getItemViewType(position - 1) == SectionRow.SECTION;
     }
 
     private void checkAccessStatus(final ViewHolder viewHolder, final CourseComponent unit) {
@@ -376,7 +394,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         //This block is used to handle timeline marker and row title text color for items before last accessed on base of last accessed item
 
         //This block is used to handle timeline marker and row title text color if current item is last accessed
-        if (lastAccessedUnitPosition > position){
+        if (lastAccessedUnitPosition > position) {
             viewHolder.subSectionTitleTV.setTextColor(ContextCompat.getColor(context, R.color.philu_primary));
             viewHolder.timelineViewMarker.setMarkerSize((int) context.getResources().getDimension(R.dimen.timeline_marker_size_small));
         } else if (lastAccessedUnitPosition == position) {
@@ -430,6 +448,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                         });
             }
         }
+
+        addRequiredPadding(viewHolder.cardViewContainer, position);
     }
 
     //This function will tell what marker type should be used
