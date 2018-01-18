@@ -259,7 +259,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     private void addRequiredPadding(FrameLayout view, int position) {
-        int padding = (int) context.getResources().getDimension(R.dimen.widget_margin );
+        int padding = (int) context.getResources().getDimension(R.dimen.widget_margin);
         view.setPadding(view.getPaddingLeft(),
                 shouldAddTopPadding(position) ? padding : 0,
                 view.getPaddingRight(),
@@ -598,19 +598,19 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }
     }
 
-    //This function will be used to add the selected items to be marked on ListView item long click(Only downloaded media/Videos)
+    /**
+     * This function will be used to add the selected items to be marked on ListView item long click(Only downloaded media/Videos)
+     *
+     * @param position
+     */
     public void selectItemAtPosition(int position) {
         selectedItemPosition = position;
         notifyDataSetChanged();
     }
-    //This function will be used to remove the selected items to be unmarked on ListView item long click(Only downloaded media/Videos)
 
-    public void removeSelectedItemAtPosition(int position) {
-        selectedItemPosition = -1;
-        notifyDataSetChanged();
-    }
-
-    //This function will remove all selected items to be unmarked/unselected on ListView (on ActionItemView dismissal)
+    /**
+     * This function will remove all selected items to be unmarked/unselected on ListView (on ActionItemView dismissal)
+     */
     public void clearSelectedItemPosition() {
         selectedItemPosition = -1;
         notifyDataSetChanged();
