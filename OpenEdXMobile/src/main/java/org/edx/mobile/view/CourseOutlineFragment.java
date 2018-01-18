@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
@@ -151,40 +152,45 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         return view;
     }
 
-    private void toggleCourseOutlineDowloadFooter(final CourseComponent courseComponent) {
-        if (isOnCourseOutline) {
-            final int totalDownloadableVideos = courseComponent.getDownloadableVideosCount();
-            // support video download for video type excluding the ones only viewable on web
-            if (totalDownloadableVideos > 0) {
-                int downloadedCount = environment.getDatabase().getDownloadedVideosCountForCourse(courseData.getCourse().getId());
+    private void toggleCourseOutlineDownloadFooter(final CourseComponent courseComponent) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isOnCourseOutline) {
+                    final int totalDownloadableVideos = courseComponent.getDownloadableVideosCount();
+                    // support video download for video type excluding the ones only viewable on web
+                    if (totalDownloadableVideos > 0) {
+                        int downloadedCount = environment.getDatabase().getDownloadedVideosCountForCourse(courseData.getCourse().getId());
 
-                if (downloadedCount == totalDownloadableVideos) {
-                    Long downloadTimeStamp = environment.getDatabase().getLastVideoDownloadTimeForCourse(courseData.getCourse().getId());
-                    String relativeTimeSpanString = getRelativeTimeStringFromNow(downloadTimeStamp);
-                    setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADED, relativeTimeSpanString, null);
-                } else if (environment.getDatabase().isAnyVideoDownloadingInCourse(null, courseData.getCourse().getId())) {
-                    setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADING, null,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View downloadView) {
-                                    environment.getRouter().showDownloads(getActivity());
-                                }
-                            });
-                } else {
-                    setRowStateOnDownload(DownloadEntry.DownloadedState.ONLINE, null,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View downloadView) {
-                                    CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
-                                    if (NetworkUtil.verifyDownloadPossible(activity)) {
-                                        downloadManager.downloadVideos(courseComponent.getVideos(), getActivity(),
-                                                CourseOutlineFragment.this);
-                                    }
-                                }
-                            });
+                        if (downloadedCount == totalDownloadableVideos) {
+                            Long downloadTimeStamp = environment.getDatabase().getLastVideoDownloadTimeForCourse(courseData.getCourse().getId());
+                            String relativeTimeSpanString = getRelativeTimeStringFromNow(downloadTimeStamp);
+                            setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADED, relativeTimeSpanString, null);
+                        } else if (environment.getDatabase().isAnyVideoDownloadingInCourse(null, courseData.getCourse().getId())) {
+                            setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADING, null,
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View downloadView) {
+                                            environment.getRouter().showDownloads(getActivity());
+                                        }
+                                    });
+                        } else {
+                            setRowStateOnDownload(DownloadEntry.DownloadedState.ONLINE, null,
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View downloadView) {
+                                            CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
+                                            if (NetworkUtil.verifyDownloadPossible(activity)) {
+                                                downloadManager.downloadVideos(courseComponent.getVideos(), getActivity(),
+                                                        CourseOutlineFragment.this);
+                                            }
+                                        }
+                                    });
+                        }
+                    }
                 }
             }
-        }
+        }, 100);
     }
 
     private void setRowStateOnDownload(DownloadEntry.DownloadedState state, String relativeTimeStamp, View.OnClickListener listener) {
@@ -233,7 +239,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         super.onResume();
         loadLastAccessed();
         CourseComponent courseComponent = getCourseComponent();
-        toggleCourseOutlineDowloadFooter(courseComponent);
+        toggleCourseOutlineDownloadFooter(courseComponent);
     }
 
     /**
@@ -362,7 +368,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
         CourseComponent courseComponent = getCourseComponent();
         adapter.setData(courseComponent);
         updateMessageView(view);
-        toggleCourseOutlineDowloadFooter(courseComponent);
+        toggleCourseOutlineDownloadFooter(courseComponent);
     }
 
     public void updateMessageView(View view) {
