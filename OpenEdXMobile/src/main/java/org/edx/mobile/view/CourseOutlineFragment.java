@@ -412,7 +412,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                         public void viewDownloadsStatus() {
                             environment.getRouter().showDownloads(getActivity());
                         }
-                    }, lastAccessedComponentId);
+                    });
         }
     }
 

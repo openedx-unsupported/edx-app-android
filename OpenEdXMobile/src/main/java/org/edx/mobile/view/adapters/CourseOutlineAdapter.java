@@ -71,12 +71,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private DownloadListener mDownloadListener;
     private Config config;
 
-    private String lastAccessedUnitId;
     private int lastAccessedUnitPosition = -1;
     public Integer selectedItemPosition;
 
     public CourseOutlineAdapter(Context context, Config config, IDatabase dbStore, IStorage storage,
-                                DownloadListener listener, String lastAccessedUnitId) {
+                                DownloadListener listener) {
         this.context = context;
         this.config = config;
         this.dbStore = dbStore;
@@ -84,7 +83,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         this.mDownloadListener = listener;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = new ArrayList();
-        this.lastAccessedUnitId = lastAccessedUnitId;
         selectedItemPosition = -1;
     }
 
@@ -586,12 +584,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     public void setLastAccessedId(String lastAccessedId) {
-        this.lastAccessedUnitId = lastAccessedId;
-        updateLastAccessedUnitPosition();
+        updateLastAccessedUnitPosition(lastAccessedId);
         notifyDataSetChanged();
     }
 
-    private void updateLastAccessedUnitPosition() {
+    private void updateLastAccessedUnitPosition(String lastAccessedUnitId) {
         if (!android.text.TextUtils.isEmpty(lastAccessedUnitId)) {
             for (SectionRow row : mData) {
                 if (row.component.getId().equals(lastAccessedUnitId)) {
