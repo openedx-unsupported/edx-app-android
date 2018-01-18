@@ -180,6 +180,15 @@ public interface IDatabase {
     Boolean isVideoDownloadedInSection(String enrollmentId, String chapter,
                                        String section, DataCallback<Boolean> callback);
 
+
+    /**
+     * Returns the count of downloaded videos for given course
+     *
+     * @param enrollmentId of course
+     * @return Count of downloaded videos for a given section
+     */
+    int getDownloadedVideosCountForCourse(String enrollmentId);
+
     /**
      * Returns dmId's of all downloaded videos for given section of logged in user
      *
@@ -450,4 +459,8 @@ public interface IDatabase {
      */
     boolean isUnitAccessed(DataCallback<Boolean> callback, String unitId);
 
+    /**
+     * get course content local download timestamp
+     */
+    Long getLastVideoDownloadTimeForCourse(String courseId);
 }

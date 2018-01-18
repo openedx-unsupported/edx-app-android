@@ -17,12 +17,17 @@ public class EncodedVideos implements Serializable {
     @SerializedName("youtube")
     public VideoInfo youtube;
 
+    @SerializedName("fallback")
+    public VideoInfo fallBack;
+
     @Nullable
     public VideoInfo getPreferredVideoInfo() {
         if (mobileLow != null && URLUtil.isNetworkUrl(mobileLow.url))
             return mobileLow;
         if (mobileHigh != null && URLUtil.isNetworkUrl(mobileHigh.url))
             return mobileHigh;
+        if (fallBack != null && URLUtil.isNetworkUrl(fallBack.url))
+            return fallBack;
         return null;
     }
 
@@ -43,6 +48,8 @@ public class EncodedVideos implements Serializable {
         if (mobileHigh != null ? !mobileHigh.equals(that.mobileHigh) : that.mobileHigh != null)
             return false;
         if (mobileLow != null ? !mobileLow.equals(that.mobileLow) : that.mobileLow != null)
+            return false;
+        if (fallBack != null ? !fallBack.equals(that.fallBack) : that.fallBack != null)
             return false;
         return youtube != null ? youtube.equals(that.youtube) : that.youtube == null;
 

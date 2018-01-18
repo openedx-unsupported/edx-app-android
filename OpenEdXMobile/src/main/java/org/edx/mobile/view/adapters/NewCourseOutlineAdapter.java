@@ -73,11 +73,10 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     private IStorage storage;
     private EnrolledCoursesResponse courseData;
     private DownloadListener downloadListener;
-    private boolean isVideoMode;
 
     public NewCourseOutlineAdapter(Context context, EnrolledCoursesResponse courseData,
                                    IEdxEnvironment environment, NewCourseOutlineAdapter.DownloadListener listener,
-                                   boolean isVideoMode, boolean isOnCourseOutline) {
+                                   boolean isOnCourseOutline) {
         this.context = context;
         this.environment = environment;
         this.config = environment.getConfig();
@@ -85,10 +84,9 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         this.storage = environment.getStorage();
         this.courseData = courseData;
         this.downloadListener = listener;
-        this.isVideoMode = isVideoMode;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
-        if (isOnCourseOutline && !isVideoMode) {
+        if (isOnCourseOutline) {
             adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
         }
     }
@@ -181,15 +179,11 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             List<IBlock> children = rootComponent.getChildren();
             for (IBlock block : children) {
                 CourseComponent comp = (CourseComponent) block;
-                if (isVideoMode && comp.getVideos().size() == 0)
-                    continue;
                 if (comp.isContainer()) {
                     SectionRow header = new SectionRow(SectionRow.SECTION, comp);
                     adapterData.add(header);
                     for (IBlock childBlock : comp.getChildren()) {
                         CourseComponent child = (CourseComponent) childBlock;
-                        if (isVideoMode && child.getVideos().size() == 0)
-                            continue;
                         SectionRow row = new SectionRow(SectionRow.ITEM, false, child);
                         adapterData.add(row);
                     }

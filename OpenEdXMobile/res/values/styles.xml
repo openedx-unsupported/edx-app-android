@@ -336,8 +336,8 @@
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
         <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
-        <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
-        <item name="android:paddingTop">@dimen/vertical_input_padding</item>
+        <item name="android:paddingBottom">@dimen/input_padding_half</item>
+        <item name="android:paddingTop">@dimen/input_padding_half</item>
     </style>
 
     <style name="edX.Widget.Button" parent="@android:style/Widget.TextView">
@@ -531,8 +531,8 @@
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
         <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
-        <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
-        <item name="android:paddingTop">@dimen/vertical_input_padding</item>
+        <item name="android:paddingBottom">@dimen/input_padding_half</item>
+        <item name="android:paddingTop">@dimen/input_padding_half</item>
     </style>
 
     <style name="edX.Widget.SegmentedControlSegment.Start" parent="edX.Widget.SegmentedControlSegment">

@@ -67,7 +67,6 @@ public class NewCourseOutlineFragment extends BaseFragment
     private ListView listView;
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
-    private boolean isVideoMode;
     private boolean isOnCourseOutline;
     private boolean isFetchingLastAccessed;
     private ActionMode deleteMode;
@@ -103,7 +102,6 @@ public class NewCourseOutlineFragment extends BaseFragment
 
         arguments.putBundle(Router.EXTRA_BUNDLE, courseBundle);
         arguments.putString(Router.EXTRA_LAST_ACCESSED_ID, lastAccessedId);
-        arguments.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
         return arguments;
     }
@@ -147,7 +145,6 @@ public class NewCourseOutlineFragment extends BaseFragment
             final Bundle bundle = savedInstanceState.getBundle(Router.EXTRA_BUNDLE);
             courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
             courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
-            isVideoMode = savedInstanceState.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
             isOnCourseOutline = isOnCourseOutline();
         }
     }
@@ -185,10 +182,10 @@ public class NewCourseOutlineFragment extends BaseFragment
                 final CourseComponent component = adapter.getItem(position).component;
                 if (component.isContainer()) {
                     environment.getRouter().showCourseContainerOutline(NewCourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId(), null, isVideoMode);
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId(), null);
                 } else {
                     environment.getRouter().showCourseUnitDetail(NewCourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId(), isVideoMode);
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId());
                 }
             }
         });
@@ -231,7 +228,7 @@ public class NewCourseOutlineFragment extends BaseFragment
                         public void viewDownloadsStatus() {
                             environment.getRouter().showDownloads(getActivity());
                         }
-                    }, isVideoMode, isOnCourseOutline);
+                    }, isOnCourseOutline);
         }
     }
 
@@ -358,7 +355,7 @@ public class NewCourseOutlineFragment extends BaseFragment
         if (adapter.hasCourseData()) {
             errorNotification.hideError();
         } else {
-            errorNotification.showError(isVideoMode ? R.string.no_videos_text : R.string.no_chapter_text, null, -1, null);
+            errorNotification.showError(R.string.no_chapter_text, null, -1, null);
         }
 
         if (!isOnCourseOutline) {
@@ -384,9 +381,7 @@ public class NewCourseOutlineFragment extends BaseFragment
         }
 
         if (isOnCourseOutline) {
-            if (!isVideoMode) {
-                lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
-            }
+            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
         }
     }
 
@@ -399,7 +394,6 @@ public class NewCourseOutlineFragment extends BaseFragment
         if (courseComponentId != null)
             bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         outState.putBundle(Router.EXTRA_BUNDLE, bundle);
-        outState.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideoMode);
     }
 
     public void reloadList() {
@@ -453,7 +447,7 @@ public class NewCourseOutlineFragment extends BaseFragment
                                     environment.getRouter().showCourseContainerOutline(
                                             NewCourseOutlineFragment.this,
                                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData,
-                                            nextComp.getId(), leafCompId, isVideoMode);
+                                            nextComp.getId(), leafCompId);
                                 }
                             }
                         }

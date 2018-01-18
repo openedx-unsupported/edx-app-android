@@ -85,11 +85,11 @@
     <color name="philu_primary">#083954</color>
     <color name="philu_primary_dark">#50c2a9</color>
     <color name="philu_light_grey">#b8bfd3</color>
-    <color name="philu_bottom_bar_blue_bg">#81c7ff</color>
-    <color name="dark_blue">#083954</color>
+    <color name="philu_blue_bg">#81c7ff</color>
+    <color name="philu_grey_bg">#f4f5f8</color>
+    <color name="philu_bottom_bar_blue_bg">@color/philu_blue_bg</color>
     <color name="philu_course_navigation_bar_background">#849aa5</color>
     <color name="philu_disabled_white_text_color">#7FFFFFFF</color>
-
     <color name="unit_view_pager_indicator_inactive">#7FFFFFFF</color>
-    <color name="unit_view_pager_indicator_active">#81c7ff</color>
+    <color name="unit_view_pager_indicator_active">@color/philu_blue_bg</color>
 </resources>
