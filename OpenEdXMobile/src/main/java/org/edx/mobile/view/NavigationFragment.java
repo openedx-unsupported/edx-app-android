@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.google.inject.Inject;
@@ -38,6 +37,7 @@ import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UserProfileUtils;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -251,17 +251,7 @@ public class NavigationFragment extends BaseFragment {
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
-            if (null == event.getUri()) {
-                Glide.with(NavigationFragment.this)
-                        .load(R.drawable.profile_photo_placeholder)
-                        .into(drawerNavigationBinding.profileImage);
-            } else {
-                Glide.with(NavigationFragment.this)
-                        .load(event.getUri())
-                        .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(drawerNavigationBinding.profileImage);
-            }
+            UserProfileUtils.loadProfileImage(getContext(), event, drawerNavigationBinding.profileImage);
         }
     }
 

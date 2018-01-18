@@ -6,4 +6,8 @@
         android:icon="@drawable/ic_search_api_material"
         android:title="@string/label_find_courses"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_item_account"
+        android:title="@string/title_account"
+        app:showAsAction="always" />
 </menu>

@@ -23,7 +23,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -56,6 +55,7 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
@@ -223,17 +223,7 @@ public class EditUserProfileFragment extends BaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
-        if (null == event.getUri()) {
-            Glide.with(this)
-                    .load(R.drawable.profile_photo_placeholder)
-                    .into(viewHolder.profileImage);
-        } else {
-            Glide.with(this)
-                    .load(event.getUri())
-                    .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(viewHolder.profileImage);
-        }
+        UserProfileUtils.loadProfileImage(getContext(), event, viewHolder.profileImage);
     }
 
     @SuppressWarnings("unused")

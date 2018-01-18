@@ -24,7 +24,7 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
 
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
-        //  configureDrawer();
+        //  addDrawer();
 
         environment.getAnalyticsRegistry().trackScreenView(
                 Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
