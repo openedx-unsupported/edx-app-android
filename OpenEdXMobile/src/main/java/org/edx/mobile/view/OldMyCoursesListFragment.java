@@ -321,7 +321,7 @@ public class OldMyCoursesListFragment extends BaseFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.my_courses, menu);
+        inflater.inflate(R.menu.old_my_courses, menu);
     }
 
     @Override

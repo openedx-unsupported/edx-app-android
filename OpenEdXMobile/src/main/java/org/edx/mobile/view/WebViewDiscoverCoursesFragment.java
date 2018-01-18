@@ -1,15 +1,12 @@
 package org.edx.mobile.view;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,7 +15,6 @@ import org.edx.mobile.databinding.FragmentWebviewCourseDiscoveryBinding;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,6 +24,7 @@ import de.greenrobot.event.EventBus;
 public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment {
     private FragmentWebviewCourseDiscoveryBinding binding;
     private SearchView searchView;
+    private MainDashboardToolbarCallbacks toolbarCallbacks;
 
     @Nullable
     @Override
@@ -41,27 +38,20 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
         super.onViewCreated(view, savedInstanceState);
 
         loadUrl(getInitialUrl());
-        final Config config = environment.getConfig();
-        setHasOptionsMenu(config.getCourseDiscoveryConfig().isWebCourseSearchEnabled());
         EventBus.getDefault().register(this);
     }
 
-    @NonNull
-    protected String getInitialUrl() {
-        return environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        toolbarCallbacks = (MainDashboardToolbarCallbacks) getActivity();
+        initSearchView();
+
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.find_courses, menu);
-        // Get the SearchView and set the searchable configuration
-        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
-        searchView = (SearchView) searchItem.getActionView();
-
-        Resources resources = getResources();
-        searchView.setQueryHint(resources.getString(R.string.search_for_courses));
+    private void initSearchView() {
+        searchView = toolbarCallbacks.getSearchView();
+        searchView.setQueryHint(getResources().getString(R.string.search_for_courses));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
@@ -82,21 +72,18 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
             @Override
             public void onFocusChange(View view, boolean queryTextFocused) {
                 if (!queryTextFocused) {
+                    toolbarCallbacks.getTitleView().setVisibility(View.VISIBLE);
                     searchView.onActionViewCollapsed();
+                } else {
+                    toolbarCallbacks.getTitleView().setVisibility(View.GONE);
                 }
             }
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == android.R.id.home && searchView != null && searchView.hasFocus()) {
-            searchView.onActionViewCollapsed();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+    @NonNull
+    protected String getInitialUrl() {
+        return environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
     }
 
     public static String buildQuery(@NonNull String baseUrl, @NonNull String query, @NonNull Logger logger) {
@@ -130,6 +117,14 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
         onNetworkConnectivityChangeEvent(event);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (toolbarCallbacks != null && toolbarCallbacks.getSearchView() != null) {
+            toolbarCallbacks.getSearchView().setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override

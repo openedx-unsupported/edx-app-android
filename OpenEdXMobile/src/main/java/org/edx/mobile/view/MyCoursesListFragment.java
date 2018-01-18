@@ -1,56 +1,35 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
-import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
-import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.user.Account;
-import org.edx.mobile.user.ProfileImage;
-import org.edx.mobile.user.UserAPI;
-import org.edx.mobile.user.UserService;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
 
 import java.util.ArrayList;
@@ -59,7 +38,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-import retrofit2.Call;
 
 public class MyCoursesListFragment extends OfflineSupportBaseFragment
         implements RefreshListener,
@@ -78,41 +56,14 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     @Inject
     private LoginPrefs loginPrefs;
 
-    @Inject
-    private UserService userService;
-
     private FullScreenErrorNotification errorNotification;
-
-    private SnackbarErrorNotification snackbarErrorNotification;
-
-    // Reason of usage: Helps in deciding if we want to show a full screen error or a SnackBar.
-    private boolean isInitialServerCallDone = false;
-
-    private ProfileModel profile;
-
-    private ToolbarCallbacks toolbarCallbacks;
-
-    @Nullable
-    private Call<Account> getAccountCall;
 
     //TODO: All these callbacks aren't essentially part of MyCoursesListFragment and should move in
     // the Tabs container fragment that's going to be implemented in LEARNER-3251
-    /**
-     * The container Activity must implement this interface so the frag can communicate
-     */
-    public interface ToolbarCallbacks {
-        @Nullable
-        SearchView getSearchView();
-        @Nullable
-        TextView getTitleView();
-        @Nullable
-        ImageView getProfileView();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         adapter = new MyCoursesAdapter(getActivity(), environment) {
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
@@ -124,15 +75,6 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
                 environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, true);
             }
         };
-
-        final boolean isUserProfileEnabled = environment.getConfig().isUserProfilesEnabled();
-        if (environment.getConfig().isTabsLayoutEnabled() && isUserProfileEnabled) {
-            profile = loginPrefs.getCurrentUserProfile();
-            sendGetUpdatedAccountCall();
-        }
-        if (!isUserProfileEnabled) {
-            toolbarCallbacks.getProfileView().setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -168,15 +110,6 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadData(true);
-    }
-
-    public void sendGetUpdatedAccountCall() {
-        getAccountCall = userService.getAccount(profile.username);
-        getAccountCall.enqueue(new UserAPI.AccountDataUpdatedCallback(
-                getActivity(),
-                profile.username,
-                null, // Disable global loading indicator
-                null)); // No place to show an error notification
     }
 
     @Override
@@ -295,16 +228,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (null != getAccountCall) {
-            getAccountCall.cancel();
-        }
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        toolbarCallbacks = (ToolbarCallbacks) activity;
     }
 
     @SuppressWarnings("unused")
@@ -368,119 +292,5 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     @Override
     protected boolean isShowingFullScreenError() {
         return errorNotification != null && errorNotification.isShowing();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.my_courses, menu);
-        final Config config = environment.getConfig();
-        if (config.isTabsLayoutEnabled()) {
-            menu.findItem(R.id.menu_item_search).setVisible(false);
-            menu.findItem(R.id.menu_item_account).setVisible(true);
-            menu.findItem(R.id.menu_item_account).setIcon(
-                    new IconDrawable(getContext(), FontAwesomeIcons.fa_gear)
-                            .colorRes(getContext(), R.color.white)
-                            .actionBarSize(getContext()));
-        } else {
-            menu.findItem(R.id.menu_item_account).setVisible(false);
-            menu.findItem(R.id.menu_item_search).setVisible(config.getCourseDiscoveryConfig().isCourseDiscoveryEnabled());
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_search: {
-                environment.getAnalyticsRegistry().trackUserFindsCourses();
-                environment.getRouter().showFindCourses(getContext());
-                return true;
-            }
-            case R.id.menu_item_account: {
-                environment.getRouter().showAccountActivity(getActivity());
-                //TODO: remove following code block after testing, (once LEARNER-3251 is done)
-//                if (toolbarCallbacks.getSearchView().getVisibility() == View.VISIBLE) {
-//                    hideSearchBar();
-//                } else {
-//                    showSearchBar();
-//                }
-                return true;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
-
-    private void hideSearchBar() {
-        toolbarCallbacks.getSearchView().setVisibility(View.GONE);
-        toolbarCallbacks.getTitleView().setVisibility(View.VISIBLE);
-    }
-
-    //TODO: This function has to update once LEARNER-3251 is done
-    private void showSearchBar() {
-        final SearchView searchView = toolbarCallbacks.getSearchView();
-        searchView.setVisibility(View.VISIBLE);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.onActionViewCollapsed();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean queryTextFocused) {
-                final TextView titleView = toolbarCallbacks.getTitleView();
-                if (queryTextFocused) {
-                    titleView.setVisibility(View.GONE);
-                } else {
-                    titleView.setVisibility(View.VISIBLE);
-                    searchView.onActionViewCollapsed();
-                }
-            }
-        });
-    }
-
-    private void loadProfileImage(@NonNull ProfileImage profileImage, @NonNull ImageView imageView) {
-        if (profileImage.hasImage()) {
-            Glide.with(this)
-                    .load(profileImage.getImageUrlMedium())
-                    .into(imageView);
-        } else {
-            Glide.with(this)
-                    .load(R.drawable.profile_photo_placeholder)
-                    .into(imageView);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
-        if (!environment.getConfig().isTabsLayoutEnabled() || !environment.getConfig().isUserProfilesEnabled()) {
-            return;
-        }
-        final ImageView profileImage = toolbarCallbacks.getProfileView();
-        if (event.getUsername().equalsIgnoreCase(profile.username)) {
-            UserProfileUtils.loadProfileImage(getContext(), event, profileImage);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
-        if (!environment.getConfig().isTabsLayoutEnabled() || !environment.getConfig().isUserProfilesEnabled()) {
-            return;
-        }
-        final Account account = event.getAccount();
-        if (account.getUsername().equalsIgnoreCase(profile.username)) {
-            final ImageView profileImage = toolbarCallbacks.getProfileView();
-            if (profileImage != null) {
-                loadProfileImage(account.getProfileImage(), profileImage);
-            }
-        }
     }
 }
