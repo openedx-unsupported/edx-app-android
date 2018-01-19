@@ -628,6 +628,7 @@
     <string name="view_my_courses" tools:ignore="MissingTranslation">View My Courses</string>
 
     <string name="app_tag_line" tools:ignore="MissingTranslation">Offline Content Viewer</string>
+    <string name="youtube_playback_failure" tools:ignore="MissingTranslation">Failed to load youtube video</string>
     <string name="course_on_web_description" tools:ignore="MissingTranslation">The content viewer app does not support the content you are trying to see at the moment. You can view it in the browser version of Philanthropy University platform by clicking on “Go to Browser” bellow or stay in the app and explore other parts of this course.</string>
     <string name="course_on_web_title" tools:ignore="MissingTranslation">You’re about to be redirected to a browser version of page you selected.</string>
     <string name="leave_app" tools:ignore="MissingTranslation">Leave App</string>

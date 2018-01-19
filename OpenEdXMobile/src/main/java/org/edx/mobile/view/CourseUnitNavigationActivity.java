@@ -70,6 +70,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private IndicatorController indicatorController;
 
+    private PageViewStateCallback currentVisiblePage;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RelativeLayout insertPoint = (RelativeLayout) findViewById(R.id.fragment_container);
@@ -96,17 +98,18 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-                    int curIndex = pager.getCurrentItem();
-                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
-                    if (curView != null)
-                        curView.onPageDisappear();
-                }
+                // replaced ViewPager.SCROLL_STATE_DRAGGING flag logic with logic to track current page
+                // and match it with next page and activate appropriate initialization and destruction callbacks
+                // when the page is changed completely.
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
                     int curIndex = pager.getCurrentItem();
-                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
-                    if (curView != null)
-                        curView.onPageShow();
+                    PageViewStateCallback nextPage = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
+                    if(currentVisiblePage != null && currentVisiblePage != nextPage){
+                        currentVisiblePage.onPageDisappear();
+                    }
+                    if (nextPage != null && currentVisiblePage != nextPage)
+                        nextPage.onPageShow();
+                    currentVisiblePage = nextPage;
                     tryToUpdateForEndOfSequential();
                 }
             }
@@ -285,6 +288,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         int index = unitList.indexOf(selectedUnit);
         if (index >= 0) {
             pager.setCurrentItem(index);
+            currentVisiblePage = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
+            if (currentVisiblePage != null)
+                currentVisiblePage.onFirstPageLoad();
             tryToUpdateForEndOfSequential();
         }
 

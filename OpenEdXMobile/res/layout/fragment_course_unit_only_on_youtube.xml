@@ -1,41 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical">
 
-    <org.edx.mobile.view.custom.IconImageViewXml
-        android:layout_width="@dimen/large_indicator_icon_width"
-        android:layout_height="@dimen/large_indicator_icon_height"
-        android:layout_margin="@dimen/edx_margin"
-        app:iconColor="@color/edx_brand_gray_back"
-        app:iconName="fa-film" />
-
-    <TextView
-        android:id="@+id/only_youtube_available_message"
+    <FrameLayout
+        android:id="@+id/youtube_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/edx_margin"
-        android:layout_marginLeft="@dimen/edx_quadruple_margin"
-        android:layout_marginRight="@dimen/edx_quadruple_margin"
-        android:gravity="center"
-        android:singleLine="false"
-        tools:text="@string/assessment_only_on_youtube"
-        android:textAlignment="center"
-        android:textColor="@color/edx_brand_gray_base"
-        android:textSize="@dimen/edx_base"
-        tools:targetApi="17" />
-
-    <Button
-        android:id="@+id/view_on_youtube_button"
-        style="@style/edX.Widget.RegularButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/edx_margin"
-        android:text="@string/assessment_open_on_youtube" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
 
