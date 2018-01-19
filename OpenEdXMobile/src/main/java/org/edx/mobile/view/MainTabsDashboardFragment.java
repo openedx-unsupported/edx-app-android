@@ -57,7 +57,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         setHasOptionsMenu(true);
 
         final boolean isUserProfileEnabled = environment.getConfig().isUserProfilesEnabled();
-        if (environment.getConfig().isTabsLayoutEnabled() && isUserProfileEnabled) {
+        if (isUserProfileEnabled) {
             profile = loginPrefs.getCurrentUserProfile();
             sendGetUpdatedAccountCall();
         }
@@ -142,7 +142,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
-        if (!environment.getConfig().isTabsLayoutEnabled() || !environment.getConfig().isUserProfilesEnabled()) {
+        if (!environment.getConfig().isUserProfilesEnabled()) {
             return;
         }
         final ImageView profileImage = toolbarCallbacks.getProfileView();
@@ -153,7 +153,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
-        if (!environment.getConfig().isTabsLayoutEnabled() || !environment.getConfig().isUserProfilesEnabled()) {
+        if (!environment.getConfig().isUserProfilesEnabled()) {
             return;
         }
         final Account account = event.getAccount();
