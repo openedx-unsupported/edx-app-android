@@ -160,18 +160,15 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
     protected void configureActionBar() {
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
-            final boolean showHomeBtn = !environment.getConfig().isTabsLayoutEnabled();
-            bar.setDisplayShowHomeEnabled(showHomeBtn);
-            bar.setDisplayHomeAsUpEnabled(showHomeBtn);
+            bar.setDisplayShowHomeEnabled(false);
+            bar.setDisplayHomeAsUpEnabled(false);
             bar.setIcon(android.R.color.transparent);
         }
     }
 
     @Override
     protected int getToolbarLayoutId() {
-        return environment.getConfig().isTabsLayoutEnabled() ?
-                R.layout.toolbar_with_profile_button :
-                super.getToolbarLayoutId();
+        return R.layout.toolbar_with_profile_button;
     }
 
     @Override
