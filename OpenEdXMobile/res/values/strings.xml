@@ -97,6 +97,8 @@
     <string name="label_close_navigation_menu">Close Navigation Menu</string>
     <!-- Button text to show user Settings screen -->
     <string name="action_settings">Settings</string>
+    <!-- Button text to download unit content -->
+    <string name="action_download">Download</string>
     <!-- Button text to show user current downloads screen -->
     <string name="label_current_downloads" tools:ignore="MissingTranslation">View current downloads</string>
     <!-- Content description for edit profile button -->
@@ -627,6 +629,7 @@
 
     <string name="view_my_courses" tools:ignore="MissingTranslation">View My Courses</string>
 
+    <string name="download_started">Download Started</string>
     <string name="app_tag_line" tools:ignore="MissingTranslation">Offline Content Viewer</string>
     <string name="youtube_playback_failure" tools:ignore="MissingTranslation">Failed to load youtube video</string>
     <string name="course_on_web_description" tools:ignore="MissingTranslation">The content viewer app does not support the content you are trying to see at the moment. You can view it in the browser version of Philanthropy University platform by clicking on “Go to Browser” bellow or stay in the app and explore other parts of this course.</string>

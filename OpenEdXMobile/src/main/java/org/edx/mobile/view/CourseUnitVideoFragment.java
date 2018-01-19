@@ -2,15 +2,22 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +31,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -36,6 +44,7 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptListener;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -47,18 +56,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
 public class CourseUnitVideoFragment extends CourseUnitFragment
-    implements IPlayerEventCallback, TranscriptListener {
+        implements IPlayerEventCallback, TranscriptListener {
 
     protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
     private final static String HAS_NEXT_UNIT_ID = "has_next_unit";
     private final static String HAS_PREV_UNIT_ID = "has_prev_unit";
     private final static int MSG_UPDATE_PROGRESS = 1022;
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
+    private final static String playbackTimeFormat = "(%02d:%02d)";
 
     VideoBlockModel unit;
     private PlayerFragment playerFragment;
@@ -67,16 +78,17 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private String chapterName;
     private LectureModel lecture;
     private EnrolledCoursesResponse enrollment;
-    private DownloadEntry videoModel;
 
+    private DownloadEntry videoModel;
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
+    private CardView transcriptListViewUnit;
     private ListView transcriptListView;
+
     private TranscriptAdapter transcriptAdapter;
 
     private boolean hasNextUnit;
-
     private boolean hasPreviousUnit;
 
     // Defines if the user is scrolling the transcript listview
@@ -86,6 +98,13 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Inject
     private CourseAPI courseApi;
+
+    @Inject
+    VideoDownloadHelper downloadManager;
+
+    @Inject
+    protected IEdxEnvironment environment;
+    private DownloadEntry.DownloadedState unitDownloadState;
 
     /**
      * Create a new instance of fragment
@@ -110,10 +129,60 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
+
         unit = getArguments() == null ? null :
-            (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+                (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
+    }
+
+    private void initializeActionBar(MenuItem menuItem) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
+        setVideoDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
+    }
+
+    private void setVideoDownloadStatusIndicator(DownloadEntry videoData, final MenuItem menuItem) {
+        environment.getDatabase().getDownloadedStateForVideoId(videoData.videoId,
+                new DataCallback<DownloadEntry.DownloadedState>(true) {
+                    @Override
+                    public void onResult(DownloadEntry.DownloadedState state) {
+                        if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                            // may be download in progress
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
+                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
+                        }else {
+                            // not yet downloaded
+                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
+                        }
+                        unitDownloadState = state;
+                    }
+
+                    @Override
+                    public void onFail(Exception ex) {
+                        logger.error(ex);
+                        unitDownloadState = DownloadEntry.DownloadedState.ONLINE;
+                    }
+                });
+    }
+
+    private void updateDownloadState(MenuItem menuItem, DownloadEntry.DownloadedState state) {
+        switch (state) {
+            case DOWNLOADING:
+                menuItem.setVisible(false);
+                break;
+            case DOWNLOADED:
+                menuItem.setVisible(true);
+                menuItem.setIcon(R.drawable.ic_done);
+                Drawable drawable = menuItem.getIcon();
+                drawable.setTint(Color.WHITE);
+                break;
+            case ONLINE:
+                menuItem.setVisible(true);
+                menuItem.setIcon(R.drawable.ic_download_media);
+                break;
+        }
     }
 
     /**
@@ -125,9 +194,36 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
         messageContainer = v.findViewById(R.id.message_container);
+        transcriptListViewUnit = (CardView) v.findViewById(R.id.transcript_listview_container);
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.download_content, menu);
+        MenuItem item = menu.findItem(R.id.menu_item_download);
+        initializeActionBar(item);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_item_download) {
+            if (unitDownloadState == DownloadEntry.DownloadedState.ONLINE) {
+                CourseUnitNavigationActivity activity = (CourseUnitNavigationActivity) getActivity();
+                if (NetworkUtil.verifyDownloadPossible(activity)) {
+                    downloadManager.downloadVideo(unit.getDownloadEntry(environment.getStorage()), activity, activity);
+                }
+            }
+            return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -136,10 +232,10 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         restore(savedInstanceState);
 
         Intent extraIntent = getActivity().getIntent();
-        if(extraIntent!=null){
+        if (extraIntent != null) {
             if (extraIntent.hasExtra("FromMyVideos")) {
                 myVideosFlag = extraIntent.getBooleanExtra(
-                    "FromMyVideos", false);
+                        "FromMyVideos", false);
             }
 
             // read incoming chapter name
@@ -150,12 +246,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             // read incoming lecture model
             if (lecture == null) {
                 lecture = (LectureModel) extraIntent
-                    .getSerializableExtra("lecture");
+                        .getSerializableExtra("lecture");
             }
             // read incoming enrollment model
             if (enrollment == null) {
                 enrollment = (EnrolledCoursesResponse) extraIntent
-                    .getSerializableExtra(Router.EXTRA_COURSE_DATA);
+                        .getSerializableExtra(Router.EXTRA_COURSE_DATA);
             }
         }
 
@@ -175,7 +271,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 playerFragment.setTranscriptCallback(this);
             }
 
-            final CourseUnitVideoFragment.HasComponent hasComponent = (CourseUnitVideoFragment.HasComponent)getActivity();
+            final CourseUnitVideoFragment.HasComponent hasComponent = (CourseUnitVideoFragment.HasComponent) getActivity();
             if (hasComponent != null) {
                 View.OnClickListener next = null;
                 View.OnClickListener prev = null;
@@ -201,12 +297,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 playerFragment.setNextPreviousListeners(next, prev);
             }
 
-            try{
+            try {
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.player_container, playerFragment, "player");
                 ft.commit();
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 logger.error(ex);
             }
         }
@@ -291,8 +387,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
-    private void startOnlinePlay(DownloadEntry model){
-        if ( !isPlayerVisible()) {
+    private void startOnlinePlay(DownloadEntry model) {
+        if (!isPlayerVisible()) {
             // don't try to showPlayer() if already shown here
             // this will cause player to freeze
             showPlayer();
@@ -312,16 +408,16 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                     return;
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.debug(ex.toString());
         }
-        try{
+        try {
 
             // reload this model
             environment.getStorage().reloadDownloadEntry(video);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
-            if ( !playerFragment.isResumed()) {
+            if (!playerFragment.isResumed()) {
                 // playback can work only if fragment is resume
                 if (playPending != null) {
                     playHandler.removeCallbacks(playPending);
@@ -344,7 +440,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
 
             playerFragment.prepare(filepath, video.lastPlayedOffset,
-                video.getTitle(), transcript, video);
+                    video.getTitle(), transcript, video);
 
 
             try {
@@ -358,14 +454,14 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             } catch (Exception e) {
                 logger.error(e);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
-    private String getVideoPath(DownloadEntry video){
+    private String getVideoPath(DownloadEntry video) {
         String filepath = null;
-        if (!(video.filepath != null && video.filepath.length()>0)) {
+        if (!(video.filepath != null && video.filepath.length() > 0)) {
             if (video.isDownloaded()) {
                 File f = new File(video.filepath);
                 if (f.exists()) {
@@ -375,23 +471,23 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 }
             }
         } else {
-            DownloadEntry de = (DownloadEntry)DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE )
-                .getIVideoModelByVideoUrl(
-                    video.url, null);
-            if(de!=null){
-                if(de.filepath!=null){
+            DownloadEntry de = (DownloadEntry) DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
+                    .getIVideoModelByVideoUrl(
+                            video.url, null);
+            if (de != null) {
+                if (de.filepath != null) {
                     File f = new File(de.filepath);
                     if (f.exists()) {
                         // play from local
                         filepath = de.filepath;
                         logger.debug("playing from local file for " +
-                            "another Download Entry");
+                                "another Download Entry");
                     }
                 }
             }
         }
 
-        if(TextUtils.isEmpty(filepath)){
+        if (TextUtils.isEmpty(filepath)) {
             // not available on local, so play online
             logger.warn("Local file path not available");
 
@@ -400,16 +496,16 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         return filepath;
     }
 
-    private TranscriptModel getTranscriptModel(DownloadEntry video){
+    private TranscriptModel getTranscriptModel(DownloadEntry video) {
         TranscriptModel transcript = null;
-        if(unit!=null && unit.getData() != null &&
-            unit.getData().transcripts != null) {
+        if (unit != null && unit.getData() != null &&
+                unit.getData().transcripts != null) {
             transcript = unit.getData().transcripts;
         }
-        if ( transcript == null ) {
+        if (transcript == null) {
             try {
                 if (video.videoId != null) {
-                    transcript =  courseApi.getTranscriptsOfVideo(video.eid, video.videoId);
+                    transcript = courseApi.getTranscriptsOfVideo(video.eid, video.videoId);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -420,7 +516,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     private void showPlayer() {
         try {
-            if(getView()!=null){
+            if (getView() != null) {
                 View container = getView().findViewById(R.id.player_container);
                 if (container != null) {
                     container.setVisibility(View.VISIBLE);
@@ -435,6 +531,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Override
     public void onStop() {
         super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
 
@@ -491,6 +588,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     /**
      * This method inserts the Download Entry Model in the database
      * Called when a user clicks on a Video in the list
+     *
      * @param v - Download Entry object
      */
     public void addVideoDatatoDb(final DownloadEntry v) {
@@ -520,12 +618,21 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             DownloadEntry v = videoModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
-                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).updateVideoLastPlayedOffset(v.videoId, offset,
-                    setCurrentPositionCallback);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getPlaybackTime(offset));
+                DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).updateVideoLastPlayedOffset(v.videoId, offset,
+                        setCurrentPositionCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);
         }
+    }
+
+    private String getPlaybackTime(int millis) {
+        return String.format(playbackTimeFormat,
+                TimeUnit.MILLISECONDS.toMinutes(millis),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
     }
 
     @Override
@@ -535,18 +642,18 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Override
     public void onPlaybackStarted() {
-         markPlaying();
+        markPlaying();
     }
 
     public void onPlaybackComplete() {
         try {
             DownloadEntry v = videoModel;
-            if (v!=null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+            if (v != null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
-                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE )
-                    .updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
-                    watchedStateCallback);
+                DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
+                        .updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
+                                watchedStateCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -609,8 +716,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         //TODO - should we use load different layout file?
         final int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
-            if ( playerContainer != null ) {
+            LinearLayout playerContainer = (LinearLayout) getView().findViewById(R.id.player_container);
+            if (playerContainer != null) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                 float screenHeight = displayMetrics.heightPixels;
                 playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
@@ -618,8 +725,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 playerContainer.requestLayout();
             }
         } else {
-            LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
-            if ( playerContainer != null ) {
+            LinearLayout playerContainer = (LinearLayout) getView().findViewById(R.id.player_container);
+            if (playerContainer != null) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                 float screenWidth = displayMetrics.widthPixels;
                 float ideaHeight = screenWidth * 9 / 16;
@@ -636,13 +743,16 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             messageContainer.setVisibility(View.GONE);
             transcriptListView.setVisibility(View.GONE);
+            transcriptListViewUnit.setVisibility(View.GONE);
         } else {
             if (transcriptAdapter == null) {
                 messageContainer.setVisibility(View.VISIBLE);
+                transcriptListViewUnit.setVisibility(View.GONE);
                 transcriptListView.setVisibility(View.GONE);
                 initTranscriptListView();
             } else {
                 messageContainer.setVisibility(View.GONE);
+                transcriptListViewUnit.setVisibility(View.VISIBLE);
                 transcriptListView.setVisibility(View.VISIBLE);
 
                 // Calculating the offset required for centralizing the current transcript item
