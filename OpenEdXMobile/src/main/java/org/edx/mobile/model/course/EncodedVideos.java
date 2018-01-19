@@ -14,9 +14,6 @@ public class EncodedVideos implements Serializable {
     @SerializedName("mobile_low")
     public VideoInfo mobileLow;
 
-    @SerializedName("fallback")
-    public VideoInfo fallBack;
-
     @SerializedName("youtube")
     public VideoInfo youtube;
 

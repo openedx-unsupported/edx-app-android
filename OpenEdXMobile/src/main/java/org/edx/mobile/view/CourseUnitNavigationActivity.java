@@ -329,20 +329,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         }
     }
 
-    public CourseComponent getComponent() {
-        return selectedUnit;
-    }
-
-    protected void hideLastAccessedView(View v) {
-    }
-
-    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
-    }
-
-    @Override
-    protected void onOffline() {
-    }
-
     @Override
     public void onDownloadStarted(Long result) {
         Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show();
