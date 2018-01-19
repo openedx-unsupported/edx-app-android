@@ -59,7 +59,7 @@
 
     <!-- Login Activity Place Holders -->
     <!-- Hint text for login field -->
-    <string name="email_username">User name or e-mail address</string>
+    <string name="email_username">Username or e-mail</string>
     <!-- Hint text for email address field in reset password dialog -->
     <string name="email">E-mail address</string>
     <!-- Hint text for password field -->
@@ -627,9 +627,16 @@
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">Version {version_number} New Features</string>
 
-    <string name="view_my_courses">View My Courses</string>
+    <string name="view_my_courses" tools:ignore="MissingTranslation">View My Courses</string>
 
-    <string name="app_tag_line">Offline Content Viewer</string>
-    <string name="download_started">Download started</string>
+    <string name="download_started">Download Started</string>
+    <string name="app_tag_line" tools:ignore="MissingTranslation">Offline Content Viewer</string>
+    <string name="course_on_web_description" tools:ignore="MissingTranslation">The content viewer app does not support the content you are trying to see at the moment. You can view it in the browser version of Philanthropy University platform by clicking on “Go to Browser” bellow or stay in the app and explore other parts of this course.</string>
+    <string name="course_on_web_title" tools:ignore="MissingTranslation">You’re about to be redirected to a browser version of page you selected.</string>
+    <string name="leave_app" tools:ignore="MissingTranslation">Leave App</string>
+
+    <string name="sub_topics_text" tools:ignore="MissingTranslation">Sub Topics</string>
+    <string name="downloading" tools:ignore="MissingTranslation">Downloading</string>
+    <string name="media_saved_time_ago" tools:ignore="MissingTranslation">Media saved %s</string>
 
 </resources>

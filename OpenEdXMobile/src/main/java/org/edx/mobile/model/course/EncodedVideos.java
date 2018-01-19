@@ -20,6 +20,9 @@ public class EncodedVideos implements Serializable {
     @SerializedName("youtube")
     public VideoInfo youtube;
 
+    @SerializedName("fallback")
+    public VideoInfo fallBack;
+
     @Nullable
     public VideoInfo getPreferredVideoInfo() {
         if (mobileLow != null && URLUtil.isNetworkUrl(mobileLow.url))

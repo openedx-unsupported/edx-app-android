@@ -43,16 +43,16 @@
                 <TextView
                     android:id="@+id/title"
                     style="@style/whats_new_heading_text"
-                    android:layout_marginTop="@dimen/whats_new_title_margin"
+                    android:layout_marginTop="@dimen/widget_margin_large"
                     android:padding="@dimen/edx_double_margin" />
 
 
                 <ImageView
                     android:id="@+id/image"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerInside"
                     tools:ignore="ContentDescription"
                     tools:src="@drawable/allowed" />
 

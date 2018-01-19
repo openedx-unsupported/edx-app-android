@@ -39,7 +39,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
                 .load(imageUrl)
                 .placeholder(R.drawable.placeholder_course_card_image)
                 .transform(new TopAnchorFillWidthTransformation(courseImage.getContext()))
-                .centerCrop()
                 .into(courseImage);
     }
 

@@ -15,7 +15,6 @@
             android:layout_width="@dimen/course_card_image_width"
             android:layout_height="@dimen/course_card_image_height"
             android:contentDescription="@null"
-            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/edx_brand_primary_base" />
@@ -50,7 +49,7 @@
             android:id="@+id/status_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/philu_bottom_bar_blue_bg"
+            android:background="@color/philu_blue_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
