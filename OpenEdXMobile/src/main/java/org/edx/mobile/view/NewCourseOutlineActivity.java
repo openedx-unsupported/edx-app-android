@@ -20,9 +20,6 @@ public class NewCourseOutlineActivity extends BaseSingleFragmentActivity {
     @InjectExtra(value = Router.EXTRA_COURSE_COMPONENT_ID, optional = true)
     private String courseComponentId = null;
 
-    @InjectExtra(Router.EXTRA_IS_VIDEOS_MODE)
-    private boolean isVideoMode = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,8 +28,7 @@ public class NewCourseOutlineActivity extends BaseSingleFragmentActivity {
 
         if (courseComponentId == null) {
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) courseBundle.getSerializable(Router.EXTRA_COURSE_DATA);
-            environment.getAnalyticsRegistry().trackScreenView(
-                    isVideoMode ? Analytics.Screens.VIDEOS_COURSE_VIDEOS : Analytics.Screens.COURSE_OUTLINE,
+            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_OUTLINE,
                     courseData.getCourse().getId(), null);
 
             setTitle(courseData.getCourse().getName());

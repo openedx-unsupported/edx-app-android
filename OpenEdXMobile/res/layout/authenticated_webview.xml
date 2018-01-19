@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_marginBottom="-2dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp"
+    android:descendantFocusability="blocksDescendants"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="6dp">
 
-    <org.edx.mobile.view.custom.EdxAssessmentWebView
-        android:id="@+id/webview"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white" />
+        android:background="@color/white">
 
-    <include layout="@layout/loading_indicator" />
+        <org.edx.mobile.view.custom.EdxAssessmentWebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:overScrollMode="never"
+            android:scrollbarStyle="outsideOverlay" />
 
-    <TextView
-        android:id="@+id/error_text"
-        style="@style/content_unavailable_error_text"
-        android:text="@string/reset_no_network_message" />
+        <include layout="@layout/loading_indicator" />
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/error_text"
+            style="@style/content_unavailable_error_text"
+            android:text="@string/reset_no_network_message" />
+
+    </FrameLayout>
+</android.support.v7.widget.CardView>

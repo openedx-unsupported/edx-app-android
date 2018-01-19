@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?><!--todo need some refactoring-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+    <com.github.vipulasri.timelineview.TimelineView
+        android:id="@+id/subsection_timeline_marker"
+        android:layout_width="@dimen/timeline_marker_size_large"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/edx_margin"
+        app:line="@color/edx_input_border_color"
+        app:lineSize="@dimen/timeline_line_width"
+        app:markerSize="@dimen/timeline_marker_size_small" />
+
+    <FrameLayout
+        android:id="@+id/card_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/multiple_items_cv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/multiple_items_bottom_margin"
+            android:layout_marginEnd="@dimen/multiple_items_end_margin"
+            android:layout_marginStart="@dimen/multiple_items_start_margin"
+            android:layout_marginTop="@dimen/multiple_items_top_margin"
+            android:visibility="gone"
+            app:cardElevation="@dimen/multiple_items_cv_elevation" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/subsection_row_cv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/single_item_vertical_margin"
+            android:layout_marginEnd="@dimen/edx_margin"
+            android:layout_marginStart="@dimen/edx_margin"
+            android:layout_marginTop="@dimen/single_item_vertical_margin"
+            android:foreground="@drawable/course_outline_selector"
+            app:cardElevation="@dimen/single_item_cv_elevation">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/course_card_min_height"
+                android:orientation="horizontal">
+
+                <org.edx.mobile.view.custom.IconImageViewXml
+                    android:id="@+id/block_type_icon"
+                    android:layout_width="@dimen/block_type_icon_size"
+                    android:layout_height="@dimen/block_type_icon_size"
+                    android:layout_marginStart="@dimen/edx_margin"
+                    android:scaleType="fitCenter"
+                    app:iconColor="@color/edx_brand_primary_base"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/title_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edx_margin"
+                    android:layout_marginEnd="@dimen/edx_margin"
+                    android:layout_marginStart="@dimen/edx_margin"
+                    android:layout_marginTop="@dimen/edx_margin"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/course_availability_status_icon"
+                    app:layout_constraintStart_toEndOf="@+id/block_type_icon"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/subsection_title_tv"
+                        style="@style/course_outline_title"
+                        tools:text="Title" />
+
+                    <TextView
+                        android:id="@+id/subsection_description"
+                        style="@style/course_outline_desc"
+                        tools:text="Description" />
+                </LinearLayout>
+
+                <org.edx.mobile.view.custom.IconImageViewXml
+                    android:id="@+id/course_availability_status_icon"
+                    android:layout_width="@dimen/course_card_min_height"
+                    android:layout_height="match_parent"
+                    android:background="@color/philu_blue_bg"
+                    android:padding="@dimen/widget_margin_double"
+                    android:scaleType="centerInside"
+                    app:iconColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
+</LinearLayout>

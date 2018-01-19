@@ -51,7 +51,6 @@ public class Router {
     public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
     public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
-    public static final String EXTRA_IS_VIDEOS_MODE = "videos_mode";
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
     public static final String EXTRA_YOUTUBE_API_KEY = "youtube_api_key";
 
@@ -172,7 +171,7 @@ public class Router {
                                            EnrolledCoursesResponse model, String courseComponentId,
                                            String lastAccessedId, boolean isVideosMode) {
         Intent courseDetail = createCourseOutlineIntent(activity, model, courseComponentId,
-                lastAccessedId, isVideosMode);
+                lastAccessedId);
         //TODO - what's the most suitable FLAG?
         // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivityForResult(courseDetail, requestCode);
@@ -180,17 +179,16 @@ public class Router {
 
     public void showCourseContainerOutline(Fragment fragment, int requestCode,
                                            EnrolledCoursesResponse model, String courseComponentId,
-                                           String lastAccessedId, boolean isVideosMode) {
+                                           String lastAccessedId) {
         Intent courseDetail = createCourseOutlineIntent(fragment.getActivity(), model,
-                courseComponentId, lastAccessedId, isVideosMode);
+                courseComponentId, lastAccessedId);
         //TODO - what's the most suitable FLAG?
         // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         fragment.startActivityForResult(courseDetail, requestCode);
     }
 
     private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
-                                             String courseComponentId, String lastAccessedId,
-                                             boolean isVideosMode) {
+                                             String courseComponentId, String lastAccessedId) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
@@ -205,20 +203,18 @@ public class Router {
         }
         intent.putExtra(EXTRA_BUNDLE, courseBundle);
         intent.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
-        intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
         return intent;
     }
 
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
-                                     String courseComponentId, boolean isVideosMode) {
+                                     String courseComponentId) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(fragment.getActivity(), CourseUnitNavigationActivity.class);
         courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         fragment.startActivityForResult(courseDetail, requestCode);
     }

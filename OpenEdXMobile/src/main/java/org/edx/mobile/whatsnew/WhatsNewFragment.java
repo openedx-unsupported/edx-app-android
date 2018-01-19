@@ -147,7 +147,7 @@ public class WhatsNewFragment extends BaseFragment {
     private void initProgressIndicator() {
         indicatorController = new IndicatorController();
         binding.indicatorContainer.addView(indicatorController.newInstance(getContext()));
-        indicatorController.initialize(noOfPages);
+        indicatorController.setCount(noOfPages);
     }
 
     private class WhatsNewAdapter extends FragmentStatePagerAdapter {
