@@ -50,6 +50,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 
+import static org.edx.mobile.http.constants.TimeInterval.HOUR;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 @Singleton
@@ -161,14 +162,20 @@ public class CourseAPI {
     }
 
     @NonNull
+    public Call<CourseStructureV1Model> getCourseStructureWithoutStale(@NonNull final String courseId) {
+        return courseService.getCourseStructure(null, getUsername(), courseId);
+    }
+
+    @NonNull
     public Call<CourseStructureV1Model> getCourseStructure(@NonNull final String courseId) {
-        return courseService.getCourseStructure(getUsername(), courseId);
+        return courseService.getCourseStructure("max-stale=" + HOUR, getUsername(), courseId);
     }
 
     @NonNull
     public CourseComponent getCourseStructureFromCache(@NonNull final String courseId)
             throws Exception {
-        CourseStructureV1Model model = executeStrict(courseService.getCourseStructureFromCache(getUsername(), courseId));
+        CourseStructureV1Model model = executeStrict(
+                courseService.getCourseStructure("only-if-cached, max-stale", getUsername(), courseId));
         return (CourseComponent) normalizeCourseStructure(model, courseId);
     }
 
