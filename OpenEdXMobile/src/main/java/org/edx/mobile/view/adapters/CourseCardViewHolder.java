@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.CourseEntry;
-import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
 public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
 
@@ -38,7 +37,7 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
         Glide.with(courseImage.getContext())
                 .load(imageUrl)
                 .placeholder(R.drawable.placeholder_course_card_image)
-                .transform(new TopAnchorFillWidthTransformation(courseImage.getContext()))
+                .centerCrop()
                 .into(courseImage);
     }
 

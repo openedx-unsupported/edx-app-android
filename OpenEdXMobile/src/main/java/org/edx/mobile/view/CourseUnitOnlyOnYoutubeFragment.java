@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,11 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
         super.onPageDisappear();
         // Youtube api allows only one youtube player fragment inside one parent.
         // So in view pager we have to destroy the previous loaded youtube fragment as soon as user goes away.
-        getChildFragmentManager().beginTransaction().replace(R.id.youtube_fragment, new Fragment()).commit();
+        try {
+            getChildFragmentManager().beginTransaction().replace(R.id.youtube_fragment, new Fragment()).commit();
+        } catch (IllegalStateException ex) {
+            Log.w(CourseUnitOnlyOnYoutubeFragment.class.getSimpleName(), ex.getMessage());
+        }
     }
 
     @Override
