@@ -237,4 +237,14 @@
     <dimen name="timeline_marker_empty_size">24dp</dimen>
     <dimen name="audio_seekbar_drawable_radius">3dp</dimen>
     <dimen name="audio_seekbar_drawable_height">3dp</dimen>
+    <dimen name="audio_notification_icons_padding">4dp</dimen>
+    <dimen name="audio_play_pause_icon_size">48dp</dimen>
+    <dimen name="audio_seekbar_horizontal_margin">25dp</dimen>
+    <dimen name="audio_seekbar_vertical_margin">42dp</dimen>
+    <dimen name="audio_seekbar_height">6dp</dimen>
+    <dimen name="audio_timer_view_horizontal_margin">40dp</dimen>
+    <dimen name="audio_timer_vertical_margin">8dp</dimen>
+    <dimen name="audio_deekbar_thumb_size">16dp</dimen>
+    <dimen name="audio_thumv_bottom_shadow_size">2dp</dimen>
+    <dimen name="audio_thumb_left_shadow_size">0.8dp</dimen>
 </resources>

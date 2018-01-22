@@ -3,19 +3,17 @@
 
     <item>
         <shape  android:shape="oval">
-            <solid android:color="#20000000" />
+            <solid android:color="@color/audio_seekbar_thumb_shadow_color" />
         </shape>
     </item>
 
     <!-- White Top color -->
-    <item android:bottom="2dp" android:left="0.7dp" android:right="0.7dp" android:top="0.7dp">
+    <item android:bottom="@dimen/audio_thumv_bottom_shadow_size" android:left="@dimen/audio_thumb_left_shadow_size" android:right="@dimen/audio_thumb_left_shadow_size" android:top="@dimen/audio_thumb_left_shadow_size">
 
         <shape  android:shape="oval">
-            <size android:height="16dp" android:width="16dp"> </size>
+            <size android:height="@dimen/audio_deekbar_thumb_size" android:width="@dimen/audio_deekbar_thumb_size"> </size>
             <solid android:color="@color/edx_white" />
         </shape>
 
     </item>
-
-
 </layer-list>

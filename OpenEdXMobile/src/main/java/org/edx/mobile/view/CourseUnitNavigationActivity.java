@@ -356,4 +356,19 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         invalidateOptionsMenu();
     }
 
+    @Override
+    public void onBackPressed() {
+
+        //Stop Any Audio service if running
+        Intent audioServiceIntent = new Intent(this , AudioMediaService.class);
+        audioServiceIntent.setAction(AudioMediaService.CANCEL_INTENT);
+        startService(audioServiceIntent);
+        if (isTaskRoot()) {
+            finish();
+            environment.getRouter().showSplashScreen(this);
+            finish();
+            return;
+        }
+        super.onBackPressed();
+    }
 }

@@ -58,13 +58,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
 
     public static final String PLAY_MEDIA = "PLAY_MEDIA";
     public static final String PAUSE_MEDIA = "PAUSE_MEDIA";
-    public static final String NEXT_MEDIA = "NEXT_MEDIA";
-    public static final String PREVIOUS_MEDIA = "PREVIOUS_MEDIA";
-    public static final String AUDIO_URI_ID = "URI";
-    public static final String AUDIO_NOTIFICATION_TITLE = "notification_title";
-    public static final String AUDIO_NOTIFICATION_MESSAGE = "notification_message";
-    public static final String COURSE_DATA_BUNDLE = "courseDataBundle";
-
     public static final String DELETE_INTENT = "DELETE_INTENT";
     public static final String CANCEL_INTENT = "CANCEL";
     public static int NOTIFICATION_ID = 101;
@@ -79,7 +72,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
         super.onCreate();
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 //        android.os.Debug.waitForDebugger();
-//        player = new Player();
     }
 
     @Override
@@ -90,7 +82,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
             String action = intent.getAction() == null ? "" : intent.getAction();
             //Stop the notification if already shown
             if(action.equals(START_SERVICE)) {
-                stopForegroundService();
+                stopForegroundService(true);
             }
 
             //Play button clicked in notification
@@ -110,12 +102,11 @@ public class AudioMediaService extends Service implements IPlayerListener{
             else if(action.equals(CANCEL_INTENT))
             {
                 Log.d(TAG , "CANCEL COMMAND");
-
-                currentPlayer.reset();
-                currentPlayer.release();
+                resetAllPlayers();
+                releaseAllPlayers();
                 currentPlayer = null;
                 connectedPlayers.clear();
-                stopForegroundService();
+                stopForegroundService(true);
                 stopSelf();
             }
             else if(action.equals(DELETE_INTENT))
@@ -124,12 +115,18 @@ public class AudioMediaService extends Service implements IPlayerListener{
 
                 if(!isBound)
                 {
+                    if(!currentPlayer.isReset()){
+                        currentPlayer.reset();
+                    }
+                    currentPlayer.release();
+                    currentPlayer = null;
+                    connectedPlayers.clear();
+                    stopForegroundService(true);
                     stopSelf();
-                    Log.d(TAG , "STOP SERVICE COMMAND");
 
                 }
                 else{
-                    stopForegroundService();
+                    stopForegroundService(true);
                     isNotificationShowing = false;
                     Log.d(TAG , "STOP FG COMMAND");
 
@@ -146,7 +143,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
         Log.d(TAG , "ON BIND");
 
         isBound = true;
-//        startForegroundService();
         return iBinder;
 
     }
@@ -167,16 +163,20 @@ public class AudioMediaService extends Service implements IPlayerListener{
     /**This will create a notification in notification bar with current music play state**/
     public void startForegroundService()
     {
-        initializeCustomNotification();
-        startForeground(NOTIFICATION_ID,notification);
         if(currentPlayer != null){
-            currentPlayer.setPlayerListener(this);
+            initializeCustomNotification();
+            startForeground(NOTIFICATION_ID,notification);
+            if(currentPlayer != null){
+                currentPlayer.setPlayerListener(this);
+            }
+        }else{
+            stopSelf();
         }
     }
     /**This will cancel/hide the notification in notification bar**/
-    public void stopForegroundService()
+    public void stopForegroundService(boolean shouldRemove)
     {
-        stopForeground(true);
+        stopForeground(shouldRemove);
         isNotificationShowing = false;
         isRunningForeground = false;
     }
@@ -190,7 +190,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
     /**This will update the notification with resume state/pause button**/
     public void showResumeNotification()
     {
-        notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.ic_pause_grey600_18dp);
+        notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.icon_pause_media);
         notificationRemoteView.setOnClickPendingIntent(R.id.play_pause, pausePendingIntent);
         notificationBuilder.setCustomContentView(notificationRemoteView);
         notification = notificationBuilder.build();
@@ -201,7 +201,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
     /**This will update the notification with play state/play button**/
     public void showPauseNotification()
     {
-        notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.ic_play_grey600_18dp);
+        notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.icon_play_media);
         notificationRemoteView.setOnClickPendingIntent(R.id.play_pause, playPendingIntent);
         notificationBuilder.setCustomContentView(notificationRemoteView);
         notification = notificationBuilder.build();
@@ -301,6 +301,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
                 .setDeleteIntent(deletePendingIntent)
                 .setOngoing(true)
                 .setShowWhen(false)
+                .setPriority(Notification.PRIORITY_MAX)
                 .build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
     }
@@ -312,10 +313,10 @@ public class AudioMediaService extends Service implements IPlayerListener{
     {
         notificationRemoteView = new RemoteViews(getPackageName() , R.layout.notification_layout);
         if(currentPlayer!= null && currentPlayer.isPlaying()){
-            notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.ic_pause_grey600_18dp);
+            notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.icon_pause_media);
             notificationRemoteView.setOnClickPendingIntent(R.id.play_pause, pausePendingIntent);
         }else{
-            notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.ic_play_grey600_18dp);
+            notificationRemoteView.setImageViewResource(R.id.play_pause, R.drawable.icon_play_media);
             notificationRemoteView.setOnClickPendingIntent(R.id.play_pause, playPendingIntent);
         }
         notificationRemoteView.setOnClickPendingIntent(R.id.icon_cancel_notification, cancelPendingIntent);
@@ -502,4 +503,23 @@ public class AudioMediaService extends Service implements IPlayerListener{
     {
         this.courseComponentId = courseComponentId;
     }
+
+    private void resetAllPlayers()
+    {
+        for (Player plr : connectedPlayers.values()){
+            if(plr!= null && !plr.isReset()){
+                plr.reset();
+            }
+        }
+    }
+    private void releaseAllPlayers()
+    {
+        for (Player plr : connectedPlayers.values()){
+            if(plr!= null){
+                plr.release();
+                plr = null;
+            }
+        }
+    }
+
 }

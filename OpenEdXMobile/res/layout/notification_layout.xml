@@ -2,62 +2,50 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="1"
-        >
+        android:weightSum="1">
 
         <TextView
-
             android:id="@+id/notification_title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="ABC"
-            android:textSize="16sp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/edx_base"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:layout_weight="0.9"
+            android:layout_weight="0.85"
+            android:padding="8dp"
             />
         <ImageView
             android:id="@+id/icon_cancel_notification"
             android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:src="@drawable/ic_close_grey600_18dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_close_media_notification"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.1"
+            android:layout_weight="0.15"
             android:contentDescription="a"
-            />
+            android:padding="@dimen/audio_notification_icons_padding"/>
 
     </LinearLayout>
-    <TextView
 
+    <TextView
         android:id="@+id/notification_Message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ABC"
-        android:textSize="14sp"
+        android:textSize="@dimen/edx_small"
         android:textColor="@android:color/black"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="6dp"
-
         />
 
     <ImageView
         android:id="@+id/play_pause"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@drawable/ic_play_grey600_18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_play_media"
         android:layout_gravity="center_horizontal"
-
-        />
+        android:contentDescription="@null"
+        android:padding="@dimen/audio_notification_icons_padding"/>
 
 </LinearLayout>

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="#f9f9f9">
+    android:background="@color/audio_player_background_color">
     <LinearLayout
         android:id="@+id/video_top_bar"
         style="@style/video_player_panel"
@@ -14,8 +14,7 @@
         <TextView
             android:id="@+id/video_title"
             style="@style/video_player_title"
-            tools:targetApi="17"
-            tools:text="This is a very long video title meant to be truncated from end" />
+            tools:targetApi="17" />
 
     </LinearLayout>
 
@@ -27,16 +26,16 @@
         >
         <org.edx.mobile.view.custom.IconImageViewXml
             android:id="@+id/audio_play_pause_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/audio_play_pause_icon_size"
+            android:layout_height="@dimen/audio_play_pause_icon_size"
             android:background="@drawable/icon_audio_play_pause"
             app:iconColor="@color/edx_white"
             app:iconName="fa-play"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="@dimen/audio_play_pause_icon_size"
             android:layout_gravity="center"
             android:scaleType="centerInside"
-            android:padding="16dp"
-            android:contentDescription="play_pause"
+            android:padding="@dimen/edx_base"
+            android:contentDescription="@null"
             app:iconAnimation="pulse"
             />
 
@@ -44,15 +43,14 @@
             android:id="@+id/audio_media_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="42dp"
+            android:layout_marginLeft="@dimen/audio_seekbar_horizontal_margin"
+            android:layout_marginRight="@dimen/audio_seekbar_horizontal_margin"
+            android:layout_marginTop="@dimen/audio_seekbar_vertical_margin"
             android:thumb="@drawable/audio_thumb"
             android:progressDrawable="@drawable/audio_progress_drawable"
-            android:maxHeight="6dp"
-            android:minHeight="6dp"
+            android:maxHeight="@dimen/audio_seekbar_height"
+            android:minHeight="@dimen/audio_seekbar_height"
             android:max="100"
-            android:thumbTintMode="src_over"
             android:splitTrack="false"
 
             />
@@ -60,20 +58,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/audio_timer_view_horizontal_margin"
+            android:layout_marginRight="@dimen/audio_timer_view_horizontal_margin"
+            android:layout_marginTop="@dimen/audio_timer_vertical_margin"
             android:weightSum="1"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/edx_margin"
             >
             <TextView
                 android:id="@+id/tv_current_audio_duration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="00:00"
-                android:layout_gravity="left"
                 android:gravity="left"
-                android:textSize="16sp"
+                android:textSize="@dimen/edx_base"
                 android:textStyle="bold"
                 android:layout_weight="0.5"
                 />
@@ -81,16 +77,12 @@
                 android:id="@+id/tv_total_audio_duration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="00:00"
-                android:layout_gravity="right"
                 android:gravity="right"
-                android:textSize="16sp"
+                android:textSize="@dimen/edx_base"
                 android:textStyle="bold"
                 android:layout_weight="0.5"
-
                 />
 
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

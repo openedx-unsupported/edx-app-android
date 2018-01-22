@@ -459,15 +459,15 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
         uiHelper.onDestroy();
         checkFragmentStatusAndStartService();
         if (!stateSaved) {
-            if (player != null && !player.isReset()) {
-                player.reset();
-            }
+//            if (player != null && !player.isReset()) {
+//                player.reset();
+//            }
             // reset player when user goes back, and there is no state saving happened
             removeSubtitleCallBack();
 
             // release the player instance
-            player.release();
-            player = null;
+//            player.release();
+//            player = null;
             logger.debug("player detached, reset and released");
 
         }
@@ -542,11 +542,6 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
             exitFullScreen();
         }
 
-        if(audioMediaService != null){
-            audioMediaService.setPlayer((Player) player);
-            audioMediaService.setPlayerCallbacks(AudioPlayerFragment.this);
-        }
-
         // reset the player, so that pending play requests will be cancelled
         try {
             player.reset();
@@ -601,6 +596,11 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
                 } else {
                     player.setUriAndPlay(path, seekTo);
 
+                }
+
+                if(audioMediaService != null){
+                    audioMediaService.setPlayer((Player) player);
+                    audioMediaService.setPlayerCallbacks(AudioPlayerFragment.this);
                 }
 
             }
