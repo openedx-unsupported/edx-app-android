@@ -502,6 +502,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
     public void setComponentId(String courseComponentId)
     {
         this.courseComponentId = courseComponentId;
+        initializeIntents();
     }
 
     private void resetAllPlayers()
