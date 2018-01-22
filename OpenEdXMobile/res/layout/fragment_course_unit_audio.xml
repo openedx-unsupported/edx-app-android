@@ -28,12 +28,11 @@
         android:orientation="vertical">
 
         <org.edx.mobile.view.custom.IconImageViewXml
-            android:layout_width="140dp"
+            android:layout_width="100dp"
             android:layout_height="140dp"
             android:background="@color/white"
-            android:rotation="90"
             app:iconColor="@color/edx_brand_gray_back"
-            app:iconName="fa-mobile-phone" />
+            app:iconName="fa-file-text-o" />
 
         <TextView
             android:layout_width="match_parent"
@@ -46,7 +45,7 @@
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:singleLine="false"
-            android:text="@string/assessment_rotate_for_fullscreen"
+            android:text="@string/subtitle_not_available_text"
             android:textAlignment="center"
             android:textColor="@color/edx_brand_gray_base"
             android:textSize="16sp"
@@ -64,4 +63,3 @@
         android:paddingTop="@dimen/widget_margin_half" />
 
 </LinearLayout>
-

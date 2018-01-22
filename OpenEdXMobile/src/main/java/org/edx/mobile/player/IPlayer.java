@@ -7,7 +7,7 @@ import android.view.accessibility.AccessibilityEvent;
 import java.io.Serializable;
 
 public interface IPlayer extends Serializable {
-    
+
     long serialVersionUID = 5689385691113719237L;
 
     void setUri(String uri, int seekTo) throws Exception;
@@ -53,4 +53,11 @@ public interface IPlayer extends Serializable {
     boolean canSeekBackward();
     boolean canSeekForward();
     void    toggleFullScreen();
+
+    //Method Addition for audio
+    void setAudioController(AudioController controller);
+    AudioController getAudioController();
+    boolean isPlayBackComplete();
+
+
 }

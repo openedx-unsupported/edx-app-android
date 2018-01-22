@@ -40,6 +40,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
     private boolean autoHideControls;
     private transient IPlayerListener callback;
     private transient PlayerController controller;
+    private transient AudioController audioController;
     private int lastCurrentPosition;
     private int lastFreezePosition;
     private int lastDuration;
@@ -161,6 +162,29 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
+    public void setAudioController(AudioController cont) {
+        // handle old controller object first
+        if (audioController == null && this.audioController != null) {
+            this.audioController.setMediaPlayer(null);
+        }
+
+        if (this.audioController != null) {
+            // hide old controller while setting new
+            this.audioController.hide();
+            this.audioController = null;
+        }
+
+        // now handle new controller object
+        this.audioController = cont;
+
+        if (this.audioController != null) {
+            this.audioController.setMediaPlayer(this);
+            logger.debug("Controller set");
+        }
+
+    }
+
+    @Override
     public void callSettings(Point p) {
         if (callback != null) {
             callback.callSettings(p);
@@ -264,6 +288,9 @@ public class Player extends MediaPlayer implements OnErrorListener,
         if (this.controller != null) {
             this.controller.hide();
         }
+        if (this.audioController != null) {
+            this.audioController.hide();
+        }
 
         reset();
         state = PlayerState.RESET;
@@ -317,6 +344,9 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
         if (controller != null) {
             controller.setTopBarVisibility(isFullScreen);
+        }
+        if (audioController != null) {
+            audioController.setTopBarVisibility(isFullScreen);
         }
     }
 
@@ -400,6 +430,19 @@ public class Player extends MediaPlayer implements OnErrorListener,
                         controller.show();
                     }
                 }
+                if (audioController != null
+                        && state != PlayerState.RESET
+                        && state != PlayerState.URI_SET) {
+                    logger.debug("Player touched");
+                    if (audioController.isShowing() && autoHideControls) {
+                        audioController.hide();
+                    } else {
+//                        audioController.setLmsUrl(lmsURL);
+                        audioController.setTitle(videoTitle);
+                        audioController.show();
+                    }
+                }
+
             }
         });
     }
@@ -456,8 +499,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
             if (autoHideControls) {
                 controller.resetShowTimeoutMS();
-            }
-            else {
+            } else {
                 controller.setShowTimeoutMS(0);
             }
 
@@ -465,12 +507,31 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
             logger.debug("Player controller shown");
         }
+        if (audioController != null) {
+            audioController.hide();
+            audioController.setTitle(videoTitle);
+//            audioController.setLmsUrl(lmsURL);
+
+            if (autoHideControls) {
+                audioController.resetShowTimeoutMS();
+            } else {
+                audioController.setShowTimeoutMS(0);
+            }
+
+            audioController.show();
+
+            logger.debug("Player controller shown");
+        }
+
     }
 
     @Override
     public void hideController() {
         if (controller != null) {
             controller.hide();
+        }
+        if (audioController != null) {
+            audioController.hide();
         }
     }
 
@@ -479,6 +540,10 @@ public class Player extends MediaPlayer implements OnErrorListener,
         if (controller != null && controller.isShowing()) {
             controller.requestAccessibilityFocusPausePlay();
         }
+        if (audioController != null && audioController.isShowing()) {
+            audioController.requestAccessibilityFocusPausePlay();
+        }
+
     }
 
     @Override
@@ -493,6 +558,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
         setPreview(null);
         setController(null);
+        setAudioController(null);
         if (isPlaying()) {
             pause();
         }
@@ -571,7 +637,6 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
             // reload controller
             showController();
-
             requestAccessibilityFocusPausePlay();
         } else {
             logger.warn("Cannot start");
@@ -733,9 +798,19 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
+    public AudioController getAudioController() {
+        return audioController;
+    }
+
+    @Override
     public void callPlayerSeeked(long previousPos, long nextPos, boolean isRewindClicked) {
         if (callback != null) {
             callback.callPlayerSeeked(previousPos, nextPos, isRewindClicked);
         }
+    }
+
+    @Override
+    public boolean isPlayBackComplete() {
+        return state == PlayerState.PLAYBACK_COMPLETE;
     }
 }

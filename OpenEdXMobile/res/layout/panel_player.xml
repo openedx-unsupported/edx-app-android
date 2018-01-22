@@ -36,6 +36,10 @@
             android:id="@+id/panel_video_only_on_web"
             layout="@layout/panel_video_only_on_web"
             android:visibility="gone" />
+        <include
+            android:id="@+id/panel_audio_not_available"
+            layout="@layout/panel_audio_not_available"
+            android:visibility="gone" />
 
     </FrameLayout>
 

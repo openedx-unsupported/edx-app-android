@@ -379,6 +379,7 @@
     <string name="assessment_only_on_youtube">This video can only be played on YouTube.</string>
     <!-- Label for button to open on youtube -->
     <string name="assessment_open_on_youtube">View video on YouTube</string>
+    <string name="subtitle_not_available_text">Subtitles not available for this audio.</string>
 
     <!-- Video List -->
     <!-- Title of video download screen -->

@@ -235,4 +235,6 @@
     <dimen name="video_icon_size">24dp</dimen>
     <dimen name="text_icon_size">13dp</dimen>
     <dimen name="timeline_marker_empty_size">24dp</dimen>
+    <dimen name="audio_seekbar_drawable_radius">3dp</dimen>
+    <dimen name="audio_seekbar_drawable_height">3dp</dimen>
 </resources>

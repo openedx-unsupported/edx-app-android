@@ -265,5 +265,15 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
             snackbarErrorNotification.hideError();
         }
     }
+    public String getCourseComponentId()
+    {
+        return courseComponentId;
+    }
+
+    public EnrolledCoursesResponse getEnrolledCourseResponse()
+    {
+        return courseData;
+    }
+
 }
 

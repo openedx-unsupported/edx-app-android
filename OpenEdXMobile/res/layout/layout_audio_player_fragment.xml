@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#f9f9f9">
+    <LinearLayout
+        android:id="@+id/video_top_bar"
+        style="@style/video_player_panel"
+        android:layout_gravity="top">
+
+        <TextView
+            android:id="@+id/video_title"
+            style="@style/video_player_title"
+            tools:targetApi="17"
+            tools:text="This is a very long video title meant to be truncated from end" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:id="@+id/audio_play_pause_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/icon_audio_play_pause"
+            app:iconColor="@color/edx_white"
+            app:iconName="fa-play"
+            android:layout_marginTop="48dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:padding="16dp"
+            android:contentDescription="play_pause"
+            app:iconAnimation="pulse"
+            />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/audio_media_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="42dp"
+            android:thumb="@drawable/audio_thumb"
+            android:progressDrawable="@drawable/audio_progress_drawable"
+            android:maxHeight="6dp"
+            android:minHeight="6dp"
+            android:max="100"
+            android:thumbTintMode="src_over"
+            android:splitTrack="false"
+
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="8dp"
+            android:weightSum="1"
+            android:layout_marginBottom="16dp"
+            >
+            <TextView
+                android:id="@+id/tv_current_audio_duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                />
+            <TextView
+                android:id="@+id/tv_total_audio_duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

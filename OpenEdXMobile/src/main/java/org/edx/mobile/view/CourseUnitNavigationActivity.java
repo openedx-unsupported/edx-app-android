@@ -1,10 +1,14 @@
 package org.edx.mobile.view;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.player.AudioMediaService;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.ViewPagerDownloadManager;
@@ -78,6 +83,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         RelativeLayout insertPoint = (RelativeLayout) findViewById(R.id.fragment_container);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -349,4 +355,5 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     public void updateListUI() {
         invalidateOptionsMenu();
     }
+
 }

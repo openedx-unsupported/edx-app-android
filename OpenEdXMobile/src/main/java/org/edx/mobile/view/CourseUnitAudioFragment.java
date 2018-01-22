@@ -1,18 +1,23 @@
 package org.edx.mobile.view;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +44,7 @@ import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.player.AudioMediaService;
 import org.edx.mobile.player.AudioPlayerFragment;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.TranscriptListener;
@@ -101,6 +107,7 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
     @Inject
     protected IEdxEnvironment environment;
     private DownloadEntry.DownloadedState unitDownloadState;
+    public static final String TEST_TAG = "TEST_TAG";
 
     /**
      * Create a new instance of fragment
@@ -193,6 +200,7 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
         messageContainer = v.findViewById(R.id.message_container);
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
 
+        Log.d("TEST_TAG" , "ONcreate");
         return v;
     }
 
@@ -827,4 +835,6 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
             isTranscriptScrolling = false;
         }
     };
+
+
 }

@@ -92,4 +92,5 @@
     <color name="philu_disabled_white_text_color">#7FFFFFFF</color>
     <color name="unit_view_pager_indicator_inactive">#7FFFFFFF</color>
     <color name="unit_view_pager_indicator_active">@color/philu_blue_bg</color>
+    <color name="audio_seekbar_buffer">#7D8995</color>
 </resources>
