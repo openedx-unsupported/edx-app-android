@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
+import org.edx.mobile.R;
 import org.edx.mobile.base.BaseVideosDownloadStateActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -17,6 +18,8 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_course_dashboard);
+        super.setToolbarAsActionBar();
 
         Bundle data = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
@@ -40,7 +43,7 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             fragment = new CourseDashboardFragment();
 
             Bundle bundle = new Bundle();
@@ -52,7 +55,7 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
             fragment.setRetainInstance(true);
 
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(android.R.id.content, fragment);
+            fragmentTransaction.add(R.id.fragment_container, fragment);
             fragmentTransaction.disallowAddToBackStack();
             fragmentTransaction.commit();
         }

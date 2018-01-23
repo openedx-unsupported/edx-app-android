@@ -102,6 +102,7 @@ public class RegisterActivity extends BaseFragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        super.setToolbarAsActionBar();
 
         setTitle(R.string.register_title);
 

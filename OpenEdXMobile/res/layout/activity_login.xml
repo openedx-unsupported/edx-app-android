@@ -2,21 +2,25 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
-        android:id="@+id/root_view"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:splitMotionEvents="false">
+        android:fitsSystemWindows="true">
 
-        <ScrollView
+        <LinearLayout
+            android:id="@+id/root_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:fillViewport="true">
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
 
-            <RelativeLayout
+            <include layout="@layout/toolbar" />
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:fillViewport="true">
 
                 <LinearLayout
                     android:id="@+id/top_layout"
@@ -25,19 +29,19 @@
                     android:layout_marginBottom="3dp"
                     android:orientation="vertical">
 
-                    <RelativeLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_edx_logo_height"
                         android:layout_marginBottom="@dimen/login_logo_margin_bottom"
-                        android:layout_marginLeft="44dp"
-                        android:layout_marginRight="44dp"
+                        android:layout_marginLeft="@dimen/login_logo_margin_horizontal"
+                        android:layout_marginRight="@dimen/login_logo_margin_horizontal"
                         android:layout_marginTop="@dimen/login_logo_margin_top">
 
                         <ImageView
                             android:id="@+id/login_map"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
                             android:contentDescription="@null"
                             android:scaleType="fitXY"
                             android:src="@drawable/login_screen_image" />
@@ -46,10 +50,10 @@
                             android:id="@+id/login_logo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
                             android:contentDescription="@string/phonetic_app_name"
                             android:src="@drawable/login_screen_logo" />
-                    </RelativeLayout>
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -62,19 +66,19 @@
                             android:id="@+id/usernameWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingStart="-4dp"
+                            android:hint="@string/email_username"
                             android:paddingEnd="-4dp"
                             android:paddingLeft="-4dp"
                             android:paddingRight="-4dp"
-                            android:hint="@string/email_username"
+                            android:paddingStart="-4dp"
                             android:textColorHint="@color/grey_text">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/email_et"
-                                android:inputType="textEmailAddress"
-                                android:maxLength="100"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:inputType="textEmailAddress"
+                                android:maxLength="100" />
 
                         </org.edx.mobile.view.custom.EdxTextInputLayout>
 
@@ -82,20 +86,20 @@
                             android:id="@+id/passwordWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingStart="-4dp"
+                            android:hint="@string/password"
                             android:paddingEnd="-4dp"
                             android:paddingLeft="-4dp"
                             android:paddingRight="-4dp"
-                            android:hint="@string/password"
+                            android:paddingStart="-4dp"
                             android:textColorHint="@color/grey_text">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/password_et"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:inputType="textPassword"
-                                android:maxLength="100"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:maxLength="100" />
 
                         </org.edx.mobile.view.custom.EdxTextInputLayout>
 
@@ -181,7 +185,7 @@
                             android:visibility="invisible" />
                     </LinearLayout>
                 </LinearLayout>
-            </RelativeLayout>
-        </ScrollView>
-    </RelativeLayout>
+            </ScrollView>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

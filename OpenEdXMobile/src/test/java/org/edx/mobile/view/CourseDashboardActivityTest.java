@@ -74,7 +74,7 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
         CourseDashboardActivity activity = controller.get();
         controller.create(null).postCreate(null);
         Fragment fragment = activity.getSupportFragmentManager()
-                .findFragmentById(android.R.id.content);
+                .findFragmentById(R.id.fragment_container);
         assertNotNull(fragment);
         assertThat(fragment).isInstanceOf(CourseDashboardFragment.class);
         assertTrue(fragment.getRetainInstance());

@@ -72,6 +72,7 @@
     <dimen name="login_edx_logo_height">125dp</dimen>
     <dimen name="login_logo_margin_top">20dp</dimen>
     <dimen name="login_logo_margin_bottom">15dp</dimen>
+    <dimen name="login_logo_margin_horizontal">44dp</dimen>
     <dimen name="login_social_divider_margin_top">20dp</dimen>
     <dimen name="login_social_divider_margin_bottom">15dp</dimen>
 
