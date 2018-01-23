@@ -3,11 +3,11 @@
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/MyActionBar</item>
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="colorPrimary">@color/edx_brand_primary_base</item>
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
+        <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
+        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
         <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
         <item name="actionMenuTextColor">@color/white</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
@@ -16,7 +16,6 @@
         <item name="android:actionButtonStyle">@style/MyActionBarButton</item>
         <item name="android:actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
         <item name="android:windowBackground">@color/edx_brand_gray_x_back</item>
-        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:listPopupWindowStyle">@style/edX.Widget.ListPopupWindow</item>
         <item name="popupSpinnerStyle">@style/edX.Widget.Spinner.Popup</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
@@ -48,9 +47,8 @@
         </item>
     </style>
 
-    <style name="MyToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="actionBarStyle">@style/MyActionBar</item>
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -58,20 +56,35 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.TranslucentStatusBar"></style>
-
-    <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@drawable/launch_background</item>
-    </style>
+    <style name="AppTheme.NoActionBar.TranslucentStatusBar" />
 
     <style name="AppTheme.NoActionBar.Fullscreen">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="AppTheme.NoShadow">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="actionBarStyle">@style/MyActionBar.NoShadow</item>
+    <!-- AppBar Styles -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <!-- ToolBar Styles -->
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.ToolBar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/edx_brand_primary_base</item>
+        <item name="titleTextAppearance">@style/AppTheme.ToolBar.Title</item>
+        <item name="subtitleTextAppearance">@style/AppTheme.ToolBar.SubTitle</item>
+    </style>
+
+    <style name="AppTheme.ToolBar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+    </style>
+
+    <style name="AppTheme.ToolBar.SubTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
 
     <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -83,19 +96,6 @@
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/white</item>
-    </style>
-
-    <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
-    <!-- ActionBar styles -->
-    <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/edx_brand_primary_base</item>
-        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
-        <item name="subtitleTextStyle">@style/MyActionBarTitleText</item>
-        <item name="itemPadding">2dip</item>
-    </style>
-
-    <style name="MyActionBar.NoShadow">
-        <item name="elevation">0dp</item>
     </style>
 
     <!-- ActionBar buttons -->
@@ -110,12 +110,6 @@
     </style>
 
     <bool name="abc_config_actionMenuItemAllCaps" tools:ignore="PrivateResource">false</bool>
-
-    <!-- ActionBar title text -->
-    <style name="MyActionBarTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/white</item>
-        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
-    </style>
 
     <style name="separator_base">
         <item name="android:layout_width">match_parent</item>
