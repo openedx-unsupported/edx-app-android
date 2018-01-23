@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI, OnActivityResultListener {
@@ -90,6 +92,23 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         if (toolbar != null && toolbar instanceof Toolbar) {
             setSupportActionBar((Toolbar) toolbar);
             configureActionBar();
+            setToolBarFont();
+        }
+    }
+
+    /**
+     * Sets the font of any TextView found within the ToolBar.
+     * <br/>
+     * TODO: Remove this function when this issue gets resolved: https://github.com/chrisjenx/Calligraphy/issues/295
+     */
+    private void setToolBarFont() {
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            final View child = toolbar.getChildAt(i);
+            if (child instanceof TextView) {
+                final TextView textView = (TextView) child;
+                CalligraphyUtils.applyFontToTextView(textView, TypefaceUtils.load(getAssets(), "fonts/OpenSans-Semibold.ttf"));
+            }
         }
     }
 
@@ -499,9 +518,9 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     public void showAlertDialog(@Nullable String title, @NonNull String message,
-                                @NonNull String  positiveButtonText,
+                                @NonNull String positiveButtonText,
                                 @Nullable DialogInterface.OnClickListener onPositiveClick,
-                                @Nullable String  negativeButtonText,
+                                @Nullable String negativeButtonText,
                                 @Nullable DialogInterface.OnClickListener onNegativeClick) {
         if (isInForeground) {
             AlertDialogFragment.newInstance(title, message, positiveButtonText, onPositiveClick, negativeButtonText, onNegativeClick)
@@ -516,7 +535,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>To conform with the {@link OnActivityResultListener} interface this function has been
      * implemented emptily, making it publicly accessible.</p>
      */
