@@ -43,7 +43,7 @@ public interface IStorage {
     /**
      * This method fetches all unenrolledVideos from the DB. 
      * Iterates through the list and then calls the remove Download method for each video
-     * Method in DB for getting all unenrolled videos is db.getAllDeactivatedVideos(callback);  
+     * Method in DB for getting all unenrolled videos is db.getAllDeactivatedMedia(callback);
      * @return
      */
     int deleteAllUnenrolledVideos();
@@ -128,11 +128,11 @@ public interface IStorage {
     void markDownloadAsComplete(long dmId, DataCallback<VideoModel> callback);
 
     /**
-     * Marks given video as WatchedState.PARTIALLY_WATCHED if it is WatchedState.WATCHED.
-     * @param videoModel
+     * Marks given media as WatchedState.PARTIALLY_WATCHED if it is WatchedState.WATCHED.
+     * @param downloadEntry
      * @param watchedStateCallback
      */
-    void markMediaPlaying(DownloadEntry videoModel, DataCallback<Integer> watchedStateCallback);
+    void markMediaPlaying(DownloadEntry downloadEntry, DataCallback<Integer> watchedStateCallback);
 
     void repairDownloadCompletionData();
 }

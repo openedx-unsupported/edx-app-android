@@ -241,12 +241,12 @@ public class DownloadEntry implements SectionItemInterface, VideoModel, AudioMod
     }
 
     @Override
-    public void setDownloadInfo(DownloadEntry video) {
-        dmId = video.getDmId();
-        downloaded = DownloadedState.values()[video.getDownloadedStateOrdinal()];
-        filepath = video.getFilePath();
-        size = video.getSize();
-        duration = video.getDuration();
+    public void setDownloadInfo(DownloadEntry downloadEntry) {
+        dmId = downloadEntry.getDmId();
+        downloaded = DownloadedState.values()[downloadEntry.getDownloadedStateOrdinal()];
+        filepath = downloadEntry.getFilePath();
+        size = downloadEntry.getSize();
+        duration = downloadEntry.getDuration();
     }
     
     public String getBestEncodingUrl(Context context){

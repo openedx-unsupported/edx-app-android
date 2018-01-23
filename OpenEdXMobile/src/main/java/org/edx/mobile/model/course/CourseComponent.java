@@ -226,7 +226,7 @@ public class CourseComponent implements IBlock, IPathNode {
 
 
     /**
-     * return all videos blocks under this node
+     * return all downloadable blocks under this node
      */
     public List<CourseComponent> getDownloadableMedia() {
         List<CourseComponent> media = getVideos();
@@ -297,13 +297,16 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
     /**
-     * @return count of videos that have encoded files available
-     * and {@link VideoData#onlyOnWeb} set to <code>false</code>
+     * @return count of downloadable media
      */
     public int getDownloadableMediaCount() {
         return getDownloadableVideosCount() + getDownloadableAudiosCount();
     }
 
+    /**
+     * @return count of videos that have encoded files available
+     * and {@link VideoData#onlyOnWeb} set to <code>false</code>
+     */
     public int getDownloadableVideosCount() {
         int downloadableCount = 0;
         List<CourseComponent> videos = getVideos();
@@ -315,6 +318,9 @@ public class CourseComponent implements IBlock, IPathNode {
         return downloadableCount;
     }
 
+    /**
+     * @return count of audio that have playback url available
+     */
     public int getDownloadableAudiosCount() {
         int downloadableCount = 0;
         List<CourseComponent> videos = getAudios();

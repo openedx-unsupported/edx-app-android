@@ -20,9 +20,9 @@ public class AudioData extends BlockData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AudioData videoData = (AudioData) o;
-        if (!getTranscripts().equals(videoData.getTranscripts())) return false;
-        return encodedAudios.equals(videoData.encodedAudios);
+        AudioData audioData = (AudioData) o;
+        if (!getTranscripts().equals(audioData.getTranscripts())) return false;
+        return encodedAudios.equals(audioData.encodedAudios);
 
     }
 

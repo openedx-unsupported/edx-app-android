@@ -108,7 +108,7 @@ class DbHelper extends SQLiteOpenHelper {
                         + DbStructure.Column.URL_MP3 + " TEXT ",
 
                 "ALTER TABLE " + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
-                        + DbStructure.Column.URL_MP3 + " TEXT "};
+                        + DbStructure.Column.URL_OGG + " TEXT "};
 
         if (oldVersion == 1) {
             // upgrade from 1 to 2
@@ -139,7 +139,6 @@ class DbHelper extends SQLiteOpenHelper {
             try {
                 for (String query : upgradeToV7) {
                     db.execSQL(query);
-                    Log.e("Zohaib", "executing");
                 }
             } catch (SQLiteException e) {
                 logger.warn(e.getMessage());

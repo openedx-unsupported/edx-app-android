@@ -60,7 +60,7 @@ public interface IDatabase {
      *
      * @param callback
      */
-    List<DownloadEntry> getAllDeactivatedVideos(DataCallback<List<DownloadEntry>> callback);
+    List<DownloadEntry> getAllDeactivatedMedia(DataCallback<List<DownloadEntry>> callback);
 
 
     /**
@@ -232,20 +232,20 @@ public interface IDatabase {
     /**
      * Update a Video's watched state
      *
-     * @param videoId - Id of video for which status needs to change
+     * @param mediaId - Id of video for which status needs to change
      * @param state   - Status flag to be set for changing Video watched state
      */
-    Integer updatePlayableMediaWatchedState(String videoId, WatchedState state,
+    Integer updatePlayableMediaWatchedState(String mediaId, WatchedState state,
                                             DataCallback<Integer> callback);
 
 
     /**
      * Update a Video's last watched time
      *
-     * @param videoId - Id of video for which status needs to change
+     * @param mediaId - Id of media for which status needs to change
      * @param offset  - Last Played offset
      */
-    Integer updateMediaLastPlayedOffset(String videoId, int offset, DataCallback<Integer> callback);
+    Integer updateMediaLastPlayedOffset(String mediaId, int offset, DataCallback<Integer> callback);
 
 
     /**
@@ -258,25 +258,16 @@ public interface IDatabase {
     Long addMediaData(DownloadEntry de, DataCallback<Long> callback);
 
     /**
-     * Returns VideoEntry for the passed VideoId
+     * Returns DownloadEntry for the passed mediaId
      *
      * @param mediaId
      * @param callback
      */
     DownloadEntry getDownloadEntryByMediaId(String mediaId, DataCallback<DownloadEntry> callback);
 
-
     /**
-     * Returns AudioEntry for the passed AudioId
-     *
-     * @param audioId
-     * @param callback
-     */
-    AudioModel getAudioEntryByAudioId(String audioId, DataCallback<AudioModel> callback);
-
-    /**
-     * Returns {@link org.edx.mobile.model.VideoModel} which is downloaded or download is in
-     * progress for given videoUrl.
+     * Returns {@link org.edx.mobile.model.db.DownloadEntry} which is downloaded or download is in
+     * progress for given mediaUrl.
      *
      * @param mediaUrl
      * @param callback
@@ -352,13 +343,6 @@ public interface IDatabase {
      * @return - count of Videos downloaded
      */
     Integer getVideosDownloadedCount(DataCallback<Integer> callback);
-
-    /**
-     * Returns IVideoModel object if entry exists with Video status set as
-     * downloaded with the given URL
-     */
-    VideoModel getIDownloadEntryByMediaUrl(String mediaUrl,
-                                           DataCallback<DownloadEntry> callback);
 
 
     /**

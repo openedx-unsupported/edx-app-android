@@ -471,7 +471,7 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
             }
         } else {
             DownloadEntry de = (DownloadEntry) DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
-                    .getAudioEntryByAudioId(
+                    .getDownloadEntryByMediaId(
                             audio.getBlockId(), null);
             if (de != null) {
                 if (de.filepath != null) {

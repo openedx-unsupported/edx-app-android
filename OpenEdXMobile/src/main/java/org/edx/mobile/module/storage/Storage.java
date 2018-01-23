@@ -295,7 +295,7 @@ public class Storage implements IStorage {
 
     @Override
     public AudioModel getDownloadEntryFromAudioModel(AudioBlockModel block){
-        AudioModel audio = db.getAudioEntryByAudioId(block.getId(), null);
+        AudioModel audio = db.getDownloadEntryByMediaId(block.getId(), null);
         if (audio != null) {
             return audio;
         }
@@ -436,15 +436,15 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public void markMediaPlaying(DownloadEntry videoModel, final DataCallback<Integer> watchedStateCallback) {
+    public void markMediaPlaying(DownloadEntry downloadEntry, final DataCallback<Integer> watchedStateCallback) {
         try {
-            final DownloadEntry v = videoModel;
+            final DownloadEntry v = downloadEntry;
             if (v != null) {
                 if (v.watched == DownloadEntry.WatchedState.UNWATCHED) {
-                    videoModel.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
+                    downloadEntry.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
 
                     // video entry might not exist in the database, add it
-                    db.addMediaData(videoModel, new DataCallback<Long>() {
+                    db.addMediaData(downloadEntry, new DataCallback<Long>() {
                         @Override
                         public void onResult(Long result) {
                             try {

@@ -10,10 +10,10 @@ import org.edx.mobile.module.db.DatabaseModelFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-class DbOperationGetVideos extends DbOperationSelect<List<DownloadEntry>> {
+class DbOperationGetDownloadEntries extends DbOperationSelect<List<DownloadEntry>> {
     
-    DbOperationGetVideos(boolean distinct, String table, String[] columns,
-            String whereClause, String[] whereArgs, String orderBy) {
+    DbOperationGetDownloadEntries(boolean distinct, String table, String[] columns,
+                                  String whereClause, String[] whereArgs, String orderBy) {
         super(distinct, table, columns, whereClause, whereArgs, orderBy);
     }
     

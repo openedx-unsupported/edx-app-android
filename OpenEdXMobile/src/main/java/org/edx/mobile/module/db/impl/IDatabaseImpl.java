@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
@@ -87,8 +86,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public List<DownloadEntry> getAllDeactivatedVideos(final DataCallback<List<DownloadEntry>> callback) {
-        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
+    public List<DownloadEntry> getAllDeactivatedMedia(final DataCallback<List<DownloadEntry>> callback) {
+        DbOperationGetDownloadEntries op = new DbOperationGetDownloadEntries(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.IS_COURSE_ACTIVE + "=? AND "
                         + DbStructure.Column.USERNAME + "=? ",
                 new String[]{"0", username()}, null);
@@ -345,28 +344,28 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Integer updatePlayableMediaWatchedState(String blockId, WatchedState status,
+    public Integer updatePlayableMediaWatchedState(String mediaId, WatchedState status,
                                                    final DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.WATCHED, status.ordinal());
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{blockId, username()});
+                new String[]{mediaId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
 
 
     @Override
-    public Integer updateMediaLastPlayedOffset(String videoId, int offset,
+    public Integer updateMediaLastPlayedOffset(String mediaId, int offset,
                                                final DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.LAST_PLAYED_OFFSET, offset);
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{videoId, username()});
+                new String[]{mediaId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -425,21 +424,6 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetDownloadEntry op = new DbOperationGetDownloadEntry(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{mediaId, username()}, null);
-        op.setCallback(callback);
-        return enqueue(op);
-    }
-
-
-    /**
-     * Returns download entry for given audio id.
-     *
-     * @param audioId
-     * @return
-     */
-    public AudioModel getAudioEntryByAudioId(String audioId, DataCallback<AudioModel> callback) {
-        DbOperationGetAudio op = new DbOperationGetAudio(false, DbStructure.Table.DOWNLOADS, null,
-                DbStructure.Column.BLOCK_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{audioId, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -533,7 +517,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     @Override
     public List<DownloadEntry> getListOfOngoingDownloads(
             final DataCallback<List<DownloadEntry>> callback) {
-        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
+        DbOperationGetDownloadEntries op = new DbOperationGetDownloadEntries(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username()},
                 null);
@@ -552,16 +536,6 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         op.setCallback(callback);
         return enqueue(op);
 
-    }
-
-    @Override
-    public VideoModel getIDownloadEntryByMediaUrl(String mediaUrl,
-                                                  final DataCallback<DownloadEntry> callback) {
-        DbOperationGetDownloadEntry op = new DbOperationGetDownloadEntry(false, DbStructure.Table.DOWNLOADS, null,
-                DbStructure.Column.URL + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[]{mediaUrl, username()}, null);
-        op.setCallback(callback);
-        return enqueue(op);
     }
 
     @Override
@@ -599,7 +573,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     @Override
     public List<DownloadEntry> getAllVideos(String username,
                                          final DataCallback<List<DownloadEntry>> callback) {
-        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
+        DbOperationGetDownloadEntries op = new DbOperationGetDownloadEntries(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.USERNAME + "=?", new String[]{username()}, null);
         op.setCallback(callback);
         return enqueue(op);

@@ -231,7 +231,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.blockTypeIcon.setImageResource(R.drawable.ic_video_media);
             final DownloadEntry videoData = ((VideoBlockModel) row.component).getDownloadEntry(storage);
             if (null != videoData) {
-                updateUIForVideo(viewHolder, videoData);
+                updateUIForDownloadableMedia(viewHolder, videoData);
             } else {
                 viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
             }
@@ -239,7 +239,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.blockTypeIcon.setIcon(FontAwesomeIcons.fa_volume_up);
             final DownloadEntry audioData = ((AudioBlockModel) row.component).getDownloadEntry(storage);
             if (null != audioData) {
-                updateUIForVideo(viewHolder, audioData);
+                updateUIForDownloadableMedia(viewHolder, audioData);
             } else {
                 viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
             }
@@ -301,18 +301,18 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }, unit.getId());
     }
 
-    private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData) {
-        if (videoData.getDuration() > 0L) {
+    private void updateUIForDownloadableMedia(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry downloadEntry) {
+        if (downloadEntry.getDuration() > 0L) {
             viewHolder.subSectionDescriptionTV.setVisibility(View.VISIBLE);
-            viewHolder.subSectionDescriptionTV.setText(videoData.getDurationReadable());
+            viewHolder.subSectionDescriptionTV.setText(downloadEntry.getDurationReadable());
         }
-        if (videoData.getSize() > 0L) {
+        if (downloadEntry.getSize() > 0L) {
             viewHolder.subSectionDescriptionTV.setVisibility(View.VISIBLE);
             viewHolder.subSectionDescriptionTV.append(String.format(Locale.getDefault(), " | %s",
-                    MemoryUtil.format(context, videoData.getSize())));
+                    MemoryUtil.format(context, downloadEntry.getSize())));
         }
 
-        dbStore.getWatchedStateForVideoId(videoData.blockId,
+        dbStore.getWatchedStateForVideoId(downloadEntry.blockId,
                 new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
@@ -329,11 +329,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     }
                 });
 
-        if (videoData.isVideoForWebOnly()) {
+        if (downloadEntry.isVideoForWebOnly()) {
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.GONE);
         } else {
             viewHolder.courseAvailabilityStatusIcon.setVisibility(View.VISIBLE);
-            dbStore.getDownloadedStateForVideoId(videoData.blockId,
+            dbStore.getDownloadedStateForVideoId(downloadEntry.blockId,
                     new DataCallback<DownloadEntry.DownloadedState>(true) {
                         @Override
                         public void onResult(DownloadEntry.DownloadedState state) {
@@ -343,7 +343,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                mDownloadListener.download(videoData);
+                                                mDownloadListener.download(downloadEntry);
                                             }
                                         });
                             } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {

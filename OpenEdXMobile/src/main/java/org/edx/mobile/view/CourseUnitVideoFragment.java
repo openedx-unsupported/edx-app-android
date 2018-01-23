@@ -471,9 +471,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 }
             }
         } else {
-            DownloadEntry de = (DownloadEntry) DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
-                .getIDownloadEntryByMediaUrl(
-                    video.url, null);
+            DownloadEntry de = DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
+                    .getDownloadEntryByMediaUrl(
+                            video.url, null);
             if (de != null) {
                 if (de.filepath != null) {
                     File f = new File(de.filepath);
@@ -505,7 +505,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if (transcript == null) {
             try {
                 if (video.blockId != null) {
-                    transcript =  courseApi.getTranscriptsOfMedia(video.eid, video.blockId);
+                    transcript = courseApi.getTranscriptsOfMedia(video.eid, video.blockId);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -619,8 +619,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             if (v != null) {
                 // mark this as partially watches, as playing has started
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getPlaybackTime(offset));
-                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).updateMediaLastPlayedOffset(v.blockId, offset,
-                    setCurrentPositionCallback);
+                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE).updateMediaLastPlayedOffset(v.blockId, offset,
+                        setCurrentPositionCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -651,9 +651,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             if (v != null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
-                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE )
+                DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
                         .updatePlayableMediaWatchedState(v.blockId, DownloadEntry.WatchedState.WATCHED,
-                            watchedStateCallback);
+                                watchedStateCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);

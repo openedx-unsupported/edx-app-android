@@ -37,6 +37,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
@@ -257,7 +258,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                             .colorRes(getContext(), R.color.white)
                             .actionBarSize(getContext())
             );
-            mode.setTitle(R.string.delete_videos_title);
+            mode.setTitle(R.string.delete_media_title);
             return true;
         }
 
@@ -275,8 +276,8 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
             switch (item.getItemId()) {
                 case R.id.item_delete:
                     final CourseOutlineAdapter.SectionRow rowItem = adapter.getItem(listView.getCheckedItemPosition());
-                    final List<CourseComponent> videos = rowItem.component.getVideos(true);
-                    final int totalVideos = videos.size();
+                    final List<CourseComponent> downloadableMedia = rowItem.component.getDownloadableMedia();
+                    final int totalMedia = downloadableMedia.size();
 
                     if (isOnCourseOutline) {
                         environment.getAnalyticsRegistry().trackSubsectionVideosDelete(
@@ -287,7 +288,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                     }
 
                     final Snackbar snackbar = Snackbar.make(listView,
-                            getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
+                            getResources().getQuantityString(R.plurals.delete_media_snackbar_msg, totalMedia, totalMedia),
                             SNACKBAR_SHOWTIME_MS);
                     snackbar.setAction(R.string.label_undo, new View.OnClickListener() {
                         @Override
@@ -303,10 +304,9 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                             // SnackBar is being dismissed by any action other than its action button's press
                             if (event != DISMISS_EVENT_ACTION) {
                                 final IStorage storage = environment.getStorage();
-                                for (CourseComponent video : videos) {
-                                    final VideoBlockModel videoBlockModel = (VideoBlockModel) video;
-                                    final DownloadEntry downloadEntry = videoBlockModel.getDownloadEntry(storage);
-                                    if (downloadEntry.isDownloaded()) {
+                                for (CourseComponent media : downloadableMedia) {
+                                    DownloadEntry downloadEntry = ((HasDownloadEntry) media).getDownloadEntry(storage);
+                                    if (downloadEntry != null && downloadEntry.isDownloaded()) {
                                         // This check is necessary because, this callback gets
                                         // called multiple times when SnackBar is about to dismiss
                                         // and the activity finishes

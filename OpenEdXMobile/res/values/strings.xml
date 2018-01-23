@@ -145,9 +145,9 @@
     <!-- Label explaining toggle for cellular data access -->
     <string name="wifi_dialog_message_help">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
     <!-- Info message text for to let use know how many videos were deleted -->
-    <plurals name="delete_video_snackbar_msg">
-        <item quantity="one">%s video deleted</item>
-        <item quantity="other">%s videos deleted</item>
+    <plurals name="delete_media_snackbar_msg">
+        <item quantity="one">%s media item deleted</item>
+        <item quantity="other">%s media items deleted</item>
     </plurals>
     <!-- Alert dialog title for users with zero rated data -->
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
@@ -645,5 +645,6 @@
     <string name="audio_player" tools:ignore="MissingTranslation">Audio Player</string>
 
     <string name="download_started" tools:ignore="MissingTranslation">Download started</string>
+    <string name="delete_media_title">Delete Media</string>
 
 </resources>

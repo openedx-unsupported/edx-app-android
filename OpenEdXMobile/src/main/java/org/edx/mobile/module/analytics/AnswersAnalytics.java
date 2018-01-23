@@ -37,42 +37,42 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackMediaPlaying(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackMediaPlaying(String mediaId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackMediaPause(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackMediaPause(String mediaId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackMediaStop(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackMediaStop(String mediaId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackShowTranscript(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackShowTranscript(String mediaId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackHideTranscript(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackHideTranscript(String mediaId, Double currentTime, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackMediaLoading(String videoId, String courseId, String unitUrl) {
+    public void trackMediaLoading(String mediaId, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackMediaSeek(String videoId, Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
+    public void trackMediaSeek(String mediaId, Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
 
     }
 
     @Override
-    public void trackDownloadComplete(String videoId, String courseId, String unitUrl) {
+    public void trackDownloadComplete(String mediaId, String courseId, String unitUrl) {
 
     }
 
@@ -97,17 +97,17 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackTranscriptLanguage(String videoId, Double currentTime, String lang, String courseId, String unitUrl) {
+    public void trackTranscriptLanguage(String mediaId, Double currentTime, String lang, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackSingleMediaDownload(String videoId, String courseId, String unitUrl) {
+    public void trackSingleMediaDownload(String mediaId, String courseId, String unitUrl) {
 
     }
 
     @Override
-    public void trackMediaOrientation(String videoId, Double currentTime, boolean isLandscape, String courseId, String unitUrl) {
+    public void trackMediaOrientation(String mediaId, Double currentTime, boolean isLandscape, String courseId, String unitUrl) {
 
     }
 

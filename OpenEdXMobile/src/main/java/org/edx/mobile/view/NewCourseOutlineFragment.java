@@ -37,7 +37,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
-import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.Analytics;
@@ -285,7 +284,7 @@ public class NewCourseOutlineFragment extends BaseFragment
                     }
 
                     final Snackbar snackbar = Snackbar.make(listView,
-                            getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
+                            getResources().getQuantityString(R.plurals.delete_media_snackbar_msg, totalVideos, totalVideos),
                             SNACKBAR_SHOWTIME_MS);
                     snackbar.setAction(R.string.label_undo, new View.OnClickListener() {
                         @Override

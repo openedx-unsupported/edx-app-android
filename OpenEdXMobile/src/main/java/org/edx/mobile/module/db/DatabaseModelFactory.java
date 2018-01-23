@@ -132,17 +132,17 @@ public class DatabaseModelFactory {
         e.section = path.get(2) == null ? "" : path.get(2).getDisplayName();
         IBlock root = block.getRoot();
         e.eid = root.getCourseId();
-        final String preferredVideoInfo = data.encodedAudios.getPreferredPlaybackUrl();
+        e.url = data.encodedAudios.getPreferredPlaybackUrl();
         e.title = block.getDisplayName();
-        e.url_mp3 = getVideoNetworkUrlOrNull(data.encodedAudios.mp3Url);
-        e.url_ogg = getVideoNetworkUrlOrNull(data.encodedAudios.oggUrl);
+        e.url_mp3 = getMediaNetworkUrlOrNull(data.encodedAudios.mp3Url);
+        e.url_ogg = getMediaNetworkUrlOrNull(data.encodedAudios.oggUrl);
         e.blockId = block.getId();
         e.transcript = data.getTranscripts();
         e.lmsUrl = block.getBlockUrl();
         return e;
     }
 
-    private static String getVideoNetworkUrlOrNull(String url) {
+    private static String getMediaNetworkUrlOrNull(String url) {
         return URLUtil.isNetworkUrl(url) ? url : null;
     }
 }
