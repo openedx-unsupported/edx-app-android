@@ -185,7 +185,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.panel_player, null);
+        View view = inflater.inflate(R.layout.panel_media_player, null);
         this.layoutInflater = inflater;
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
@@ -620,25 +620,13 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
             }
             final ViewGroup container = (ViewGroup) f
                     .findViewById(R.id.preview_container);
-//            final  controller = new PlayerController(
-//                    getActivity());
-//            controller.setAnchorView(container);
-//
-//            // changed to true after Lou's comments to hide the controllers
-//            controller.setAutoHide(true);
-//
-//            controller.setNextPreviousListeners(nextListner, prevListner);
             final AudioController controller = new AudioController(
                     getActivity());
             controller.setAnchorView(container);
 
             // changed to true after Lou's comments to hide the controllers
             controller.setAutoHide(false);
-//            controller.setAutoHide(false);
-
-//            controller.setNextPreviousListeners(nextListner, prevListner);
-
-            player.setAudioController(controller);
+            player.setController(controller);
             reAttachPlayEventListener();
 
         } catch (Exception e) {
@@ -784,7 +772,8 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
 
                 View errorView;
                 if (reason == AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED) {
-                    errorView = getView().findViewById(R.id.panel_audio_not_available);
+                    errorView = getView().findViewById(R.id.panel_media_not_available);
+                    ((TextView)errorView.findViewById(R.id.text_media_error)).setText(getText(R.string.msg_audio_not_available));
                     errorView.setVisibility(View.VISIBLE);
                 }
 
@@ -800,7 +789,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
         try {
             View errorView;
             if (reason == AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED) {
-                errorView = getView().findViewById(R.id.panel_audio_not_available);
+                errorView = getView().findViewById(R.id.panel_media_not_available);
                 errorView.setVisibility(View.GONE);
             }
             curMessageTypes.remove(reason);
@@ -910,8 +899,8 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
         hideSettingsPopUp();
         try {
             if (player != null) {
-                if (player.getAudioController() != null) {
-                    player.getAudioController().showSpecial((getTouchExploreEnabled() ? 0L : 5000L));
+                if (player.getController() != null) {
+                    player.getController().showSpecial((getTouchExploreEnabled() ? 0L : 5000L));
                 }
             }
         } catch (Exception e) {
@@ -1300,7 +1289,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
                     int margin_ten_dp = (int) UiUtil.getParamsInDP(getResources(), 10);
                     if (player != null) {
                         LayoutParams lp = (LayoutParams) subTitlesLayout.getLayoutParams();
-                        if (player.getAudioController() != null && player.getAudioController().isShown()) {
+                        if (player.getController() != null && player.getController().isShown()) {
                             if (player.isFullScreen()) {
                                 lp.setMargins(margin_twenty_dp, 0,
                                         margin_twenty_dp, (int) UiUtil.getParamsInDP(getResources(), 50));
@@ -1480,7 +1469,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
     private void showSettingsPopup(final Point p) {
         try {
             if (player != null) {
-                player.getAudioController().setAutoHide(false);
+                player.getController().setAutoHide(false);
 //                player.getAudioController().setAutoHide(!getTouchExploreEnabled());
                 Activity context = getActivity();
                 Resources r = getResources();
@@ -1508,7 +1497,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
                         hideTransparentImage();
                         if (player != null) {
 //                            player.getAudioController().setSettingsBtnDrawable(false);
-                            player.getAudioController().setAutoHide(!getTouchExploreEnabled());
+                            player.getController().setAutoHide(!getTouchExploreEnabled());
                         }
                     }
                 });
@@ -1573,7 +1562,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
                     displaySrtData();
                     if (player != null) {
 //                        player.getAudioController().setSettingsBtnDrawable(false);
-                        player.getAudioController().setAutoHide(true);
+                        player.getController().setAutoHide(true);
                     }
                 }
 
@@ -1588,7 +1577,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
                                 audioEntry.eid, audioEntry.lmsUrl);
                     }
                     if (player != null) {
-                        player.getAudioController().setAutoHide(true);
+                        player.getController().setAutoHide(true);
 //                        player.getAudioController().setSettingsBtnDrawable(false);
                     }
                 }
@@ -1601,7 +1590,6 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
             logger.error(e);
         }
     }
-
 
     /**
      * This function hides the Settings popup and overlay

@@ -175,7 +175,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.panel_player, null);
+        View view = inflater.inflate(R.layout.panel_media_player, null);
         this.layoutInflater = inflater;
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
@@ -727,8 +727,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 hideProgress();
 
                 View errorView;
-                if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
-                    errorView = getView().findViewById(R.id.panel_video_not_available);
+                if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED){
+                    errorView = getView().findViewById(R.id.panel_media_not_available);
+                    ((TextView)errorView.findViewById(R.id.text_media_error)).setText(getText(R.string.msg_video_not_available));
+                }
                 else
                     errorView = getView().findViewById(R.id.panel_video_only_on_web);
                 errorView.setVisibility(View.VISIBLE);
@@ -745,7 +747,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         try {
             View errorView;
             if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
-                errorView = getView().findViewById(R.id.panel_video_not_available);
+                errorView = getView().findViewById(R.id.panel_media_not_available);
             else
                 errorView = getView().findViewById(R.id.panel_video_only_on_web);
             errorView.setVisibility(View.GONE);

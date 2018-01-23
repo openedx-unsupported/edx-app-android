@@ -17,7 +17,7 @@
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:layout_weight="0.85"
-            android:padding="8dp"
+            android:padding="@dimen/vertical_input_padding"
             />
         <ImageView
             android:id="@+id/icon_cancel_notification"
@@ -26,7 +26,7 @@
             android:src="@drawable/icon_close_media_notification"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.15"
-            android:contentDescription="a"
+            android:contentDescription="@null"
             android:padding="@dimen/audio_notification_icons_padding"/>
 
     </LinearLayout>

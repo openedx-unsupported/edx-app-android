@@ -7,12 +7,12 @@
     android:orientation="vertical"
     android:background="@color/audio_player_background_color">
     <LinearLayout
-        android:id="@+id/video_top_bar"
+        android:id="@+id/audio_top_bar"
         style="@style/video_player_panel"
         android:layout_gravity="top">
 
         <TextView
-            android:id="@+id/video_title"
+            android:id="@+id/audio_title"
             style="@style/video_player_title"
             tools:targetApi="17" />
 

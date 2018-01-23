@@ -55,8 +55,6 @@ public interface IPlayer extends Serializable {
     void    toggleFullScreen();
 
     //Method Addition for audio
-    void setAudioController(AudioController controller);
-    AudioController getAudioController();
     boolean isPlayBackComplete();
 
 

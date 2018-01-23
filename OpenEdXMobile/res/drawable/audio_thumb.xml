@@ -8,10 +8,10 @@
     </item>
 
     <!-- White Top color -->
-    <item android:bottom="@dimen/audio_thumv_bottom_shadow_size" android:left="@dimen/audio_thumb_left_shadow_size" android:right="@dimen/audio_thumb_left_shadow_size" android:top="@dimen/audio_thumb_left_shadow_size">
+    <item android:bottom="@dimen/audio_thumb_bottom_shadow_size" android:left="@dimen/audio_thumb_left_shadow_size" android:right="@dimen/audio_thumb_left_shadow_size" android:top="@dimen/audio_thumb_left_shadow_size">
 
         <shape  android:shape="oval">
-            <size android:height="@dimen/audio_deekbar_thumb_size" android:width="@dimen/audio_deekbar_thumb_size"> </size>
+            <size android:height="@dimen/audio_seekbar_thumb_size" android:width="@dimen/audio_seekbar_thumb_size"> </size>
             <solid android:color="@color/edx_white" />
         </shape>
 

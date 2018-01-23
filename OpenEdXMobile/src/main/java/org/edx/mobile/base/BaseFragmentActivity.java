@@ -30,6 +30,7 @@ import org.edx.mobile.interfaces.OnActivityResultListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
+import org.edx.mobile.view.CourseUnitNavigationActivity;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
@@ -226,6 +227,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         // Handle action bar buttons click
         switch (item.getItemId()) {
             case android.R.id.home:
+                environment.getRouter().manageAudioServiceRouting(isTaskRoot() , BaseFragmentActivity.this);
                 finish();
                 return true;
         }

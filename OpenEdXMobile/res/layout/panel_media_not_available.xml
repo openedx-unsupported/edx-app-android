@@ -9,6 +9,7 @@
     android:clickable="true">
 
     <TextView
+        android:id="@+id/text_media_error"
         style="@style/text_network_error"
         android:text="@string/msg_video_not_available"
         android:textSize="15sp" />

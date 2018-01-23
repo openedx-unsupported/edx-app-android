@@ -28,8 +28,8 @@
         android:orientation="vertical">
 
         <org.edx.mobile.view.custom.IconImageViewXml
-            android:layout_width="100dp"
-            android:layout_height="140dp"
+            android:layout_width="@dimen/audio_not_available_icon_width"
+            android:layout_height="@dimen/audio_not_available_icon_height"
             android:background="@color/white"
             app:iconColor="@color/edx_brand_gray_back"
             app:iconName="fa-file-text-o" />
@@ -37,18 +37,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginBottom="@dimen/audio_not_available_text_vertical_margin"
+            android:layout_marginEnd="@dimen/audio_not_available_text_horizontal_margin"
+            android:layout_marginLeft="@dimen/audio_not_available_text_horizontal_margin"
+            android:layout_marginRight="@dimen/audio_not_available_text_horizontal_margin"
+            android:layout_marginStart="@dimen/audio_not_available_text_horizontal_margin"
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:singleLine="false"
             android:text="@string/subtitle_not_available_text"
             android:textAlignment="center"
             android:textColor="@color/edx_brand_gray_base"
-            android:textSize="16sp"
+            android:textSize="@dimen/edx_base"
             tools:targetApi="17" />
     </LinearLayout>
 

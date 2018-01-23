@@ -43,35 +43,23 @@ public class AudioMediaService extends Service implements IPlayerListener{
     boolean isRunningForeground = false;
     boolean isBound = false;
     boolean isNotificationShowing = false;
-    public static final String MUSIC_CHANNEL = "MusicChannel";
     String notificationTitle, notificationMessage;
-
     protected EnrolledCoursesResponse courseData;
     protected String courseComponentId;
-
-
     public static final String ACTION_MAIN_ACTIVITY = "MAIN_ACTIVITY";
-    public static final String START_FOREGROUND_SERVICE = "START_FOREGROUND_SERVICE";
     public static final String START_SERVICE = "START_SERVICE";
-    public static final String STOP_SERVICE = "STOP_SERVICE";
-    public static final String STOP_FOREGROUND_SERVICE = "STOP_FOREGROUND_SERVICE";
-
     public static final String PLAY_MEDIA = "PLAY_MEDIA";
     public static final String PAUSE_MEDIA = "PAUSE_MEDIA";
     public static final String DELETE_INTENT = "DELETE_INTENT";
     public static final String CANCEL_INTENT = "CANCEL";
     public static int NOTIFICATION_ID = 101;
-
     IPlayerListener iPlayerListenerActivityCallbacks;
     IPlayer currentPlayer;
-
     HashMap<String , Player> connectedPlayers= new HashMap<>();
     @Override
     public void onCreate() {
-
         super.onCreate();
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        android.os.Debug.waitForDebugger();
     }
 
     @Override
@@ -80,57 +68,53 @@ public class AudioMediaService extends Service implements IPlayerListener{
         if (intent != null)
         {
             String action = intent.getAction() == null ? "" : intent.getAction();
-            //Stop the notification if already shown
-            if(action.equals(START_SERVICE)) {
-                stopForegroundService(true);
-            }
-
-            //Play button clicked in notification
-            else if (action.equals(PLAY_MEDIA)) {
-                handleResumeAction(false);
-                Log.d(TAG , "RESUME/PLAY COMMAND");
-            }
-
-            //Pause button clicked in notification
-            else if (action.equals(PAUSE_MEDIA)) {
-                handlePauseAction(false);
-                Log.d(TAG , "PAUSE COMMAND");
-
-            }
-
-            //Cancel button clicked in notification
-            else if(action.equals(CANCEL_INTENT))
-            {
-                Log.d(TAG , "CANCEL COMMAND");
-                resetAllPlayers();
-                releaseAllPlayers();
-                currentPlayer = null;
-                connectedPlayers.clear();
-                stopForegroundService(true);
-                stopSelf();
-            }
-            else if(action.equals(DELETE_INTENT))
-            {
-                Log.d(TAG , "DELETE COMMAND");
-
-                if(!isBound)
+            switch (action){
+                case START_SERVICE:{
+                    //Stop the notification if already shown
+                    stopForegroundService(true);
+                    break;
+                }
+                //Play button clicked in notification
+                case PLAY_MEDIA:{
+                    handleResumeAction(false);
+                    Log.d(TAG , "RESUME/PLAY COMMAND");
+                    break;
+                }
+                //Pause button clicked in notification
+                case PAUSE_MEDIA:
                 {
-                    if(!currentPlayer.isReset()){
-                        currentPlayer.reset();
-                    }
-                    currentPlayer.release();
+                    handlePauseAction(false);
+                    Log.d(TAG , "PAUSE COMMAND");
+                    break;
+                }
+                //Cancel button clicked in notification
+
+                case CANCEL_INTENT:
+                {
+                    Log.d(TAG , "CANCEL COMMAND");
+                    resetAllPlayers();
+                    releaseAllPlayers();
                     currentPlayer = null;
                     connectedPlayers.clear();
                     stopForegroundService(true);
                     stopSelf();
-
+                    break;
                 }
-                else{
-                    stopForegroundService(true);
-                    isNotificationShowing = false;
-                    Log.d(TAG , "STOP FG COMMAND");
+                case DELETE_INTENT:
+                {
+                    Log.d(TAG , "DELETE COMMAND");
 
+                    if(!isBound)
+                    {
+                        handleDeleteCommandUnbound();
+                    }
+                    else{
+                        handleDeleteCommandBound();
+                    }
+                    break;
                 }
+                default:
+                    break;
             }
             initializeIntents();
         }
@@ -141,16 +125,13 @@ public class AudioMediaService extends Service implements IPlayerListener{
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG , "ON BIND");
-
         isBound = true;
         return iBinder;
-
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         Log.d(TAG , "ON UNBIND");
-
         isBound = false;
         return super.onUnbind(intent);
     }
@@ -160,6 +141,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
         super.onDestroy();
         Log.d(TAG , "ON DESTROY");
     }
+
     /**This will create a notification in notification bar with current music play state**/
     public void startForegroundService()
     {
@@ -185,7 +167,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
     {
         this.iPlayerListenerActivityCallbacks = iplayerListener;
     }
-
 
     /**This will update the notification with resume state/pause button**/
     public void showResumeNotification()
@@ -216,11 +197,8 @@ public class AudioMediaService extends Service implements IPlayerListener{
      */
     public void handlePauseAction(boolean fromActivity)
     {
-//        if (isNotificationShowing)
         showPauseNotification();
         currentPlayer.pause();
-
-//        if(!fromActivity) activityCallbacks.onMediaPaused();
     }
 
     /**
@@ -229,13 +207,9 @@ public class AudioMediaService extends Service implements IPlayerListener{
      */
     public void handleResumeAction(boolean fromActivity)
     {
-//        if(isNotificationShowing)
         showResumeNotification();
         currentPlayer.start();
-//        if(!fromActivity) activityCallbacks.onMediaResumed();
-
     }
-
 
     /**
      * Initialize all Intents/PendingIntents for handling service call actions
@@ -272,7 +246,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
         cancelIntent.setAction(CANCEL_INTENT);
         cancelPendingIntent = PendingIntent.getService(this, 0,
                 cancelIntent, 0);
-
     }
 
     private Bundle createCourseBundle()
@@ -429,24 +402,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
      * @param tag - unique per fragment
      * @return
      */
-//    public IPlayer getPlayer(String tag)
-//    {
-//        Log.d(TAG , "GET PLAYER CALL");
-//        if(connectedPlayers.containsKey(tag)){
-//            currentPlayer = connectedPlayers.get(tag);
-//            Log.d(TAG , "RETURNING FROM EXISTING PLAYERS");
-//
-//            return currentPlayer;
-//
-//        }
-//        else{
-//            Log.d(TAG , "NO PLAYER EXIST _ ADDING");
-//
-//            connectedPlayers.put(tag , new Player());
-//            currentPlayer = connectedPlayers.get(tag);
-//            return currentPlayer;
-//        }
-//    }
 
     public Player addPlayer(Player player , String tag)
     {
@@ -523,4 +478,20 @@ public class AudioMediaService extends Service implements IPlayerListener{
         }
     }
 
+    private void handleDeleteCommandUnbound(){
+        if(!currentPlayer.isReset()){
+            currentPlayer.reset();
+        }
+        currentPlayer.release();
+        currentPlayer = null;
+        connectedPlayers.clear();
+        stopForegroundService(true);
+        stopSelf();
+    }
+    private void handleDeleteCommandBound()
+    {
+        stopForegroundService(true);
+        isNotificationShowing = false;
+        Log.d(TAG , "STOP FG COMMAND");
+    }
 }
