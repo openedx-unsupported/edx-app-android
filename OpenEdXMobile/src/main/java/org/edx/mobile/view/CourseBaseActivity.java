@@ -3,8 +3,6 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -75,14 +73,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        ActionBar bar = getSupportActionBar();
-        if (bar != null) {
-            bar.setDisplayShowHomeEnabled(true);
-            bar.setDisplayHomeAsUpEnabled(true);
-            bar.setIcon(android.R.color.transparent);
-        }
+        super.setToolbarAsActionBar();
         errorNotification = new FullScreenErrorNotification(contentLayout);
         snackbarErrorNotification = new SnackbarErrorNotification(contentLayout);
 

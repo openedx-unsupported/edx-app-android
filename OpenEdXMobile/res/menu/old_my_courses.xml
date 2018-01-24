@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_item_account"
-        android:title="@string/title_account"
+        android:id="@+id/menu_item_search"
+        android:icon="@drawable/ic_search_api_material"
+        android:title="@string/label_find_courses"
         app:showAsAction="always" />
 </menu>

@@ -114,12 +114,16 @@ public class Router {
     }
 
     public void showMyCourses(Activity sourceActivity) {
-        sourceActivity.startActivity(MyCoursesListActivity.newIntent());
+        if (config.isTabsLayoutEnabled()) {
+            sourceActivity.startActivity(MainDashboardActivity.newIntent());
+        } else {
+            sourceActivity.startActivity(MyCoursesListActivity.newIntent());
+        }
     }
 
     public void showCourseDashboardTabs(Activity activity, Config config, EnrolledCoursesResponse model,
                                         boolean announcements) {
-        if (config.isTabsDashboardEnabled()) {
+        if (config.isTabsLayoutEnabled()) {
             showCourseTabsDashboard(activity, model, announcements);
         } else {
             showCourseDashboard(activity, model, announcements);
@@ -196,7 +200,7 @@ public class Router {
 
         final Intent intent;
         {
-            if (config.isTabsDashboardEnabled()) {
+            if (config.isTabsLayoutEnabled()) {
                 intent = new Intent(activity, NewCourseOutlineActivity.class);
             } else {
                 intent = new Intent(activity, CourseOutlineActivity.class);

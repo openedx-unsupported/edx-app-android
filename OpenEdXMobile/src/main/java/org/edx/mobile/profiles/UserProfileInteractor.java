@@ -148,7 +148,7 @@ public class UserProfileInteractor implements RefreshListener {
         userService.getAccount(username).enqueue(new Callback<Account>() {
             @Override
             protected void onResponse(@NonNull Account account) {
-                handleNewAccount(account);
+                eventBus.post(new AccountDataLoadedEvent(account));
             }
 
             @Override

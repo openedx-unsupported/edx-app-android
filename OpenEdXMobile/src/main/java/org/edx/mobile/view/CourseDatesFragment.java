@@ -64,18 +64,18 @@ public class CourseDatesFragment extends AuthenticatedWebViewFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        CourseTabsUtils.setUserVisibleHint(getActivity(), isVisibleToUser,
+        OfflineSupportUtils.setUserVisibleHint(getActivity(), isVisibleToUser,
                 authWebView != null && authWebView.isShowingError());
     }
 
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
-        CourseTabsUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), authWebView.isShowingError());
+        OfflineSupportUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), authWebView.isShowingError());
     }
 
     @Override
     protected void onRevisit() {
-        CourseTabsUtils.onRevisit(getActivity());
+        OfflineSupportUtils.onRevisit(getActivity());
     }
 
     @Override

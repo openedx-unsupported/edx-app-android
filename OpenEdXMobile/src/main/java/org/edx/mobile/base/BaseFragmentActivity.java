@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -81,6 +82,18 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        configureActionBar();
+    }
+
+    protected void setToolbarAsActionBar() {
+        final View toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null && toolbar instanceof Toolbar) {
+            setSupportActionBar((Toolbar) toolbar);
+            configureActionBar();
+        }
+    }
+
+    protected void configureActionBar() {
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayShowHomeEnabled(true);
@@ -109,14 +122,18 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().registerSticky(this);
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (mDrawerLayout != null) {
-            Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
-            if (frag == null) {
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.slider_menu,
-                        new NavigationFragment(),
-                        "NavigationFragment").commit();
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawerLayout != null) {
+            if (environment.getConfig().isTabsLayoutEnabled()) {
+                blockDrawerFromOpening();
+            } else {
+                final Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
+                if (frag == null) {
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.slider_menu,
+                            new NavigationFragment(),
+                            "NavigationFragment").commit();
+                }
             }
         }
     }
@@ -160,8 +177,15 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
-    //this is configure the Navigation Drawer of the application
-    protected void configureDrawer() {
+    /**
+     * It will add the slide drawer in the activity's layout.
+     * <p>
+     * For addition, {@link DrawerLayout} with id {@link R.id#drawer_layout R.id.drawer_layout} will
+     * be searched in activity's layout, if it exists, the {@link NavigationFragment Navigation Drawer}
+     * will be replaced by the container having id {@link R.id#slider_menu R.id.slider_menu}.
+     * </p>
+     */
+    protected void addDrawer() {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
             getSupportFragmentManager().beginTransaction()

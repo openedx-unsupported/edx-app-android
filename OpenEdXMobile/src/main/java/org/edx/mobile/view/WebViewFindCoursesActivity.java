@@ -27,7 +27,9 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (environment.getLoginPrefs().getUsername() != null) {
-            configureDrawer();
+            if (!environment.getConfig().isTabsLayoutEnabled()) {
+                addDrawer();
+            }
         } else {
             blockDrawerFromOpening();
         }

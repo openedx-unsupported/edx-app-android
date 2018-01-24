@@ -7,9 +7,15 @@ import android.support.v4.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.Config;
+
+import javax.inject.Inject;
 
 public class AccountActivity extends BaseSingleFragmentActivity {
     protected Logger logger = new Logger(getClass().getSimpleName());
+
+    @Inject
+    private Config config;
 
     public static Intent newIntent(Activity activity) {
         return new Intent(activity, AccountActivity.class);
@@ -17,7 +23,9 @@ public class AccountActivity extends BaseSingleFragmentActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        configureDrawer();
+        if (!config.isTabsLayoutEnabled()) {
+            addDrawer();
+        }
     }
 
     @Override

@@ -13,7 +13,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -21,7 +20,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
 
-public class ResourcesFragment extends BaseFragment {
+public class ResourcesFragment extends OfflineSupportBaseFragment {
     @Inject
     private IEdxEnvironment environment;
 
@@ -90,20 +89,14 @@ public class ResourcesFragment extends BaseFragment {
         TextView subtitleView;
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        CourseTabsUtils.setUserVisibleHint(getActivity(), isVisibleToUser, false);
-    }
-
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
-        CourseTabsUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), false);
+        onNetworkConnectivityChangeEvent(event);
     }
 
     @Override
-    protected void onRevisit() {
-        CourseTabsUtils.onRevisit(getActivity());
+    protected boolean isShowingFullScreenError() {
+        return false;
     }
 
     @Override
