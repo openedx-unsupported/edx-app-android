@@ -9,7 +9,7 @@
         android:layout_gravity="center"
         ProgressWheel:barColor="@color/edx_success_accent"
         ProgressWheel:barWidth="5dp"
-        ProgressWheel:contourColor="@android:color/transparent"
+        ProgressWheel:contourColor="@color/edx_brand_primary_base"
         ProgressWheel:progressBarLength="70dp"
         ProgressWheel:rimColor="@color/white"
         ProgressWheel:rimWidth="4dp"
