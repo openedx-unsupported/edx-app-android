@@ -55,49 +55,20 @@ public class AudioController extends PlayerController {
     protected Handler mHandler = new MessageHandler(this);
 
 
-    private static final Logger logger = new Logger(PlayerController.class.getName());
+    private static final Logger logger = new Logger(AudioController.class.getName());
 
     public AudioController(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mRoot = null;
-        mContext = context;
     }
 
     public AudioController(Context context) {
         super(context);
-        mContext = context;
-
     }
 
-    @Override
-    public void onFinishInflate() {
-        super.onFinishInflate();
-        if (mRoot != null)
-            initControllerView(mRoot);
-    }
     @Override
     public void setMediaPlayer(IPlayer player) {
         mPlayer = player;
         updatePausePlay();
-    }
-
-    /**
-     * Set the view that acts as the anchor for the control view.
-     * This can for example be a VideoView, or your Activity's main view.
-     * @param view The view to which to anchor the controller when it is visible.
-     */
-    @Override
-    public void setAnchorView(ViewGroup view) {
-        mAnchor = view;
-
-        LayoutParams frameParams = new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        );
-
-        removeAllViews();
-        View v = makeControllerView();
-        addView(v, frameParams);
     }
 
     /**
@@ -108,8 +79,8 @@ public class AudioController extends PlayerController {
      */
     @Override
     protected View makeControllerView() {
-        LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRoot = inflate.inflate(R.layout.audio_player_controller, null);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mRoot = inflater.inflate(R.layout.audio_player_controller, null);
         initControllerView(mRoot);
         return mRoot;
     }
@@ -319,41 +290,6 @@ public class AudioController extends PlayerController {
         info.setClassName(AudioController.class.getName());
     }
 
-    private static class MessageHandler extends Handler {
-        private final WeakReference<AudioController> mView;
-
-        MessageHandler(AudioController view) {
-            mView = new WeakReference<>(view);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            try {
-                AudioController view = mView.get();
-                if (view == null || view.mPlayer == null) {
-                    return;
-                }
-
-                int pos;
-                switch (msg.what) {
-                    case FADE_OUT:
-                        if (view.mIsAutoHide) {
-                            view.hide();
-                        }
-                        break;
-                    case SHOW_PROGRESS:
-                        pos = view.setProgress();
-                        // FIXME: got illegalstateexception for player here
-                        if (!view.mDragging && view.mShowing && view.mPlayer.isPlaying()) {
-                            msg = obtainMessage(SHOW_PROGRESS);
-                            sendMessageDelayed(msg, 1000 - (pos % 1000));
-                        }
-                        break;
-                }
-            } catch(Exception ex) {
-                logger.error(ex);
-            }
-        }
-    }
     @Override
     @SuppressWarnings("unused")
     public void hideProgress() {
@@ -367,16 +303,4 @@ public class AudioController extends PlayerController {
         this.audioProgressSeekbar.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Sets the visibility of top bar of the player controller
-     * @param isVisible true=visible & false=gone
-     */
-    @Override
-    public void setTopBarVisibility(boolean isVisible) {
-        if (isVisible){
-            mTopBar.setVisibility(View.VISIBLE);
-        } else {
-            mTopBar.setVisibility(View.GONE);
-        }
-    }
 }

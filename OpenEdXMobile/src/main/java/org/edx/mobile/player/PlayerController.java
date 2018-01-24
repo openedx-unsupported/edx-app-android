@@ -171,8 +171,8 @@ public class PlayerController extends FrameLayout {
      * @hide This doesn't work as advertised
      */
     protected View makeControllerView() {
-        LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRoot = inflate.inflate(R.layout.player_controller, null);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mRoot = inflater.inflate(R.layout.player_controller, null);
 
         initControllerView(mRoot);
 
@@ -777,7 +777,7 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    private static class MessageHandler extends Handler {
+    protected static class MessageHandler extends Handler {
         private final WeakReference<PlayerController> mView; 
 
         MessageHandler(PlayerController view) {
