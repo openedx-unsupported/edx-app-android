@@ -41,12 +41,13 @@ public abstract class TabsBaseFragment extends BaseFragment {
         // Get fragment items list
         final List<FragmentItemModel> fragmentItems = getFragmentItems();
         // Init tabs
-        final TabLayout tabLayout = binding.tabLayout;
+        final TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.appbar).findViewById(R.id.tabs);
 
         // No need to show tabs if we only have
         if (fragmentItems.size() <= 1) {
             tabLayout.setVisibility(View.GONE);
         } else {
+            tabLayout.setVisibility(View.VISIBLE);
             for (FragmentItemModel fragmentItem : fragmentItems) {
                 tabLayout.addTab(createTab(tabLayout, fragmentItem));
             }
