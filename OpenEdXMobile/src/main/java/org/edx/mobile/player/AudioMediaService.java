@@ -18,7 +18,10 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.CourseUnitNavigationActivity;
 import org.edx.mobile.view.Router;
@@ -32,7 +35,6 @@ import java.util.HashSet;
 
 public class AudioMediaService extends Service implements IPlayerListener{
 
-    private static final String TAG = "TEST_TAG_SERVICE";
     Notification notification;
     NotificationCompat.Builder notificationBuilder;
     Intent notificationIntent, playIntent, pauseIntent, deleteIntent, cancelIntent;
@@ -53,9 +55,11 @@ public class AudioMediaService extends Service implements IPlayerListener{
     public static final String DELETE_INTENT = "DELETE_INTENT";
     public static final String CANCEL_INTENT = "CANCEL";
     public static int NOTIFICATION_ID = 101;
-    IPlayerListener iPlayerListenerActivityCallbacks;
     IPlayer currentPlayer;
     HashMap<String , Player> connectedPlayers= new HashMap<>();
+    private DownloadEntry audioEntry;
+    private static final Logger logger = new Logger(AudioMediaService.class.getName());
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,7 +68,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG , "START COMMAND");
+        initializeIntents();
         if (intent != null)
         {
             String action = intent.getAction() == null ? "" : intent.getAction();
@@ -76,22 +80,19 @@ public class AudioMediaService extends Service implements IPlayerListener{
                 }
                 //Play button clicked in notification
                 case PLAY_MEDIA:{
-                    handleResumeAction(false);
-                    Log.d(TAG , "RESUME/PLAY COMMAND");
+                    handleResumeAction();
                     break;
                 }
                 //Pause button clicked in notification
                 case PAUSE_MEDIA:
                 {
-                    handlePauseAction(false);
-                    Log.d(TAG , "PAUSE COMMAND");
+                    handlePauseAction();
                     break;
                 }
                 //Cancel button clicked in notification
 
                 case CANCEL_INTENT:
                 {
-                    Log.d(TAG , "CANCEL COMMAND");
                     resetAllPlayers();
                     releaseAllPlayers();
                     currentPlayer = null;
@@ -102,8 +103,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
                 }
                 case DELETE_INTENT:
                 {
-                    Log.d(TAG , "DELETE COMMAND");
-
                     if(!isBound)
                     {
                         handleDeleteCommandUnbound();
@@ -116,7 +115,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
                 default:
                     break;
             }
-            initializeIntents();
         }
         return START_STICKY;
     }
@@ -124,14 +122,12 @@ public class AudioMediaService extends Service implements IPlayerListener{
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG , "ON BIND");
         isBound = true;
         return iBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d(TAG , "ON UNBIND");
         isBound = false;
         return super.onUnbind(intent);
     }
@@ -139,18 +135,15 @@ public class AudioMediaService extends Service implements IPlayerListener{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG , "ON DESTROY");
     }
 
     /**This will create a notification in notification bar with current music play state**/
     public void startForegroundService()
     {
         if(currentPlayer != null){
+            currentPlayer.setPlayerListener(this);
             initializeCustomNotification();
             startForeground(NOTIFICATION_ID,notification);
-            if(currentPlayer != null){
-                currentPlayer.setPlayerListener(this);
-            }
         }else{
             stopSelf();
         }
@@ -158,16 +151,15 @@ public class AudioMediaService extends Service implements IPlayerListener{
     /**This will cancel/hide the notification in notification bar**/
     public void stopForegroundService(boolean shouldRemove)
     {
+        if(currentPlayer != null){
+            currentPlayer.setPlayerListener(null);
+            currentPlayer.reset();
+            currentPlayer = null;
+        }
         stopForeground(shouldRemove);
         isNotificationShowing = false;
         isRunningForeground = false;
     }
-
-    public void setPlayerCallbacks(IPlayerListener iplayerListener)
-    {
-        this.iPlayerListenerActivityCallbacks = iplayerListener;
-    }
-
     /**This will update the notification with resume state/pause button**/
     public void showResumeNotification()
     {
@@ -192,20 +184,31 @@ public class AudioMediaService extends Service implements IPlayerListener{
 
     /**
      *
-     * @param fromActivity
      * Handles the pause button click even clicked through notification or Activity
      */
-    public void handlePauseAction(boolean fromActivity)
+    private void handlePauseAction()
     {
         showPauseNotification();
         currentPlayer.pause();
+        try {
+            if (currentPlayer != null) {
+                if (currentPlayer.isPlaying()) {
+                    int pos = currentPlayer.getCurrentPosition();
+                    if (pos > 0) {
+                        saveCurrentPlaybackPosition(pos);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 
     /**
      *
      * Handles the resume/play button click even clicked through notification or Activity
      */
-    public void handleResumeAction(boolean fromActivity)
+    private void handleResumeAction()
     {
         showResumeNotification();
         currentPlayer.start();
@@ -220,7 +223,6 @@ public class AudioMediaService extends Service implements IPlayerListener{
         notificationIntent.setAction(ACTION_MAIN_ACTIVITY);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
 
         notificationIntent.putExtra(Router.EXTRA_BUNDLE, createCourseBundle());
         notificationIntent.putExtra(Router.EXTRA_IS_VIDEOS_MODE, false);
@@ -237,6 +239,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
         pauseIntent.setAction(PAUSE_MEDIA);
         pausePendingIntent = PendingIntent.getService(this, 0,
                 pauseIntent, 0);
+
         deleteIntent = new Intent(this, AudioMediaService.class);
         deleteIntent.setAction(DELETE_INTENT);
         deletePendingIntent = PendingIntent.getService(this, 0,
@@ -248,6 +251,10 @@ public class AudioMediaService extends Service implements IPlayerListener{
                 cancelIntent, 0);
     }
 
+    /**
+     * Create the bundle to be passed back into the activity with its states when clicking on the notification.
+     * @return
+     */
     private Bundle createCourseBundle()
     {
         Bundle courseBundle = new Bundle();
@@ -265,7 +272,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
         Bitmap icon = BitmapFactory.decodeResource(getResources(),R.drawable.launch_screen_logo);
         notificationBuilder  = new NotificationCompat.Builder(this);
         notificationBuilder.setAutoCancel(true);
-        notification = notificationBuilder.setContentTitle("Test Music Player")
+        notification = notificationBuilder.setContentTitle("")
                 .setSmallIcon(R.drawable.launch_screen_logo)
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 100, 70, false))
                 .setContentIntent(notificationPendingIntent)
@@ -297,6 +304,10 @@ public class AudioMediaService extends Service implements IPlayerListener{
         notificationRemoteView.setTextViewText(R.id.notification_Message , notificationMessage);
     }
 
+    /**
+     * Setting current playing player with its state
+     * @param player
+     */
     public void setPlayer(Player player)
     {
         this.currentPlayer = player;
@@ -305,119 +316,80 @@ public class AudioMediaService extends Service implements IPlayerListener{
     @Override
     public void onError() {
 
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onError();
-        }
     }
 
     @Override
     public void onMediaLagging() {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onMediaLagging();
-        }
 
     }
 
     @Override
     public void onMediaNotSeekable() {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onMediaNotSeekable();
-        }
 
     }
 
     @Override
     public void onPreparing() {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onPreparing();
-        }
 
     }
 
     @Override
     public void onPrepared() {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onPrepared();
-        }
 
     }
 
     @Override
     public void onPlaybackPaused() {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onPlaybackPaused();
-        }else{
-            showPauseNotification();
-        }
-
     }
 
     @Override
     public void onPlaybackStarted() {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onPlaybackStarted();
-        }else{
-            showResumeNotification();
-        }
-
     }
 
     @Override
     public void onPlaybackComplete() {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onPlaybackComplete();
-        }else{
-            showPauseNotification();
-        }
+        showPauseNotification();
+        saveCurrentPlaybackPosition(0);
+        setPlaybackCompleteStatusInDb();
     }
 
     @Override
     public void onFullScreen(boolean isFullScreen) {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.onFullScreen(isFullScreen);
-        }
-
     }
 
     @Override
     public void callSettings(Point p) {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.callSettings(p);
-        }
-
     }
 
     @Override
     public void callPlayerSeeked(long lastPostion, long newPosition, boolean isRewindClicked) {
-        if(iPlayerListenerActivityCallbacks != null){
-            iPlayerListenerActivityCallbacks.callPlayerSeeked(lastPostion, newPosition, isRewindClicked);
-        }
     }
 
     /**
      * This method will return a player according to the fragment with that states of the player
      * If an audio fragment connects first time then this will make a new player and and sava en return it
      * WE NEED THIS METHOD TO MAINTAIN THE STATE OF EACH AUDIO BEING OR BEEN PLAYED SO THAT WE DON'T HAVE TO PREPARE
-     * EACH TIME A FRAGEMNT GETS VISIBLE
+     * EACH TIME A FRAGMENT GETS VISIBLE
      * @param tag - unique per fragment
      * @return
      */
 
-    public Player addPlayer(Player player , String tag)
-    {
-        Log.d(TAG , "ADD PLAYER CALL");
-        connectedPlayers.put(tag , player);
-        currentPlayer = connectedPlayers.get(tag);
-        return (Player) currentPlayer;
-    }
-
     public Player getOrAddPLayer(Player player , String tag)
     {
-        Log.d(TAG , "GET OR ADD PLAYER CALL");
         if(connectedPlayers.containsKey(tag))
         {
             currentPlayer = connectedPlayers.get(tag);
-            return (Player) currentPlayer;
+            if(player!= null && currentPlayer == player){
+                return (Player) currentPlayer;
+            }else{
+                currentPlayer.reset();
+                currentPlayer.release();
+                currentPlayer = null;
+                connectedPlayers.remove(tag);
+                connectedPlayers.put(tag, player);
+                currentPlayer = connectedPlayers.get(tag);
+                return (Player) currentPlayer;
+            }
         }
         else{
             if(player == null)
@@ -431,9 +403,8 @@ public class AudioMediaService extends Service implements IPlayerListener{
         }
     }
 
-
     /**
-     * Inner binder class
+     * Inner binder class to get the service object on Audio Player Fragment
      */
     public class MusicBinder extends Binder {
         public AudioMediaService getService()
@@ -442,42 +413,71 @@ public class AudioMediaService extends Service implements IPlayerListener{
         }
     }
 
+    /**
+     * Set the title to be shown on notification - Its actual value is Audio Unit's title
+     * @param title
+     */
     public void setNotificationTitle(String title)
     {
         this.notificationTitle = title;
     }
+    /**
+     * Set the title to be shown on notification - Its actual value is Audio Unit's Section Name
+     * @param message
+     */
+
     public void setNotificationMessage(String message){
         this.notificationMessage = message;
     }
 
+    /**
+     * Set the enrolled course while moving from audio fragment to service so that we can use it to retail the state when clicking the notification
+     * Required by the audio fragment holder activity - Receives it in bundle
+     * @param enrolledCourse
+     */
     public void setEnrolledCourse(EnrolledCoursesResponse enrolledCourse)
     {
         this.courseData = enrolledCourse;
     }
+
+    /**
+     * Set the enrolled course component while moving from audio fragment to service so that we can use it to retail the state when clicking the notification
+     * Required by the audio fragment holder activity - Receives it in bundle
+     * @param courseComponentId
+     */
     public void setComponentId(String courseComponentId)
     {
         this.courseComponentId = courseComponentId;
         initializeIntents();
     }
 
+    /**
+     * Reset all the players associated to the service when no more audio background is need and ending service
+     */
     private void resetAllPlayers()
     {
-        for (Player plr : connectedPlayers.values()){
-            if(plr!= null && !plr.isReset()){
-                plr.reset();
+        for (Player player : connectedPlayers.values()){
+            if(player!= null && !player.isReset()){
+                player.reset();
             }
         }
     }
+    /**
+     * Release all the players associated to the service when no more audio background is need and ending service
+     */
+
     private void releaseAllPlayers()
     {
-        for (Player plr : connectedPlayers.values()){
-            if(plr!= null){
-                plr.release();
-                plr = null;
+        for (Player player : connectedPlayers.values()){
+            if(player!= null){
+                player.release();
             }
         }
     }
 
+    /**
+     * Handles the action DELETE for the service when service is unbound
+     */
     private void handleDeleteCommandUnbound(){
         if(!currentPlayer.isReset()){
             currentPlayer.reset();
@@ -488,10 +488,65 @@ public class AudioMediaService extends Service implements IPlayerListener{
         stopForegroundService(true);
         stopSelf();
     }
+    /**
+     * Handles the action DELETE for the service when service is bound
+     */
+
     private void handleDeleteCommandBound()
     {
         stopForegroundService(true);
         isNotificationShowing = false;
-        Log.d(TAG , "STOP FG COMMAND");
     }
+
+    /**
+     * Set the current playing player with state when moving to background service
+     * @param player
+     */
+    public void updateCurrentPlayer(IPlayer player)
+    {
+        currentPlayer = null;
+        currentPlayer = player;
+    }
+    /**
+     * Set the current playing Audio to update its playback statuses in the database
+     * @param audioEntry
+     */
+
+    public void setAudioEntry(DownloadEntry audioEntry)
+    {
+        this.audioEntry = audioEntry;
+    }
+    /**
+     * Set the current playing Audio playback position in the database - To be retained when audio is played next time
+     * @param offset
+     */
+
+    private void saveCurrentPlaybackPosition(int offset) {
+        try {
+            if (audioEntry != null) {
+                // mark this as partially watches, as playing has started
+                DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).updateMediaLastPlayedOffset(audioEntry.blockId, offset,
+                        null);
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
+    }
+
+    private void setPlaybackCompleteStatusInDb()
+    {
+        try {
+            if (audioEntry != null && audioEntry.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+                audioEntry.watched = DownloadEntry.WatchedState.WATCHED;
+                // mark this as partially watches, as playing has started
+                DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
+                        .updatePlayableMediaWatchedState(audioEntry.blockId, DownloadEntry.WatchedState.WATCHED,
+                                null);
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
+
+    }
+
 }
