@@ -19,8 +19,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <FrameLayout
-                android:id="@+id/toolbar_container"
+            <View
+                android:id="@+id/toolbar_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:minHeight="?android:attr/actionBarSize"/>
