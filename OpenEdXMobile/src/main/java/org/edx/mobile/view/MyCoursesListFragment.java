@@ -37,7 +37,6 @@ import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.task.RestoreVideosCacheDataTask;
 import org.edx.mobile.util.KonnekteerUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;

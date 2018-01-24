@@ -14,8 +14,6 @@ import org.edx.mobile.util.VideoUtil;
 import java.io.Serializable;
 
 public class EncodedVideos implements Serializable {
-    @SerializedName("fallback")
-    public VideoInfo fallback;
 
     @SerializedName("mobile_high")
     public VideoInfo mobileHigh;
@@ -67,7 +65,6 @@ public class EncodedVideos implements Serializable {
             return mobileHigh;
         if (fallback != null && URLUtil.isNetworkUrl(fallback.url))
             return fallback;
-        }
         return null;
     }
 
