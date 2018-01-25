@@ -365,7 +365,12 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
 
     private void checkAudioStatusAndPlay(AudioBlockModel unit) {
         final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
-        if (!checkDownloadEntry(entry)) return;
+        if (!checkDownloadEntry(entry)) {
+            if(playerFragment != null){
+                playerFragment.setAudioNotObtainable();
+            }
+            return;
+        }
         if (entry.isDownloaded()) {
             startOnlinePlay(entry);
         } else {

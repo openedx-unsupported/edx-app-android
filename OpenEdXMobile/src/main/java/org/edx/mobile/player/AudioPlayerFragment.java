@@ -82,7 +82,7 @@ import subtitleFile.TimedTextObject;
 public class AudioPlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
         AudioManager.OnAudioFocusChangeListener, NetworkObserver {
 
-    private enum AudioNotPlayMessageType {
+    public enum AudioNotPlayMessageType {
         IS_CLEAR, IS_AUDIO_MESSAGE_DISPLAYED, IS_AUDIO_ONLY_ON_WEB,
         IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE
     }
@@ -143,6 +143,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
     AudioMediaService audioMediaService;
     boolean isServiceBound = false;
     Intent serviceIntent;
+    private boolean isAudioObtainable = true;
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
@@ -380,9 +381,12 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
         uiHelper.onResume();
         setupController();
 
-        if (curMessageTypes.isEmpty()) {
+        if (curMessageTypes.isEmpty() && isAudioObtainable) {
             // display progress until playback actually starts
             showProgress();
+        }else{
+            hideProgress();
+            showAudioNotObtained(AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED);
         }
 
         configureAutoHideControls();
@@ -720,7 +724,7 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
         }
     }
 
-    private void showAudioNotAvailable(AudioNotPlayMessageType reason) {
+    public void showAudioNotAvailable(AudioNotPlayMessageType reason) {
         try {
             if (player != null) {
                 hideCCPopUp();
@@ -751,6 +755,21 @@ public class AudioPlayerFragment extends BaseFragment implements IPlayerListener
         }
     }
 
+    public void setAudioNotObtainable()
+    {
+        isAudioObtainable = false;
+    }
+
+    private void showAudioNotObtained(AudioNotPlayMessageType reason)
+    {
+        View errorView;
+        if (reason == AudioNotPlayMessageType.IS_AUDIO_MESSAGE_DISPLAYED) {
+            errorView = getView().findViewById(R.id.panel_media_not_available);
+            ((TextView)errorView.findViewById(R.id.text_media_error)).setText(getText(R.string.msg_audio_not_available));
+            errorView.setVisibility(View.VISIBLE);
+        }
+
+    }
     private void hideAudioNotPlayInfo(AudioNotPlayMessageType reason) {
         try {
             View errorView;
