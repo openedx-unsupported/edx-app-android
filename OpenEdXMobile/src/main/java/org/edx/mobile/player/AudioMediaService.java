@@ -191,13 +191,11 @@ public class AudioMediaService extends Service implements IPlayerListener{
         showPauseNotification();
         currentPlayer.pause();
         try {
-            if (currentPlayer != null) {
-                if (currentPlayer.isPlaying()) {
+            if (currentPlayer != null && currentPlayer.isPlaying()) {
                     int pos = currentPlayer.getCurrentPosition();
                     if (pos > 0) {
                         saveCurrentPlaybackPosition(pos);
                     }
-                }
             }
         } catch (Exception e) {
             logger.error(e);
