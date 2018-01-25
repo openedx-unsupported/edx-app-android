@@ -217,6 +217,7 @@
     <dimen name="widget_margin_double">20dp</dimen>
     <dimen name="widget_margin_large">25dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
+    <dimen name="vertical_input_padding">@dimen/widget_margin</dimen>
     <dimen name="input_padding_half">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="edx_action_button_height">50dp</dimen>

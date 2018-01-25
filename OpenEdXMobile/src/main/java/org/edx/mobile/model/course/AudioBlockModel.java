@@ -1,6 +1,7 @@
 package org.edx.mobile.model.course;
 
 import android.support.annotation.Nullable;
+import android.webkit.URLUtil;
 
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;
@@ -38,5 +39,7 @@ public class AudioBlockModel extends CourseComponent implements HasDownloadEntry
         this.data = data;
     }
 
-
+    public boolean isPlayableAudio(){
+        return URLUtil.isNetworkUrl(data.encodedAudios.getPreferredPlaybackUrl());
+    }
 }

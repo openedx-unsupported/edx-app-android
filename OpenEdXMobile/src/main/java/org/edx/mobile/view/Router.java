@@ -54,6 +54,7 @@ public class Router {
     public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
     public static final String EXTRA_YOUTUBE_API_KEY = "youtube_api_key";
+    public static final String EXTRA_IS_VIDEOS_MODE = "video_mode";
 
     @Inject
     Config config;

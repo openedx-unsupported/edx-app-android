@@ -1,16 +1,12 @@
 package org.edx.mobile.view;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -44,7 +40,6 @@ import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.player.AudioMediaService;
 import org.edx.mobile.player.AudioPlayerFragment;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.TranscriptListener;
@@ -140,34 +135,38 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
     }
 
 
-    private void initializeActionabr(MenuItem menuItem) {
+    private void initializeActionBar(MenuItem menuItem) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
-        setVideoDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
+        setAudioDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
     }
 
-    private void setVideoDownloadStatusIndicator(DownloadEntry videoData, final MenuItem menuItem) {
-        environment.getDatabase().getDownloadedStateForVideoId(videoData.blockId,
-                new DataCallback<DownloadEntry.DownloadedState>(true) {
-                    @Override
-                    public void onResult(DownloadEntry.DownloadedState state) {
-                        if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
-                            // not yet downloaded
-                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
-                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
-                            // may be download in progress
-                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
-                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
-                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
+    private void setAudioDownloadStatusIndicator(DownloadEntry audioData, final MenuItem menuItem) {
+        if (audioData != null) {
+            environment.getDatabase().getDownloadedStateForVideoId(audioData.blockId,
+                    new DataCallback<DownloadEntry.DownloadedState>(true) {
+                        @Override
+                        public void onResult(DownloadEntry.DownloadedState state) {
+                            if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
+                                // not yet downloaded
+                                updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                                // may be download in progress
+                                updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+                                updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
+                            }
+                            unitDownloadState = state;
                         }
-                        unitDownloadState = state;
-                    }
 
-                    @Override
-                    public void onFail(Exception ex) {
-                        logger.error(ex);
-                        unitDownloadState = DownloadEntry.DownloadedState.ONLINE;
-                    }
-                });
+                        @Override
+                        public void onFail(Exception ex) {
+                            logger.error(ex);
+                            unitDownloadState = DownloadEntry.DownloadedState.ONLINE;
+                        }
+                    });
+        } else {
+            menuItem.setVisible(false);
+        }
     }
 
     private void updateDownloadState(MenuItem menuItem, DownloadEntry.DownloadedState state) {
@@ -200,7 +199,7 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
         messageContainer = v.findViewById(R.id.message_container);
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
 
-        Log.d("TEST_TAG" , "ONcreate");
+        Log.d("TEST_TAG", "ONcreate");
         return v;
     }
 
@@ -209,7 +208,7 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
         super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.download_content, menu);
         MenuItem item = menu.findItem(R.id.menu_item_download);
-        initializeActionabr(item);
+        initializeActionBar(item);
     }
 
     @Override
@@ -237,7 +236,7 @@ public class CourseUnitAudioFragment extends CourseUnitFragment
 
         Intent extraIntent = getActivity().getIntent();
         if (extraIntent != null) {
-            if (extraIntent.hasExtra("FromMyAudios")) {
+            if (extraIntent.hasExtra("FromMyVideos")) {
                 myAudiosFlag = extraIntent.getBooleanExtra(
                         "FromMyVideos", false);
             }
