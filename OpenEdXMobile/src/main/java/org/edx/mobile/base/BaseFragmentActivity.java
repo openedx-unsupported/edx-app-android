@@ -3,10 +3,12 @@ package org.edx.mobile.base;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -93,6 +95,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             setSupportActionBar((Toolbar) toolbar);
             configureActionBar();
             setToolBarFont();
+            setToolbarShadowBasedOnOS();
         }
     }
 
@@ -110,6 +113,19 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                 CalligraphyUtils.applyFontToTextView(textView, TypefaceUtils.load(getAssets(), "fonts/OpenSans-Semibold.ttf"));
             }
         }
+    }
+
+    /**
+     * Decides whether a shadow needs to be shown beneath the {@link Toolbar} or not.
+     * <br/>
+     * {@link AppBarLayout} on pre-lollipop devices doesn't add a shadow at its bottom. To work
+     * around it, a shadow view explicitly needs to be added.
+     */
+    private void setToolbarShadowBasedOnOS() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            findViewById(R.id.shadow_view).setVisibility(View.VISIBLE);
+        }
+
     }
 
     protected void configureActionBar() {

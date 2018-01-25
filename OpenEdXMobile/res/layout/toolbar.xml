@@ -5,6 +5,7 @@
     android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     app:theme="@style/AppTheme.AppBarOverlay"
     tools:minHeight="?android:attr/actionBarSize">
 
@@ -17,7 +18,9 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:background="@color/white" />
+        tools:visibility="visible" />
+
+    <include layout="@layout/toolbar_shadow_view" />
 </android.support.design.widget.AppBarLayout>
