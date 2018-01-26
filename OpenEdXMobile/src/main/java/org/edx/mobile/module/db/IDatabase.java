@@ -184,12 +184,12 @@ public interface IDatabase {
 
 
     /**
-     * Returns the count of downloaded videos for given course
+     * Returns the count of downloaded videos and audio for given course
      *
      * @param enrollmentId of course
      * @return Count of downloaded videos for a given section
      */
-    int getDownloadedVideosCountForCourse(String enrollmentId);
+    int getDownloadedMediaCountForCourse(String enrollmentId);
 
     /**
      * Returns dmId's of all downloaded videos for given section of logged in user
@@ -457,5 +457,5 @@ public interface IDatabase {
     /**
      * get course content local download timestamp
      */
-    Long getLastVideoDownloadTimeForCourse(String courseId);
+    Long getLastMediaDownloadTimeForCourse(String courseId);
 }

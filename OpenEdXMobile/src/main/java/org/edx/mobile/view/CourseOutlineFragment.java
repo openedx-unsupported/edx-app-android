@@ -37,11 +37,9 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
-import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
@@ -161,10 +159,10 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                     final int totalDownloadableMedia = courseComponent.getDownloadableMediaCount();
                     // support video download for video type excluding the ones only viewable on web
                     if (totalDownloadableMedia > 0) {
-                        int downloadedCount = environment.getDatabase().getDownloadedVideosCountForCourse(courseData.getCourse().getId());
+                        int downloadedCount = environment.getDatabase().getDownloadedMediaCountForCourse(courseData.getCourse().getId());
 
                         if (downloadedCount == totalDownloadableMedia) {
-                            Long downloadTimeStamp = environment.getDatabase().getLastVideoDownloadTimeForCourse(courseData.getCourse().getId());
+                            Long downloadTimeStamp = environment.getDatabase().getLastMediaDownloadTimeForCourse(courseData.getCourse().getId());
                             String relativeTimeSpanString = getRelativeTimeStringFromNow(downloadTimeStamp);
                             setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADED, relativeTimeSpanString, null);
                         } else if (environment.getDatabase().isAnyVideoDownloadingInCourse(null, courseData.getCourse().getId())) {

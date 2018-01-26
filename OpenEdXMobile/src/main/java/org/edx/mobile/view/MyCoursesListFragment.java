@@ -33,8 +33,11 @@ import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
 
@@ -57,6 +60,11 @@ public class MyCoursesListFragment extends BaseFragment
     private boolean refreshOnResume = false;
 
     @Inject
+    CourseManager courseManager;
+
+    @Inject
+    VideoDownloadHelper downloadManager;
+    @Inject
     private IEdxEnvironment environment;
 
     @Inject
@@ -73,7 +81,7 @@ public class MyCoursesListFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        adapter = new MyCoursesAdapter(getActivity(), environment) {
+        adapter = new MyCoursesAdapter(getActivity(), environment, courseManager) {
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
 //                environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, false);
@@ -85,6 +93,19 @@ public class MyCoursesListFragment extends BaseFragment
             @Override
             public void onAnnouncementClicked(EnrolledCoursesResponse model) {
                 environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, true);
+            }
+
+            @Override
+            public void download(List<CourseComponent> models) {
+                MyCoursesListActivity activity = (MyCoursesListActivity) getActivity();
+                if (NetworkUtil.verifyDownloadPossible(activity)) {
+                    downloadManager.downloadVideos(models, activity, activity);
+                }
+            }
+
+            @Override
+            public void viewDownloadsStatus() {
+                environment.getRouter().showDownloads(getActivity());
             }
         };
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_COURSES);
@@ -207,6 +228,8 @@ public class MyCoursesListFragment extends BaseFragment
         if (refreshOnResume) {
             loadData(true);
             refreshOnResume = false;
+        } else {
+            adapter.notifyDataSetChanged();
         }
     }
 

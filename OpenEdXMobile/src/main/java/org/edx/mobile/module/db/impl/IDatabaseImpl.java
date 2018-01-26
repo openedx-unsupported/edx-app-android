@@ -265,7 +265,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public int getDownloadedVideosCountForCourse(String enrollmentId) {
+    public int getDownloadedMediaCountForCourse(String enrollmentId) {
         DbOperationGetCount op = new DbOperationGetCount(false, DbStructure.Table.DOWNLOADS,
                 new String[]{DbStructure.Column.DM_ID},
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.EID + "=? AND "
@@ -777,7 +777,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Long getLastVideoDownloadTimeForCourse(String courseId) {
+    public Long getLastMediaDownloadTimeForCourse(String courseId) {
         DbOperationGetColumn<Long> op = new DbOperationGetColumn<Long>(true,
                 DbStructure.Table.DOWNLOADS,
                 new String[]{DbStructure.Column.DOWNLOADED_ON},

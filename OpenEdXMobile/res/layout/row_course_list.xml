@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/course_card_height"
+    android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="4dp">
 
@@ -46,24 +46,39 @@
                 tools:text="Coming Soon" />
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/status_layout"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/philu_blue_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/edx_button_height"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="@color/philu_bottom_bar_blue_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/course_image">
 
+
+            <org.edx.mobile.view.custom.IconImageViewXml
+                android:id="@+id/course_download_status_icon"
+                android:layout_width="23dp"
+                android:layout_height="24dp"
+                android:baselineAlignBottom="true"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/input_padding_half"
+                android:layout_marginEnd="@dimen/input_padding_half"
+                app:iconColor="@color/white"
+                app:iconName="fa-download" />
+
             <TextView
+                android:id="@+id/course_download_status"
                 style="@style/course_card_media_download"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 tools:targetApi="17"
                 tools:text="Media Download Status" />
-        </FrameLayout>
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
