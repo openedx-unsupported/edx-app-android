@@ -74,7 +74,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         menu.findItem(R.id.menu_item_account).setVisible(true);
         menu.findItem(R.id.menu_item_account).setIcon(
                 new IconDrawable(getContext(), FontAwesomeIcons.fa_gear)
-                        .colorRes(getContext(), R.color.edx_brand_primary_base)
+                        .colorRes(getContext(), R.color.toolbar_controls_color)
                         .actionBarSize(getContext()));
     }
 

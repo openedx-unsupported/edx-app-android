@@ -9,7 +9,7 @@
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
         <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
         <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
-        <item name="actionMenuTextColor">@color/edx_brand_primary_base</item>
+        <item name="actionMenuTextColor">@color/toolbar_controls_color</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
         <item name="actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
         <item name="windowActionModeOverlay">true</item>
@@ -65,25 +65,25 @@
 
     <!-- AppBar Styles -->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColorPrimary">@color/edx_brand_primary_base</item>
+        <item name="android:textColorPrimary">@color/toolbar_controls_color</item>
     </style>
 
     <!-- ToolBar Styles -->
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.ToolBar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/toolbar_background_color</item>
         <item name="titleTextAppearance">@style/AppTheme.ToolBar.Title</item>
         <item name="subtitleTextAppearance">@style/AppTheme.ToolBar.SubTitle</item>
     </style>
 
     <style name="AppTheme.ToolBar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@color/edx_brand_primary_base</item>
+        <item name="android:textColor">@color/toolbar_controls_color</item>
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
 
     <style name="AppTheme.ToolBar.SubTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@color/edx_brand_primary_base</item>
+        <item name="android:textColor">@color/toolbar_controls_color</item>
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
 
@@ -95,7 +95,7 @@
 
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/white</item>
+        <item name="color">@color/toolbar_controls_color</item>
     </style>
 
     <!-- ActionBar buttons -->
@@ -293,7 +293,7 @@
 
     <style name="profile_image">
         <item name="android:src">@color/edx_brand_gray_accent</item>
-        <item name="civ_border_color">@color/white</item>
+        <item name="civ_border_color">@color/edx_brand_primary_base</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@drawable/white_circle</item>
     </style>

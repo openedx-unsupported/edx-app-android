@@ -83,12 +83,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
-    @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        configureActionBar();
-    }
-
     protected void setToolbarAsActionBar() {
         final View toolbar = findViewById(R.id.toolbar);
         if (toolbar != null && toolbar instanceof Toolbar) {
@@ -125,7 +119,17 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             findViewById(R.id.shadow_view).setVisibility(View.VISIBLE);
         }
+    }
 
+    /**
+     * Hides the shadow that appears below {@link Toolbar}.
+     */
+    protected void hideToolbarShadow() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            findViewById(R.id.shadow_view).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.appbar).setOutlineProvider(null);
+        }
     }
 
     protected void configureActionBar() {

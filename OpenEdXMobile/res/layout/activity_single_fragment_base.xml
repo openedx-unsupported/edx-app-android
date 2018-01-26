@@ -1,10 +1,10 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
@@ -14,25 +14,21 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
+        <View
+            android:id="@+id/toolbar_placeholder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            tools:minHeight="?android:attr/actionBarSize" />
 
-            <View
-                android:id="@+id/toolbar_placeholder"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:minHeight="?android:attr/actionBarSize"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/error_layout"
@@ -40,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone">
 
-                    <include layout="@layout/panel_error_message_with_title"/>
+                    <include layout="@layout/panel_error_message_with_title" />
                 </LinearLayout>
 
                 <RelativeLayout
@@ -51,25 +47,26 @@
 
                 </RelativeLayout>
 
-                <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
+                <include
+                    android:id="@+id/auth_panel"
+                    layout="@layout/auth_panel" />
             </LinearLayout>
 
-                <TextView
-                    android:id="@+id/flying_message"
-                    style="@style/flying_message"
-                    android:layout_alignParentTop="true"
-                    android:visibility="gone" />
+            <TextView
+                android:id="@+id/flying_message"
+                style="@style/flying_message"
+                android:layout_alignParentTop="true"
+                android:visibility="gone" />
 
-                <include layout="@layout/loading_indicator" />
+            <include layout="@layout/loading_indicator" />
 
-                <TextView
-                    android:id="@+id/center_message_box"
-                    style="@style/content_unavailable_error_text"
-                    tools:text="Error text comes here."
-                    tools:visibility="visible" />
+            <TextView
+                android:id="@+id/center_message_box"
+                style="@style/content_unavailable_error_text"
+                tools:text="Error text comes here."
+                tools:visibility="visible" />
 
-            </FrameLayout>
-        </LinearLayout>
+        </FrameLayout>
     </android.support.design.widget.CoordinatorLayout>
 
     <include layout="@layout/navigation_drawer_container" />

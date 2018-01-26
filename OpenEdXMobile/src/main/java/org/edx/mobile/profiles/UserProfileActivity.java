@@ -28,6 +28,7 @@ public class UserProfileActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideToolbarShadow();
         if (!config.isTabsLayoutEnabled()) {
             if (getIntent().getBooleanExtra(EXTRA_SHOW_NAVIGATION_DRAWER, false)) {
                 addDrawer();

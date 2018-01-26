@@ -2,8 +2,10 @@ package org.edx.mobile.view;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
     @Nullable
     protected FragmentTabsBaseBinding binding;
 
+    @ColorRes
+    private int TAB_COLOR_SELECTOR_RES = R.color.tab_selector;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,7 +46,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
         // Get fragment items list
         final List<FragmentItemModel> fragmentItems = getFragmentItems();
         // Init tabs
-        final TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.appbar).findViewById(R.id.tabs);
+        final TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
 
         // No need to show tabs if we only have
         if (fragmentItems.size() <= 1) {
@@ -108,7 +113,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
 
     protected TabLayout.Tab createTab(TabLayout tabLayout, FragmentItemModel fragmentItem) {
         final IconDrawable iconDrawable = new IconDrawable(getContext(), fragmentItem.getIcon());
-        iconDrawable.colorRes(getContext(), R.color.edx_brand_primary_base);
+        iconDrawable.colorRes(getContext(), TAB_COLOR_SELECTOR_RES);
         final TabLayout.Tab tab;
         tab = tabLayout.newTab();
         if (showTitleInTabs()) {
@@ -117,6 +122,8 @@ public abstract class TabsBaseFragment extends BaseFragment {
             final TextView title = (TextView) tabItem.findViewById(R.id.title);
             final ImageView icon = (ImageView) tabItem.findViewById(R.id.icon);
             title.setText(fragmentItem.getTitle());
+
+            title.setTextColor(ContextCompat.getColorStateList(getContext(), TAB_COLOR_SELECTOR_RES));
             icon.setImageDrawable(iconDrawable);
             tab.setCustomView(tabItem);
         } else {
