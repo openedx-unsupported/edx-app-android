@@ -229,8 +229,8 @@ public class CourseComponent implements IBlock, IPathNode {
      * return all downloadable blocks under this node
      */
     public List<CourseComponent> getDownloadableMedia() {
-        List<CourseComponent> media = getVideos();
-        media.addAll(getAudios());
+        List<CourseComponent> media = getVideos(true);
+        media.addAll(getAudios(true));
         return media;
     }
 

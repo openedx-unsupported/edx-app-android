@@ -158,12 +158,12 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
             @Override
             public void run() {
                 if (isOnCourseOutline) {
-                    final int totalDownloadableVideos = courseComponent.getDownloadableVideosCount();
+                    final int totalDownloadableMedia = courseComponent.getDownloadableMediaCount();
                     // support video download for video type excluding the ones only viewable on web
-                    if (totalDownloadableVideos > 0) {
+                    if (totalDownloadableMedia > 0) {
                         int downloadedCount = environment.getDatabase().getDownloadedVideosCountForCourse(courseData.getCourse().getId());
 
-                        if (downloadedCount == totalDownloadableVideos) {
+                        if (downloadedCount == totalDownloadableMedia) {
                             Long downloadTimeStamp = environment.getDatabase().getLastVideoDownloadTimeForCourse(courseData.getCourse().getId());
                             String relativeTimeSpanString = getRelativeTimeStringFromNow(downloadTimeStamp);
                             setRowStateOnDownload(DownloadEntry.DownloadedState.DOWNLOADED, relativeTimeSpanString, null);
@@ -182,7 +182,7 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                                         public void onClick(View downloadView) {
                                             CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
                                             if (NetworkUtil.verifyDownloadPossible(activity)) {
-                                                downloadManager.downloadVideos(courseComponent.getVideos(), getActivity(),
+                                                downloadManager.downloadVideos(courseComponent.getDownloadableMedia(), getActivity(),
                                                         CourseOutlineFragment.this);
                                             }
                                         }
@@ -191,13 +191,15 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
                     }
                 }
             }
-        }, 100);
+        }, 500);
     }
 
     private void setRowStateOnDownload(DownloadEntry.DownloadedState state, String relativeTimeStamp, View.OnClickListener listener) {
-        listView.setOnScrollListener(onScrollListener());
-        courseStatusUnit.setVisibility(View.VISIBLE);
-        updateDownloadStatus(getContext(), state, listener, relativeTimeStamp);
+        if(isVisible()) {
+            listView.setOnScrollListener(onScrollListener());
+            courseStatusUnit.setVisibility(View.VISIBLE);
+            updateDownloadStatus(getContext(), state, listener, relativeTimeStamp);
+        }
     }
 
     public AbsListView.OnScrollListener onScrollListener() {
@@ -501,12 +503,12 @@ public class CourseOutlineFragment extends BaseFragment implements LastAccessMan
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
-        adapter.notifyDataSetChanged();
+        reloadList();
     }
 
     @SuppressWarnings("unused")
     public void onEvent(DownloadedVideoDeletedEvent e) {
-        adapter.notifyDataSetChanged();
+        reloadList();
     }
 
     public void loadLastAccessed() {
