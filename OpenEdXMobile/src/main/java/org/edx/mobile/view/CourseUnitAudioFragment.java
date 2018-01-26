@@ -11,9 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +25,6 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -37,12 +36,12 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.TranscriptModel;
-import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.player.AudioPlayerFragment;
 import org.edx.mobile.player.IPlayerEventCallback;
-import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptListener;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.ViewPagerDownloadManager;
@@ -56,39 +55,36 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
-public class CourseUnitVideoFragment extends CourseUnitFragment
+public class CourseUnitAudioFragment extends CourseUnitFragment
         implements IPlayerEventCallback, TranscriptListener {
 
-    protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
+    protected final static Logger logger = new Logger(CourseUnitAudioFragment.class.getName());
     private final static String HAS_NEXT_UNIT_ID = "has_next_unit";
     private final static String HAS_PREV_UNIT_ID = "has_prev_unit";
     private final static int MSG_UPDATE_PROGRESS = 1022;
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
-    private final static String playbackTimeFormat = "(%02d:%02d)";
 
-    VideoBlockModel unit;
-    private PlayerFragment playerFragment;
-    private boolean myVideosFlag = false;
+    AudioBlockModel unit;
+    private AudioPlayerFragment playerFragment;
+    private boolean myAudiosFlag = false;
     private boolean isActivityStarted;
     private String chapterName;
     private LectureModel lecture;
     private EnrolledCoursesResponse enrollment;
+    private DownloadEntry audioModel;
 
-    private DownloadEntry videoModel;
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
-    private CardView transcriptListViewUnit;
     private ListView transcriptListView;
-
     private TranscriptAdapter transcriptAdapter;
 
     private boolean hasNextUnit;
+
     private boolean hasPreviousUnit;
 
     // Defines if the user is scrolling the transcript listview
@@ -99,18 +95,20 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Inject
     private CourseAPI courseApi;
 
+
     @Inject
     VideoDownloadHelper downloadManager;
 
     @Inject
     protected IEdxEnvironment environment;
     private DownloadEntry.DownloadedState unitDownloadState;
+    public static final String TEST_TAG = "TEST_TAG";
 
     /**
      * Create a new instance of fragment
      */
-    public static CourseUnitVideoFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
-        CourseUnitVideoFragment f = new CourseUnitVideoFragment();
+    public static CourseUnitAudioFragment newInstance(AudioBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
+        CourseUnitAudioFragment f = new CourseUnitAudioFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -130,41 +128,45 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
-
         unit = getArguments() == null ? null :
-                (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+                (AudioBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
 
+
     private void initializeActionBar(MenuItem menuItem) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
-        setVideoDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
+        setAudioDownloadStatusIndicator(unit.getDownloadEntry(environment.getStorage()), menuItem);
     }
 
-    private void setVideoDownloadStatusIndicator(DownloadEntry videoData, final MenuItem menuItem) {
-        environment.getDatabase().getDownloadedStateForVideoId(videoData.blockId,
-                new DataCallback<DownloadEntry.DownloadedState>(true) {
-                    @Override
-                    public void onResult(DownloadEntry.DownloadedState state) {
-                        if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
-                            // may be download in progress
-                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
-                        } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
-                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
-                        }else {
-                            // not yet downloaded
-                            updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
+    private void setAudioDownloadStatusIndicator(DownloadEntry audioData, final MenuItem menuItem) {
+        if (audioData != null) {
+            environment.getDatabase().getDownloadedStateForVideoId(audioData.blockId,
+                    new DataCallback<DownloadEntry.DownloadedState>(true) {
+                        @Override
+                        public void onResult(DownloadEntry.DownloadedState state) {
+                            if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
+                                // not yet downloaded
+                                updateDownloadState(menuItem, DownloadEntry.DownloadedState.ONLINE);
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                                // may be download in progress
+                                updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADING);
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+                                updateDownloadState(menuItem, DownloadEntry.DownloadedState.DOWNLOADED);
+                            }
+                            unitDownloadState = state;
                         }
-                        unitDownloadState = state;
-                    }
 
-                    @Override
-                    public void onFail(Exception ex) {
-                        logger.error(ex);
-                        unitDownloadState = DownloadEntry.DownloadedState.ONLINE;
-                    }
-                });
+                        @Override
+                        public void onFail(Exception ex) {
+                            logger.error(ex);
+                            unitDownloadState = DownloadEntry.DownloadedState.ONLINE;
+                        }
+                    });
+        } else {
+            menuItem.setVisible(false);
+        }
     }
 
     private void updateDownloadState(MenuItem menuItem, DownloadEntry.DownloadedState state) {
@@ -185,6 +187,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
+
     /**
      * The Fragment's UI is just a simple text view showing its
      * instance number.
@@ -192,11 +195,11 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
+        View v = inflater.inflate(R.layout.fragment_course_unit_audio, container, false);
         messageContainer = v.findViewById(R.id.message_container);
-        transcriptListViewUnit = (CardView) v.findViewById(R.id.transcript_listview_container);
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
 
+        Log.d("TEST_TAG", "ONcreate");
         return v;
     }
 
@@ -234,7 +237,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         Intent extraIntent = getActivity().getIntent();
         if (extraIntent != null) {
             if (extraIntent.hasExtra("FromMyVideos")) {
-                myVideosFlag = extraIntent.getBooleanExtra(
+                myAudiosFlag = extraIntent.getBooleanExtra(
                         "FromMyVideos", false);
             }
 
@@ -265,13 +268,15 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
         if (playerFragment == null) {
 
-            playerFragment = new PlayerFragment();
+            playerFragment = new AudioPlayerFragment();
             playerFragment.setCallback(this);
+
+            // Can have separate flag for enabling audio transcripts.
             if (environment.getConfig().isVideoTranscriptEnabled()) {
                 playerFragment.setTranscriptCallback(this);
             }
 
-            final CourseUnitVideoFragment.HasComponent hasComponent = (CourseUnitVideoFragment.HasComponent) getActivity();
+            final CourseUnitAudioFragment.HasComponent hasComponent = (CourseUnitAudioFragment.HasComponent) getActivity();
             if (hasComponent != null) {
                 View.OnClickListener next = null;
                 View.OnClickListener prev = null;
@@ -307,7 +312,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             }
         }
         if (getUserVisibleHint()) {
-            checkVideoStatusAndPlay(unit);
+            checkAudioStatusAndPlay(unit);
         }
         if (ViewPagerDownloadManager.instance.inInitialPhase(unit)) {
             ViewPagerDownloadManager.instance.addTask(this);
@@ -323,10 +328,10 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
 
         if (isVisibleToUser) {
-            if (playerFragment.getPlayingVideo() == null) {
-                checkVideoStatusAndPlay(unit);
+            if (playerFragment.getPlayingAudio() == null) {
+                checkAudioStatusAndPlay(unit);
             } else {
-                checkVideoStatus(unit);
+                checkAudioStatus(unit);
             }
         } else {
             ((BaseFragmentActivity) getActivity()).hideInfoMessage();
@@ -345,17 +350,10 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if (entry == null || !entry.isDownload()) {
             return false;
         }
-
-        if (entry.isVideoForWebOnly) {
-            Toast.makeText(getContext(), getString(R.string.video_only_on_web_short),
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         return true;
     }
 
-    private void checkVideoStatus(VideoBlockModel unit) {
+    private void checkAudioStatus(AudioBlockModel unit) {
         final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
         if (checkDownloadEntry(entry) && !entry.isDownloaded()) {
             if (!MediaConsentUtils.canStreamMedia(getContext())) {
@@ -365,9 +363,14 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
-    private void checkVideoStatusAndPlay(VideoBlockModel unit) {
+    private void checkAudioStatusAndPlay(AudioBlockModel unit) {
         final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
-        if (!checkDownloadEntry(entry)) return;
+        if (!checkDownloadEntry(entry)) {
+            if(playerFragment != null){
+                playerFragment.setAudioNotObtainable();
+            }
+            return;
+        }
         if (entry.isDownloaded()) {
             startOnlinePlay(entry);
         } else {
@@ -394,17 +397,17 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             showPlayer();
         }
 
-        addVideoDatatoDb(model);
+        addAudioDatatoDb(model);
 
-        playVideoModel(model);
+        playAudioModel(model);
         notifyAdapter();
     }
 
-    public synchronized void playVideoModel(final DownloadEntry video) {
+    public synchronized void playAudioModel(final DownloadEntry audio) {
         try {
             if (playerFragment.isPlaying()) {
-                if (video.getBlockId().equals(playerFragment.getPlayingVideo().getBlockId())) {
-                    logger.debug("this video is already being played, skipping play event");
+                if (audio.getBlockId().equals(playerFragment.getPlayingAudio().getBlockId())) {
+                    logger.debug("this audio is already being played, skipping play event");
                     return;
                 }
             }
@@ -414,7 +417,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         try {
 
             // reload this model
-            environment.getStorage().reloadDownloadEntry(video);
+            environment.getStorage().reloadDownloadEntry(audio);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
             if (!playerFragment.isResumed()) {
@@ -424,7 +427,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 }
                 playPending = new Runnable() {
                     public void run() {
-                        playVideoModel(video);
+                        playAudioModel(audio);
                     }
                 };
                 playHandler.postDelayed(playPending, 200);
@@ -435,22 +438,22 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 }
             }
 
-            TranscriptModel transcript = getTranscriptModel(video);
-            String filepath = getVideoPath(video);
+            TranscriptModel transcript = getTranscriptModel(audio);
+            String filepath = getAudioPath(audio);
 
 
-            playerFragment.prepare(filepath, video.lastPlayedOffset,
-                    video.getTitle(), transcript, video);
+            playerFragment.prepare(filepath, audio.lastPlayedOffset,
+                    audio.getTitle(), transcript, audio);
 
 
             try {
                 // capture chapter name
                 if (chapterName == null) {
-                    // capture the chapter name of this video
-                    chapterName = video.chapter;
+                    // capture the chapter name of this audio
+                    chapterName = audio.chapter;
                 }
 
-                videoModel = video;
+                audioModel = audio;
             } catch (Exception e) {
                 logger.error(e);
             }
@@ -459,21 +462,21 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
-    private String getVideoPath(DownloadEntry video) {
+    private String getAudioPath(DownloadEntry audio) {
         String filepath = null;
-        if (!(video.filepath != null && video.filepath.length() > 0)) {
-            if (video.isDownloaded()) {
-                File f = new File(video.filepath);
+        if (!(audio.filepath != null && audio.filepath.length() > 0)) {
+            if (audio.isDownloaded()) {
+                File f = new File(audio.filepath);
                 if (f.exists()) {
                     // play from local
-                    filepath = video.filepath;
+                    filepath = audio.filepath;
                     logger.debug("playing from local file");
                 }
             }
         } else {
-            DownloadEntry de = DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
-                    .getDownloadEntryByMediaUrl(
-                            video.url, null);
+            DownloadEntry de = (DownloadEntry) DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
+                    .getDownloadEntryByMediaId(
+                            audio.getBlockId(), null);
             if (de != null) {
                 if (de.filepath != null) {
                     File f = new File(de.filepath);
@@ -491,21 +494,21 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             // not available on local, so play online
             logger.warn("Local file path not available");
 
-            filepath = video.getBestEncodingUrl(getActivity());
+            filepath = audio.getBestEncodingUrl(getActivity());
         }
         return filepath;
     }
 
-    private TranscriptModel getTranscriptModel(DownloadEntry video) {
+    private TranscriptModel getTranscriptModel(DownloadEntry audio) {
         TranscriptModel transcript = null;
         if (unit != null && unit.getData() != null &&
-                unit.getData().transcripts != null) {
-            transcript = unit.getData().transcripts;
+                unit.getData().getTranscripts() != null) {
+            transcript = unit.getData().getTranscripts();
         }
         if (transcript == null) {
             try {
-                if (video.blockId != null) {
-                    transcript = courseApi.getTranscriptsOfMedia(video.eid, video.blockId);
+                if (audio.blockId != null) {
+                    transcript = courseApi.getTranscriptsOfMedia(audio.eid, audio.blockId);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -531,7 +534,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Override
     public void onStop() {
         super.onStop();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
 
@@ -553,7 +555,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onStart() {
         super.onStart();
         isActivityStarted = true;
-        if (!myVideosFlag) {
+        if (!myAudiosFlag) {
             handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
         }
     }
@@ -582,23 +584,23 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     };
 
     public void markPlaying() {
-        environment.getStorage().markMediaPlaying(videoModel, watchedStateCallback);
+        environment.getStorage().markMediaPlaying(audioModel, watchedStateCallback);
     }
 
     /**
      * This method inserts the Download Entry Model in the database
-     * Called when a user clicks on a Video in the list
+     * Called when a user clicks on a Audio in the list
      *
      * @param v - Download Entry object
      */
-    public void addVideoDatatoDb(final DownloadEntry v) {
+    public void addAudioDatatoDb(final DownloadEntry v) {
         try {
             if (v != null) {
                 DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).addMediaData(v, new DataCallback<Long>() {
                     @Override
                     public void onResult(Long result) {
                         if (result != -1) {
-                            logger.debug("Video entry inserted" + v.blockId);
+                            logger.debug("Audio entry inserted" + v.blockId);
                         }
                     }
 
@@ -615,24 +617,15 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     public void saveCurrentPlaybackPosition(int offset) {
         try {
-            DownloadEntry v = videoModel;
+            DownloadEntry v = audioModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getPlaybackTime(offset));
-                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE).updateMediaLastPlayedOffset(v.blockId, offset,
+                DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).updateMediaLastPlayedOffset(v.blockId, offset,
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);
         }
-    }
-
-    private String getPlaybackTime(int millis) {
-        return String.format(playbackTimeFormat,
-                TimeUnit.MILLISECONDS.toMinutes(millis),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-        );
     }
 
     @Override
@@ -647,9 +640,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     public void onPlaybackComplete() {
         try {
-            DownloadEntry v = videoModel;
+            DownloadEntry v = audioModel;
             if (v != null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                videoModel.watched = DownloadEntry.WatchedState.WATCHED;
+                audioModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
                 DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
                         .updatePlayableMediaWatchedState(v.blockId, DownloadEntry.WatchedState.WATCHED,
@@ -671,13 +664,13 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable("model", videoModel);
+        outState.putSerializable("model", audioModel);
         super.onSaveInstanceState(outState);
     }
 
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            videoModel = (DownloadEntry) savedInstanceState.getSerializable("model");
+            audioModel = (DownloadEntry) savedInstanceState.getSerializable("model");
         }
     }
 
@@ -743,16 +736,13 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             messageContainer.setVisibility(View.GONE);
             transcriptListView.setVisibility(View.GONE);
-            transcriptListViewUnit.setVisibility(View.GONE);
         } else {
             if (transcriptAdapter == null) {
                 messageContainer.setVisibility(View.VISIBLE);
-                transcriptListViewUnit.setVisibility(View.GONE);
                 transcriptListView.setVisibility(View.GONE);
                 initTranscriptListView();
             } else {
                 messageContainer.setVisibility(View.GONE);
-                transcriptListViewUnit.setVisibility(View.VISIBLE);
                 transcriptListView.setVisibility(View.VISIBLE);
 
                 // Calculating the offset required for centralizing the current transcript item
@@ -840,7 +830,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     /**
-     * Re-enables our auto scrolling logic of transcript listview with respect to video's current
+     * Re-enables our auto scrolling logic of transcript listview with respect to audio's current
      * playback position.
      */
     final Runnable UNFREEZE_AUTO_SCROLL = new Runnable() {
@@ -849,4 +839,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             isTranscriptScrolling = false;
         }
     };
+
+
 }

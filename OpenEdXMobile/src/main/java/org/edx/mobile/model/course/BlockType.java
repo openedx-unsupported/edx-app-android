@@ -21,6 +21,7 @@ public enum  BlockType {
     SEQUENTIAL{ @Override public boolean isContainer() {return true;} },
     VERTICAL{ @Override public boolean isContainer() {return true;} },
     VIDEO{ @Override public boolean isContainer() {return false;} },
+    AUDIO{ @Override public boolean isContainer() {return false;} },
     HTML{ @Override public boolean isContainer() {return false;} },
     PROBLEM{ @Override public boolean isContainer() {return false;} },
     DISCUSSION{ @Override public boolean isContainer() {return false;} },

@@ -3,9 +3,11 @@ package org.edx.mobile.module.storage;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.AudioBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -21,7 +23,7 @@ public interface IStorage {
      * @param model
      * @return row id updated in the Database (0 if not added to download)
      */
-    long addDownload(VideoModel model);
+    long addDownload(DownloadEntry model);
     
     /**
      * Removes a Video from the database as well as NativeDownloadManager 
@@ -41,7 +43,7 @@ public interface IStorage {
     /**
      * This method fetches all unenrolledVideos from the DB. 
      * Iterates through the list and then calls the remove Download method for each video
-     * Method in DB for getting all unenrolled videos is db.getAllDeactivatedVideos(callback);  
+     * Method in DB for getting all unenrolled videos is db.getAllDeactivatedMedia(callback);
      * @return
      */
     int deleteAllUnenrolledVideos();
@@ -90,6 +92,13 @@ public interface IStorage {
     VideoModel getDownloadEntryFromVideoModel(VideoBlockModel block);
 
     /**
+     * Returns DownloadEntry Model after converting it from AudioBlockModel
+     * @param block - AudioBlockModel
+     * @return
+     */
+    AudioModel getDownloadEntryFromAudioModel(AudioBlockModel block);
+
+    /**
      * Returns NativeDownload Entry for the given DMID
      * @param dmId
      * @return
@@ -119,11 +128,11 @@ public interface IStorage {
     void markDownloadAsComplete(long dmId, DataCallback<VideoModel> callback);
 
     /**
-     * Marks given video as WatchedState.PARTIALLY_WATCHED if it is WatchedState.WATCHED.
-     * @param videoModel
+     * Marks given media as WatchedState.PARTIALLY_WATCHED if it is WatchedState.WATCHED.
+     * @param downloadEntry
      * @param watchedStateCallback
      */
-    void markVideoPlaying(DownloadEntry videoModel, DataCallback<Integer> watchedStateCallback);
+    void markMediaPlaying(DownloadEntry downloadEntry, DataCallback<Integer> watchedStateCallback);
 
     void repairDownloadCompletionData();
 }

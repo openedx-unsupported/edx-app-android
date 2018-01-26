@@ -297,9 +297,9 @@ public class ApiTests extends HttpBaseTestCase {
         assertSame(courseComponent,
                 courseComponent.getAncestor(EnumSet.of(blockType)));
 
-        List<VideoBlockModel> videos = courseComponent.getVideos();
+        List<CourseComponent> videos = courseComponent.getVideos();
         assertNotNull(videos);
-        for (HasDownloadEntry video : videos) {
+        for (CourseComponent video : videos) {
             assertNotNull(video);
             assertTrue(video instanceof CourseComponent);
             CourseComponent videoComponent = (CourseComponent) video;

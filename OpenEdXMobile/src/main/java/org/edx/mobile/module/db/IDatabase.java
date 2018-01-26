@@ -2,7 +2,9 @@ package org.edx.mobile.module.db;
 
 import android.support.annotation.Nullable;
 
+import org.edx.mobile.model.AudioModel;
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
@@ -58,7 +60,7 @@ public interface IDatabase {
      *
      * @param callback
      */
-    List<VideoModel> getAllDeactivatedVideos(DataCallback<List<VideoModel>> callback);
+    List<DownloadEntry> getAllDeactivatedMedia(DataCallback<List<DownloadEntry>> callback);
 
 
     /**
@@ -212,8 +214,8 @@ public interface IDatabase {
      * @param callback     callback to return results to
      * @return Count of downloaded videos for a given section
      */
-    int getDownloadedVideosCountForSection(String enrollmentId, String chapter, String section,
-                                           final DataCallback<Integer> callback);
+    int getDownloadedMediaCountForSection(String enrollmentId, String chapter, String section,
+                                          final DataCallback<Integer> callback);
 
     /**
      * get number of videos marked as webOnly
@@ -230,20 +232,20 @@ public interface IDatabase {
     /**
      * Update a Video's watched state
      *
-     * @param videoId - Id of video for which status needs to change
+     * @param mediaId - Id of video for which status needs to change
      * @param state   - Status flag to be set for changing Video watched state
      */
-    Integer updateVideoWatchedState(String videoId, WatchedState state,
-                                    DataCallback<Integer> callback);
+    Integer updatePlayableMediaWatchedState(String mediaId, WatchedState state,
+                                            DataCallback<Integer> callback);
 
 
     /**
      * Update a Video's last watched time
      *
-     * @param videoId - Id of video for which status needs to change
+     * @param mediaId - Id of media for which status needs to change
      * @param offset  - Last Played offset
      */
-    Integer updateVideoLastPlayedOffset(String videoId, int offset, DataCallback<Integer> callback);
+    Integer updateMediaLastPlayedOffset(String mediaId, int offset, DataCallback<Integer> callback);
 
 
     /**
@@ -253,25 +255,25 @@ public interface IDatabase {
      * @param callback
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
-    Long addVideoData(VideoModel de, DataCallback<Long> callback);
+    Long addMediaData(DownloadEntry de, DataCallback<Long> callback);
 
     /**
-     * Returns VideoEntry for the passed VideoId
+     * Returns DownloadEntry for the passed mediaId
      *
-     * @param videoId
+     * @param mediaId
      * @param callback
      */
-    VideoModel getVideoEntryByVideoId(String videoId, DataCallback<VideoModel> callback);
+    DownloadEntry getDownloadEntryByMediaId(String mediaId, DataCallback<DownloadEntry> callback);
 
     /**
-     * Returns {@link org.edx.mobile.model.VideoModel} which is downloaded or download is in
-     * progress for given videoUrl.
+     * Returns {@link org.edx.mobile.model.db.DownloadEntry} which is downloaded or download is in
+     * progress for given mediaUrl.
      *
-     * @param videoUrl
+     * @param mediaUrl
      * @param callback
      * @return
      */
-    VideoModel getVideoByVideoUrl(String videoUrl, DataCallback<VideoModel> callback);
+    DownloadEntry getDownloadEntryByMediaUrl(String mediaUrl, DataCallback<DownloadEntry> callback);
 
 
     /**
@@ -331,7 +333,7 @@ public interface IDatabase {
      *
      * @return
      */
-    List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
+    List<DownloadEntry> getListOfOngoingDownloads(DataCallback<List<DownloadEntry>> callback);
 
 
     /**
@@ -341,13 +343,6 @@ public interface IDatabase {
      * @return - count of Videos downloaded
      */
     Integer getVideosDownloadedCount(DataCallback<Integer> callback);
-
-    /**
-     * Returns IVideoModel object if entry exists with Video status set as
-     * downloaded with the given URL
-     */
-    VideoModel getIVideoModelByVideoUrl(String videoUrl,
-                                        DataCallback<VideoModel> callback);
 
 
     /**
@@ -375,7 +370,7 @@ public interface IDatabase {
      *
      * @return
      */
-    List<VideoModel> getAllVideos(String username, DataCallback<List<VideoModel>> DataCallback);
+    List<DownloadEntry> getAllVideos(String username, DataCallback<List<DownloadEntry>> DataCallback);
 
     /**
      * Removes all records of given username from the database.
@@ -409,7 +404,7 @@ public interface IDatabase {
      * @param callback
      * @return
      */
-    VideoModel getDownloadEntryByDmId(long dmId, DataCallback<VideoModel> callback);
+    DownloadEntry getDownloadEntryByDmId(long dmId, DataCallback<DownloadEntry> callback);
 
     /**
      * This method gives the WatchedState stored in the DB for VideoID

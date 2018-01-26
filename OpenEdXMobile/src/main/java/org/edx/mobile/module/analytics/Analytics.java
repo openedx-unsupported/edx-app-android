@@ -30,78 +30,78 @@ public interface Analytics {
     /**
      * This function is used to track Video Playing
      *
-     * @param videoId     - Video Id that is being Played
+     * @param mediaId     - Video Id that is being Played
      * @param currentTime - Video Playing started at
      * @param unitUrl     - Page Url for that Video
      * @param courseId    - CourseId under which the video is present
      */
-    void trackVideoPlaying(String videoId, Double currentTime,
+    void trackMediaPlaying(String mediaId, Double currentTime,
                            String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Pause
      *
-     * @param videoId     - Video Id that is being Played
+     * @param mediaId     - Video Id that is being Played
      * @param currentTime - Video Playing started at
      * @param courseId    - CourseId under which the video is present
      * @param unitUrl     - Page Url for that Video
      */
-    void trackVideoPause(String videoId, Double currentTime,
+    void trackMediaPause(String mediaId, Double currentTime,
                          String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Stop
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param courseId
      * @param unitUrl
      */
-    void trackVideoStop(String videoId, Double currentTime,
+    void trackMediaStop(String mediaId, Double currentTime,
                         String courseId, String unitUrl);
 
     /**
      * This function is used to Show Transcript
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param courseId
      * @param unitUrl
      */
-    void trackShowTranscript(String videoId, Double currentTime,
+    void trackShowTranscript(String mediaId, Double currentTime,
                              String courseId, String unitUrl);
 
     /**
      * This function is used to Hide Transcript
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param courseId
      * @param unitUrl
      */
-    void trackHideTranscript(String videoId, Double currentTime,
+    void trackHideTranscript(String mediaId, Double currentTime,
                              String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Loading
      *
-     * @param videoId
+     * @param mediaId
      * @param courseId
      * @param unitUrl
      */
-    void trackVideoLoading(String videoId, String courseId, String unitUrl);
+    void trackMediaLoading(String mediaId, String courseId, String unitUrl);
 
     /**
      * This function is used to track 30 second rewind on Video
      *
-     * @param videoId
+     * @param mediaId
      * @param oldTime
      * @param newTime
      * @param courseId
      * @param unitUrl
      * @param skipSeek
      */
-    void trackVideoSeek(String videoId, Double oldTime, Double newTime,
+    void trackMediaSeek(String mediaId, Double oldTime, Double newTime,
                         String courseId, String unitUrl, Boolean skipSeek);
 
     /* Events not mentioned in PDF */
@@ -109,11 +109,11 @@ public interface Analytics {
     /**
      * This function is used to track Video Download completed
      *
-     * @param videoId  - Video id for which download has started
+     * @param mediaId  - Block id for which download has started
      * @param courseId
      * @param unitUrl
      */
-    void trackDownloadComplete(String videoId, String courseId,
+    void trackDownloadComplete(String mediaId, String courseId,
                                String unitUrl);
 
     /**
@@ -149,35 +149,35 @@ public interface Analytics {
     /**
      * This function is used to track Language changed for Transcripts
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param lang
      * @param courseId
      * @param unitUrl
      */
-    void trackTranscriptLanguage(String videoId, Double currentTime,
+    void trackTranscriptLanguage(String mediaId, Double currentTime,
                                  String lang, String courseId, String unitUrl);
 
     /**
      * This function is used to track Video Download started from Video List
      *
-     * @param videoId  -  Video id for which download has started
+     * @param mediaId  -  Block id for which download has started
      * @param courseId
      * @param unitUrl
      */
-    void trackSingleVideoDownload(String videoId, String courseId,
+    void trackSingleMediaDownload(String mediaId, String courseId,
                                   String unitUrl);
 
     /**
-     * This function is used to track Video Orientation
+     * This function is used to track Media Orientation
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param isLandscape -  true / false based on orientation
      * @param courseId
      * @param unitUrl
      */
-    void trackVideoOrientation(String videoId, Double currentTime,
+    void trackMediaOrientation(String mediaId, Double currentTime,
                                boolean isLandscape, String courseId, String unitUrl);
 
     void trackDiscoverCoursesClicked();

@@ -61,7 +61,7 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
                             DownloadEntry download = (DownloadEntry) result;
 
                             AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
-                            analyticsRegistry.trackDownloadComplete(download.videoId, download.eid,
+                            analyticsRegistry.trackDownloadComplete(download.blockId, download.eid,
                                     download.lmsUrl);
                         }
                     }

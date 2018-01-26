@@ -22,7 +22,7 @@ public class BlockData implements Serializable {
             //TODO - can not figure out a way to pass parent properties, for example, "type" field
             //so have to check the existence of certain fields
             if (jsonObject.has("playable_audio")) {
-                return new BlockData();
+                return context.deserialize(jsonObject, AudioData.class);
             } else if (jsonObject.has("encoded_videos") || jsonObject.has("transcripts")) {
                 return context.deserialize(jsonObject, VideoData.class);
             } else if (jsonObject.has("topic_id")) {

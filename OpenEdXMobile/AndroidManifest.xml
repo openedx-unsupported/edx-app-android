@@ -300,6 +300,7 @@
         </receiver>
 
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
+        <service android:name=".player.AudioMediaService" />
     </application>
 
 </manifest>

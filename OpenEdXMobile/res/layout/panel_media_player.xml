@@ -28,8 +28,8 @@
             android:visibility="gone" />
 
         <include
-            android:id="@+id/panel_video_not_available"
-            layout="@layout/panel_video_not_available"
+            android:id="@+id/panel_media_not_available"
+            layout="@layout/panel_media_not_available"
             android:visibility="gone" />
 
         <include

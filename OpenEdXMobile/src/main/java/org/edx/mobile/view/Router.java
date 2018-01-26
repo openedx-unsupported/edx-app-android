@@ -27,6 +27,7 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.player.AudioMediaService;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
@@ -53,6 +54,7 @@ public class Router {
     public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
     public static final String EXTRA_YOUTUBE_API_KEY = "youtube_api_key";
+    public static final String EXTRA_IS_VIDEOS_MODE = "video_mode";
 
     @Inject
     Config config;
@@ -234,7 +236,7 @@ public class Router {
     }
 
     public void showCourseTabsDashboard(Activity activity, EnrolledCoursesResponse model,
-                                    boolean announcements) {
+                                        boolean announcements) {
         activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, announcements));
     }
 
@@ -431,5 +433,16 @@ public class Router {
                 .append(NEW_LINE).append(NEW_LINE)
                 .append(activity.getString(R.string.insert_feedback));
         EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
+    }
+
+    public void manageAudioServiceRouting(boolean isTaskRoot, Activity activity)
+    {
+        //Stop Any Audio service if running
+        Intent audioServiceIntent = new Intent(activity , AudioMediaService.class);
+        audioServiceIntent.setAction(AudioMediaService.CANCEL_INTENT);
+        activity.startService(audioServiceIntent);
+        if (isTaskRoot) {
+            showSplashScreen(activity);
+        }
     }
 }

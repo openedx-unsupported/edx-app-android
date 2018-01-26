@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape  android:shape="oval">
+            <solid android:color="@color/audio_seekbar_thumb_shadow_color" />
+        </shape>
+    </item>
+
+    <!-- White Top color -->
+    <item android:bottom="@dimen/audio_thumb_bottom_shadow_size" android:left="@dimen/audio_thumb_left_shadow_size" android:right="@dimen/audio_thumb_left_shadow_size" android:top="@dimen/audio_thumb_left_shadow_size">
+
+        <shape  android:shape="oval">
+            <size android:height="@dimen/audio_seekbar_thumb_size" android:width="@dimen/audio_seekbar_thumb_size"> </size>
+            <solid android:color="@color/edx_white" />
+        </shape>
+
+    </item>
+</layer-list>

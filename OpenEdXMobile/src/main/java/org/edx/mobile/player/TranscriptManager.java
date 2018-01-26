@@ -148,7 +148,7 @@ public class TranscriptManager {
      * This function starts downloading all the srt files in a Transcript model
      * @param transcript
      */
-    public void downloadTranscriptsForVideo(TranscriptModel transcript) {
+    public void downloadTranscriptsForMedia(TranscriptModel transcript) {
         if (transcript == null) {
             return;
         }
@@ -165,7 +165,7 @@ public class TranscriptManager {
      * @param transcript - This model contains links of the srt files
      * @return ArrayList<String> which is the list of srt response strings
      */
-    public LinkedHashMap<String, InputStream> fetchTranscriptsForVideo(TranscriptModel transcript) {
+    public LinkedHashMap<String, InputStream> fetchTranscriptsForMedia(TranscriptModel transcript) {
         LinkedHashMap<String, InputStream> transcriptList = new LinkedHashMap<>();
         for (Map.Entry<String, String> entry : transcript.entrySet()) {
             if (entry.getValue() != null) {

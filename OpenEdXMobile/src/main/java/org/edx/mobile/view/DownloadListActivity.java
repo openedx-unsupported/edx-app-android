@@ -124,9 +124,9 @@ public class DownloadListActivity extends BaseFragmentActivity {
     }
 
     private void fetchOngoingDownloads() {
-        environment.getDatabase().getListOfOngoingDownloads(new DataCallback<List<VideoModel>>(false) {
+        environment.getDatabase().getListOfOngoingDownloads(new DataCallback<List<DownloadEntry>>(false) {
             @Override
-            public void onResult(List<VideoModel> result) {
+            public void onResult(List<DownloadEntry> result) {
                 final List<DownloadEntryAdapter.Item> downloadItems = new ArrayList<>(result.size());
                 for (VideoModel model : result) {
                     final DownloadEntry downloadEntry = (DownloadEntry) model;

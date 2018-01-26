@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/notification_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/edx_base"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_weight="0.85"
+            android:padding="@dimen/vertical_input_padding"
+            />
+        <ImageView
+            android:id="@+id/icon_cancel_notification"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_close_media_notification"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.15"
+            android:contentDescription="@null"
+            android:padding="@dimen/audio_notification_icons_padding"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/notification_Message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/edx_small"
+        android:textColor="@android:color/black"
+        />
+
+    <ImageView
+        android:id="@+id/play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_play_media"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null"
+        android:padding="@dimen/audio_notification_icons_padding"/>
+
+</LinearLayout>

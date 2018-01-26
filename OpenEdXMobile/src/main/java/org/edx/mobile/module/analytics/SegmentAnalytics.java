@@ -109,76 +109,76 @@ public class SegmentAnalytics implements Analytics {
     }
 
     /**
-     * This function is used to track Video Loading
+     * This function is used to track media Loading
      *
-     * @param videoId
+     * @param mediaId
      * @param courseId
      * @param unitUrl
      */
     @Override
-    public void trackVideoLoading(String videoId, String courseId, String unitUrl) {
-        SegmentEvent aEvent = getCommonProperties(videoId, Values.VIDEO_LOADED);
+    public void trackMediaLoading(String mediaId, String courseId, String unitUrl) {
+        SegmentEvent aEvent = getCommonProperties(mediaId, Values.VIDEO_LOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         trackSegmentEvent(Events.LOADED_VIDEO, aEvent.properties);
     }
 
     /**
-     * This function is used to track Video Playing
+     * This function is used to track Media Playing
      *
-     * @param videoId     -   Video Id that is being Played
-     * @param currentTime -  Video Playing started at
-     * @param unitUrl     -   Page Url for that Video
-     * @param courseId    -     CourseId under which the video is present
+     * @param mediaId     -   Media Id that is being Played
+     * @param currentTime -  Media Playing started at
+     * @param unitUrl     -   Page Url for that Media
+     * @param courseId    -     CourseId under which the media is present
      */
     @Override
-    public void trackVideoPlaying(String videoId, Double currentTime,
+    public void trackMediaPlaying(String mediaId, Double currentTime,
                                   String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
-                videoId, Values.VIDEO_PLAYED);
+                mediaId, Values.VIDEO_PLAYED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
         trackSegmentEvent(Events.PLAYED_VIDEO, aEvent.properties);
     }
 
     /**
-     * This function is used to track Video Pause
+     * This function is used to track media Pause
      *
-     * @param videoId     -   Video Id that is being Played
-     * @param currentTime -  Video Playing started at
-     * @param courseId    -  CourseId under which the video is present
-     * @param unitUrl     -   Page Url for that Video
+     * @param mediaId     -   Media Id that is being Played
+     * @param currentTime -  Media Playing started at
+     * @param courseId    -  CourseId under which the Media is present
+     * @param unitUrl     -   Page Url for that Media
      */
     @Override
-    public void trackVideoPause(String videoId,
+    public void trackMediaPause(String mediaId,
                                 Double currentTime, String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
-                videoId, Values.VIDEO_PAUSED);
+                mediaId, Values.VIDEO_PAUSED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         trackSegmentEvent(Events.PAUSED_VIDEO, aEvent.properties);
     }
 
     /**
-     * This function is used to track Video Stop
+     * This function is used to track media Stop
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param courseId
      * @param unitUrl
      */
     @Override
-    public void trackVideoStop(String videoId, Double currentTime, String courseId,
+    public void trackMediaStop(String mediaId, Double currentTime, String courseId,
                                String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
-                videoId, Values.VIDEO_STOPPED);
+                mediaId, Values.VIDEO_STOPPED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
         trackSegmentEvent(Events.STOPPED_VIDEO, aEvent.properties);
     }
 
     /**
-     * This function is used to track 30 second rewind on Video
+     * This function is used to track 30 second rewind on Playable Media
      *
-     * @param videoId
+     * @param mediaId
      * @param oldTime
      * @param newTime
      * @param courseId
@@ -186,9 +186,9 @@ public class SegmentAnalytics implements Analytics {
      * @param skipSeek
      */
     @Override
-    public void trackVideoSeek(String videoId,
+    public void trackMediaSeek(String mediaId,
                                Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
-        SegmentEvent aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
+        SegmentEvent aEvent = getCommonProperties(mediaId, Values.VIDEO_SEEKED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         //Call the format Double value so that we can have upto 3 decimal places after
         oldTime = JavaUtil.formatDoubleValue(oldTime, 3);
@@ -210,16 +210,16 @@ public class SegmentAnalytics implements Analytics {
     /**
      * This function is used to Show Transcript
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param courseId
      * @param unitUrl
      */
     @Override
-    public void trackShowTranscript(String videoId, Double currentTime, String courseId,
+    public void trackShowTranscript(String mediaId, Double currentTime, String courseId,
                                     String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
-                videoId, Values.TRANSCRIPT_SHOWN);
+                mediaId, Values.TRANSCRIPT_SHOWN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
         trackSegmentEvent(Events.SHOW_TRANSCRIPT, aEvent.properties);
@@ -228,17 +228,17 @@ public class SegmentAnalytics implements Analytics {
     /**
      * This function is used to Hide Transcript
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param courseId
      * @param unitUrl
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public void trackHideTranscript(String videoId, Double currentTime, String courseId,
+    public void trackHideTranscript(String mediaId, Double currentTime, String courseId,
                                     String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
-                videoId, Values.TRANSCRIPT_HIDDEN);
+                mediaId, Values.TRANSCRIPT_HIDDEN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
         trackSegmentEvent(Events.HIDE_TRANSCRIPT, aEvent.properties);
@@ -254,16 +254,16 @@ public class SegmentAnalytics implements Analytics {
 
 
     /**
-     * This function is used to track Video Download completed
+     * This function is used to track Media Download completed
      *
-     * @param videoId  -  Video id for which download has started
+     * @param mediaId  -  Media id for which download has started
      * @param courseId
      * @param unitUrl
      */
     @Override
-    public void trackDownloadComplete(String videoId, String courseId,
+    public void trackDownloadComplete(String mediaId, String courseId,
                                       String unitUrl) {
-        SegmentEvent aEvent = getCommonProperties(videoId, Values.VIDEO_DOWNLOADED);
+        SegmentEvent aEvent = getCommonProperties(mediaId, Values.VIDEO_DOWNLOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
 
         trackSegmentEvent(Events.VIDEO_DOWNLOADED, aEvent.properties);
@@ -295,17 +295,17 @@ public class SegmentAnalytics implements Analytics {
     }
 
     /**
-     * This function is used to track Video Download started from Video List
+     * This function is used to track Media Download started from Media List
      *
-     * @param videoId  -  Video id for which download has started
+     * @param mediaId  -  Video id for which download has started
      * @param courseId
      * @param unitUrl
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public void trackSingleVideoDownload(String videoId, String courseId,
+    public void trackSingleMediaDownload(String mediaId, String courseId,
                                          String unitUrl) {
-        SegmentEvent aEvent = getCommonProperties(videoId,
+        SegmentEvent aEvent = getCommonProperties(mediaId,
                 Values.SINGLE_VIDEO_DOWNLOAD);
         aEvent.setCourseContext(courseId,
                 unitUrl, Values.DOWNLOAD_MODULE);
@@ -313,9 +313,9 @@ public class SegmentAnalytics implements Analytics {
     }
 
     /**
-     * This function is used to track Video Orientation
+     * This function is used to track Media Orientation
      *
-     * @param videoId
+     * @param mediaId
      * @param currentTime
      * @param isLandscape -  true / false based on orientation
      * @param courseId
@@ -323,10 +323,10 @@ public class SegmentAnalytics implements Analytics {
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public void trackVideoOrientation(String videoId, Double currentTime,
+    public void trackMediaOrientation(String mediaId, Double currentTime,
                                       boolean isLandscape, String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
-                videoId, Values.FULLSREEN_TOGGLED);
+                mediaId, Values.FULLSREEN_TOGGLED);
         aEvent.data.putValue(Keys.FULLSCREEN, isLandscape);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
@@ -392,10 +392,10 @@ public class SegmentAnalytics implements Analytics {
      * This function is used to track Language changed for Transcripts
      */
     @Override
-    public void trackTranscriptLanguage(String videoId,
+    public void trackTranscriptLanguage(String mediaId,
                                         Double currentTime, String lang, String courseId, String unitUrl) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
-                videoId, Values.TRANSCRIPT_LANGUAGE);
+                mediaId, Values.TRANSCRIPT_LANGUAGE);
         aEvent.properties.putValue(Keys.LANGUAGE, lang);
         aEvent.setCourseContext(courseId, unitUrl,
                 Values.VIDEOPLAYER);

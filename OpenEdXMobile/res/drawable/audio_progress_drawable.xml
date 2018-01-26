@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/light_gray" />
+            <corners android:radius="@dimen/audio_seekbar_drawable_radius" />
+            <size android:height="@dimen/audio_seekbar_drawable_height"/>
+        </shape>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/audio_seekbar_buffer" />
+            <corners android:radius="@dimen/audio_seekbar_drawable_radius" />
+            <size android:height="@dimen/audio_seekbar_drawable_height"/>
+
+        </shape>
+        </clip>
+    </item>
+
+    <item android:id="@android:id/progress">
+        <clip>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/edx_brand_primary_base" />
+            <corners android:radius="@dimen/audio_seekbar_drawable_radius" />
+            <size android:height="@dimen/audio_seekbar_drawable_height"/>
+        </shape>
+        </clip>
+    </item>
+
+</layer-list>

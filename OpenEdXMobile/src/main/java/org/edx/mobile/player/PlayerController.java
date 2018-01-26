@@ -81,24 +81,24 @@ public class PlayerController extends FrameLayout {
 
     public static final long    DEFAULT_TIMEOUT_MS = 3000L;
 
-    private long                mTimeoutMS = DEFAULT_TIMEOUT_MS;
-    private IPlayer             mPlayer;
-    private Context             mContext;
-    private ViewGroup           mAnchor;
-    private View                mRoot;
-    private ProgressBar         mProgress;
-    private TextView            mEndTime, mCurrentTime;
-    private boolean             mShowing;
-    private boolean             mPauseAccessibilityRequestQueued;
-    private boolean             mDragging;
-    private static final int    FADE_OUT = 1;
-    private static final int    SHOW_PROGRESS = 2;
-    private boolean             mUseFastForward;
-    private boolean             mFromXml;
-    private boolean             mListenersSet;
-    private View.OnClickListener mNextListener, mPrevListener;
-    StringBuilder               mFormatBuilder;
-    Formatter                   mFormatter;
+    protected long                mTimeoutMS = DEFAULT_TIMEOUT_MS;
+    protected IPlayer             mPlayer;
+    protected Context             mContext;
+    protected ViewGroup           mAnchor;
+    protected View                mRoot;
+    protected ProgressBar         mProgress;
+    protected TextView            mEndTime, mCurrentTime;
+    protected boolean             mShowing;
+    protected boolean             mPauseAccessibilityRequestQueued;
+    protected boolean             mDragging;
+    protected static final int    FADE_OUT = 1;
+    protected static final int    SHOW_PROGRESS = 2;
+    protected boolean             mUseFastForward;
+    protected boolean             mFromXml;
+    protected boolean             mListenersSet;
+    protected View.OnClickListener mNextListener, mPrevListener;
+    protected StringBuilder               mFormatBuilder;
+    protected Formatter                   mFormatter;
     private IconImageButton     mPauseButton;
     private ImageButton         mRewButton;
     private ImageButton         mNextButton;
@@ -106,11 +106,11 @@ public class PlayerController extends FrameLayout {
     private IconImageButton     mFullscreenButton;
     private IconImageButton     mSettingsButton;
     private Handler             mHandler = new MessageHandler(this);
-    private String              mTitle;
-    private TextView            mTitleTextView;
-    private boolean             mIsAutoHide = true;
-    private String              mLmsUrl;
-    private View                mTopBar;
+    protected String              mTitle;
+    protected TextView            mTitleTextView;
+    protected boolean             mIsAutoHide = true;
+    protected String              mLmsUrl;
+    protected View                mTopBar;
 
     private static final Logger logger = new Logger(PlayerController.class.getName());
 
@@ -171,15 +171,15 @@ public class PlayerController extends FrameLayout {
      * @hide This doesn't work as advertised
      */
     protected View makeControllerView() {
-        LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRoot = inflate.inflate(R.layout.player_controller, null);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mRoot = inflater.inflate(R.layout.player_controller, null);
 
         initControllerView(mRoot);
 
         return mRoot;
     }
 
-    private void initControllerView(View v) {
+    protected void initControllerView(View v) {
         mPauseButton = (IconImageButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
@@ -277,7 +277,7 @@ public class PlayerController extends FrameLayout {
         show(timeoutMS);
     }
 
-    private void show(long timeoutMS) {
+    protected void show(long timeoutMS) {
         if (!mShowing && mAnchor != null) {
             setProgress();
             if (mPauseButton != null) {
@@ -313,7 +313,7 @@ public class PlayerController extends FrameLayout {
      * Disable pause or seek buttons if the stream cannot be paused or seeked.
      * This requires the control interface to be a MediaPlayerControlExt
      */
-    private void disableUnsupportedButtons() {
+    protected void disableUnsupportedButtons() {
         if (mPlayer == null) {
             return;
         }
@@ -378,7 +378,7 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    private String stringForTime(int timeMs) {
+    protected String stringForTime(int timeMs) {
         int totalSeconds = timeMs / 1000;
 
         int seconds = totalSeconds % 60;
@@ -393,7 +393,7 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    private synchronized int setProgress() {
+    protected synchronized int setProgress() {
         if (mPlayer == null || mDragging) {
             return 0;
         }
@@ -481,7 +481,7 @@ public class PlayerController extends FrameLayout {
         return super.dispatchKeyEvent(event);
     }
 
-    private View.OnClickListener mPauseListener = new View.OnClickListener() {
+    protected View.OnClickListener mPauseListener = new View.OnClickListener() {
         public void onClick(View v) {
             doPauseResume();
             show();
@@ -516,7 +516,7 @@ public class PlayerController extends FrameLayout {
         }
     };
 
-    private void updateTitle() {
+    protected void updateTitle() {
         mTitleTextView.setText(mTitle);
     }
 
@@ -554,7 +554,7 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    private void doPauseResume() {
+    protected void doPauseResume() {
         if (mPlayer == null) {
             return;
         }
@@ -608,7 +608,7 @@ public class PlayerController extends FrameLayout {
     // The second scenario involves the user operating the scroll ball, in this
     // case there WON'T BE onStartTrackingTouch/onStopTrackingTouch notifications,
     // we will simply apply the updated position without suspending regular updates.
-    private OnSeekBarChangeListener mSeekListener = new OnSeekBarChangeListener() {
+    protected OnSeekBarChangeListener mSeekListener = new OnSeekBarChangeListener() {
         long startPos = 0;
         long endPos = 0;
         public void onStartTrackingTouch(SeekBar bar) {
@@ -777,7 +777,7 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    private static class MessageHandler extends Handler {
+    protected static class MessageHandler extends Handler {
         private final WeakReference<PlayerController> mView; 
 
         MessageHandler(PlayerController view) {

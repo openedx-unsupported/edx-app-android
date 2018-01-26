@@ -65,9 +65,9 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackDownloadComplete(String videoId, String courseId, String unitUrl) {
+    public void trackDownloadComplete(String mediaId, String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackDownloadComplete(videoId, courseId, unitUrl);
+            service.trackDownloadComplete(mediaId, courseId, unitUrl);
         }
     }
 
@@ -136,79 +136,79 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackVideoPause(String videoId, Double currentTime,
+    public void trackMediaPause(String mediaId, Double currentTime,
                                 String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackVideoPause(videoId, currentTime, courseId, unitUrl);
+            service.trackMediaPause(mediaId, currentTime, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackVideoLoading(String videoId, String courseId, String unitUrl) {
+    public void trackMediaLoading(String mediaId, String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackVideoLoading(videoId, courseId, unitUrl);
+            service.trackMediaLoading(mediaId, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackVideoPlaying(String videoId, Double currentTime,
+    public void trackMediaPlaying(String mediaId, Double currentTime,
                                   String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackVideoPlaying(videoId, currentTime, courseId, unitUrl);
+            service.trackMediaPlaying(mediaId, currentTime, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackVideoStop(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackMediaStop(String mediaId, Double currentTime, String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackVideoStop(videoId, currentTime, courseId, unitUrl);
+            service.trackMediaStop(mediaId, currentTime, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackVideoOrientation(String videoId, Double currentTime, boolean isLandscape,
+    public void trackMediaOrientation(String mediaId, Double currentTime, boolean isLandscape,
                                       String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackVideoOrientation(videoId, currentTime, isLandscape, courseId, unitUrl);
+            service.trackMediaOrientation(mediaId, currentTime, isLandscape, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackTranscriptLanguage(String videoId, Double currentTime,
+    public void trackTranscriptLanguage(String mediaId, Double currentTime,
                                         String lang, String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackTranscriptLanguage(videoId, currentTime, lang, courseId, unitUrl);
+            service.trackTranscriptLanguage(mediaId, currentTime, lang, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackHideTranscript(String videoId, Double currentTime,
+    public void trackHideTranscript(String mediaId, Double currentTime,
                                     String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackHideTranscript(videoId, currentTime, courseId, unitUrl);
+            service.trackHideTranscript(mediaId, currentTime, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackShowTranscript(String videoId, Double currentTime,
+    public void trackShowTranscript(String mediaId, Double currentTime,
                                     String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackShowTranscript(videoId, currentTime, courseId, unitUrl);
+            service.trackShowTranscript(mediaId, currentTime, courseId, unitUrl);
         }
     }
 
     @Override
-    public void trackVideoSeek(String videoId, Double oldTime, Double newTime,
+    public void trackMediaSeek(String mediaId, Double oldTime, Double newTime,
                                String courseId, String unitUrl, Boolean skipSeek) {
         for (Analytics service : services) {
-            service.trackVideoSeek(videoId, oldTime, newTime, courseId, unitUrl, skipSeek);
+            service.trackMediaSeek(mediaId, oldTime, newTime, courseId, unitUrl, skipSeek);
         }
     }
 
     @Override
-    public void trackSingleVideoDownload(String videoId, String courseId, String unitUrl) {
+    public void trackSingleMediaDownload(String mediaId, String courseId, String unitUrl) {
         for (Analytics service : services) {
-            service.trackSingleVideoDownload(videoId, courseId, unitUrl);
+            service.trackSingleMediaDownload(mediaId, courseId, unitUrl);
         }
     }
 

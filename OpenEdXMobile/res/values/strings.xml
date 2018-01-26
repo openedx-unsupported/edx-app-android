@@ -145,9 +145,9 @@
     <!-- Label explaining toggle for cellular data access -->
     <string name="wifi_dialog_message_help">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
     <!-- Info message text for to let use know how many videos were deleted -->
-    <plurals name="delete_video_snackbar_msg">
-        <item quantity="one">%s video deleted</item>
-        <item quantity="other">%s videos deleted</item>
+    <plurals name="delete_media_snackbar_msg">
+        <item quantity="one">%s media item deleted</item>
+        <item quantity="other">%s media items deleted</item>
     </plurals>
     <!-- Alert dialog title for users with zero rated data -->
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
@@ -379,6 +379,7 @@
     <string name="assessment_only_on_youtube">This video can only be played on YouTube.</string>
     <!-- Label for button to open on youtube -->
     <string name="assessment_open_on_youtube">View video on YouTube</string>
+    <string name="subtitle_not_available_text">Subtitles not available for this audio.</string>
 
     <!-- Video List -->
     <!-- Title of video download screen -->
@@ -404,6 +405,8 @@
     <string name="msg_video_not_downloaded">"Unable to download video"</string>
     <!-- Error shown when video download fails -->
     <string name="msg_video_not_available">This video is currently unavailable.\nCheck back again later.</string>
+    <!-- Error shown when audio download fails -->
+    <string name="msg_audio_not_available">This audio is currently unavailable.\nCheck back again later.</string>
     <!-- Error shown when video has flag to indicate it is not available for mobile app -->
     <string name="video_only_on_web_label">This video is currently only on web. Click to view on web.</string>
     <!-- Message to indicate the it is not available for mobile app  -->
@@ -629,7 +632,6 @@
 
     <string name="view_my_courses" tools:ignore="MissingTranslation">View My Courses</string>
 
-    <string name="download_started">Download Started</string>
     <string name="app_tag_line" tools:ignore="MissingTranslation">Offline Content Viewer</string>
     <string name="youtube_playback_failure" tools:ignore="MissingTranslation">Failed to load youtube video</string>
     <string name="course_on_web_description" tools:ignore="MissingTranslation">The content viewer app does not support the content you are trying to see at the moment. You can view it in the browser version of Philanthropy University platform by clicking on the button below or stay in the app and explore other parts of this course.</string>
@@ -639,5 +641,9 @@
     <string name="sub_topics_text" tools:ignore="MissingTranslation">Sub Topics</string>
     <string name="downloading" tools:ignore="MissingTranslation">Downloading</string>
     <string name="media_saved_time_ago" tools:ignore="MissingTranslation">Media saved %s</string>
+    <string name="audio_player" tools:ignore="MissingTranslation">Audio Player</string>
+
+    <string name="download_started" tools:ignore="MissingTranslation">Download started</string>
+    <string name="delete_media_title">Delete Media</string>
 
 </resources>

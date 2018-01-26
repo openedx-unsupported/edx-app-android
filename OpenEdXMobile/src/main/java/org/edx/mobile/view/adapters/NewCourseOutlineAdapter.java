@@ -55,7 +55,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     private final Logger logger = new Logger(getClass().getName());
 
     public interface DownloadListener {
-        void download(List<? extends HasDownloadEntry> models);
+        void download(List<CourseComponent> models);
 
         void download(DownloadEntry videoData);
 
@@ -352,7 +352,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             }
         }
 
-        dbStore.getWatchedStateForVideoId(videoData.videoId,
+        dbStore.getWatchedStateForVideoId(videoData.blockId,
                 new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
@@ -373,7 +373,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
         } else {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
-            dbStore.getDownloadedStateForVideoId(videoData.videoId,
+            dbStore.getDownloadedStateForVideoId(videoData.blockId,
                     new DataCallback<DownloadEntry.DownloadedState>(true) {
                         @Override
                         public void onResult(DownloadEntry.DownloadedState state) {
@@ -441,7 +441,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             }
         }
 
-        final int totalDownloadableVideos = component.getDownloadableVideosCount();
+        final int totalDownloadableVideos = component.getDownloadableMediaCount();
         // support video download for video type excluding the ones only viewable on web
         if (totalDownloadableVideos == 0) {
             holder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
@@ -450,7 +450,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             holder.noOfVideos.setVisibility(View.VISIBLE);
             holder.noOfVideos.setText("" + totalDownloadableVideos);
 
-            Integer downloadedCount = dbStore.getDownloadedVideosCountForSection(courseId,
+            Integer downloadedCount = dbStore.getDownloadedMediaCountForSection(courseId,
                     chapterId, sequentialId, null);
 
             if (downloadedCount == totalDownloadableVideos) {

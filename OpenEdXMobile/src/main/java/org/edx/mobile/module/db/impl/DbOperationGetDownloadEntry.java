@@ -4,18 +4,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DatabaseModelFactory;
 
-class DbOperationGetVideo extends DbOperationSelect<VideoModel> {
+class DbOperationGetDownloadEntry extends DbOperationSelect<DownloadEntry> {
     
-    DbOperationGetVideo(boolean distinct, String table, String[] columns,
-            String whereClause, String[] whereArgs, String orderBy) {
+    DbOperationGetDownloadEntry(boolean distinct, String table, String[] columns,
+                                String whereClause, String[] whereArgs, String orderBy) {
         super(distinct, table, columns, whereClause, whereArgs, orderBy);
     }
     
     @Override
-    public VideoModel execute(SQLiteDatabase db) {
-        VideoModel video = null;
+    public DownloadEntry execute(SQLiteDatabase db) {
+        DownloadEntry video = null;
         
         Cursor c = getCursor(db);
         if (c.moveToFirst()) {
@@ -31,7 +32,7 @@ class DbOperationGetVideo extends DbOperationSelect<VideoModel> {
     }
     
     @Override
-    public VideoModel getDefaultValue() {
+    public DownloadEntry getDefaultValue() {
         // Returning null should be fine here, as video should only be queried if
         // it exists, or at least there should be a null check on the client code
         // otherwise. If we want to return an empty object here, then we will

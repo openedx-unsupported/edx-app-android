@@ -76,43 +76,43 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoLoading(String videoId, String courseId, String unitUrl) {
-        final FirebaseEvent event = new FirebaseEvent(Events.LOADED_VIDEO, videoId, Values.VIDEO_LOADED);
+    public void trackMediaLoading(String mediaId, String courseId, String unitUrl) {
+        final FirebaseEvent event = new FirebaseEvent(Events.LOADED_VIDEO, mediaId, Values.VIDEO_LOADED);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackVideoPlaying(String videoId, Double currentTime,
+    public void trackMediaPlaying(String mediaId, Double currentTime,
                                   String courseId, String unitUrl) {
-        final FirebaseEvent event = new FirebaseEvent(Events.PLAYED_VIDEO, videoId,
+        final FirebaseEvent event = new FirebaseEvent(Events.PLAYED_VIDEO, mediaId,
                 Values.VIDEO_PLAYED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackVideoPause(String videoId,
+    public void trackMediaPause(String mediaId,
                                 Double currentTime, String courseId, String unitUrl) {
         final FirebaseEvent event = new FirebaseEvent(Events.PAUSED_VIDEO,
-                videoId, Values.VIDEO_PAUSED, currentTime);
+                mediaId, Values.VIDEO_PAUSED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackVideoStop(String videoId, Double currentTime, String courseId,
+    public void trackMediaStop(String mediaId, Double currentTime, String courseId,
                                String unitUrl) {
         final FirebaseEvent event = new FirebaseEvent(Events.STOPPED_VIDEO,
-                videoId, Values.VIDEO_STOPPED, currentTime);
+                mediaId, Values.VIDEO_STOPPED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackVideoSeek(String videoId, Double oldTime, Double newTime, String courseId,
+    public void trackMediaSeek(String mediaId, Double oldTime, Double newTime, String courseId,
                                String unitUrl, Boolean skipSeek) {
-        final FirebaseEvent event = new FirebaseEvent(Events.SEEK_VIDEO, videoId, Values.VIDEO_SEEKED);
+        final FirebaseEvent event = new FirebaseEvent(Events.SEEK_VIDEO, mediaId, Values.VIDEO_SEEKED);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         //Call the format Double value so that we can have upto 3 decimal places after
         oldTime = JavaUtil.formatDoubleValue(oldTime, 3);
@@ -132,27 +132,27 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackShowTranscript(String videoId, Double currentTime, String courseId,
+    public void trackShowTranscript(String mediaId, Double currentTime, String courseId,
                                     String unitUrl) {
-        final FirebaseEvent event = new FirebaseEvent(Events.SHOW_TRANSCRIPT, videoId,
+        final FirebaseEvent event = new FirebaseEvent(Events.SHOW_TRANSCRIPT, mediaId,
                 Values.TRANSCRIPT_SHOWN, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackHideTranscript(String videoId, Double currentTime, String courseId,
+    public void trackHideTranscript(String mediaId, Double currentTime, String courseId,
                                     String unitUrl) {
         final FirebaseEvent event = new FirebaseEvent(Events.HIDE_TRANSCRIPT,
-                videoId, Values.TRANSCRIPT_HIDDEN, currentTime);
+                mediaId, Values.TRANSCRIPT_HIDDEN, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackDownloadComplete(String videoId, String courseId,
+    public void trackDownloadComplete(String mediaId, String courseId,
                                       String unitUrl) {
-        final FirebaseEvent event = new FirebaseEvent(Events.VIDEO_DOWNLOADED, videoId, Values.VIDEO_DOWNLOADED);
+        final FirebaseEvent event = new FirebaseEvent(Events.VIDEO_DOWNLOADED, mediaId, Values.VIDEO_DOWNLOADED);
         event.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
@@ -172,18 +172,18 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackSingleVideoDownload(String videoId, String courseId,
+    public void trackSingleMediaDownload(String mediaId, String courseId,
                                          String unitUrl) {
-        final FirebaseEvent event = new FirebaseEvent(Events.SINGLE_VIDEO_DOWNLOAD, videoId,
+        final FirebaseEvent event = new FirebaseEvent(Events.SINGLE_VIDEO_DOWNLOAD, mediaId,
                 Values.SINGLE_VIDEO_DOWNLOAD);
         event.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackVideoOrientation(String videoId, Double currentTime,
+    public void trackMediaOrientation(String mediaId, Double currentTime,
                                       boolean isLandscape, String courseId, String unitUrl) {
-        final FirebaseEvent event = new FirebaseEvent(Events.SCREEN_TOGGLED, videoId,
+        final FirebaseEvent event = new FirebaseEvent(Events.SCREEN_TOGGLED, mediaId,
                 Values.FULLSREEN_TOGGLED, currentTime);
         event.putBoolean(Keys.FULLSCREEN, isLandscape);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -231,9 +231,9 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackTranscriptLanguage(String videoId, Double currentTime, String lang,
+    public void trackTranscriptLanguage(String mediaId, Double currentTime, String lang,
                                         String courseId, String unitUrl) {
-        final FirebaseEvent event = new FirebaseEvent(Events.LANGUAGE_CLICKED, videoId,
+        final FirebaseEvent event = new FirebaseEvent(Events.LANGUAGE_CLICKED, mediaId,
                 Values.TRANSCRIPT_LANGUAGE, currentTime);
         event.putString(Keys.LANGUAGE, lang);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
