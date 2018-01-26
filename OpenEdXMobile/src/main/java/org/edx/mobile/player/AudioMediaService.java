@@ -161,7 +161,7 @@ public class AudioMediaService extends Service implements IPlayerListener{
         if(currentPlayer != null){
             currentPlayer.setPlayerListener(null);
             if(!currentPlayer.isReset())
-            currentPlayer.reset();
+                currentPlayer.reset();
             currentPlayer = null;
         }
         stopForeground(shouldRemove);
@@ -200,10 +200,10 @@ public class AudioMediaService extends Service implements IPlayerListener{
         currentPlayer.pause();
         try {
             if (currentPlayer != null && currentPlayer.isPlaying()) {
-                    int pos = currentPlayer.getCurrentPosition();
-                    if (pos > 0) {
-                        saveCurrentPlaybackPosition(pos);
-                    }
+                int pos = currentPlayer.getCurrentPosition();
+                if (pos > 0) {
+                    saveCurrentPlaybackPosition(pos);
+                }
             }
         } catch (Exception e) {
             logger.error(e);
