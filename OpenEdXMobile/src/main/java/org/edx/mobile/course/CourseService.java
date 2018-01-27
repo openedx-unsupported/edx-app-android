@@ -24,13 +24,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-
-import static org.edx.mobile.http.constants.TimeInterval.HOUR;
 
 public interface CourseService {
     /**
@@ -117,24 +116,14 @@ public interface CourseService {
     @POST("/api/enrollment/v1/enrollment")
     Call<ResponseBody> enrollInACourse(@Body final EnrollBody body);
 
-    @Headers("Cache-Control: max-stale=" + HOUR)
     @GET("/api/courses/v1/blocks/?" +
             "depth=all&" +
             "requested_fields=graded,format,student_view_multi_device,due&" +
             "student_view_data=video,discussion&" +
             "block_counts=video&" +
             "nav_depth=3")
-    Call<CourseStructureV1Model> getCourseStructure(@Query("username") final String username,
-                                                    @Query("course_id") final String courseId);
-
-    @Headers("Cache-Control: only-if-cached, max-stale")
-    @GET("/api/courses/v1/blocks/?" +
-            "depth=all&" +
-            "requested_fields=graded,format,student_view_multi_device,due&" +
-            "student_view_data=video,discussion&" +
-            "block_counts=video&" +
-            "nav_depth=3")
-    Call<CourseStructureV1Model> getCourseStructureFromCache(
+    Call<CourseStructureV1Model> getCourseStructure(
+            @Header("Cache-Control") String cacheControlHeaderParam,
             @Query("username") final String username,
             @Query("course_id") final String courseId);
 

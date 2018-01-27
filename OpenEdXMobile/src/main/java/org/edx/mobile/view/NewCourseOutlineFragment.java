@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
@@ -26,7 +28,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
@@ -34,6 +35,8 @@ import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
+import org.edx.mobile.loader.AsyncTaskResult;
+import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
@@ -59,7 +62,8 @@ import retrofit2.Call;
 
 public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
-        VideoDownloadHelper.DownloadManagerCallback {
+        VideoDownloadHelper.DownloadManagerCallback,
+        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>{
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
     private static final int SNACKBAR_SHOWTIME_MS = 5000;
@@ -92,6 +96,8 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
     @Inject
     protected IEdxEnvironment environment;
 
+    private View loadingIndicator;
+
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
                                        @Nullable String lastAccessedId, boolean isVideosMode) {
@@ -123,8 +129,8 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         final View view = inflater.inflate(R.layout.fragment_course_outline_new, container, false);
         initListView(view);
         errorNotification = new FullScreenErrorNotification(listView);
-        fetchCourseComponent(view);
-
+        loadingIndicator = view.findViewById(R.id.loading_indicator);
+        fetchCourseComponent();
         return view;
     }
 
@@ -144,30 +150,73 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         }
     }
 
-    private void fetchCourseComponent(@NonNull final View view) {
-        if (courseComponentId == null) {
-            final String courseId = courseData.getCourse().getId();
-            getHierarchyCall = courseApi.getCourseStructure(courseId);
-            getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
-                    new TaskProgressCallback.ProgressViewController(
-                            view.findViewById(R.id.loading_indicator)), errorNotification,
-                    null, this) {
-                @Override
-                protected void onResponse(@NonNull final CourseComponent courseComponent) {
-                    courseComponentId = courseComponent.getId();
-                    loadData();
-                }
-
-                @Override
-                protected void onFinish() {
-                    if (!EventBus.getDefault().isRegistered(NewCourseOutlineFragment.this)) {
-                        EventBus.getDefault().registerSticky(NewCourseOutlineFragment.this);
-                    }
-                }
-            });
-        } else {
-            loadData();
+    private void fetchCourseComponent() {
+        final String courseId = courseData.getCourse().getId();
+        if (courseComponentId != null) {
+            // Its not a course outline so course data would definitely exist in cache
+            loadData(courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId));
+            return;
         }
+        // Check if course data is available in app session cache
+        final CourseComponent courseComponent = courseManager.getCourseDataFromAppLevelCache(courseId);
+        if (courseComponent != null) {
+            // Course data exist in app session cache
+            loadData(courseComponent);
+            return;
+        }
+        // Check if course data is available in persistable cache
+        loadingIndicator.setVisibility(View.VISIBLE);
+        // Prepare the loader. Either re-connect with an existing one or start a new one.
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public Loader<AsyncTaskResult<CourseComponent>> onCreateLoader(int id, Bundle args) {
+        return new CourseOutlineAsyncLoader(getContext(), courseData.getCourse().getId());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<AsyncTaskResult<CourseComponent>> loader, AsyncTaskResult<CourseComponent> result) {
+        final CourseComponent courseComponent = result.getResult();
+        if (courseComponent != null) {
+            // Course data exist in persistable cache
+            loadData(courseComponent);
+            loadingIndicator.setVisibility(View.GONE);
+            // Send a server call in background for refreshed data
+            getCourseComponentFromServer(false);
+            return;
+        } else {
+            // Course data is neither available in app session cache nor available in persistable cache
+            getCourseComponentFromServer(true);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<AsyncTaskResult<CourseComponent>> loader) {
+        loadingIndicator.setVisibility(View.VISIBLE);
+    }
+
+    public void getCourseComponentFromServer(boolean showProgress) {
+        final TaskProgressCallback progressCallback = showProgress ?
+                new TaskProgressCallback.ProgressViewController(loadingIndicator) : null;
+        final String courseId = courseData.getCourse().getId();
+        getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
+        getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
+                progressCallback, errorNotification, null, this) {
+            @Override
+            protected void onResponse(@NonNull final CourseComponent courseComponent) {
+                courseComponentId = courseComponent.getId();
+                courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
+                loadData(courseComponent);
+            }
+
+            @Override
+            protected void onFinish() {
+                if (!EventBus.getDefault().isRegistered(NewCourseOutlineFragment.this)) {
+                    EventBus.getDefault().registerSticky(NewCourseOutlineFragment.this);
+                }
+            }
+        });
     }
 
     private void initListView(@NonNull View view) {
@@ -344,11 +393,15 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         }
     };
 
-    //Loading data to the Adapter
-    private void loadData() {
+    /**
+     * Load data to the adapter
+     */
+    private void loadData(@NonNull CourseComponent courseComponent) {
         if (courseData == null)
             return;
-        final CourseComponent courseComponent = getCourseComponent();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().registerSticky(this);
+        }
         if (!isOnCourseOutline) {
             // We only need to set the title of Course Outline screen, where we show a subsection's units
             getActivity().setTitle(courseComponent.getDisplayName());
@@ -367,20 +420,19 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
             // Update the last accessed item reference if we are in the course subsection view
             lastAccessManager.setLastAccessed(courseComponent.getCourseId(), courseComponent.getId());
         }
-    }
 
-    protected CourseComponent getCourseComponent() {
-        return courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
+        fetchLastAccessed();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onRevisit() {
+        super.onRevisit();
+        fetchLastAccessed();
+    }
 
-        if (isOnCourseOutline) {
-            if (!isVideoMode) {
-                lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
-            }
+    public void fetchLastAccessed() {
+        if (isOnCourseOutline && !isVideoMode) {
+            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
         }
     }
 
@@ -426,10 +478,10 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
             case REQUEST_SHOW_COURSE_UNIT_DETAIL: {
                 switch (resultCode) {
                     case Activity.RESULT_OK: {
-                        final CourseComponent outlineComp = courseManager.getComponentById(
+                        final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
                                 courseData.getCourse().getId(), courseComponentId);
                         final String leafCompId = (String) data.getSerializableExtra(Router.EXTRA_COURSE_COMPONENT_ID);
-                        final CourseComponent leafComp = courseManager.getComponentById(
+                        final CourseComponent leafComp = courseManager.getComponentByIdFromAppLevelCache(
                                 courseData.getCourse().getId(), leafCompId);
                         final BlockPath outlinePath = outlineComp.getPath();
                         final BlockPath leafPath = leafComp.getPath();
@@ -460,7 +512,7 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
 
     protected boolean isOnCourseOutline() {
         if (courseComponentId == null) return true;
-        final CourseComponent outlineComp = courseManager.getComponentById(
+        final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
                 courseData.getCourse().getId(), courseComponentId);
         final BlockPath outlinePath = outlineComp.getPath();
         final int outlinePathSize = outlinePath.getPath().size();
@@ -481,16 +533,12 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
     @SuppressWarnings("unused")
     public void onEvent(CourseDashboardRefreshEvent e) {
         errorNotification.hideError();
-        if (isOnCourseOutline()) {
-            if (getArguments() != null) {
-                restore(getArguments());
-                fetchCourseComponent(getView());
-            }
-        } else {
-            loadData();
+        final Bundle arguments = getArguments();
+        if (isOnCourseOutline() && arguments != null) {
+            restore(arguments);
         }
+        fetchCourseComponent();
     }
-
 
     @Override
     public boolean isFetchingLastAccessed() {
@@ -508,7 +556,7 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
             return;
         if (NetworkUtil.isConnected(getContext())) {
             if (courseId != null && lastAccessedSubSectionId != null) {
-                CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
+                CourseComponent lastAccessComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, lastAccessedSubSectionId);
                 if (lastAccessComponent != null) {
                     if (!lastAccessComponent.isContainer()) {   // true means its a course unit
                         // getting subsection
