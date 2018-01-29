@@ -12,6 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--
+        Normally, we shouldn't need a separate LinearLayout under a CoordinatorLayout to hold the
+        toolbar and any content under it. But in this case its necessary cuz our tests start to
+        fail without any valid/explanatory reasons. (CourseUnitNavigationActivityTest &
+        CourseOutlineActivityTest)
+        TODO: Get rid of this layout when we remove the Navigation drawer from our app and convert CourseUnitNavigationActivity to use BaseSingleFragmentActivity as a parent. (i.e flag: TAB_LAYOUTS_ENABLED=FALSE)
+        -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

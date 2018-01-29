@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
-    android:theme="@style/MyToolbar"
-    app:titleTextAppearance="@style/MyActionBarTitleText"/>
+    android:background="@android:color/transparent"
+    app:theme="@style/AppTheme.AppBarOverlay"
+    tools:minHeight="?android:attr/actionBarSize">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_background_color"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <include layout="@layout/toolbar_shadow_view" />
+</android.support.design.widget.AppBarLayout>

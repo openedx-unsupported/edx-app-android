@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:paddingBottom="@dimen/widget_margin">
+
+
+    <include layout="@layout/toolbar" />
 
     <FrameLayout
         android:id="@+id/registration_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:visibility="visible">
 
         <ScrollView
@@ -126,11 +131,11 @@
         android:id="@+id/content_unavailable_error_text"
         style="@style/content_unavailable_error_text"
         android:text="@string/reset_no_network_message"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <include
         android:id="@+id/loadingIndicator"
         layout="@layout/loading_indicator"
         android:visibility="gone" />
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

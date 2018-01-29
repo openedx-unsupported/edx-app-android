@@ -36,6 +36,7 @@ public abstract class PresenterActivity<P extends Presenter<V>, V> extends BaseF
         }
         view = createView(savedInstanceState);
         presenter.attachView(view);
+        super.setToolbarAsActionBar();
     }
 
     @SuppressWarnings("unchecked")

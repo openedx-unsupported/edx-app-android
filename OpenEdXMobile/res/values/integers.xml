@@ -1,4 +1,12 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- This delay is to start Animation for hiding info / error messages -->
 	<integer name="message_delay">4000</integer>
+    <!--
+    Fix for a known issue in the support library due to which the shadow beneath the AppBarLayout
+    appears after a noticeable delay.
+    Link to issue: https://issuetracker.google.com/issues/37106543
+    Fix inspiration: https://stackoverflow.com/a/41137710/1402616
+    TODO: Remove AppBarLayout's shadow fix when the support library fixes it
+    -->
+    <integer name="app_bar_elevation_anim_duration" tools:override="true">0</integer>
 </resources>
