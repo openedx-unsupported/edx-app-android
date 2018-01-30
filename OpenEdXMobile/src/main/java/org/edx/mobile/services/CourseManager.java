@@ -13,7 +13,7 @@ import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.course.CourseComponent;
 
 /**
- *  A central place for course data model transformation
+ * A central place for course data model transformation
  */
 
 @Singleton
@@ -31,31 +31,47 @@ public class CourseManager {
     }
 
     @Nullable
-    public CourseComponent getCourseByCourseId(@NonNull final String courseId) {
+    public CourseComponent getCourseByCourseId(@NonNull final String courseId) throws Exception {
         CourseComponent component = cachedComponent.get(courseId);
-        if ( component != null )
+        if (component != null)
             return component;
-        try {
-            component = courseApi.getCourseStructureFromCache(courseId);
-            cachedComponent.put(courseId,component);
-        } catch (Exception e) {
-           logger.error(e);
-        }
+        component = courseApi.getCourseStructureFromCache(courseId);
+        cachedComponent.put(courseId, component);
         return component;
     }
 
     @Nullable
     public CourseComponent getComponentById(@NonNull final String courseId,
                                             @NonNull final String componentId) {
-        CourseComponent courseComponent = getCourseByCourseId(courseId);
-        if ( courseComponent == null )
-            return null;
-        return courseComponent.find(new Filter<CourseComponent>() {
-            @Override
-            public boolean apply(CourseComponent courseComponent) {
-                return componentId.equals(courseComponent.getId());
-            }
-        });
+        CourseComponent courseComponent = null;
+        try {
+            courseComponent = getCourseByCourseId(courseId);
+            if (courseComponent == null)
+                return null;
+            return courseComponent.find(new Filter<CourseComponent>() {
+                @Override
+                public boolean apply(CourseComponent courseComponent) {
+                    return componentId.equals(courseComponent.getId());
+                }
+            });
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return courseComponent;
+    }
+
+    @Nullable
+    private CourseComponent getCourseByCourseIdFromCache(@NonNull final String courseId) {
+        CourseComponent component = cachedComponent.get(courseId);
+        if (component != null)
+            return component;
+        try {
+            component = courseApi.getCourseStructureFromCache(courseId);
+            cachedComponent.put(courseId, component);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return component;
     }
 
 }

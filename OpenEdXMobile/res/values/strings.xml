@@ -644,6 +644,8 @@
     <string name="audio_player" tools:ignore="MissingTranslation">Audio Player</string>
 
     <string name="download_started" tools:ignore="MissingTranslation">Download started</string>
-    <string name="delete_media_title">Delete Media</string>
+    <string name="delete_media_title" tools:ignore="MissingTranslation">Delete Media</string>
+    <string name="visit_course_to_download" tools:ignore="MissingTranslation">Visit the course to download</string>
+    <string name="no_downloadable_content" tools:ignore="MissingTranslation">No downloadable content available</string>
 
 </resources>

@@ -66,8 +66,12 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
         startingFrom.setText(formattedDate);
     }
 
-    public void hideDownloadStatusContainer() {
-        courseStatusUnit.setVisibility(View.GONE);
+    public void showNoContentDownloadStatusContainer(Context context) {
+        courseDownloadStatusIcon.setImageResource(R.drawable.ic_prohibition);
+        courseDownloadStatusIcon.setPadding(5,5,5,5);
+        courseDownloadStatus.setText(R.string.no_downloadable_content);
+        courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
+        courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
     }
 
     public void showDownloadStatusContainer() {
@@ -75,31 +79,35 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     }
 
     public void updateDownloadStatus(Context context, DownloadEntry.DownloadedState state, View.OnClickListener listener, String relativeTimeStamp) {
-        switch (state) {
-            case DOWNLOADING:
-                courseDownloadStatusIcon.setIcon(FontAwesomeIcons.fa_spinner);
-                courseDownloadStatusIcon.setIconAnimation(Animation.PULSE);
-                courseDownloadStatusIcon.setIconColorResource(R.color.black);
-                courseDownloadStatus.setText(R.string.downloading);
-                courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
-                courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
-                break;
-            case DOWNLOADED:
-                courseDownloadStatusIcon.setImageResource(R.drawable.ic_done);
-                courseDownloadStatusIcon.setIconAnimation(Animation.NONE);
-                courseDownloadStatusIcon.setIconColorResource(R.color.black);
-                courseDownloadStatus.setText(String.format(context.getString(R.string.media_saved_time_ago), relativeTimeStamp));
-                courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
-                courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
-                break;
-            case ONLINE:
-                courseDownloadStatusIcon.setImageResource(R.drawable.ic_download_media);
-                courseDownloadStatusIcon.setIconAnimation(Animation.NONE);
-                courseDownloadStatusIcon.setIconColorResource(R.color.white);
-                courseDownloadStatus.setText(R.string.label_download_media);
-                courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.white));
-                courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.philu_bottom_bar_blue_bg));
-                break;
+        if(state == null){
+            courseDownloadStatusIcon.setImageResource(R.drawable.ic_danger);
+            courseDownloadStatusIcon.setPadding(5,5,5,5);
+            courseDownloadStatus.setText(R.string.visit_course_to_download);
+            courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
+            courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
+            return;
+        } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+            courseDownloadStatusIcon.setIcon(FontAwesomeIcons.fa_spinner);
+            courseDownloadStatusIcon.setIconAnimation(Animation.PULSE);
+            courseDownloadStatusIcon.setIconColorResource(R.color.black);
+            courseDownloadStatus.setText(R.string.downloading);
+            courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
+            courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
+
+        } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+            courseDownloadStatusIcon.setImageResource(R.drawable.ic_done_black);
+            courseDownloadStatusIcon.setIconAnimation(Animation.NONE);
+            courseDownloadStatus.setText(String.format(context.getString(R.string.media_saved_time_ago), relativeTimeStamp));
+            courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
+            courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_1));
+
+        } else if (state == DownloadEntry.DownloadedState.ONLINE) {
+            courseDownloadStatusIcon.setImageResource(R.drawable.ic_download_media);
+            courseDownloadStatusIcon.setIconAnimation(Animation.NONE);
+            courseDownloadStatus.setText(R.string.label_download_media);
+            courseDownloadStatus.setTextColor(ContextCompat.getColor(context, R.color.white));
+            courseStatusUnit.setBackgroundColor(ContextCompat.getColor(context, R.color.philu_bottom_bar_blue_bg));
+
         }
 
         courseStatusUnit.setOnClickListener(listener);

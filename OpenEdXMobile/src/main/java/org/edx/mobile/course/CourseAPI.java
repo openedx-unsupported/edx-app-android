@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.ErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
@@ -44,6 +45,7 @@ import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
