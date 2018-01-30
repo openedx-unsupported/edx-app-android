@@ -49,6 +49,10 @@
     <color name="hint_grey_text">#8c8e90</color>
     <color name="last_accessed_row_blue">#E5F5FC</color>
 
+    <!-- Toolbar colors -->
+    <color name="toolbar_background_color">@color/white</color>
+    <color name="toolbar_controls_color">@color/edx_brand_primary_base</color>
+
     <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
     <color name="edx_brand_primary_dark">#065683</color>
     <color name="edx_brand_primary_base">#0075B4</color>

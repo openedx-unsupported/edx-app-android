@@ -1,15 +1,13 @@
 package org.edx.mobile.base;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,9 +30,9 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     @Nullable
     TextView centerMessageBox;
 
-    @InjectView(R.id.toolbar_container)
+    @InjectView(R.id.toolbar_placeholder)
     @NonNull
-    FrameLayout toolbarContainer;
+    View toolbarPlaceholder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +45,18 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     /**
      * It will add the custom toolbar in the activity's layout.
      * <p>
-     * Toolbar addition will be done by finding a {@link FrameLayout} with id
-     * {@link R.id#toolbar_container R.id.toolbar_container} and then inflating a custom toolbar layout
-     * in it. Custom toolbar layout will be obtained from {@link BaseSingleFragmentActivity#getToolbarLayoutId()}
-     * function.
+     * Toolbar addition will be done by finding a placeholder view with id
+     * {@link R.id#toolbar_placeholder R.id.toolbar_placeholder} and then replacing it with an
+     * inflated custom toolbar layout. Custom toolbar layout will be obtained from
+     * {@link BaseSingleFragmentActivity#getToolbarLayoutId()} function.
      * </p>
      */
     private void addToolbar() {
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(getToolbarLayoutId(), toolbarContainer);
+        final ViewGroup parent = (ViewGroup) toolbarPlaceholder.getParent();
+        final int index = parent.indexOfChild(toolbarPlaceholder);
+        parent.removeView(toolbarPlaceholder);
+        final View toolbar = getLayoutInflater().inflate(getToolbarLayoutId(), parent, false);
+        parent.addView(toolbar, index);
     }
 
     @LayoutRes
@@ -72,7 +73,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             try {
                 this.loadFirstFragment();
             } catch (Exception e) {
@@ -97,14 +98,14 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
 
     public abstract Fragment getFirstFragment();
 
-    protected void showLoadingProgress(){
-        if ( progressSpinner != null ){
+    protected void showLoadingProgress() {
+        if (progressSpinner != null) {
             progressSpinner.setVisibility(View.VISIBLE);
         }
     }
 
-    protected void hideLoadingProgress(){
-        if ( progressSpinner != null ){
+    protected void hideLoadingProgress() {
+        if (progressSpinner != null) {
             progressSpinner.setVisibility(View.GONE);
         }
     }
@@ -112,13 +113,14 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     /**
      * implements TaskProcessCallback
      */
-    public void startProcess(){
+    public void startProcess() {
         showLoadingProgress();
     }
+
     /**
      * implements TaskProcessCallback
      */
-    public void finishProcess(){
+    public void finishProcess() {
         hideLoadingProgress();
     }
 
@@ -145,15 +147,15 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         }
     }
 
-    protected void showMessageInSitu(String message){
-        if ( centerMessageBox != null ){
-            centerMessageBox.setVisibility( View.VISIBLE );
+    protected void showMessageInSitu(String message) {
+        if (centerMessageBox != null) {
+            centerMessageBox.setVisibility(View.VISIBLE);
             centerMessageBox.setText(message);
         }
     }
 
-    protected void hideMessageInSitu(){
-        if ( centerMessageBox != null ){
+    protected void hideMessageInSitu() {
+        if (centerMessageBox != null) {
             centerMessageBox.setVisibility(View.GONE);
         }
     }

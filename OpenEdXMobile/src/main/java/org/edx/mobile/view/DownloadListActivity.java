@@ -39,6 +39,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_downloads_list);
+        super.setToolbarAsActionBar();
 
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.DOWNLOADS);
 

@@ -3,10 +3,12 @@ package org.edx.mobile.base;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -39,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI, OnActivityResultListener {
@@ -79,17 +83,52 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
-    @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        configureActionBar();
-    }
-
     protected void setToolbarAsActionBar() {
         final View toolbar = findViewById(R.id.toolbar);
         if (toolbar != null && toolbar instanceof Toolbar) {
             setSupportActionBar((Toolbar) toolbar);
             configureActionBar();
+            setToolBarFont();
+            setToolbarShadowBasedOnOS();
+        }
+    }
+
+    /**
+     * Sets the font of any TextView found within the ToolBar.
+     * <br/>
+     * TODO: Remove this function when this issue gets resolved: https://github.com/chrisjenx/Calligraphy/issues/295
+     */
+    private void setToolBarFont() {
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            final View child = toolbar.getChildAt(i);
+            if (child instanceof TextView) {
+                final TextView textView = (TextView) child;
+                CalligraphyUtils.applyFontToTextView(textView, TypefaceUtils.load(getAssets(), "fonts/OpenSans-Semibold.ttf"));
+            }
+        }
+    }
+
+    /**
+     * Decides whether a shadow needs to be shown beneath the {@link Toolbar} or not.
+     * <br/>
+     * {@link AppBarLayout} on pre-lollipop devices doesn't add a shadow at its bottom. To work
+     * around it, a shadow view explicitly needs to be added.
+     */
+    private void setToolbarShadowBasedOnOS() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            findViewById(R.id.shadow_view).setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Hides the shadow that appears below {@link Toolbar}.
+     */
+    protected void hideToolbarShadow() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            findViewById(R.id.shadow_view).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.appbar).setOutlineProvider(null);
         }
     }
 
@@ -500,9 +539,9 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     public void showAlertDialog(@Nullable String title, @NonNull String message,
-                                @NonNull String  positiveButtonText,
+                                @NonNull String positiveButtonText,
                                 @Nullable DialogInterface.OnClickListener onPositiveClick,
-                                @Nullable String  negativeButtonText,
+                                @Nullable String negativeButtonText,
                                 @Nullable DialogInterface.OnClickListener onNegativeClick) {
         if (isInForeground) {
             AlertDialogFragment.newInstance(title, message, positiveButtonText, onPositiveClick, negativeButtonText, onNegativeClick)
@@ -517,7 +556,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>To conform with the {@link OnActivityResultListener} interface this function has been
      * implemented emptily, making it publicly accessible.</p>
      */
