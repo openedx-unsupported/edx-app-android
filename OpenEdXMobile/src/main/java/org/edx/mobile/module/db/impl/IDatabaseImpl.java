@@ -2,6 +2,7 @@ package org.edx.mobile.module.db.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
@@ -17,6 +18,7 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Sha1Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
@@ -436,8 +438,8 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Integer deleteVideoByVideoId(VideoModel video, DataCallback<Integer> callback,
-                                        String username) {
+    public Integer deleteVideoByVideoId(VideoModel video, String username,
+                                        DataCallback<Integer> callback) {
         DbOperationDelete op = new DbOperationDelete(DbStructure.Table.DOWNLOADS,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{video.getVideoId(), username});
@@ -496,6 +498,25 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username()},
                 null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public List<VideoModel> getListOfOngoingDownloadsByCourseId(@Nullable String courseId,
+                                        DataCallback<List<VideoModel>> callback) {
+        final StringBuilder whereClause = new StringBuilder();
+        final List<String> whereArgs = new ArrayList<>();
+        whereClause.append(DbStructure.Column.DOWNLOADED).append("=? AND ");
+        whereClause.append(DbStructure.Column.USERNAME).append("=?");
+        whereArgs.add(String.valueOf(DownloadedState.DOWNLOADING.ordinal()));
+        whereArgs.add(username());
+        if (courseId != null) {
+            whereClause.append(" AND ").append(DbStructure.Column.EID).append("=?");
+            whereArgs.add(courseId);
+        }
+        final DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
+                whereClause.toString(), whereArgs.toArray(new String[whereArgs.size()]), null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -560,6 +581,16 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                          final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.USERNAME + "=?", new String[]{username()}, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public List<VideoModel> getAllVideosByCourse(@NonNull String courseId,
+                                                 @Nullable DataCallback<List<VideoModel>> callback) {
+        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.EID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{courseId, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }

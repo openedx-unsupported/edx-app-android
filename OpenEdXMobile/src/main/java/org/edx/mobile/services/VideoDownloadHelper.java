@@ -13,6 +13,8 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
+import org.edx.mobile.module.storage.BulkVideosDownloadStartedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -24,6 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
+
+import static org.edx.mobile.util.DownloadUtil.isDownloadSizeWithinLimit;
 
 /**
  *
@@ -42,15 +48,15 @@ public class VideoDownloadHelper {
         boolean showInfoMessage(String message);
     }
 
-    protected final Logger logger = new Logger(getClass().getName());
+    protected static final Logger logger = new Logger(VideoDownloadHelper.class.getName());
 
     private DownloadSizeExceedDialog downloadFragment;
 
     @Inject
-    IStorage storage;
+    private IStorage storage;
 
     @Inject
-    AnalyticsRegistry analyticsRegistry;
+    private AnalyticsRegistry analyticsRegistry;
 
 
     public void downloadVideos(final List<? extends HasDownloadEntry> model, final FragmentActivity activity,
@@ -58,24 +64,19 @@ public class VideoDownloadHelper {
         if (model == null || model.isEmpty()) {
             return;
         }
-        try {
-            IDialogCallback dialogCallback = new IDialogCallback() {
-                @Override
-                public void onPositiveClicked() {
-                    startDownloadVideos(model, activity, callback);
-                }
+        IDialogCallback dialogCallback = new IDialogCallback() {
+            @Override
+            public void onPositiveClicked() {
+                startDownloadVideos(model, activity, callback);
+            }
 
-                @Override
-                public void onNegativeClicked() {
-                    callback.showInfoMessage(activity.getString(R.string.wifi_off_message));
-                }
-            };
-            MediaConsentUtils.requestStreamMedia(activity, dialogCallback);
-
-        } catch (Exception e) {
-            logger.error(e);
-        }
-
+            @Override
+            public void onNegativeClicked() {
+                callback.showInfoMessage(activity.getString(R.string.wifi_off_message));
+                EventBus.getDefault().post(new BulkVideosDownloadCancelledEvent());
+            }
+        };
+        MediaConsentUtils.requestStreamMedia(activity, dialogCallback);
     }
 
     private void startDownloadVideos(List<? extends HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
@@ -104,8 +105,9 @@ public class VideoDownloadHelper {
                 .getAvailableExternalMemory(activity)) {
             ((BaseFragmentActivity) activity).showInfoMessage(activity.getString(R.string.file_size_exceeded));
             callback.updateListUI();
+            EventBus.getDefault().post(new BulkVideosDownloadCancelledEvent());
         } else {
-            if (downloadSize < MemoryUtil.GB && !downloadList.isEmpty()) {
+            if (isDownloadSizeWithinLimit(downloadSize, MemoryUtil.GB) && !downloadList.isEmpty()) {
                 startDownload(downloadList, activity, callback);
 
                 final DownloadEntry downloadEntry = downloadList.get(0);
@@ -135,6 +137,7 @@ public class VideoDownloadHelper {
                             analyticsRegistry.trackSubSectionBulkVideoDownload(downloadEntry.getSectionName(),
                                     downloadEntry.getChapterName(), downloadEntry.getEnrollmentId(),
                                     noOfDownloads);
+                            EventBus.getDefault().post(new BulkVideosDownloadStartedEvent());
                         }
                     }
 
@@ -142,6 +145,7 @@ public class VideoDownloadHelper {
                     public void onNegativeClicked() {
                         //  updateList();
                         downloadFragment.dismiss();
+                        EventBus.getDefault().post(new BulkVideosDownloadCancelledEvent());
                     }
                 });
         downloadFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
@@ -166,12 +170,14 @@ public class VideoDownloadHelper {
             @Override
             public void onSuccess(Long result) {
                 callback.onDownloadStarted(result);
+                logger.debug("EnqueueDownloadTask: STARTED = " + result);
             }
 
             @Override
             public void onException(Exception ex) {
                 super.onException(ex);
                 callback.onDownloadFailedToStart();
+                logger.warn("EnqueueDownloadTask: FAILED \n" + ex.toString());
             }
         };
 
@@ -179,5 +185,4 @@ public class VideoDownloadHelper {
         downloadTask.setTaskProcessCallback(null);
         downloadTask.execute();
     }
-
 }

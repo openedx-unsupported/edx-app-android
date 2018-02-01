@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,9 +43,11 @@ import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
+import org.edx.mobile.view.BulkDownloadFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +56,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- *
  * TODO: Rename class name to 'CourseOutlineAdapter' once old/deprecated  {@link CourseOutlineAdapter} is deleted.
  */
 public class NewCourseOutlineAdapter extends BaseAdapter {
@@ -68,6 +71,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     }
 
     private Context context;
+    private Fragment parentFragment;
     private CourseComponent rootComponent;
     private LayoutInflater inflater;
     private List<SectionRow> adapterData;
@@ -80,10 +84,11 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     private DownloadListener downloadListener;
     private boolean isVideoMode;
 
-    public NewCourseOutlineAdapter(final Context context, final EnrolledCoursesResponse courseData,
-                                   final IEdxEnvironment environment, NewCourseOutlineAdapter.DownloadListener listener,
+    public NewCourseOutlineAdapter(final Context context, Fragment fragment, final EnrolledCoursesResponse courseData,
+                                   final IEdxEnvironment environment, DownloadListener listener,
                                    boolean isVideoMode, boolean isOnCourseOutline) {
         this.context = context;
+        this.parentFragment = fragment;
         this.environment = environment;
         this.config = environment.getConfig();
         this.dbStore = environment.getDatabase();
@@ -93,17 +98,23 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         this.isVideoMode = isVideoMode;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
-        if (isOnCourseOutline && !isVideoMode) {
-            adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
-            // Add certificate item
-            if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
-                adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                environment.getRouter().showCertificate(context, courseData);
-                            }
-                        }));
+        if (isOnCourseOutline) {
+            if (isVideoMode) {
+                // Add bulk video download item
+                adapterData.add(new SectionRow(SectionRow.BULK_DOWNLOAD, null));
+            } else {
+                // Add course card item
+                adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
+                // Add certificate item
+                if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
+                    adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    environment.getRouter().showCertificate(context, courseData);
+                                }
+                            }));
+                }
             }
         }
     }
@@ -149,42 +160,77 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     public final View getView(int position, View convertView, ViewGroup parent) {
         final int type = getItemViewType(position);
 
-        // FIXME: Re-enable row recycling in favor of better DB communication [MA-1640]
-        //if (convertView == null) {
+        // FIXME: Revisit better DB communication and code improvements in [MA-1640]
+        // INITIALIZATION
+        if (convertView == null) {
+            switch (type) {
+                case SectionRow.ITEM: {
+                    convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
+                    // apply a tag to this list row
+                    ViewHolder tag = getTag(convertView);
+                    convertView.setTag(tag);
+                    break;
+                }
+                case SectionRow.SECTION: {
+                    convertView = inflater.inflate(R.layout.row_section_header, parent, false);
+                    break;
+                }
+                case SectionRow.COURSE_CARD: {
+                    convertView = inflater.inflate(R.layout.row_course_card, parent, false);
+                    break;
+                }
+                case SectionRow.COURSE_CERTIFICATE:
+                    convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
+                    break;
+                case SectionRow.LAST_ACCESSED_ITEM: {
+                    convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
+                    break;
+                }
+                case SectionRow.BULK_DOWNLOAD: {
+                    final FrameLayout layout = new FrameLayout(parentFragment.getContext());
+                    final int id = UiUtil.generateViewId();
+                    layout.setId(id);
+
+                    final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
+                    parentFragment.getChildFragmentManager().
+                            beginTransaction().replace(id, fragment).commit();
+                    convertView = layout;
+                    convertView.setTag(fragment);
+                    break;
+                }
+                default: {
+                    throw new IllegalArgumentException(String.valueOf(type));
+                }
+            }
+        }
+
+        // POPULATION
         switch (type) {
             case SectionRow.ITEM: {
-                convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
-                // apply a tag to this list row
-                ViewHolder tag = getTag(convertView);
-                convertView.setTag(tag);
                 return getRowView(position, convertView);
             }
             case SectionRow.SECTION: {
-                convertView = inflater.inflate(R.layout.row_section_header, parent, false);
                 return getHeaderView(position, convertView);
             }
             case SectionRow.COURSE_CARD: {
-                if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.course_card, parent, false);
-                }
                 return getCardView(convertView);
             }
             case SectionRow.COURSE_CERTIFICATE:
-                if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
-                }
                 return getCertificateView(position, convertView);
             case SectionRow.LAST_ACCESSED_ITEM: {
-                if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
-                }
                 return getLastAccessedView(position, convertView);
+            }
+            case SectionRow.BULK_DOWNLOAD: {
+                if (rootComponent != null) {
+                    final BulkDownloadFragment fragment = (BulkDownloadFragment) convertView.getTag();
+                    fragment.populateViewHolder(rootComponent);
+                }
+                return convertView;
             }
             default: {
                 throw new IllegalArgumentException(String.valueOf(type));
             }
         }
-        //}
     }
 
     /**
@@ -216,6 +262,13 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                 } else {
                     SectionRow row = new SectionRow(SectionRow.ITEM, true, comp);
                     adapterData.add(row);
+                }
+            }
+
+            if (isVideoMode && rootComponent.getDownloadableVideosCount() == 0) {
+                // Remove bulk video download row if the course has NO downloadable videos
+                if (adapterData.size() > 0 && adapterData.get(0).type == SectionRow.BULK_DOWNLOAD) {
+                    adapterData.remove(0);
                 }
             }
         }
@@ -583,9 +636,9 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     }
 
     public View getCardView(View view) {
-        final TextView courseTextName = (TextView) view.findViewById(R.id.course_name);
-        final TextView courseTextDetails = (TextView) view.findViewById(R.id.course_details);
-        final ImageView headerImageView = (ImageView) view.findViewById(R.id.course_image);
+        final TextView courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
+        final TextView courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
+        final ImageView headerImageView = (ImageView) view.findViewById(R.id.header_image_view);
 
         // Full course name should appear on the course's dashboard screen.
         courseTextName.setEllipsize(null);
@@ -732,9 +785,10 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         public static final int LAST_ACCESSED_ITEM = 2;
         public static final int SECTION = 3;
         public static final int ITEM = 4;
+        public static final int BULK_DOWNLOAD = 5;
 
         // Update this count according to the section types mentioned above
-        public static final int NUM_OF_SECTION_ROWS = 5;
+        public static final int NUM_OF_SECTION_ROWS = 6;
 
         public final int type;
         public final boolean topComponent;

@@ -207,9 +207,14 @@
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_error</item>
-        <item name="android:minHeight">3dip</item>
-        <item name="android:maxHeight">3dip</item>
+        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_success</item>
+        <item name="android:minHeight">@dimen/progress_bar_height</item>
+        <item name="android:maxHeight">@dimen/progress_bar_height</item>
+    </style>
+
+    <style name="bulk_download_progress_bar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/bulk_download_progress_bar_horizontal</item>
     </style>
 
     <style name="edX.Widget.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
@@ -225,6 +230,10 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:switchMinWidth">90dp</item>
         <item name="android:background">@null</item>
+    </style>
+
+    <style name="bulk_download_switch" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/edx_success_accent</item>
     </style>
 
     <style name="spinner">

@@ -31,7 +31,7 @@ public class ResourceUtil {
         return getFormattedString(pattern, Collections.singletonMap(key, value));
     }
 
-    public static CharSequence getFormattedString(@NonNull String pattern, @NonNull Map<String, CharSequence> keyValMap) {
+    public static CharSequence getFormattedString(@NonNull String pattern, @NonNull Map<String, ? extends CharSequence> keyValMap) {
         Phrase resourceString = Phrase.from(pattern);
         Set<String> keys = keyValMap.keySet();
         for (String key : keys) {
@@ -51,7 +51,13 @@ public class ResourceUtil {
     }
 
     public static CharSequence getFormattedStringForQuantity(@NonNull Resources resources, @PluralsRes int resourceId, @NonNull String key, int quantity) {
+        return getFormattedStringForQuantity(resources, resourceId, quantity, Collections.singletonMap(key, quantity + ""));
+    }
+
+    public static CharSequence getFormattedStringForQuantity(@NonNull Resources resources,
+                                                             @PluralsRes int resourceId, int quantity,
+                                                             @NonNull Map<String, String> keyValMap) {
         String template = resources.getQuantityString(resourceId, quantity);
-        return Phrase.from(template).put(key, quantity + "").format();
+        return getFormattedString(template, keyValMap);
     }
 }
