@@ -428,12 +428,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Override
     public Integer deleteVideoByVideoId(VideoModel video, DataCallback<Integer> callback) {
-        ContentValues values = new ContentValues();
-        values.put(DbStructure.Column.DOWNLOADED, DownloadedState.ONLINE.ordinal());
-        values.put(DbStructure.Column.DM_ID, -1);
-        values.put(DbStructure.Column.FILEPATH, "");
-
-        DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
+        DbOperationDelete op = new DbOperationDelete(DbStructure.Table.DOWNLOADS,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{video.getVideoId(), username()});
         op.setCallback(callback);
@@ -443,18 +438,12 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     @Override
     public Integer deleteVideoByVideoId(VideoModel video, DataCallback<Integer> callback,
                                         String username) {
-        ContentValues values = new ContentValues();
-        values.put(DbStructure.Column.DOWNLOADED, DownloadedState.ONLINE.ordinal());
-        values.put(DbStructure.Column.DM_ID, -1);
-        values.put(DbStructure.Column.FILEPATH, "");
-
-        DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
+        DbOperationDelete op = new DbOperationDelete(DbStructure.Table.DOWNLOADS,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{video.getVideoId(), username});
         op.setCallback(callback);
         return enqueue(op);
     }
-
 
     @Override
     public Boolean isVideoFilePresentByUrl(String videoUrl, final DataCallback<Boolean> callback) {

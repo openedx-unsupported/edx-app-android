@@ -18,6 +18,9 @@ public class VideoData extends BlockData {
     @SerializedName("only_on_web")
     public boolean onlyOnWeb;
 
+    @SerializedName("all_sources")
+    public String[] allSources;
+
     @SerializedName("encoded_videos")
     public EncodedVideos encodedVideos;
 
