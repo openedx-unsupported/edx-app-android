@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- the theme applied to the application or activity -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/edx_brand_primary_base</item>
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
@@ -207,9 +207,9 @@
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_error</item>
-        <item name="android:minHeight">3dip</item>
-        <item name="android:maxHeight">3dip</item>
+        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_success</item>
+        <item name="android:minHeight">@dimen/progress_bar_height</item>
+        <item name="android:maxHeight">@dimen/progress_bar_height</item>
     </style>
 
     <style name="edX.Widget.Switch" parent="Widget.AppCompat.CompoundButton.Switch">

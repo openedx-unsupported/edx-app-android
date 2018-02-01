@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/last_accessed_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/edx_brand_gray_x_back"
+    android:minHeight="@dimen/last_accessed_bar_height"
+    android:orientation="vertical">
+
+    <org.edx.mobile.view.custom.IconImageViewXml
+        android:id="@+id/icon"
+        android:layout_width="@dimen/edx_large"
+        android:layout_height="@dimen/edx_large"
+        android:layout_marginLeft="@dimen/widget_margin_double"
+        android:layout_marginStart="@dimen/widget_margin_double"
+        app:iconColor="@color/edx_brand_primary_base"
+        app:iconName="fa-film"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edx_margin"
+        android:layout_marginStart="@dimen/edx_margin"
+        android:textColor="@color/edx_brand_primary_base"
+        android:textSize="@dimen/edx_small"
+        app:layout_constraintBottom_toBottomOf="@+id/description"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/icon"
+        app:layout_constraintRight_toLeftOf="@+id/download_button"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1 of 17 Videos Downloaded" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edx_margin"
+        android:layout_marginStart="@dimen/edx_margin"
+        android:layout_marginTop="@dimen/widget_margin_half"
+        android:textColor="@color/edx_brand_gray_accent"
+        android:textSize="@dimen/edx_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/icon"
+        app:layout_constraintRight_toLeftOf="@+id/download_button"
+        app:layout_constraintTop_toTopOf="@+id/title"
+        tools:text="5.5MB of 67.5MB total" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/download_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/widget_margin_double"
+        android:layout_marginRight="@dimen/widget_margin_double"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/download_progress"
+        style="@style/CustomProgressBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:progress="50"
+        tools:visibility="visible" />
+
+</android.support.constraint.ConstraintLayout>
