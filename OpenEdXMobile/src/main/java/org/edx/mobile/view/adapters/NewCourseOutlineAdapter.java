@@ -185,10 +185,11 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             case SectionRow.BULK_DOWNLOAD: {
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.row_bulk_download, parent, false);
+                    convertView.setTag(new BulkDownloadViewHolder(convertView, downloadListener, storage));
                 }
                 if (rootComponent != null) {
-                    BulkDownloadViewHolder viewHolder = new BulkDownloadViewHolder(convertView);
-                    viewHolder.populateViewHolder(rootComponent, dbStore, downloadListener, null);
+                    final BulkDownloadViewHolder viewHolder = (BulkDownloadViewHolder) convertView.getTag();
+                    viewHolder.populateViewHolder(rootComponent, dbStore);
                 }
                 return convertView;
             }

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.adapters.NewCourseOutlineAdapter;
@@ -29,27 +31,53 @@ import java.util.List;
 import java.util.Map;
 
 public class BulkDownloadViewHolder {
+    private static final int DELETE_DELAY_MS = 4000;
+
+    public final View rootView;
     public final IconImageView image;
     public final TextView title;
     public final TextView description;
     public final SwitchCompat downloadSwitch;
     public final ProgressBar progressBar;
+    private final NewCourseOutlineAdapter.DownloadListener downloadListener;
+    private final IStorage storage;
 
+    /**
+     * Summarises the download status of all the videos within a course.
+     */
+    private CourseVideosStatus videosStatus = new CourseVideosStatus();
+    /**
+     * List of videos that can be downloaded.
+     */
     private List<HasDownloadEntry> remainingVideos = new ArrayList<>();
+    /**
+     * List of videos that are currently being downloaded or haven been downloaded.
+     */
+    private List<VideoModel> removableVideos = new ArrayList<>();
+    /**
+     * Tells if the download switch's state was changed due to user's interaction.
+     */
+    private boolean isChangeByUser;
 
-    public BulkDownloadViewHolder(View itemView) {
+    public BulkDownloadViewHolder(@NonNull View itemView,
+                                  @NonNull NewCourseOutlineAdapter.DownloadListener downloadListener,
+                                  @NonNull IStorage storage) {
+        rootView = itemView;
         image = (IconImageView) itemView.findViewById(R.id.icon);
         title = (TextView) itemView.findViewById(R.id.title);
         description = (TextView) itemView.findViewById(R.id.description);
         downloadSwitch = (SwitchCompat) itemView.findViewById(R.id.download_button);
         progressBar = (ProgressBar) itemView.findViewById(R.id.download_progress);
+        this.downloadListener = downloadListener;
+        this.storage = storage;
+        initDownloadSwitch();
     }
 
     public void populateViewHolder(@NonNull CourseComponent courseComponent,
-                                   @NonNull IDatabase database,
-                                   @NonNull NewCourseOutlineAdapter.DownloadListener downloadListener,
-                                   @NonNull Runnable listener) {
-        final CourseVideosStatus videosStatus = new CourseVideosStatus();
+                                   @NonNull IDatabase database) {
+        remainingVideos.clear();
+        removableVideos.clear();
+        videosStatus.reset();
 
         // Get all the videos of this course
         final List<CourseComponent> allVideosInCourse = courseComponent.getVideos(true);
@@ -66,11 +94,13 @@ public class BulkDownloadViewHolder {
                         case DOWNLOADED:
                             videosStatus.downloaded++;
                             videosStatus.totalVideosSize += dbVideo.getSize();
+                            removableVideos.add(dbVideo);
                             break;
                         case DOWNLOADING:
                             videosStatus.downloading++;
                             videosStatus.remaining++;
                             videosStatus.remainingVideosSize += dbVideo.getSize();
+                            removableVideos.add(dbVideo);
                             break;
                         default:
                             videosStatus.remaining++;
@@ -101,19 +131,31 @@ public class BulkDownloadViewHolder {
                     description.getResources().getQuantityString(R.plurals.download_total, videosStatus.total),
                     "total_videos_count", videosStatus.total + "", "total_videos_size",
                     MemoryUtil.format(description.getContext(), videosStatus.totalVideosSize));
+            rootView.setOnClickListener(null);
         } else if (videosStatus.allVideosDownloading()) {
             setViewState(FontAwesomeIcons.fa_spinner, Animation.PULSE, R.string.downloading_videos,
                     description.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(description.getContext(), videosStatus.remainingVideosSize));
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    downloadListener.viewDownloadsStatus();
+                }
+            });
         } else {
             setViewState(FontAwesomeIcons.fa_film, Animation.NONE,
                     R.string.download_to_device,
                     description.getResources().getQuantityString(R.plurals.download_total, videosStatus.total),
                     "total_videos_count", videosStatus.remaining + "", "total_videos_size",
                     MemoryUtil.format(description.getContext(), videosStatus.remainingVideosSize));
+            rootView.setOnClickListener(null);
         }
-        downloadSwitch.setChecked(videosStatus.allVideosDownloaded());
+
+        if (!isChangeByUser) {
+            downloadSwitch.setChecked(videosStatus.allVideosDownloaded());
+        }
+        isChangeByUser = false;
     }
 
     private void setViewState(@NonNull Icon icon, @NonNull Animation animation,
@@ -130,6 +172,38 @@ public class BulkDownloadViewHolder {
         description.setText(ResourceUtil.getFormattedString(descPattern, keyValMap));
     }
 
+    private void initDownloadSwitch() {
+        downloadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!buttonView.isPressed()) {
+                    // Ignore callback if the switch's state was changed programmatically
+                    return;
+                }
+
+                isChangeByUser = true;
+                if (isChecked) {
+                    // Stop videos from deletion (if the Runnable has been postDelayed)
+                    buttonView.removeCallbacks(DELETE_VIDEOS);
+                    // Download all videos
+                    downloadListener.download(remainingVideos);
+                } else {
+                    // Delete all videos after a delay
+                    buttonView.postDelayed(DELETE_VIDEOS, DELETE_DELAY_MS);
+                }
+            }
+
+            final Runnable DELETE_VIDEOS = new Runnable() {
+                @Override
+                public void run() {
+                    for (VideoModel videoModel : removableVideos) {
+                        storage.removeDownload(videoModel);
+                    }
+                }
+            };
+        });
+    }
+
     private class CourseVideosStatus {
         int total;
         int downloaded;
@@ -144,6 +218,11 @@ public class BulkDownloadViewHolder {
 
         boolean allVideosDownloading() {
             return total == downloaded + downloading;
+        }
+
+        void reset() {
+            total = downloaded = downloading = remaining = 0;
+            totalVideosSize = remainingVideosSize = 0;
         }
     }
 }
