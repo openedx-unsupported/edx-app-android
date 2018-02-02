@@ -408,6 +408,21 @@
     <!-- Alert dialog title when login fails due to lack of Internet -->
     <string name="no_connectivity">Connection Error</string>
 
+    <!-- Bulk Videos Download -->
+    <!-- Title for bulk videos download view when in new or partial videos' download state -->
+    <string name="download_to_device" tools:ignore="MissingTranslation">Download to Device</string>
+    <!-- Subtitle for bulk videos download view when in new or partial videos' download state -->
+    <plurals name="download_total" tools:ignore="MissingTranslation">
+        <item quantity="one">{total_videos_count} Video, {total_videos_size} total</item>
+        <item quantity="other">{total_videos_count} Videos, {total_videos_size} total</item>
+    </plurals>
+    <!-- Title for bulk videos download view when in downloading state -->
+    <string name="downloading_videos" tools:ignore="MissingTranslation">Downloading Videos…</string>
+    <!-- Subtitle for bulk videos download view when in downloading state -->
+    <string name="download_remaining" tools:ignore="MissingTranslation">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
+    <!-- Title for bulk videos download view when in downloaded state -->
+    <string name="download_complete" tools:ignore="MissingTranslation">All Videos Downloaded</string>
+
     <!-- Wifi New Message -->
     <!-- Toggle to allow downloads using cellular data -->
     <string name="allow">Allow</string>

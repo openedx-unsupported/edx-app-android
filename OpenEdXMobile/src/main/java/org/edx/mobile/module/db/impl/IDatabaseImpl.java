@@ -2,6 +2,7 @@ package org.edx.mobile.module.db.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
@@ -571,6 +572,16 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                                          final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.USERNAME + "=?", new String[]{username()}, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public List<VideoModel> getAllVideosByCourse(@NonNull String courseId,
+                                                 @Nullable DataCallback<List<VideoModel>> callback) {
+        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.EID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{courseId, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }

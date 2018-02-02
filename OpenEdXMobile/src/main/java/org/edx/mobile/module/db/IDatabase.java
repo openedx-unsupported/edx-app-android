@@ -1,5 +1,6 @@
 package org.edx.mobile.module.db;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.edx.mobile.model.VideoModel;
@@ -367,6 +368,14 @@ public interface IDatabase {
      * @return
      */
     List<VideoModel> getAllVideos(String username, DataCallback<List<VideoModel>> DataCallback);
+
+    /**
+     * Returns list of all videos from the database.
+     *
+     * @return
+     */
+    List<VideoModel> getAllVideosByCourse(@NonNull String courseId,
+                                          @Nullable DataCallback<List<VideoModel>> callback);
 
     /**
      * Removes all records of given username from the database.

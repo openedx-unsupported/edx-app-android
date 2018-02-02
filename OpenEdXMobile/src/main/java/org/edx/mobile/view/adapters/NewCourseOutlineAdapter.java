@@ -44,6 +44,7 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
+import org.edx.mobile.view.view_holders.BulkDownloadViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,17 +90,22 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         this.isVideoMode = isVideoMode;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
-        if (isOnCourseOutline && !isVideoMode) {
-            adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
-            // Add certificate item
-            if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
-                adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                environment.getRouter().showCertificate(context, courseData);
-                            }
-                        }));
+        if (isOnCourseOutline) {
+            if (!isVideoMode) {
+                adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
+                // Add certificate item
+                if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
+                    adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    environment.getRouter().showCertificate(context, courseData);
+                                }
+                            }));
+                }
+            } else {
+                // Add bulk video download row
+                adapterData.add(new SectionRow(SectionRow.BULK_DOWNLOAD, null));
             }
         }
     }
@@ -175,6 +181,16 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
                 }
                 return getLastAccessedView(position, convertView);
+            }
+            case SectionRow.BULK_DOWNLOAD: {
+                if (convertView == null) {
+                    convertView = inflater.inflate(R.layout.row_bulk_download, parent, false);
+                }
+                if (rootComponent != null) {
+                    BulkDownloadViewHolder viewHolder = new BulkDownloadViewHolder(convertView);
+                    viewHolder.populateViewHolder(rootComponent, dbStore, downloadListener, null);
+                }
+                return convertView;
             }
             default: {
                 throw new IllegalArgumentException(String.valueOf(type));
@@ -714,9 +730,10 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         public static final int LAST_ACCESSED_ITEM = 2;
         public static final int SECTION = 3;
         public static final int ITEM = 4;
+        public static final int BULK_DOWNLOAD = 5;
 
         // Update this count according to the section types mentioned above
-        public static final int NUM_OF_SECTION_ROWS = 5;
+        public static final int NUM_OF_SECTION_ROWS = 6;
 
         public final int type;
         public final boolean topComponent;
