@@ -20,6 +20,7 @@
             android:layout_weight="0.5" />
 
         <View
+            android:id="@+id/view_padding"
             android:layout_width="6dp"
             android:layout_height="1dp" />
 

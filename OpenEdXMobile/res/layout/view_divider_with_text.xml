@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_divider_with_text_root"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,6 +9,7 @@
     android:weightSum="2">
 
     <View
+        android:id="@+id/view_left_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center"
@@ -26,6 +28,7 @@
         android:textSize="@dimen/edx_small"/>
 
     <View
+        android:id="@+id/view_right_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center"
