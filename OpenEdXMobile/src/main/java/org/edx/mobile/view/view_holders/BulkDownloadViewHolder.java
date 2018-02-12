@@ -3,6 +3,7 @@ package org.edx.mobile.view.view_holders;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
@@ -19,9 +20,12 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
+import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.adapters.NewCourseOutlineAdapter;
 
@@ -55,9 +59,10 @@ public class BulkDownloadViewHolder {
      */
     private List<VideoModel> removableVideos = new ArrayList<>();
     /**
-     * Tells if the download switch's state was changed due to user's interaction.
+     * Callback for monitoring currently downloaded videos. Fetched from calling
+     * {@link VideoDownloadHelper#registerForDownloadProgress(String, View, VideoDownloadHelper.DownloadProgressCallback) VideoDownloadHelper#registerForDownloadProgress}.
      */
-    private boolean isChangeByUser;
+    private Runnable downloadProgressRunnable;
 
     public BulkDownloadViewHolder(@NonNull View itemView,
                                   @NonNull NewCourseOutlineAdapter.DownloadListener downloadListener,
@@ -127,35 +132,44 @@ public class BulkDownloadViewHolder {
 
         // Lets populate the view now that we have all the info
         if (videosStatus.allVideosDownloaded()) {
+            progressBar.setVisibility(View.GONE);
+            progressBar.removeCallbacks(downloadProgressRunnable);
+            downloadProgressRunnable = null;
+
             setViewState(FontAwesomeIcons.fa_film, Animation.NONE, R.string.download_complete,
                     description.getResources().getQuantityString(R.plurals.download_total, videosStatus.total),
                     "total_videos_count", videosStatus.total + "", "total_videos_size",
                     MemoryUtil.format(description.getContext(), videosStatus.totalVideosSize));
+
             rootView.setOnClickListener(null);
         } else if (videosStatus.allVideosDownloading()) {
             setViewState(FontAwesomeIcons.fa_spinner, Animation.PULSE, R.string.downloading_videos,
                     description.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(description.getContext(), videosStatus.remainingVideosSize));
+
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadListener.viewDownloadsStatus();
                 }
             });
+            initDownloadProgressView(courseComponent);
         } else {
+            progressBar.setVisibility(View.GONE);
+            progressBar.removeCallbacks(downloadProgressRunnable);
+            downloadProgressRunnable = null;
+
             setViewState(FontAwesomeIcons.fa_film, Animation.NONE,
                     R.string.download_to_device,
-                    description.getResources().getQuantityString(R.plurals.download_total, videosStatus.total),
+                    description.getResources().getQuantityString(R.plurals.download_total, videosStatus.remaining),
                     "total_videos_count", videosStatus.remaining + "", "total_videos_size",
                     MemoryUtil.format(description.getContext(), videosStatus.remainingVideosSize));
+
             rootView.setOnClickListener(null);
         }
 
-        if (!isChangeByUser) {
-            downloadSwitch.setChecked(videosStatus.allVideosDownloaded());
-        }
-        isChangeByUser = false;
+        downloadSwitch.setChecked(videosStatus.allVideosDownloaded() || videosStatus.allVideosDownloading());
     }
 
     private void setViewState(@NonNull Icon icon, @NonNull Animation animation,
@@ -165,7 +179,12 @@ public class BulkDownloadViewHolder {
         image.setIcon(icon);
         image.setIconAnimation(animation);
         title.setText(titleRes);
+        setSubtitle(descPattern, firstPlaceholder, firstPlaceholderVal, secondPlaceholder, secondPlaceholderVal);
+    }
 
+    private void setSubtitle(@NonNull String descPattern, @NonNull String firstPlaceholder,
+                             @NonNull String firstPlaceholderVal, @NonNull String secondPlaceholder,
+                             @NonNull String secondPlaceholderVal) {
         final Map<String, String> keyValMap = new HashMap<>();
         keyValMap.put(firstPlaceholder, firstPlaceholderVal);
         keyValMap.put(secondPlaceholder, secondPlaceholderVal);
@@ -173,20 +192,19 @@ public class BulkDownloadViewHolder {
     }
 
     private void initDownloadSwitch() {
-        downloadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        downloadSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!buttonView.isPressed()) {
-                    // Ignore callback if the switch's state was changed programmatically
-                    return;
-                }
-
-                isChangeByUser = true;
-                if (isChecked) {
+            public void onClick(View v) {
+                final CompoundButton buttonView = (CompoundButton) v;
+                if (buttonView.isChecked()) {
                     // Stop videos from deletion (if the Runnable has been postDelayed)
                     buttonView.removeCallbacks(DELETE_VIDEOS);
                     // Download all videos
                     downloadListener.download(remainingVideos);
+                    // Turn the switch off forcefully if there's no connectivity
+                    if (!NetworkUtil.isConnected(buttonView.getContext())) {
+                        buttonView.setChecked(false);
+                    }
                 } else {
                     // Delete all videos after a delay
                     buttonView.postDelayed(DELETE_VIDEOS, DELETE_DELAY_MS);
@@ -202,6 +220,48 @@ public class BulkDownloadViewHolder {
                 }
             };
         });
+    }
+
+    private void initDownloadProgressView(CourseComponent courseComponent) {
+        progressBar.setVisibility(View.VISIBLE);
+        downloadProgressRunnable = VideoDownloadHelper.registerForDownloadProgress(courseComponent.getCourseId(),
+                progressBar, new VideoDownloadHelper.DownloadProgressCallback() {
+                    @Override
+                    public void giveProgressStatus(final NativeDownloadModel downloadModel) {
+                        progressBar.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setProgress(downloadModel.getPercentDownloaded());
+                                setSubtitle(description.getResources().getString(R.string.download_remaining),
+                                        "remaining_videos_count", downloadModel.downloadCount + "", "remaining_videos_size",
+                                        MemoryUtil.format(description.getContext(),
+                                                NativeDownloadModel.getRemainingSizeToDownload(
+                                                        videosStatus.remainingVideosSize, downloadModel.downloaded
+                                                )));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void startProgress() {
+                        progressBar.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void stopProgress() {
+                        progressBar.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                });
     }
 
     private class CourseVideosStatus {
