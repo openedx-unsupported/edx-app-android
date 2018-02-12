@@ -3,21 +3,16 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
-import org.edx.mobile.model.api.ChapterModel;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -35,14 +30,9 @@ import org.edx.mobile.util.Sha1Util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import de.greenrobot.event.EventBus;
-
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 @Singleton
 public class Storage implements IStorage {
@@ -251,6 +241,29 @@ public class Storage implements IStorage {
 
                 int averageProgress = dm.getAverageProgressForDownloads(dmids);
                 callback.onResult(averageProgress);
+            }
+
+            @Override
+            public void onFail(Exception ex) {
+                callback.onFail(ex);
+            }
+        });
+    }
+
+    @Override
+    public void getDownloadProgressOfCourseVideos(@Nullable String courseId,
+                                                  final DataCallback<NativeDownloadModel> callback) {
+        final IDatabase db = DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE);
+        db.getListOfOngoingDownloadsByCourseId(courseId, new DataCallback<List<VideoModel>>() {
+            @Override
+            public void onResult(List<VideoModel> result) {
+                final long[] dmids = new long[result.size()];
+                for (int i = 0; i < result.size(); i++) {
+                    dmids[i] = result.get(i).getDmId();
+                    logger.debug("xxxxxxxx =" + dmids[i]);
+                }
+
+                callback.onResult(dm.getProgressDetailsForDownloads(dmids));
             }
 
             @Override

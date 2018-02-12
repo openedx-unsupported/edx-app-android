@@ -5,6 +5,7 @@ package org.edx.mobile.model.download;
  */
 public class NativeDownloadModel {
 
+    public int downloadCount;
     public long downloaded;
     public long size; // size might be -1 if download has not yet started, or 0 if it has failed
     public String filepath;
@@ -16,6 +17,13 @@ public class NativeDownloadModel {
             return 0; // Prevent division-by-zero
         }
         return (int) (100 * downloaded / size);
+    }
+
+    public static int getRemainingSizeToDownload(long totalSize, long downloadedSize) {
+        if (totalSize <= 0 || downloadedSize > totalSize) {
+            return 0; // Prevent negative values
+        }
+        return (int) (totalSize - downloadedSize);
     }
 
     @Override

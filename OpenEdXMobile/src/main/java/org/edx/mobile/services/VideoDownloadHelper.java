@@ -1,21 +1,29 @@
 package org.edx.mobile.services;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateUtils;
+import android.view.View;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
@@ -41,15 +49,21 @@ public class VideoDownloadHelper {
         boolean showInfoMessage(String message);
     }
 
-    protected final Logger logger = new Logger(getClass().getName());
+    public interface DownloadProgressCallback {
+        void giveProgressStatus(NativeDownloadModel downloadModel);
+        void startProgress();
+        void stopProgress();
+    }
+
+    protected static final Logger logger = new Logger(VideoDownloadHelper.class.getName());
 
     private DownloadSizeExceedDialog downloadFragment;
 
     @Inject
-    IStorage storage;
+    private IStorage storage;
 
     @Inject
-    AnalyticsRegistry analyticsRegistry;
+    private AnalyticsRegistry analyticsRegistry;
 
 
     public void downloadVideos(final List<? extends HasDownloadEntry> model, final FragmentActivity activity,
@@ -175,4 +189,51 @@ public class VideoDownloadHelper {
         downloadTask.execute();
     }
 
+    /**
+     * Utility for subscribing to the downloads happening through {@link android.app.DownloadManager DownloadManager}.
+     * <br/>
+     * Note: Unregistering from download progress updates is the caller's responsibility by utilising
+     * the returned object of this function.
+     * <br/>
+     * Auto unregister will only happen if the registering view is destroyed or the
+     * subscribed downloads finish.
+     *
+     * @param courseId        Course's Id.
+     * @param registeringView The view that's interested in getting download callbacks and updating itself accordingly.
+     * @param callback        Callback to listen to specific events fired during the download is in progress.
+     * @return The task that's listening to in progress downloads.
+     */
+    public static Runnable registerForDownloadProgress(@Nullable final String courseId,
+                                                       @Nullable final View registeringView,
+                                                       @Nullable final DownloadProgressCallback callback) {
+        final IEdxEnvironment environment = MainApplication.getEnvironment(MainApplication.instance());
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (registeringView != null && callback != null) {
+                    if (!NetworkUtil.isConnected(registeringView.getContext()) ||
+                            !environment.getDatabase().isAnyVideoDownloading(null)) {
+                        callback.stopProgress();
+                    } else {
+                        callback.startProgress();
+                        environment.getStorage().getDownloadProgressOfCourseVideos(courseId,
+                                new DataCallback<NativeDownloadModel>() {
+                                    @Override
+                                    public void onResult(NativeDownloadModel result) {
+                                        callback.giveProgressStatus(result);
+                                    }
+
+                                    @Override
+                                    public void onFail(Exception ex) {
+                                        logger.error(ex);
+                                    }
+                                });
+                        registeringView.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
+                    }
+                }
+            }
+        };
+        runnable.run();
+        return runnable;
+    }
 }

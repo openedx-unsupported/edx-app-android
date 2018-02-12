@@ -325,6 +325,18 @@ public interface IDatabase {
      */
     List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
 
+    /**
+     * If the courseId is provided returns the Videos within a course which are currently being
+     * downloaded. Otherwise, returns all the videos being downloaded (irrespective of course
+     * they belong to).
+     *
+     * @param callback Callback to get list of videos being downloaded.
+     * @param courseId Course's ID.
+     * @return List of videos being downloaded.
+     */
+    List<VideoModel> getListOfOngoingDownloadsByCourseId(@Nullable String courseId,
+                                                         DataCallback<List<VideoModel>> callback);
+
 
     /**
      * Returns no of Videos which have been completely
