@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- the theme applied to the application or activity -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/edx_brand_primary_base</item>
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
