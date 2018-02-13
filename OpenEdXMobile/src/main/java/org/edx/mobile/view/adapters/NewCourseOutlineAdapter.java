@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.function.Predicate;
 
 public class NewCourseOutlineAdapter extends BaseAdapter {
 
@@ -229,6 +230,13 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                 } else {
                     SectionRow row = new SectionRow(SectionRow.ITEM, true, comp);
                     adapterData.add(row);
+                }
+            }
+
+            if (isVideoMode && rootComponent.getDownloadableVideosCount() == 0) {
+                // Remove bulk video download row if the course has NO downloadable videos
+                if (adapterData.get(0).type == SectionRow.BULK_DOWNLOAD) {
+                    adapterData.remove(0);
                 }
             }
         }
