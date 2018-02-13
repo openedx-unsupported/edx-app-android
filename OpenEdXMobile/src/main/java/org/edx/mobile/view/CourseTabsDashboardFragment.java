@@ -19,7 +19,6 @@ import com.google.inject.Inject;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.FragmentItemModel;
@@ -50,6 +49,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable updateDownloadProgressRunnable;
+    private MenuItem downloadsMenuItem;
 
     @NonNull
     public static CourseTabsDashboardFragment newInstance() {
@@ -117,14 +117,12 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     }
 
     public void handleDownloadProgressMenuItem(Menu menu) {
-        final MenuItem downloadsMenuItem = menu.findItem(R.id.menu_item_download_progress);
+        downloadsMenuItem = menu.findItem(R.id.menu_item_download_progress);
         final View progressView = downloadsMenuItem.getActionView();
         final ProgressWheel progressWheel = (ProgressWheel)
                 progressView.findViewById(R.id.progress_wheel);
-        if (downloadsMenuItem != null) {
-            downloadsMenuItem.setVisible(downloadsMenuItem.isVisible());
-            progressWheel.setProgress(progressWheel.getProgress());
-        }
+        downloadsMenuItem.setVisible(downloadsMenuItem.isVisible());
+        progressWheel.setProgress(progressWheel.getProgress());
         progressView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,6 +178,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                     public void onFragmentSelected() {
                         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_OUTLINE,
                                 courseData.getCourse().getId(), null);
+                        setDownloadProgressMenuItemVisibility(true);
                     }
                 }));
         // Add videos tab
@@ -192,6 +191,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                         public void onFragmentSelected() {
                             environment.getAnalyticsRegistry().trackScreenView(
                                     Analytics.Screens.VIDEOS_COURSE_VIDEOS, courseData.getCourse().getId(), null);
+                            setDownloadProgressMenuItemVisibility(false);
                         }
                     }));
         }
@@ -205,6 +205,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                         public void onFragmentSelected() {
                             environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPICS,
                                     courseData.getCourse().getId(), null, null);
+                            setDownloadProgressMenuItemVisibility(false);
                         }
                     }));
         }
@@ -218,6 +219,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                         public void onFragmentSelected() {
                             analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,
                                     courseData.getCourse().getId(), null);
+                            setDownloadProgressMenuItemVisibility(false);
                         }
                     }));
         }
@@ -226,5 +228,18 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                 getResources().getString(R.string.resources_title),
                 FontAwesomeIcons.fa_ellipsis_h, null));
         return items;
+    }
+
+    private void setDownloadProgressMenuItemVisibility(boolean isVisible) {
+        if (updateDownloadProgressRunnable != null) {
+            handler.removeCallbacks(updateDownloadProgressRunnable);
+            if (isVisible) {
+                handler.post(updateDownloadProgressRunnable);
+            } else {
+                if (downloadsMenuItem != null) {
+                    downloadsMenuItem.setVisible(false);
+                }
+            }
+        }
     }
 }
