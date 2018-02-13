@@ -50,6 +50,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable updateDownloadProgressRunnable;
     private MenuItem downloadsMenuItem;
+    private boolean wasDownloadItemVisibleBeforeStopping = false;
 
     @NonNull
     public static CourseTabsDashboardFragment newInstance() {
@@ -103,7 +104,8 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (updateDownloadProgressRunnable != null) {
+        // Only re-run the runnable if it was previously running when onStop was called which stopped it
+        if (updateDownloadProgressRunnable != null && wasDownloadItemVisibleBeforeStopping) {
             updateDownloadProgressRunnable.run();
         }
     }
@@ -113,6 +115,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         super.onStop();
         if (updateDownloadProgressRunnable != null) {
             handler.removeCallbacks(updateDownloadProgressRunnable);
+            wasDownloadItemVisibleBeforeStopping = downloadsMenuItem.isVisible();
         }
     }
 
@@ -133,6 +136,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             updateDownloadProgressRunnable = new Runnable() {
                 @Override
                 public void run() {
+                    logger.debug("KHALID:: updateDownloadProgressRunnable RUNNING");
                     if (!NetworkUtil.isConnected(getContext()) ||
                             !environment.getDatabase().isAnyVideoDownloading(null)) {
                         downloadsMenuItem.setVisible(false);
@@ -235,10 +239,12 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             handler.removeCallbacks(updateDownloadProgressRunnable);
             if (isVisible) {
                 handler.post(updateDownloadProgressRunnable);
+                logger.debug("KHALID: START updateDownloadProgressRunnable");
             } else {
                 if (downloadsMenuItem != null) {
                     downloadsMenuItem.setVisible(false);
                 }
+                logger.debug("KHALID: STOP updateDownloadProgressRunnable");
             }
         }
     }
