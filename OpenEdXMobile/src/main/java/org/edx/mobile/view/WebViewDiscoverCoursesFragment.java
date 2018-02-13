@@ -122,8 +122,9 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (toolbarCallbacks != null && toolbarCallbacks.getSearchView() != null) {
-            toolbarCallbacks.getSearchView().setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+        if (searchView != null) {
+            searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+            searchView.setIconified(!isVisibleToUser);
         }
     }
 
