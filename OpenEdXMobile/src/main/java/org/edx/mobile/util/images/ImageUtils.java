@@ -1,5 +1,6 @@
 package org.edx.mobile.util.images;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -82,5 +83,36 @@ public class ImageUtils {
             logger.error(e);
         }
         return null;
+    }
+
+    /**
+     * Check the validity of the context to be used for image loading via Glide library.
+     * <br>
+     * It's necessary to avoid the possible exceptions/crashes which are discussed in LEARNER-3186
+     * in detail.
+     * <br>
+     * Glide issues:
+     * <ul>
+     * <li> <a href="https://github.com/bumptech/glide/issues/1484">https://github.com/bumptech/glide/issues/1484</li>
+     * <li> <a href="https://github.com/bumptech/glide/issues/803">https://github.com/bumptech/glide/issues/803</li>
+     * </ul>
+     * <p>
+     * TODO: Revisit this validity in LEARNER-4118
+     *
+     * @param context
+     * @return <code>true</code> if context is valid for Glide to load the required image,
+     * <code>false</code> otherwise.
+     */
+    public static boolean isValidContextForGlide(final Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
+            if (activity.isDestroyed() || activity.isFinishing()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
