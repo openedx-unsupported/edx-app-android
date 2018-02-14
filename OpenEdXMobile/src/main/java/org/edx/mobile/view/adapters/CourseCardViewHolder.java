@@ -1,5 +1,6 @@
 package org.edx.mobile.view.adapters;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.CourseEntry;
+import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
 public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
@@ -41,11 +43,14 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     }
 
     public void setCourseImage(@NonNull String imageUrl) {
-        Glide.with(courseImage.getContext())
-                .load(imageUrl)
-                .placeholder(R.drawable.placeholder_course_card_image)
-                .transform(new TopAnchorFillWidthTransformation(courseImage.getContext()))
-                .into(courseImage);
+        final Context context = courseImage.getContext();
+        if (ImageUtils.isValidContextForGlide(context)) {
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_course_card_image)
+                    .transform(new TopAnchorFillWidthTransformation(context))
+                    .into(courseImage);
+        }
     }
 
     public void setHasUpdates(@NonNull CourseEntry courseData, @NonNull View.OnClickListener listener) {
