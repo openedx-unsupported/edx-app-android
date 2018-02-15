@@ -768,4 +768,26 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.UNIT_ID, unitId);
         trackSegmentEvent(Events.VIDEOS_UNDO_UNIT_DELETE, aEvent.properties);
     }
+
+    @Override
+    public void trackBulkDownloadSwitchOn(@NonNull String courseId, int totalDownloadableVideos, int remainingDownloadableVideos) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.BULK_DOWNLOAD_SWITCH_ON);
+        aEvent.properties.putValue(Keys.COMPONENT, Values.DOWNLOAD_MODULE);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.TOTAL_DOWNLOADABLE_VIDEOS, totalDownloadableVideos);
+        aEvent.data.putValue(Keys.REMAINING_DOWNLOADABLE_VIDEOS, remainingDownloadableVideos);
+        trackSegmentEvent(Events.BULK_DOWNLOAD_TOGGLE_ON, aEvent.properties);
+    }
+
+    @Override
+    public void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.BULK_DOWNLOAD_SWITCH_OFF);
+        aEvent.properties.putValue(Keys.COMPONENT, Values.DOWNLOAD_MODULE);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.TOTAL_DOWNLOADABLE_VIDEOS, totalDownloadableVideos);
+        trackSegmentEvent(Events.BULK_DOWNLOAD_TOGGLE_OFF, aEvent.properties);
+
+    }
 }

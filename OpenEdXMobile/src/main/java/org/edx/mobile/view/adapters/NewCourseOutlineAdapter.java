@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.function.Predicate;
 
 public class NewCourseOutlineAdapter extends BaseAdapter {
 
@@ -186,11 +185,11 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             case SectionRow.BULK_DOWNLOAD: {
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.row_bulk_download, parent, false);
-                    convertView.setTag(new BulkDownloadViewHolder(convertView, downloadListener, storage));
+                    convertView.setTag(new BulkDownloadViewHolder(convertView, downloadListener, environment));
                 }
                 if (rootComponent != null) {
                     final BulkDownloadViewHolder viewHolder = (BulkDownloadViewHolder) convertView.getTag();
-                    viewHolder.populateViewHolder(rootComponent, dbStore);
+                    viewHolder.populateViewHolder(rootComponent);
                 }
                 return convertView;
             }

@@ -3,7 +3,6 @@ package org.edx.mobile.view.view_holders;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
@@ -15,14 +14,13 @@ import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -44,7 +42,7 @@ public class BulkDownloadViewHolder {
     public final SwitchCompat downloadSwitch;
     public final ProgressBar progressBar;
     private final NewCourseOutlineAdapter.DownloadListener downloadListener;
-    private final IStorage storage;
+    private final IEdxEnvironment environment;
 
     /**
      * Summarises the download status of all the videos within a course.
@@ -66,7 +64,7 @@ public class BulkDownloadViewHolder {
 
     public BulkDownloadViewHolder(@NonNull View itemView,
                                   @NonNull NewCourseOutlineAdapter.DownloadListener downloadListener,
-                                  @NonNull IStorage storage) {
+                                  @NonNull IEdxEnvironment environment) {
         rootView = itemView;
         image = (IconImageView) itemView.findViewById(R.id.icon);
         title = (TextView) itemView.findViewById(R.id.title);
@@ -74,22 +72,22 @@ public class BulkDownloadViewHolder {
         downloadSwitch = (SwitchCompat) itemView.findViewById(R.id.download_button);
         progressBar = (ProgressBar) itemView.findViewById(R.id.download_progress);
         this.downloadListener = downloadListener;
-        this.storage = storage;
+        this.environment = environment;
         initDownloadSwitch();
     }
 
-    public void populateViewHolder(@NonNull CourseComponent courseComponent,
-                                   @NonNull IDatabase database) {
+    public void populateViewHolder(@NonNull CourseComponent courseComponent) {
         remainingVideos.clear();
         removableVideos.clear();
         videosStatus.reset();
+        videosStatus.courseId = courseComponent.getCourseId();
 
         // Get all the videos of this course
         final List<CourseComponent> allVideosInCourse = courseComponent.getVideos(true);
         videosStatus.total = allVideosInCourse.size();
 
         // Get all the videos of this course from DB that we have downloaded or are downloading
-        final List<VideoModel> videosInDB = database.getAllVideosByCourse(courseComponent.getCourseId(), null);
+        final List<VideoModel> videosInDB = environment.getDatabase().getAllVideosByCourse(courseComponent.getCourseId(), null);
         for (CourseComponent video : allVideosInCourse) {
             boolean foundInDb = false;
             for (VideoModel dbVideo : videosInDB) {
@@ -204,6 +202,9 @@ public class BulkDownloadViewHolder {
                     // Turn the switch off forcefully if there's no connectivity
                     if (!NetworkUtil.isConnected(buttonView.getContext())) {
                         buttonView.setChecked(false);
+                    } else {
+                        environment.getAnalyticsRegistry().trackBulkDownloadSwitchOn(
+                                videosStatus.courseId, videosStatus.total, videosStatus.remaining);
                     }
                 } else {
                     // Delete all videos after a delay
@@ -215,8 +216,10 @@ public class BulkDownloadViewHolder {
                 @Override
                 public void run() {
                     for (VideoModel videoModel : removableVideos) {
-                        storage.removeDownload(videoModel);
+                        environment.getStorage().removeDownload(videoModel);
                     }
+                    environment.getAnalyticsRegistry().trackBulkDownloadSwitchOff(
+                            videosStatus.courseId, videosStatus.total);
                 }
             };
         });
@@ -265,6 +268,7 @@ public class BulkDownloadViewHolder {
     }
 
     private class CourseVideosStatus {
+        String courseId;
         int total;
         int downloaded;
         int downloading;
@@ -283,6 +287,7 @@ public class BulkDownloadViewHolder {
         void reset() {
             total = downloaded = downloading = remaining = 0;
             totalVideosSize = remainingVideosSize = 0;
+            courseId = null;
         }
     }
 }
