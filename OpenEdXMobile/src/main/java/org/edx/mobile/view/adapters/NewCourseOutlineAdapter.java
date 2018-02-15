@@ -234,7 +234,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
 
             if (isVideoMode && rootComponent.getDownloadableVideosCount() == 0) {
                 // Remove bulk video download row if the course has NO downloadable videos
-                if (adapterData.get(0).type == SectionRow.BULK_DOWNLOAD) {
+                if (adapterData.size() > 0 && adapterData.get(0).type == SectionRow.BULK_DOWNLOAD) {
                     adapterData.remove(0);
                 }
             }
