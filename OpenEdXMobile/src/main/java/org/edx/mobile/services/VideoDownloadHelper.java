@@ -2,6 +2,7 @@ package org.edx.mobile.services;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -79,10 +80,14 @@ public class VideoDownloadHelper {
 
     private void startDownloadVideos(List<? extends HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
         long downloadSize = 0;
-        ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
+        ArrayList<DownloadEntry> downloadList = new ArrayList<>();
         int downloadCount = 0;
         for (HasDownloadEntry v : model) {
             DownloadEntry de = v.getDownloadEntry(storage);
+            if (!TextUtils.isEmpty(v.getDownloadUrl())) {
+                // Prefer download url to download
+                de.url = v.getDownloadUrl();
+            }
             if (null == de
                     || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
                     || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED

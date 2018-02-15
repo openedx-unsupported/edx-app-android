@@ -365,7 +365,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     private String getVideoPath(DownloadEntry video){
         String filepath = null;
-        if (!(video.filepath != null && video.filepath.length()>0)) {
+        if (video.filepath != null && video.filepath.length()>0) {
             if (video.isDownloaded()) {
                 File f = new File(video.filepath);
                 if (f.exists()) {
