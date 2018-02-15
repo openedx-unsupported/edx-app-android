@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,11 +41,10 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         toolbarCallbacks = (MainDashboardToolbarCallbacks) getActivity();
         initSearchView();
-
     }
 
     private void initSearchView() {
