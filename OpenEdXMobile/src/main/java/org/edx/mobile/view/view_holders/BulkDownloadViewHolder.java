@@ -2,6 +2,7 @@ package org.edx.mobile.view.view_holders;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -71,6 +72,14 @@ public class BulkDownloadViewHolder {
         description = (TextView) itemView.findViewById(R.id.description);
         downloadSwitch = (SwitchCompat) itemView.findViewById(R.id.download_button);
         progressBar = (ProgressBar) itemView.findViewById(R.id.download_progress);
+
+        ViewCompat.setImportantForAccessibility(rootView, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        ViewCompat.setImportantForAccessibility(image, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        ViewCompat.setImportantForAccessibility(title, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        ViewCompat.setImportantForAccessibility(description, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        ViewCompat.setImportantForAccessibility(progressBar, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        ViewCompat.setImportantForAccessibility(downloadSwitch, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+
         this.downloadListener = downloadListener;
         this.environment = environment;
         initDownloadSwitch();
@@ -140,6 +149,7 @@ public class BulkDownloadViewHolder {
                     MemoryUtil.format(description.getContext(), videosStatus.totalVideosSize));
 
             rootView.setOnClickListener(null);
+            setSwitchAccessibility(R.string.switch_on_all_downloaded);
         } else if (videosStatus.allVideosDownloading()) {
             setViewState(FontAwesomeIcons.fa_spinner, Animation.PULSE, R.string.downloading_videos,
                     description.getResources().getString(R.string.download_remaining),
@@ -153,6 +163,7 @@ public class BulkDownloadViewHolder {
                 }
             });
             initDownloadProgressView(courseComponent);
+            setSwitchAccessibility(R.string.switch_on_all_downloading);
         } else {
             progressBar.setVisibility(View.GONE);
             progressBar.removeCallbacks(downloadProgressRunnable);
@@ -165,6 +176,7 @@ public class BulkDownloadViewHolder {
                     MemoryUtil.format(description.getContext(), videosStatus.remainingVideosSize));
 
             rootView.setOnClickListener(null);
+            setSwitchAccessibility(R.string.switch_off_no_downloading);
         }
 
         downloadSwitch.setChecked(videosStatus.allVideosDownloaded() || videosStatus.allVideosDownloading());
@@ -187,6 +199,12 @@ public class BulkDownloadViewHolder {
         keyValMap.put(firstPlaceholder, firstPlaceholderVal);
         keyValMap.put(secondPlaceholder, secondPlaceholderVal);
         description.setText(ResourceUtil.getFormattedString(descPattern, keyValMap));
+    }
+
+    private void setSwitchAccessibility(@StringRes int accessibilitySuffixStringRes) {
+        downloadSwitch.setContentDescription(title.getText() + ". " +
+                description.getText() + ". " +
+                downloadSwitch.getResources().getString(accessibilitySuffixStringRes));
     }
 
     private void initDownloadSwitch() {
@@ -241,6 +259,7 @@ public class BulkDownloadViewHolder {
                                                 NativeDownloadModel.getRemainingSizeToDownload(
                                                         videosStatus.remainingVideosSize, downloadModel.downloaded
                                                 )));
+                                setSwitchAccessibility(R.string.switch_on_all_downloading);
                             }
                         });
                     }

@@ -422,6 +422,13 @@
     <string name="download_remaining" tools:ignore="MissingTranslation">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
     <!-- Title for bulk videos download view when in downloaded state -->
     <string name="download_complete" tools:ignore="MissingTranslation">All Videos Downloaded</string>
+    <!-- Accessibility label of bulk download switch, when its state is OFF and no download is happening -->
+    <string name="switch_off_no_downloading">Toggling the switch on, will download all videos of this course.</string>
+    <!-- Accessibility label of bulk download switch, when its state is ON and all videos are downloading -->
+    <string name="switch_on_all_downloading">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
+    <!-- Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded -->
+    <string name="switch_on_all_downloaded">Toggling the switch off, will delete all downloaded videos of this course.
+</string>
 
     <!-- Wifi New Message -->
     <!-- Toggle to allow downloads using cellular data -->
