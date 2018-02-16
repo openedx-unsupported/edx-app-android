@@ -12,6 +12,7 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
 
     private DownloadEntry downloadEntry;
     private VideoData data;
+    private String downloadUrl;
 
     public VideoBlockModel(BlockModel blockModel, CourseComponent parent){
         super(blockModel,parent);
@@ -28,6 +29,16 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
                 .getDownloadEntryFromVideoModel(this);
         }
         return downloadEntry;
+    }
+
+    public void setDownloadUrl(@Nullable String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    @Nullable
+    @Override
+    public String getDownloadUrl() {
+        return downloadUrl;
     }
 
     public VideoData getData() {

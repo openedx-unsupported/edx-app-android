@@ -46,7 +46,7 @@ public class EncodedVideos implements Serializable {
         }
         if (new Config(MainApplication.instance()).isUsingVideoPipeline()) {
             if (fallback != null && URLUtil.isNetworkUrl(fallback.url) &&
-                    VideoUtil.isSupportedVideoFormat(fallback.url, AppConstants.VIDEO_FORMAT_M3U8)) {
+                    VideoUtil.videoHasFormat(fallback.url, AppConstants.VIDEO_FORMAT_M3U8)) {
                 return fallback;
             }
         } else {

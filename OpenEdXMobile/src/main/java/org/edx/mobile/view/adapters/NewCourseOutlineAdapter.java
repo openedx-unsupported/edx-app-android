@@ -354,7 +354,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     }
 
     private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData,
-                                  @NonNull VideoBlockModel videoBlockModel) {
+                                  @NonNull final VideoBlockModel videoBlockModel) {
         viewHolder.rowType.setIcon(FontAwesomeIcons.fa_film);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);
@@ -406,6 +406,12 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
+                                                /**
+                                                 * Assign preferred downloadable url to {@link DownloadEntry#url}
+                                                 * to use this url to download. After downloading
+                                                 * only downloaded video path will be used for streaming.
+                                                 */
+                                                videoData.url = VideoUtil.getPreferredVideoUrlForDownloading(videoBlockModel.getData());
                                                 downloadListener.download(videoData);
                                             }
                                         });
@@ -495,7 +501,16 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View downloadView) {
-                                downloadListener.download(component.getVideos());
+                                final List<VideoBlockModel> downloadableVideos = (List<VideoBlockModel>) (List) component.getVideos(true);
+                                for (VideoBlockModel videoBlockModel : downloadableVideos) {
+                                    /**
+                                     * Assign preferred downloadable url to {@link VideoBlockModel#downloadUrl},
+                                     * to use this url to download. After downloading only downloaded
+                                     * video path will be used for streaming.
+                                     */
+                                    videoBlockModel.setDownloadUrl(VideoUtil.getPreferredVideoUrlForDownloading(videoBlockModel.getData()));
+                                }
+                                downloadListener.download(downloadableVideos);
                             }
                         });
             }

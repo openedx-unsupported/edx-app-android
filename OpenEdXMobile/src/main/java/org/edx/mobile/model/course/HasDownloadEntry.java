@@ -8,4 +8,7 @@ import org.edx.mobile.module.storage.IStorage;
 public interface HasDownloadEntry {
     @Nullable
     DownloadEntry getDownloadEntry(IStorage storage);
+
+    @Nullable
+    String getDownloadUrl();
 }
