@@ -19,11 +19,11 @@ public class NativeDownloadModel {
         return (int) (100 * downloaded / size);
     }
 
-    public static int getRemainingSizeToDownload(long totalSize, long downloadedSize) {
+    public static long getRemainingSizeToDownload(long totalSize, long downloadedSize) {
         if (totalSize <= 0 || downloadedSize > totalSize) {
             return 0; // Prevent negative values
         }
-        return (int) (totalSize - downloadedSize);
+        return totalSize - downloadedSize;
     }
 
     @Override
