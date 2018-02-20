@@ -1,9 +1,10 @@
 package org.edx.mobile.services;
 
+import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.text.format.DateUtils;
 import android.view.View;
 
 import com.google.inject.Inject;
@@ -51,7 +52,9 @@ public class VideoDownloadHelper {
 
     public interface DownloadProgressCallback {
         void giveProgressStatus(NativeDownloadModel downloadModel);
+
         void startProgress();
+
         void stopProgress();
     }
 
@@ -190,10 +193,11 @@ public class VideoDownloadHelper {
     }
 
     /**
-     * Utility for subscribing to the downloads happening through {@link android.app.DownloadManager DownloadManager}.
+     * Utility for asynchronously listening to the downloads happening through
+     * {@link android.app.DownloadManager DownloadManager}.
      * <br/>
      * Note: Unregistering from download progress updates is the caller's responsibility by utilising
-     * the returned object of this function.
+     * the registeringView param i.e. hiding it whenever the callers needs to stop listening.
      * <br/>
      * Auto unregister will only happen if the registering view is destroyed or the
      * subscribed downloads finish.
@@ -201,16 +205,16 @@ public class VideoDownloadHelper {
      * @param courseId        Course's Id.
      * @param registeringView The view that's interested in getting download callbacks and updating itself accordingly.
      * @param callback        Callback to listen to specific events fired during the download is in progress.
-     * @return The task that's listening to in progress downloads.
      */
-    public static Runnable registerForDownloadProgress(@Nullable final String courseId,
-                                                       @Nullable final View registeringView,
-                                                       @Nullable final DownloadProgressCallback callback) {
+    public static void listenToDownloadProgress(@Nullable final String courseId,
+                                                @Nullable final View registeringView,
+                                                @Nullable final DownloadProgressCallback callback) {
         final IEdxEnvironment environment = MainApplication.getEnvironment(MainApplication.instance());
-        final Runnable runnable = new Runnable() {
+        AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                if (registeringView != null && callback != null) {
+                while (callback != null && registeringView != null &&
+                        registeringView.isAttachedToWindow() && registeringView.isShown()) {
                     if (!NetworkUtil.isConnected(registeringView.getContext()) ||
                             !environment.getDatabase().isAnyVideoDownloading(null)) {
                         callback.stopProgress();
@@ -220,7 +224,9 @@ public class VideoDownloadHelper {
                                 new DataCallback<NativeDownloadModel>() {
                                     @Override
                                     public void onResult(NativeDownloadModel result) {
-                                        callback.giveProgressStatus(result);
+                                        if (result != null) {
+                                            callback.giveProgressStatus(result);
+                                        }
                                     }
 
                                     @Override
@@ -228,12 +234,9 @@ public class VideoDownloadHelper {
                                         logger.error(ex);
                                     }
                                 });
-                        registeringView.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
                     }
                 }
             }
-        };
-        runnable.run();
-        return runnable;
+        });
     }
 }

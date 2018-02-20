@@ -57,11 +57,6 @@ public class BulkDownloadViewHolder {
      * List of videos that are currently being downloaded or haven been downloaded.
      */
     private List<VideoModel> removableVideos = new ArrayList<>();
-    /**
-     * Callback for monitoring currently downloaded videos. Fetched from calling
-     * {@link VideoDownloadHelper#registerForDownloadProgress(String, View, VideoDownloadHelper.DownloadProgressCallback) VideoDownloadHelper#registerForDownloadProgress}.
-     */
-    private Runnable downloadProgressRunnable;
 
     public BulkDownloadViewHolder(@NonNull View itemView,
                                   @NonNull NewCourseOutlineAdapter.DownloadListener downloadListener,
@@ -140,8 +135,6 @@ public class BulkDownloadViewHolder {
         // Lets populate the view now that we have all the info
         if (videosStatus.allVideosDownloaded()) {
             progressBar.setVisibility(View.GONE);
-            progressBar.removeCallbacks(downloadProgressRunnable);
-            downloadProgressRunnable = null;
 
             setViewState(FontAwesomeIcons.fa_film, Animation.NONE, R.string.download_complete,
                     description.getResources().getQuantityString(R.plurals.download_total, videosStatus.total),
@@ -166,8 +159,6 @@ public class BulkDownloadViewHolder {
             setSwitchAccessibility(R.string.switch_on_all_downloading);
         } else {
             progressBar.setVisibility(View.GONE);
-            progressBar.removeCallbacks(downloadProgressRunnable);
-            downloadProgressRunnable = null;
 
             setViewState(FontAwesomeIcons.fa_film, Animation.NONE,
                     R.string.download_to_device,
@@ -245,7 +236,7 @@ public class BulkDownloadViewHolder {
 
     private void initDownloadProgressView(CourseComponent courseComponent) {
         progressBar.setVisibility(View.VISIBLE);
-        downloadProgressRunnable = VideoDownloadHelper.registerForDownloadProgress(courseComponent.getCourseId(),
+        VideoDownloadHelper.listenToDownloadProgress(courseComponent.getCourseId(),
                 progressBar, new VideoDownloadHelper.DownloadProgressCallback() {
                     @Override
                     public void giveProgressStatus(final NativeDownloadModel downloadModel) {
