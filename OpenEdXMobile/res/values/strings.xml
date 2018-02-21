@@ -191,11 +191,11 @@
     <!-- Label indicating new course content has been downloaded -->
     <string name="new_course_content">New Course Content</string>
     <!-- Label for date when course starts -->
-    <string name="label_starting">Starting - {date}</string>
+    <string name="label_starting" tools:ignore="MissingTranslation">Starting {date}</string>
     <!-- Label for course that has ended -->
-    <string name="label_ended">Ended - {date}</string>
+    <string name="label_ended" tools:ignore="MissingTranslation">Ended {date}</string>
     <!-- Label for date when course is ending -->
-    <string name="label_ending">Ending - {date}</string>
+    <string name="label_ending" tools:ignore="MissingTranslation">Ending {date}</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->

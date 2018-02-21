@@ -3,7 +3,6 @@ package org.edx.mobile.util.images;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseDetail;
@@ -47,19 +46,16 @@ public enum CourseCardUtils {
                 return null;
             } else if (isEnded(end)) {
                 formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_ended, "date", DateUtils.formatDateTime(context, endDate.getTime()
-                        , DateUtils.FORMAT_NO_YEAR));
+                        .label_ended, "date", DateUtil.formatDateWithNoYear(endDate.getTime()));
             } else {
                 formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_ending, "date", DateUtils.formatDateTime(context, endDate.getTime
-                        (), DateUtils.FORMAT_NO_YEAR));
+                        .label_ending, "date", DateUtil.formatDateWithNoYear(endDate.getTime()));
             }
         } else {
             if (start_type == StartType.TIMESTAMP && !TextUtils.isEmpty(start)) {
                 Date startDate = DateUtil.convertToDate(start);
                 formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_starting, "date", DateUtils.formatDateTime(context, startDate
-                        .getTime(), DateUtils.FORMAT_NO_YEAR));
+                        .label_starting, "date", DateUtil.formatDateWithNoYear(startDate.getTime()));
             } else if (start_type == StartType.STRING && !TextUtils.isEmpty(start_display)) {
                 formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
                         .label_starting, "date", start_display);
@@ -70,7 +66,7 @@ public enum CourseCardUtils {
             }
         }
 
-        return formattedDate.toString().toUpperCase();
+        return formattedDate.toString();
     }
 
     public static String getFormattedDate(@NonNull Context context, @NonNull CourseEntry course) {

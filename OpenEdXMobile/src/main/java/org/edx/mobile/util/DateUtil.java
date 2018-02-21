@@ -1,15 +1,16 @@
 package org.edx.mobile.util;
 
 import android.annotation.SuppressLint;
-import android.text.format.DateUtils;
+import android.support.annotation.Nullable;
 
 import com.google.gson.internal.bind.util.ISO8601Utils;
+
+import org.edx.mobile.logger.Logger;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.edx.mobile.logger.Logger;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
@@ -56,6 +57,23 @@ public class DateUtil {
             return formattedDate;
         } catch (Exception e) {
             //This will be removed when the PR for log changes is merged with master
+            logger.error(e);
+            return null;
+        }
+    }
+
+    /**
+     * Formats a date according to 'MMMM d' format.
+     * Example output is 'February 21'.
+     *
+     * @param millis a point in time in UTC milliseconds
+     * @return a string containing the formatted date.
+     */
+    @Nullable
+    public static String formatDateWithNoYear(long millis) {
+        try {
+            return new SimpleDateFormat("MMMM d").format(millis);
+        } catch (IllegalArgumentException e) {
             logger.error(e);
             return null;
         }

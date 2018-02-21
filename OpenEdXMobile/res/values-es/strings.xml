@@ -166,12 +166,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="course_name">Nombre del curso</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Nuevo contenido del curso</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">Comenzando el {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">Terminado - {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">Terminando - {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Contenido del curso</string>
