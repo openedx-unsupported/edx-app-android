@@ -82,7 +82,7 @@ public class PrefManager {
     public String getString(String key) {
         if (context != null) {
             return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                    .getString(key, null);
+              .getString(key, null);
         }
         return null;
     }
@@ -97,7 +97,7 @@ public class PrefManager {
     public boolean getBoolean(String key, boolean defaultValue) {
         if (context != null) {
             return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                    .getBoolean(key, defaultValue);
+              .getBoolean(key, defaultValue);
         }
         return defaultValue;
     }
@@ -111,7 +111,7 @@ public class PrefManager {
     public long getLong(String key) {
         if (context != null) {
             return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                    .getLong(key, -1);
+              .getLong(key, -1);
         }
         return -1;
     }
@@ -124,7 +124,7 @@ public class PrefManager {
      */
     public float getFloat(String key) {
         return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getFloat(key, -1.0f);
+          .getFloat(key, -1.0f);
     }
 
     /**
@@ -137,7 +137,7 @@ public class PrefManager {
     public float getFloat(String key, float defaultValue) {
         if (context != null) {
             return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                    .getFloat(key, defaultValue);
+              .getFloat(key, defaultValue);
         }
         return defaultValue;
     }
@@ -187,6 +187,10 @@ public class PrefManager {
             super.put(Key.AppSettingNeedSyncWithParse, enabled);
         }
 
+        public String getUserLanguages() {
+            return getString(Key.USER_LANGUAGE);
+        }
+
         public String getPrevNotificationHashKey() {
             return getString(Key.AppNotificationPushHash);
         }
@@ -211,6 +215,10 @@ public class PrefManager {
             super.put(Key.LAST_RATED_VERSION, versionName);
         }
 
+        public void setLanguage(String language) {
+            super.put(Key.USER_LANGUAGE, language);
+        }
+
         @Nullable
         public String getWhatsNewShownVersion() {
             return getString(Key.WHATS_NEW_SHOWN_FOR_VERSION);
@@ -218,6 +226,20 @@ public class PrefManager {
 
         public void setWhatsNewShown(@NonNull String version) {
             super.put(Key.WHATS_NEW_SHOWN_FOR_VERSION, version);
+        }
+    }
+
+    public static class UserPrefManager extends PrefManager {
+        public UserPrefManager(Context context) {
+            super(context, Pref.USER_PREF);
+        }
+
+        public boolean isVideosCacheRestored() {
+            return getBoolean(Key.VIDEOS_CACHE_RESTORED, false);
+        }
+
+        public void setIsVideosCacheRestored(boolean restored) {
+            super.put(Key.VIDEOS_CACHE_RESTORED, restored);
         }
     }
 
@@ -269,6 +291,14 @@ public class PrefManager {
         public static final String AppNotificationPushHash = "AppNotificationPushHash";
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
+        public static final String USER_LANGUAGE = "pref_language";
+
+        /**
+         * For downloaded videos to appear in order on the My Videos screen, we need
+         * to have the videos' courses data cached. This is the key to a persistent
+         * flag which marks whether the cache has been restored
+         */
+        public static final String VIDEOS_CACHE_RESTORED = "VideosCacheRestored";
 
         // Preference to save user app rating
         public static final String APP_RATING = "APP_RATING";
@@ -297,7 +327,7 @@ public class PrefManager {
                 continue;
             }
             MainApplication.application.getSharedPreferences(
-                    prefName, Context.MODE_PRIVATE).edit().clear().apply();
+              prefName, Context.MODE_PRIVATE).edit().clear().apply();
         }
     }
 }
