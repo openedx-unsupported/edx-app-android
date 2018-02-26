@@ -9,6 +9,10 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 
+/**
+ * @deprecated As of release v2.13, use {@link CourseTabsDashboardActivity} instead.
+ */
+@Deprecated
 public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
 
     protected Logger logger = new Logger(getClass().getSimpleName());

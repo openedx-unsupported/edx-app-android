@@ -51,6 +51,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ *
+ * TODO: Rename class name to 'CourseOutlineAdapter' once old/deprecated  {@link CourseOutlineAdapter} is deleted.
+ */
 public class NewCourseOutlineAdapter extends BaseAdapter {
 
     private final Logger logger = new Logger(getClass().getName());

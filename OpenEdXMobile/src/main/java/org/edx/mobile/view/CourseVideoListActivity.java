@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.View;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
@@ -17,7 +16,11 @@ import javax.inject.Inject;
 
 /**
  * Created by hanning on 5/15/15.
+ *
+ *  @deprecated As of release v2.13, see {@link NewCourseOutlineActivity} and
+ *  {@link NewCourseOutlineFragment} as an alternate.
  */
+@Deprecated
 public abstract class CourseVideoListActivity  extends CourseBaseActivity implements
     LastAccessManager.LastAccessManagerCallback ,VideoDownloadHelper.DownloadManagerCallback {
 

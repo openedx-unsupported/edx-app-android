@@ -10,6 +10,11 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
+/**
+ * @deprecated As of release v2.13, see {@link MainDashboardActivity}, {@link MainTabsDashboardFragment}
+ * and {@link NativeFindCoursesFragment} as an alternate.
+ */
+@Deprecated
 public class NativeFindCoursesActivity extends BaseSingleFragmentActivity {
 
     public static Intent newIntent(@NonNull Context context) {

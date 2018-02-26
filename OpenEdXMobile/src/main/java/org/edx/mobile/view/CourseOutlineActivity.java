@@ -14,7 +14,11 @@ import javax.inject.Inject;
 
 /**
  *  Top level outline for the Course
+ *
+ *  @deprecated As of release v2.13, see {@link NewCourseOutlineActivity} and
+ *  {@link NewCourseOutlineFragment} as an alternate.
  */
+@Deprecated
 public class CourseOutlineActivity extends CourseVideoListActivity {
 
     private CourseOutlineFragment fragment;

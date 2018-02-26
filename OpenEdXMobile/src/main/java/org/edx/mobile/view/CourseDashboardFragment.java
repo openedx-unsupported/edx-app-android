@@ -29,6 +29,10 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
+/**
+ *  @deprecated As of release v2.13, see {@link CourseTabsDashboardFragment} as an alternate.
+ */
+@Deprecated
 public class CourseDashboardFragment extends BaseFragment {
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String CourseData = TAG + ".course_data";

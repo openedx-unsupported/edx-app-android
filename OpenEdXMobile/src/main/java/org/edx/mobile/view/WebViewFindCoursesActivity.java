@@ -19,6 +19,9 @@ import java.net.URLEncoder;
 
 import roboguice.inject.ContentView;
 
+/**
+ * This activity will be refactored to fragment in future. See Jira story LEARNER-3842 for more details.
+ */
 @ContentView(R.layout.activity_find_courses)
 public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
     private SearchView searchView;

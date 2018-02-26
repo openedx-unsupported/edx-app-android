@@ -222,7 +222,13 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * be searched in activity's layout, if it exists, the {@link NavigationFragment Navigation Drawer}
      * will be replaced by the container having id {@link R.id#slider_menu R.id.slider_menu}.
      * </p>
+     *
+     * @deprecated As of release v2.13, see new toolbar design used in
+     * {@link org.edx.mobile.view.MainDashboardActivity} and menu options used in
+     * {@link org.edx.mobile.view.MainTabsDashboardFragment} as an alternate.
+     *
      */
+    @Deprecated
     protected void addDrawer() {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
@@ -262,6 +268,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * Call this function if you do not want to allow
      * opening/showing the drawer(Navigation Fragment) on swiping left to right
      */
+    @Deprecated
     protected void blockDrawerFromOpening() {
         DrawerLayout drawerLayout = (DrawerLayout)
                 findViewById(R.id.drawer_layout);
@@ -271,6 +278,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     //Closing the Navigation Drawer
+    @Deprecated
     public void closeDrawer() {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
