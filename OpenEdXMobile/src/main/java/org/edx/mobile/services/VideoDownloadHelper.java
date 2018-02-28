@@ -1,30 +1,23 @@
 package org.edx.mobile.services;
 
-import android.os.AsyncTask;
-import android.os.Looper;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.storage.DownloadInterruptedEvent;
+import org.edx.mobile.module.storage.DownloadStartedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
@@ -32,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  *
@@ -50,14 +45,6 @@ public class VideoDownloadHelper {
         boolean showInfoMessage(String message);
     }
 
-    public interface DownloadProgressCallback {
-        void giveProgressStatus(NativeDownloadModel downloadModel);
-
-        void startProgress();
-
-        void stopProgress();
-    }
-
     protected static final Logger logger = new Logger(VideoDownloadHelper.class.getName());
 
     private DownloadSizeExceedDialog downloadFragment;
@@ -74,24 +61,19 @@ public class VideoDownloadHelper {
         if (model == null || model.isEmpty()) {
             return;
         }
-        try {
-            IDialogCallback dialogCallback = new IDialogCallback() {
-                @Override
-                public void onPositiveClicked() {
-                    startDownloadVideos(model, activity, callback);
-                }
+        IDialogCallback dialogCallback = new IDialogCallback() {
+            @Override
+            public void onPositiveClicked() {
+                startDownloadVideos(model, activity, callback);
+            }
 
-                @Override
-                public void onNegativeClicked() {
-                    callback.showInfoMessage(activity.getString(R.string.wifi_off_message));
-                }
-            };
-            MediaConsentUtils.requestStreamMedia(activity, dialogCallback);
-
-        } catch (Exception e) {
-            logger.error(e);
-        }
-
+            @Override
+            public void onNegativeClicked() {
+                callback.showInfoMessage(activity.getString(R.string.wifi_off_message));
+                EventBus.getDefault().post(new DownloadInterruptedEvent());
+            }
+        };
+        MediaConsentUtils.requestStreamMedia(activity, dialogCallback);
     }
 
     private void startDownloadVideos(List<? extends HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
@@ -116,6 +98,7 @@ public class VideoDownloadHelper {
                 .getAvailableExternalMemory(activity)) {
             ((BaseFragmentActivity) activity).showInfoMessage(activity.getString(R.string.file_size_exceeded));
             callback.updateListUI();
+            EventBus.getDefault().post(new DownloadInterruptedEvent());
         } else {
             if (downloadSize < MemoryUtil.GB && !downloadList.isEmpty()) {
                 startDownload(downloadList, activity, callback);
@@ -147,6 +130,7 @@ public class VideoDownloadHelper {
                             analyticsRegistry.trackSubSectionBulkVideoDownload(downloadEntry.getSectionName(),
                                     downloadEntry.getChapterName(), downloadEntry.getEnrollmentId(),
                                     noOfDownloads);
+                            EventBus.getDefault().post(new DownloadStartedEvent());
                         }
                     }
 
@@ -154,6 +138,7 @@ public class VideoDownloadHelper {
                     public void onNegativeClicked() {
                         //  updateList();
                         downloadFragment.dismiss();
+                        EventBus.getDefault().post(new DownloadInterruptedEvent());
                     }
                 });
         downloadFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
@@ -190,53 +175,5 @@ public class VideoDownloadHelper {
         callback.showProgressDialog(downloadList.size());
         downloadTask.setTaskProcessCallback(null);
         downloadTask.execute();
-    }
-
-    /**
-     * Utility for asynchronously listening to the downloads happening through
-     * {@link android.app.DownloadManager DownloadManager}.
-     * <br/>
-     * Note: Unregistering from download progress updates is the caller's responsibility by utilising
-     * the registeringView param i.e. hiding it whenever the callers needs to stop listening.
-     * <br/>
-     * Auto unregister will only happen if the registering view is destroyed or the
-     * subscribed downloads finish.
-     *
-     * @param courseId        Course's Id.
-     * @param registeringView The view that's interested in getting download callbacks and updating itself accordingly.
-     * @param callback        Callback to listen to specific events fired during the download is in progress.
-     */
-    public static void listenToDownloadProgress(@Nullable final String courseId,
-                                                @Nullable final View registeringView,
-                                                @Nullable final DownloadProgressCallback callback) {
-        final IEdxEnvironment environment = MainApplication.getEnvironment(MainApplication.instance());
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                while (callback != null && registeringView != null &&
-                        registeringView.isAttachedToWindow() && registeringView.isShown()) {
-                    if (!NetworkUtil.isConnected(registeringView.getContext()) ||
-                            !environment.getDatabase().isAnyVideoDownloading(null)) {
-                        callback.stopProgress();
-                    } else {
-                        callback.startProgress();
-                        environment.getStorage().getDownloadProgressOfCourseVideos(courseId,
-                                new DataCallback<NativeDownloadModel>() {
-                                    @Override
-                                    public void onResult(NativeDownloadModel result) {
-                                        if (result != null) {
-                                            callback.giveProgressStatus(result);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFail(Exception ex) {
-                                        logger.error(ex);
-                                    }
-                                });
-                    }
-                }
-            }
-        });
     }
 }

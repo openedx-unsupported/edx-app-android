@@ -9,6 +9,8 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 
+import java.util.List;
+
 public interface IStorage {
 
     /**
@@ -26,6 +28,15 @@ public interface IStorage {
      * @return no of entries that were marked as deleted or removed
      */
     int removeDownload(VideoModel model);
+
+    /**
+     * Removes a list of videos from the database as well as NativeDownloadManager
+     * and removes the files stored in DB.
+     *
+     * @param modelList List of video files that need to be deleted.
+     * @return No of entries that were marked as deleted or removed.
+     */
+    int removeDownloads(List<VideoModel> modelList);
 
     /**
      * Removes all videos from the database as well as NativeDownloadManager.

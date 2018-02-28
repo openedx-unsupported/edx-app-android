@@ -4,7 +4,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -24,9 +23,10 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.prefs.VideoPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.Sha1Util;
+import org.edx.mobile.view.BulkDownloadFragment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,6 +51,8 @@ public class Storage implements IStorage {
     private LoginPrefs loginPrefs;
     @Inject
     private CourseAPI api;
+    @Inject
+    private VideoPrefs videoPrefs;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -129,33 +131,25 @@ public class Storage implements IStorage {
 
         // anyways, we mark the video as DELETED
         int videosDeleted = db.deleteVideoByVideoId(model, null);
+        // Reset the state of Videos Bulk Download view whenever a delete happens
+        videoPrefs.setBulkDownloadSwitchState(BulkDownloadFragment.SwitchState.DEFAULT, model.getEnrollmentId());
         EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
         return videosDeleted;
     }
 
-    public void removeAllDownloads() {
-        final String username = loginPrefs.getUsername();
-        final String sha1Username;
-        if (TextUtils.isEmpty(username)) {
-            return;
-        } else {
-            sha1Username = Sha1Util.SHA1(username);
-        }
+    @Override
+    public int removeDownloads(List<VideoModel> modelList) {
+        final int deletedVideos = removeDownloadsFromApp(modelList);
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+        return deletedVideos;
+    }
 
+    public void removeAllDownloads() {
         // Get all on going downloads
         db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>(false) {
             @Override
             public void onResult(List<VideoModel> result) {
-                // Remove all downloads from db
-                long [] videoIds = new long[result.size()];
-                VideoModel model;
-                for (int i=0; i<result.size(); i++) {
-                    model = result.get(i);
-                    db.deleteVideoByVideoId(model, null, sha1Username);
-                    videoIds[i] = model.getDmId();
-                }
-                // Remove all downloads from NativeDownloadManager
-                dm.removeDownloads(videoIds);
+                removeDownloadsFromApp(result);
                 EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
             }
 
@@ -163,6 +157,20 @@ public class Storage implements IStorage {
             public void onFail(Exception ex) {
             }
         });
+    }
+
+    private int removeDownloadsFromApp(List<VideoModel> result) {
+        // Remove all downloads from db
+        long[] videoIds = new long[result.size()];
+        VideoModel model;
+        for (int i = 0; i < result.size(); i++) {
+            model = result.get(i);
+            db.deleteVideoByVideoId(model, null);
+            deleteFile(model.getFilePath());
+            videoIds[i] = model.getDmId();
+        }
+        // Remove all downloads from NativeDownloadManager
+        return videoIds.length > 0 ? dm.removeDownloads(videoIds) : 0;
     }
 
     /**
@@ -204,7 +212,7 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public void getAverageDownloadProgressInChapter(String enrollmentId, String chapter, 
+    public void getAverageDownloadProgressInChapter(String enrollmentId, String chapter,
             final DataCallback<Integer> callback) {
         List<Long> dmidList = db.getDownloadingVideoDmIdsForChapter(enrollmentId, chapter, null);
         if (dmidList == null || dmidList.isEmpty()) {

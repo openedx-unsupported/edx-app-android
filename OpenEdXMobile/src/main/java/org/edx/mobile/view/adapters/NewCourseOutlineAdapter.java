@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,9 +44,10 @@ import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
-import org.edx.mobile.view.view_holders.BulkDownloadViewHolder;
+import org.edx.mobile.view.BulkDownloadFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +68,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     }
 
     private Context context;
+    private Fragment parentFragment;
     private CourseComponent rootComponent;
     private LayoutInflater inflater;
     private List<SectionRow> adapterData;
@@ -77,10 +81,11 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     private DownloadListener downloadListener;
     private boolean isVideoMode;
 
-    public NewCourseOutlineAdapter(final Context context, final EnrolledCoursesResponse courseData,
-                                   final IEdxEnvironment environment, NewCourseOutlineAdapter.DownloadListener listener,
+    public NewCourseOutlineAdapter(final Context context, Fragment fragment, final EnrolledCoursesResponse courseData,
+                                   final IEdxEnvironment environment, DownloadListener listener,
                                    boolean isVideoMode, boolean isOnCourseOutline) {
         this.context = context;
+        this.parentFragment = fragment;
         this.environment = environment;
         this.config = environment.getConfig();
         this.dbStore = environment.getDatabase();
@@ -108,6 +113,8 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                 adapterData.add(new SectionRow(SectionRow.BULK_DOWNLOAD, null));
             }
         }
+
+        getItem(getNonCourseWareItemPlace(SectionRow.BULK_DOWNLOAD));
     }
 
     @Override
@@ -184,12 +191,23 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             }
             case SectionRow.BULK_DOWNLOAD: {
                 if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.row_bulk_download, parent, false);
-                    convertView.setTag(new BulkDownloadViewHolder(convertView, downloadListener, environment));
+                    // TODO: Remove this log, its just for performance testing purpose
+                    logger.debug("PERFORMANCE: Adapter: NEW - SectionRow.BULK_DOWNLOAD");
+                    final FrameLayout layout = new FrameLayout(parentFragment.getContext());
+                    final int id = UiUtil.generateViewId();
+                    layout.setId(id);
+
+                    final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
+                    parentFragment.getChildFragmentManager().
+                            beginTransaction().replace(id, fragment).commit();
+                    convertView = layout;
+                    convertView.setTag(fragment);
                 }
                 if (rootComponent != null) {
-                    final BulkDownloadViewHolder viewHolder = (BulkDownloadViewHolder) convertView.getTag();
-                    viewHolder.populateViewHolder(rootComponent);
+                    // TODO: Remove this log, its just for performance testing purpose
+                    logger.debug("PERFORMANCE: Adapter: POPULATE - SectionRow.BULK_DOWNLOAD");
+                    final BulkDownloadFragment fragment = (BulkDownloadFragment) convertView.getTag();
+                    fragment.populateViewHolder(rootComponent);
                 }
                 return convertView;
             }
@@ -780,5 +798,23 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                 return i;
         }
         return -1;
+    }
+
+    // TODO: Remove this code, its just for performance testing purpose
+    long startTime = System.currentTimeMillis();
+    long endTime = System.currentTimeMillis();
+    int timesCalledInASec = 0;
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        if (endTime - startTime >= 1000) {
+            logger.debug("PERFORMANCE: Adapter: notifyDataSetChanged Times Called = " + timesCalledInASec);
+            startTime = System.currentTimeMillis();
+            timesCalledInASec = 0;
+        } else {
+            timesCalledInASec += 1;
+            endTime = System.currentTimeMillis();
+        }
     }
 }
