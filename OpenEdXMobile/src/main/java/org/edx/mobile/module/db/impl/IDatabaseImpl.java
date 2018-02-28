@@ -514,8 +514,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public List<VideoModel>
-    getListOfOngoingDownloadsByCourseId(@Nullable String courseId,
+    public List<VideoModel> getListOfOngoingDownloadsByCourseId(@Nullable String courseId,
                                         DataCallback<List<VideoModel>> callback) {
         final StringBuilder whereClause = new StringBuilder();
         final List<String> whereArgs = new ArrayList<>();
