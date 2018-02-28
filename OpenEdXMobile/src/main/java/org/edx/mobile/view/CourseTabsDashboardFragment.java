@@ -136,7 +136,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             updateDownloadProgressRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    logger.debug("KHALID:: updateDownloadProgressRunnable RUNNING");
                     if (!NetworkUtil.isConnected(getContext()) ||
                             !environment.getDatabase().isAnyVideoDownloading(null)) {
                         downloadsMenuItem.setVisible(false);
@@ -239,12 +238,10 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             handler.removeCallbacks(updateDownloadProgressRunnable);
             if (isVisible) {
                 handler.post(updateDownloadProgressRunnable);
-                logger.debug("KHALID: START updateDownloadProgressRunnable");
             } else {
                 if (downloadsMenuItem != null) {
                     downloadsMenuItem.setVisible(false);
                 }
-                logger.debug("KHALID: STOP updateDownloadProgressRunnable");
             }
         }
     }
