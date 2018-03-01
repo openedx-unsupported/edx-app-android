@@ -423,11 +423,11 @@
     <!-- Title for bulk videos download view when in downloaded state -->
     <string name="download_complete" tools:ignore="MissingTranslation">All Videos Downloaded</string>
     <!-- Accessibility label of bulk download switch, when its state is OFF and no download is happening -->
-    <string name="switch_off_no_downloading">Toggling the switch on, will download all videos of this course.</string>
+    <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">Toggling the switch on, will download all videos of this course.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos are downloading -->
-    <string name="switch_on_all_downloading">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
+    <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded -->
-    <string name="switch_on_all_downloaded">Toggling the switch off, will delete all downloaded videos of this course.
+    <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">Toggling the switch off, will delete all downloaded videos of this course.
 </string>
 
     <!-- Wifi New Message -->
