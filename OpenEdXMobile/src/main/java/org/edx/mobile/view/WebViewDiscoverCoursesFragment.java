@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,11 +41,10 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         toolbarCallbacks = (MainDashboardToolbarCallbacks) getActivity();
         initSearchView();
-
     }
 
     private void initSearchView() {
@@ -122,8 +120,9 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (toolbarCallbacks != null && toolbarCallbacks.getSearchView() != null) {
-            toolbarCallbacks.getSearchView().setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+        if (searchView != null) {
+            searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+            searchView.setIconified(!isVisibleToUser);
         }
     }
 

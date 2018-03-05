@@ -1,5 +1,7 @@
 package org.edx.mobile.model.api;
 
+import android.support.annotation.Nullable;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.HasDownloadEntry;
@@ -146,6 +148,12 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
                 .getDownloadEntryfromVideoResponseModel(this);
         }
         return downloadEntry;
+    }
+
+    @Nullable
+    @Override
+    public String getDownloadUrl() {
+        return null;
     }
 
     public long getSize(){
