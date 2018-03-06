@@ -303,7 +303,7 @@ public class BulkDownloadFragment extends BaseFragment {
         downloadProgressTimer.schedule(new TimerTask() {
             public void run() {
                 final Context context = getContext();
-                if (context == null) {
+                if (context == null || environment == null || downloadListener == null) {
                     downloadProgressTimer.cancel();
                     return;
                 }
@@ -325,6 +325,9 @@ public class BulkDownloadFragment extends BaseFragment {
                             new DataCallback<NativeDownloadModel>() {
                                 @Override
                                 public void onResult(final NativeDownloadModel downloadModel) {
+                                    if (getActivity() == null || environment == null || downloadListener == null) {
+                                        return;
+                                    }
                                     if (downloadModel != null) {
                                         binding.downloadProgress.post(new Runnable() {
                                             @Override
@@ -371,6 +374,7 @@ public class BulkDownloadFragment extends BaseFragment {
         super.onStop();
         if (downloadProgressTimer != null) {
             downloadProgressTimer.cancel();
+            logger.debug("PERFORMANCE: ProgressTimer STOPPED");
         }
         EventBus.getDefault().unregister(this);
     }

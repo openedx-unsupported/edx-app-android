@@ -161,7 +161,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         // FIXME: Re-enable row recycling in favor of better DB communication [MA-1640]
         //if (convertView == null) {
         switch (type) {
-            case SectionRow.ITEM: {
+            /*case SectionRow.ITEM: {
                 convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
                 // apply a tag to this list row
                 ViewHolder tag = getTag(convertView);
@@ -188,7 +188,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
                 }
                 return getLastAccessedView(position, convertView);
-            }
+            }*/
             case SectionRow.BULK_DOWNLOAD: {
                 if (convertView == null) {
                     // TODO: Remove this log, its just for performance testing purpose
@@ -212,7 +212,14 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                 return convertView;
             }
             default: {
-                throw new IllegalArgumentException(String.valueOf(type));
+//                throw new IllegalArgumentException(String.valueOf(type));
+                if (convertView == null) {
+                    logger.debug("PERFORMANCE: Adapter: NEW - DUMMY");
+                    convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
+                } else {
+                    logger.debug("PERFORMANCE: Adapter: POPULATE - DUMMY");
+                }
+                return convertView;
             }
         }
         //}
