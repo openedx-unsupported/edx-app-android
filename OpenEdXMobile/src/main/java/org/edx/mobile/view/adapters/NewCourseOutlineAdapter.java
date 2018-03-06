@@ -158,39 +158,33 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     public final View getView(int position, View convertView, ViewGroup parent) {
         final int type = getItemViewType(position);
 
-        // FIXME: Re-enable row recycling in favor of better DB communication [MA-1640]
-        //if (convertView == null) {
-        switch (type) {
-            case SectionRow.ITEM: {
-                convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
-                // apply a tag to this list row
-                ViewHolder tag = getTag(convertView);
-                convertView.setTag(tag);
-                return getRowView(position, convertView);
-            }
-            case SectionRow.SECTION: {
-                convertView = inflater.inflate(R.layout.row_section_header, parent, false);
-                return getHeaderView(position, convertView);
-            }
-            case SectionRow.COURSE_CARD: {
-                if (convertView == null) {
+        // FIXME: Revisit better DB communication and code improvements in [MA-1640]
+        // INITIALIZATION
+        if (convertView == null) {
+            switch (type) {
+                case SectionRow.ITEM: {
+                    convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
+                    // apply a tag to this list row
+                    ViewHolder tag = getTag(convertView);
+                    convertView.setTag(tag);
+                    break;
+                }
+                case SectionRow.SECTION: {
+                    convertView = inflater.inflate(R.layout.row_section_header, parent, false);
+                    break;
+                }
+                case SectionRow.COURSE_CARD: {
                     convertView = inflater.inflate(R.layout.row_course_card, parent, false);
+                    break;
                 }
-                return getCardView(convertView);
-            }
-            case SectionRow.COURSE_CERTIFICATE:
-                if (convertView == null) {
+                case SectionRow.COURSE_CERTIFICATE:
                     convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
-                }
-                return getCertificateView(position, convertView);
-            case SectionRow.LAST_ACCESSED_ITEM: {
-                if (convertView == null) {
+                    break;
+                case SectionRow.LAST_ACCESSED_ITEM: {
                     convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
+                    break;
                 }
-                return getLastAccessedView(position, convertView);
-            }
-            case SectionRow.BULK_DOWNLOAD: {
-                if (convertView == null) {
+                case SectionRow.BULK_DOWNLOAD: {
                     // TODO: Remove this log, its just for performance testing purpose
                     logger.debug("PERFORMANCE: Adapter: NEW - SectionRow.BULK_DOWNLOAD");
                     final FrameLayout layout = new FrameLayout(parentFragment.getContext());
@@ -202,7 +196,31 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                             beginTransaction().replace(id, fragment).commit();
                     convertView = layout;
                     convertView.setTag(fragment);
+                    break;
                 }
+                default: {
+                    throw new IllegalArgumentException(String.valueOf(type));
+                }
+            }
+        }
+
+        // POPULATION
+        switch (type) {
+            case SectionRow.ITEM: {
+                return getRowView(position, convertView);
+            }
+            case SectionRow.SECTION: {
+                return getHeaderView(position, convertView);
+            }
+            case SectionRow.COURSE_CARD: {
+                return getCardView(convertView);
+            }
+            case SectionRow.COURSE_CERTIFICATE:
+                return getCertificateView(position, convertView);
+            case SectionRow.LAST_ACCESSED_ITEM: {
+                return getLastAccessedView(position, convertView);
+            }
+            case SectionRow.BULK_DOWNLOAD: {
                 if (rootComponent != null) {
                     // TODO: Remove this log, its just for performance testing purpose
                     logger.debug("PERFORMANCE: Adapter: POPULATE - SectionRow.BULK_DOWNLOAD");
@@ -215,7 +233,6 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                 throw new IllegalArgumentException(String.valueOf(type));
             }
         }
-        //}
     }
 
     /**
