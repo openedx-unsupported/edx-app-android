@@ -74,6 +74,12 @@ public class Config {
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
+    /**
+     * At the time when deprecated activities {@link org.edx.mobile.view.MyCoursesListActivity},
+     * {@link org.edx.mobile.view.CourseDashboardActivity} and {@link org.edx.mobile.view.CourseOutlineActivity}
+     * will be removed, this flag will no longer be of any use.
+     *
+     */
     private static final String TAB_LAYOUTS_ENABLED = "TAB_LAYOUTS_ENABLED";
 
 
@@ -593,6 +599,11 @@ public class Config {
         return getBoolean(COURSE_VIDEOS_ENABLED, true);
     }
 
+    /**
+     * At the time when deprecated activities {@link org.edx.mobile.view.MyCoursesListActivity},
+     * {@link org.edx.mobile.view.CourseDashboardActivity} and {@link org.edx.mobile.view.CourseOutlineActivity}
+     * will be removed, this function will no longer be of any use.
+     */
     public boolean isTabsLayoutEnabled() {
         return getBoolean(TAB_LAYOUTS_ENABLED, false);
     }

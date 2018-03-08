@@ -8,8 +8,13 @@ import android.view.View;
 import org.edx.mobile.R;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.CourseTabsDashboardFragment;
 import org.edx.mobile.view.custom.ProgressWheel;
 
+/**
+ * @deprecated As of release v2.13, use {@link CourseTabsDashboardFragment} instead.
+ */
+@Deprecated
 public abstract class BaseVideosDownloadStateActivity extends BaseFragmentActivity {
     private ProgressWheel progressWheel;
     private MenuItem progressMenuItem;

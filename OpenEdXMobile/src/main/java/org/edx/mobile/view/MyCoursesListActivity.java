@@ -26,6 +26,11 @@ import java.text.ParseException;
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
+/**
+ * @deprecated As of release v2.13, see {@link MainDashboardActivity},
+ * {@link MainTabsDashboardFragment} and {@link MyCoursesListFragment} as an alternate.
+ */
+@Deprecated
 public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
     @NonNull

@@ -226,7 +226,7 @@ public class Router {
         fragment.startActivityForResult(courseDetail, requestCode);
     }
 
-
+    @Deprecated
     public void showCourseDashboard(Activity activity, EnrolledCoursesResponse model,
                                     boolean announcements) {
         Bundle courseBundle = new Bundle();

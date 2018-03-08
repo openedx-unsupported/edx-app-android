@@ -46,7 +46,10 @@ import java.util.TimeZone;
 
 /**
  * Used for pinned behavior.
+ *
+ * @deprecated As of release v2.13, use {@link NewCourseOutlineAdapter} instead.
  */
+@Deprecated
 public class CourseOutlineAdapter extends BaseAdapter {
 
     private final Logger logger = new Logger(getClass().getName());

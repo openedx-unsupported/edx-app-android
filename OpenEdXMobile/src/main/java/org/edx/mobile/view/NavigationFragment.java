@@ -42,6 +42,12 @@ import org.edx.mobile.util.UserProfileUtils;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+/**
+ * @deprecated As of release v2.13, see new toolbar design used in
+ * {@link org.edx.mobile.view.MainDashboardActivity} and menu options used in
+ * {@link MainTabsDashboardFragment} as an alternate.
+ */
+@Deprecated
 public class NavigationFragment extends BaseFragment {
 
     private static final String TAG = "NavigationFragment";

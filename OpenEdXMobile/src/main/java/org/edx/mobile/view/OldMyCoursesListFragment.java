@@ -33,7 +33,6 @@ import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.NetworkUtil;
@@ -46,6 +45,10 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+/**
+ *  @deprecated As of release v2.13, see {@link MyCoursesListFragment} as an alternate.
+ */
+@Deprecated
 public class OldMyCoursesListFragment extends BaseFragment
         implements NetworkObserver, RefreshListener,
         LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {

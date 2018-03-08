@@ -12,6 +12,8 @@ import roboguice.inject.InjectExtra;
 
 /**
  * Top level outline for the Course
+ *
+ * TODO: Rename class name to 'CourseOutlineActivity' once old/deprecated {@link CourseOutlineActivity} is deleted.
  */
 public class NewCourseOutlineActivity extends BaseSingleFragmentActivity {
     @InjectExtra(Router.EXTRA_BUNDLE)

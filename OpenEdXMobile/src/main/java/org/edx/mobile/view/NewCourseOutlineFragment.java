@@ -60,6 +60,9 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+/**
+ * TODO: Rename class name to 'CourseOutlineFragment' once old/deprecated  {@link CourseOutlineFragment} is deleted.
+ */
 public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
         VideoDownloadHelper.DownloadManagerCallback,

@@ -46,6 +46,10 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
+/**
+ *  @deprecated As of release v2.13, see {@link NewCourseOutlineFragment} as an alternate.
+ */
+@Deprecated
 public class CourseOutlineFragment extends BaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
