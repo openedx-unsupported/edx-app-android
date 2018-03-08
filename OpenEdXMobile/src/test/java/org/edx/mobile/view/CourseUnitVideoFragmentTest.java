@@ -50,13 +50,14 @@ public class CourseUnitVideoFragmentTest extends UiTest {
         }
         String courseId = courseData.getCourse().getId();
         CourseStructureV1Model model;
+        CourseComponent courseComponent;
         try {
             model = executeStrict(courseAPI.getCourseStructure(courseId));
+            courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        CourseComponent courseComponent = (CourseComponent)
-                CourseAPI.normalizeCourseStructure(model, courseId);
+
         return (VideoBlockModel) courseComponent.getVideos().get(0);
     }
 

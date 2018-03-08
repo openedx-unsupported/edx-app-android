@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.ErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
@@ -203,7 +204,11 @@ public class CourseAPI {
 
         @Override
         protected final void onResponse(@NonNull final CourseStructureV1Model model) {
-            onResponse((CourseComponent) normalizeCourseStructure(model, courseId));
+            try {
+                onResponse((CourseComponent) normalizeCourseStructure(model, courseId));
+            } catch (CourseContentNotValidException e) {
+                onFailure(e);
+            }
         }
 
         protected abstract void onResponse(@NonNull final CourseComponent courseComponent);
@@ -461,12 +466,15 @@ public class CourseAPI {
     @NonNull
     public static IBlock normalizeCourseStructure(
             @NonNull final CourseStructureV1Model courseStructureV1Model,
-            @NonNull final String courseId) {
+            @NonNull final String courseId) throws CourseContentNotValidException {
         BlockModel topBlock = courseStructureV1Model.getBlockById(courseStructureV1Model.root);
+        if (topBlock == null) {
+            throw new CourseContentNotValidException("Server didn't send a proper response for this course: " + courseStructureV1Model.root);
+        }
         CourseComponent course = new CourseComponent(topBlock, null);
         course.setCourseId(courseId);
         for (BlockModel m : courseStructureV1Model.getDescendants(topBlock)) {
-            normalizeCourseStructure(courseStructureV1Model,m,course);
+            normalizeCourseStructure(courseStructureV1Model, m, course);
         }
         return course;
     }

@@ -5,6 +5,7 @@ import android.webkit.WebView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -29,7 +30,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
      *
      * @return The first {@link HtmlBlockModel} leaf in the mock course data
      */
-    private HtmlBlockModel getHtmlUnit() {
+    private HtmlBlockModel getHtmlUnit() throws CourseContentNotValidException {
         EnrolledCoursesResponse courseData;
         try {
             courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
@@ -55,7 +56,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
      * Testing initialization
      */
     @Test
-    public void initializeTest() {
+    public void initializeTest() throws CourseContentNotValidException {
         CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit());
         SupportFragmentTestUtil.startVisibleFragment(fragment);
         View view = fragment.getView();

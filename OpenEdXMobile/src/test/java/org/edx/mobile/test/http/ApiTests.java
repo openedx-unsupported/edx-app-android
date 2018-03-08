@@ -240,8 +240,7 @@ public class ApiTests extends HttpBaseTestCase {
         EnrolledCoursesResponse e = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         final String courseId = e.getCourse().getId();
         final CourseStructureV1Model model = executeStrict(courseAPI.getCourseStructure(courseId));
-        final CourseComponent courseComponent = (CourseComponent)
-                CourseAPI.normalizeCourseStructure(model, courseId);
+        final CourseComponent courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
         assertNotNull(courseComponent);
         assertNotNull(courseComponent.getRoot());
         assertEquals(courseId, courseComponent.getCourseId());
