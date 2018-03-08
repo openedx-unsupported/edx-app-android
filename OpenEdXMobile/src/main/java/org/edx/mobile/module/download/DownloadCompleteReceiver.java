@@ -3,6 +3,7 @@ package org.edx.mobile.module.download;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 
 import com.google.inject.Inject;
 
@@ -39,36 +40,42 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
 
     private void handleDownloadCompleteIntent(final Intent data) {
         if (data.hasExtra(DownloadManager.EXTRA_DOWNLOAD_ID)) {
-            long id = data.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            final long id = data.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if (id != -1) {
-                logger.debug("Received download notification for id: " + id);
-
-                // check if download was SUCCESSFUL
-                NativeDownloadModel nm = environment.getDownloadManager().getDownload(id);
-
-                if (nm == null || nm.status != DownloadManager.STATUS_SUCCESSFUL) {
-                    logger.debug("Download seems failed or cancelled for id : " + id);
-                    return;
-                } else {
-                    logger.debug("Download successful for id : " + id);
-                }
-
-                // mark download as completed
-                environment.getStorage().markDownloadAsComplete(id, new DataCallback<VideoModel>() {
+                AsyncTask.execute(new Runnable() {
                     @Override
-                    public void onResult(VideoModel result) {
-                        if (result != null) {
-                            DownloadEntry download = (DownloadEntry) result;
+                    public void run() {
+                        logger.debug("Received download notification for id: " + id);
 
-                            AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
-                            analyticsRegistry.trackDownloadComplete(download.videoId, download.eid,
-                                    download.lmsUrl);
+                        // check if download was SUCCESSFUL
+                        NativeDownloadModel nm = environment.getDownloadManager().getDownload(id);
+
+                        if (nm == null || nm.status != DownloadManager.STATUS_SUCCESSFUL) {
+                            logger.debug("Download seems failed or cancelled for id : " + id);
+                            environment.getDownloadManager().removeDownloads(id);
+                            return;
+                        } else {
+                            logger.debug("Download successful for id : " + id);
                         }
-                    }
 
-                    @Override
-                    public void onFail(Exception ex) {
-                        logger.error(ex);
+                        // mark download as completed
+                        environment.getStorage().markDownloadAsComplete(id, new DataCallback<VideoModel>() {
+                            @Override
+                            public void onResult(VideoModel result) {
+                                if (result != null) {
+                                    DownloadEntry download = (DownloadEntry) result;
+
+                                    AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
+                                    analyticsRegistry.trackDownloadComplete(download.videoId, download.eid,
+                                            download.lmsUrl);
+                                }
+                            }
+
+                            @Override
+                            public void onFail(Exception ex) {
+                                logger.error(ex);
+                            }
+                        });
                     }
                 });
             }
