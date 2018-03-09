@@ -33,10 +33,12 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CourseOutlineAsyncLoader;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
@@ -70,6 +72,8 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
     private static final int SNACKBAR_SHOWTIME_MS = 5000;
+
+    protected final Logger logger = new Logger(getClass().getName());
 
     private NewCourseOutlineAdapter adapter;
     private ListView listView;
@@ -211,6 +215,15 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
                 courseComponentId = courseComponent.getId();
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
                 loadData(courseComponent);
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                super.onFailure(error);
+                if (error instanceof CourseContentNotValidException) {
+                    errorNotification.showError(getContext(), error);
+                    logger.error(error, true);
+                }
             }
 
             @Override

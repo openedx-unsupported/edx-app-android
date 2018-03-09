@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- An error occurred but we don't know why -->
     <string name="error_unknown">Unknown error. Please try again later.</string>
+
+    <!-- Course related error messages -->
+    <!-- Error shown when a course's content is invalid or not in the format that we expect -->
+    <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Unable to load course content. Try again later.</string>
 
     <!-- Network error messages -->
     <!-- Error shown when  user attempts an action but needs an internet connection -->

@@ -121,13 +121,13 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         assertNotNull(courseData);
         String courseId = courseData.getCourse().getId();
         CourseStructureV1Model model;
+        CourseComponent courseComponent;
         try {
             model = executeStrict(courseAPI.getCourseStructure(courseId));
+            courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        CourseComponent courseComponent = (CourseComponent)
-                CourseAPI.normalizeCourseStructure(model, courseId);
         int subsectionRowIndex = -1;
         String subsectionId = null;
         CourseComponent subsectionUnit = null;
@@ -200,13 +200,13 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         assertNotNull(courseData);
         String courseId = courseData.getCourse().getId();
         CourseStructureV1Model model;
+        CourseComponent courseComponent;
         try {
             model = executeStrict(courseAPI.getCourseStructure(courseId));
+            courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        CourseComponent courseComponent = (CourseComponent)
-                CourseAPI.normalizeCourseStructure(model, courseId);
         List<CourseComponent> leafComponents = new ArrayList<>();
         courseComponent.fetchAllLeafComponents(leafComponents,
                 EnumSet.allOf(BlockType.class));

@@ -9,6 +9,7 @@ import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.CallTrigger;
@@ -76,6 +77,8 @@ public enum ErrorUtils {
                     errorResId = R.string.app_version_unsupported;
                     break;
             }
+        } else if (error instanceof CourseContentNotValidException) {
+            errorResId = R.string.course_error_content_invalid;
         }
         if (errorResId == R.string.error_unknown) {
             // Submit crash report since this is an unknown type of error
@@ -88,7 +91,7 @@ public enum ErrorUtils {
     public static Icon getErrorIcon(@NonNull Throwable ex) {
         if (ex instanceof IOException) {
             return FontAwesomeIcons.fa_wifi;
-        } else if (ex instanceof HttpStatusException) {
+        } else if (ex instanceof HttpStatusException || ex instanceof CourseContentNotValidException) {
             return FontAwesomeIcons.fa_exclamation_circle;
         } else {
             return null;

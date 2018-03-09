@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -20,7 +19,8 @@ import org.robolectric.util.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
@@ -58,13 +58,13 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         if (provideCourseId) {
             String courseId = courseData.getCourse().getId();
             CourseStructureV1Model model;
+            CourseComponent courseComponent;
             try {
                 model = executeStrict(courseAPI.getCourseStructure(courseId));
+                courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            CourseComponent courseComponent = (CourseComponent)
-                    CourseAPI.normalizeCourseStructure(model, courseId);
             extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
         }
         intent.putExtra(Router.EXTRA_BUNDLE, extras);
