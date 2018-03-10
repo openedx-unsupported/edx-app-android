@@ -383,4 +383,18 @@ public class AnalyticsRegistry implements Analytics {
             service.trackUndoingUnitVideoDelete(courseId, unitId);
         }
     }
+
+    @Override
+    public void trackBulkDownloadSwitchOn(@NonNull String courseId, int totalDownloadableVideos, int remainingDownloadableVideos) {
+        for (Analytics service : services) {
+            service.trackBulkDownloadSwitchOn(courseId, totalDownloadableVideos, remainingDownloadableVideos);
+        }
+    }
+
+    @Override
+    public void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos) {
+        for (Analytics service : services) {
+            service.trackBulkDownloadSwitchOff(courseId, totalDownloadableVideos);
+        }
+    }
 }

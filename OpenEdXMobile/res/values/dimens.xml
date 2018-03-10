@@ -182,6 +182,9 @@
     <dimen name="notification_settings_margin">12dp</dimen>
     <dimen name="fullscreen_message_max_width">240dp</dimen>
 
+    <!-- Horizontal Progress -->
+    <dimen name="progress_bar_height">3dp</dimen>
+
     <!-- Unorganized -->
     <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_line">3px</dimen>
