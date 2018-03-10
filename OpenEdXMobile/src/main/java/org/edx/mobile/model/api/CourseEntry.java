@@ -214,10 +214,6 @@ public class CourseEntry implements Serializable {
         this.course_url = course_url;
     }
 
-    public String getDescription() {
-        return CourseCardUtils.getDescription(org, number, null);
-    }
-
     public String getDescriptionWithStartDate(Context context) {
         return CourseCardUtils.getDescription(org, number, CourseCardUtils.getFormattedDate(context, this));
     }

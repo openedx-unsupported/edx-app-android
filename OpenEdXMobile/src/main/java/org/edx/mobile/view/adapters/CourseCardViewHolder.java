@@ -21,17 +21,14 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
 
     private final ImageView courseImage;
     private final TextView courseTitle;
-    private final TextView courseRun;
-    private final TextView startingFrom;
+    private final TextView courseDetails;
     private final View newCourseContent;
 
     public CourseCardViewHolder(View convertView) {
         this.courseTitle = (TextView) convertView
                 .findViewById(R.id.course_name);
-        this.courseRun = (TextView) convertView
-                .findViewById(R.id.course_run);
-        this.startingFrom = (TextView) convertView
-                .findViewById(R.id.starting_from);
+        this.courseDetails = (TextView) convertView
+                .findViewById(R.id.course_details);
         this.courseImage = (ImageView) convertView
                 .findViewById(R.id.course_image);
         this.newCourseContent = convertView
@@ -54,16 +51,15 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     }
 
     public void setHasUpdates(@NonNull CourseEntry courseData, @NonNull View.OnClickListener listener) {
-        startingFrom.setVisibility(View.GONE);
+        courseDetails.setVisibility(View.GONE);
         newCourseContent.setVisibility(View.VISIBLE);
         newCourseContent.setTag(courseData);
         newCourseContent.setOnClickListener(listener);
     }
 
-    public void setDescription(@NonNull String description, @NonNull String formattedDate) {
+    public void setDetails(@NonNull String date) {
         newCourseContent.setVisibility(View.GONE);
-        startingFrom.setVisibility(View.VISIBLE);
-        courseRun.setText(description);
-        startingFrom.setText(formattedDate);
+        courseDetails.setVisibility(View.VISIBLE);
+        courseDetails.setText(date);
     }
 }

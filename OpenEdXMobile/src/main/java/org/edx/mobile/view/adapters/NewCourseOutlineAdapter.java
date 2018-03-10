@@ -24,7 +24,6 @@ import com.joanzapata.iconify.widget.IconImageView;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
@@ -43,6 +42,7 @@ import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
 import org.edx.mobile.util.VideoUtil;
+import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
 import java.text.SimpleDateFormat;
@@ -165,7 +165,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             }
             case SectionRow.COURSE_CARD: {
                 if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.row_course_card, parent, false);
+                    convertView = inflater.inflate(R.layout.course_card, parent, false);
                 }
                 return getCardView(convertView);
             }
@@ -583,9 +583,9 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     }
 
     public View getCardView(View view) {
-        final TextView courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
-        final TextView courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
-        final ImageView headerImageView = (ImageView) view.findViewById(R.id.header_image_view);
+        final TextView courseTextName = (TextView) view.findViewById(R.id.course_name);
+        final TextView courseTextDetails = (TextView) view.findViewById(R.id.course_details);
+        final ImageView headerImageView = (ImageView) view.findViewById(R.id.course_image);
 
         // Full course name should appear on the course's dashboard screen.
         courseTextName.setEllipsize(null);
@@ -599,8 +599,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
                 .into(headerImageView);
 
         courseTextName.setText(courseData.getCourse().getName());
-        CourseEntry course = courseData.getCourse();
-        courseTextDetails.setText(course.getDescriptionWithStartDate(context));
+        courseTextDetails.setText(CourseCardUtils.getFormattedDate(context, courseData.getCourse()));
 
         return view;
     }

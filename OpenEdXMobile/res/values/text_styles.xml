@@ -119,8 +119,7 @@
         <item name="android:textColor">@color/edx_brand_primary_base</item>
     </style>
 
-    <style name="bold_regular_edx_black_text" parent="@style/regular_text">
-        <item name="android:textStyle">bold</item>
+    <style name="bold_regular_edx_black_text" parent="@style/bold_text">
         <item name="android:textColor">@color/black</item>
     </style>
 
@@ -234,14 +233,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">3dp</item>
-        <item name="android:textSize">@dimen/edx_large</item>
-        <item name="android:singleLine">true</item>
+        <item name="android:textSize">@dimen/edx_x_large</item>
+        <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="course_card_course_run" parent="@style/regular_edx_gray_xdark_text">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">@dimen/edx_xxx_small</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
 
     <style name="edX.TextAppearance.Switch" parent="@style/semibold_text">

@@ -1,102 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_row_course_list_root"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/course_card_height"
-    android:descendantFocusability="blocksDescendants"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/widget_margin"
     android:paddingRight="@dimen/widget_margin">
 
     <FrameLayout
+        android:id="@+id/fl_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:duplicateParentState="true"
         android:foreground="@drawable/fg_course_row">
 
-        <ImageView
-            android:id="@+id/course_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:scaleType="fitXY"
-            tools:background="@color/edx_brand_primary_base" />
+        <include layout="@layout/course_card" />
 
-        <RelativeLayout
-            android:id="@+id/course_item_detail"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/course_detail_card_height"
-            android:layout_gravity="bottom"
-            android:background="@color/transparent_white_85"
-            android:paddingEnd="@dimen/widget_margin"
-            android:paddingLeft="@dimen/widget_margin"
-            android:paddingRight="@dimen/widget_margin"
-            android:paddingStart="@dimen/widget_margin"
-            android:paddingTop="@dimen/widget_margin"
-            tools:targetApi="17">
-
-            <TextView
-                android:id="@+id/course_name"
-                style="@style/course_card_title"
-                tools:text="@string/course_name" />
-
-            <LinearLayout
-                android:id="@+id/new_course_content_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/course_name"
-                tools:targetApi="17">
-
-                <View
-                    android:id="@+id/ellipsis_icon"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/edx_brand_primary_accent_circle" />
-
-                <TextView
-                    android:id="@+id/new_course_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/new_course_content"
-                    android:paddingEnd="0dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="0dp"
-                    android:paddingStart="3dp"
-                    android:text="@string/new_course_content"
-                    android:textAllCaps="true"
-                    android:textColor="@color/edx_brand_primary_accent"
-                    android:textSize="@dimen/edx_xxx_small"
-                    tools:targetApi="17" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/starting_from"
-                style="@style/course_card_course_run"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/course_name"
-                tools:targetApi="17"
-                tools:text="Coming Soon" />
-
-            <TextView
-                android:id="@+id/course_run"
-                style="@style/course_card_course_run"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/course_name"
-                android:layout_gravity="center_vertical"
-                android:layout_toEndOf="@+id/new_course_content_layout"
-                android:layout_toRightOf="@+id/new_course_content_layout"
-                tools:targetApi="17"
-                tools:text="MITx | CS501" />
-        </RelativeLayout>
     </FrameLayout>
+
 </FrameLayout>

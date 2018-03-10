@@ -45,6 +45,7 @@
     <dimen name="course_card_play_icon_size">60dp</dimen>
     <dimen name="course_detail_card_height">70dp</dimen>
     <dimen name="course_detail_share_icon_size">50dp</dimen>
+    <dimen name="course_card_ellipsis_icon_size">8dp</dimen>
 
     <!-- Courses Toolbar -->
     <dimen name="courses_profile_icon_size">30dp</dimen>
