@@ -72,4 +72,7 @@
   <string name="app_version_unsupported_login_msg">Su versión de la aplicación ya no es compatible. Actualice a la última versión para iniciar sesión.</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
   <string name="app_version_unsupported_register_msg">Su versión de la aplicación ya no es compatible. Actualice a la última versión para registrarse.</string>
+    <!-- Error message to be displayed when no courses are found -->
+    <string name="no_available_courses">No hay cursos disponibles</string>
+
 </resources>
