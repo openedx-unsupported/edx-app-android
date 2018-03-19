@@ -55,4 +55,8 @@ public interface UserService {
     @GET("/api/badges/v1/assertions/user/{username}?" + PARAM_PAGE_SIZE)
     Call<Page<BadgeAssertion>> getBadges(@Path("username") String username,
                                          @Query("page") int page);
+
+    @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
+    Call<ResponseBody> getUserEnrolledCourses(@Path("username") String username,
+                                              @Query("org") String org);
 }

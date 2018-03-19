@@ -91,4 +91,6 @@
     <!-- Error dialog message shown when the user try to register in app with un-supported version -->
     <string name="app_version_unsupported_register_msg">Your version of the app is no longer supported. Update to the latest version to register.</string>
 
+    <!-- Error message to be displayed when no courses are found -->
+    <string name="no_available_courses">No available courses</string>
 </resources>

@@ -214,7 +214,7 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public void getAverageDownloadProgressInChapter(String enrollmentId, String chapter, 
+    public void getAverageDownloadProgressInChapter(String enrollmentId, String chapter,
             final DataCallback<Integer> callback) {
         List<Long> dmidList = db.getDownloadingVideoDmIdsForChapter(enrollmentId, chapter, null);
         if (dmidList == null || dmidList.isEmpty()) {

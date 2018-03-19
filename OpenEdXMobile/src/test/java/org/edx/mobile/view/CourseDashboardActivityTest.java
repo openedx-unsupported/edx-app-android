@@ -109,12 +109,16 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
             assertRow(discussionRowView, FontAwesomeIcons.fa_comments_o,
                     R.string.discussion_title, R.string.discussion_subtitle);
         }
+
         View handoutsRowView = rowsContainerGroup.getChildAt(rowNum++);
         assertRow(handoutsRowView, FontAwesomeIcons.fa_file_text_o,
                 R.string.handouts_title, R.string.handouts_subtitle);
-        View announcementRowView = rowsContainerGroup.getChildAt(rowNum++);
-        assertRow(announcementRowView, FontAwesomeIcons.fa_bullhorn,
-                R.string.announcement_title, R.string.announcement_subtitle);
+
+        if (config.isAnnoucementsEnabled()) {
+            View announcementRowView = rowsContainerGroup.getChildAt(rowNum++);
+            assertRow(announcementRowView, FontAwesomeIcons.fa_bullhorn,
+                    R.string.announcement_title, R.string.announcement_subtitle);
+        }
 
         assertTrue(coursewareRowView.performClick());
         Intent newIntent = assertNextStartedActivity(activity, CourseOutlineActivity.class);

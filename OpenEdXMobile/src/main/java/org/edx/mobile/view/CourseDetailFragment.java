@@ -8,6 +8,8 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,7 +51,13 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import org.edx.mobile.base.BaseFragment;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -79,6 +87,7 @@ public class CourseDetailFragment extends BaseFragment {
 
     private Button mEnrollButton;
     private boolean mEnrolled = false;
+    private boolean mInvitationOnly = false;
 
     boolean emailOptIn = true;
 
@@ -306,10 +315,30 @@ public class CourseDetailFragment extends BaseFragment {
             logger.debug("Unable to get cached enrollments list");
         }
 
+        Boolean is_old_enough = true;
+        if(courseDetail.minimum_age != null && courseDetail.minimum_age > 0) {
+            Integer year_of_birth = environment.getLoginPrefs().getYearOfBirth();
+            if(year_of_birth != null){
+                Integer year = Calendar.getInstance().get(Calendar.YEAR);
+                if(year - year_of_birth <= courseDetail.minimum_age){
+                    is_old_enough = false;
+                }
+            }
+        }
+
         if (mEnrolled) {
             mEnrollButton.setText(R.string.view_course_button_text);
         } else if (courseDetail.invitation_only != null && courseDetail.invitation_only) {
             mEnrollButton.setText(R.string.invitation_only_button_text);
+            mEnrollButton.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_back));
+            mEnrollButton.setEnabled(false);
+        } else if (!is_old_enough){
+            mEnrollButton.setText(R.string.not_old_enough_button_text);
+            mEnrollButton.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_back));
+            mEnrollButton.setEnabled(false);
+        } else if (!is_old_enough){
+            mEnrollButton.setText(R.string.not_old_enough_button_text);
+            mEnrollButton.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_back));
             mEnrollButton.setEnabled(false);
         } else {
             mEnrollButton.setText(R.string.enroll_now_button_text);

@@ -31,6 +31,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.KonnekteerUtil;
 import org.edx.mobile.util.NetworkUtil;
 
 import javax.inject.Inject;
@@ -78,6 +79,11 @@ public abstract class MainApplication extends MultiDexApplication {
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
         injector.injectMembers(this);
+
+        // initialize Konnekteer
+        if (config.getPushNotificationsConfig().isEnabled()) {
+            KonnekteerUtil.createMobileEndpoint(this);
+        }
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {

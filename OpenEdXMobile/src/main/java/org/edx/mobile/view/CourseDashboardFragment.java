@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,12 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.services.LastAccessManager.LastAccessManagerCallback;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -50,6 +56,12 @@ public class CourseDashboardFragment extends BaseFragment {
 
     @Inject
     private AnalyticsRegistry analyticsRegistry;
+
+    @Inject
+    private LastAccessManager lastAccessManager;
+
+    @Inject
+    CourseManager courseManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +124,46 @@ public class CourseDashboardFragment extends BaseFragment {
             holder.rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
+                environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
+
+                if(environment.getConfig().isJumpToLastAccessedModuleEnabled()) {
+                    lastAccessManager.fetchLastAccessed(new LastAccessManagerCallback() {
+                        private boolean isFetchingLastAccessed;
+
+                        @Override
+                        public boolean isFetchingLastAccessed() {
+                            return isFetchingLastAccessed;
+                        }
+
+                        @Override
+                        public void showLastAccessedView(String lastAccessedSubSectionId, String courseId, View view) {
+                            if (courseId != null && lastAccessedSubSectionId != null) {
+                                CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
+                                if(lastAccessComponent != null) {
+                                    if (lastAccessComponent.getParent().isVertical()) {
+                                        if (lastAccessComponent.getParent().getParent().isSequential()) {
+                                            environment.getRouter().showCourseContainerOutline(
+                                                    getActivity(), courseData, lastAccessComponent.getParent().getParent().getId());
+                                        }
+                                    }
+
+                                    if (lastAccessComponent.isContainer()) {
+                                        environment.getRouter().showCourseContainerOutline(
+                                                getActivity(), courseData, lastAccessComponent.getId());
+                                    } else {
+                                        environment.getRouter().showCourseUnitDetail(
+                                                CourseDashboardFragment.this, 0, courseData, lastAccessComponent.getId(), false);
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void setFetchingLastAccessed(boolean accessed) {
+                            this.isFetchingLastAccessed = accessed;
+                        }
+                    }, courseData.getCourse().getId());
+                }
                 }
             });
 
@@ -135,7 +186,6 @@ public class CourseDashboardFragment extends BaseFragment {
                     && !TextUtils.isEmpty(courseData.getCourse().getDiscussionUrl())
                     && environment.getConfig().isDiscussionsEnabled()) {
                 holder = createViewHolder(inflater, parent);
-
                 holder.typeView.setIcon(FontAwesomeIcons.fa_comments_o);
                 holder.titleView.setText(R.string.discussion_title);
                 holder.subtitleView.setText(R.string.discussion_subtitle);
@@ -147,35 +197,37 @@ public class CourseDashboardFragment extends BaseFragment {
                 });
             }
 
-            holder = createViewHolder(inflater, parent);
+            if (courseData != null
+                    && !TextUtils.isEmpty(courseData.getCourse().getCourse_handouts())) {
+                holder = createViewHolder(inflater, parent);
+                holder.typeView.setIcon(FontAwesomeIcons.fa_file_text_o);
+                holder.titleView.setText(R.string.handouts_title);
+                holder.subtitleView.setText(R.string.handouts_subtitle);
+                holder.rowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (courseData != null)
+                            environment.getRouter().showHandouts(getActivity(), courseData);
+                    }
+                });
+            }
 
-            holder.typeView.setIcon(FontAwesomeIcons.fa_file_text_o);
-            holder.titleView.setText(R.string.handouts_title);
-            holder.subtitleView.setText(R.string.handouts_subtitle);
-            holder.rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (courseData != null)
-                        environment.getRouter().showHandouts(getActivity(), courseData);
-                }
-            });
-
-            holder = createViewHolder(inflater, parent);
-
-            holder.typeView.setIcon(FontAwesomeIcons.fa_bullhorn);
-            holder.titleView.setText(R.string.announcement_title);
-            holder.subtitleView.setText(R.string.announcement_subtitle);
-            holder.rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (courseData != null)
-                        environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
-                }
-            });
+            if (environment.getConfig().isAnnoucementsEnabled()) {
+                holder = createViewHolder(inflater, parent);
+                holder.typeView.setIcon(FontAwesomeIcons.fa_bullhorn);
+                holder.titleView.setText(R.string.announcement_title);
+                holder.subtitleView.setText(R.string.announcement_subtitle);
+                holder.rowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (courseData != null)
+                            environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
+                    }
+                });
+            }
 
             if (environment.getConfig().isCourseDatesEnabled()) {
                 holder = createViewHolder(inflater, parent);
-
                 holder.typeView.setIcon(FontAwesomeIcons.fa_calendar);
                 holder.titleView.setText(R.string.course_dates_title);
                 holder.subtitleView.setText(R.string.course_dates_subtitle);
@@ -224,11 +276,12 @@ public class CourseDashboardFragment extends BaseFragment {
      * Creates a dropdown menu with appropriate apps when the share button is clicked.
      */
     private void openShareMenu() {
+        final String baseUrl = courseData.getCourse().getCourse_about().replace("https://learn.proversity.org", environment.getConfig().getApiHostURL());
         final String shareTextWithPlatformName = ResourceUtil.getFormattedString(
                 getResources(),
                 R.string.share_course_message,
                 "platform_name",
-                getString(R.string.platform_name)).toString() + "\n" + courseData.getCourse().getCourse_about();
+                getString(R.string.platform_name)).toString() + "\n" + baseUrl;
         ShareUtils.showShareMenu(
                 getActivity(),
                 ShareUtils.newShareIntent(shareTextWithPlatformName),
@@ -250,7 +303,7 @@ public class CourseDashboardFragment extends BaseFragment {
 
                     @NonNull
                     private String getSharingText(@NonNull ShareUtils.ShareType shareType) {
-                        String courseUrl = courseData.getCourse().getCourse_about();
+                        String courseUrl = baseUrl;
                         if (!TextUtils.isEmpty(shareType.getUtmParamKey())) {
                             final String utmParams = courseData.getCourse().getCourseSharingUtmParams(shareType.getUtmParamKey());
                             if (!TextUtils.isEmpty(utmParams)) {

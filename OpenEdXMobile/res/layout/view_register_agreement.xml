@@ -29,6 +29,6 @@
     <TextView
         android:id="@+id/txt_input_error"
         style="@style/registration_error_message"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:text="You must agree to the agreement"/>
 </LinearLayout>

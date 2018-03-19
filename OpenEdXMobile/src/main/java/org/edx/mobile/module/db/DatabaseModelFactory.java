@@ -98,10 +98,10 @@ public class DatabaseModelFactory {
         IBlock root = block.getRoot();
         e.eid = root.getCourseId();
         e.duration = vrm.duration;
-        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredVideoInfo();
-        e.size = preferredVideoInfo.fileSize;
+        final VideoInfo videoInfo = vrm.encodedVideos.getDownloadableVideoInfo();
+        e.size = videoInfo.fileSize;
         e.title = block.getDisplayName();
-        e.url = preferredVideoInfo.url;
+        e.url = videoInfo.url;
         e.url_high_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileHigh);
         e.url_low_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileLow);
         e.url_youtube = getVideoNetworkUrlOrNull(vrm.encodedVideos.youtube);

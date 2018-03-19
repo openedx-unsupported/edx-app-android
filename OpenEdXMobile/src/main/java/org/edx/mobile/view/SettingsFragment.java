@@ -58,7 +58,7 @@ public class SettingsFragment extends BaseFragment {
                 getActivity().getBaseContext(), PrefManager.Pref.WIFI);
 
         wifiSwitch.setOnCheckedChangeListener(null);
-        wifiSwitch.setChecked(wifiPrefManager.getBoolean(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true));
+        wifiSwitch.setChecked(wifiPrefManager.getBoolean(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, false));
         wifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override

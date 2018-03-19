@@ -8,6 +8,7 @@ public class ProfileModel implements Serializable {
     public String username;
     public String email;
     public String name;
+    public Integer year_of_birth;
     public String course_enrollments;
     // public String url;
 }

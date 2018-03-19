@@ -3,6 +3,7 @@
     <string name="app_name" translatable="false">@string/platform_name</string>
     <string name="app_shortcut_name" translatable="false">@string/shortcut_name</string>
     <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>
+    <string name="eula_file_link">file:///android_asset/EULA.htm</string>
 
     <!-- Certificates -->
 
@@ -19,6 +20,8 @@
     <string name="enroll_now_button_text">Enroll now</string>
     <!-- Invitation Only button text-->
     <string name="invitation_only_button_text">Invitation only</string>
+    <!-- Not old enough button text-->
+    <string name="not_old_enough_button_text">You are not old enough to enroll</string>
     <!-- Effort field name -->
     <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
@@ -137,7 +140,7 @@
     <!-- Label for switch controlling whether users permit downloading using cellular data or only wifi -->
     <string name="wifi_dialog_title_help">Allow cellular download</string>
     <!-- Password reset sent succesfully alert -->
-    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address. 
+    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address.
         If you don’t see it in the next few minutes, make sure to check your spam folder.</string>
     <!-- Password reset dialog prompt -->
     <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>

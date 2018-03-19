@@ -8,7 +8,9 @@ import com.google.inject.Inject;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     private Config config;
 
     @Inject
-    CourseAPI api;
+    UserAPI api;
 
     @Inject
     LoginPrefs loginPrefs;
@@ -44,14 +46,17 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
+        ProfileModel profile = loginPrefs.getCurrentUserProfile();
         List<EnrolledCoursesResponse> enrolledCoursesResponse = null;
 
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
 
         try {
-            enrolledCoursesResponse = executeStrict(api.getEnrolledCourses());
-            environment.getNotificationDelegate().syncWithServerForFailure();
-            environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
+            if (profile != null) {
+                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, config.getOrganizationCode());
+                environment.getNotificationDelegate().syncWithServerForFailure();
+                environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
+            }
 
         } catch (Exception exception) {
             result.setEx(exception);

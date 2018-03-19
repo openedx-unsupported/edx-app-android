@@ -34,6 +34,7 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.KonnekteerUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 
 import de.greenrobot.event.EventBus;
@@ -86,7 +87,11 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(IStorage.class).to(Storage.class);
 
-        requestStaticInjection(CallUtil.class, BrowserUtil.class, MediaConsentUtils.class,
-                DiscussionTextUtils.class, AppStoreUtils.class);
+        requestStaticInjection(CallUtil.class,
+                BrowserUtil.class,
+                MediaConsentUtils.class,
+                DiscussionTextUtils.class,
+                AppStoreUtils.class,
+                KonnekteerUtil.class);
     }
 }
