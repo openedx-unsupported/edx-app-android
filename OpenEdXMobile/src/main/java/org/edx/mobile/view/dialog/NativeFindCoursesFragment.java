@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -80,7 +81,13 @@ public class NativeFindCoursesFragment extends BaseFragment {
                         callback.onPageLoaded(coursesPage);
                         ++nextPage;
                         if (null != viewHolder) {
-                            viewHolder.listView.setVisibility(View.VISIBLE);
+                            if (coursesPage.getCount()==0){
+                                viewHolder.no_courses.setVisibility(View.VISIBLE);
+                                viewHolder.listView.setVisibility(View.GONE);;
+                            }else {
+                                viewHolder.listView.setVisibility(View.VISIBLE);
+                                viewHolder.listView.setVisibility(View.VISIBLE);
+                            }
                             viewHolder.loadingIndicator.setVisibility(View.GONE);
                         }
                     }
@@ -116,10 +123,13 @@ public class NativeFindCoursesFragment extends BaseFragment {
     public static class ViewHolder {
         public final ListView listView;
         public final View loadingIndicator;
+        public final TextView no_courses;
 
         public ViewHolder(View view) {
             this.listView = (ListView) view.findViewById(R.id.course_list);
             this.loadingIndicator = view.findViewById(R.id.loading_indicator);
+            this.no_courses = (TextView) view.findViewById(R.id.no_courses);
+
         }
     }
 }
