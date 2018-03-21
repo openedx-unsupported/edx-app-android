@@ -212,7 +212,6 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
                 progressCallback, errorNotification, null, this) {
             @Override
             protected void onResponse(@NonNull final CourseComponent courseComponent) {
-                courseComponentId = courseComponent.getId();
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
                 loadData(courseComponent);
             }
@@ -413,6 +412,7 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
      * Load data to the adapter
      */
     private void loadData(@NonNull CourseComponent courseComponent) {
+        courseComponentId = courseComponent.getId();
         if (courseData == null)
             return;
         if (!EventBus.getDefault().isRegistered(this)) {
