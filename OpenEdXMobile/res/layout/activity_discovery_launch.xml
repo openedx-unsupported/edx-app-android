@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/ll_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
@@ -20,6 +21,7 @@
             android:src="@drawable/launch_screen_logo" />
 
         <LinearLayout
+            android:id="@+id/ll_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
@@ -46,6 +48,7 @@
         </LinearLayout>
 
         <android.support.v4.widget.Space
+            android:id="@+id/space"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />

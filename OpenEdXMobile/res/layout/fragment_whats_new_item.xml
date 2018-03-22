@@ -3,11 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/ll_whats_new_item_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <FrameLayout
+            android:id="@+id/fl_image_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.7"
@@ -25,6 +27,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/ll_message_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.3"

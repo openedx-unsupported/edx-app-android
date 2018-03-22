@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
+    
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/cl_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
-
 
         <include layout="@layout/toolbar" />
 
@@ -27,6 +27,7 @@
                 android:orientation="vertical">
 
                 <FrameLayout
+                    android:id="@+id/fl_logo"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_edx_logo_height"
                     android:layout_marginBottom="@dimen/login_logo_margin_bottom"
@@ -53,6 +54,7 @@
                 </FrameLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_login_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -136,6 +138,7 @@
                         android:orientation="vertical">
 
                         <org.edx.mobile.view.custom.DividerWithTextView
+                            android:id="@+id/text_alternate_sign_in"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/or_sign_in_with" />
