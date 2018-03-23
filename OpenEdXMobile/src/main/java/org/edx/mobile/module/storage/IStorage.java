@@ -1,35 +1,42 @@
 package org.edx.mobile.module.storage;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.VideoModel;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface IStorage {
 
     /**
-     * Adds a Video for Downloading by enqueing in Native Download Manager 
-     * and updating in the Database 
+     * Adds a Video for Downloading by enqueing in Native Download Manager
+     * and updating in the Database
      * @param model
      * @return row id updated in the Database (0 if not added to download)
      */
     long addDownload(VideoModel model);
-    
+
     /**
-     * Removes a Video from the database as well as NativeDownloadManager 
-     * and removing the file stored in DB 
+     * Removes a Video from the database as well as NativeDownloadManager
+     * and removing the file stored in DB
      * @param model
      * @return no of entries that were marked as deleted or removed
      */
     int removeDownload(VideoModel model);
+
+    /**
+     * Removes a list of videos from the database as well as NativeDownloadManager
+     * and removes the files from storage.
+     *
+     * @param modelList List of video files that need to be deleted.
+     * @return No of entries that were marked as deleted or removed.
+     */
+    int removeDownloads(List<VideoModel> modelList);
 
     /**
      * Removes all videos from the database as well as NativeDownloadManager.
@@ -39,34 +46,44 @@ public interface IStorage {
     void removeAllDownloads();
 
     /**
-     * This method fetches all unenrolledVideos from the DB. 
+     * This method fetches all unenrolledVideos from the DB.
      * Iterates through the list and then calls the remove Download method for each video
-     * Method in DB for getting all unenrolled videos is db.getAllDeactivatedVideos(callback);  
+     * Method in DB for getting all unenrolled videos is db.getAllDeactivatedVideos(callback);
      * @return
      */
     int deleteAllUnenrolledVideos();
 
-    
+
     /**
-     * Returns Download Progress percent of all the Videos 
-     * which are currently being downloaded 
+     * Returns Download Progress percent of all the Videos
+     * which are currently being downloaded
      */
     void getAverageDownloadProgress(DataCallback<Integer> callback);
-    
-    
+
     /**
-     * Returns Download Progress percent of all Videos which are currently 
-     * being downloadedin the chapter 
+     * If the courseId is provided returns the download progress percent of all the Videos
+     * within a course which are currently being downloaded. Otherwise, returns the download
+     * progress of the all the videos being downloaded irrespective of course they belong to.
+     *
+     * @param callback Callback to get status of videos download.
+     * @param courseId Course's ID.
+     */
+    void getDownloadProgressOfCourseVideos(@Nullable String courseId,
+                                           DataCallback<NativeDownloadModel> callback);
+
+    /**
+     * Returns Download Progress percent of all Videos which are currently
+     * being downloadedin the chapter
      * @param enrollmentId
      * @param chapter
      * @param callback - Callback containing Integer
      */
     void getAverageDownloadProgressInChapter(String enrollmentId,
             String chapter, DataCallback<Integer> callback);
-    
+
     /**
-     * Returns Download Progress percent of all Videos which are currently 
-     * being downloaded in the section 
+     * Returns Download Progress percent of all Videos which are currently
+     * being downloaded in the section
      * @param enrollmentId
      * @param chapter
      * @param section
@@ -105,13 +122,13 @@ public interface IStorage {
     DownloadEntry reloadDownloadEntry(DownloadEntry video);
 
     /**
-     * Returns Download Progress percent of the DMID 
+     * Returns Download Progress percent of the DMID
      * @param dmId
      */
     void getDownloadProgressByDmid(long dmId, DataCallback<Integer> callback);
 
     /**
-     * Marks in the db as Download completed for dmid and sets values from 
+     * Marks in the db as Download completed for dmid and sets values from
      * Native manager into the db for that dmid
      * @param dmId - DownloadModule ID
      * @param callback

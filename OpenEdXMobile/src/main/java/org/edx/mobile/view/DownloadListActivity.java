@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
@@ -35,6 +36,9 @@ public class DownloadListActivity extends BaseFragmentActivity {
     @NonNull
     private final ObservableDataCallback<List<DownloadEntryAdapter.Item>> observable = new ObservableDataCallback<>();
 
+    private ListView downloadListView;
+    private View loadingIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +62,12 @@ public class DownloadListActivity extends BaseFragmentActivity {
                 }
             }
         };
-        final ListView downloadListView = (ListView) findViewById(R.id.my_downloads_list);
+        loadingIndicator = findViewById(R.id.loading_indicator);
+        downloadListView = (ListView) findViewById(R.id.my_downloads_list);
         downloadListView.setAdapter(adapter);
+
+        loadingIndicator.setVisibility(View.VISIBLE);
+        downloadListView.setVisibility(View.GONE);
     }
 
     @Override
@@ -71,6 +79,8 @@ public class DownloadListActivity extends BaseFragmentActivity {
                 if (result != null) {
                     adapter.setItems(result);
                 }
+                loadingIndicator.setVisibility(View.GONE);
+                downloadListView.setVisibility(View.VISIBLE);
                 fetchOngoingDownloadsAfterDelay();
             }
 

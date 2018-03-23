@@ -158,6 +158,29 @@ public class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
+    public synchronized NativeDownloadModel getProgressDetailsForDownloads(long[] dmids) {
+        //Need to check first if the download manager service is enabled
+        if (!isDownloadManagerEnabled()) return null;
+
+        final NativeDownloadModel downloadProgressModel = new NativeDownloadModel();
+        final Query query = new Query();
+        query.setFilterById(dmids);
+        final Cursor c = dm.query(query);
+        if (c.moveToFirst()) {
+            downloadProgressModel.downloadCount = c.getCount();
+            do {
+                downloadProgressModel.downloaded += c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                downloadProgressModel.size += c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+            } while (c.moveToNext());
+            c.close();
+            return downloadProgressModel;
+        }
+        c.close();
+
+        return null;
+    }
+
+    @Override
     public synchronized boolean isDownloadComplete(long dmid) {
         //Need to check first if the download manager service is enabled
         if(!isDownloadManagerEnabled())

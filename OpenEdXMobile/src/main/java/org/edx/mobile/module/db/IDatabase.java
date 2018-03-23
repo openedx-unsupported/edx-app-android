@@ -1,5 +1,6 @@
 package org.edx.mobile.module.db;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.edx.mobile.model.VideoModel;
@@ -286,11 +287,11 @@ public interface IDatabase {
      * Only the reference should be removed and not the downloaded file
      *
      * @param video    - IVideoModel object
-     * @param callback
      * @param username
+     * @param callback
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
-    Integer deleteVideoByVideoId(VideoModel video, DataCallback<Integer> callback, String username);
+    Integer deleteVideoByVideoId(VideoModel video, String username, DataCallback<Integer> callback);
 
     /**
      * Returns if a IVideoModel with the same video URL is downloaded
@@ -323,6 +324,18 @@ public interface IDatabase {
      * @return
      */
     List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
+
+    /**
+     * If the courseId is provided returns the Videos within a course which are currently being
+     * downloaded. Otherwise, returns all the videos being downloaded irrespective of course
+     * they belong to.
+     *
+     * @param callback Callback to get list of videos being downloaded.
+     * @param courseId Course's ID.
+     * @return List of videos being downloaded.
+     */
+    List<VideoModel> getListOfOngoingDownloadsByCourseId(@Nullable String courseId,
+                                                         DataCallback<List<VideoModel>> callback);
 
 
     /**
@@ -367,6 +380,16 @@ public interface IDatabase {
      * @return
      */
     List<VideoModel> getAllVideos(String username, DataCallback<List<VideoModel>> DataCallback);
+
+    /**
+     * Returns list of all videos from the database for a specific course.
+     *
+     * @param courseId Course's ID.
+     * @param callback Callback to use for delivering the result.
+     * @return List of all videos from the database for a specific course.
+     */
+    List<VideoModel> getAllVideosByCourse(@NonNull String courseId,
+                                          @Nullable DataCallback<List<VideoModel>> callback);
 
     /**
      * Removes all records of given username from the database.

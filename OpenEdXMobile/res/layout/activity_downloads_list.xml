@@ -5,13 +5,20 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
     <include layout="@layout/toolbar" />
 
-    <ListView
-        android:id="@+id/my_downloads_list"
-        style="@style/list_downloads"
+    <FrameLayout
+        android:id="@+id/fl_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ListView
+            android:id="@+id/my_downloads_list"
+            style="@style/list_downloads"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include layout="@layout/loading_indicator" />
+    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

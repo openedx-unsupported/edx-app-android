@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_bulk_download_view_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/edx_brand_gray_x_back"
+        android:contentDescription="@string/view_downloads"
+        android:minHeight="@dimen/bulk_download_view_height"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:id="@+id/iv_icon"
+            android:layout_width="@dimen/fa_large"
+            android:layout_height="@dimen/fa_large"
+            android:layout_marginLeft="@dimen/widget_margin_double"
+            android:layout_marginStart="@dimen/widget_margin_double"
+            app:iconColor="@color/edx_brand_primary_base"
+            app:iconName="fa-film"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/widget_margin_half"
+            android:layout_marginLeft="@dimen/edx_margin"
+            android:layout_marginStart="@dimen/edx_margin"
+            android:layout_marginTop="@dimen/widget_margin_half"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sw_download"
+            app:layout_constraintLeft_toRightOf="@+id/iv_icon"
+            app:layout_constraintRight_toLeftOf="@+id/sw_download"
+            app:layout_constraintStart_toEndOf="@+id/iv_icon"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/edx_brand_primary_base"
+                android:textSize="@dimen/edx_small"
+                tools:text="1 of 17 Videos Downloaded" />
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bulk_download_description_top_margin"
+                android:textColor="@color/edx_brand_gray_accent"
+                android:textSize="@dimen/edx_small"
+                tools:text="5.5MB of 67.5MB total" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sw_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/edx_margin"
+            android:layout_marginRight="@dimen/edx_margin"
+            android:padding="@dimen/widget_margin_half"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:theme="@style/bulk_download_switch" />
+
+        <ProgressBar
+            android:id="@+id/pb_download"
+            style="@style/bulk_download_progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bulk_download_progress_height"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:progress="50"
+            tools:visibility="visible" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

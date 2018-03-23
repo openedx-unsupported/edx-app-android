@@ -62,6 +62,14 @@ public interface IDownloadManager {
     int getAverageProgressForDownloads(long[] dmids);
 
     /**
+     * Returns download progress details of provided download manager IDs.
+     *
+     * @param dmids Download manager IDs.
+     * @return Download progress details object.
+     */
+    NativeDownloadModel getProgressDetailsForDownloads(long[] dmids);
+
+    /**
      * Returns true if the Native Download Manager service is on.
      * @return
      */

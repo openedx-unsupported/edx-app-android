@@ -68,12 +68,11 @@ import retrofit2.Call;
 public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
         VideoDownloadHelper.DownloadManagerCallback,
-        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>{
+        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>> {
+    private final Logger logger = new Logger(getClass().getName());
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
     private static final int SNACKBAR_SHOWTIME_MS = 5000;
-
-    protected final Logger logger = new Logger(getClass().getName());
 
     private NewCourseOutlineAdapter adapter;
     private ListView listView;
@@ -272,22 +271,16 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
     private void initAdapter() {
         if (adapter == null) {
             // creating adapter just once
-            adapter = new NewCourseOutlineAdapter(getActivity(), courseData, environment,
+            adapter = new NewCourseOutlineAdapter(getActivity(), this, courseData, environment,
                     new NewCourseOutlineAdapter.DownloadListener() {
                         @Override
                         public void download(List<? extends HasDownloadEntry> models) {
-                            final BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
-                            if (NetworkUtil.verifyDownloadPossible(activity)) {
-                                downloadManager.downloadVideos(models, activity, NewCourseOutlineFragment.this);
-                            }
+                            downloadManager.downloadVideos(models, getActivity(), NewCourseOutlineFragment.this);
                         }
 
                         @Override
                         public void download(DownloadEntry videoData) {
-                            final BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
-                            if (NetworkUtil.verifyDownloadPossible(activity)) {
-                                downloadManager.downloadVideo(videoData, activity, NewCourseOutlineFragment.this);
-                            }
+                            downloadManager.downloadVideo(videoData, getActivity(), NewCourseOutlineFragment.this);
                         }
 
                         @Override
@@ -542,7 +535,7 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(DownloadedVideoDeletedEvent e) {
+    public void onEventMainThread(DownloadedVideoDeletedEvent e) {
         adapter.notifyDataSetChanged();
     }
 
@@ -647,6 +640,14 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     protected boolean isShowingFullScreenError() {
         return errorNotification != null && errorNotification.isShowing();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

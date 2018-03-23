@@ -74,6 +74,17 @@ public class PrefManager {
     }
 
     /**
+     * Puts given key-value pair to the Shared Preferences.
+     *
+     * @param key
+     * @param value - int
+     */
+    public void put(String key, int value) {
+        Editor edit = context.getSharedPreferences(prefName, Context.MODE_PRIVATE).edit();
+        edit.putInt(key, value).commit();
+    }
+
+    /**
      * Returns String value for the given key, null if no value is found.
      *
      * @param key
@@ -140,6 +151,17 @@ public class PrefManager {
                     .getFloat(key, defaultValue);
         }
         return defaultValue;
+    }
+
+    /**
+     * Returns int value for the given key, -1 if no value is found.
+     *
+     * @param key
+     * @return int
+     */
+    public int getInt(String key) {
+        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                .getInt(key, -1);
     }
 
     public static class AppInfoPrefManager extends PrefManager {
@@ -276,6 +298,8 @@ public class PrefManager {
         public static final String LAST_RATED_VERSION = "LAST_RATED_VERSION";
         // Preference to keep track if Whats New feature has been shown for a specific version
         public static final String WHATS_NEW_SHOWN_FOR_VERSION = "WHATS_NEW_SHOWN_FOR_VERSION";
+        // Preference to keep track of Bulk download switch for a Course ID
+        public static final String BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s";
     }
 
     public static final class Value {

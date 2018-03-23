@@ -348,6 +348,24 @@ public interface Analytics {
      */
     void trackUndoingUnitVideoDelete(@NonNull String courseId, @NonNull String unitId);
 
+    /**
+     * Track the pressing of bulk download switch to ON state.
+     *
+     * @param courseId                    ID of the course.
+     * @param totalDownloadableVideos     Number of videos that can be downloaded in a course.
+     * @param remainingDownloadableVideos Remaining videos that can be downloaded within a course.
+     */
+    void trackBulkDownloadSwitchOn(@NonNull String courseId, int totalDownloadableVideos,
+                                   int remainingDownloadableVideos);
+
+    /**
+     * Track the pressing of bulk download switch to OFF state.
+     *
+     * @param courseId                ID of the course.
+     * @param totalDownloadableVideos Number of videos that can be downloaded in a course.
+     */
+    void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos);
+
     interface Keys {
         String NAME = "name";
         String OLD_TIME = "old_time";
@@ -403,6 +421,9 @@ public interface Analytics {
         String TOTAL_VIEWED = "total_viewed";
         String CURRENTLY_VIEWED = "currently_viewed";
         String TOTAL_SCREENS = "total_screens";
+        // Bulk download feature keys
+        String TOTAL_DOWNLOADABLE_VIDEOS = "total_downloadable_videos";
+        String REMAINING_DOWNLOADABLE_VIDEOS = "remaining_downloadable_videos";
     }
 
     interface Values {
@@ -491,6 +512,9 @@ public interface Analytics {
         String VIDEOS_UNDO_SUBSECTION_DELETE = "edx.bi.app.video.undo.subsection.delete";
         String VIDEOS_UNIT_DELETE = "edx.bi.app.video.delete.unit";
         String VIDEOS_UNDO_UNIT_DELETE = "edx.bi.app.video.undo.unit.delete";
+        // Bulk download feature even values
+        String BULK_DOWNLOAD_SWITCH_ON = "edx.bi.app.videos.download.toggle.on";
+        String BULK_DOWNLOAD_SWITCH_OFF = "edx.bi.app.videos.download.toggle.off";
     }
 
     interface Screens {
@@ -578,6 +602,9 @@ public interface Analytics {
         String VIDEOS_UNDO_SUBSECTION_DELETE = "Videos: Undo Subsection Delete";
         String VIDEOS_UNIT_DELETE = "Videos: Unit Delete";
         String VIDEOS_UNDO_UNIT_DELETE = "Videos: Undo Unit Delete";
+        // Bulk download events
+        String BULK_DOWNLOAD_TOGGLE_ON = "Bulk Download Toggle On";
+        String BULK_DOWNLOAD_TOGGLE_OFF = "Bulk Download Toggle Off";
     }
 
     /**

@@ -528,4 +528,23 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.UNIT_ID, unitId);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackBulkDownloadSwitchOn(@NonNull String courseId, int totalDownloadableVideos, int remainingDownloadableVideos) {
+        final FirebaseEvent event = new FirebaseEvent(Events.BULK_DOWNLOAD_TOGGLE_ON, Values.BULK_DOWNLOAD_SWITCH_ON);
+        event.putString(Keys.COURSE_ID, courseId);
+        event.putString(Keys.COMPONENT, Values.DOWNLOAD_MODULE);
+        event.putInt(Keys.TOTAL_DOWNLOADABLE_VIDEOS, totalDownloadableVideos);
+        event.putInt(Keys.REMAINING_DOWNLOADABLE_VIDEOS, remainingDownloadableVideos);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos) {
+        final FirebaseEvent event = new FirebaseEvent(Events.BULK_DOWNLOAD_TOGGLE_OFF, Values.BULK_DOWNLOAD_SWITCH_OFF);
+        event.putString(Keys.COURSE_ID, courseId);
+        event.putString(Keys.COMPONENT, Values.DOWNLOAD_MODULE);
+        event.putInt(Keys.TOTAL_DOWNLOADABLE_VIDEOS, totalDownloadableVideos);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

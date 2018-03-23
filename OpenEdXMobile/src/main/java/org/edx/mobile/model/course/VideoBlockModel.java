@@ -49,5 +49,17 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
         this.data = data;
     }
 
-
+    /**
+     * Returns the size of the video file of whichever encoding is currently preferred within the
+     * app for playing or downloading.
+     *
+     * @return The size of the video if available, <code>-1</code> otherwise.
+     */
+    public long getPreferredVideoEncodingSize() {
+        if (data != null && data.encodedVideos != null
+                && data.encodedVideos.getPreferredVideoInfo() != null) {
+            return data.encodedVideos.getPreferredVideoInfo().fileSize;
+        }
+        return -1;
+    }
 }

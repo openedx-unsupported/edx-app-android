@@ -5,6 +5,7 @@ package org.edx.mobile.model.download;
  */
 public class NativeDownloadModel {
 
+    public int downloadCount;
     public long downloaded;
     public long size; // size might be -1 if download has not yet started, or 0 if it has failed
     public String filepath;

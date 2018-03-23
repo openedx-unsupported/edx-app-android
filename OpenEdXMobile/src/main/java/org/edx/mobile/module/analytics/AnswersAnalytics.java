@@ -279,4 +279,14 @@ public class AnswersAnalytics implements Analytics {
     public void trackUndoingUnitVideoDelete(@NonNull String courseId, @NonNull String unitId) {
 
     }
+
+    @Override
+    public void trackBulkDownloadSwitchOn(@NonNull String courseId, int totalDownloadableVideos, int remainingDownloadableVideos) {
+
+    }
+
+    @Override
+    public void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos) {
+
+    }
 }
