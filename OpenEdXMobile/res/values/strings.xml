@@ -101,7 +101,7 @@
     <!-- Content description for edit profile button -->
     <string name="open_profile_button">Open your profile</string>
     <!-- Title of user's course list screen -->
-    <string name="label_my_courses" tools:ignore="MissingTranslation">Courses</string>
+    <string name="label_my_courses">Courses</string>
     <!-- Title of important course dates screen -->
     <string name="label_course_dates">Course Dates and Deadlines</string>
     <!-- Title of native Find Courses Screen -->
@@ -109,7 +109,7 @@
     <!-- Title of webview based Find Courses Screen -->
     <string name="label_discover">Discover</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
-    <string name="label_discovery" tools:ignore="MissingTranslation">Discovery</string>
+    <string name="label_discovery">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
     <string name="label_submit_feedback">Submit Feedback</string>
     <!-- Toggle switch on state label -->

@@ -86,12 +86,16 @@
   <string name="label_current_downloads">Ver descargas</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Abrir su perfil</string>
+  <!--Title of user's course list screen-->
+  <string name="label_my_courses">Cursos</string>
   <!--Title of important course dates screen-->
   <string name="label_course_dates">Fechas y Plazos del Curso</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Exploración</string>
+  <!--Title of Find Courses tab on Main Dashboard screen-->
+  <string name="label_discovery">Descubrir</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentario</string>
   <!--Toggle switch on state label-->
@@ -125,6 +129,10 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label explaining toggle for cellular data access-->
   <string name="wifi_dialog_message_help">Permitir que su dispositivo descargue videos usando su conexión de datos móviles cuando no haya una red Wi-Fi disponible. Pueden aplicar cargos de datos.</string>
   <!--Info message text for to let use know how many videos were deleted-->
+  <plurals name="delete_video_snackbar_msg">
+    <item quantity="one">%s video borrado</item>
+    <item quantity="other">%s videos borrados</item>
+  </plurals>
   <!--Alert dialog title for users with zero rated data-->
   <string name="leaving_app_data_title">Saliendo de la app de {platform_name}</string>
   <!--Alert dialog content for users with zero rated data-->
@@ -166,6 +174,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="course_name">Nombre del curso</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Nuevo contenido del curso</string>
+  <!--Label for date when course starts-->
+  <!--Label for course that has ended-->
+  <!--Label for date when course is ending-->
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Contenido del curso</string>
@@ -358,6 +369,18 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="login_error">Error de inicio de sesión</string>
   <!--Alert dialog title when login fails due to lack of Internet-->
   <string name="no_connectivity">Error de conexión</string>
+  <!--Bulk Videos Download-->
+  <!--Accessibility label of bulk download switch-->
+  <!--Title for bulk videos download view when in new or partial videos' download state-->
+  <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
+  <!--Title for bulk videos download view when download is starting-->
+  <!--Title for bulk videos download view when in downloading state-->
+  <!--Subtitle for bulk videos download view when in downloading state-->
+  <!--Title for bulk videos download view when in downloaded state-->
+  <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
+  <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
+  <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
+  <!--Accessibility label of full bulk download view when videos are being downloaded-->
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">Permitir</string>
