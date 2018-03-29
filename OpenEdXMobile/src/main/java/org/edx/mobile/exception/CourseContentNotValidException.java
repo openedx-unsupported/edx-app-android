@@ -10,4 +10,8 @@ public class CourseContentNotValidException extends Exception {
     public CourseContentNotValidException(@NonNull String message) {
         super(message);
     }
+
+    public CourseContentNotValidException(String message, Exception e) {
+        super(message, e);
+    }
 }
