@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">Error desconocido. Por favor, intente más tarde. </string>
+  <!--Course related error messages-->
+  <!--Error shown when a course's content is invalid or not in the format that we expect-->
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">No está conectado a Internet.</string>
