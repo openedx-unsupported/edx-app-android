@@ -266,6 +266,24 @@
         <item name="android:iconifiedByDefault">false</item>
     </style>
 
+    <style name="launch_search_bar">
+        <item name="android:layout_height">@dimen/search_layout_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="queryHint">@string/launch_search_courses</item>
+        <item name="iconifiedByDefault">false</item>
+        <item name="android:background">@drawable/edx_bordered_button</item>
+    </style>
+
+    <style name="search_view_theme" parent="Theme.AppCompat.Light">
+        <!-- Following is the cursor color -->
+        <item name="colorAccent">@color/edx_brand_primary_base</item>
+        <!-- Following is the icons' color -->
+        <item name="colorControlNormal">@color/edx_brand_primary_base</item>
+        <item name="editTextColor">@color/edx_brand_primary_base</item>
+        <item name="android:editTextColor">@color/edx_brand_primary_base</item>
+        <item name="android:textColorHint">@color/edx_brand_primary_base</item>
+    </style>
+
     <style name="footer_action_button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>

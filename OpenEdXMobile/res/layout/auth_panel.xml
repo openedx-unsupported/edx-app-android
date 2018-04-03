@@ -2,41 +2,38 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/container"
+        android:id="@+id/ll_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent_black_80"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/auth_panel_height"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/widget_margin_double">
 
         <Button
             android:id="@+id/sign_up"
+            style="@style/edX.Widget.BrandPillButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/auth_panel_btn_height"
             android:layout_weight="1"
-            android:background="@drawable/light_selectable_box_overlay"
             android:focusable="true"
-            android:padding="@dimen/edx_margin"
             android:text="@string/launch_register"
             android:textColor="@color/white"
             android:textSize="@dimen/edx_base" />
 
         <View
             android:id="@+id/view_divider"
-            android:layout_width="@dimen/edx_hairline"
-            android:layout_height="match_parent"
-            android:background="@color/edx_brand_gray_base" />
+            android:layout_width="@dimen/widget_margin_double"
+            android:layout_height="match_parent" />
 
         <Button
             android:id="@+id/log_in"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/light_selectable_box_overlay"
+            style="@style/edX.Widget.BorderedButton"
+            android:layout_width="@dimen/auth_panel_login_btn_width"
+            android:layout_height="@dimen/auth_panel_btn_height"
             android:focusable="true"
-            android:padding="@dimen/edx_margin"
-            android:text="@string/login"
-            android:textColor="@color/white"
-
+            android:text="@string/launch_login"
+            android:textColor="@color/edx_brand_primary_accent"
             android:textSize="@dimen/edx_base" />
     </LinearLayout>
 </layout>

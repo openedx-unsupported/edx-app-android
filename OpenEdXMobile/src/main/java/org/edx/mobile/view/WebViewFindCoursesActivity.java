@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseWebViewFindCoursesActivity;
 import org.edx.mobile.logger.Logger;
@@ -36,8 +37,20 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
         } else {
             blockDrawerFromOpening();
         }
+
+        // Check for search query in extras
+        String searchQueryExtra = null;
+        if (getIntent().getExtras() != null) {
+            searchQueryExtra = getIntent().getStringExtra(Router.EXTRA_SEARCH_QUERY);
+        }
+
+        if (searchQueryExtra != null) {
+            initSearch(searchQueryExtra);
+        } else {
+            loadUrl(getInitialUrl());
+        }
+
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
-        loadUrl(getInitialUrl());
     }
 
     @Override
@@ -69,13 +82,14 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
         Resources resources = getResources();
         searchView.setQueryHint(resources.getString(R.string.search_for_courses));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
             @Override
             public boolean onQueryTextSubmit(String query) {
-                String baseUrl = environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
-                String searchUrl = buildQuery(baseUrl, query, logger);
+                if (query == null || query.trim().isEmpty())
+                    return false;
+                initSearch(query);
                 searchView.onActionViewCollapsed();
-                loadUrl(searchUrl);
+                final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
+                environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
                 return true;
             }
 
@@ -95,6 +109,12 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
         });
 
         return result;
+    }
+
+    private void initSearch(@NonNull String query) {
+        final String baseUrl = environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
+        final String searchUrl = buildQuery(baseUrl, query, logger);
+        loadUrl(searchUrl);
     }
 
     public void enableDrawerMenuButton(boolean showDrawer) {

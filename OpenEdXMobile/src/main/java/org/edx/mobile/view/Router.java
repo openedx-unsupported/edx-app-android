@@ -378,12 +378,19 @@ public class Router {
     }
 
     public void showFindCourses(@NonNull Context context) {
+        showFindCourses(context, null);
+    }
+
+    public void showFindCourses(@NonNull Context context, @Nullable String searchQuery) {
         if (!config.getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
             throw new RuntimeException("Course discovery is not enabled");
         }
         final Intent findCoursesIntent;
         if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
             findCoursesIntent = new Intent(context, WebViewFindCoursesActivity.class);
+            if (searchQuery != null) {
+                findCoursesIntent.putExtra(Router.EXTRA_SEARCH_QUERY, searchQuery);
+            }
         } else {
             findCoursesIntent = NativeFindCoursesActivity.newIntent(context);
         }

@@ -495,9 +495,13 @@
 
     <!-- New Logistration Launch screen text -->
     <!-- Button leading user to create account screen -->
-    <string name="launch_register">Register</string>
-    <!-- Button leading user to Find Courses screen from the launch screen -->
-    <string name="launch_discover_courses">Discover Courses</string>
+    <string name="launch_register" tools:ignore="MissingTranslation">Create your Account</string>
+    <!-- Button leading user to log in screen -->
+    <string name="launch_login" tools:ignore="MissingTranslation">Log In</string>
+    <!-- Introduction text on the launch screen -->
+    <string name="launch_text" tools:ignore="MissingTranslation">Free courses from the world’s best universities in your pocket.</string>
+    <!-- Search view leading user to Find Courses screen from the launch screen upon searching some text -->
+    <string name="launch_search_courses" tools:ignore="MissingTranslation">Search Courses</string>
 
     <!-- Registration Screen -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
