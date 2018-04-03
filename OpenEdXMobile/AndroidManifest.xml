@@ -175,12 +175,6 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.WebViewExploreSubjectsActivity"
-            android:label="@string/launch_explore_subjects"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name=".view.NativeFindCoursesActivity"
             android:label="@string/label_find_courses"
             android:screenOrientation="portrait"

@@ -392,18 +392,6 @@ public class Router {
         context.startActivity(findCoursesIntent);
     }
 
-    public void showExploreSubjects(@NonNull Context context) {
-        final Intent findCoursesIntent;
-        if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
-            findCoursesIntent = new Intent(context, WebViewExploreSubjectsActivity.class);
-        } else {
-            throw new RuntimeException("'Explore Subjects' is not implemented for native course discovery");
-        }
-        //Add this flag as multiple activities need to be created
-        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(findCoursesIntent);
-    }
-
     public void showWebViewActivity(@NonNull Activity activity, @NonNull String url, @Nullable String title) {
         activity.startActivity(WebViewActivity.newIntent(activity, url, title));
     }

@@ -182,8 +182,6 @@ public interface Analytics {
 
     void trackDiscoverCoursesClicked();
 
-    void trackExploreSubjectsClicked();
-
     /**
      * This function is used to track if user clicks on Sign up on landing page
      */
@@ -454,7 +452,6 @@ public interface Analytics {
         String USERLOGIN = "edx.bi.app.user.login";
         String APP_NAME = "edx.mobileapp.android";
         String DISCOVER_COURSES_CLICK = "edx.bi.app.discover.courses.tapped";
-        String EXPLORE_SUBJECTS_CLICK = "edx.bi.app.discover.explore.tapped";
         String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
         String CREATE_ACCOUNT_CLICKED = "edx.bi.app.user.register.clicked";
         String USER_REGISTRATION_SUCCESS = "edx.bi.app.user.register.success";
@@ -577,7 +574,6 @@ public interface Analytics {
         String COURSE_ENROLL_CLICKED = "Course Enroll Clicked";
         String COURSE_ENROLL_SUCCESS = "Course Enroll Success";
         String DISCOVER_COURSES = "Discover Courses";
-        String EXPLORE_SUBJECTS = "Explore Subjects";
         String SPEED = "Connected Speed Report";
         String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
         String SOCIAL_COURSE_DETAIL_SHARED = "Shared a course";

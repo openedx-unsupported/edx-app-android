@@ -440,8 +440,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="launch_register">Registrarse</string>
   <!--Button leading user to Find Courses screen from the launch screen-->
   <string name="launch_discover_courses">Encontrar cursos</string>
-  <!--Button leading user to Find Courses screen from the launch screen-->
-  <string name="launch_explore_subjects">Explorar temas</string>
   <!--Registration Screen-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
   <string name="by_creating_account">Al crear una cuenta, usted acepta los </string>

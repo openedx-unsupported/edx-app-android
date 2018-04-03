@@ -28,7 +28,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
         AuthPanelUtils.setAuthPanelVisible(true, binding.authPanel, environment);
         return new DiscoveryLaunchPresenter.ViewInterface() {
             @Override
-            public void setEnabledButtons(boolean courseDiscoveryEnabled, boolean exploreSubjectsEnabled) {
+            public void setEnabledButtons(boolean courseDiscoveryEnabled) {
                 if (courseDiscoveryEnabled) {
                     binding.discoverCourses.setOnClickListener(new OnClickListener() {
                         @Override
@@ -39,17 +39,6 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                     });
                 } else {
                     binding.discoverCourses.setVisibility(View.GONE);
-                }
-                if (exploreSubjectsEnabled) {
-                    binding.exploreSubjects.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            environment.getAnalyticsRegistry().trackExploreSubjectsClicked();
-                            environment.getRouter().showExploreSubjects(DiscoveryLaunchActivity.this);
-                        }
-                    });
-                } else {
-                    binding.exploreSubjects.setVisibility(View.INVISIBLE);
                 }
             }
 

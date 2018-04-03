@@ -498,8 +498,6 @@
     <string name="launch_register">Register</string>
     <!-- Button leading user to Find Courses screen from the launch screen -->
     <string name="launch_discover_courses">Discover Courses</string>
-    <!-- Button leading user to Find Courses screen from the launch screen -->
-    <string name="launch_explore_subjects">Explore Subjects</string>
 
     <!-- Registration Screen -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->

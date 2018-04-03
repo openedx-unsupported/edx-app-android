@@ -234,13 +234,6 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackExploreSubjectsClicked() {
-        for (Analytics service : services) {
-            service.trackExploreSubjectsClicked();
-        }
-    }
-
-    @Override
     public void trackCreateAccountClicked(@NonNull String appVersion, @Nullable String source) {
         for (Analytics service : services) {
             service.trackCreateAccountClicked(appVersion, source);

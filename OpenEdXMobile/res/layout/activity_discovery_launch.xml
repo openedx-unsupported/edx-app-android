@@ -29,14 +29,6 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/explore_subjects"
-                style="@style/edX.Widget.BrandPillButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:text="@string/launch_explore_subjects" />
-
-            <Button
                 android:id="@+id/discover_courses"
                 style="@style/edX.Widget.BrandPillButton"
                 android:layout_width="match_parent"

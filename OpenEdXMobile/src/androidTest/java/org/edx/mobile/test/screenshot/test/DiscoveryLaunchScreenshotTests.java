@@ -9,16 +9,11 @@ public class DiscoveryLaunchScreenshotTests extends PresenterActivityScreenshotT
 
     @Test
     public void testScreenshot_withCourseDiscoveryDisabled() {
-        view.setEnabledButtons(false, false);
+        view.setEnabledButtons(false);
     }
 
     @Test
     public void testScreenshot_withCourseDiscoveryEnabled() {
-        view.setEnabledButtons(true, false);
-    }
-
-    @Test
-    public void testScreenshot_withCourseDiscoveryAndExploreSubjectsEnabled() {
-        view.setEnabledButtons(true, true);
+        view.setEnabledButtons(true);
     }
 }

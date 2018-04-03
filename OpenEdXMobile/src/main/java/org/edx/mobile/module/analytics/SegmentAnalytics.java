@@ -340,13 +340,6 @@ public class SegmentAnalytics implements Analytics {
         trackSegmentEvent(Events.DISCOVER_COURSES, aEvent.properties);
     }
 
-    @Override
-    public void trackExploreSubjectsClicked() {
-        SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.EXPLORE_SUBJECTS_CLICK);
-        trackSegmentEvent(Events.EXPLORE_SUBJECTS, aEvent.properties);
-    }
-
     /**
      * This function is used to track User Login activity
      */

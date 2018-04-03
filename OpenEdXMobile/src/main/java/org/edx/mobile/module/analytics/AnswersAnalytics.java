@@ -117,11 +117,6 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackExploreSubjectsClicked() {
-
-    }
-
-    @Override
     public void trackUserSignUpForAccount() {
 
     }

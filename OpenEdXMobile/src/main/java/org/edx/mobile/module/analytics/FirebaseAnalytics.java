@@ -198,13 +198,6 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackExploreSubjectsClicked() {
-        final FirebaseEvent event = new FirebaseEvent(Events.EXPLORE_SUBJECTS,
-                Values.EXPLORE_SUBJECTS_CLICK);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
     public void trackUserLogin(String method) {
         final FirebaseEvent event = new FirebaseEvent(Events.USER_LOGIN, Values.USERLOGIN);
         //More information regarding a track event should be under 'data'
