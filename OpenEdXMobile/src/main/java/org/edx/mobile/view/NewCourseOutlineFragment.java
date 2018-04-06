@@ -136,21 +136,9 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         errorNotification = new FullScreenErrorNotification(listView);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
 
-        try {
-            restore(bundle);
-            initListView(view);
-            fetchCourseComponent();
-        } catch (Exception e) {
-            final StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("CourseId: "+courseData.getCourse().getId())
-                    .append(", CourseName: "+courseData.getCourse().getName())
-                    .append(", CourseComponentId: "+courseComponentId)
-                    .append(", isVideoMode: "+isVideoMode)
-                    .append("\n Exception: "+e.getMessage());
-            final CourseContentNotValidException ex = new CourseContentNotValidException(stringBuilder.toString(), e);
-            errorNotification.showError(getContext(), ex);
-            logger.error(ex, true);
-        }
+        restore(bundle);
+        initListView(view);
+        fetchCourseComponent();
 
         return view;
     }
@@ -167,16 +155,23 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
             courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
             courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
             isVideoMode = savedInstanceState.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
-            isOnCourseOutline = isOnCourseOutline();
+            if (savedInstanceState.containsKey(Router.EXTRA_IS_ON_COURSE_OUTLINE)) {
+                isOnCourseOutline = savedInstanceState.getBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE);
+            } else {
+                isOnCourseOutline = isOnCourseOutline();
+            }
         }
     }
 
     private void fetchCourseComponent() {
         final String courseId = courseData.getCourse().getId();
         if (courseComponentId != null) {
-            // Its not a course outline so course data would definitely exist in cache
-            loadData(courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId));
-            return;
+            final CourseComponent courseComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId);
+            if (courseComponent != null) {
+                // Course data exist in app session cache
+                loadData(courseComponent);
+                return;
+            }
         }
         // Check if course data is available in app session cache
         final CourseComponent courseComponent = courseManager.getCourseDataFromAppLevelCache(courseId);
@@ -201,11 +196,10 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
         final CourseComponent courseComponent = result.getResult();
         if (courseComponent != null) {
             // Course data exist in persistable cache
-            loadData(courseComponent);
+            loadData(validateCourseComponent(courseComponent));
             loadingIndicator.setVisibility(View.GONE);
             // Send a server call in background for refreshed data
             getCourseComponentFromServer(false);
-            return;
         } else {
             // Course data is neither available in app session cache nor available in persistable cache
             getCourseComponentFromServer(true);
@@ -227,7 +221,7 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onResponse(@NonNull final CourseComponent courseComponent) {
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
-                loadData(courseComponent);
+                loadData(validateCourseComponent(courseComponent));
             }
 
             @Override
@@ -246,6 +240,24 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
                 }
             }
         });
+    }
+
+    /**
+     * Validates the course component that we should load on screen i.e. based on
+     * {@link #isOnCourseOutline} validates that the CourseComponent we are about to load on screen
+     * has the same ID as {@link #courseComponentId}.
+     *
+     * @param courseComponent The course component to validate.
+     * @return Validated course component having the same ID as {@link #courseComponentId}.
+     */
+    @NonNull
+    private CourseComponent validateCourseComponent(@NonNull CourseComponent courseComponent) {
+        if (!isOnCourseOutline) {
+            final CourseComponent cached = courseManager.getComponentByIdFromAppLevelCache(
+                    courseData.getCourse().getId(), courseComponentId);
+            courseComponent = cached != null ? cached : courseComponent;
+        }
+        return courseComponent;
     }
 
     private void initListView(@NonNull View view) {
@@ -469,6 +481,7 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
             bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         outState.putBundle(Router.EXTRA_BUNDLE, bundle);
         outState.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideoMode);
+        outState.putBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE, isOnCourseOutline);
     }
 
     public void reloadList() {
