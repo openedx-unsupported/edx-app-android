@@ -191,6 +191,17 @@
     <dimen name="bulk_download_progress_height">@dimen/progress_bar_height</dimen>
     <dimen name="bulk_download_description_top_margin">4dp</dimen>
 
+    <!-- Logistration Launch screen -->
+    <dimen name="logo_top_margin">90dp</dimen>
+    <dimen name="logo_height">40dp</dimen>
+    <dimen name="logo_width">70dp</dimen>
+    <dimen name="search_layout_height">45dp</dimen>
+
+    <!-- Auth Panel -->
+    <dimen name="auth_panel_height">92dp</dimen>
+    <dimen name="auth_panel_btn_height">50dp</dimen>
+    <dimen name="auth_panel_login_btn_width">96dp</dimen>
+
     <!-- Unorganized -->
     <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_line">3px</dimen>
@@ -198,9 +209,10 @@
     <dimen name="edx_margin">15dp</dimen>
     <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="edx_quadruple_margin">60dp</dimen>
-    <dimen name="widget_margin">10dp</dimen>
     <dimen name="widget_margin_half">5dp</dimen>
+    <dimen name="widget_margin">10dp</dimen>
     <dimen name="widget_margin_double">20dp</dimen>
+    <dimen name="widget_margin_quadruple">40dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>

@@ -1,50 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/ll_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:splitMotionEvents="false"
-        tools:background="@drawable/launch_background">
-
-        <ImageView
-            android:id="@+id/edx_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="75dp"
-            android:layout_marginTop="75dp"
-            android:contentDescription="@string/phonetic_app_name"
-            android:src="@drawable/launch_screen_logo" />
+        android:splitMotionEvents="false">
 
         <LinearLayout
-            android:id="@+id/ll_buttons"
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/edx_double_margin"
+            android:paddingLeft="@dimen/edx_double_margin"
+            android:paddingRight="@dimen/edx_double_margin"
+            android:paddingStart="@dimen/edx_double_margin">
 
-            <Button
-                android:id="@+id/explore_subjects"
-                style="@style/edX.Widget.BrandPillButton"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/iv_edx_logo"
+                android:layout_width="@dimen/logo_width"
+                android:layout_height="@dimen/logo_height"
+                android:layout_marginTop="@dimen/logo_top_margin"
+                android:contentDescription="@string/phonetic_app_name"
+                android:src="@drawable/launch_screen_logo" />
+
+            <TextView
+                android:id="@+id/tv_launch_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:text="@string/launch_explore_subjects" />
+                android:layout_marginTop="@dimen/widget_margin_double"
+                android:text="@string/launch_text"
+                android:textColor="@color/edx_brand_primary_base"
+                android:textSize="@dimen/edx_xx_large" />
 
-            <Button
-                android:id="@+id/discover_courses"
-                style="@style/edX.Widget.BrandPillButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:focusable="true"
-                android:text="@string/launch_discover_courses" />
-
+            <android.support.v7.widget.SearchView
+                android:id="@+id/sv_search_courses"
+                style="@style/launch_search_bar"
+                android:layout_marginTop="@dimen/widget_margin_quadruple"
+                app:theme="@style/search_view_theme" />
         </LinearLayout>
 
         <android.support.v4.widget.Space
@@ -53,7 +50,9 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
+        <include
+            android:id="@+id/auth_panel"
+            layout="@layout/auth_panel" />
 
     </LinearLayout>
 </layout>

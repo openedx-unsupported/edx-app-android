@@ -191,16 +191,12 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackDiscoverCoursesClicked() {
-        final FirebaseEvent event = new FirebaseEvent(Events.DISCOVER_COURSES,
-                Values.DISCOVER_COURSES_CLICK);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
-    public void trackExploreSubjectsClicked() {
-        final FirebaseEvent event = new FirebaseEvent(Events.EXPLORE_SUBJECTS,
-                Values.EXPLORE_SUBJECTS_CLICK);
+    public void trackCoursesSearch(String searchQuery, boolean isLoggedIn, String versionName) {
+        final FirebaseEvent event = new FirebaseEvent(Events.DISCOVERY_COURSES_SEARCH,
+                Values.DISCOVERY_COURSES_SEARCH);
+        event.putString(Keys.LABEL, searchQuery);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putString(Keys.ACTION, isLoggedIn ? Values.DISCOVERY_COURSES_SEARCH_TAB : Values.DISCOVERY_COURSES_SEARCH_LANDING);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 

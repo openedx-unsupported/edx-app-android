@@ -180,9 +180,14 @@ public interface Analytics {
     void trackVideoOrientation(String videoId, Double currentTime,
                                boolean isLandscape, String courseId, String unitUrl);
 
-    void trackDiscoverCoursesClicked();
-
-    void trackExploreSubjectsClicked();
+    /**
+     * Tracks search of courses in the app.
+     *
+     * @param searchQuery The search query.
+     * @param isLoggedIn  <code>true</code> if the user is logged-in, <code>false</code> otherwise.
+     * @param versionName App's version.
+     */
+    void trackCoursesSearch(String searchQuery, boolean isLoggedIn, String versionName);
 
     /**
      * This function is used to track if user clicks on Sign up on landing page
@@ -453,8 +458,7 @@ public interface Analytics {
         String USERLOGOUT = "edx.bi.app.user.logout";
         String USERLOGIN = "edx.bi.app.user.login";
         String APP_NAME = "edx.mobileapp.android";
-        String DISCOVER_COURSES_CLICK = "edx.bi.app.discover.courses.tapped";
-        String EXPLORE_SUBJECTS_CLICK = "edx.bi.app.discover.explore.tapped";
+        String DISCOVERY_COURSES_SEARCH = "edx.bi.app.discovery.courses_search";
         String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
         String CREATE_ACCOUNT_CLICKED = "edx.bi.app.user.register.clicked";
         String USER_REGISTRATION_SUCCESS = "edx.bi.app.user.register.success";
@@ -512,9 +516,12 @@ public interface Analytics {
         String VIDEOS_UNDO_SUBSECTION_DELETE = "edx.bi.app.video.undo.subsection.delete";
         String VIDEOS_UNIT_DELETE = "edx.bi.app.video.delete.unit";
         String VIDEOS_UNDO_UNIT_DELETE = "edx.bi.app.video.undo.unit.delete";
-        // Bulk download feature even values
+        // Bulk download feature event values
         String BULK_DOWNLOAD_SWITCH_ON = "edx.bi.app.videos.download.toggle.on";
         String BULK_DOWNLOAD_SWITCH_OFF = "edx.bi.app.videos.download.toggle.off";
+        // Discovery Courses Search
+        String DISCOVERY_COURSES_SEARCH_LANDING = "landing_screen";
+        String DISCOVERY_COURSES_SEARCH_TAB = "discovery_tab";
     }
 
     interface Screens {
@@ -576,8 +583,7 @@ public interface Analytics {
         String REGISTRATION_SUCCESS = "Registration Success";
         String COURSE_ENROLL_CLICKED = "Course Enroll Clicked";
         String COURSE_ENROLL_SUCCESS = "Course Enroll Success";
-        String DISCOVER_COURSES = "Discover Courses";
-        String EXPLORE_SUBJECTS = "Explore Subjects";
+        String DISCOVERY_COURSES_SEARCH = "Discovery: Courses Search";
         String SPEED = "Connected Speed Report";
         String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
         String SOCIAL_COURSE_DETAIL_SHARED = "Shared a course";

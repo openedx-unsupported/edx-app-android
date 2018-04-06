@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.SearchEvent;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
@@ -24,11 +26,6 @@ public class AnswersAnalytics implements Analytics {
 
     public AnswersAnalytics() {
         this.tracker = Answers.getInstance();
-    }
-
-    private void trackAnswersEvent(@NonNull AnswersEvent event) {
-        logger.debug(event.toString());
-        tracker.logCustom(event);
     }
 
     @Override
@@ -112,13 +109,15 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackDiscoverCoursesClicked() {
+    public void trackCoursesSearch(String searchQuery, boolean isLoggedIn, String versionName) {
+        final SearchEvent event = new SearchEvent();
+        AnswersEventUtil.setCustomProperties(event);
 
-    }
-
-    @Override
-    public void trackExploreSubjectsClicked() {
-
+        event.putQuery(searchQuery);
+        event.putCustomAttribute(Keys.NAME, Values.DISCOVERY_COURSES_SEARCH)
+                .putCustomAttribute(Keys.APP_VERSION, versionName)
+                .putCustomAttribute(Keys.ACTION, isLoggedIn ? Values.DISCOVERY_COURSES_SEARCH_TAB : Values.DISCOVERY_COURSES_SEARCH_LANDING);
+        tracker.logSearch(event);
     }
 
     @Override
@@ -138,14 +137,15 @@ public class AnswersAnalytics implements Analytics {
 
     @Override
     public void trackRegistrationSuccess(@NonNull String appVersion, @Nullable String source) {
-        final AnswersEvent event = new AnswersEvent(Events.REGISTRATION_SUCCESS);
+        final CustomEvent event = new CustomEvent(Events.REGISTRATION_SUCCESS);
+        AnswersEventUtil.setCustomProperties(event);
+        AnswersEventUtil.addCategoryToBiEvents(event, Values.CONVERSION, appVersion);
+
         event.putCustomAttribute(Keys.NAME, Values.USER_REGISTRATION_SUCCESS);
         if (!TextUtils.isEmpty(source)) {
             event.putCustomAttribute(Keys.PROVIDER, source);
         }
-
-        event.addCategoryToBiEvents(Values.CONVERSION, appVersion);
-        trackAnswersEvent(event);
+        tracker.logCustom(event);
     }
 
     @Override
@@ -155,14 +155,14 @@ public class AnswersAnalytics implements Analytics {
 
     @Override
     public void trackEnrolmentSuccess(@NonNull String courseId, boolean emailOptIn) {
-        final AnswersEvent event = new AnswersEvent(Events.COURSE_ENROLL_SUCCESS);
+        final CustomEvent event = new CustomEvent(Events.COURSE_ENROLL_SUCCESS);
+        AnswersEventUtil.setCustomProperties(event);
+        AnswersEventUtil.addCategoryToBiEvents(event, Values.CONVERSION, courseId);
+
         event.putCustomAttribute(Keys.NAME, Values.USER_COURSE_ENROLL_SUCCESS)
                 .putCustomAttribute(Analytics.Keys.COURSE_ID, courseId)
-                .putCustomAttribute(Keys.EMAIL_OPT_IN, emailOptIn ? 1 : 0)
-        ;
-
-        event.addCategoryToBiEvents(Values.CONVERSION, courseId);
-        trackAnswersEvent(event);
+                .putCustomAttribute(Keys.EMAIL_OPT_IN, emailOptIn ? 1 : 0);
+        tracker.logCustom(event);
     }
 
     @Override

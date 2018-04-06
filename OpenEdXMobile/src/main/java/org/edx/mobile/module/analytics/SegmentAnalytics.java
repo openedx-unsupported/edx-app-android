@@ -334,17 +334,13 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackDiscoverCoursesClicked() {
+    public void trackCoursesSearch(String searchQuery, boolean isLoggedIn, String versionName) {
         SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.DISCOVER_COURSES_CLICK);
-        trackSegmentEvent(Events.DISCOVER_COURSES, aEvent.properties);
-    }
-
-    @Override
-    public void trackExploreSubjectsClicked() {
-        SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.EXPLORE_SUBJECTS_CLICK);
-        trackSegmentEvent(Events.EXPLORE_SUBJECTS, aEvent.properties);
+        aEvent.properties.putValue(Keys.NAME, Values.DISCOVERY_COURSES_SEARCH);
+        aEvent.properties.putValue(Keys.LABEL, searchQuery);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        aEvent.data.putValue(Keys.ACTION, isLoggedIn ? Values.DISCOVERY_COURSES_SEARCH_TAB : Values.DISCOVERY_COURSES_SEARCH_LANDING);
+        trackSegmentEvent(Events.DISCOVERY_COURSES_SEARCH, aEvent.properties);
     }
 
     /**

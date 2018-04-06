@@ -21,7 +21,7 @@ public class DiscoveryLaunchPresenter extends ViewHoldingPresenter<DiscoveryLaun
     @Override
     public void attachView(@NonNull ViewInterface view) {
         super.attachView(view);
-        view.setEnabledButtons(enrollmentConfig.isCourseDiscoveryEnabled(), enrollmentConfig.isExploreSubjectsEnabled());
+        view.setEnabledButtons(enrollmentConfig.isCourseDiscoveryEnabled());
     }
 
     public void onResume() {
@@ -32,7 +32,7 @@ public class DiscoveryLaunchPresenter extends ViewHoldingPresenter<DiscoveryLaun
     }
 
     public interface ViewInterface {
-        void setEnabledButtons(boolean courseDiscoveryEnabled, boolean exploreSubjectsEnabled);
+        void setEnabledButtons(boolean courseDiscoveryEnabled);
 
         void navigateToMyCourses();
     }
