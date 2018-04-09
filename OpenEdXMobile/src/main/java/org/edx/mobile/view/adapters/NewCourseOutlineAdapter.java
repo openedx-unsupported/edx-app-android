@@ -386,7 +386,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             if (unit.getType() == BlockType.PROBLEM) {
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_list);
             } else {
-                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_file_o);
+                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_book);
             }
             checkAccessStatus(viewHolder, unit);
         }
