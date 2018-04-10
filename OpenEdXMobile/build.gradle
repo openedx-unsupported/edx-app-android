@@ -177,7 +177,7 @@ dependencies {
     }
 
     //Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true;
     }
 
