@@ -201,10 +201,10 @@ public class AnswersAnalytics implements Analytics {
         final ShareEvent event = new ShareEvent();
         AnswersEventUtil.setCustomProperties(event);
         event.putContentId(courseId);
-        event.putContentName(aboutUrl);
+        event.putContentName(Values.SOCIAL_COURSE_DETAIL_SHARED);
         event.putContentType(Values.SOCIAL_SHARING);
         event.putMethod(getShareTypeValue(method));
-        event.putCustomAttribute(Keys.NAME, Values.SOCIAL_COURSE_DETAIL_SHARED);
+        event.putCustomAttribute(Keys.URL, aboutUrl);
         tracker.logShare(event);
     }
 
