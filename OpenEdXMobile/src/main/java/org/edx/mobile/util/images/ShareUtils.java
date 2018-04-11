@@ -46,11 +46,12 @@ public enum ShareUtils {
                                            @NonNull final EnrolledCoursesResponse courseData,
                                            @NonNull final AnalyticsRegistry analyticsRegistry,
                                            @NonNull final IEdxEnvironment environment) {
+        final String COURSE_ABOUT_URL = courseData.getCourse().getCourse_about();
         final String shareTextWithPlatformName = ResourceUtil.getFormattedString(
                 activity.getResources(),
                 R.string.share_course_message,
                 "platform_name",
-                activity.getString(R.string.platform_name)).toString() + "\n" + courseData.getCourse().getCourse_about();
+                activity.getString(R.string.platform_name)).toString() + "\n" + COURSE_ABOUT_URL;
         ShareUtils.showShareMenu(
                 activity, ShareUtils.newShareIntent(shareTextWithPlatformName), anchor,
                 new ShareUtils.ShareMenuItemListener() {
@@ -62,7 +63,7 @@ public enum ShareUtils {
                         } else {
                             shareText = getSharingText(shareType);
                         }
-                        analyticsRegistry.courseDetailShared(courseData.getCourse().getId(), shareText, shareType);
+                        analyticsRegistry.courseDetailShared(courseData.getCourse().getId(), COURSE_ABOUT_URL, shareType);
                         final Intent intent = ShareUtils.newShareIntent(shareText);
                         intent.setComponent(componentName);
                         activity.startActivity(intent);
@@ -70,7 +71,7 @@ public enum ShareUtils {
 
                     @NonNull
                     private String getSharingText(@NonNull ShareUtils.ShareType shareType) {
-                        String courseUrl = courseData.getCourse().getCourse_about();
+                        String courseUrl = COURSE_ABOUT_URL;
                         if (!TextUtils.isEmpty(shareType.getUtmParamKey())) {
                             final String utmParams = courseData.getCourse().getCourseSharingUtmParams(shareType.getUtmParamKey());
                             if (!TextUtils.isEmpty(utmParams)) {
