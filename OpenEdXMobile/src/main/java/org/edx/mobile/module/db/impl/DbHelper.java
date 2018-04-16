@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.FileUtil;
@@ -45,6 +46,7 @@ class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.DURATION               + " LONG, "
                 + DbStructure.Column.FILEPATH               + " TEXT, "
                 + DbStructure.Column.URL                    + " TEXT, "
+                + DbStructure.Column.URL_HLS                + " TEXT, "
                 + DbStructure.Column.URL_HIGH_QUALITY       + " TEXT, "
                 + DbStructure.Column.URL_LOW_QUALITY        + " TEXT, "
                 + DbStructure.Column.URL_YOUTUBE            + " TEXT, "
@@ -97,6 +99,9 @@ class DbHelper extends SQLiteOpenHelper {
         String upgradeToV4 =
                 "ALTER TABLE " + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
                         + DbStructure.Column.VIDEO_FOR_WEB_ONLY + " BOOLEAN ";
+
+        String upgradeToV7 = "ALTER TABLE " + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
+                        + DbStructure.Column.URL_HLS + " TEXT ";
 
         if (oldVersion == 1) {
             // upgrade from 1 to 2
@@ -200,6 +205,16 @@ class DbHelper extends SQLiteOpenHelper {
                 db.endTransaction();
             }
         }
+
+        if (oldVersion < 7) {
+            // upgrade to version 7
+            db.execSQL(upgradeToV7);
+            // delete all old videos with ONLINE state to make sure that HLS video encoding is with them when they are saved again.
+            db.delete(DbStructure.Table.DOWNLOADS,
+                    DbStructure.Column.DOWNLOADED + "=?",
+                    new String[]{String.valueOf(DownloadEntry.DownloadedState.ONLINE.ordinal())});
+        }
+
     }
 
     /**

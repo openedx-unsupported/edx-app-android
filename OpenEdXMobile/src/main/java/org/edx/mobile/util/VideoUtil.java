@@ -65,7 +65,7 @@ public class VideoUtil {
      */
     @Nullable
     public static String getPreferredVideoUrlForDownloading(@NonNull VideoData video) {
-        final VideoInfo preferredVideoInfo = video.encodedVideos.getPreferredVideoInfo();
+        final VideoInfo preferredVideoInfo = video.encodedVideos.getPreferredVideoUrlForDownloading();
         if (preferredVideoInfo == null || video.onlyOnWeb) {
             return null;
         }
