@@ -22,7 +22,7 @@ subprojects {
         // get picked up. We only have one buildSrc plugin
         // so it doesn't really matter, but if we ever get more
         // we should figure this out
-        compile 'org.codehaus.groovy:groovy-all:2.4.7'
+        compile 'org.codehaus.groovy:groovy-all:2.4.12'
         compile gradleApi()
         compile 'org.yaml:snakeyaml:1.14'
     }
