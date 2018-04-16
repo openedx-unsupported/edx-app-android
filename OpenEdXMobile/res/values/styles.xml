@@ -148,6 +148,7 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@color/transparent_black_80</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="iconColor" />
     </style>
 
     <style name="video_player_play_pause_button">
@@ -193,6 +194,7 @@
         <item name="android:paddingRight">0dp</item>
         <item name="android:paddingEnd" tools:targetApi="17">0dp</item>
         <item name="android:max">100</item>
+        <item name="iconColor">@color/white</item>
     </style>
 
     <style name="video_player_bottom_control">
