@@ -197,6 +197,7 @@ dependencies {
     testImplementation ("org.mockito:mockito-core:1.10.19"){
         exclude group: 'org.hamcrest'
     }
+    testImplementation 'commons-lang:commons-lang:2.6'
     testImplementation "org.robolectric:robolectric:3.0"
     testImplementation "org.robolectric:shadows-support-v4:3.0"
     testImplementation "org.robolectric:shadows-multidex:3.0"
