@@ -74,6 +74,7 @@ public abstract class MainApplication extends MultiDexApplication {
      */
     private void init() {
         application = this;
+        RoboGuice.setUseAnnotationDatabases(false);
         injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
@@ -163,7 +164,7 @@ public abstract class MainApplication extends MultiDexApplication {
     }
 
     private void onAppUpdated(final long previousVersionCode, final long curVersionCode,
-                             final String previousVersionName, final String curVersionName) {
+                              final String previousVersionName, final String curVersionName) {
         // Try repair of download data on updating of app version
         injector.getInstance(IStorage.class).repairDownloadCompletionData();
         // Fire app updated event
