@@ -6,13 +6,17 @@ import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.LoginEvent;
 import com.crashlytics.android.answers.SearchEvent;
+import com.crashlytics.android.answers.ShareEvent;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
+
+import static org.edx.mobile.module.analytics.Analytics.Util.getShareTypeValue;
 
 /**
  * A concrete implementation of {@link Analytics} to report all the screens and events to Answers.
@@ -85,7 +89,14 @@ public class AnswersAnalytics implements Analytics {
 
     @Override
     public void trackUserLogin(String method) {
-
+        final LoginEvent event = new LoginEvent();
+        AnswersEventUtil.setCustomProperties(event);
+        if (method != null) {
+            event.putMethod(method);
+        }
+        event.putSuccess(true);
+        event.putCustomAttribute(Keys.NAME, Values.USERLOGIN);
+        tracker.logLogin(event);
     }
 
     @Override
@@ -187,7 +198,14 @@ public class AnswersAnalytics implements Analytics {
 
     @Override
     public void courseDetailShared(String courseId, String aboutUrl, ShareUtils.ShareType method) {
-
+        final ShareEvent event = new ShareEvent();
+        AnswersEventUtil.setCustomProperties(event);
+        event.putContentId(courseId);
+        event.putContentName(Values.SOCIAL_COURSE_DETAIL_SHARED);
+        event.putContentType(Values.SOCIAL_SHARING);
+        event.putMethod(getShareTypeValue(method));
+        event.putCustomAttribute(Keys.URL, aboutUrl);
+        tracker.logShare(event);
     }
 
     @Override
