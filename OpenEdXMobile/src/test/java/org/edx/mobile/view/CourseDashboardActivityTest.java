@@ -15,7 +15,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.junit.Test;
 import org.robolectric.Robolectric;
-import org.robolectric.util.ActivityController;
+import org.robolectric.android.controller.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -70,7 +70,7 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
                 data.getSerializable(Router.EXTRA_COURSE_DATA);
         ActivityController<? extends CourseDashboardActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(intent);
+                Robolectric.buildActivity(getActivityClass(), intent);
         CourseDashboardActivity activity = controller.get();
         controller.create(null).postCreate(null);
         Fragment fragment = activity.getSupportFragmentManager()

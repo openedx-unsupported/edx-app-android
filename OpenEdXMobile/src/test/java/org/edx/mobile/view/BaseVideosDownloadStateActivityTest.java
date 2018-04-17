@@ -38,8 +38,8 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
     @Test
     public void initializeOptionsMenuTest() {
         BaseVideosDownloadStateActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
+                Robolectric.buildActivity(getActivityClass(), getIntent())
+                        .setup().get();
         Menu menu = Shadows.shadowOf(activity).getOptionsMenu();
         assertNotNull(menu);
         // Can't see any method to confirm action layout source as well
@@ -57,15 +57,15 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
     @Test
     public void downloadProgressViewTest() {
         connectToNetwork();
-        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
-                .withIntent(getIntent()).setup().get())
+        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass(), getIntent())
+                .setup().get())
                 .getOptionsMenu()
                 .findItem(R.id.download_progress)
                 .isVisible());
 
         disconnectFromNetwork();
-        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
-                .withIntent(getIntent()).setup().get())
+        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass(), getIntent())
+                .setup().get())
                 .getOptionsMenu()
                 .findItem(R.id.download_progress)
                 .isVisible());
@@ -89,16 +89,16 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
         Long rowId = db.addVideoData(de, null);
         assertNotNull(rowId);
         assertThat(rowId).isGreaterThan(0);
-        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
-                .withIntent(getIntent()).setup().get())
+        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass(), getIntent())
+                .setup().get())
                 .getOptionsMenu()
                 .findItem(R.id.download_progress)
                 .isVisible());
 
         connectToNetwork();
         BaseVideosDownloadStateActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
+                Robolectric.buildActivity(getActivityClass(), getIntent())
+                        .setup().get();
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
         MenuItem downloadProgressMenuItem = shadowActivity
                 .getOptionsMenu()
