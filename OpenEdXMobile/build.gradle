@@ -198,7 +198,7 @@ dependencies {
         exclude group: 'org.hamcrest'
     }
     testImplementation 'commons-lang:commons-lang:2.6'
-    testImplementation "org.robolectric:robolectric:3.0"
+    testImplementation "org.robolectric:robolectric:3.8"
     testImplementation "org.robolectric:shadows-support-v4:3.0"
     testImplementation "org.robolectric:shadows-multidex:3.0"
     testImplementation 'org.assertj:assertj-core:2.5.0'
@@ -268,7 +268,7 @@ android {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.0
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 27
 
         versionCode getVersionCode()
         versionName getVersionName()
@@ -342,6 +342,7 @@ android {
                 includeCompileClasspath false
             }
         }
+        testOptions.unitTests.includeAndroidResources = true
     }
     sourceSets {
         main {
