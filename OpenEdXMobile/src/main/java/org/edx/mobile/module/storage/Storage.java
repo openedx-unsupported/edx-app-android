@@ -3,6 +3,7 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -14,6 +15,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -295,6 +297,29 @@ public class Storage implements IStorage {
                 callback.onFail(ex);
             }
         });
+    }
+
+    @Override
+    public void getDownloadProgressOfVideos(@NonNull List<CourseComponent> videoComponents,
+                                            final DataCallback<NativeDownloadModel> callback) {
+        final IDatabase db = DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE);
+        db.getVideosByVideoIds(videoComponents, DownloadEntry.DownloadedState.DOWNLOADING,
+                new DataCallback<List<VideoModel>>() {
+                    @Override
+                    public void onResult(List<VideoModel> result) {
+                        final long[] dmids = new long[result.size()];
+                        for (int i = 0; i < result.size(); i++) {
+                            dmids[i] = result.get(i).getDmId();
+                        }
+
+                        callback.onResult(dm.getProgressDetailsForDownloads(dmids));
+                    }
+
+                    @Override
+                    public void onFail(Exception ex) {
+                        callback.onFail(ex);
+                    }
+                });
     }
 
     @Override

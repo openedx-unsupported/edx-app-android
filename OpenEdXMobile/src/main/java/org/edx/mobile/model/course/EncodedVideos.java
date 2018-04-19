@@ -56,7 +56,7 @@ public class EncodedVideos implements Serializable {
     }
 
     @Nullable
-    public VideoInfo getPreferredVideoUrlForDownloading() {
+    public VideoInfo getPreferredVideoInfoForDownloading() {
         if (isPreferredVideoInfo(mobileLow)) {
             return mobileLow;
         }

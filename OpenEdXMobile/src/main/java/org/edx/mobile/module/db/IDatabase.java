@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
@@ -326,7 +327,7 @@ public interface IDatabase {
     List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
 
     /**
-     * If the courseId is provided returns the Videos within a course which are currently being
+     * If the courseId is provided, returns the Videos within a course which are currently being
      * downloaded. Otherwise, returns all the videos being downloaded irrespective of course
      * they belong to.
      *
@@ -390,6 +391,20 @@ public interface IDatabase {
      */
     List<VideoModel> getAllVideosByCourse(@NonNull String courseId,
                                           @Nullable DataCallback<List<VideoModel>> callback);
+
+    /**
+     * Returns the list of all videos from the database for the provided video components. If
+     * {@link DownloadedState downloaded state} is non-null the results are filtered accordingly, if
+     * its null the results are returned as is.
+     *
+     * @param videoComponents Video components.
+     * @param callback        Callback to use for delivering the result.
+     * @param downloadedState Video download state against which the result will be filtered..
+     * @return List of all videos from the database for the provided video components.
+     */
+    List<VideoModel> getVideosByVideoIds(@NonNull List<CourseComponent> videoComponents,
+                                         @Nullable DownloadedState downloadedState,
+                                         @Nullable DataCallback<List<VideoModel>> callback);
 
     /**
      * Removes all records of given username from the database.
