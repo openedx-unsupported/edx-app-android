@@ -373,6 +373,7 @@ public interface Analytics {
 
     interface Keys {
         String NAME = "name";
+        String USER_ID = "user_id";
         String OLD_TIME = "old_time";
         String NEW_TIME = "new_time";
         String SEEK_TYPE = "seek_type";
