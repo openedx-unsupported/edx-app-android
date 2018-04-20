@@ -605,7 +605,8 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         switch (state) {
             case DOWNLOADING:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_spinner);
-                row.bulkDownload.setIconAnimation(Animation.PULSE);
+                // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
+                row.bulkDownload.setIconAnimation(Animation.SPIN);
                 row.bulkDownload.setIconColorResource(R.color.edx_brand_primary_base);
                 break;
             case DOWNLOADED:

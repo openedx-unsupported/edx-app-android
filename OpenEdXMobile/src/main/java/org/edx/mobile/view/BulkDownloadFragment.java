@@ -243,7 +243,8 @@ public class BulkDownloadFragment extends BaseFragment {
         } else if (videosStatus.allVideosDownloading()) {
             initDownloadProgressView();
 
-            setViewState(FontAwesomeIcons.fa_spinner, Animation.PULSE, R.string.downloading_videos,
+            // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
+            setViewState(FontAwesomeIcons.fa_spinner, Animation.SPIN, R.string.downloading_videos,
                     binding.tvSubtitle.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
@@ -257,7 +258,8 @@ public class BulkDownloadFragment extends BaseFragment {
             ViewCompat.setImportantForAccessibility(binding.getRoot(), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
             setSwitchAccessibility(R.string.switch_on_all_downloading);
         } else if (switchState == SwitchState.IN_PROCESS) {
-            setViewState(FontAwesomeIcons.fa_spinner, Animation.PULSE, R.string.download_starting,
+            // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
+            setViewState(FontAwesomeIcons.fa_spinner, Animation.SPIN, R.string.download_starting,
                     binding.tvSubtitle.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
