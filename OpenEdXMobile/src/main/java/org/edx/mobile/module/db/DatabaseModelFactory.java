@@ -38,6 +38,7 @@ public class DatabaseModelFactory {
         de.username = c.getString(c.getColumnIndex(DbStructure.Column.USERNAME));
         de.title = c.getString(c.getColumnIndex(DbStructure.Column.TITLE));
         de.url = c.getString(c.getColumnIndex(DbStructure.Column.URL));
+        de.url_hls = c.getString(c.getColumnIndex(DbStructure.Column.URL_HLS));
         de.url_high_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_HIGH_QUALITY));
         de.url_low_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_LOW_QUALITY));
         de.url_youtube = c.getString(c.getColumnIndex(DbStructure.Column.URL_YOUTUBE));
@@ -102,6 +103,7 @@ public class DatabaseModelFactory {
         e.size = preferredVideoInfo.fileSize;
         e.title = block.getDisplayName();
         e.url = preferredVideoInfo.url;
+        e.url_hls = getVideoNetworkUrlOrNull(vrm.encodedVideos.hls);
         e.url_high_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileHigh);
         e.url_low_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileLow);
         e.url_youtube = getVideoNetworkUrlOrNull(vrm.encodedVideos.youtube);

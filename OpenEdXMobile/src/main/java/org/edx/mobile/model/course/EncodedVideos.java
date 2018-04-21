@@ -12,7 +12,13 @@ import org.edx.mobile.util.VideoUtil;
 
 import java.io.Serializable;
 
+import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
+
 public class EncodedVideos implements Serializable {
+
+    @SerializedName("hls")
+    public VideoInfo hls;
+
     @SerializedName("fallback")
     public VideoInfo fallback;
 
@@ -27,6 +33,9 @@ public class EncodedVideos implements Serializable {
 
     @Nullable
     public VideoInfo getPreferredVideoInfo() {
+        if (isPreferredVideoInfo(hls)) {
+            return hls;
+        }
         if (isPreferredVideoInfo(mobileLow)) {
             return mobileLow;
         }
@@ -42,6 +51,22 @@ public class EncodedVideos implements Serializable {
             if (isPreferredVideoInfo(fallback)) {
                 return fallback;
             }
+        }
+        return null;
+    }
+
+    @Nullable
+    public VideoInfo getPreferredVideoUrlForDownloading() {
+        if (isPreferredVideoInfo(mobileLow)) {
+            return mobileLow;
+        }
+        if (isPreferredVideoInfo(mobileHigh)) {
+            return mobileHigh;
+        }
+        if (!new Config(MainApplication.instance()).isUsingVideoPipeline() &&
+                isPreferredVideoInfo(fallback) &&
+                !VideoUtil.videoHasFormat(fallback.url, VIDEO_FORMAT_M3U8)) {
+            return fallback;
         }
         return null;
     }

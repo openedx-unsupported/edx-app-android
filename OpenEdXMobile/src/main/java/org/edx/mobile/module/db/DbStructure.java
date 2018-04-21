@@ -11,7 +11,8 @@ public final class DbStructure {
     // Updated to Version 4 to add flag to indicate that video is only available for web
     // Updated to Version 5 to create a new table to record learning history for assessment
     // Updated to Version 6 to swap every occurrence of username field to its SHA1 hash
-    public static final int VERSION = 6;
+    // Updated to Version 7 to add a new field for HLS url encodings
+    public static final int VERSION = 7;
 
     public static final class Table {
         public static final String DOWNLOADS = "downloads";
@@ -28,6 +29,7 @@ public final class DbStructure {
         public static final String WATCHED = "watched"; // watched, unwatched, partially watched
         public static final String DOWNLOADED = "downloaded"; // yes, no
         public static final String URL = "video_url";
+        public static final String URL_HLS = "video_url_hls";
         public static final String URL_LOW_QUALITY = "video_url_low_quality";
         public static final String URL_HIGH_QUALITY = "video_url_high_quality";
         public static final String URL_YOUTUBE = "video_url_youtube";

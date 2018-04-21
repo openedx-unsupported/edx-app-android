@@ -32,6 +32,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public DownloadedState downloaded = DownloadedState.ONLINE;
     public String videoId;
     public String url;
+    public String url_hls;
     public String url_high_quality;
     public String url_low_quality;
     public String url_youtube;
@@ -131,6 +132,11 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     @Override
     public String getVideoUrl() {
         return url;
+    }
+
+    @Override
+    public String getHLSVideoUrl() {
+        return url_hls;
     }
 
     @Override
@@ -235,8 +241,11 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         size = video.getSize();
         duration = video.getDuration();
     }
-    
-    public String getBestEncodingUrl(Context context){
+
+    public String getBestEncodingUrl(Context context) {
+        if (!TextUtils.isEmpty(url_hls)) {
+            return url_hls;
+        }
 
         PrefManager prefs = new PrefManager(context, PrefManager.Pref.WIFI);
         float kbs = prefs.getFloat(PrefManager.Key.SPEED_TEST_KBPS, 0.0f);
