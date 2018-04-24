@@ -401,6 +401,8 @@ public class BulkDownloadFragment extends BaseFragment {
     final Runnable DELETION_RUNNABLE = new Runnable() {
         @Override
         public void run() {
+            // Before starting deletion stop showing progress of downloads first
+            bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
             final int deleted = environment.getStorage().removeDownloads(removableVideos);
             isDeleteScheduled = false;
             logger.debug("TOTAL_VIDEOS: " + removableVideos.size() + " - DELETE_VIDEOS: " + deleted);
