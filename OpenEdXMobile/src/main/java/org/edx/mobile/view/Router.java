@@ -113,21 +113,13 @@ public class Router {
         return RegisterActivity.newIntent();
     }
 
-    public void showMyCourses(Activity sourceActivity) {
-        if (config.isTabsLayoutEnabled()) {
-            sourceActivity.startActivity(MainDashboardActivity.newIntent());
-        } else {
-            sourceActivity.startActivity(MyCoursesListActivity.newIntent());
-        }
+    public void showMainDashboard(Activity sourceActivity) {
+        sourceActivity.startActivity(MainDashboardActivity.newIntent());
     }
 
-    public void showCourseDashboardTabs(Activity activity, Config config, EnrolledCoursesResponse model,
+    public void showCourseDashboardTabs(Activity activity, EnrolledCoursesResponse model,
                                         boolean announcements) {
-        if (config.isTabsLayoutEnabled()) {
-            showCourseTabsDashboard(activity, model, announcements);
-        } else {
-            showCourseDashboard(activity, model, announcements);
-        }
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, announcements));
     }
 
     /**
@@ -151,19 +143,10 @@ public class Router {
         courseBundle.putBoolean(Router.EXTRA_ANNOUNCEMENTS, true);
         courseBundle.putString(Router.EXTRA_COURSE_ID, courseId);
         final Intent courseDetail = new Intent(context, CourseAnnouncementsActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
-        // TODO: It's not essential, but we may want additional activities on the back-stack (e.g. CourseDashboardActivity)
+        // TODO: It's not essential, but we may want additional activities on the back-stack
         TaskStackBuilder.create(context)
                 .addNextIntent(courseDetail)
                 .startActivities();
-    }
-
-    public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model) {
-        showCourseContainerOutline(activity, model, null);
-    }
-
-    public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model,
-                                           boolean isVideosMode) {
-        showCourseContainerOutline(activity, -1, model, null, null, isVideosMode);
     }
 
     public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model,
@@ -198,14 +181,7 @@ public class Router {
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        final Intent intent;
-        {
-            if (config.isTabsLayoutEnabled()) {
-                intent = new Intent(activity, NewCourseOutlineActivity.class);
-            } else {
-                intent = new Intent(activity, CourseOutlineActivity.class);
-            }
-        }
+        final Intent intent = new Intent(activity, CourseOutlineActivity.class);
         intent.putExtra(EXTRA_BUNDLE, courseBundle);
         intent.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
         intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
@@ -224,32 +200,6 @@ public class Router {
         courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         fragment.startActivityForResult(courseDetail, requestCode);
-    }
-
-    @Deprecated
-    public void showCourseDashboard(Activity activity, EnrolledCoursesResponse model,
-                                    boolean announcements) {
-        Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
-
-        Intent courseDashboard = new Intent(activity, CourseDashboardActivity.class);
-        courseDashboard.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDashboard.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDashboard);
-
-    }
-
-    public void showCourseTabsDashboard(Activity activity, EnrolledCoursesResponse model,
-                                    boolean announcements) {
-        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, announcements));
-    }
-
-    public void showCourseDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
-        Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionTopicsActivity.class);
-        showDiscussionsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
-        showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(showDiscussionsIntent);
     }
 
     public void showCourseDiscussionAddPost(@NonNull Activity activity, @Nullable DiscussionTopic discussionTopic, @NonNull EnrolledCoursesResponse courseData) {
@@ -358,11 +308,7 @@ public class Router {
     }
 
     public void showUserProfile(@NonNull Context context, @NonNull String username) {
-        context.startActivity(UserProfileActivity.newIntent(context, username, false));
-    }
-
-    public void showUserProfileWithNavigationDrawer(@NonNull Context context, @NonNull String username) {
-        context.startActivity(UserProfileActivity.newIntent(context, username, true));
+        context.startActivity(UserProfileActivity.newIntent(context, username));
     }
 
     public void showUserProfileEditor(@NonNull Context context, @NonNull String username) {
@@ -397,10 +343,6 @@ public class Router {
         //Add this flag as multiple activities need to be created
         findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(findCoursesIntent);
-    }
-
-    public void showCourseDatesActivity(@NonNull Activity activity, @NonNull EnrolledCoursesResponse model) {
-        activity.startActivity(CourseDatesActivity.newIntent(activity, model));
     }
 
     public void showWhatsNewActivity(@NonNull Activity activity) {

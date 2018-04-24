@@ -35,7 +35,6 @@ public class FormFieldActivity extends BaseSingleFragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        blockDrawerFromOpening();
         fireScreenEvent();
     }
 

@@ -139,20 +139,6 @@
         <item name="android:textColor">@color/edx_brand_gray_accent</item>
     </style>
 
-    <style name="drawer_option" parent="@style/regular_white_text">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/height_drawer_menu</item>
-        <item name="android:textColor">@color/drawer_option_text</item>
-        <item name="android:background">@drawable/selectable_box_overlay</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingBottom">@dimen/widget_margin</item>
-        <item name="android:paddingLeft">@dimen/edx_margin</item>
-        <item name="android:paddingRight">@dimen/edx_margin</item>
-        <item name="android:paddingTop">@dimen/widget_margin</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">@dimen/edx_small</item>
-    </style>
-
     <style name="account_option" parent="@style/regular_white_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_drawer_menu</item>

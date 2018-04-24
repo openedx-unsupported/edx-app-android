@@ -17,10 +17,7 @@
 
     <!-- Navigation Drawer -->
     <dimen name="height_drawer_menu">44dp</dimen>
-    <dimen name="drawer_profile_image_diameter">85dp</dimen>
     <dimen name="drawer_profile_image_border_width">1dp</dimen>
-    <dimen name="drawer_username_text">20sp</dimen>
-    <dimen name="drawer_email_text">13sp</dimen>
     <dimen name="drawer_app_version_text">12sp</dimen>
 
     <!-- Popup Spinner -->

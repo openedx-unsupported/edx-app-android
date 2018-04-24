@@ -30,13 +30,6 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (environment.getLoginPrefs().getUsername() != null) {
-            if (!environment.getConfig().isTabsLayoutEnabled()) {
-                addDrawer();
-            }
-        } else {
-            blockDrawerFromOpening();
-        }
 
         // Check for search query in extras
         String searchQueryExtra = null;
@@ -104,7 +97,6 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
                 if (!queryTextFocused) {
                     searchView.onActionViewCollapsed();
                 }
-                enableDrawerMenuButton(!queryTextFocused);
             }
         });
 
@@ -115,13 +107,6 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
         final String baseUrl = environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
         final String searchUrl = buildQuery(baseUrl, query, logger);
         loadUrl(searchUrl);
-    }
-
-    public void enableDrawerMenuButton(boolean showDrawer) {
-        if (mDrawerToggle == null) {
-            return;
-        }
-        mDrawerToggle.setDrawerIndicatorEnabled(showDrawer);
     }
 
     @Override

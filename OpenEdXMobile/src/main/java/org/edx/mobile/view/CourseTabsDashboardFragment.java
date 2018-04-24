@@ -33,15 +33,12 @@ import org.edx.mobile.view.custom.ProgressWheel;
 import java.util.ArrayList;
 import java.util.List;
 
-import roboguice.inject.InjectExtra;
-
 public class CourseTabsDashboardFragment extends TabsBaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
 
     @Nullable
     private FragmentDashboardErrorLayoutBinding errorLayoutBinding;
 
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
     @Inject
@@ -53,13 +50,18 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     private boolean wasDownloadItemVisibleBeforeStopping = false;
 
     @NonNull
-    public static CourseTabsDashboardFragment newInstance() {
-        return new CourseTabsDashboardFragment();
+    public static CourseTabsDashboardFragment newInstance(EnrolledCoursesResponse courseData) {
+        final CourseTabsDashboardFragment fragment = new CourseTabsDashboardFragment();
+        final Bundle bundle = new Bundle();
+        bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
         getActivity().setTitle(courseData.getCourse().getName());
         setHasOptionsMenu(courseData.getCourse().getCoursewareAccess().hasAccess());
         environment.getAnalyticsRegistry().trackScreenView(
@@ -173,9 +175,9 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     public List<FragmentItemModel> getFragmentItems() {
         ArrayList<FragmentItemModel> items = new ArrayList<>();
         // Add course outline tab
-        items.add(new FragmentItemModel(NewCourseOutlineFragment.class, courseData.getCourse().getName(),
+        items.add(new FragmentItemModel(CourseOutlineFragment.class, courseData.getCourse().getName(),
                 FontAwesomeIcons.fa_list_alt,
-                NewCourseOutlineFragment.makeArguments(courseData, null, null, false),
+                CourseOutlineFragment.makeArguments(courseData, null, null, false),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {
@@ -186,9 +188,9 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                 }));
         // Add videos tab
         if (environment.getConfig().isCourseVideosEnabled()) {
-            items.add(new FragmentItemModel(NewCourseOutlineFragment.class,
+            items.add(new FragmentItemModel(CourseOutlineFragment.class,
                     getResources().getString(R.string.videos_title), FontAwesomeIcons.fa_film
-                    , NewCourseOutlineFragment.makeArguments(courseData, null, null, true),
+                    , CourseOutlineFragment.makeArguments(courseData, null, null, true),
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {

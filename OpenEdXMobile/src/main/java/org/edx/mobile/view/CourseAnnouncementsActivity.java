@@ -48,7 +48,7 @@ public class CourseAnnouncementsActivity extends BaseSingleFragmentActivity {
             if (!handleFromNotification) {
                 //it is a good idea to go to the my course page. as loading of my courses
                 //take a while to load. that the only way to get anouncement link
-                environment.getRouter().showMyCourses(this);
+                environment.getRouter().showMainDashboard(this);
                 finish();
             }
         }

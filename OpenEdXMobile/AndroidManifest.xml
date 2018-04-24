@@ -79,12 +79,6 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.MyCoursesListActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name="org.edx.mobile.view.MainDashboardActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
@@ -96,19 +90,7 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseDashboardActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name="org.edx.mobile.view.CourseOutlineActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
-            android:name="org.edx.mobile.view.NewCourseOutlineActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
@@ -175,12 +157,6 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.NativeFindCoursesActivity"
-            android:label="@string/label_find_courses"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
             android:label="@string/label_discover"
             android:screenOrientation="portrait"
@@ -199,8 +175,8 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseDatesActivity"
-            android:label="@string/app_name"
+            android:name=".view.NativeFindCoursesActivity"
+            android:label="@string/label_find_courses"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 

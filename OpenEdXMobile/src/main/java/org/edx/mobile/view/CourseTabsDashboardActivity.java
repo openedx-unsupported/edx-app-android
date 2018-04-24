@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
@@ -24,16 +23,10 @@ public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        blockDrawerFromOpening();
-    }
-
-    @Override
     public Fragment getFirstFragment() {
-        return CourseTabsDashboardFragment.newInstance();
+        return CourseTabsDashboardFragment.newInstance(
+                (EnrolledCoursesResponse) getIntent().getExtras().getSerializable(EXTRA_COURSE_DATA));
     }
-
 
     @Override
     public Object getRefreshEvent() {

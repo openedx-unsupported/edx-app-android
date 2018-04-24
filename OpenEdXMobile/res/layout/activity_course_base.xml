@@ -1,11 +1,15 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fitsSystemWindows="true"
-    android:splitMotionEvents="false">
+    android:fitsSystemWindows="true">
+    <!--
+    As part of LEARNER-4143 we removed DrawerLayout from the whole app but we've kept it here cuz
+    CourseUnitActivityTest class's test don't pass if make CoordinatorLayout the root of this layout
+    and have the `fitsSystemWindows` attribute in it (which is necessary to have).
+    TODO: Convert this whole layout into a fragment's layout as part of LEARNER-5278.
+    -->
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
@@ -37,64 +41,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/last_accessed_bar"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/last_accessed_bar_height"
-                        android:background="@color/edx_brand_primary_back"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginLeft="@dimen/last_accessed_bar_left_margin"
-                            android:layout_marginStart="@dimen/last_accessed_bar_left_margin"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            tools:targetApi="17">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    style="@style/bold_edx_brand_primary_base_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/last_accessed"
-                                    android:textSize="@dimen/last_accessed_header_text_size"
-                                    tools:targetApi="17" />
-
-                                <TextView
-                                    android:id="@+id/last_accessed_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:ellipsize="end"
-                                    android:maxLines="1"
-                                    android:textSize="@dimen/last_accessed_unit_text_size"
-                                    tools:targetApi="17"
-                                    tools:text="Course Name" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/last_accessed_button"
-                                style="@style/bold_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="@dimen/last_accessed_button_padding"
-                                android:text="@string/view_button_text"
-                                android:textColor="@color/edx_brand_primary_base"
-                                android:textSize="@dimen/last_accessed_button_text_size" />
-
-                        </LinearLayout>
-
-                        <View style="@style/blue_separator" />
-                    </LinearLayout>
 
                     <RelativeLayout
                         android:id="@+id/fragment_container"
@@ -169,7 +115,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-
                 </LinearLayout>
 
                 <TextView
@@ -184,7 +129,4 @@
             </FrameLayout>
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
-
-    <include layout="@layout/navigation_drawer_container" />
-
 </android.support.v4.widget.DrawerLayout>

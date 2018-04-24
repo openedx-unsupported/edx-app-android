@@ -2,11 +2,9 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -40,9 +38,6 @@ import roboguice.inject.InjectView;
 @ContentView(R.layout.activity_course_base)
 public abstract  class CourseBaseActivity  extends BaseFragmentActivity
         implements TaskProcessCallback, RefreshListener{
-
-    @InjectView(R.id.last_accessed_bar)
-    View lastAccessBar;
 
     @InjectView(R.id.loading_indicator)
     ProgressBar progressWheel;
@@ -83,8 +78,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
                 bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         }
         restore(bundle);
-
-        blockDrawerFromOpening();
     }
 
     @Override
@@ -176,37 +169,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
     private void hideLoadingProgress(){
         if(progressWheel!=null){
             progressWheel.setVisibility(View.GONE);
-        }
-    }
-
-    protected void hideLastAccessedView(View v) {
-        try{
-            lastAccessBar.setVisibility(View.GONE);
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
-        lastAccessBar.setVisibility(View.VISIBLE);
-        View lastAccessTextView = v == null ? findViewById(R.id.last_accessed_text) :
-            v.findViewById(R.id.last_accessed_text);
-        ((TextView)lastAccessTextView).setText(title);
-        View detailButton = v == null ? findViewById(R.id.last_accessed_button) :
-            v.findViewById(R.id.last_accessed_button);
-        detailButton.setOnClickListener(listener);
-    }
-
-
-    /**
-     * Call this function if you do not want to allow
-     * opening/showing the drawer(Navigation Fragment) on swiping left to right
-     */
-    protected void blockDrawerFromOpening(){
-        DrawerLayout drawerLayout = (DrawerLayout)
-            findViewById(R.id.drawer_layout);
-        if (drawerLayout != null) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 

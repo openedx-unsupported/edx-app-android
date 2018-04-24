@@ -39,7 +39,7 @@ import org.edx.mobile.util.DownloadUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.adapters.NewCourseOutlineAdapter;
+import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +76,7 @@ public class BulkDownloadFragment extends BaseFragment {
     private static final int DOWNLOAD_PROGRESS_DELAY_MS = 2000;
 
     private RowBulkDownloadBinding binding;
-    private NewCourseOutlineAdapter.DownloadListener downloadListener;
+    private CourseOutlineAdapter.DownloadListener downloadListener;
     private IEdxEnvironment environment;
     private VideoPrefs prefManager;
     private SwitchState switchState = SwitchState.DEFAULT;
@@ -104,7 +104,7 @@ public class BulkDownloadFragment extends BaseFragment {
     }
 
     @SuppressLint("ValidFragment")
-    public BulkDownloadFragment(@NonNull NewCourseOutlineAdapter.DownloadListener downloadListener,
+    public BulkDownloadFragment(@NonNull CourseOutlineAdapter.DownloadListener downloadListener,
                                 @NonNull IEdxEnvironment environment) {
         this.downloadListener = downloadListener;
         this.environment = environment;

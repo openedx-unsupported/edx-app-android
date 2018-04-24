@@ -23,7 +23,6 @@ public class CourseDiscussionTopicsActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        blockDrawerFromOpening();
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPICS,
                 courseData.getCourse().getId(), null, null);
     }
