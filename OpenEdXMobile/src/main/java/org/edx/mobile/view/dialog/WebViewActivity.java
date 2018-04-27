@@ -2,6 +2,7 @@ package org.edx.mobile.view.dialog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,12 +15,15 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 public class WebViewActivity extends BaseFragmentActivity {
 
     private static final String ARG_URL = "url";
     private static final String ARG_TITLE = "title";
+
+    public static final String PARAM_INTENT_FILE_LINK = "fileLink";
 
     WebView webView;
 
@@ -34,6 +38,16 @@ public class WebViewActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         super.setToolbarAsActionBar();
+
+        // Check if the activity was opened due to a broadcast for which we have an IntentFilter
+        // for this activity in AndroidManifest.xml
+        final Uri intentData = getIntent().getData();
+        if (intentData != null && AppConstants.APP_URI_SCHEME.startsWith(intentData.getScheme())) {
+            final String title = intentData.getHost();
+            final String url = intentData.getQueryParameter(PARAM_INTENT_FILE_LINK);
+
+            getIntent().putExtra(ARG_URL, url).putExtra(ARG_TITLE, title);
+        }
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.loading_indicator);
         progress.setVisibility(View.GONE);

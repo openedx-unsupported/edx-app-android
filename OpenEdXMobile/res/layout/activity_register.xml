@@ -108,21 +108,10 @@
 
                 <TextView
                     android:id="@+id/by_creating_account_tv"
-                    style="@style/regular_text"
+                    style="@style/agreement_text_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/widget_margin"
-                    android:gravity="center"
-                    android:textColor="@color/grey_redirected_txt"
-                    android:textSize="@dimen/edx_xx_small"
                     tools:text="@string/by_creating_account" />
-
-                <LinearLayout
-                    android:id="@+id/layout_agreement"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-
             </LinearLayout>
         </ScrollView>
 
