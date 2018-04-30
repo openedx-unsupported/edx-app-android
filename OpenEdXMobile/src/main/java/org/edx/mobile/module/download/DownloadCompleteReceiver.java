@@ -52,7 +52,14 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
 
                         if (nm == null || nm.status != DownloadManager.STATUS_SUCCESSFUL) {
                             logger.debug("Download seems failed or cancelled for id : " + id);
-                            environment.getDownloadManager().removeDownloads(id);
+                            final VideoModel downloadEntry = environment.getDatabase().getDownloadEntryByDmId(id, null);
+                            if (downloadEntry != null) {
+                                // This means that the download was either cancelled from the native
+                                // download manager app or the cancel button on download notification
+                                environment.getStorage().removeDownload(downloadEntry);
+                            } else {
+                                environment.getDownloadManager().removeDownloads(id);
+                            }
                             return;
                         } else {
                             logger.debug("Download successful for id : " + id);

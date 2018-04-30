@@ -463,6 +463,9 @@ public class NewCourseOutlineFragment extends OfflineSupportBaseFragment
     public void onRevisit() {
         super.onRevisit();
         fetchLastAccessed();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void fetchLastAccessed() {

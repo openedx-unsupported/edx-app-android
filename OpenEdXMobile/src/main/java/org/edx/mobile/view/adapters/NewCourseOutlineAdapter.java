@@ -83,6 +83,7 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     private EnrolledCoursesResponse courseData;
     private DownloadListener downloadListener;
     private boolean isVideoMode;
+    private boolean isOnCourseOutline;
 
     public NewCourseOutlineAdapter(final Context context, Fragment fragment, final EnrolledCoursesResponse courseData,
                                    final IEdxEnvironment environment, DownloadListener listener,
@@ -96,26 +97,26 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         this.courseData = courseData;
         this.downloadListener = listener;
         this.isVideoMode = isVideoMode;
+        this.isOnCourseOutline = isOnCourseOutline;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
-        if (isOnCourseOutline) {
-            if (isVideoMode) {
-                // Add bulk video download item
-                adapterData.add(new SectionRow(SectionRow.BULK_DOWNLOAD, null));
-            } else {
-                // Add course card item
-                adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
-                // Add certificate item
-                if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
-                    adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    environment.getRouter().showCertificate(context, courseData);
-                                }
-                            }));
-                }
+        if (isOnCourseOutline && !isVideoMode) {
+            // Add course card item
+            adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
+            // Add certificate item
+            if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
+                adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                environment.getRouter().showCertificate(context, courseData);
+                            }
+                        }));
             }
+        }
+        if (isVideoMode) {
+            // Add bulk video download item
+            adapterData.add(new SectionRow(SectionRow.BULK_DOWNLOAD, null));
         }
     }
 
@@ -223,7 +224,9 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
             case SectionRow.BULK_DOWNLOAD: {
                 if (rootComponent != null) {
                     final BulkDownloadFragment fragment = (BulkDownloadFragment) convertView.getTag();
-                    fragment.populateViewHolder(rootComponent);
+                    fragment.populateViewHolder(
+                            isOnCourseOutline ? rootComponent.getCourseId() : rootComponent.getId(),
+                            rootComponent.getVideos(true));
                 }
                 return convertView;
             }
@@ -602,7 +605,8 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
         switch (state) {
             case DOWNLOADING:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_spinner);
-                row.bulkDownload.setIconAnimation(Animation.PULSE);
+                // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
+                row.bulkDownload.setIconAnimation(Animation.SPIN);
                 row.bulkDownload.setIconColorResource(R.color.edx_brand_primary_base);
                 break;
             case DOWNLOADED:
@@ -823,6 +827,8 @@ public class NewCourseOutlineAdapter extends BaseAdapter {
     public int getPositionByItemId(String itemId) {
         int size = getCount();
         for (int i = 0; i < size; i++) {
+            // Some items might not have a component assigned to them e.g. Bulk Download item
+            if (getItem(i).component == null) continue;
             if (getItem(i).component.getId().equals(itemId))
                 return i;
         }

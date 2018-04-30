@@ -1,9 +1,11 @@
 package org.edx.mobile.module.storage;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -65,11 +67,21 @@ public interface IStorage {
      * within a course which are currently being downloaded. Otherwise, returns the download
      * progress of the all the videos being downloaded irrespective of course they belong to.
      *
-     * @param callback Callback to get status of videos download.
      * @param courseId Course's ID.
+     * @param callback Callback to get status of videos download.
      */
     void getDownloadProgressOfCourseVideos(@Nullable String courseId,
                                            DataCallback<NativeDownloadModel> callback);
+
+    /**
+     * Returns the download progress percent of the provided Videos which are currently being
+     * downloaded.
+     *
+     * @param videoComponents List of video components.
+     * @param callback        Callback to get status of videos download.
+     */
+    void getDownloadProgressOfVideos(@NonNull List<CourseComponent> videoComponents,
+                                     DataCallback<NativeDownloadModel> callback);
 
     /**
      * Returns Download Progress percent of all Videos which are currently
