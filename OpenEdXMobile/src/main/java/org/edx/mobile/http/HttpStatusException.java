@@ -17,6 +17,8 @@ public class HttpStatusException extends Exception {
      * @param response The error response.
      */
     public HttpStatusException(@NonNull final Response response) {
+        // Populate the message argument of the parent exception with all the response data we have
+        super(response.toString());
         this.response = response;
     }
 
