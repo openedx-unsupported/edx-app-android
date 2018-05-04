@@ -79,8 +79,19 @@
     <string name="error_heading">The following error occurred while logging you in</string>
     <!-- Error during log in. -->
     <string name="login_failed">Please make sure that your user name or e-mail address and password are correct and try again.</string>
-    <string name="by_signing_up">By signing in to this app, you agree to the </string>
-    <string name="licensing_agreement">{platform_name} Terms of Service and Honor Code</string>
+
+    <!-- License Agreement related string on Login and Regiser screens -->
+    <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
+    <string name="by_creating_account" tools:ignore="MissingTranslation">By creating an account, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
+    <!-- Sign In agreement. Followed by list of agreement names like "End User License Agreement" -->
+    <string name="by_signing_in" tools:ignore="MissingTranslation">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
+    <!-- Label for End User License Agreement -->
+    <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} End User License Agreement</string>
+    <!-- Label for Terms of Service and Honor Code -->
+    <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name} Terms of Service and Honor Code</string>
+    <!-- Label for Privacy Policy -->
+    <string name="privacy_policy" tools:ignore="MissingTranslation">Privacy Policy</string>
+
     <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
     <string name="close">Close</string>
@@ -154,6 +165,10 @@
     <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
     <!-- Title of agreement users must accept to use the app -->
     <string name="end_user_title">End User License Agreement</string>
+    <!-- Title of privacy policy users must accept to use the app -->
+    <string name="privacy_policy_title" translatable="false">@string/privacy_policy</string>
+    <!-- Title of terms of service & honor code users must accept to use the app -->
+    <string name="terms_of_service_title" tools:ignore="MissingTranslation">Terms of Service</string>
 
     <!-- My Courses -->
     <!-- Row of course on dashboard screen -->
@@ -504,8 +519,6 @@
     <string name="launch_search_courses" tools:ignore="MissingTranslation">Search Courses</string>
 
     <!-- Registration Screen -->
-    <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_creating_account">By creating an account, you agree to the </string>
     <!-- Button text allowing user to show hidden optional registration fields -->
     <string name="show_optional_text">Show optional fields</string>
     <!-- Button text allowing user to hide visible optional registration fields -->

@@ -325,6 +325,13 @@
         <item name="android:background">@drawable/white_circle</item>
     </style>
 
+    <style name="agreement_text_style">
+        <item name="android:color">@color/edx_brand_gray_base</item>
+        <item name="android:layout_marginTop">@dimen/widget_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/edx_xx_small</item>
+    </style>
+
     <!-- Styles from the edX style guide will be nested under "edX" -->
     <style name="edX" />
 

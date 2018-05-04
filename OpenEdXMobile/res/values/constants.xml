@@ -1,5 +1,7 @@
-<resources>
-    <string name="eula_file_link" translatable="false">file:///android_asset/EULA.htm</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="eula_file_link" tools:ignore="MissingTranslation">file:///android_asset/eula_en.html</string>
+    <string name="privacy_file_link">file:///android_asset/privacy_policy_en.html</string>
+    <string name="terms_file_link">file:///android_asset/terms_of_services_en.html</string>
 
     <!-- Speed Test.
     Once this feature is ready, migrate this to the YAML config -->

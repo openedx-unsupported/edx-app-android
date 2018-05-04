@@ -20,6 +20,7 @@ public enum AppConstants {
 
     public static final String VIDEO_FORMAT_M3U8 = ".m3u8";
     public static final String VIDEO_FORMAT_MP4 = ".mp4";
+    public static final String APP_URI_SCHEME = "org.edx.mobile.innerlinks://";
 
     /**
      * This class defines the names of various directories which are used for

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -32,7 +33,7 @@ import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.TextUtils;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.dialog.ResetPasswordDialogFragment;
 import org.edx.mobile.view.login.LoginPresenter;
@@ -94,15 +95,8 @@ public class LoginActivity
             }
         });
 
-        String platformName = environment.getConfig().getPlatformName();
-        CharSequence licenseText = ResourceUtil.getFormattedString(getResources(), R.string.licensing_agreement, "platform_name", platformName);
-        activityLoginBinding.endUserAgreementTv.setText(licenseText);
-        activityLoginBinding.endUserAgreementTv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEulaDialog();
-            }
-        });
+        activityLoginBinding.endUserAgreementTv.setMovementMethod(LinkMovementMethod.getInstance());
+        activityLoginBinding.endUserAgreementTv.setText(TextUtils.generateLicenseText(getResources(), R.string.by_signing_in));
 
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LOGIN);
 
@@ -261,11 +255,6 @@ public class LoginActivity
 
     private void showResetPasswordDialog() {
         ResetPasswordDialogFragment.newInstance(getEmail()).show(getSupportFragmentManager(), null);
-    }
-
-    public void showEulaDialog() {
-        environment.getRouter().showWebViewActivity(this, getString(R.string.eula_file_link),
-                getString(R.string.end_user_title));
     }
 
     // make sure that on the login activity, all errors show up as a dialog as opposed to a flying snackbar

@@ -66,8 +66,6 @@
   <string name="error_heading">Se ha producido el siguiente error al iniciar sesión</string>
   <!--Error during log in.-->
   <string name="login_failed">Por favor, asegúrese de que su nombre de usuario o dirección de correo electrónico y la contraseña son correctos e inténtelo de nuevo.</string>
-  <string name="by_signing_up">Al iniciar sesión en esta app, está aceptando los </string>
-  <string name="licensing_agreement">Términos del servicio y Código de honor de {platform_name}</string>
   <string name="login_title">iniciar sesión</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Cerrar</string>
@@ -436,8 +434,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="register_with">Registrarse con</string>
   <string name="or_register_with_email">o registrarse con el correo electrónico</string>
   <!--Registration Screen-->
-  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">Al crear una cuenta, usted acepta los </string>
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Mostrar campos opcionales</string>
   <!--Button text allowing user to hide visible optional registration fields-->

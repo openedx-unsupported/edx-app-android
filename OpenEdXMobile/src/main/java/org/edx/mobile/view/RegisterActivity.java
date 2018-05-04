@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,6 @@ public class RegisterActivity extends BaseFragmentActivity
     private ViewGroup createAccountBtn;
     private LinearLayout requiredFieldsLayout;
     private LinearLayout optionalFieldsLayout;
-    private LinearLayout agreementLayout;
     private TextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
@@ -139,7 +139,8 @@ public class RegisterActivity extends BaseFragmentActivity
         }
 
         TextView agreementMessageView = (TextView) findViewById(R.id.by_creating_account_tv);
-        agreementMessageView.setText(R.string.by_creating_account);
+        agreementMessageView.setMovementMethod(LinkMovementMethod.getInstance());
+        agreementMessageView.setText(org.edx.mobile.util.TextUtils.generateLicenseText(getResources(), R.string.by_creating_account));
 
         createAccountBtn = (ViewGroup) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +154,6 @@ public class RegisterActivity extends BaseFragmentActivity
         createAccountTv = (TextView) findViewById(R.id.create_account_tv);
         requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
         optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
-        agreementLayout = (LinearLayout) findViewById(R.id.layout_agreement);
         final TextView optional_text = (TextView) findViewById(R.id.optional_field_tv);
         optional_text.setTextColor(optional_text.getLinkTextColors().getDefaultColor());
         optional_text.setOnClickListener(new View.OnClickListener() {
@@ -252,20 +252,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 } else {
                     optionalFieldsLayout.addView(v.getView());
                 }
-            }
-
-            // add agreement fields to the window if available
-            for (RegistrationFormField agreement : agreements) {
-                IRegistrationFieldView agreementView = IRegistrationFieldView.Factory.getInstance(inflater, agreement);
-                agreementView.setActionListener(new IRegistrationFieldView.IActionListener() {
-                    @Override
-                    public void onClickAgreement() {
-                        // show EULA license that is shipped with app
-                        environment.getRouter().showWebViewActivity(RegisterActivity.this,
-                                getString(R.string.eula_file_link), getString(R.string.end_user_title));
-                    }
-                });
-                agreementLayout.addView(agreementView.getView());
             }
 
             // enable all the views

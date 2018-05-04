@@ -260,7 +260,13 @@
         <activity
             android:name=".view.dialog.WebViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="org.edx.mobile.innerlinks" />
+            </intent-filter>
+        </activity>
 
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
