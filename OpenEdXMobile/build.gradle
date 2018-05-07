@@ -4,8 +4,7 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-
+        google()
     }
 
     dependencies {
@@ -33,7 +32,7 @@ apply from: 'jacoco.gradle'
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    google()
 }
 
 
@@ -119,117 +118,120 @@ task(version) << {
 
 
 dependencies {
-    compile project (':android-iconify')
+    implementation 'com.github.mgambati.android-iconify:android-iconify:3.0.0'
+    implementation 'com.github.mgambati.android-iconify:android-iconify-fontawesome:3.0.0'
     // Note that we have the Font Awesome TTF file
     // in the local assets as well, to enable the
     // graphical layout editor to render it. Since
     // that is what will be compiled in the APK now,
     // we need to ensure that it's updated along
     // with module updates.
-    compile project (':android-iconify-fontawesome')
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.facebook.android:facebook-android-sdk:3.23.1'
-    compile 'com.google.android.gms:play-services-plus:10.0.1'
-    compile 'com.google.android.gms:play-services-analytics:10.0.1'
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
-    compile 'com.google.android.gms:play-services-ads:10.0.1'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'de.greenrobot:eventbus:2.4.1'
-    compile 'com.squareup.phrase:phrase:1.1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.0.1'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+
+    // compile "com.github.mgambati.android-iconify:android-iconify-fontawesome:3eeed6cfd1"
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
+    implementation 'com.google.android.gms:play-services-plus:12.0.1'
+    implementation 'com.google.android.gms:play-services-analytics:12.0.1'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
+    implementation 'com.google.android.gms:play-services-ads:12.0.1'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'de.greenrobot:eventbus:2.4.1'
+    implementation 'com.squareup.phrase:phrase:1.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.0.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     /* Exclude dependencies defined statically at the top-
      * level, to prevent them from being resolved to the
      * latest version as a result of dynamic version
      * definitions in the transitive dependencies.
      */
-    compile ('com.squareup.retrofit2:retrofit:2.1.0') {
+    implementation ('com.squareup.retrofit2:retrofit:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    compile ('com.squareup.retrofit2:converter-gson:2.1.0') {
+    implementation ('com.squareup.retrofit2:converter-gson:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'de.hdodenhof:circleimageview:2.0.0'
+    implementation 'uk.co.chrisjenx:calligraphy:2.1.0'
     // Branch SDK
     /* To support versions prior to API level 15 we have to use v1.14.5 of Branch SDK
      * https://dev.branch.io/getting-started/sdk-integration-guide/advanced/android/#supporting-pre-15-android
      */
-    compile 'io.branch.sdk.android:library:1.14.5'
+    implementation 'io.branch.sdk.android:library:1.14.5'
 
     // Google Firebase
-    compile 'com.google.firebase:firebase-core:10.0.1'
+    implementation 'com.google.firebase:firebase-core:12.0.1'
 
     // Segment Library
-    compile 'com.segment.analytics.android:analytics:4.2.6'
+    implementation 'com.segment.analytics.android:analytics:4.2.6'
 
-    compile('com.segment.analytics.android.integrations:google-analytics:1.0.0') {
+    implementation('com.segment.analytics.android.integrations:google-analytics:1.0.0') {
         exclude module: 'play-services-analytics'
         transitive = true
     }
 
     //Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
 
     //New Relic Integration
-    compile 'com.newrelic.agent.android:android-agent:5.4.1'
+    implementation 'com.newrelic.agent.android:android-agent:5.4.1'
 
     //Include DI framework
-    compile 'org.roboguice:roboguice:3.0.1'
-    provided 'org.roboguice:roboblender:3.0.1'
+    implementation 'org.roboguice:roboguice:3.0.1'
+    compileOnly 'org.roboguice:roboblender:3.0.1'
 
     // For the optional Nullable annotation
-    compile 'com.android.support:support-annotations:25.3.1'
+    implementation 'com.android.support:support-annotations:27.1.1'
 
     // test project configuration
-    testCompile 'junit:junit:4.12'
-    testCompile ("org.mockito:mockito-core:1.10.19"){
+    testImplementation 'junit:junit:4.12'
+    testImplementation ("org.mockito:mockito-core:1.10.19"){
         exclude group: 'org.hamcrest'
     }
-    testCompile "org.robolectric:robolectric:3.0"
-    testCompile "org.robolectric:shadows-support-v4:3.0"
-    testCompile "org.robolectric:shadows-multidex:3.0"
-    testCompile 'org.assertj:assertj-core:2.5.0'
-    testCompile ('com.squareup.assertj:assertj-android:1.1.1') {
+    testImplementation 'commons-lang:commons-lang:2.6'
+    testImplementation "org.robolectric:robolectric:3.8"
+    testImplementation "org.robolectric:shadows-support-v4:3.0"
+    testImplementation "org.robolectric:shadows-multidex:3.0"
+    testImplementation 'org.assertj:assertj-core:2.5.0'
+    testImplementation ('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
+    testImplementation ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
+    testImplementation ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
-    testCompile ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.0.1'
+    testImplementation ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
-    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile "com.crittercism.dexmaker:dexmaker:1.4"
-    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:1.4"
-    androidTestCompile ("org.mockito:mockito-core:1.10.19"){
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation "com.crittercism.dexmaker:dexmaker:1.4"
+    androidTestImplementation "com.crittercism.dexmaker:dexmaker-mockito:1.4"
+    androidTestImplementation ("org.mockito:mockito-core:1.10.19"){
         exclude group: 'org.hamcrest'
     }
 }
 
 configurations {
-    androidTestCompile.exclude group: 'com.android.support', module: 'support-annotations'
-    androidTestCompile.exclude group: 'com.android.support', module: 'multidex'
-    androidTestCompile.exclude group: 'javax.inject'
-    androidTestCompile.exclude group: 'javax.annotation'
+    androidTestImplementation.exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestImplementation.exclude group: 'com.android.support', module: 'multidex'
+    androidTestImplementation.exclude group: 'javax.inject'
+    androidTestImplementation.exclude group: 'javax.annotation'
 }
 
 def config = new TaskHelper().loadConfig(project)
@@ -260,11 +262,13 @@ android {
         javaMaxHeapSize "2g"
     }
 
+    flavorDimensions "tier"
+
     defaultConfig {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.0
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 27
 
         versionCode getVersionCode()
         versionName getVersionName()
@@ -332,6 +336,13 @@ android {
         manifestPlaceholders = [supportsRtl:"false",
                                 firebaseEnabled: config.get('FIREBASE_ENABLED')?: false,
                                 branchKey: branchKey]
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+        testOptions.unitTests.includeAndroidResources = true
     }
     sourceSets {
         main {
@@ -386,12 +397,10 @@ android {
 
     productFlavors {
         prod {
-            if (project.hasProperty('APPLICATION_ID')) {
-                applicationId APPLICATION_ID
-            }
+            dimension "tier"
         }
         dev {
-            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+            dimension "tier"
         }
     }
 
@@ -409,12 +418,9 @@ android {
         release {
             signingConfig signingConfigs.releasekey
             applicationVariants.all { variant ->
-                variant.outputs.each { output ->
+                variant.outputs.all { output ->
                     project.ext { appName = 'edx' }
-                    def newName = output.outputFile.name
-                    newName = newName.replace("OpenEdXMobile-", "$project.ext.appName-")
-                    newName = newName.replace(("-" + variant.buildType.name), ("-" + variant.buildType.name + "-" + versionName))
-                    output.outputFile = new File(output.outputFile.parent, newName)
+                    outputFileName  = "${project.ext.appName}-${variant.buildType.name}-${versionName}.apk"
                 }
             }
         }
@@ -430,9 +436,9 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
     testOptions {
-         unitTests.all {
-             maxHeapSize '1g'
-         }
+        unitTests.all {
+            maxHeapSize '1g'
+        }
     }
 }
 
@@ -457,4 +463,11 @@ android.applicationVariants.all { variant ->
 screenshots {
     testApkTarget = 'packageProdDebuggableAndroidTest'
     connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+
+    }
 }

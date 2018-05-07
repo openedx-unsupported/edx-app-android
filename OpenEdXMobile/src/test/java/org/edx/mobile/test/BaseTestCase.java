@@ -51,6 +51,7 @@ public abstract class BaseTestCase extends BaseTest {
     private void glueInjections() throws Exception {
         addBindings();
         if ( !module.isEmpty()  ) {
+            RoboGuice.setUseAnnotationDatabases(false);
             Injector injector = RoboGuice.getOrCreateBaseApplicationInjector(RuntimeEnvironment.application, RoboGuice.DEFAULT_STAGE,
                 (Module) RoboGuice.newDefaultRoboModule(RuntimeEnvironment.application), Modules.override(new EdxDefaultModule(context)).with(module));
             inject(injector);

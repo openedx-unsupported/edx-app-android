@@ -1,1 +1,1 @@
-include ':OpenEdXMobile', ':android-iconify', ':android-iconify-fontawesome', ':buildSrc'
+include ':OpenEdXMobile', ':buildSrc'

@@ -3,16 +3,17 @@ buildscript {
     repositories {
         jcenter()       // This is the default repo
         mavenCentral()  //  This is the Maven Central repo
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
 project.ext {
-    BUILD_TOOLS_VERSION = "25.0.3"
-    COMPILE_SDK_VERSION = 25
+    BUILD_TOOLS_VERSION = "27.0.3"
+    COMPILE_SDK_VERSION = 27
 
     // dummy keystore configuration if not already defined
     if ( !project.properties.containsKey("RELEASE_STORE_FILE")) {
@@ -84,3 +85,9 @@ subprojects {
 // Increases adb timeout for installing an apk. This tweak is need for slow adb installs on an
 // emulator for CI.
 com.android.ddmlib.DdmPreferences.setTimeOut(600000)
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}

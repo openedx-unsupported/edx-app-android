@@ -36,7 +36,7 @@ import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.ActivityController;
+import org.robolectric.android.controller.ActivityController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
 
         Intent intent = getIntent();
         ActivityController<? extends CourseUnitNavigationActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(intent);
+                Robolectric.buildActivity(getActivityClass(), intent);
         CourseUnitNavigationActivity activity = controller.get();
 
         controller.create();
@@ -322,7 +322,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
      */
     public void testOrientationSetup(int orientation) {
         ActivityController<? extends CourseUnitNavigationActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
+                Robolectric.buildActivity(getActivityClass(), getIntent());
         CourseUnitNavigationActivity activity = controller.get();
         activity.getResources().getConfiguration().orientation = orientation;
         controller.create();
@@ -359,8 +359,8 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     @Test
     public void orientationChangeTest() {
         CourseUnitNavigationActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
+                Robolectric.buildActivity(getActivityClass(), getIntent())
+                        .setup().get();
         // Orientation needs to be explicitly set as PORTRAIT since its UNDEFINED initially
         testOrientationChange(activity, Configuration.ORIENTATION_PORTRAIT);
         assertEquals(Configuration.ORIENTATION_PORTRAIT,
