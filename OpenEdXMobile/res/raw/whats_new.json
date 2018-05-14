@@ -1,5 +1,28 @@
  [
   {
+  "version": "2.14",
+  "messages": [
+               {
+               "platforms": [
+                             "ios",
+                             "android"
+                             ],
+               "image": "screen_1",
+               "title": "Bulk Download Subsection Videos",
+               "message": "Easily download all videos within a subsection using the new toggle controls."
+               },
+               {
+               "platforms": [
+                             "ios",
+                             "android"
+                             ],
+               "image": "screen_2",
+               "title": "Improved Video Streaming Quality",
+               "message": "Video streaming quality will now adapt based on your network. Improve video quality even further by connecting to a WiFi network!"
+               }
+               ]
+  },
+  {
   "version": "2.13",
   "messages": [
                {
