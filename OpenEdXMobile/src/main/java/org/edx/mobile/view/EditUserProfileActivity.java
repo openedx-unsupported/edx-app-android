@@ -22,7 +22,6 @@ public class EditUserProfileActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.edit_user_profile_title));
-        blockDrawerFromOpening();
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.PROFILE_EDIT);
     }
 

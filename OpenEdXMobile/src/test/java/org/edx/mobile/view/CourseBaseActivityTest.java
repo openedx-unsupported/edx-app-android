@@ -3,8 +3,6 @@ package org.edx.mobile.view;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
@@ -19,8 +17,6 @@ import org.robolectric.util.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
@@ -90,15 +86,6 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         CourseBaseActivity activity = controller.get();
 
         controller.create();
-        assertNotNull(activity.findViewById(R.id.last_accessed_bar));
-        DrawerLayout drawerLayout = (DrawerLayout)
-                activity.findViewById(R.id.drawer_layout);
-        if (drawerLayout != null) {
-            assertEquals(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
-                    drawerLayout.getDrawerLockMode(Gravity.LEFT));
-            assertEquals(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
-                    drawerLayout.getDrawerLockMode(Gravity.RIGHT));
-        }
 
         controller.postCreate(null).resume().postResume().visible();
     }

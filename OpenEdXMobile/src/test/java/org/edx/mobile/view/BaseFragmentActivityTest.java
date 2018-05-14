@@ -2,22 +2,13 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.AnimRes;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
@@ -26,7 +17,6 @@ import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.util.ActivityController;
@@ -34,14 +24,11 @@ import org.robolectric.util.Scheduler;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeThat;
 import static org.junit.Assume.assumeTrue;
 
 // TODO: Test network connectivity change events too, after we manage to mock them
@@ -65,15 +52,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      */
     protected Intent getIntent() {
         return new Intent(RuntimeEnvironment.application, getActivityClass());
-    }
-
-    /**
-     * Method for defining whether the activity has a drawer configured
-     *
-     * @return true if the drawer is configured
-     */
-    protected boolean hasDrawer() {
-        return false;
     }
 
     /**
@@ -122,48 +100,10 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         }
 
         controller.postCreate(null).resume().postResume().visible();
-        DrawerLayout mDrawerLayout = (DrawerLayout)
-                activity.findViewById(R.id.drawer_layout);
-        boolean hasDrawer = hasDrawer();
-        if (mDrawerLayout != null) {
-            // NavigationFragment initialization
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            fragmentManager.executePendingTransactions();
-            assert fragmentManager.findFragmentByTag("NavigationFragment") != null;
-
-            if (hasDrawer) {
-                CharSequence contentDescription = activity.findViewById(
-                        android.R.id.home).getContentDescription();
-                assertFalse(mDrawerLayout.isDrawerOpen(GravityCompat.START));
-                assertEquals(activity.getText(R.string.label_close), contentDescription);
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
-                assertEquals(activity.getText(R.string.label_close), contentDescription);
-                activity.closeDrawer();
-                assertFalse(mDrawerLayout.isDrawerOpen(GravityCompat.START));
-                assertEquals(activity.getText(R.string.label_close), contentDescription);
-
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
-                assertEquals(activity.getText(R.string.label_close), contentDescription);
-                Configuration config = activity.getResources().getConfiguration();
-                assertNotEquals(Configuration.ORIENTATION_LANDSCAPE, config.orientation);
-                config.orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                activity.onConfigurationChanged(config);
-                assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
-                assertEquals(activity.getText(R.string.label_close), contentDescription);
-            }
-        }
 
         // Action bar home button
         assertTrue(shadowActivity.clickMenuItem(android.R.id.home));
-        if (hasDrawer) {
-            assertNotNull(mDrawerLayout);
-            assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
-            assertTrue(shadowActivity.clickMenuItem(android.R.id.home));
-            assertFalse(mDrawerLayout.isDrawerOpen(GravityCompat.START));
-            activity.finish();
-        }
+        activity.finish();
         assertThat(activity).isFinishing();
     }
 

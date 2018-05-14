@@ -41,7 +41,7 @@ public class SplashActivity extends Activity {
 
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
         if (environment.getUserPrefs().getProfile() != null) {
-            environment.getRouter().showMyCourses(SplashActivity.this);
+            environment.getRouter().showMainDashboard(SplashActivity.this);
         } else if (!environment.getConfig().isRegistrationEnabled()) {
             startActivity(environment.getRouter().getLogInIntent());
         } else {

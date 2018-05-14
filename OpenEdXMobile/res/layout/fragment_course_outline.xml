@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -12,10 +13,11 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-    <org.edx.mobile.view.custom.IconTextViewXml
-        android:id="@+id/no_chapter_tv"
-        style="@style/content_unavailable_error_text"
-        android:text="@string/no_chapter_text" />
-</RelativeLayout>
+    <include layout="@layout/content_error" />
+
+    <include layout="@layout/loading_indicator" />
+</FrameLayout>

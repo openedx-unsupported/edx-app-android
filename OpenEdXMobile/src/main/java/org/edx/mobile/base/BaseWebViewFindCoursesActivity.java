@@ -217,8 +217,8 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
                                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                                     @Override
                                     protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
-                                        environment.getRouter().showMyCourses(BaseWebViewFindCoursesActivity.this);
-                                        environment.getRouter().showCourseDashboardTabs(BaseWebViewFindCoursesActivity.this, environment.getConfig(), course, false);
+                                        environment.getRouter().showMainDashboard(BaseWebViewFindCoursesActivity.this);
+                                        environment.getRouter().showCourseDashboardTabs(BaseWebViewFindCoursesActivity.this, course, false);
                                     }
 
                                     @Override

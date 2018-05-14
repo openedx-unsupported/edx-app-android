@@ -9,11 +9,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +30,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
-import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.ArrayList;
@@ -51,7 +46,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
     private boolean isConnectedToWifi = false;
     private boolean isActivityStarted = false;
-    protected ActionBarDrawerToggle mDrawerToggle;
 
     @Inject
     protected IEdxEnvironment environment;
@@ -161,20 +155,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().registerSticky(this);
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawerLayout != null) {
-            if (environment.getConfig().isTabsLayoutEnabled()) {
-                blockDrawerFromOpening();
-            } else {
-                final Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
-                if (frag == null) {
-                    getSupportFragmentManager().beginTransaction().replace(
-                            R.id.slider_menu,
-                            new NavigationFragment(),
-                            "NavigationFragment").commit();
-                }
-            }
-        }
     }
 
     @Override
@@ -206,94 +186,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawers();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    /**
-     * It will add the slide drawer in the activity's layout.
-     * <p>
-     * For addition, {@link DrawerLayout} with id {@link R.id#drawer_layout R.id.drawer_layout} will
-     * be searched in activity's layout, if it exists, the {@link NavigationFragment Navigation Drawer}
-     * will be replaced by the container having id {@link R.id#slider_menu R.id.slider_menu}.
-     * </p>
-     *
-     * @deprecated As of release v2.13, see new toolbar design used in
-     * {@link org.edx.mobile.view.MainDashboardActivity} and menu options used in
-     * {@link org.edx.mobile.view.MainTabsDashboardFragment} as an alternate.
-     *
-     */
-    @Deprecated
-    protected void addDrawer() {
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (mDrawerLayout != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.slider_menu, new NavigationFragment(),
-                            "NavigationFragment").commit();
-
-            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.string.label_open_navigation_menu, R.string.label_close_navigation_menu) {
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    invalidateOptionsMenu();
-                }
-
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    Fragment frag = getSupportFragmentManager().
-                            findFragmentByTag("NavigationFragment");
-                    if (frag == null) {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.slider_menu, new NavigationFragment(),
-                                        "NavigationFragment").commit();
-                    }
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                public void onDrawerSlide(View drawerView, float slideOffset) {
-                    super.onDrawerSlide(drawerView, 0); // this disables the animation
-                }
-            };
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-        }
-    }
-
-    /**
-     * Call this function if you do not want to allow
-     * opening/showing the drawer(Navigation Fragment) on swiping left to right
-     */
-    @Deprecated
-    protected void blockDrawerFromOpening() {
-        DrawerLayout drawerLayout = (DrawerLayout)
-                findViewById(R.id.drawer_layout);
-        if (drawerLayout != null) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
-    }
-
-    //Closing the Navigation Drawer
-    @Deprecated
-    public void closeDrawer() {
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawers();
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Toggle navigation drawer when the app icon or title on the action bar
-        // is clicked
-        if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
         // Handle action bar buttons click
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -315,28 +208,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             }
         } catch (Exception ex) {
             logger.error(ex);
-        }
-    }
-
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        if (mDrawerToggle != null) {
-            mDrawerToggle.syncState();
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
-        if (mDrawerToggle != null) {
-            mDrawerToggle.onConfigurationChanged(newConfig);
         }
     }
 

@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -44,7 +43,7 @@ public class LaunchActivity extends BaseFragmentActivity {
         super.onResume();
         if (environment.getLoginPrefs().getUsername() != null) {
             finish();
-            environment.getRouter().showMyCourses(this);
+            environment.getRouter().showMainDashboard(this);
         }
     }
 }

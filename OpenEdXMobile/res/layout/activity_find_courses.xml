@@ -1,49 +1,40 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:splitMotionEvents="false">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator_layout"
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:id="@+id/content_error_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/toolbar" />
-
-        <LinearLayout
-            android:id="@+id/content_error_root"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <RelativeLayout
+            <org.edx.mobile.view.custom.EdxWebView
+                android:id="@+id/webview"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:background="@color/grey_act_background"
+                android:visibility="gone" />
 
-                <org.edx.mobile.view.custom.EdxWebView
-                    android:id="@+id/webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/grey_act_background"
-                    android:visibility="gone" />
+            <include layout="@layout/loading_indicator" />
 
-                <include layout="@layout/loading_indicator" />
+            <include layout="@layout/content_error" />
 
-                <include layout="@layout/content_error" />
+        </RelativeLayout>
 
-            </RelativeLayout>
-
-            <include
-                android:id="@+id/auth_panel"
-                layout="@layout/auth_panel" />
-        </LinearLayout>
-    </android.support.design.widget.CoordinatorLayout>
-
-    <include layout="@layout/navigation_drawer_container" />
-
-</android.support.v4.widget.DrawerLayout>
+        <include
+            android:id="@+id/auth_panel"
+            layout="@layout/auth_panel" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

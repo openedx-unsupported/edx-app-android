@@ -74,7 +74,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent) {
         ViewHolder holder = new ViewHolder();
-        holder.rowView = inflater.inflate(R.layout.row_course_dashboard_list, parent, false);
+        holder.rowView = inflater.inflate(R.layout.row_resource_list, parent, false);
         holder.typeView = (IconImageView) holder.rowView.findViewById(R.id.row_type);
         holder.titleView = (TextView) holder.rowView.findViewById(R.id.row_title);
         holder.subtitleView = (TextView) holder.rowView.findViewById(R.id.row_subtitle);

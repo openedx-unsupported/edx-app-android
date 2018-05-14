@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
@@ -19,13 +18,6 @@ public class AccountActivity extends BaseSingleFragmentActivity {
 
     public static Intent newIntent(Activity activity) {
         return new Intent(activity, AccountActivity.class);
-    }
-
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (!config.isTabsLayoutEnabled()) {
-            addDrawer();
-        }
     }
 
     @Override

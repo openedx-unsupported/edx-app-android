@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -362,8 +361,8 @@ public class CourseDetailFragment extends BaseFragment {
                                         courseDetail.course_id) {
                                     @Override
                                     protected void onResponse(@NonNull EnrolledCoursesResponse course) {
-                                        environment.getRouter().showMyCourses(getActivity());
-                                        environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), course, false);
+                                        environment.getRouter().showMainDashboard(getActivity());
+                                        environment.getRouter().showCourseDashboardTabs(getActivity(), course, false);
                                     }
                                 });
                             }
@@ -386,8 +385,8 @@ public class CourseDetailFragment extends BaseFragment {
                     executeStrict(courseApi.getEnrolledCoursesFromCache());
             for (EnrolledCoursesResponse course : enrolledCoursesResponse) {
                 if (course.getCourse().getId().equals(courseDetail.course_id)) {
-                    environment.getRouter().showMyCourses(getActivity());
-                    environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), course, false);
+                    environment.getRouter().showMainDashboard(getActivity());
+                    environment.getRouter().showCourseDashboardTabs(getActivity(), course, false);
                 }
             }
         } catch (Exception exception) {

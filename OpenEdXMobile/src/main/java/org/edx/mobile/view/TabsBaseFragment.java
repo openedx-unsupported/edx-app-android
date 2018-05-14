@@ -48,6 +48,13 @@ public abstract class TabsBaseFragment extends BaseFragment {
         // Init tabs
         final TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
 
+        // This check is necessary to run test cases on this fragment in which parent activity of
+        // fragment will not have any TabLayout view e.g. CourseTabsDashboardFragmentTest.
+        // TODO: Remove this check when we would find out how to initialize a fragment with associated activity in Roboelectric.
+        if (tabLayout == null) {
+            return;
+        }
+
         // No need to show tabs if we only have
         if (fragmentItems.size() <= 1) {
             tabLayout.setVisibility(View.GONE);

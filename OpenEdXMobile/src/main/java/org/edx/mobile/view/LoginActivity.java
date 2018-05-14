@@ -279,7 +279,7 @@ public class LoginActivity
         setResult(RESULT_OK);
         finish();
         if (!environment.getConfig().isRegistrationEnabled()) {
-            environment.getRouter().showMyCourses(this);
+            environment.getRouter().showMainDashboard(this);
         }
     }
 
