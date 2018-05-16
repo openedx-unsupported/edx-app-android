@@ -655,6 +655,7 @@
     <string name="whats_new_title">Version {version_number} New Features</string>
 
     <!-- TESTING TRANSIFEX THROUGH TRAVIS -->
+    <string name="dummy_text_0" tools:ignore="MissingTranslation">Text Zero</string>
     <string name="dummy_text_1" tools:ignore="MissingTranslation">Text One</string>
     <string name="dummy_text_2" tools:ignore="MissingTranslation">Text Two</string>
 </resources>
