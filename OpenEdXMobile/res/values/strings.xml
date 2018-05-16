@@ -653,4 +653,8 @@
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">Version {version_number} New Features</string>
+
+    <!-- TESTING TRANSIFEX THROUGH TRAVIS -->
+    <string name="dummy_text_1" tools:ignore="MissingTranslation">Text One</string>
+    <string name="dummy_text_2" tools:ignore="MissingTranslation">Text Two</string>
 </resources>
