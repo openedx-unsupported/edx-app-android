@@ -66,12 +66,17 @@
   <string name="error_heading">Se ha producido el siguiente error al iniciar sesión</string>
   <!--Error during log in.-->
   <string name="login_failed">Por favor, asegúrese de que su nombre de usuario o dirección de correo electrónico y la contraseña son correctos e inténtelo de nuevo.</string>
+  <!--License Agreement related string on Login and Regiser screens-->
+  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Label for End User License Agreement-->
+  <!--Label for Terms of Service and Honor Code-->
+  <!--Label for Privacy Policy-->
   <string name="login_title">iniciar sesión</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Cerrar</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">Lista desplegable.</string>
-  <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">Ver descargas</string>
   <!--Content description for edit profile button-->
@@ -127,6 +132,8 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="leaving_app_data_message">Si sale de la aplicación, no seguirá viendo el contenido gratuito de {platform_name}. Pueden aplicarse cargos por consumo de datos.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">Acuerdo de Licencia del Usuario</string>
+  <!--Title of privacy policy users must accept to use the app-->
+  <!--Title of terms of service & honor code users must accept to use the app-->
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">Curso</string>
@@ -163,8 +170,11 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Nuevo contenido del curso</string>
   <!--Label for date when course starts-->
+  <string name="label_starting">Comenzando el {date}</string>
   <!--Label for course that has ended-->
+  <string name="label_ended">Terminado el {date}</string>
   <!--Label for date when course is ending-->
+  <string name="label_ending">Terminando el {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Contenido del curso</string>
@@ -360,15 +370,20 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
   <!--Title for bulk videos download view when in new or partial videos' download state-->
+  <string name="download_to_device">Descargar a Dispositivo </string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <!--Title for bulk videos download view when download is starting-->
+  <string name="download_starting">Iniciando Descarga...</string>
   <!--Title for bulk videos download view when in downloading state-->
+  <string name="downloading_videos">Descargando Videos...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
   <!--Title for bulk videos download view when in downloaded state-->
+  <string name="download_complete">Todos los Videos Descargados</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
+  <string name="view_downloads">Toque dos veces para ver las descargas actuales</string>
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">Permitir</string>
@@ -423,6 +438,15 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--In Register screen-->
   <string name="register_with">Registrarse con</string>
   <string name="or_register_with_email">o registrarse con el correo electrónico</string>
+  <!--New Logistration Launch screen text-->
+  <!--Button leading user to create account screen-->
+  <string name="launch_register">Crea tu Cuenta</string>
+  <!--Button leading user to log in screen-->
+  <string name="launch_login">Iniciar sesión</string>
+  <!--Introduction text on the launch screen-->
+  <string name="launch_text">Cursos gratuitos de las mejores universidades del mundo en tu bolsillo.</string>
+  <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
+  <string name="launch_search_courses">Buscar cursos</string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Mostrar campos opcionales</string>
