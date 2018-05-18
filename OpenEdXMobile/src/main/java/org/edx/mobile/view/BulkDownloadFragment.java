@@ -48,8 +48,6 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-import static org.edx.mobile.util.DownloadUtil.isDownloadSizeWithinLimit;
-
 public class BulkDownloadFragment extends BaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -370,11 +368,6 @@ public class BulkDownloadFragment extends BaseFragment {
 
                     // Download all videos
                     downloadListener.download(remainingVideos);
-                    // Video download process on bulk download view needs to be delayed when the
-                    // confirmation dialog for videos' size above 1 GB is shown.
-                    if (isDownloadSizeWithinLimit(videosStatus.remainingVideosSize, MemoryUtil.GB)) {
-                        onEvent((BulkVideosDownloadStartedEvent) null);
-                    }
 
                     environment.getAnalyticsRegistry().trackBulkDownloadSwitchOn(
                             videosStatus.courseComponentId, videosStatus.total, videosStatus.remaining);
