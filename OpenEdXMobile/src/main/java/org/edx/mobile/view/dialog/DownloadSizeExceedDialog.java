@@ -1,6 +1,7 @@
 package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +12,30 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class DownloadSizeExceedDialog extends DialogFragment {
 
     private final Logger logger = new Logger(getClass().getName());
     private IDialogCallback callback;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        /*
+         * TODO: As a quick fix, avoid the recreation of dialog on orientation change to avoid
+         * problematic scenarios For e.g. cancel button stops working on orientation change, we
+         * have to fix it properly which is explained and planned to implement in story LEARNER-2177
+         */
+        if (savedInstanceState != null) {
+            dismiss();
+            EventBus.getDefault().post(new BulkVideosDownloadCancelledEvent());
+        }
+    }
 
     public static DownloadSizeExceedDialog newInstance(
             Map<String, String> dialogMap, IDialogCallback callback) {
