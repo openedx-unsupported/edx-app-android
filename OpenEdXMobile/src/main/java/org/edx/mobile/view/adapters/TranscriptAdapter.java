@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.util.TextUtils;
 
 import subtitleFile.Caption;
 
@@ -33,7 +34,7 @@ public class TranscriptAdapter extends BaseListAdapter<Caption> {
         if (captionText.endsWith("<br />")) {
             captionText = captionText.substring(0, captionText.length() - 6);
         }
-        viewHolder.transcriptTv.setText(captionText);
+        viewHolder.transcriptTv.setText(TextUtils.formatHtml(captionText));
         final int position = getPosition(model);
         if (isSelected(position)) {
             viewHolder.transcriptTv.setTextColor(SELECTED_TRANSCRIPT_COLOR);
