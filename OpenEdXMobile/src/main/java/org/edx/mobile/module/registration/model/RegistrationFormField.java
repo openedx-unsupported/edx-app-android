@@ -1,5 +1,7 @@
 package org.edx.mobile.module.registration.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -48,8 +50,9 @@ public class RegistrationFormField {
         return instructions;
     }
 
+    @NonNull
     public RegistrationFieldType getFieldType() {
-        return fieldType;
+        return fieldType != null ? fieldType : RegistrationFieldType.UNKNOWN;
     }
 
     public String getLabel() {

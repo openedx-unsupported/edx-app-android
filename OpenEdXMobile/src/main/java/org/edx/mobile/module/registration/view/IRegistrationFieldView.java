@@ -73,18 +73,14 @@ public interface IRegistrationFieldView {
                 View view = inflater.inflate(R.layout.view_register_spinner, null);
                 return new RegistrationSelectView(field, view);
             }
-            else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
-                if (field.getSupplementalLink() != null) {
-                    View view = inflater.inflate(R.layout.view_register_agreement, null);
-                    return new RegistrationAgreementView(field, view);
-                } else {
-                    View view = inflater.inflate(R.layout.view_register_checkbox, null);
-                    return new RegistrationCheckBoxView(field, view);
-                }
-            }
-            else {
-                logger.warn(String.format("unknown field type %s found in RegistrationDescription, skipping it",
-                        fieldType.toString()));
+            else if (fieldType.equals(RegistrationFieldType.PLAINTEXT)) {
+                // For now we aren't using this field type
+                return null;
+            } else {
+                logger.error(new Exception(
+                        String.format("Unknown field type found for field named: %s in RegistrationDescription, skipping it!",
+                                field.getName())
+                ));
                 return null;
             }
         }
