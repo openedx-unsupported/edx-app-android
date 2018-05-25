@@ -380,8 +380,7 @@ android {
          * Link to issue: https://issuetracker.google.com/issues/37630182
          */
         //TODO: Remove GradleCompatible after we upgrade to Android Studio 2.4
-        //TODO: Remove NewApi after this issue on Travis gets resolved: https://github.com/travis-ci/travis-ci/issues/8676
-        disable 'GradleCompatible', 'NewApi'
+        disable 'GradleCompatible'
     }
 
     productFlavors {
