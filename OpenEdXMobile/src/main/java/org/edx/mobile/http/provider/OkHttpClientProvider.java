@@ -18,6 +18,7 @@ import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
 import org.edx.mobile.http.interceptor.StaleIfErrorHandlingInterceptor;
 import org.edx.mobile.http.interceptor.StaleIfErrorInterceptor;
 import org.edx.mobile.http.interceptor.UserAgentInterceptor;
+import org.edx.mobile.http.util.Tls12SocketFactory;
 
 import java.io.File;
 import java.util.List;
@@ -98,7 +99,8 @@ public interface OkHttpClientProvider extends Provider<OkHttpClient> {
                     interceptors.add(loggingInterceptor);
                 }
                 builder.authenticator(new OauthRefreshTokenAuthenticator(context));
-                client = builder.build();
+                // Enable TLS 1.2 support
+                client = Tls12SocketFactory.enableTls12OnPreLollipop(builder).build();
                 clients[index] = client;
             }
             return client;

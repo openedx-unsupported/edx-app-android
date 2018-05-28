@@ -9,6 +9,9 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
+import com.bumptech.glide.load.model.GlideUrl;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -22,6 +25,7 @@ import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.AppUpdatedEvent;
 import org.edx.mobile.event.NewRelicEvent;
+import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.AnswersAnalytics;
@@ -32,6 +36,8 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
+
+import java.io.InputStream;
 
 import javax.inject.Inject;
 
@@ -139,6 +145,11 @@ public abstract class MainApplication extends MultiDexApplication {
         if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
             Branch.getAutoInstance(this);
         }
+
+        // Force Glide to use our version of OkHttp which now supports TLS 1.2 out-of-the-box for
+        // Pre-Lollipop devices
+        Glide.get(this).register(GlideUrl.class, InputStream.class,
+                new OkHttpUrlLoader.Factory(injector.getInstance(OkHttpClientProvider.class).get()));
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
