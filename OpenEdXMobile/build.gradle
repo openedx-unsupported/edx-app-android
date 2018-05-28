@@ -267,12 +267,12 @@ android {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.0
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 26
 
         versionCode getVersionCode()
         versionName getVersionName()
 
-        renderscriptTargetApi 22
+        renderscriptTargetApi 26
         renderscriptSupportModeEnabled true
 
         // test configuration
