@@ -265,8 +265,8 @@ android {
 
     defaultConfig {
         applicationId "org.edx.mobile"
-        // minimum version is Android 4.0
-        minSdkVersion 14
+        // minimum version is Android 4.1
+        minSdkVersion 16
         targetSdkVersion 21
 
         versionCode getVersionCode()
