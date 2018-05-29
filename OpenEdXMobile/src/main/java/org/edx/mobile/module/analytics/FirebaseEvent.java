@@ -227,7 +227,7 @@ public class FirebaseEvent {
             final String key = entry.getKey();
             if (isSkippableKey(key)) continue;
             bundle.putString(applyRestrictions(key, PARAM_NAME_MAX_CHARS),
-                    applyRestrictions(entry.getValue(), PARAM_VALUE_MAX_CHARS));
+                    truncateString(entry.getValue(), PARAM_VALUE_MAX_CHARS)); // 100 char limit
         }
     }
 
