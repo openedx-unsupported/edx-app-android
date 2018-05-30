@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
@@ -149,10 +148,8 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // Force Glide to use our version of OkHttp which now supports TLS 1.2 out-of-the-box for
         // Pre-Lollipop devices
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Glide.get(this).register(GlideUrl.class, InputStream.class,
-                    new OkHttpUrlLoader.Factory(injector.getInstance(OkHttpClientProvider.class).get()));
-        }
+        Glide.get(this).register(GlideUrl.class, InputStream.class,
+                new OkHttpUrlLoader.Factory(injector.getInstance(OkHttpClientProvider.class).get()));
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
