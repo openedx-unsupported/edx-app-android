@@ -37,6 +37,7 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.NotificationUtil;
 
 import java.io.InputStream;
 
@@ -98,7 +99,7 @@ public abstract class MainApplication extends MultiDexApplication {
                 EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
             }
 
-            if (config.getFabricConfig().getKitsConfig().isAnswersEnabled())  {
+            if (config.getFabricConfig().getKitsConfig().isAnswersEnabled()) {
                 analyticsRegistry.addAnalyticsProvider(injector.getInstance(AnswersAnalytics.class));
             }
         }
@@ -116,13 +117,18 @@ public abstract class MainApplication extends MultiDexApplication {
         }
 
         // Add Segment as an analytics provider if enabled in the config
-        if (config.getSegmentConfig().isEnabled())  {
+        if (config.getSegmentConfig().isEnabled()) {
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
         }
 
         // Add Firebase as an analytics provider if enabled in the config
-        if (config.isFirebaseEnabled())  {
+        if (config.getFirebaseConfig().isAnalyticsEnabled()) {
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(FirebaseAnalytics.class));
+        }
+
+        if (config.getFirebaseConfig().areNotificationsEnabled()) {
+            NotificationUtil.subscribeToTopics(config);
+            NotificationUtil.logFirebaseToken();
         }
 
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -168,20 +174,20 @@ public abstract class MainApplication extends MultiDexApplication {
             // Save version code and name in preferences
             prefManager.setAppVersionCode(curVersionCode);
             prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
-            logger.debug("App opened first time, VersionCode:"+curVersionCode);
+            logger.debug("App opened first time, VersionCode:" + curVersionCode);
         } else if (previousVersionCode < curVersionCode) {
             final String previousVersionName = prefManager.getAppVersionName();
             // Update version code and name in preferences
             prefManager.setAppVersionCode(curVersionCode);
             prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
-            logger.debug("App updated, VersionCode:"+previousVersionCode+"->"+curVersionCode);
+            logger.debug("App updated, VersionCode:" + previousVersionCode + "->" + curVersionCode);
             // App updated
             onAppUpdated(previousVersionCode, curVersionCode, previousVersionName, BuildConfig.VERSION_NAME);
         }
     }
 
     private void onAppUpdated(final long previousVersionCode, final long curVersionCode,
-                             final String previousVersionName, final String curVersionName) {
+                              final String previousVersionName, final String curVersionName) {
         // Try repair of download data on updating of app version
         injector.getInstance(IStorage.class).repairDownloadCompletionData();
         // Fire app updated event

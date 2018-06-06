@@ -570,6 +570,8 @@
     <string name="notification_toggle">Allow Notifications</string>
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
+    <!-- Title for default channel notifications -->
+    <string name="default_notification_channel_title" tools:ignore="MissingTranslation">{platform_name} Notification</string>
 
 
     <!-- Discussion/Forum -->
