@@ -61,6 +61,7 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
     private boolean lastClickEnrollEmailOptIn;
 
     private FullScreenErrorNotification errorNotification;
+    private URLInterceptorWebViewClient client;
 
     @Inject
     private CourseService courseService;
@@ -115,7 +116,7 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
     }
 
     private void setupWebView() {
-        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webView);
+        client = new URLInterceptorWebViewClient(this, webView);
 
         // if all the links are to be treated as external
         client.setAllLinksAsExternal(isAllLinksExternal());
@@ -130,6 +131,9 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
      * @param url The URL to load.
      */
     protected void loadUrl(@NonNull String url) {
+        if (client != null) {
+            client.setLoadingInitialUrl(true);
+        }
         WebViewUtil.loadUrlBasedOnOsVersion(this, webView, url, this, errorNotification, okHttpClientProvider);
     }
 
