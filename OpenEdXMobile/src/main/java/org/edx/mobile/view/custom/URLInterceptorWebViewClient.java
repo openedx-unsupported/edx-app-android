@@ -45,6 +45,21 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
 
+    /**
+     * Tells if the page loading has been finished or not.
+     */
+    private boolean loadingFinished = true;
+    /**
+     * Url will be considered as redirected if it will not be the initial page url requested to load.
+     * For example, in case the server redirects us to another URL or the user clicks a link
+     * on the web-page, it will be considered as a redirect.
+     */
+    private boolean redirect = false;
+    /**
+     * Tells if the currently loading url is the initial page url requested to load.
+     */
+    private boolean loadingInitialUrl = true;
+
     @Inject
     Config config;
     /*
@@ -89,6 +104,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         //We need to hide the loading progress if the Page starts rendering.
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
+                if (progress > 25) {
+                    /*
+                     * 'loadingInitialUrl is marked to false on 25% progress of initial page load
+                     * to avoid any problematic scenarios e.g. user presses some link available on
+                     * a web page before 'onPageFinished' has been called.
+                     */
+                    loadingInitialUrl = false;
+                }
                 if (progress > 50) {
                     if (pageStatusListener != null) {
                         pageStatusListener.onPagePartiallyLoaded();
@@ -101,6 +124,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
+
+        loadingFinished = false;
 
         // hold on the host of this page, just once
         if (this.hostForThisPage == null && url != null) {
@@ -116,6 +141,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
 
+        loadingInitialUrl = false;
+        if (!redirect) {
+            loadingFinished = true;
+        }
+        redirect = false;
+
+        // Page loading has finished.
         if (pageStatusListener != null) {
             pageStatusListener.onPageFinished();
         }
@@ -141,6 +173,11 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        if (!loadingFinished) {
+            redirect = true;
+        }
+        loadingFinished = false;
+
         if (actionListener == null) {
             logger.warn("you have not set IActionLister to this WebViewClient, " +
                     "you might miss some event");
@@ -152,6 +189,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         } else if (parseEnrollLinkAndCallActionListener(url)) {
             // we handled this URL
             return true;
+        } else if (redirect && loadingInitialUrl) {
+            // Server has redirected the initial url to other hosting url, in this case no need to
+            // redirect the user to external browser.
+            // Inspiration of this solution has been taken from: https://stackoverflow.com/questions/3149216/how-to-listen-for-a-webview-finishing-loading-a-url/5172952#5172952
+            loadingInitialUrl = false;
+            // Return false means the current WebView handles the url.
+            return false;
         } else if (isAllLinksExternal || isExternalLink(url)) {
             // open URL in external web browser
             // return true means the host application handles the url
@@ -166,6 +210,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     public void setAllLinksAsExternal(boolean isAllLinksExternal) {
         this.isAllLinksExternal = isAllLinksExternal;
+    }
+
+    public void setLoadingInitialUrl(boolean isLoadingInitialUrl) {
+        this.loadingInitialUrl = isLoadingInitialUrl;
     }
 
     @Override

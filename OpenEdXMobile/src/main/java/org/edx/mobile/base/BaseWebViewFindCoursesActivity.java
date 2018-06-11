@@ -31,6 +31,7 @@ import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.interfaces.WebViewStatusListener;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
@@ -60,6 +61,7 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
     private boolean lastClickEnrollEmailOptIn;
 
     private FullScreenErrorNotification errorNotification;
+    private URLInterceptorWebViewClient client;
 
     @Inject
     private CourseService courseService;
@@ -114,7 +116,7 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
     }
 
     private void setupWebView() {
-        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webView);
+        client = new URLInterceptorWebViewClient(this, webView);
 
         // if all the links are to be treated as external
         client.setAllLinksAsExternal(isAllLinksExternal());
@@ -129,6 +131,9 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
      * @param url The URL to load.
      */
     protected void loadUrl(@NonNull String url) {
+        if (client != null) {
+            client.setLoadingInitialUrl(true);
+        }
         WebViewUtil.loadUrlBasedOnOsVersion(this, webView, url, this, errorNotification, okHttpClientProvider);
     }
 
@@ -235,7 +240,16 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
                     protected void onFailure(@NonNull Throwable error) {
                         isTaskInProgress = false;
                         logger.debug("Error during enroll api call");
-                        showEnrollErrorMessage(courseId, emailOptIn);
+
+                        if (error instanceof HttpStatusException &&
+                                ((HttpStatusException) error).getStatusCode() == HttpStatus.BAD_REQUEST) {
+                            final HashMap<String, CharSequence> params = new HashMap<>();
+                            params.put("platform_name", environment.getConfig().getPlatformName());
+                            final CharSequence message = ResourceUtil.getFormattedString(getResources(), R.string.enrollment_error_message, params);
+                            showAlertDialog(getString(R.string.enrollment_error_title), message.toString());
+                        } else {
+                            showEnrollErrorMessage(courseId, emailOptIn);
+                        }
                     }
                 });
     }
