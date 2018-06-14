@@ -1,11 +1,14 @@
 package org.edx.mobile.util;
 
-import org.edx.mobile.R;
-
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import org.edx.mobile.R;
 
 public class ViewAnimationUtil {
     // Prohibit instantiation
@@ -54,7 +57,8 @@ public class ViewAnimationUtil {
         }
 
         @Override
-        public void onAnimationStart(Animation animation) {}
+        public void onAnimationStart(Animation animation) {
+        }
 
         @Override
         public void onAnimationEnd(Animation animation) {
@@ -62,6 +66,35 @@ public class ViewAnimationUtil {
         }
 
         @Override
-        public void onAnimationRepeat(Animation animation) {}
+        public void onAnimationRepeat(Animation animation) {
+        }
+    }
+
+    /**
+     * Animates the fade in/out of view within a specific duration.
+     *
+     * @param view       The view to animate.
+     * @param visibility Visibility to set after the view has finished animating.
+     */
+    public static void fadeViewTo(@NonNull final View view, final int visibility) {
+        final int durationMs = 1000;
+        final boolean animationNeeded = view.getVisibility() != visibility;
+        if (!animationNeeded) {
+            return;
+        }
+        // View needs to be visible for the animation to be visible
+        view.setVisibility(View.VISIBLE);
+        final int alpha = visibility == View.VISIBLE ? 1 : 0;
+        view.animate()
+                .alpha(alpha)
+                .setDuration(durationMs)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        view.setVisibility(visibility);
+                    }
+                });
+
     }
 }

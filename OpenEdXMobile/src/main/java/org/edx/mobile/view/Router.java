@@ -31,7 +31,6 @@ import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;
-import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import de.greenrobot.event.EventBus;
@@ -53,6 +52,7 @@ public class Router {
     public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
     public static final String EXTRA_IS_VIDEOS_MODE = "videos_mode";
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
+    public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
 
     @Inject
     Config config;
@@ -351,6 +351,10 @@ public class Router {
 
     public void showAccountActivity(@NonNull Activity activity) {
         activity.startActivity(AccountActivity.newIntent(activity));
+    }
+
+    public void showSubjectsActivityForResult(@NonNull Fragment fragment, int requestCode) {
+        fragment.startActivityForResult(ViewSubjectsActivity.newIntent(fragment.getActivity()), requestCode);
     }
 
     /**
