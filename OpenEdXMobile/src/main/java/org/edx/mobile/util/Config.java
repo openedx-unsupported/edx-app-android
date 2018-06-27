@@ -75,6 +75,9 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
 
+    // Youtube api key
+    private static final String YOUTUBE_API_KEY = "YOUTUBE_API_KEY";
+
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
         private boolean mEnabled;
@@ -477,6 +480,10 @@ public class Config {
 
     public String getOAuthClientId() {
         return getString(OAUTH_CLIENT_ID);
+    }
+
+    public String getYoutubeApiKey() {
+        return getString(YOUTUBE_API_KEY);
     }
 
     /**

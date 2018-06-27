@@ -32,6 +32,11 @@ public abstract class CourseUnitFragment extends BaseFragment implements PageVie
     }
 
     @Override
+    public void onFirstPageLoad() {
+
+    }
+
+    @Override
     public void onPageShow() {
 
     }

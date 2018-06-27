@@ -5,6 +5,7 @@ package org.edx.mobile.view.common;
  * to define callback to sync with page movement
  */
 public interface PageViewStateCallback {
+    void onFirstPageLoad();
     void onPageShow();
     void onPageDisappear();
 }

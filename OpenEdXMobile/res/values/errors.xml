@@ -95,4 +95,7 @@
     <!-- Error dialog message shown when the user try to register in app with un-supported version -->
     <string name="app_version_unsupported_register_msg">Your version of the app is no longer supported. Update to the latest version to register.</string>
 
+    <string name="youtube_initialization_failure" tools:ignore="MissingTranslation">Failed to initialize youtube player</string>
+    <string name="youtube_playback_failure" tools:ignore="MissingTranslation">Failed to load youtube video</string>
+
 </resources>
