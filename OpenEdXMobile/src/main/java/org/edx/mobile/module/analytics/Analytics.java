@@ -371,6 +371,13 @@ public interface Analytics {
      */
     void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos);
 
+    /**
+     * Tracks the pressing of a subject item.
+     *
+     * @param subjectId ID of the subject.
+     */
+    void trackSubjectClicked(@NonNull String subjectId);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -430,6 +437,8 @@ public interface Analytics {
         // Bulk download feature keys
         String TOTAL_DOWNLOADABLE_VIDEOS = "total_downloadable_videos";
         String REMAINING_DOWNLOADABLE_VIDEOS = "remaining_downloadable_videos";
+        // Subjects
+        String SUBJECT_ID = "subject_id";
     }
 
     interface Values {
@@ -523,6 +532,10 @@ public interface Analytics {
         // Discovery Courses Search
         String DISCOVERY_COURSES_SEARCH_LANDING = "landing_screen";
         String DISCOVERY_COURSES_SEARCH_TAB = "discovery_tab";
+        // Subjects
+        String SUBJECT_CLICKED = "edx.bi.app.discover.subject.clicked";
+        String DISCOVERY = "discovery";
+        String VIEW_ALL_SUBJECTS = "View All Subjects";
     }
 
     interface Screens {
@@ -560,6 +573,7 @@ public interface Analytics {
         String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
         String WHATS_NEW = "WhatsNew: Whats New";
         String VIDEOS_COURSE_VIDEOS = "Videos: Course Videos";
+        String ALL_SUBJECTS = "Discover: All Subjects";
     }
 
     interface Events {
@@ -612,6 +626,7 @@ public interface Analytics {
         // Bulk download events
         String BULK_DOWNLOAD_TOGGLE_ON = "Bulk Download Toggle On";
         String BULK_DOWNLOAD_TOGGLE_OFF = "Bulk Download Toggle Off";
+        String SUBJECT_DISCOVERY = "Subject Discovery";
     }
 
     /**

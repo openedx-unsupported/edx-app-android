@@ -11,14 +11,16 @@ import android.view.View;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseWebViewFindCoursesActivity;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.Config;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.inject.ContentView;
+
+import static org.edx.mobile.util.UrlUtil.QUERY_PARAM_SEARCH;
+import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
 
 /**
  * This activity will be refactored to fragment in future. See Jira story LEARNER-3842 for more details.
@@ -105,8 +107,9 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
 
     private void initSearch(@NonNull String query) {
         final String baseUrl = environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
-        final String searchUrl = buildQuery(baseUrl, query, logger);
-        loadUrl(searchUrl);
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(QUERY_PARAM_SEARCH, query);
+        loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
     }
 
     @Override
@@ -118,23 +121,5 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    public static String buildQuery(@NonNull String baseUrl, @NonNull String query, @NonNull Logger logger) {
-        String encodedQuery = null;
-        try {
-            encodedQuery = URLEncoder.encode(query, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.error(e);
-        }
-        String searchTerm = "search_query=" + encodedQuery;
-
-        String searchUrl;
-        if (baseUrl.contains("?")) {
-            searchUrl = baseUrl + "&" + searchTerm;
-        } else {
-            searchUrl = baseUrl + "?" + searchTerm;
-        }
-        return searchUrl;
     }
 }

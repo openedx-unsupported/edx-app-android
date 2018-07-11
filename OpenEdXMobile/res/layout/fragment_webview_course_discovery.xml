@@ -1,32 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/content_error_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <FrameLayout
+        <LinearLayout
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_subject_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/widget_margin"
+                android:layout_marginRight="@dimen/widget_margin"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_browse_subjects"
+                    style="@style/regular_edx_gray_dark_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/widget_margin"
+                    android:text="@string/browse_by_subject"
+                    android:textSize="@dimen/edx_x_small" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_subjects"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/widget_margin"
+                    android:layout_marginTop="@dimen/widget_margin" />
+
+                <include layout="@layout/edx_divider" />
+            </LinearLayout>
 
             <org.edx.mobile.view.custom.EdxWebView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/grey_act_background"
-                android:visibility="gone" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/grey_act_background" />
+        </LinearLayout>
 
-            <include
-                android:id="@+id/loading_indicator"
-                layout="@layout/loading_indicator" />
+        <include
+            android:id="@+id/loading_indicator"
+            layout="@layout/loading_indicator" />
 
-            <include
-                android:id="@+id/content_error"
-                layout="@layout/content_error" />
+        <include
+            android:id="@+id/content_error"
+            layout="@layout/content_error" />
 
-        </FrameLayout>
-    </LinearLayout>
+    </FrameLayout>
 </layout>

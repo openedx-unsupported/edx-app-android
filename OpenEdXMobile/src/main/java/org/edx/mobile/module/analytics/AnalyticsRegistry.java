@@ -390,4 +390,11 @@ public class AnalyticsRegistry implements Analytics {
             service.trackBulkDownloadSwitchOff(courseId, totalDownloadableVideos);
         }
     }
+
+    @Override
+    public void trackSubjectClicked(@NonNull String subjectId) {
+        for (Analytics service : services) {
+            service.trackSubjectClicked(subjectId);
+        }
+    }
 }

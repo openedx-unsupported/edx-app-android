@@ -23,6 +23,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -118,8 +119,8 @@ public class CertificateFragment extends BaseFragment {
             }
 
             @Override
-            public void onPagePartiallyLoaded() {
-                loadingIndicator.setVisibility(View.GONE);
+            public void onPageLoadProgressChanged(WebView view, int progress) {
+                if (progress > AppConstants.PAGE_LOAD_THRESHOLD) loadingIndicator.setVisibility(View.GONE);
             }
         });
         return view;

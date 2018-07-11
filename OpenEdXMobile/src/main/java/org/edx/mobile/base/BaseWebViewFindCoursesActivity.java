@@ -350,7 +350,7 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
         }
 
         @Override
-        public void onPagePartiallyLoaded() {
+        public void onPageLoadProgressChanged(WebView view, int progress) {
         }
     };
 }
