@@ -25,8 +25,14 @@ public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     private final Map<Integer, Fragment> positionToFragment = new HashMap<>();
 
-    public StaticFragmentPagerAdapter(@NonNull FragmentManager manager, @NonNull FragmentItemModel... items) {
+    private FragmentLifecycleCallbacks fragmentLifecycleCallbacks;
+    public interface FragmentLifecycleCallbacks {
+        void onFragmentInstantiate();
+    }
+
+    public StaticFragmentPagerAdapter(@NonNull FragmentManager manager, FragmentLifecycleCallbacks fragmentLifecycleCallbacks, @NonNull FragmentItemModel... items) {
         super(manager);
+        this.fragmentLifecycleCallbacks = fragmentLifecycleCallbacks;
         setItems(Arrays.asList(items));
     }
 
@@ -58,6 +64,9 @@ public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment instantiateItem(ViewGroup container, int position) {
         final Fragment fragment = (Fragment)super.instantiateItem(container, position);
         positionToFragment.put(position, fragment);
+        if (fragmentLifecycleCallbacks != null) {
+            fragmentLifecycleCallbacks.onFragmentInstantiate();
+        }
         return fragment;
     }
 

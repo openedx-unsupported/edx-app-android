@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -48,7 +49,7 @@ import roboguice.RoboGuice;
 
 public class UserProfileFragment
         extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface>
-        implements UserProfileBioTabParent, ScrollingPreferenceParent, RefreshListener {
+        implements UserProfileBioTabParent, ScrollingPreferenceParent, RefreshListener, StaticFragmentPagerAdapter.FragmentLifecycleCallbacks {
 
     @NonNull
     public static UserProfileFragment newInstance(@NonNull String username) {
@@ -126,7 +127,7 @@ public class UserProfileFragment
     @VisibleForTesting
     @NonNull
     protected StaticFragmentPagerAdapter createTabAdapter() {
-        return new StaticFragmentPagerAdapter(getChildFragmentManager());
+        return new StaticFragmentPagerAdapter(getChildFragmentManager() , this);
     }
 
     @NonNull
@@ -287,15 +288,18 @@ public class UserProfileFragment
         final int position = viewHolder.profileSectionTabs.getSelectedTabPosition();
         @AppBarLayout.LayoutParams.ScrollFlags
         final int scrollFlags;
-        if (position >= 0 && ((ScrollingPreferenceChild) ((StaticFragmentPagerAdapter) viewHolder.profileSectionPager.getAdapter()).getFragment(position))
-                .prefersScrollingHeader()) {
-            scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
-        } else {
-            scrollFlags = 0;
+        final Fragment fragment = (((StaticFragmentPagerAdapter) viewHolder.profileSectionPager.getAdapter()).getFragment(position));
+        if (fragment != null) {
+            if (position >= 0 &&
+                    ((ScrollingPreferenceChild) fragment).prefersScrollingHeader()) {
+                scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
+            } else {
+                scrollFlags = 0;
+            }
+            final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams();
+            params.setScrollFlags(scrollFlags);
+            viewHolder.profileHeader.setLayoutParams(params);
         }
-        final AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams();
-        p.setScrollFlags(scrollFlags);
-        viewHolder.profileHeader.setLayoutParams(p);
     }
 
     @NonNull
@@ -334,5 +338,10 @@ public class UserProfileFragment
         if (NetworkUtil.isConnected(getActivity())) {
             snackbarErrorNotification.hideError();
         }
+    }
+
+    @Override
+    public void onFragmentInstantiate() {
+        onChildScrollingPreferenceChanged();
     }
 }
