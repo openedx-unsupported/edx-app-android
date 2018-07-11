@@ -19,6 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/toolbar_background_color"
+        app:tabMaxWidth="0dp"
+        app:tabGravity="fill"
         android:visibility="gone"
         tools:visibility="visible" />
 

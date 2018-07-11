@@ -196,7 +196,6 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
         super.setUserVisibleHint(isVisibleToUser);
         if (searchView != null) {
             searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
-            searchView.setIconified(!isVisibleToUser);
         }
     }
 
