@@ -23,6 +23,10 @@
   <string name="you_are_now_enrolled">Ya está inscrito en este curso.</string>
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">No es posible mostrar el panel de control.</string>
+  <!--Subjects Discovery-->
+  <!--Label for browsing courses by a subject-->
+  <!--Button's Label for viewing all subjects-->
+  <!--Label for searching subjects-->
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartir este curso</string>
@@ -77,6 +81,7 @@
   <string name="close">Cerrar</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">Lista desplegable.</string>
+  <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">Ver descargas</string>
   <!--Content description for edit profile button-->

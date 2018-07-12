@@ -1,4 +1,27 @@
  [
+   {
+     "version": "2.15",
+     "messages": [
+       {
+         "platforms": [
+           "ios",
+           "android"
+         ],
+         "image": "screen_1",
+         "title": "Improved Landscape and Rotation Support",
+         "message": "You can now rotate your iPhone or iPad for improved viewing on most areas of the application."
+       },
+       {
+         "platforms": [
+           "ios",
+           "android"
+         ],
+         "image": "screen_2",
+         "title": "Show Popular Subjects in Course Discovery",
+         "message": "Browse courses by subject when you are looking for new learning experiences!"
+       }
+     ]
+   },
   {
   "version": "2.14",
   "messages": [
