@@ -43,6 +43,7 @@
                 style="@style/semibold_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textColor="@color/edx_white"
                 android:textSize="@dimen/edx_base"
                 tools:text="App Feedback" />
@@ -51,6 +52,7 @@
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:paddingTop="@dimen/widget_margin"
                 android:textColor="@color/edx_white"
                 android:textSize="@dimen/edx_base"
