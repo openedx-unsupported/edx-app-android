@@ -81,8 +81,8 @@ public class WebViewActivity extends BaseFragmentActivity {
             }
 
             @Override
-            public void onPagePartiallyLoaded() {
-                progress.setVisibility(View.GONE);
+            public void onPageLoadProgressChanged(WebView view, int progressPercent) {
+                if (progressPercent > AppConstants.PAGE_LOAD_THRESHOLD) progress.setVisibility(View.GONE);
             }
         });
 

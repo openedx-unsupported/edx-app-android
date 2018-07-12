@@ -112,10 +112,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                      */
                     loadingInitialUrl = false;
                 }
-                if (progress > 50) {
-                    if (pageStatusListener != null) {
-                        pageStatusListener.onPagePartiallyLoaded();
-                    }
+                if (pageStatusListener != null) {
+                    pageStatusListener.onPageLoadProgressChanged(view, progress);
                 }
             }
         });
@@ -170,6 +168,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                     request.getUrl().toString().equals(view.getUrl()));
         }
     }
+
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -339,8 +338,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                              boolean isMainRequestFailure);
 
         /**
-         * Callback that indicates that the page is 50 percent loaded.
+         * Callback that indicates a page's loading progress inside a WebView whether it be
+         * through a full page load/refresh or through an AJAX request.
+         * <br>
+         * Note: This is a utility callback that exposes {@link WebChromeClient#onProgressChanged(WebView, int)}
+         *
+         * @param webView  The WebView in which a page is being loaded.
+         * @param progress Progress of the page being loaded.
          */
-        void onPagePartiallyLoaded();
+        void onPageLoadProgressChanged(WebView webView, int progress);
     }
 }

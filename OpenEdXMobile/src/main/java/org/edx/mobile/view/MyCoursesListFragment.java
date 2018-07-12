@@ -94,13 +94,8 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
         binding.swipeContainer.setColorSchemeResources(R.color.edx_brand_primary_accent,
                 R.color.edx_brand_gray_x_back, R.color.edx_brand_gray_x_back,
                 R.color.edx_brand_gray_x_back);
-        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
-            // As per docs, the footer needs to be added before adapter is set to the ListView
-            addFindCoursesFooter();
-        }
-        // Add empty views to cause dividers to render at the top and bottom of the list
+        // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.addHeaderView(new View(getContext()), null, false);
-        binding.myCourseList.addFooterView(new View(getContext()), null, false);
         binding.myCourseList.setAdapter(adapter);
         binding.myCourseList.setOnItemClickListener(adapter);
         return binding.getRoot();
@@ -154,6 +149,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
             updateDatabaseAfterDownload(newItems);
 
             if (result.getResult().size() > 0) {
+                addFindCoursesFooter();
                 adapter.setItems(newItems);
                 adapter.notifyDataSetChanged();
             }
@@ -245,16 +241,25 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     }
 
     private void addFindCoursesFooter() {
-        final PanelFindCourseBinding footer = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
-                R.layout.panel_find_course, binding.myCourseList, false);
-        binding.myCourseList.addFooterView(footer.getRoot(), null, false);
-        footer.courseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getAnalyticsRegistry().trackUserFindsCourses();
-                environment.getRouter().showFindCourses(getActivity());
-            }
-        });
+        // Validate footer is not already added.
+        if (binding.myCourseList.getFooterViewsCount() > 0) {
+            return;
+        }
+        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+            // Add 'Find a Course' list item as a footer.
+            final PanelFindCourseBinding footer = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
+                    R.layout.panel_find_course, binding.myCourseList, false);
+            binding.myCourseList.addFooterView(footer.getRoot(), null, false);
+            footer.courseBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    environment.getAnalyticsRegistry().trackUserFindsCourses();
+                    environment.getRouter().showFindCourses(getActivity());
+                }
+            });
+        }
+        // Add empty view to cause divider to render at the bottom of the list.
+        binding.myCourseList.addFooterView(new View(getContext()), null, false);
     }
 
     @Override

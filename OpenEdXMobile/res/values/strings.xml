@@ -31,6 +31,15 @@
     <!-- Error message shown when dashboard cannot be shown from course detail view -->
     <string name="cannot_show_dashboard">Unable to show dashboard.</string>
 
+    <!-- Subjects Discovery -->
+
+    <!-- Label for browsing courses by a subject -->
+    <string name="browse_by_subject" tools:ignore="MissingTranslation">Browse by Subject</string>
+    <!-- Button's Label for viewing all subjects -->
+    <string name="view_all_subjects" tools:ignore="MissingTranslation">View All Subjects</string>
+    <!-- Label for searching subjects -->
+    <string name="search_subjects" tools:ignore="MissingTranslation">Search Subject</string>
+
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share course menu -->

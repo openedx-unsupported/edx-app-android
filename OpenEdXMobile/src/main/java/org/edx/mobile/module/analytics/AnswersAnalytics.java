@@ -307,4 +307,9 @@ public class AnswersAnalytics implements Analytics {
     public void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos) {
 
     }
+
+    @Override
+    public void trackSubjectClicked(@NonNull String subjectId) {
+
+    }
 }

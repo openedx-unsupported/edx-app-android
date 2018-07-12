@@ -144,6 +144,10 @@ public class Config {
         public boolean isWebCourseSearchEnabled() {
             return null != mWebViewConfig && mWebViewConfig.isWebCourseSearchEnabled();
         }
+
+        public boolean isSubjectDiscoveryEnabled() {
+            return null != mWebViewConfig && mWebViewConfig.isSubjectDiscoveryEnabled();
+        }
     }
 
     public static class WebViewConfig {
@@ -156,6 +160,9 @@ public class Config {
         @SerializedName("SEARCH_BAR_ENABLED")
         private boolean mSearchBarEnabled;
 
+        @SerializedName("SUBJECT_DISCOVERY_ENABLED")
+        private boolean subjectDiscovery;
+
         public String getCourseSearchUrl() {
             return mSearchUrl;
         }
@@ -166,6 +173,10 @@ public class Config {
 
         public boolean isWebCourseSearchEnabled() {
             return mSearchBarEnabled;
+        }
+
+        public boolean isSubjectDiscoveryEnabled() {
+            return subjectDiscovery;
         }
     }
 

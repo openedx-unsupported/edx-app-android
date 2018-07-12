@@ -36,19 +36,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:gravity="end">
 
             <!--
             When SearchView is added through menu.xml file and it expands upon tapping the icon,
             the toolbar's overall layout gets messed up.
+
+            Collapsible action items have a max width that they can occupy (something like 400dp).
+            It will not always fill the entire width of the toolbar, so, to expand it to the full
+            available width we are giving it a really high maxWidth.
+            Ref: https://stackoverflow.com/a/23451789/2998007
+            https://github.com/JakeWharton/ActionBarSherlock/issues/698#event-30314549
             -->
             <android.support.v7.widget.SearchView
                 android:id="@+id/toolbar_search_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="@dimen/highest_max_width"
                 android:layout_marginLeft="@dimen/courses_profile_icon_left_margin"
                 android:layout_marginStart="@dimen/courses_profile_icon_left_margin"
+                android:imeOptions="flagNoFullscreen"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -59,6 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/toolbar_background_color"
+        app:tabMaxWidth="0dp"
+        app:tabGravity="fill"
         android:visibility="gone"
         tools:visibility="visible" />
 

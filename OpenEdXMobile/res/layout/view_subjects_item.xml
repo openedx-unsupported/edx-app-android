@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:id="@+id/fl_root"
+        android:layout_width="@dimen/subject_item_width"
+        android:layout_height="@dimen/subject_item_height"
+        android:padding="@dimen/widget_margin_half">
+
+        <Button
+            android:id="@+id/bt_view_subjects"
+            style="@style/edX.Widget.BrandPillButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/view_all_subjects"
+            android:textSize="@dimen/edx_x_small" />
+    </FrameLayout>
+</layout>

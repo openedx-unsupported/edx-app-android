@@ -17,6 +17,8 @@ public enum AppConstants {
     public static final int MINOR_VERSIONS_DIFF_REQUIRED_FOR_NEGATIVE_RATERS = 2;
     // Minimum minor version changes required to show whats new screens
     public static final int MINOR_VERSIONS_DIFF_REQUIRED_FOR_WHATS_NEW = 1;
+    // Threshold percentage of a web page's loading after which we are hiding the progress indicator
+    public static final int PAGE_LOAD_THRESHOLD = 50;
 
     public static final String VIDEO_FORMAT_M3U8 = ".m3u8";
     public static final String VIDEO_FORMAT_MP4 = ".mp4";
