@@ -149,10 +149,10 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
             updateDatabaseAfterDownload(newItems);
 
             if (result.getResult().size() > 0) {
-                addFindCoursesFooter();
                 adapter.setItems(newItems);
-                adapter.notifyDataSetChanged();
             }
+            addFindCoursesFooter();
+            adapter.notifyDataSetChanged();
 
             if (adapter.isEmpty() && !environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
                 errorNotification.showError(R.string.no_courses_to_display,
