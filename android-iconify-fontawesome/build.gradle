@@ -1,13 +1,3 @@
-buildscript {
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-
-        repositories {
-            jcenter()
-        }
-    }
-}
-
 apply plugin: 'com.android.library'
 
 android {
@@ -25,5 +15,6 @@ android {
 }
 
 dependencies {
-    compile project(':android-iconify')
+    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation project(':android-iconify')
 }

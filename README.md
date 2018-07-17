@@ -61,34 +61,20 @@ The full set of known keys can be found in the
 `org/edx/mobile/util/Config.java` file or see [additional documentation](<https://openedx.atlassian.net/wiki/display/MA/App+Configuration+Flags>).
 
 
-Flavors
---------------------
-
-There are 2 Flavors in this project:
-
-- **dev**
-    - Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
-    - Only works for devices with Lollipop and above.
-- **prod**
-    - Used for release builds or devices with OS below Android 5.0 (Lollipop).
-    - Works on all devices we support i.e. Android 4.0 (Ice-cream Sandwich) and above.
-
 Build Variants
 --------------------
 
-There are 6 Build Variants in this project:
+There are 3 Build Variants in this project:
 
-- **devDebug**: Uses dev flavor for debug builds.
-- **devDebuggable**: Uses dev flavor for debug builds with debugging enabled.
-- **devRelease**: Uses dev flavor for release builds that'll work on devices with Android 5.0 (Lollipop) and above.
 - **prodDebug**: Uses prod flavor for debug builds.
 - **prodDebuggable**: Uses prod flavor for debug builds with debugging enabled.
-- **prodRelease**: Uses prod flavor for release builds that'll work on devices with Android 4.0 (Ice-cream Sandwich) and above.
+- **prodRelease**: Uses prod flavor for release builds that'll work on devices with Android 4.1.x (Jelly Bean) and above.
 
 Building For Release
 --------------------
-To build an APK for release, you must specify an application ID and signing key. Create or edit the `gradle.properties` file inside the `OpenEdXMobile` directory of `edx-app-android`. For example:
-
+To build an APK for release, you may specify an application ID and signing key.
+Application ID key is optional and if it is not present the package identifier will be used as an application ID.
+Create or edit the `gradle.properties` file inside the `OpenEdXMobile` directory of `edx-app-android`. For example:
 
     APPLICATION_ID=com.example.yourapp
     RELEASE_STORE_FILE=../../path/to/your.keystore
