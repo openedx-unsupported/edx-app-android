@@ -272,6 +272,8 @@ android {
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
 
+        vectorDrawables.useSupportLibrary = true
+
         // test configuration
         testApplicationId 'org.edx.mobile.test'
 
