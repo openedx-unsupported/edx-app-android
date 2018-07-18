@@ -122,12 +122,12 @@ dependencies {
     // with module updates.
     implementation project (':android-iconify-fontawesome')
 
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
+    implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:cardview-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
     // For the optional Nullable annotation
-    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}"
 
     implementation "com.google.android.gms:play-services-plus:15.0.1"
     implementation "com.google.android.gms:play-services-analytics:16.0.1"
@@ -263,8 +263,8 @@ android {
     defaultConfig {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.1
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
 
         versionCode getVersionCode()
         versionName getVersionName()

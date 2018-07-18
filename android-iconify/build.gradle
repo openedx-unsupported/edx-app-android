@@ -5,7 +5,7 @@ android {
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 4
+        minSdkVersion MIN_SDK_VERSION
         consumerProguardFiles 'proguard-rules.txt'
     }
 
@@ -13,9 +13,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_6
         targetCompatibility JavaVersion.VERSION_1_6
     }
-    buildToolsVersion BUILD_TOOLS_VERSION
 }
 
 dependencies {
-    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}"
 }

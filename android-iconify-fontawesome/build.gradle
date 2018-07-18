@@ -5,7 +5,7 @@ android {
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 4
+        minSdkVersion MIN_SDK_VERSION
     }
 
     compileOptions {
@@ -15,6 +15,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}"
     implementation project(':android-iconify')
 }
