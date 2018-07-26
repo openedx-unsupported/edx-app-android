@@ -52,6 +52,7 @@ public class Config {
     private static final String GOOGLE = "GOOGLE";
     private static final String TWITTER = "TWITTER";
     private static final String FABRIC = "FABRIC";
+    private static final String YOUTUBE_PLAYER = "INAPP_YOUTUBE_PLAYER";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
@@ -74,9 +75,6 @@ public class Config {
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
-
-    // Youtube api key
-    private static final String YOUTUBE_API_KEY = "YOUTUBE_API_KEY";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -226,6 +224,23 @@ public class Config {
 
         public String getHashTag() {
             return mHashTag;
+        }
+    }
+
+    public static class YoutubePlayerConfig {
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("YOUTUBE_PLAYER_KEY")
+        private String mYoutubePlayerKey;
+
+        public boolean isEnabled() {
+            return mEnabled
+                    && !TextUtils.isEmpty(mYoutubePlayerKey);
+        }
+
+        public String getYoutubePlayerKey() {
+            return mYoutubePlayerKey;
         }
     }
 
@@ -493,10 +508,6 @@ public class Config {
         return getString(OAUTH_CLIENT_ID);
     }
 
-    public String getYoutubeApiKey() {
-        return getString(YOUTUBE_API_KEY);
-    }
-
     /**
      * @return A list of URIs of app stores, or an empty list if none are available.
      */
@@ -618,6 +629,11 @@ public class Config {
     @NonNull
     public TwitterConfig getTwitterConfig() {
         return getObjectOrNewInstance(TWITTER, TwitterConfig.class);
+    }
+
+    @NonNull
+    public YoutubePlayerConfig getYoutubePlayerConfig() {
+        return getObjectOrNewInstance(YOUTUBE_PLAYER, YoutubePlayerConfig.class);
     }
 
     @NonNull
