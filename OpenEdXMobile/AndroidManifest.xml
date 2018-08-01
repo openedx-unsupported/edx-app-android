@@ -22,9 +22,6 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
-    <!-- Required by app for TelephonyManager to determine mobile network carrier ID -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <!-- Sticky broadcast passing a message from one screen and display on another -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
