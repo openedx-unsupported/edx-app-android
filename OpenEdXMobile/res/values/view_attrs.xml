@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <declare-styleable name="custom_view">
-        <attr name="font" format="string" />
-    </declare-styleable>
-    
     <declare-styleable name="TitleRowView">
         <attr name="titleFontSize" format="dimension" />
         <attr name="titleText" format="string" />
@@ -17,5 +12,4 @@
         <attr name="android:textColor"/>
         <attr name="rightColor" format="dimension"/>
     </declare-styleable>
-
 </resources>
