@@ -201,7 +201,7 @@ public class Storage implements IStorage {
 
     /**
      * Deletes the physical file identified by given absolute file path.
-     * Returns true if delete succeeds or if file does NOT exist, false otherwise.
+     * Returns true if delete succeeds or if file does NOT exisHe t, false otherwise.
      * DownloadManager actually deletes the physical file when remove method is called.
      * So, this method might not be required for removing downloads.
      * @param filepath The file to delete

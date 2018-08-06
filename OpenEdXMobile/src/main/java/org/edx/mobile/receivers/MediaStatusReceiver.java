@@ -111,5 +111,4 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
             db.updateDownloadingVideoInfoByVideoId(videoModel, null);
         }
     }
-//    private class AllVideosCallback implements DataCallback<List>
 }

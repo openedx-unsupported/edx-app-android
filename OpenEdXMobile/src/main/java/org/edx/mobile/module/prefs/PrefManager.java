@@ -246,20 +246,6 @@ public class PrefManager {
         }
     }
 
-    public static class UserPrefManager extends PrefManager {
-        public UserPrefManager(Context context) {
-            super(context, Pref.USER_PREF);
-        }
-
-        public boolean isVideosCacheRestored() {
-            return getBoolean(Key.VIDEOS_CACHE_RESTORED, false);
-        }
-
-        public void setIsVideosCacheRestored(boolean restored) {
-            super.put(Key.VIDEOS_CACHE_RESTORED, restored);
-        }
-    }
-
     /**
      * Contains preference name constants. These must be unique.
      */

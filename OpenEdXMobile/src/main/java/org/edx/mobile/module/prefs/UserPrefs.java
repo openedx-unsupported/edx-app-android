@@ -59,12 +59,11 @@ public class UserPrefs {
         File downloadDir = null;
         if (prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false)) {
             downloadDir = FileUtil.getRemovableStorageAppDir(context);
-        }
-
-        // If no removable storage found, set app internal storage directory as download directory
-        if (downloadDir == null) {
+        } else {
+            // If no removable storage found, set app internal storage directory as download directory
             downloadDir = FileUtil.getExternalAppDir(context);
         }
+
         final ProfileModel profile = getProfile();
         if (downloadDir != null && profile != null) {
             File videosDir = new File(downloadDir, AppConstants.Directories.VIDEOS);

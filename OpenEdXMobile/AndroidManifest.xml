@@ -16,6 +16,7 @@
 
     <!-- Required by app for storing downloaded videos to the external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!-- Required by app for capturing image -->
     <uses-permission android:name="android.permission.CAMERA" />
