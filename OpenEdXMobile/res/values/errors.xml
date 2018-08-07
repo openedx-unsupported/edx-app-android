@@ -41,11 +41,15 @@
     <string name="error_account_not_linked_title_fb">Facebook account not associated with {platform_name} account</string>
     <!-- Content of alert shown during login when user attempts login via Facebook without having linked their account -->
     <string name="error_account_not_linked_desc_fb">Make sure your Facebook account is associated with your {platform_name} account on {platform_destination}</string>
+    <!-- Content of alert shown during login when user attempts login via Facebook without having linked their account -->
+    <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">This Facebook account is not linked with any {platform_name} account. Please register.</string>
     <!-- Title of alert shown during login when user attempts login via Google without having linked their account -->
     <string name="error_account_not_linked_title_google">Google account not associated with {platform_name} account</string>
     <!-- Content of alert shown during login when user attempts login via Google without having linked their account -->
     <string name="error_account_not_linked_desc_google">Make sure your Google account is associated with your {platform_name} account on {platform_destination}</string>
-    
+    <!-- Content of alert shown during login when user attempts login via Google without having linked their account -->
+    <string name="error_account_not_linked_desc_google_2" tools:ignore="MissingTranslation">This Google account is not linked with any {platform_name} account. Please register.</string>
+
     <!-- Download error messages -->
     <!-- Label shown on video list item whose download failed -->
     <string name="error_download_failed">Download failed</string>

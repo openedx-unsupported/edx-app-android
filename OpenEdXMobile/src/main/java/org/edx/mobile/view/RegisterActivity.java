@@ -111,7 +111,8 @@ public class RegisterActivity extends BaseFragmentActivity
         loadingIndicator = findViewById(R.id.loadingIndicator);
         registrationForm = findViewById(R.id.registration_form);
 
-        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
+        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState,
+                this, environment.getConfig(), loginPrefs, SocialLoginDelegate.Feature.REGISTRATION);
 
         errorTextView = (TextView) findViewById(R.id.content_unavailable_error_text);
 

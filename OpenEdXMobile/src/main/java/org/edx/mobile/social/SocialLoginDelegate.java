@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.google.inject.Inject;
@@ -26,6 +27,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.ICommonUI;
 
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 
 
@@ -37,12 +39,15 @@ public class SocialLoginDelegate {
 
     protected final Logger logger = new Logger(getClass().getName());
 
+    public enum Feature {SIGN_IN, REGISTRATION}
+
     private Activity activity;
     private MobileLoginCallback callback;
     private ISocial google, facebook;
     private final LoginPrefs loginPrefs;
 
     private String userEmail;
+    private Feature feature;
 
     private ISocial.Callback googleCallback = new ISocial.Callback() {
         @Override
@@ -62,12 +67,14 @@ public class SocialLoginDelegate {
         }
     };
 
-
-    public SocialLoginDelegate(Activity activity, Bundle savedInstanceState, MobileLoginCallback callback, Config config, LoginPrefs loginPrefs) {
+    public SocialLoginDelegate(@NonNull Activity activity, @NonNull Bundle savedInstanceState,
+                               @NonNull MobileLoginCallback callback, @NonNull Config config,
+                               @NonNull LoginPrefs loginPrefs, @NonNull Feature feature) {
 
         this.activity = activity;
         this.callback = callback;
         this.loginPrefs = loginPrefs;
+        this.feature = feature;
 
         google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, config);
         google.setCallback(googleCallback);
@@ -184,24 +191,17 @@ public class SocialLoginDelegate {
         @Override
         public ProfileModel call() throws Exception {
             final AuthResponse auth;
-            final HashMap<String, CharSequence> descParams = new HashMap<>();
-            descParams.put("platform_name", environment.getConfig().getPlatformName());
-            descParams.put("platform_destination", environment.getConfig().getPlatformDestinationName());
             if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
                 try {
                     auth = loginAPI.logInUsingFacebook(accessToken);
                 } catch (LoginAPI.AccountNotLinkedException e) {
-                    CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_fb, descParams);
-                    CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_fb, descParams);
-                    throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
+                    throw new LoginException(makeLoginErrorMessage(e));
                 }
             } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
                 try {
                     auth = loginAPI.logInUsingGoogle(accessToken);
                 } catch (LoginAPI.AccountNotLinkedException e) {
-                    CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_google, descParams);
-                    CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_google, descParams);
-                    throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
+                    throw new LoginException(makeLoginErrorMessage(e));
                 }
             } else {
                 throw new IllegalArgumentException("Unknown backend: " + backend);
@@ -209,6 +209,26 @@ public class SocialLoginDelegate {
             return auth.profile;
         }
 
+        public LoginErrorMessage makeLoginErrorMessage(@NonNull LoginAPI.AccountNotLinkedException e) throws LoginException {
+            final boolean isFacebook = backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK);
+            if (feature == Feature.SIGN_IN && e.getResponseCode() ==  HttpURLConnection.HTTP_BAD_REQUEST) {
+                final String title =  activity.getResources().getString(R.string.login_error);
+                final CharSequence desc = ResourceUtil.getFormattedString(context.getResources(),
+                        isFacebook ? R.string.error_account_not_linked_desc_fb_2 : R.string.error_account_not_linked_desc_google_2,
+                        "platform_name", environment.getConfig().getPlatformName());
+                throw new LoginException(new LoginErrorMessage(title, desc.toString()));
+            }
+            final CharSequence title = ResourceUtil.getFormattedString(context.getResources(),
+                    isFacebook ? R.string.error_account_not_linked_title_fb : R.string.error_account_not_linked_title_google,
+                    "platform_name", environment.getConfig().getPlatformName());
+            final HashMap<String, CharSequence> descParamsDesc = new HashMap<>();
+            descParamsDesc.put("platform_name", environment.getConfig().getPlatformName());
+            descParamsDesc.put("platform_destination", environment.getConfig().getPlatformDestinationName());
+            final CharSequence desc = ResourceUtil.getFormattedString(context.getResources(),
+                    isFacebook ? R.string.error_account_not_linked_desc_fb : R.string.error_account_not_linked_desc_google,
+                    descParamsDesc);
+            return new LoginErrorMessage(title.toString(), desc.toString());
+        }
     }
 
     public SocialButtonClickHandler createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
