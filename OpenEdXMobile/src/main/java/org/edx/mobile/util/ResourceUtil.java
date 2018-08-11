@@ -35,7 +35,7 @@ public class ResourceUtil {
         Phrase resourceString = Phrase.from(pattern);
         Set<String> keys = keyValMap.keySet();
         for (String key : keys) {
-            CharSequence val = keyValMap.get(key);
+            final CharSequence val = keyValMap.get(key);
             if (val == null) {
                 logger.warn(String.format("Value for key %s is null", key));
                 resourceString.put(key, "");
