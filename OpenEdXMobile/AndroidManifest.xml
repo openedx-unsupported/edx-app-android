@@ -267,10 +267,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- Setup for Code Coverage -->
-        <instrumentation
-            android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
-            android:targetPackage="org.edx.mobile" />
+
 
         <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
         <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast">
