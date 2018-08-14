@@ -16,6 +16,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
@@ -35,6 +36,7 @@ public class SettingsFragment extends BaseFragment {
 
     private Switch wifiSwitch;
     private Switch sdCardSwitch;
+    private LinearLayout sdCardSettinglayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class SettingsFragment extends BaseFragment {
         final View layout = inflater.inflate(R.layout.fragment_settings, container, false);
         wifiSwitch = (Switch) layout.findViewById(R.id.wifi_setting);
         sdCardSwitch = (Switch) layout.findViewById(R.id.download_location_switch);
+        sdCardSettinglayout = (LinearLayout) layout.findViewById(R.id.sd_card_setting_layout);
 
         updateWifiSwitch();
         updateSDCardSwitch();
@@ -82,20 +85,25 @@ public class SettingsFragment extends BaseFragment {
     private void updateSDCardSwitch() {
         final PrefManager prefManager =
                 new PrefManager(getActivity().getBaseContext(), PrefManager.Pref.SD_CARD);
-        if (FileUtil.isRemovableStorageAvailable(getContext())) {
-            sdCardSwitch.setEnabled(true);
 
-            sdCardSwitch.setOnCheckedChangeListener(null);
-            sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
-            sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                    prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, isChecked);
-                }
-            });
+        if (!environment.getConfig().isSDCardDownloadEnabled()){
+            sdCardSettinglayout.setVisibility(View.GONE);
         } else {
-            prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
-            sdCardSwitch.setEnabled(false);
+            if (FileUtil.isRemovableStorageAvailable(getContext())) {
+                sdCardSwitch.setEnabled(true);
+
+                sdCardSwitch.setOnCheckedChangeListener(null);
+                sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
+                sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, isChecked);
+                    }
+                });
+            } else {
+                prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
+                sdCardSwitch.setEnabled(false);
+            }
         }
     }
 

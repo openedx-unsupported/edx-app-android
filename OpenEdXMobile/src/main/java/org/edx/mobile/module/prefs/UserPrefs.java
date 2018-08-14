@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.util.AppConstants;
@@ -25,6 +26,9 @@ public class UserPrefs {
 
     @NonNull
     private final LoginPrefs loginPrefs;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     @Inject
     public UserPrefs(Context context, @NonNull LoginPrefs loginPrefs) {
@@ -46,6 +50,14 @@ public class UserPrefs {
         return onlyWifi;
     }
 
+    public boolean isSDCardDownloadEnabled(){
+        if (!environment.getConfig().isSDCardDownloadEnabled()){
+            return false;
+        }
+        final PrefManager prefManger = new PrefManager(context, PrefManager.Pref.SD_CARD);
+        return prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
+    }
+
     /**
      * Returns user storage directory under /Android/data/ folder for the currently logged in user
      * or if the sd-card download is enabled the sd-card data location will be used.
@@ -55,12 +67,12 @@ public class UserPrefs {
      */
     @Nullable
     public File getDownloadDirectory() {
-        final PrefManager prefManger = new PrefManager(context, PrefManager.Pref.SD_CARD);
         File downloadDir = null;
-        if (prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false)) {
+        if (isSDCardDownloadEnabled()) {
             downloadDir = FileUtil.getRemovableStorageAppDir(context);
         } else {
-            // If no removable storage found, set app internal storage directory as download directory
+            // If no removable storage found, set app internal storage directory
+            // as download directory
             downloadDir = FileUtil.getExternalAppDir(context);
         }
 
