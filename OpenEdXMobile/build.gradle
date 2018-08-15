@@ -337,6 +337,7 @@ android {
 
         manifestPlaceholders = [supportsRtl:"false",
                                 firebaseEnabled: firebaseEnabled?: false,
+                                sdCardEnabled: config.get('SD_CARD_DOWNLOAD')?:false,
                                 branchKey: branchKey]
 
         javaCompileOptions {
