@@ -99,4 +99,9 @@
     <!-- Error dialog message shown when the user try to register in app with un-supported version -->
     <string name="app_version_unsupported_register_msg">Your version of the app is no longer supported. Update to the latest version to register.</string>
 
+    <!-- Permission Error Messages -->
+
+    <!-- Error message shown when a permission is not granted -->
+    <string name="permission_not_granted" tools:ignore="MissingTranslation">Permission not granted</string>
+
 </resources>

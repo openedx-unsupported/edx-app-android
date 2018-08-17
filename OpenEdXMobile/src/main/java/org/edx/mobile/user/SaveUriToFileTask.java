@@ -63,18 +63,16 @@ public abstract class SaveUriToFileTask extends
             return null;
         }
         try {
-            if (cursor.getCount() != 1) {
-                return null;
+            if (cursor.moveToFirst() && cursor.getColumnCount() > 0) {
+                final String data = cursor.getString(0);
+                if (TextUtils.isEmpty(data)) {
+                    return null;
+                }
+                return Uri.fromFile(new File(data));
             }
-            cursor.moveToFirst();
-            final String data = cursor.getString(0);
-            if (TextUtils.isEmpty(data)) {
-                return null;
-            }
-            return Uri.fromFile(new File(data));
-
         } finally {
             cursor.close();
         }
+        return null;
     }
 }

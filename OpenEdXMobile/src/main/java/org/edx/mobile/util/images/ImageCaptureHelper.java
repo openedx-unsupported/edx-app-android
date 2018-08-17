@@ -3,10 +3,12 @@ package org.edx.mobile.util.images;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +36,13 @@ public class ImageCaptureHelper {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        outputFileUri = Uri.fromFile(outputFile);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            outputFileUri = FileProvider.getUriForFile(context,
+                    context.getApplicationContext().getPackageName() + ".provider",
+                    outputFile);
+        } else {
+            outputFileUri = Uri.fromFile(outputFile);
+        }
 
         // Support using Camera
         final Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
