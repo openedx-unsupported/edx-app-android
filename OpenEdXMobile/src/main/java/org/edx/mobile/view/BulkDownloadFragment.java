@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -37,10 +38,7 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.VideoPrefs;
 import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.edx.mobile.module.storage.BulkVideosDownloadStartedEvent;
-import org.edx.mobile.util.DownloadUtil;
-import org.edx.mobile.util.MemoryUtil;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.*;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 
 import java.util.ArrayList;
@@ -50,8 +48,9 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class BulkDownloadFragment extends BaseFragment {
+public class BulkDownloadFragment extends BaseFragment implements BaseFragment.PermissionListener {
     private final String EXTRA_COURSE_VIDEOS_STATUS = "extra_course_videos_status";
+
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -148,6 +147,7 @@ public class BulkDownloadFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prefManager = new VideoPrefs(getContext());
+        permissionListener = this;
 
         final HandlerThread handlerThread = new HandlerThread("BulkDownloadBgThread");
         handlerThread.start();
@@ -395,19 +395,8 @@ public class BulkDownloadFragment extends BaseFragment {
             public void onClick(View v) {
                 final CompoundButton buttonView = (CompoundButton) v;
                 if (buttonView.isChecked()) {
-                    // Stop videos from deletion (if the Runnable has been postDelayed)
-                    bgThreadHandler.removeCallbacks(DELETION_RUNNABLE);
-                    isDeleteScheduled = false;
-
-                    switchState = SwitchState.IN_PROCESS;
-                    prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
-                    setSwitchState();
-
-                    // Download all videos
-                    downloadListener.download(remainingVideos);
-
-                    environment.getAnalyticsRegistry().trackBulkDownloadSwitchOn(
-                            videosStatus.courseComponentId, videosStatus.total, videosStatus.remaining);
+                    askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                 } else {
                     switchState = SwitchState.USER_TURNED_OFF;
                     prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
@@ -421,6 +410,27 @@ public class BulkDownloadFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onPermissionGranted(String[] permissions, int requestCode) {
+        // Stop videos from deletion (if the Runnable has been postDelayed)
+        bgThreadHandler.removeCallbacks(DELETION_RUNNABLE);
+        isDeleteScheduled = false;
+
+        switchState = SwitchState.IN_PROCESS;
+        prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+        setSwitchState();
+
+        // Download all videos
+        downloadListener.download(remainingVideos);
+
+        environment.getAnalyticsRegistry().trackBulkDownloadSwitchOn(
+                videosStatus.courseComponentId, videosStatus.total, videosStatus.remaining);
+    }
+
+    @Override
+    public void onPermissionDenied(String[] permissions, int requestCode) {
     }
 
     private void startVideosDeletion() {
