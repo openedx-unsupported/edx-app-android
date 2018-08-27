@@ -162,11 +162,6 @@ dependencies {
     }
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-    // Branch SDK
-    /* To support versions prior to API level 15 we have to use v1.14.5 of Branch SDK
-     * https://dev.branch.io/getting-started/sdk-integration-guide/advanced/android/#supporting-pre-15-android
-     */
-    compile 'io.branch.sdk.android:library:1.14.5'
 
     // Google Firebase
     compile 'com.google.firebase:firebase-core:10.0.1'
@@ -179,9 +174,16 @@ dependencies {
         transitive = true
     }
 
-    //Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true;
+    // Crashlytics Kit
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+        transitive = true
+    }
+
+    // Branch SDK
+    // Check this link for guide to updating Branch integration:
+    // https://github.com/BranchMetrics/android-branch-deep-linking
+    implementation ('io.branch.sdk.android:library:2.19.2') {
+        exclude module: 'answers-shim'
     }
 
     //New Relic Integration
