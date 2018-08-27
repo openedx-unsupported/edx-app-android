@@ -29,7 +29,6 @@ import org.edx.mobile.util.Config;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.branch.referral.Branch;
 import roboguice.RoboGuice;
 import roboguice.activity.event.OnActivityResultEvent;
 import roboguice.activity.event.OnContentChangedEvent;
@@ -87,9 +86,6 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
     protected void onStart() {
         super.onStart();
         eventManager.fire(new OnStartEvent<Activity>(this));
-        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
-            Branch.getInstance(getApplicationContext()).initSession();
-        }
     }
 
     @Override
@@ -118,9 +114,6 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
             eventManager.fire(new OnStopEvent(this));
         } finally {
             super.onStop();
-        }
-        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
-            Branch.getInstance().closeSession();
         }
     }
 
