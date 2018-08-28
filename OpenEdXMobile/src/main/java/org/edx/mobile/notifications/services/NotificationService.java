@@ -33,6 +33,12 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     @Override
+    public void onNewToken(String s) {
+        logger.debug("Refreshed FCM token: " + s);
+        super.onNewToken(s);
+    }
+
+    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
 

@@ -128,7 +128,9 @@ public abstract class MainApplication extends MultiDexApplication {
 
         if (config.getFirebaseConfig().areNotificationsEnabled()) {
             NotificationUtil.subscribeToTopics(config);
-            NotificationUtil.logFirebaseToken();
+        } else if (!config.getFirebaseConfig().areNotificationsEnabled() &&
+                config.getFirebaseConfig().isEnabled()) {
+            NotificationUtil.unsubscribeFromTopics(config);
         }
 
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));

@@ -20,25 +20,19 @@ public class NotificationUtil {
     public static void subscribeToTopics(Config config) {
         if (config.areFirebasePushNotificationsEnabled()) {
             FirebaseMessaging.getInstance().subscribeToTopic(
-                    NotificationService.NOTIFICATION_TOPIC_RELEASE
+                NotificationService.NOTIFICATION_TOPIC_RELEASE
             );
         }
     }
 
-    public static void logFirebaseToken() {
-        // Get token
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            logger.warn("getInstanceId failed");
-                            return;
-                        }
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        logger.debug("Firebase Token: " + token);
-                    }
-                });
+    /**
+     * UnSubscribe from all the Topic channels
+     */
+    public static void unsubscribeFromTopics(Config config) {
+        if (config.getFirebaseConfig().isEnabled()) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(
+                NotificationService.NOTIFICATION_TOPIC_RELEASE
+            );
+        }
     }
 }

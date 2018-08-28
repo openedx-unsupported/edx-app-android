@@ -571,7 +571,7 @@
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
     <!-- Title for default channel notifications -->
-    <string name="default_notification_channel_title" tools:ignore="MissingTranslation">{platform_name} Notification</string>
+    <string name="default_notification_channel_title" tools:ignore="MissingTranslation">General Notification</string>
 
 
     <!-- Discussion/Forum -->

@@ -17,6 +17,7 @@ buildscript {
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
 
         classpath 'com.facebook.testing.screenshot:plugin:0.4.2'
+        classpath 'com.google.gms:google-services:4.0.1'
     }
 }
 
@@ -234,7 +235,7 @@ configurations {
 def config = new TaskHelper().loadConfig(project)
 def firebase = config.get('FIREBASE')
 def firebaseEnabled = firebase?.get('ENABLED')
-if (config.get('FIREBASE_ENABLED')?: false) {
+if (firebaseEnabled?: false) {
     apply plugin: 'com.google.gms.google-services'
 }
 
