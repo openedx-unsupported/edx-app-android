@@ -48,7 +48,7 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
             switch (action) {
                 case Intent.ACTION_MEDIA_REMOVED:
                 case Intent.ACTION_MEDIA_UNMOUNTED:
-                    handleSDCardUnmounted(context, hashedUsername, sdCardPath);
+                    handleSDCardUnmounted(hashedUsername, sdCardPath);
                     break;
                 case Intent.ACTION_MEDIA_MOUNTED:
                     handleSDCardMounted(hashedUsername, sdCardPath);
@@ -57,12 +57,7 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
         }
     }
 
-    private void handleSDCardUnmounted(Context context,
-                                       String hashedUsername,
-                                       final String sdCardPath){
-        final PrefManager prefManager =
-                new PrefManager(context, PrefManager.Pref.SD_CARD);
-        prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
+    private void handleSDCardUnmounted(String hashedUsername, final String sdCardPath){
         db.getAllVideos(hashedUsername, new DataCallback<List<VideoModel>>() {
             @Override
             public void onResult(List<VideoModel> result) {
@@ -76,7 +71,6 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
                     );
                 }
             }
-
             @Override
             public void onFail(Exception ex) {
                 Log.e(this.getClass().getSimpleName(),

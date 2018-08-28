@@ -89,21 +89,14 @@ public class SettingsFragment extends BaseFragment {
         if (!environment.getConfig().isSDCardDownloadEnabled()){
             sdCardSettinglayout.setVisibility(View.GONE);
         } else {
-            if (FileUtil.isRemovableStorageAvailable(getContext())) {
-                sdCardSwitch.setEnabled(true);
-
-                sdCardSwitch.setOnCheckedChangeListener(null);
-                sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
-                sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, isChecked);
-                    }
-                });
-            } else {
-                prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
-                sdCardSwitch.setEnabled(false);
-            }
+            sdCardSwitch.setOnCheckedChangeListener(null);
+            sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
+            sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, isChecked);
+                }
+            });
         }
     }
 
