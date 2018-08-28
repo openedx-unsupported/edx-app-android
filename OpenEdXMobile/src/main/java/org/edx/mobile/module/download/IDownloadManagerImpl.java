@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -47,8 +48,17 @@ public class IDownloadManagerImpl implements IDownloadManager {
                                 .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                 long size = c.getLong(c
                         .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                String filepath = c.getString(c
-                        .getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                int fileUriIdx = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+                String fileUri = c.getString(fileUriIdx);
+                String filepath = null;
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    if (fileUri != null) {
+                        filepath = Uri.parse(fileUri).getPath();
+                    }
+                } else {
+                    int fileNameIdx = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+                    filepath = c.getString(fileNameIdx);
+                }
                 int status = c.getInt(c
                         .getColumnIndex(DownloadManager.COLUMN_STATUS));
 
