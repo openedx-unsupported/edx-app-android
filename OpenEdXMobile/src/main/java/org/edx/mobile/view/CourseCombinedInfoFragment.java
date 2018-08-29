@@ -50,8 +50,6 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
     private final Logger logger = new Logger(getClass().getName());
 
     private EdxWebView announcementWebView;
-    private View notificationSettingRow;
-    private Switch notificationSwitch;
 
     private EnrolledCoursesResponse courseData;
     private List<AnnouncementsModel> savedAnnouncements;
@@ -93,8 +91,6 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
         // treat every link as external link in this view, so that all links will open in external browser
         client.setAllLinksAsExternal(true);
 
-        notificationSettingRow = view.findViewById(R.id.notification_setting_row);
-        notificationSwitch = (Switch) view.findViewById(R.id.notification_switch);
 
         return view;
     }
@@ -132,25 +128,6 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
                 } else {
                     populateAnnouncements(savedAnnouncements);
                 }
-            }
-
-            if (environment.getConfig().isNotificationEnabled()
-                    && courseData != null && courseData.getCourse() != null) {
-                notificationSettingRow.setVisibility(View.VISIBLE);
-                final String courseId = courseData.getCourse().getId();
-                final String subscriptionId = courseData.getCourse().getSubscription_id();
-                boolean isSubscribed = environment.getNotificationDelegate().isSubscribedByCourseId(courseId);
-                notificationSwitch.setChecked(isSubscribed);
-                notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        environment.getNotificationDelegate().changeNotificationSetting(
-                                courseId, subscriptionId, isChecked);
-                    }
-                });
-            } else {
-                notificationSwitch.setOnCheckedChangeListener(null);
-                notificationSettingRow.setVisibility(View.GONE);
             }
         } catch (Exception ex) {
             logger.error(ex);
