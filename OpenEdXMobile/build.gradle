@@ -175,14 +175,14 @@ dependencies {
     }
 
     // Crashlytics Kit
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+    compile ('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true
     }
 
     // Branch SDK
     // Check this link for guide to updating Branch integration:
     // https://github.com/BranchMetrics/android-branch-deep-linking
-    implementation ('io.branch.sdk.android:library:2.19.2') {
+    compile ('io.branch.sdk.android:library:2.19.2') {
         exclude module: 'answers-shim'
     }
 
