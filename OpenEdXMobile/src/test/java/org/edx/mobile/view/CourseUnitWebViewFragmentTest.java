@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import roboguice.activity.RoboFragmentActivity;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotNull;
@@ -58,7 +60,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
     @Test
     public void initializeTest() throws CourseContentNotValidException {
         CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit());
-        SupportFragmentTestUtil.startVisibleFragment(fragment);
+        SupportFragmentTestUtil.startVisibleFragment(fragment, RoboFragmentActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);
 
