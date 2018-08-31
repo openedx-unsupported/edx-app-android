@@ -1,115 +1,138 @@
- [
+[
   {
-  "version": "2.14",
-  "messages": [
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_1",
-               "title": "Descarga de Videos de Subsección ",
-               "message": "Descargue fácilmente todos los videos dentro de una subsección usando los nuevos controles."
-               },
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_2",
-               "title": "Mejora de la Calidad de Video",
-               "message": "La calidad de transmisión de video se adaptará ahora dependiendo de su red. ¡Mejora aún más la calidad del video al conectarte a una red WiFi!"
-               }
-               ]
+    "version": "2.15",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Soporte mejorado de rotación y modo horizontal",
+        "message": "Ahora puede rotar su Android dispositivo para una mejor visualización en la mayoría de las áreas de la aplicación."
+      },
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Explora Cursos Nuevos con Temas Populares",
+        "message": "¡Explora cursos por tema cuando buscas nuevas experiencias de aprendizaje!"
+      }
+    ]
   },
   {
-  "version": "2.13",
-  "messages": [
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_1",
-               "title": "Navegación Actualizada ",
-               "message": "Acceda rápidamente a sus cursos o descubra nuevos cursos utilizando la nueva navegación."
-               },
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_2",
-               "title": "Descarga de Videos a Granel",
-               "message": "Descargue fácilmente todos los videos dentro de un curso usando los nuevos controles de alternar."
-               }
-               ]
+    "version": "2.14",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Descarga de Videos de Subsección ",
+        "message": "Descargue fácilmente todos los videos dentro de una subsección usando los nuevos controles."
+      },
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Mejora de la Calidad de Video",
+        "message": "La calidad de transmisión de video se adaptará ahora dependiendo de su red. ¡Mejora aún más la calidad del video al conectarte a una red WiFi!"
+      }
+    ]
   },
   {
-  "version": "2.12",
-  "messages": [
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_1",
-               "title": "Mejora de la Navegación del Curso",
-               "message": "Pase rápidamente a los videos del curso, a las discusiones y a las fechas importantes de su curso usando una nueva navegación en curso."
-               }
-               ]
+    "version": "2.13",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Navegación Actualizada ",
+        "message": "Acceda rápidamente a sus cursos o descubra nuevos cursos utilizando la nueva navegación."
+      },
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Descarga de Videos a Granel",
+        "message": "Descargue fácilmente todos los videos dentro de un curso usando los nuevos controles de alternar."
+      }
+    ]
   },
   {
-  "version": "2.11",
-  "messages": [
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_1",
-               "title": "Navegación Actualizada",
-               "message": "Un menú principal simplificado hace que sea más fácil acceder y descubrir cursos."
-               },
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_2",
-               "title": "Plazos de Asignación",
-               "message": "Ahora puede ver las fechas límites de las asignaciones en el esquema del curso."
-               }
-               ]
+    "version": "2.12",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Mejora de la Navegación del Curso",
+        "message": "Pase rápidamente a los videos del curso, a las discusiones y a las fechas importantes de su curso usando una nueva navegación en curso."
+      }
+    ]
   },
   {
-  "version": "2.10",
-  "messages": [
-               {
-               "platforms": [
-                             "ios",
-                             "android"
-                             ],
-               "image": "screen_1",
-               "title": "Videos",
-               "message": "La pestaña \"Videos\" en el menú de cada curso reemplaza \"Mis Videos\" en el menú principal. Ahora puedes ver todos los videos de un curso en un solo lugar!"
-               },
-               {
-               "platforms": [
-                             "android"
-                             ],
-               "image": "screen_2",
-               "title": "Borrar Videos",
-               "message": "En la lista de videos de cursos descargados, pulse prolongadamente una vez para seleccionar los videos que desea eliminar."
-               },
-               {
-               "platforms": [
-                             "ios"
-                             ],
-               "image": "screen_2",
-               "title": "Borrar Videos",
-               "message": "Desliza hacia la izquierda para eliminar los videos descargados."
-               }
-               ]
+    "version": "2.11",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Navegación Actualizada",
+        "message": "Un menú principal simplificado hace que sea más fácil acceder y descubrir cursos."
+      },
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Plazos de Asignación",
+        "message": "Ahora puede ver las fechas límites de las asignaciones en el esquema del curso."
+      }
+    ]
+  },
+  {
+    "version": "2.10",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Videos",
+        "message": "La pestaña \"Videos\" en el menú de cada curso reemplaza \"Mis Videos\" en el menú principal. Ahora puedes ver todos los videos de un curso en un solo lugar!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Borrar Videos",
+        "message": "En la lista de videos de cursos descargados, pulse prolongadamente una vez para seleccionar los videos que desea eliminar."
+      },
+      {
+        "platforms": [
+          "ios"
+        ],
+        "image": "screen_2",
+        "title": "Borrar Videos",
+        "message": "Desliza hacia la izquierda para eliminar los videos descargados."
+      }
+    ]
   }
-  ]
+]

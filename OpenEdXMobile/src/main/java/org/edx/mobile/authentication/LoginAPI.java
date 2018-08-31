@@ -28,6 +28,7 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 @Singleton
@@ -101,16 +102,16 @@ public class LoginAPI {
     private AuthResponse finishSocialLogIn(@NonNull String accessToken, @NonNull LoginPrefs.AuthBackend authBackend) throws Exception {
         final String backend = ApiConstants.getOAuthGroupIdForAuthBackend(authBackend);
         final Response<AuthResponse> response = loginService.exchangeAccessToken(accessToken, config.getOAuthClientId(), backend).execute();
-        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED || response.code() == HTTP_BAD_REQUEST) {
             // TODO: Introduce a more explicit error code to indicate that an account is not linked.
-            throw new AccountNotLinkedException();
+            throw new AccountNotLinkedException(response.code());
         }
         if (!response.isSuccessful()) {
             throw new HttpStatusException(response);
         }
         final AuthResponse data = response.body();
         if (data.error != null && data.error.equals(Integer.toString(HttpURLConnection.HTTP_UNAUTHORIZED))) {
-            throw new AccountNotLinkedException();
+            throw new AccountNotLinkedException(HttpURLConnection.HTTP_UNAUTHORIZED);
         }
         finishLogIn(data, authBackend, "");
         return data;
@@ -203,6 +204,19 @@ public class LoginAPI {
     }
 
     public static class AccountNotLinkedException extends Exception {
+        /** HTTP status code. */
+        private int responseCode;
+
+        public AccountNotLinkedException(int responseCode) {
+            this.responseCode = responseCode;
+        }
+
+        /**
+         * @return HTTP status code.
+         */
+        public int getResponseCode() {
+            return responseCode;
+        }
     }
 
     public static class RegistrationException extends Exception {

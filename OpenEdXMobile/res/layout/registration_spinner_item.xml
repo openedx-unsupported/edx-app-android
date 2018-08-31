@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="?android:attr/spinnerItemStyle"
     android:maxLines="1"
     android:layout_width="match_parent"
@@ -8,4 +9,5 @@
     android:textAlignment="inherit"
     android:fontFamily="sans-serif"
     android:paddingTop="@dimen/edx_base"
-    android:textSize="@dimen/edx_base" />
+    android:textSize="@dimen/edx_base"
+    tools:ignore="EllipsizeMaxLines" />
