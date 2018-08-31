@@ -442,7 +442,9 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         unitList.add(othersModel);
         classesList.add(CourseUnitMobileNotSupportedFragment.class);
 
-        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
+        when(environment.getConfig()).thenReturn(config);
+
+        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, environment,
                 unitList, courseData, hasComponent);
 
         for (int size = unitList.size(), i = 0; i < size; i++) {
@@ -536,12 +538,13 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         @Test
         public void test() throws IOException {
             config = new org.edx.mobile.util.Config(generateConfigProperties());
+            when(environment.getConfig()).thenReturn(config);
 
             FragmentManager fragmentManager = Mockito.mock(FragmentManager.class);
             EnrolledCoursesResponse courseData = Mockito.mock(EnrolledCoursesResponse.class);
             CourseUnitFragment.HasComponent hasComponent = Mockito.mock(CourseUnitFragment.HasComponent.class);
 
-            CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
+            CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, environment,
                     Collections.singletonList(paramCourseComponent), courseData, hasComponent);
 
             assertThat(adapter.getItem(0)).isInstanceOf(expectedFragmentClass);
