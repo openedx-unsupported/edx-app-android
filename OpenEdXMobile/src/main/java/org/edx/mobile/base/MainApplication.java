@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.FacebookSdk;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.joanzapata.iconify.Iconify;
@@ -136,13 +137,6 @@ public abstract class MainApplication extends MultiDexApplication {
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
 
-        // initialize Facebook SDK
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
-        if (!isOnZeroRatedNetwork
-                && config.getFacebookConfig().isEnabled()) {
-            com.facebook.Settings.setApplicationId(config.getFacebookConfig().getFacebookAppId());
-        }
-
         checkIfAppVersionUpgraded(this);
 
         // Register Font Awesome module in android-iconify library
@@ -164,6 +158,16 @@ public abstract class MainApplication extends MultiDexApplication {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             Glide.get(this).register(GlideUrl.class, InputStream.class,
                     new OkHttpUrlLoader.Factory(injector.getInstance(OkHttpClientProvider.class).get()));
+        }
+
+        // Initialize Facebook SDK
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
+        if (!isOnZeroRatedNetwork && config.getFacebookConfig().isEnabled()) {
+            // Facebook sdk should be initialized through AndroidManifest meta data declaration but
+            // we are generating the meta data through gradle script due to which it is necessary
+            // to manually initialize the sdk here.
+            FacebookSdk.setApplicationId(config.getFacebookConfig().getFacebookAppId());
+            FacebookSdk.sdkInitialize(getApplicationContext());
         }
     }
 

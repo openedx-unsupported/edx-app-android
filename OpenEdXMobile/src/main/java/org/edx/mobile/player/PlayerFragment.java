@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -34,7 +33,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.widget.FacebookDialog;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
@@ -47,7 +45,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
@@ -133,8 +130,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     private boolean isManualFullscreen = false;
     private int currentPosition = 0;
-
-    private IUiLifecycleHelper uiHelper;
     private boolean pauseDueToDialog;
     private boolean closedCaptionsEnabled = false;
 
@@ -179,28 +174,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         View view = inflater.inflate(R.layout.panel_player, null);
         this.layoutInflater = inflater;
 
-        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
-        uiHelper.onCreate(savedInstanceState);
-
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
-            @Override
-            public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-
-            }
-
-            @Override
-            public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-
-            }
-        });
-
     }
 
     /**
@@ -367,7 +341,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     public void handleOnResume() {
-        uiHelper.onResume();
         setupController();
 
         if (curMessageTypes.isEmpty()) {
@@ -399,8 +372,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     public void handleOnPause(){
-        uiHelper.onPause();
-
         try{
             orientationDetector.stop();
             handler.removeCallbacks(unfreezeCallback);
@@ -430,8 +401,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onDestroy() {
         super.onDestroy();
-        uiHelper.onDestroy();
-
         if (!stateSaved) {
             if (player!=null) {
                 // reset player when user goes back, and there is no state saving happened
@@ -481,8 +450,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         //FIXME: ensure that prepare is called on all activity restarts and then this can be removed
         outState.putSerializable(KEY_TRANSCRIPT, transcript);
         super.onSaveInstanceState(outState);
-
-        uiHelper.onSaveInstanceState(outState);
     }
 
     public synchronized void prepare(String path, int seekTo, String title,
