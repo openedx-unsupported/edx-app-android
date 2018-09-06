@@ -6,8 +6,15 @@
         android:id="@+id/rl_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:background="@drawable/launch_background"
         android:splitMotionEvents="false">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/phonetic_app_name"
+            android:src="@drawable/launch_background" />
 
         <ImageView
             android:id="@+id/edx_logo"
