@@ -104,4 +104,7 @@
     <!-- Error message shown when a permission is not granted -->
     <string name="permission_not_granted" tools:ignore="MissingTranslation">Permission not granted</string>
 
+    <!-- Error message to be displayed when no courses are found -->
+    <string name="no_available_courses">No available courses</string>
+
 </resources>
