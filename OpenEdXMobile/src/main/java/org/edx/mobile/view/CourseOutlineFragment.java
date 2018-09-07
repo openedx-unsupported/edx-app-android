@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
@@ -54,6 +56,7 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
@@ -65,7 +68,7 @@ import retrofit2.Call;
 public class CourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
         VideoDownloadHelper.DownloadManagerCallback,
-        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>> {
+        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>, BaseFragment.PermissionListener {
     private final Logger logger = new Logger(getClass().getName());
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
@@ -78,7 +81,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private boolean isVideoMode;
     private boolean isOnCourseOutline;
     private boolean isFetchingLastAccessed;
+    // Flag to differentiate between single or multiple video download
+    private boolean isSingleVideoDownload;
     private ActionMode deleteMode;
+    private DownloadEntry downloadEntry;
+    private List<? extends HasDownloadEntry> downloadEntries;
 
     private Call<CourseStructureV1Model> getHierarchyCall;
 
@@ -143,6 +150,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        permissionListener = this;
         updateRowSelection(getArguments().getString(Router.EXTRA_LAST_ACCESSED_ID));
     }
 
@@ -298,12 +306,18 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     new CourseOutlineAdapter.DownloadListener() {
                         @Override
                         public void download(List<? extends HasDownloadEntry> models) {
-                            downloadManager.downloadVideos(models, getActivity(), CourseOutlineFragment.this);
+                            downloadEntries = models;
+                            isSingleVideoDownload = false;
+                            askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                         }
 
                         @Override
                         public void download(DownloadEntry videoData) {
-                            downloadManager.downloadVideo(videoData, getActivity(), CourseOutlineFragment.this);
+                            downloadEntry = videoData;
+                            isSingleVideoDownload = true;
+                            askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                         }
 
                         @Override
@@ -311,6 +325,32 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                             environment.getRouter().showDownloads(getActivity());
                         }
                     }, isVideoMode, isOnCourseOutline);
+        }
+    }
+
+    @Override
+    public void onPermissionGranted(String[] permissions, int requestCode) {
+        switch (requestCode) {
+            case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
+                if (isSingleVideoDownload) {
+                    downloadManager.downloadVideo(downloadEntry, getActivity(), CourseOutlineFragment.this);
+                } else {
+                    downloadManager.downloadVideos(downloadEntries, getActivity(), CourseOutlineFragment.this);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionDenied(String[] permissions, int requestCode) {
+        if (isSingleVideoDownload) {
+            downloadEntry = null;
+        } else {
+            downloadEntries.clear();
+            downloadEntries = null;
         }
     }
 

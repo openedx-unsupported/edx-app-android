@@ -4,13 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
@@ -37,6 +35,9 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
+import de.greenrobot.event.EventBus;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
@@ -45,39 +46,31 @@ import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.user.Account;
-import org.edx.mobile.user.DataType;
-import org.edx.mobile.user.DeleteAccountImageTask;
-import org.edx.mobile.user.FormDescription;
-import org.edx.mobile.user.FormField;
-import org.edx.mobile.user.GetProfileFormDescriptionTask;
-import org.edx.mobile.user.LanguageProficiency;
-import org.edx.mobile.user.SetAccountImageTask;
+import org.edx.mobile.user.*;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
-import org.edx.mobile.user.UserService;
-import org.edx.mobile.util.*;
+import org.edx.mobile.util.InvalidLocaleException;
+import org.edx.mobile.util.LocaleUtils;
+import org.edx.mobile.util.PermissionsUtil;
+import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
+
+import retrofit2.Call;
+import roboguice.inject.InjectExtra;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
-
-public class EditUserProfileFragment extends BaseFragment {
+public class EditUserProfileFragment extends BaseFragment implements BaseFragment.PermissionListener {
 
     private static final int EDIT_FIELD_REQUEST = 1;
     private static final int CAPTURE_PHOTO_REQUEST = 2;
     private static final int CHOOSE_PHOTO_REQUEST = 3;
     private static final int CROP_PHOTO_REQUEST = 4;
-    public static final int CAMERA_PERMISSION_REQUEST = 5;
-    public static final int READ_STORAGE_PERMISSION_REQUEST = 6;
 
     @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
@@ -147,6 +140,7 @@ public class EditUserProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        permissionListener = this;
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
@@ -166,21 +160,13 @@ public class EditUserProfileFragment extends BaseFragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.take_photo: {
-                                if (PermissionsUtil.checkPermissions(Manifest.permission.CAMERA, getActivity())) {
-                                    onPermissionGranted(CAMERA_PERMISSION_REQUEST);
-                                } else {
-                                    PermissionsUtil.requestPermissions(CAMERA_PERMISSION_REQUEST,
-                                            new String[]{Manifest.permission.CAMERA}, EditUserProfileFragment.this);
-                                }
+                                askForPermission(new String[]{Manifest.permission.CAMERA},
+                                        PermissionsUtil.CAMERA_PERMISSION_REQUEST);
                                 break;
                             }
                             case R.id.choose_photo: {
-                                if (PermissionsUtil.checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, getActivity())) {
-                                    onPermissionGranted(READ_STORAGE_PERMISSION_REQUEST);
-                                } else {
-                                    PermissionsUtil.requestPermissions(READ_STORAGE_PERMISSION_REQUEST,
-                                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, EditUserProfileFragment.this);
-                                }
+                                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                        PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST);
                                 break;
                             }
                             case R.id.remove_photo: {
@@ -524,35 +510,12 @@ public class EditUserProfileFragment extends BaseFragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onPermissionGranted(String[] permissions, int requestCode) {
         switch (requestCode) {
-            case CAMERA_PERMISSION_REQUEST:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onPermissionGranted(CAMERA_PERMISSION_REQUEST);
-                } else {
-                    Snackbar.make(getView(), getResources().getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG).show();
-                }
-                break;
-            case READ_STORAGE_PERMISSION_REQUEST:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onPermissionGranted(READ_STORAGE_PERMISSION_REQUEST);
-                } else {
-                    Snackbar.make(getView(), getResources().getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG).show();
-                }
-                break;
-            default:
-                break;
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public void onPermissionGranted(int requestCode) {
-        switch (requestCode) {
-            case CAMERA_PERMISSION_REQUEST:
+            case PermissionsUtil.CAMERA_PERMISSION_REQUEST:
                 startActivityForResult(helper.createCaptureIntent(getActivity()), CAPTURE_PHOTO_REQUEST);
                 break;
-            case READ_STORAGE_PERMISSION_REQUEST:
+            case PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST:
                 final Intent galleryIntent = new Intent()
                         .setType("image/*")
                         .setAction(Intent.ACTION_GET_CONTENT);
@@ -561,5 +524,9 @@ public class EditUserProfileFragment extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onPermissionDenied(String[] permissions, int requestCode) {
     }
 }
