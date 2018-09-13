@@ -5,15 +5,23 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Task;
 
 import org.edx.mobile.social.ISocialImpl;
 
@@ -23,7 +31,9 @@ public class GoogleOauth2 extends ISocialImpl{
     
     private String accessToken;
     private String mEmail; // Received from newChooseAccountIntent(); passed to getToken()
+    private String mUserName;
     private static final int REQUEST_AUTHORIZATION = 343;
+    private GoogleSignInClient googleSignInClient;
 
     
     public GoogleOauth2(Activity activity) {
@@ -38,25 +48,33 @@ public class GoogleOauth2 extends ISocialImpl{
     private GoogleApiClient mGoogleApiClient;
 
     private void pickUserAccount() {
-        try {
-            String[] accountTypes = new String[]{"com.google"};
-            Intent intent = AccountPicker.newChooseAccountIntent(null, null,
-                    accountTypes, true, null, null, null, null);
-            if ( activity == null )
-                return;
-            // check if play-services are installed
-            int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
-            if (ConnectionResult.SUCCESS == result) {
-                activity.startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
-                logger.debug("Launching google account picker ...");
-            } else {
-                // display user friendly error message
-                logger.debug("Play services are missing ...");
-                GooglePlayServicesUtil.getErrorDialog(result, activity, 100).show();
-            }
-        } catch (ActivityNotFoundException ex) {
-            logger.debug("Google-play-services are missing? cannot login by google");
-        }
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("357684780317-d2nb46ph3omjeb8dde5lofs7p5ss4np8.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(activity, gso);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        activity.startActivityForResult(signInIntent, REQUEST_CODE_PICK_ACCOUNT);
+//        try {
+//            String[] accountTypes = new String[]{"com.google"};
+//            Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+//                    accountTypes, true, null, null, null, null);
+//            if ( activity == null )
+//                return;
+//            // check if play-services are installed
+//            int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+//            if (ConnectionResult.SUCCESS == result) {
+//                activity.startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
+//                logger.debug("Launching google account picker ...");
+//            } else {
+//                // display user friendly error message
+//                logger.debug("Play services are missing ...");
+//                GooglePlayServicesUtil.getErrorDialog(result, activity, 100).show();
+//            }
+//        } catch (ActivityNotFoundException ex) {
+//            logger.debug("Google-play-services are missing? cannot login by google");
+//        }
     }
 
     /**
@@ -157,10 +175,13 @@ public class GoogleOauth2 extends ISocialImpl{
         if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
             // Receiving a result from the AccountPicker
             if (resultCode == Activity.RESULT_OK) {
-                mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                logger.debug(data.toString());
-                // With the account name acquired, go get the auth token
-                getUsername();
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+
+//                mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+//                logger.debug(data.toString());
+//                // With the account name acquired, go get the auth token
+//                getUsername();
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // The account picker dialog closed without selecting an account.
                 // Notify users that they must pick an account to proceed.
@@ -176,6 +197,30 @@ public class GoogleOauth2 extends ISocialImpl{
         }
     }
 
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            mEmail = account.getEmail();
+            mUserName = account.getDisplayName();
+            logger.debug(account.toString());
+
+            accessToken = (String) account.getIdToken();
+            logger.debug("Google oauth2: accessToken: " + accessToken);
+            if (callback != null) {
+                callback.onLogin(accessToken);
+            }
+
+            // With the account name acquired, go get the auth token
+//            getUsername();
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("catchResponse", "signInResult:failed code=" + e.getStatusCode());
+//            updateUI(null);
+        }
+    }
+
     @Override
     public void login() {
         pickUserAccount();
@@ -187,6 +232,7 @@ public class GoogleOauth2 extends ISocialImpl{
             try {
                 if ( activity == null )
                     return;
+                googleSignInClient.signOut();
                 GoogleAuthUtil.clearToken(activity, accessToken);
                 logger.debug("Google logged out");
             } catch (GooglePlayServicesAvailabilityException e) {
@@ -201,6 +247,10 @@ public class GoogleOauth2 extends ISocialImpl{
 
     public String getEmail(){
         return mEmail;
+    }
+
+    public String getUserName(){
+        return mUserName;
     }
 
     private String getScopes() {

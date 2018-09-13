@@ -42,6 +42,8 @@ public class GoogleProvider implements SocialProvider {
     public void getUserInfo(Context context,
                             SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,
                             final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
+        userInfoCallback.setSocialUserInfo(google.getEmail(), google.getUserName());
+
         final OkHttpClientProvider okHttpClientProvider = RoboGuice.getInjector(context).getInstance(OkHttpClientProvider.class);
         okHttpClientProvider.get().newCall(new Request.Builder()
                 .url(String.format(USER_INFO_URL, accessToken))
