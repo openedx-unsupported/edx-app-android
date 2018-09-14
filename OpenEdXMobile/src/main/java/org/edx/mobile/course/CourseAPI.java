@@ -140,9 +140,10 @@ public class CourseAPI {
             for (EnrolledCoursesResponse coursesResponse : courseResponses) {
                 if (coursesResponse.getCourse().getId().equals(courseId)) {
                     onResponse(coursesResponse);
-                    break;
+                    return;
                 }
             }
+            onFailure(new Exception("Course not found in user's enrolled courses."));
         }
 
         protected abstract void onResponse(@NonNull final EnrolledCoursesResponse coursesResponse);

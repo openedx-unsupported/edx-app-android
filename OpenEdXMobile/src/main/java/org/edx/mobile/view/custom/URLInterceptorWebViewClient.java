@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.webkit.WebChromeClient;
@@ -20,8 +21,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.StandardCharsets;
-import org.edx.mobile.util.links.EdxCourseInfoLink;
-import org.edx.mobile.util.links.EdxEnrollLink;
+import org.edx.mobile.util.links.WebViewLink;
 
 import roboguice.RoboGuice;
 
@@ -40,7 +40,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     private final Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private final FragmentActivity activity;
-    private IActionListener actionListener;
+    private ActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
 
@@ -74,11 +74,11 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     /**
      * Sets action listener for this client. Use this method to get callbacks
-     * of actions as declared in {@link org.edx.mobile.view.custom.URLInterceptorWebViewClient.IActionListener}.
+     * of actions as declared in {@link ActionListener}.
      *
      * @param actionListener
      */
-    public void setActionListener(IActionListener actionListener) {
+    public void setActionListener(ActionListener actionListener) {
         this.actionListener = actionListener;
     }
 
@@ -180,10 +180,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                     "you might miss some event");
         }
         logger.debug("loading: " + url);
-        if (parseCourseInfoLinkAndCallActionListener(url)) {
-            // we handled this URL
-            return true;
-        } else if (parseEnrollLinkAndCallActionListener(url)) {
+        if (parseRecognizedLinkAndCallListener(url)) {
             // we handled this URL
             return true;
         } else if (redirect && loadingInitialUrl) {
@@ -235,25 +232,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     /**
-     * Checks if {@param strUrl} is valid course info link and, if so,
-     * calls {@link org.edx.mobile.view.custom.URLInterceptorWebViewClient.IActionListener#onClickCourseInfo(String)}
-     *
-     * @return true if an action listener is set and URL was a valid course info link, false otherwise
-     */
-    private boolean parseCourseInfoLinkAndCallActionListener(String strUrl) {
-        if (null == actionListener) {
-            return false;
-        }
-        final EdxCourseInfoLink link = EdxCourseInfoLink.parse(strUrl);
-        if (null == link) {
-            return false;
-        }
-        actionListener.onClickCourseInfo(link.pathId);
-        logger.debug("found course-info URL: " + strUrl);
-        return true;
-    }
-
-    /**
      * Returns true if the pattern of the url matches with that of EXTERNAL URL pattern,
      * false otherwise.
      *
@@ -267,47 +245,40 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     /**
      * Checks if {@param strUrl} is valid enroll link and, if so,
-     * calls {@link org.edx.mobile.view.custom.URLInterceptorWebViewClient.IActionListener#onClickEnroll(String, boolean)}
+     * calls {@link ActionListener#onClickEnroll(String, boolean)}
      *
      * @return true if an action listener is set and URL was a valid enroll link, false otherwise
      */
-    private boolean parseEnrollLinkAndCallActionListener(@Nullable String strUrl) {
+    /**
+     * Checks if {@param strUrl} is recognizable link for the app, if so,
+     * calls {@link ActionListener#onLinkRecognized(WebViewLink)}
+     *
+     * @param strUrl The URL to parse.
+     * @return Whether the URL had atleast one recognized link in it.
+     */
+    private boolean parseRecognizedLinkAndCallListener(@Nullable String strUrl) {
         if (null == actionListener) {
             return false;
         }
-        final EdxEnrollLink link = EdxEnrollLink.parse(strUrl);
-        if (null == link) {
+        final WebViewLink helperObj = WebViewLink.parse(strUrl);
+        if (null == helperObj) {
             return false;
         }
-        actionListener.onClickEnroll(link.courseId, link.emailOptIn);
-        logger.debug("found enroll URL: " + strUrl);
+        actionListener.onLinkRecognized(helperObj);
+        logger.debug("found a recognized URL: " + strUrl);
         return true;
     }
 
     /**
-     * Action listener interface for handling enroll link click action
-     * and course-info link click action.
-     * We may need to add more actions to this interface in future.
+     * Action listener interface for handling a user's click on recognized links in a WebView.
      */
-    public static interface IActionListener {
+    public interface ActionListener {
         /**
-         * Callback that gets called when this client has intercepted Course Info URL.
-         * Sub-classes or any implementation of this class should override this method to handle
-         * tap of course info URL.
-         *
-         * @param pathId
+         * Callback that gets called when this client has intercepted a recognizable link in the
+         * WebView. Sub-classes or any implementation of this class should override this method to
+         * handle or further act upon the recognized link.
          */
-        void onClickCourseInfo(String pathId);
-
-        /**
-         * Callback that gets called when this client has intercepted Enroll action.
-         * Sub-classes or any implementation of this class should override this method to handle
-         * enroll action further.
-         *
-         * @param courseId
-         * @param emailOptIn
-         */
-        void onClickEnroll(String courseId, boolean emailOptIn);
+        void onLinkRecognized(@NonNull WebViewLink helper);
     }
 
     /**
