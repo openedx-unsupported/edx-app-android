@@ -56,6 +56,7 @@ public class GoogleOauth2 extends ISocialImpl{
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         activity.startActivityForResult(signInIntent, REQUEST_CODE_PICK_ACCOUNT);
+        
 //        try {
 //            String[] accountTypes = new String[]{"com.google"};
 //            Intent intent = AccountPicker.newChooseAccountIntent(null, null,
