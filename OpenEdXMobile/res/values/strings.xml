@@ -425,6 +425,11 @@
     <!-- Label for button to open on youtube -->
     <string name="assessment_open_on_youtube">View video on YouTube</string>
 
+    <!-- Label showing that you need to update youtube in order to watch the video -->
+    <string name="assessment_needed_updating_youtube" tools:ignore="MissingTranslation">This video requires that you update the YouTube app.</string>
+    <!-- Label for button to update youtube -->
+    <string name="assessment_update_youtube" tools:ignore="MissingTranslation">Update YouTube</string>
+
     <!-- Video List -->
     <!-- Title of video download screen -->
     <string name="title_download">Downloads</string>

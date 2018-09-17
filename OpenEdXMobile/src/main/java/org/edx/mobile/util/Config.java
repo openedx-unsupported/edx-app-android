@@ -61,6 +61,7 @@ public class Config {
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String API_URL_VERSION = "API_URL_VERSION";
+    private static final String YOUTUBE_VIDEO = "YOUTUBE_VIDEO";
 
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
@@ -592,6 +593,22 @@ public class Config {
         }
     }
 
+    public static class EmbeddedYoutubeConfig {
+        @SerializedName("ENABLED")
+        private boolean enabled;
+
+        @SerializedName("YOUTUBE_API_KEY")
+        private String youtubeApiKey;
+
+        public boolean isYoutubeEnabled() {
+            return enabled;
+        }
+
+        public String getYoutubeApiKey() {
+            return youtubeApiKey;
+        }
+    }
+
     @Inject
     public Config(Context context) {
         try {
@@ -853,5 +870,10 @@ public class Config {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @NonNull
+    public EmbeddedYoutubeConfig getEmbeddedYoutubeConfig() {
+        return getObjectOrNewInstance(YOUTUBE_VIDEO, EmbeddedYoutubeConfig.class);
     }
 }

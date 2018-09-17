@@ -18,16 +18,15 @@
         android:id="@+id/only_youtube_available_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/edx_margin"
         android:layout_marginLeft="@dimen/edx_quadruple_margin"
         android:layout_marginRight="@dimen/edx_quadruple_margin"
+        android:layout_marginBottom="@dimen/edx_margin"
         android:gravity="center"
         android:singleLine="false"
-        tools:text="@string/assessment_only_on_youtube"
         android:textAlignment="center"
         android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_base"
-        tools:targetApi="17" />
+        tools:text="@string/assessment_only_on_youtube" />
 
     <Button
         android:id="@+id/view_on_youtube_button"
@@ -36,6 +35,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/edx_margin"
         android:text="@string/assessment_open_on_youtube" />
+
+    <Button
+        android:id="@+id/update_youtube_button"
+        style="@style/edX.Widget.RegularButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/edx_margin"
+        android:text="@string/assessment_update_youtube"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>
 

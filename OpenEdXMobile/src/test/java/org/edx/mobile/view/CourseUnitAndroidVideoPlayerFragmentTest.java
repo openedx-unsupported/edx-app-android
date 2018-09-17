@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 // The SDK version needs to be lesser than Lollipop because of this
 // issue: https://github.com/robolectric/robolectric/issues/1810
 @Config(sdk = 19)
-public class CourseUnitVideoFragmentTest extends UiTest {
+public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
     /**
      * Method for iterating through the mock course response data, and
      * returning the first video block leaf.
@@ -67,7 +67,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit(), false, false);
+        CourseUnitVideoFragment fragment = CourseUnitAndroidVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertTrue(fragment.getRetainInstance());
 
@@ -115,7 +115,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      */
     @Test
     public void orientationChangeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit(), false, false);
+        CourseUnitVideoFragment fragment = CourseUnitAndroidVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);

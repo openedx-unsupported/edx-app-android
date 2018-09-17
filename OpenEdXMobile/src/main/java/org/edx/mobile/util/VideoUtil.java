@@ -1,6 +1,8 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import java.io.File;
 
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_MP4;
+import static org.edx.mobile.util.AppConstants.YOUTUBE_PACKAGE_NAME;
 
 public class VideoUtil {
     public static final String[] SUPPORTED_VIDEO_FORMATS = {
@@ -151,5 +154,29 @@ public class VideoUtil {
             filepath = video.getBestEncodingUrl(context);
         }
         return filepath;
+    }
+
+    /**
+     * Videos on youtube only are supported if the youtube app is installed
+     * and its version is mayor to 12, so this method verifies these requirements.
+     *
+     * @param context The activity context
+     * @return true if the requirements are satisfied otherwise false
+     */
+    public static boolean isYoutubeAPISupported(Context context) {
+        try {
+            final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(YOUTUBE_PACKAGE_NAME, 0);
+            /*
+             * Youtube documentation says the following "Users need to run version 4.2.16 of the mobile YouTube app (or higher) to use the API."
+             * but the feature has been tested over the version 10 and this has not worked,
+             * so the target version has been set in the minor version where it works
+             * Youtube Documentation (https://developers.google.com/youtube/android/player/)
+             */
+            final float targetVersion = 12;
+            final float currentVersion = Float.parseFloat(packageInfo.versionName.split("\\.")[0]);
+            return Float.compare(currentVersion, targetVersion) >= 0;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

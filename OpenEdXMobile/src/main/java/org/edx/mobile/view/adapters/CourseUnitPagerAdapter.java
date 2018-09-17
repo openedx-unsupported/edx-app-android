@@ -13,13 +13,16 @@ import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.VideoUtil;
+import org.edx.mobile.view.CourseBaseActivity;
+import org.edx.mobile.view.CourseUnitAndroidVideoPlayerFragment;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
 import org.edx.mobile.view.CourseUnitFragment;
 import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment;
 import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment;
-import org.edx.mobile.view.CourseUnitVideoFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
+import org.edx.mobile.view.CourseUnitYoutubeVideoFragment;
 
 import java.util.List;
 
@@ -74,6 +77,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         }
 
         CourseUnitFragment unitFragment;
+        final boolean isYoutubeVideo = (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null);
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
             unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
         }
@@ -81,8 +85,10 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         else if (isCourseUnitVideo(minifiedUnit)) {
             final VideoBlockModel videoBlockModel = (VideoBlockModel) minifiedUnit;
             videoBlockModel.setVideoThumbnail(courseData.getCourse().getCourse_image());
-            unitFragment = CourseUnitVideoFragment.newInstance(videoBlockModel, (pos < unitList.size()), (pos > 0));
-        } else if (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
+            unitFragment = CourseUnitAndroidVideoPlayerFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
+        } else if (isYoutubeVideo && config.getEmbeddedYoutubeConfig().isYoutubeEnabled() && VideoUtil.isYoutubeAPISupported(((CourseBaseActivity) callback).getApplicationContext())) {
+            unitFragment = CourseUnitYoutubeVideoFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
+        } else if (isYoutubeVideo) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);
         } else if (config.isDiscussionsEnabled() && minifiedUnit instanceof DiscussionBlockModel) {
             unitFragment = CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData);
