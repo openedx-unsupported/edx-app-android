@@ -69,9 +69,18 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
                 environment.getConfig(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            private Boolean  firstTime = true;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (firstTime) {
+                    firstTime = false;
+                    CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.instantiateItem(pager, position);
+                    if (initialPage != null) {
+                        initialPage.onPageShow();
+                    }
+                }
             }
 
             @Override
