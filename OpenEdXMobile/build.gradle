@@ -138,7 +138,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.google.firebase:firebase-messaging:17.1.0"
 
-    implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
+    implementation 'com.facebook.android:facebook-login:4.36.0'
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'de.greenrobot:eventbus:2.4.1'
     implementation 'com.squareup.phrase:phrase:1.1.0'
@@ -335,9 +335,22 @@ android {
             }
         }
 
+        def facebookAppId = ""
+        def fbLoginProtocolScheme = ""
+        def facebook = config.get('FACEBOOK')
+        if (facebook?.get('ENABLED')) {
+            facebookAppId = facebook.get('FACEBOOK_APP_ID')
+            if (null == facebookAppId) {
+                throw new GradleException("You must set FACEBOOK_APP_ID if FACEBOOK is enabled")
+            }
+            fbLoginProtocolScheme = "fb"+facebookAppId
+        }
+
         manifestPlaceholders = [supportsRtl:"false",
                                 firebaseEnabled: firebaseEnabled?: false,
-                                branchKey: branchKey]
+                                branchKey: branchKey,
+                                facebookAppId: facebookAppId,
+                                fbLoginProtocolScheme: fbLoginProtocolScheme]
 
         javaCompileOptions {
             annotationProcessorOptions {
