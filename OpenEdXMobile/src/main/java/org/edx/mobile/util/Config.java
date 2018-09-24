@@ -593,7 +593,7 @@ public class Config {
         }
     }
 
-    public static class YoutubeConfig {
+    public static class EmbeddedYoutubeConfig {
         @SerializedName("ENABLED")
         private boolean mEnabled;
 
@@ -873,7 +873,7 @@ public class Config {
     }
 
     @NonNull
-    public YoutubeConfig getYoutubeConfig() {
-        return getObjectOrNewInstance(YOUTUBE_VIDEO, YoutubeConfig.class);
+    public EmbeddedYoutubeConfig getYoutubeConfig() {
+        return getObjectOrNewInstance(YOUTUBE_VIDEO, EmbeddedYoutubeConfig.class);
     }
 }

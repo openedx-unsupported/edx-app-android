@@ -55,8 +55,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     implements IPlayerEventCallback, TranscriptListener {
 
     protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
-    private final static String HAS_NEXT_UNIT_ID = "has_next_unit";
-    private final static String HAS_PREV_UNIT_ID = "has_prev_unit";
+    protected final static String HAS_NEXT_UNIT_ID = "has_next_unit";
+    protected final static String HAS_PREV_UNIT_ID = "has_prev_unit";
     private final static int MSG_UPDATE_PROGRESS = 1022;
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
 
@@ -393,7 +393,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         return filepath;
     }
 
-    private TranscriptModel getTranscriptModel(DownloadEntry video) {
+    protected TranscriptModel getTranscriptModel(DownloadEntry video){
         TranscriptModel transcript = null;
         if (unit != null && unit.getData() != null &&
                 unit.getData().transcripts != null) {

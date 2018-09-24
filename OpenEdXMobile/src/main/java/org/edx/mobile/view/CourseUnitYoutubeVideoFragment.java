@@ -32,9 +32,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private static final int SUBTITLES_DISPLAY_DELAY_MS = 100;
 
-    private final static String HAS_NEXT_UNIT_ID = "has_next_unit";
-    private final static String HAS_PREV_UNIT_ID = "has_prev_unit";
-
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private YouTubePlayer youTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
@@ -170,8 +167,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private void setSubtitlesObj(VideoBlockModel unit) {
         LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
         TranscriptManager transcriptManager = new TranscriptManager(getContext());
-        TranscriptModel transcript = unit.getData().transcripts;
-        transcriptManager.downloadTranscriptsForVideo(transcript);
+        TranscriptModel transcript = getTranscriptModel(unit.getDownloadEntry(environment.getStorage()));
+
         try {
             LinkedHashMap<String, InputStream> localHashMap = transcriptManager
                     .fetchTranscriptsForVideo(transcript);
