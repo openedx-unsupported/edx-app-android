@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
-        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
         <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
         <item name="actionMenuTextColor">@color/toolbar_controls_color</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
@@ -66,9 +65,6 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/toolbar_controls_color</item>
     </style>
-
-    <!-- ToolBar Styles -->
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.ToolBar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/toolbar_background_color</item>
