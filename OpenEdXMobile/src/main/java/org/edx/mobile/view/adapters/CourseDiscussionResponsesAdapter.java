@@ -160,7 +160,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     }
 
-    private void bindViewHolderToThreadRow(DiscussionThreadViewHolder holder) {
+    private void bindViewHolderToThreadRow(final DiscussionThreadViewHolder holder) {
         holder.authorLayoutViewHolder.populateViewHolder(config, discussionThread,
                 discussionThread, initialTimeStampMs,
                 new Runnable() {
@@ -193,15 +193,19 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             bindSocialView(holder.socialLayoutViewHolder, discussionThread);
             holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
+                    boolean isReported = holder.discussionReportViewHolder.toggleReported();
                     discussionService.setThreadFlagged(discussionThread.getIdentifier(),
-                            new FlagBody(!discussionThread.isAbuseFlagged()))
+                            new FlagBody(isReported))
                             .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                     context, null, new DialogErrorNotification(baseFragment)) {
                                 @Override
                                 protected void onResponse(@NonNull final DiscussionThread topicThread) {
                                     discussionThread = discussionThread.patchObject(topicThread);
-                                    notifyItemChanged(0);
                                     EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                                }
+                                @Override
+                                protected void onFailure(@NonNull final Throwable error) {
+                                    notifyItemChanged(0);
                                 }
                             });
                 }
@@ -211,21 +215,25 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
+    private void bindSocialView(final DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
         holder.setDiscussionThread(thread);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean isVoted = holder.toggleVote(discussionThread.isVoted() ? discussionThread.getVoteCount()-1: discussionThread.getVoteCount());
                 discussionService.setThreadVoted(discussionThread.getIdentifier(),
-                        new VoteBody(!discussionThread.isVoted()))
+                        new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                 context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                notifyItemChanged(0);
                                 EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                            }
+                            @Override
+                            protected void onFailure(@NonNull final Throwable error) {
+                                notifyItemChanged(0);
                             }
                         });
             }
@@ -234,16 +242,19 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.threadFollowContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                boolean isFollowing = holder.toggleFollow();
                 discussionService.setThreadFollowed(discussionThread.getIdentifier(),
-                        new FollowBody(!discussionThread.isFollowing()))
+                        new FollowBody(isFollowing))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
                                 context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                notifyItemChanged(0);
                                 EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
+                            }
+                            @Override
+                            protected void onFailure(@NonNull final Throwable error) {
+                                notifyItemChanged(0);
                             }
                         });
             }
@@ -266,7 +277,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
 
-    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, final int position) {
+    private void bindViewHolderToResponseRow(final DiscussionResponseViewHolder holder, final int position) {
         final DiscussionComment comment = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
         holder.authorLayoutViewHolder.populateViewHolder(config, comment,
@@ -339,14 +350,18 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             bindSocialView(holder.socialLayoutViewHolder, position, comment);
             holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
+                    boolean isReported = holder.discussionReportViewHolder.toggleReported();
                     discussionService.setCommentFlagged(comment.getIdentifier(),
-                            new FlagBody(!comment.isAbuseFlagged()))
+                            new FlagBody(isReported))
                             .enqueue(new ErrorHandlingCallback<DiscussionComment>(
                                     context, null, new DialogErrorNotification(baseFragment)) {
                                 @Override
                                 protected void onResponse(@NonNull final DiscussionComment comment) {
                                     discussionResponses.get(position - 1).patchObject(comment);
                                     discussionResponses.set(position - 1, comment);
+                                }
+                                @Override
+                                protected void onFailure(@NonNull final Throwable error) {
                                     notifyItemChanged(position);
                                 }
                             });
@@ -358,21 +373,24 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
+    private void bindSocialView(final DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
         holder.setDiscussionResponse(response);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                boolean isVoted = holder.toggleVote(response.isVoted() ? response.getVoteCount()-1: response.getVoteCount());
                 discussionService.setCommentVoted(response.getIdentifier(),
-                        new VoteBody(!response.isVoted()))
+                        new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionComment>(
                                 context, null, new DialogErrorNotification(baseFragment)) {
                             @Override
                             protected void onResponse(@NonNull final DiscussionComment comment) {
                                 discussionResponses.get(position - 1).patchObject(comment);
                                 discussionResponses.set(position - 1, comment);
+                            }
+                            @Override
+                            protected void onFailure(@NonNull final Throwable error) {
                                 notifyItemChanged(position);
                             }
                         });
