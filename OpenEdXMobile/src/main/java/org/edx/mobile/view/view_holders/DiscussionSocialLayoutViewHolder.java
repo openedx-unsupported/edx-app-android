@@ -41,26 +41,37 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDiscussionThread(final DiscussionThread discussionThread) {
-        threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
-                threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
-        threadVoteIconImageView.setIconColorResource(discussionThread.isVoted() ?
-                R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
-
+        setVote(discussionThread.isVoted(), discussionThread.isVoted() ? discussionThread.getVoteCount() - 1 : discussionThread.getVoteCount());
+        setFollowing(discussionThread.isFollowing());
         threadFollowContainer.setVisibility(View.VISIBLE);
-
-        if (discussionThread.isFollowing()) {
-            threadFollowTextView.setText(R.string.forum_unfollow);
-            threadFollowIconImageView.setIconColorResource(R.color.edx_brand_primary_base);
-        } else {
-            threadFollowTextView.setText(R.string.forum_follow);
-            threadFollowIconImageView.setIconColorResource(R.color.edx_brand_gray_base);
-        }
     }
 
     public void setDiscussionResponse(final DiscussionComment discussionResponse) {
+        setVote(discussionResponse.isVoted(), discussionResponse.isVoted() ? discussionResponse.getVoteCount() - 1 : discussionResponse.getVoteCount());
+    }
+
+    public boolean toggleFollow() {
+        setFollowing(!threadFollowContainer.isSelected());
+        return threadFollowContainer.isSelected();
+    }
+
+    public boolean toggleVote(int otherUserVotes) {
+        setVote(!voteViewContainer.isSelected(), otherUserVotes);
+        return voteViewContainer.isSelected();
+    }
+
+    private void setFollowing(boolean follow) {
+        if (threadFollowContainer.isSelected() != follow) {
+            threadFollowContainer.setSelected(follow);
+            threadFollowTextView.setText(follow ? R.string.forum_unfollow : R.string.forum_follow);
+            threadFollowIconImageView.setIconColorResource(follow ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
+        }
+    }
+
+    private void setVote(boolean vote, int otherUserVotes) {
+        voteViewContainer.setSelected(vote);
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
-                threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionResponse.getVoteCount()));
-        threadVoteIconImageView.setIconColorResource(discussionResponse.isVoted() ?
-                R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
+                threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, vote ? otherUserVotes + 1 : otherUserVotes));
+        threadVoteIconImageView.setIconColorResource(vote ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
     }
 }
