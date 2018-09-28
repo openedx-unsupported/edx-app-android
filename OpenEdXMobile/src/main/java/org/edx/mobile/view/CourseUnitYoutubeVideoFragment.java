@@ -168,6 +168,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
         TranscriptManager transcriptManager = new TranscriptManager(getContext());
         TranscriptModel transcript = getTranscriptModel(unit.getDownloadEntry(environment.getStorage()));
+        transcriptManager.downloadTranscriptsForVideo(transcript);
 
         try {
             LinkedHashMap<String, InputStream> localHashMap = transcriptManager
