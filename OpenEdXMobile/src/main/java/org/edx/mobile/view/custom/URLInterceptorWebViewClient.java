@@ -13,8 +13,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.inject.Inject;
-
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
@@ -60,8 +59,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean loadingInitialUrl = true;
 
-    @Inject
-    Config config;
+    private final Config config;
     /*
     To help a few views (like Announcements) to treat every link as external link and open in
     external web browser.
@@ -70,7 +68,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView) {
         this.activity = activity;
-        RoboGuice.injectMembers(activity, this);
+        config = RoboGuice.getInjector(MainApplication.instance()).getInstance(Config.class);
         setupWebView(webView);
     }
 
