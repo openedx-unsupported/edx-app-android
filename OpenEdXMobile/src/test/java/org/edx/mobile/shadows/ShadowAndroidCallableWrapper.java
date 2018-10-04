@@ -1,14 +1,12 @@
 package org.edx.mobile.shadows;
 
-import android.view.Menu;
-
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.robolectric.annotation.RealObject;
+import org.robolectric.shadow.api.Shadow;
 
 import roboguice.util.AndroidCallableWrapper;
 
-import static org.robolectric.internal.Shadow.*;
 
 /**
  * Shadow for {@link AndroidCallableWrapper} to remove potential deadlock
@@ -24,6 +22,6 @@ public class ShadowAndroidCallableWrapper<ResultT> {
 
     @Implementation
     public void beforeCall() {
-        directlyOn(realAndroidCallableWrapper, AndroidCallableWrapper.class, "doOnPreCall");
+        Shadow.directlyOn(realAndroidCallableWrapper, AndroidCallableWrapper.class, "doOnPreCall");
     }
 }

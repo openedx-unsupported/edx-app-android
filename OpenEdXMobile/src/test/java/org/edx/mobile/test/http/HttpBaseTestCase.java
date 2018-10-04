@@ -14,14 +14,12 @@ import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.interceptor.JsonMergePatchInterceptor;
 import org.edx.mobile.http.interceptor.OnlyIfCachedStrippingInterceptor;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.test.util.MockDataUtil;
-import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
-import org.robolectric.util.concurrent.RoboExecutorService;
+import org.robolectric.android.util.concurrent.RoboExecutorService;
 
 import java.io.IOException;
 import java.util.Locale;

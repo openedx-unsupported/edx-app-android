@@ -46,9 +46,12 @@ public class WebViewActivityTest extends BaseTestCase {
                                                                  @Nullable String title)
             throws PackageManager.NameNotFoundException {
         final WebViewActivity activity =
-                Robolectric.buildActivity(WebViewActivity.class)
-                        .withIntent(WebViewActivity.newIntent(
-                                RuntimeEnvironment.application, url, title)).setup().get();
+                Robolectric.buildActivity(
+                    WebViewActivity.class,
+                    WebViewActivity.newIntent(
+                        RuntimeEnvironment.application, url, title
+                    )
+                ).setup().get();
         final View contentView = Shadows.shadowOf(activity).getContentView();
         assertNotNull(contentView);
         final WebView webView = (WebView) contentView.findViewById(R.id.webView);

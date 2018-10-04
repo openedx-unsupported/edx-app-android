@@ -39,13 +39,11 @@ before_script:
 
 script:
   - make quality
-
-# FIXME: Disable test cases for some time due to dependency on updating of robolectric library which we shall cover in story LEARNER-5469
-#  - make test
-#  # Check if emulator has finished booting
-#  - android-wait-for-emulator
-#  - adb shell input keyevent 82 &
-#  - travis_wait make e2e
+  - make test
+  # Check if emulator has finished booting
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+  - travis_wait make e2e
   # Script to print lint information in logs.
   - ./gradlew lintProdDebug --info
 

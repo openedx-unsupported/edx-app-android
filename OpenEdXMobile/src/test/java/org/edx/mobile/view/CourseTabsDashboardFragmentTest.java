@@ -8,6 +8,8 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.junit.Test;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
+import roboguice.activity.RoboFragmentActivity;
+
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotNull;
@@ -29,7 +31,7 @@ public class CourseTabsDashboardFragmentTest extends UiTest {
     @Test
     public void initializeTest() {
         CourseTabsDashboardFragment fragment = CourseTabsDashboardFragment.newInstance(getCourseData());
-        SupportFragmentTestUtil.startVisibleFragment(fragment);
+        SupportFragmentTestUtil.startVisibleFragment(fragment, RoboFragmentActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);
 
