@@ -21,11 +21,6 @@
     <!-- Required by app for capturing image -->
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- Required by legacy Google Sign In (TODO: Switch to new Google Sign In) -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-
     <!-- Sticky broadcast passing a message from one screen and display on another -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
