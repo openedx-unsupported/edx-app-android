@@ -86,6 +86,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Inject
     private CourseAPI courseApi;
+    private ViewTreeObserver.OnGlobalLayoutListener transcriptListLayoutListener;
 
     /**
      * Create a new instance of fragment
@@ -435,6 +436,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Override
     public void onStop() {
         super.onStop();
+        transcriptListView.getViewTreeObserver().removeOnGlobalLayoutListener(transcriptListLayoutListener);
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
 
@@ -644,22 +646,17 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             } else {
                 messageContainer.setVisibility(View.GONE);
                 transcriptListView.setVisibility(View.VISIBLE);
-
                 // Calculating the offset required for centralizing the current transcript item
                 // p.s. Without this listener the getHeight function returns 0
-                transcriptListView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                transcriptListLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
                     public void onGlobalLayout() {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            transcriptListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        } else {
-                            transcriptListView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        }
-
+                        transcriptListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         final float transcriptRowHeight = getResources().getDimension(R.dimen.transcript_row_height);
                         final float listviewHeight = transcriptListView.getHeight();
                         topOffset = (listviewHeight / 2) - (transcriptRowHeight / 2);
                     }
-                });
+                };
+                transcriptListView.getViewTreeObserver().addOnGlobalLayoutListener(transcriptListLayoutListener);
             }
         }
     }
