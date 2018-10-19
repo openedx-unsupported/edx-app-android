@@ -11,6 +11,7 @@ import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
@@ -57,6 +58,7 @@ import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
@@ -86,6 +88,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private ActionMode deleteMode;
     private DownloadEntry downloadEntry;
     private List<? extends HasDownloadEntry> downloadEntries;
+    private SwipeRefreshLayout swipeContainer;
 
     private Call<CourseStructureV1Model> getHierarchyCall;
 
@@ -137,9 +140,21 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         final View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView) view.findViewById(R.id.outline_list);
-        errorNotification = new FullScreenErrorNotification(listView);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
 
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Hide the progress bar as swipe layout has its own progress indicator
+                loadingIndicator.setVisibility(View.GONE);
+                errorNotification.hideError();
+                getCourseComponentFromServer(false);
+            }
+        });
+        UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
+        
         restore(bundle);
         initListView(view);
         fetchCourseComponent();
@@ -227,6 +242,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             protected void onResponse(@NonNull final CourseComponent courseComponent) {
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
                 loadData(validateCourseComponent(courseComponent));
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -236,6 +252,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     errorNotification.showError(getContext(), error);
                     logger.error(error, true);
                 }
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -243,6 +260,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 if (!EventBus.getDefault().isRegistered(CourseOutlineFragment.this)) {
                     EventBus.getDefault().registerSticky(CourseOutlineFragment.this);
                 }
+                swipeContainer.setRefreshing(false);
             }
         });
     }
