@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,9 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
 
     @InjectView(R.id.auth_webview)
     protected AuthenticatedWebView authWebView;
+
+    @InjectView(R.id.swipe_container)
+    protected SwipeRefreshLayout swipeContainer;
 
     public static Bundle makeArguments(@NonNull String url, @Nullable String javascript, boolean isManuallyReloadable) {
         final Bundle args = new Bundle();
@@ -59,6 +63,13 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_authenticated_webview, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Disable the SwipeRefreshLayout by-default to allow the subclasses to provide a proper implementation for it
+        swipeContainer.setEnabled(false);
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RawRes;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,5 +132,15 @@ public class UiUtil {
         } else {
             return View.generateViewId();
         }
+    }
+
+    /**
+     * Sets the color scheme of the provided {@link SwipeRefreshLayout}.
+     *
+     * @param swipeRefreshLayout The SwipeRefreshLayout to set the color scheme of.
+     */
+    public static void setSwipeRefreshLayoutColors(@NonNull SwipeRefreshLayout swipeRefreshLayout) {
+        swipeRefreshLayout.setColorSchemeResources(R.color.edx_brand_primary_accent,
+                R.color.edx_brand_gray_x_back);
     }
 }
