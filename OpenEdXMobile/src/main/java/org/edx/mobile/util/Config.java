@@ -47,6 +47,7 @@ public class Config {
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
+    private static final String PROGRAM = "PROGRAM";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String GOOGLE = "GOOGLE";
@@ -174,6 +175,29 @@ public class Config {
 
         public boolean isSubjectDiscoveryEnabled() {
             return subjectDiscovery;
+        }
+    }
+
+    public static class ProgramConfig {
+        @SerializedName("ENABLED")
+        private boolean enabled;
+
+        @SerializedName("PROGRAM_URL")
+        private String url;
+
+        @SerializedName("PROGRAM_DETAIL_URL_TEMPLATE")
+        private String detailUrlTemplate;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getDetailUrlTemplate() {
+            return detailUrlTemplate;
         }
     }
 
@@ -614,6 +638,11 @@ public class Config {
     @NonNull
     public EnrollmentConfig getCourseDiscoveryConfig() {
         return getObjectOrNewInstance(COURSE_ENROLLMENT, EnrollmentConfig.class);
+    }
+
+    @NonNull
+    public ProgramConfig getProgramConfig() {
+        return getObjectOrNewInstance(PROGRAM, ProgramConfig.class);
     }
 
     @NonNull
