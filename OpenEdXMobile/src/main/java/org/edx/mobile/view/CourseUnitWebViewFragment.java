@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @InjectView(R.id.auth_webview)
     private AuthenticatedWebView authWebView;
 
+    @InjectView(R.id.swipe_container)
+    protected SwipeRefreshLayout swipeContainer;
+
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
         Bundle args = new Bundle();
@@ -38,6 +42,12 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_authenticated_webview, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        swipeContainer.setEnabled(false);
     }
 
     @Override
