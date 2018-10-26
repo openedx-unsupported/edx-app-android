@@ -45,6 +45,10 @@
         </item>
     </style>
 
+    <style name="AppTheme.NoDisplayTheme" parent="android:style/Theme.NoDisplay">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
