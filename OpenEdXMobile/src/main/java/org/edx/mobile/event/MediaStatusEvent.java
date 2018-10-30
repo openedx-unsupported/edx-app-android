@@ -1,18 +1,14 @@
 package org.edx.mobile.event;
 
-import android.support.annotation.NonNull;
-
 public class MediaStatusEvent extends BaseEvent {
 
-    @NonNull
-    private final String status;
+    private final boolean sdCardAvailable;
 
-    public MediaStatusEvent(@NonNull String status) {
-        this.status = status;
+    public MediaStatusEvent(boolean sdCardAvailable) {
+        this.sdCardAvailable = sdCardAvailable;
     }
 
-    @NonNull
-    public String getStatus() {
-        return status;
+    public boolean isSdCardAvailable() {
+        return sdCardAvailable;
     }
 }

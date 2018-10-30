@@ -47,16 +47,19 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
 
         String action = intent.getAction();
         if(action != null) {
+            boolean sdCardAvailable = false;
             switch (action) {
                 case Intent.ACTION_MEDIA_REMOVED:
                 case Intent.ACTION_MEDIA_UNMOUNTED:
+                    sdCardAvailable = false;
                     handleSDCardUnmounted(hashedUsername, sdCardPath);
                     break;
                 case Intent.ACTION_MEDIA_MOUNTED:
+                    sdCardAvailable = true;
                     handleSDCardMounted(hashedUsername, sdCardPath);
                     break;
             }
-            EventBus.getDefault().postSticky(new MediaStatusEvent(action));
+            EventBus.getDefault().postSticky(new MediaStatusEvent(sdCardAvailable));
         }
     }
 

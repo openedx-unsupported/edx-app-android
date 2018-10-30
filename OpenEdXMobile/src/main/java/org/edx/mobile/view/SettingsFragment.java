@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -98,15 +97,7 @@ public class SettingsFragment extends BaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaStatusEvent event) {
-        switch (event.getStatus()) {
-            case Intent.ACTION_MEDIA_REMOVED:
-            case Intent.ACTION_MEDIA_UNMOUNTED:
-                sdCardSwitch.setEnabled(false);
-                break;
-            case Intent.ACTION_MEDIA_MOUNTED:
-                sdCardSwitch.setEnabled(true);
-                break;
-        }
+        sdCardSwitch.setEnabled(event.isSdCardAvailable());
     }
 
     private void updateSDCardSwitch() {

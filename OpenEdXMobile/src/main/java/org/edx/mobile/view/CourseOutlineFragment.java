@@ -35,6 +35,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
+import org.edx.mobile.event.MediaStatusEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
@@ -621,6 +622,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
+        adapter.notifyDataSetChanged();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaStatusEvent e) {
         adapter.notifyDataSetChanged();
     }
 
