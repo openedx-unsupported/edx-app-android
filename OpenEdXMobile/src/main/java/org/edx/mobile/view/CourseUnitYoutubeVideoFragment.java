@@ -23,6 +23,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import subtitleFile.Caption;
 import subtitleFile.FormatSRT;
@@ -181,13 +182,28 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                                 new FormatSRT().parseFile("temp.srt", localInputStream);
                         srtList.put(thisKey, localTimedTextObject);
                         localInputStream.close();
-                        subtitlesObj = srtList.entrySet().iterator().next().getValue();
                     }
+                }
+                if (!srtList.entrySet().isEmpty()) {
+                    setSubtitlesObj(srtList);
                 }
             }
 
         } catch (Exception localException) {
             logger.error(localException);
         }
+    }
+
+    private void setSubtitlesObj(LinkedHashMap<String, TimedTextObject> srtList){
+        String key = Locale.getDefault().getLanguage();
+        if (srtList.containsKey(key)) {
+            subtitlesObj = srtList.get(key);
+        } else if (srtList.containsKey("en")) {
+            subtitlesObj = srtList.get("en");
+        } else {
+            subtitlesObj = srtList.entrySet().iterator().next().getValue();
+        }
+
+
     }
 }
