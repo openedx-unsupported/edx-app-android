@@ -68,7 +68,7 @@ public class UserPrefs {
     @Nullable
     public File getDownloadDirectory() {
         File downloadDir = null;
-        if (isSDCardDownloadEnabled()) {
+        if (isSDCardDownloadEnabled() && FileUtil.isRemovableStorageAvailable(context)) {
             downloadDir = FileUtil.getRemovableStorageAppDir(context);
         } else {
             // If no removable storage found, set app internal storage directory
