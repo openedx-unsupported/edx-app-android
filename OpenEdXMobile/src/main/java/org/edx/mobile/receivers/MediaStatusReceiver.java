@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.event.MediaStatusEvent;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -15,6 +16,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Sha1Util;
 
+import de.greenrobot.event.EventBus;
 import roboguice.receiver.RoboBroadcastReceiver;
 
 
@@ -54,6 +56,7 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
                     handleSDCardMounted(hashedUsername, sdCardPath);
                     break;
             }
+            EventBus.getDefault().postSticky(new MediaStatusEvent(action));
         }
     }
 
