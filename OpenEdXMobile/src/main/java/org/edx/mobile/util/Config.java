@@ -2,6 +2,7 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -189,7 +190,8 @@ public class Config {
         private String detailUrlTemplate;
 
         public boolean isEnabled() {
-            return enabled;
+            // TODO Disable program feature for kitkat users, See Jira story LEARNER-6625 for more details.
+            return enabled && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT ;
         }
 
         public String getUrl() {
