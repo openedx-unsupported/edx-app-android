@@ -128,12 +128,18 @@ public abstract class BaseWebViewFindCoursesActivity extends BaseFragmentActivit
         if (progressWheel != null) {
             progressWheel.setVisibility(View.VISIBLE);
         }
+        if (webView != null) {
+            webView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void hideLoadingProgress() {
         if (progressWheel != null) {
             progressWheel.setVisibility(View.GONE);
+        }
+        if (webView != null) {
+            webView.setVisibility(View.VISIBLE);
         }
     }
 
