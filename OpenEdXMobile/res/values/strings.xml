@@ -34,11 +34,11 @@
     <!-- Subjects Discovery -->
 
     <!-- Label for browsing courses by a subject -->
-    <string name="browse_by_subject" tools:ignore="MissingTranslation">Browse by Subject</string>
+    <string name="browse_by_subject">Browse by Subject</string>
     <!-- Button's Label for viewing all subjects -->
-    <string name="view_all_subjects" tools:ignore="MissingTranslation">View All Subjects</string>
+    <string name="view_all_subjects">View All Subjects</string>
     <!-- Label for searching subjects -->
-    <string name="search_subjects" tools:ignore="MissingTranslation">Search Subject</string>
+    <string name="search_subjects">Search Subject</string>
 
     <!-- Course Sharing -->
 
@@ -91,15 +91,15 @@
 
     <!-- License Agreement related string on Login and Regiser screens -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_creating_account" tools:ignore="MissingTranslation">By creating an account, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
+    <string name="by_creating_account">By creating an account, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
     <!-- Sign In agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_signing_in" tools:ignore="MissingTranslation">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
+    <string name="by_signing_in">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
     <!-- Label for End User License Agreement -->
-    <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} End User License Agreement</string>
+    <string name="licensing_agreement">{platform_name} End User License Agreement</string>
     <!-- Label for Terms of Service and Honor Code -->
-    <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name} Terms of Service and Honor Code</string>
+    <string name="tos_and_honor_code">{platform_name} Terms of Service and Honor Code</string>
     <!-- Label for Privacy Policy -->
-    <string name="privacy_policy" tools:ignore="MissingTranslation">Privacy Policy</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
     <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
@@ -169,7 +169,7 @@
     <!-- Title of privacy policy users must accept to use the app -->
     <string name="privacy_policy_title" translatable="false">@string/privacy_policy</string>
     <!-- Title of terms of service & honor code users must accept to use the app -->
-    <string name="terms_of_service_title" tools:ignore="MissingTranslation">Terms of Service</string>
+    <string name="terms_of_service_title">Terms of Service</string>
 
     <!-- My Courses -->
     <!-- Row of course on dashboard screen -->
@@ -426,11 +426,11 @@
 
     <!-- Bulk Videos Download -->
     <!-- Accessibility label of bulk download switch -->
-    <string name="bulk_download_switch" tools:ignore="MissingTranslation">Bulk videos download switch.</string>
+    <string name="bulk_download_switch">Bulk videos download switch.</string>
     <!-- Title for bulk videos download view when in new or partial videos' download state -->
     <string name="download_to_device">Download to Device</string>
     <!-- Subtitle for bulk videos download view when in new or partial videos' download state -->
-    <plurals name="download_total" tools:ignore="MissingTranslation">
+    <plurals name="download_total">
         <item quantity="one">{total_videos_count} Video, {total_videos_size} total</item>
         <item quantity="other">{total_videos_count} Videos, {total_videos_size} total</item>
     </plurals>
@@ -439,15 +439,15 @@
     <!-- Title for bulk videos download view when in downloading state -->
     <string name="downloading_videos">Downloading Videos…</string>
     <!-- Subtitle for bulk videos download view when in downloading state -->
-    <string name="download_remaining" tools:ignore="MissingTranslation">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
+    <string name="download_remaining">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
     <!-- Title for bulk videos download view when in downloaded state -->
     <string name="download_complete">All Videos Downloaded</string>
     <!-- Accessibility label of bulk download switch, when its state is OFF and no download is happening -->
-    <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">Toggling the switch on, will download all videos of this course.</string>
+    <string name="switch_off_no_downloading">Toggling the switch on, will download all videos of this course.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos are downloading -->
-    <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
+    <string name="switch_on_all_downloading">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded -->
-    <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">Toggling the switch off, will delete all downloaded videos of this course.</string>
+    <string name="switch_on_all_downloaded">Toggling the switch off, will delete all downloaded videos of this course.</string>
     <!-- Accessibility label of full bulk download view when videos are being downloaded -->
     <string name="view_downloads">Double tap to view current downloads.</string>
 
@@ -573,7 +573,7 @@
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
     <!-- Title for default channel notifications -->
-    <string name="default_notification_channel_title" tools:ignore="MissingTranslation">General Notification</string>
+    <string name="default_notification_channel_title">General Notification</string>
 
 
     <!-- Discussion/Forum -->

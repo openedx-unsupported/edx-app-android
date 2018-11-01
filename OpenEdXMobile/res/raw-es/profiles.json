@@ -17,7 +17,7 @@
     {
               "name" : "year_of_birth",
               "label" : "Año de nacimiento",
-              "type" : "select",
+              "type" : "elegir",
               "options" : {
                 "range_min" : 1896,
                 "range_max" : 2015,
@@ -31,9 +31,9 @@
               "name" : "país",
               "label" : "Ubicación",
               "type" : "select",
-              "data_type" : "country",
+              "data_type" : "país",
               "options" : {
-                "reference" : "countries",
+                "reference" : "paises",
                 "allows_none" : true,
                 "none_label" : "Sin ubicación"
               }
@@ -41,10 +41,10 @@
     {
               "name" : "language_proficiencies",
               "label" : "Idioma Primario",
-              "type" : "select",
-              "data_type" : "language",
+              "type" : "elegir",
+              "data_type" : "idioma",
               "options" : {
-                "reference" : "languages",
+                "reference" : "idiomas",
                 "allows_none" : true,
                 "none_label" : "Sin idioma primario"
               }

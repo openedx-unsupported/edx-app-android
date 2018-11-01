@@ -4,8 +4,11 @@
   <string name="error_unknown">Error desconocido. Por favor, intente más tarde. </string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
+  <string name="course_error_content_invalid">No ha sido posible cargar el contenido del curso. Inténtelo de nuevo más tarde.</string>
   <!--Title of alert shown when course enrollment request fails-->
+  <string name="enrollment_error_title">Error en la Inscripción</string>
   <!--Error message shown in alert when course enrollment request fails-->
+  <string name="enrollment_error_message">No ha sido posible inscribirlo a este curso en este momento usando la aplicación móvil {platform_name}. Por favor inténtelo de nuevo desde su navegador web.</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">No está conectado a Internet.</string>
@@ -34,10 +37,14 @@
   <string name="error_account_not_linked_title_fb">La cuenta de Facebook no está asociada con una cuenta de {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">Asegurese de que su cuenta de Facebook está asociada con su cuenta de {platform_name} en {platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
+  <string name="error_account_not_linked_desc_fb_2">Esta cuenta de Facebook no está asociada con ninguna cuenta de {platform_name}. Por favor regístrela.</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_title_google">La cuenta de Google no está asociada con una cuenta de {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_desc_google">Asegurese de que su cuenta de Google está asociada con su cuenta de {platform_name} en {platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_google_2">Esta cuenta de Google no está asociada con ninguna cuenta de {platform_name}. Por favor regístrela.</string>
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">Descarga fallida.</string>
@@ -76,4 +83,7 @@
   <string name="app_version_unsupported_login_msg">Su versión de la aplicación ya no es compatible. Actualice a la última versión para iniciar sesión.</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
   <string name="app_version_unsupported_register_msg">Su versión de la aplicación ya no es compatible. Actualice a la última versión para registrarse.</string>
+  <!--Permission Error Messages-->
+  <!--Error message shown when a permission is not granted-->
+  <string name="permission_not_granted">Permiso denegado</string>
 </resources>
