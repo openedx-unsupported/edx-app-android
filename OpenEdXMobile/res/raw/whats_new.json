@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.16",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Programs on Mobile",
+        "message": "You can now view your edX programs on the go!"
+      }
+    ]
+  },
+  {
     "version": "2.15",
     "messages": [
       {

@@ -6,11 +6,11 @@
 
     <!-- Course related error messages -->
     <!-- Error shown when a course's content is invalid or not in the format that we expect -->
-    <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Unable to load course content. Try again later.</string>
+    <string name="course_error_content_invalid">Unable to load course content. Try again later.</string>
     <!-- Title of alert shown when course enrollment request fails -->
-    <string name="enrollment_error_title" tools:ignore="MissingTranslation">Enrollment Error</string>
+    <string name="enrollment_error_title">Enrollment Error</string>
     <!-- Error message shown in alert when course enrollment request fails -->
-    <string name="enrollment_error_message" tools:ignore="MissingTranslation">We are unable to enroll you in this course at this time using the {platform_name} mobile application. Please try again on your web browser.</string>
+    <string name="enrollment_error_message">We are unable to enroll you in this course at this time using the {platform_name} mobile application. Please try again on your web browser.</string>
 
     <!-- Network error messages -->
     <!-- Error shown when  user attempts an action but needs an internet connection -->
@@ -42,13 +42,13 @@
     <!-- Content of alert shown during login when user attempts login via Facebook without having linked their account -->
     <string name="error_account_not_linked_desc_fb">Make sure your Facebook account is associated with your {platform_name} account on {platform_destination}</string>
     <!-- Content of alert shown during login when user attempts login via Facebook without having linked their account -->
-    <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">This Facebook account is not linked with any {platform_name} account. Please register.</string>
+    <string name="error_account_not_linked_desc_fb_2">This Facebook account is not linked with any {platform_name} account. Please register.</string>
     <!-- Title of alert shown during login when user attempts login via Google without having linked their account -->
     <string name="error_account_not_linked_title_google">Google account not associated with {platform_name} account</string>
     <!-- Content of alert shown during login when user attempts login via Google without having linked their account -->
     <string name="error_account_not_linked_desc_google">Make sure your Google account is associated with your {platform_name} account on {platform_destination}</string>
     <!-- Content of alert shown during login when user attempts login via Google without having linked their account -->
-    <string name="error_account_not_linked_desc_google_2" tools:ignore="MissingTranslation">This Google account is not linked with any {platform_name} account. Please register.</string>
+    <string name="error_account_not_linked_desc_google_2">This Google account is not linked with any {platform_name} account. Please register.</string>
 
     <!-- Download error messages -->
     <!-- Label shown on video list item whose download failed -->
@@ -102,6 +102,6 @@
     <!-- Permission Error Messages -->
 
     <!-- Error message shown when a permission is not granted -->
-    <string name="permission_not_granted" tools:ignore="MissingTranslation">Permission not granted</string>
+    <string name="permission_not_granted">Permission not granted</string>
 
 </resources>
