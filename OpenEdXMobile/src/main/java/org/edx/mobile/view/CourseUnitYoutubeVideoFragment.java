@@ -196,6 +196,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private void setSubtitlesObj(LinkedHashMap<String, TimedTextObject> srtList){
         String key = Locale.getDefault().getLanguage();
+        if (key.equals("iw")) {
+            key = "he";
+        }
         if (srtList.containsKey(key)) {
             subtitlesObj = srtList.get(key);
         } else if (srtList.containsKey("en")) {
