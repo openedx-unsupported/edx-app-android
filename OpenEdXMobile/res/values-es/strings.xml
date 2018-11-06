@@ -25,8 +25,11 @@
   <string name="cannot_show_dashboard">No es posible mostrar el panel de control.</string>
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
+  <string name="browse_by_subject">Buscar por Asignatura</string>
   <!--Button's Label for viewing all subjects-->
+  <string name="view_all_subjects">Ver todas las Asignaturas</string>
   <!--Label for searching subjects-->
+  <string name="search_subjects">Buscar Asignatura</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartir este curso</string>
@@ -72,10 +75,15 @@
   <string name="login_failed">Por favor, asegúrese de que su nombre de usuario o dirección de correo electrónico y la contraseña son correctos e inténtelo de nuevo.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <string name="by_creating_account">Al crear una cuenta, usted acepta la {license} y {tos_and_honor_code} y reconoce la {privacy_policy}</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <string name="by_signing_in">Al registrarse, usted acepta la {license} y {tos_and_honor_code} y reconoce la {privacy_policy}</string>
   <!--Label for End User License Agreement-->
+  <string name="licensing_agreement">{platform_name} Acuerdo de Licencia de Usuario Final</string>
   <!--Label for Terms of Service and Honor Code-->
+  <string name="tos_and_honor_code">{platform_name} Términos de Servicio y Código de Honor</string>
   <!--Label for Privacy Policy-->
+  <string name="privacy_policy">Política de Privacidad</string>
   <string name="login_title">iniciar sesión</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Cerrar</string>
@@ -88,6 +96,7 @@
   <string name="open_profile_button">Abrir su perfil</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Cursos</string>
+  <!--Title of user's program list screen-->
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
   <!--Title of webview based Find Courses Screen-->
@@ -139,6 +148,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="end_user_title">Acuerdo de Licencia del Usuario</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
+  <string name="terms_of_service_title">Términos de Servicio</string>
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">Curso</string>
@@ -374,19 +384,28 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="no_connectivity">Error de conexión</string>
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
+  <string name="bulk_download_switch">Activación de descarga de videos masiva.</string>
   <!--Title for bulk videos download view when in new or partial videos' download state-->
   <string name="download_to_device">Descargar a Dispositivo </string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
+  <plurals name="download_total">
+    <item quantity="one">{total_videos_count} Video, {total_videos_size} en total</item>
+    <item quantity="other">{total_videos_count} Videos, {total_videos_size} en total</item>
+  </plurals>
   <!--Title for bulk videos download view when download is starting-->
   <string name="download_starting">Iniciando Descarga...</string>
   <!--Title for bulk videos download view when in downloading state-->
   <string name="downloading_videos">Descargando Videos...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
+  <string name="download_remaining">{remaining_videos_count} Restantes, {remaining_videos_size} en total</string>
   <!--Title for bulk videos download view when in downloaded state-->
   <string name="download_complete">Todos los Videos Descargados</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
+  <string name="switch_off_no_downloading">Al activar el interruptor, se descargarán todos los videos de este curso.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
+  <string name="switch_on_all_downloading">Al desactivar el interruptor, se cancelará la descarga de todos los videos y se eliminarán todos los videos descargados de este curso.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
+  <string name="switch_on_all_downloaded">Al apagar el interruptor, se eliminarán todos los videos descargados de este curso.</string>
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
   <string name="view_downloads">Toque dos veces para ver las descargas actuales</string>
   <!--Wifi New Message-->
@@ -501,6 +520,8 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="notification_toggle">Permitir notificaciones</string>
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">Sin título</string>
+  <!--Title for default channel notifications-->
+  <string name="default_notification_channel_title">Notificación General</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">Resultados no encontrados para \"{search_query}\". Intente usando otro término de búsqueda o seleccione una categoría de discusión para explorar.</string>
   <string name="forum_no_results_for_all_posts">No hay comentarios en esta discusión.</string>
@@ -557,7 +578,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Button that will open a camera for taking a new profile photo-->
   <string name="edit_user_profile_take_photo">Tomar foto</string>
   <!--Button that will open photo gallery for choosing a new profile photo-->
-  <string name="edit_user_profile_choose_photo">Elejir una foto</string>
+  <string name="edit_user_profile_choose_photo">Elegir una foto</string>
   <!--Button that will open a camera for taking a new profile photo-->
   <string name="edit_user_profile_remove_photo">Eliminar foto</string>
   <!--Title when cropping newly selected profile photo-->

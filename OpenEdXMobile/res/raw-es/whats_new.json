@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.16",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Programas en Móvil",
+        "message": "Ahora puede ver sus programas de edX en cualquier lugar!"
+      }
+    ]
+  },
+  {
     "version": "2.15",
     "messages": [
       {
