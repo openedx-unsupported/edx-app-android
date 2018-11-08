@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 
 import org.edx.mobile.R;
@@ -37,6 +40,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private YouTubePlayer youTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
     private TimedTextObject subtitlesObj;
+    private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
 
     /**
      * Create a new instance of fragment
@@ -57,13 +61,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setSubtitlesObj(unit);
-
-        if (subtitlesObj != null) {
-            initTranscriptListView();
-            updateTranscript(subtitlesObj);
-        }
-
+        setHasOptionsMenu(true);
     }
 
     public void initializeYoutubePlayer() {
@@ -99,6 +97,20 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onPageShow() {
         super.onPageShow();
         initializeYoutubePlayer();
+
+        if (!initTranscripts()) {
+            /*
+             The subtitles are not been loaded the first time that the user watch the video component.
+             So this allows to reload the subtitles and reload the menu items after a second.
+             */
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initTranscripts();
+                    getActivity().invalidateOptionsMenu();
+                }
+            }, 1000);
+        }
     }
 
     @Override
@@ -137,6 +149,32 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        for (String key : srtList.keySet()) {
+            Locale loc = new Locale(key);
+            String name = loc.getDisplayLanguage(loc);
+            menu.add(name);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        String [] codes = Locale.getISOLanguages();
+        for (String code : codes){
+            Locale loc = new Locale(code);
+            if (item.toString().equals(loc.getDisplayName(loc))) {
+                subtitlesObj = srtList.get(code);
+                initTranscriptListView();
+                updateTranscript(subtitlesObj);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider,
                                         YouTubeInitializationResult result) {
@@ -165,8 +203,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         }
     };
 
-    private void setSubtitlesObj(VideoBlockModel unit) {
-        LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
+    private void loadTranscriptsData(VideoBlockModel unit) {
         TranscriptManager transcriptManager = new TranscriptManager(getContext());
         TranscriptModel transcript = getTranscriptModel(unit.getDownloadEntry(environment.getStorage()));
         transcriptManager.downloadTranscriptsForVideo(transcript);
@@ -185,7 +222,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                     }
                 }
                 if (!srtList.entrySet().isEmpty()) {
-                    setSubtitlesObj(srtList);
+                    setSubtitlesObj();
                 }
             }
 
@@ -194,7 +231,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         }
     }
 
-    private void setSubtitlesObj(LinkedHashMap<String, TimedTextObject> srtList){
+    private void setSubtitlesObj(){
         String key = Locale.getDefault().getLanguage();
         if (key.equals("iw")) {
             key = "he";
@@ -207,6 +244,15 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             subtitlesObj = srtList.entrySet().iterator().next().getValue();
         }
 
+    }
 
+    private boolean initTranscripts(){
+        loadTranscriptsData(unit);
+        if (subtitlesObj != null) {
+            initTranscriptListView();
+            updateTranscript(subtitlesObj);
+            return true;
+        }
+        return false;
     }
 }
