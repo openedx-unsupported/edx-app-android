@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -94,9 +93,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public static CourseUnitVideoFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
         CourseUnitVideoFragment f = new CourseUnitVideoFragment();
 
+        final VideoBlockModel bundleUnit = new VideoBlockModel();
+        bundleUnit.prepareBundleData(unit);
+
         // Supply num input as an argument.
         Bundle args = new Bundle();
-        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        args.putSerializable(Router.EXTRA_COURSE_UNIT, bundleUnit);
         args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
         args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
         f.setArguments(args);
@@ -111,8 +113,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        unit = getArguments() == null ? null :
-            (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+//        unit = getArguments() == null ? null :
+//            (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+        unit = (VideoBlockModel) super.unit;
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }

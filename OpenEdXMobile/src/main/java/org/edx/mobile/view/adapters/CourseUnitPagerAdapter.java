@@ -57,25 +57,28 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int pos) {
-        CourseComponent unit = getUnit(pos);
+        final CourseComponent unit = getUnit(pos);
+        final CourseComponent bundleUnit = new CourseComponent();
+        bundleUnit.prepareBundleData(unit);
+
         CourseUnitFragment unitFragment;
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
         if (isCourseUnitVideo(unit)) {
             unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit, (pos < unitList.size()), (pos > 0));
         } else if (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
-            unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit);
+            unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(bundleUnit);
         } else if (config.isDiscussionsEnabled() && unit instanceof DiscussionBlockModel) {
-            unitFragment = CourseUnitDiscussionFragment.newInstance(unit, courseData);
+            unitFragment = CourseUnitDiscussionFragment.newInstance(bundleUnit, courseData);
         } else if (!unit.isMultiDevice()) {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(bundleUnit);
         } else if (unit.getType() != BlockType.VIDEO &&
                 unit.getType() != BlockType.HTML &&
                 unit.getType() != BlockType.OTHERS &&
                 unit.getType() != BlockType.DISCUSSION &&
                 unit.getType() != BlockType.PROBLEM) {
-            unitFragment = CourseUnitEmptyFragment.newInstance(unit);
+            unitFragment = CourseUnitEmptyFragment.newInstance(bundleUnit);
         } else if (unit instanceof HtmlBlockModel) {
-            unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) unit);
+            unitFragment = CourseUnitWebViewFragment.newInstance(bundleUnit);
         }
 
         //fallback

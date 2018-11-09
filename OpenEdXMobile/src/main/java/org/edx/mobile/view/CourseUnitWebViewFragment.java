@@ -14,7 +14,6 @@ import android.webkit.WebView;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -30,7 +29,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @InjectView(R.id.swipe_container)
     protected SwipeRefreshLayout swipeContainer;
 
-    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
+    public static CourseUnitWebViewFragment newInstance(CourseComponent unit) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);

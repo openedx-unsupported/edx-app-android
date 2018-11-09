@@ -1,5 +1,6 @@
 package org.edx.mobile.model.course;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.edx.mobile.R;
@@ -35,6 +36,24 @@ public class CourseComponent implements IBlock, IPathNode {
     private String courseId;
     private String format;
     private String dueDate;
+
+    public void prepareBundleData(@NonNull CourseComponent courseComponent) {
+        this.id = courseComponent.id;
+        this.blockId = courseComponent.blockId;
+        this.type = courseComponent.type;
+        this.name = courseComponent.name;
+        this.graded = courseComponent.graded;
+        this.multiDevice = courseComponent.multiDevice;
+        this.blockUrl = courseComponent.blockUrl;
+        this.webUrl = courseComponent.webUrl;
+        this.blockCount = courseComponent.blockCount;
+        this.parent = null;
+        this.root = null;  // FIXME: it is being used in code so can't be null
+        this.children = courseComponent.children;
+        this.courseId = courseComponent.courseId;
+        this.format = courseComponent.format;
+        this.dueDate = courseComponent.dueDate;
+    }
 
     public CourseComponent(){}
 
