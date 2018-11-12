@@ -307,8 +307,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                IconImageView bulkDownload = (IconImageView) view.findViewById(R.id.bulk_download);
-                if (bulkDownload != null && bulkDownload.getIcon() == FontAwesomeIcons.fa_check) {
+                final IconImageView bulkDownloadIcon = (IconImageView) view.findViewById(R.id.bulk_download);
+                if (bulkDownloadIcon != null && bulkDownloadIcon.getIcon() == FontAwesomeIcons.fa_check) {
                     ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
                     listView.setItemChecked(position, true);
                     return true;
@@ -488,7 +488,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
      */
     private void loadData(@NonNull CourseComponent courseComponent) {
         courseComponentId = courseComponent.getId();
-        if (courseData == null)
+        if (courseData == null || getActivity() == null)
             return;
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().registerSticky(this);
