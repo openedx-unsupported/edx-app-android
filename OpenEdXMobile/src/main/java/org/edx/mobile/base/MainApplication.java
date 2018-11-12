@@ -7,18 +7,23 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.evernote.android.state.StateSaver;
 import com.facebook.FacebookSdk;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.livefront.bridge.Bridge;
+import com.livefront.bridge.SavedStateHandler;
 import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.BuildConfig;
@@ -169,6 +174,18 @@ public abstract class MainApplication extends MultiDexApplication {
             FacebookSdk.setApplicationId(config.getFacebookConfig().getFacebookAppId());
             FacebookSdk.sdkInitialize(getApplicationContext());
         }
+
+        Bridge.initialize(this, new SavedStateHandler() {
+            @Override
+            public void saveInstanceState(@NonNull Object target, @NonNull Bundle state) {
+                StateSaver.saveInstanceState(target, state);
+            }
+
+            @Override
+            public void restoreInstanceState(@NonNull Object target, @Nullable Bundle state) {
+                StateSaver.restoreInstanceState(target, state);
+            }
+        });
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
