@@ -414,6 +414,11 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
 
     @Override
     public void onPermissionGranted(String[] permissions, int requestCode) {
+        //FIXME: This check should be removed within scope of this story LEARNER-2177
+        if (downloadListener == null) {
+            return;
+        }
+
         // Stop videos from deletion (if the Runnable has been postDelayed)
         bgThreadHandler.removeCallbacks(DELETION_RUNNABLE);
         isDeleteScheduled = false;
