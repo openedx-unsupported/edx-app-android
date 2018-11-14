@@ -2,17 +2,14 @@ package org.edx.mobile.base;
 
 import android.app.Activity;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NewRelicEvent;
-
-import de.greenrobot.event.EventBus;
-
 import org.edx.mobile.util.PermissionsUtil;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 
 public class BaseFragment extends RoboFragment {
@@ -72,7 +69,9 @@ public class BaseFragment extends RoboFragment {
                 permissionListener.onPermissionGranted(permissions, requestCode);
             }
         } else {
-            Snackbar.make(getView(), getResources().getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG).show();
+            // android.R.id.content gives you the root element of a view, without having to know its actual name/type/ID
+            // Ref: https://stackoverflow.com/questions/47666685/java-lang-illegalargumentexception-no-suitable-parent-found-from-the-given-view
+            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG).show();
             if (permissionListener != null) {
                 permissionListener.onPermissionDenied(permissions, requestCode);
             }
