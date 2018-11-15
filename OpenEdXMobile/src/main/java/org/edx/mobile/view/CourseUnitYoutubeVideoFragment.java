@@ -66,7 +66,11 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     public void initializeYoutubePlayer() {
         youTubePlayerFragment = new YouTubePlayerSupportFragment();
-        youTubePlayerFragment.initialize(environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey(), this);
+        String apiKey =environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
+        if (apiKey == null || apiKey.isEmpty()) {
+            return;
+        }
+        youTubePlayerFragment.initialize(apiKey, this);
 
         try {
             FragmentManager fm = getChildFragmentManager();

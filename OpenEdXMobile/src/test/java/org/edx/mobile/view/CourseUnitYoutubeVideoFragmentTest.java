@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
@@ -19,6 +22,8 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.junit.Test;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
+import java.io.IOException;
+
 import roboguice.activity.RoboFragmentActivity;
 
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
@@ -27,6 +32,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
+
+
+    private static final String YOUTUBE_VIDEO = "YOUTUBE_VIDEO"; // Config key for YOUTUBE
 
     private VideoBlockModel getVideoUnit() {
         EnrolledCoursesResponse courseData;
@@ -85,7 +93,6 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
     public void onPageShowTest() {
         CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
-
         fragment.onPageShow();
 
         Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
@@ -128,5 +135,17 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
         @Override
         public void navigatePreviousComponent() {
         }
+    }
+
+    @Override
+    protected JsonObject generateConfigProperties() throws IOException {
+        // Add the mock youtube api key in the test config properties
+        JsonObject properties = super.generateConfigProperties();
+        properties.add(YOUTUBE_VIDEO, getYoutubeMockConfig());
+        return properties;
+    }
+    private JsonElement getYoutubeMockConfig() {
+        String serializedData =  "{\"ENABLED\":\"True\", \"YOUTUBE_API_KEY\":\"TEST_YOUTUBE_API_KEY\"}";
+        return new JsonParser().parse(serializedData);
     }
 }
