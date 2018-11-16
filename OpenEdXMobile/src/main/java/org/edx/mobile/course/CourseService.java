@@ -15,8 +15,10 @@ import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.view.common.TaskProgressCallback;
+import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -126,6 +128,23 @@ public interface CourseService {
             @Header("Cache-Control") String cacheControlHeaderParam,
             @Query("username") final String username,
             @Query("course_id") final String courseId);
+
+    @POST("/api/completion/v1/completion-batch")
+    Call<JSONObject> markBlocksCompletion(@Body BlocksCompletionBody completionBody);
+
+    final class BlocksCompletionBody {
+        @NonNull String username;
+        @NonNull String courseKey;
+        @NonNull HashMap<String, String> blocks = new HashMap<>();
+
+        public BlocksCompletionBody(@NonNull String username, @NonNull String courseKey, @NonNull String[] blockIds) {
+            this.username = username;
+            this.courseKey = courseKey;
+            for (int index = 0; index < blockIds.length; index++) {
+                blocks.put(blockIds[index], "1");
+            }
+        }
+    }
 
     final class SyncLastAccessedSubsectionBody {
         @NonNull

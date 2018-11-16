@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,6 +24,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
@@ -42,6 +42,7 @@ import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.TranscriptAdapter;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -541,18 +542,21 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     public void onPlaybackComplete() {
-        try {
-            DownloadEntry v = videoModel;
-            if (v!=null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                videoModel.watched = DownloadEntry.WatchedState.WATCHED;
-                // mark this as partially watches, as playing has started
-                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE )
+        DownloadEntry v = videoModel;
+        if (v != null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+            videoModel.watched = DownloadEntry.WatchedState.WATCHED;
+            // mark this as watched, as the playback has ended
+            DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
                     .updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
-                    watchedStateCallback);
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
+                            watchedStateCallback);
         }
+
+        courseApi.markBlocksCompletion(unit.getCourseId(), new String[]{unit.getId()}).enqueue(new Callback<JSONObject>() {
+            @Override
+            protected void onResponse(@NonNull JSONObject responseBody) {
+                // Nothing to do here
+            }
+        });
     }
 
     private boolean isPlayerVisible() {
