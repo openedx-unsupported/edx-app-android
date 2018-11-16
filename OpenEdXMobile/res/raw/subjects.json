@@ -2,7 +2,7 @@
   {
     "name": "Architecture",
     "image_name": "architecture",
-    "filter": "architecture",
+    "filter": "Architecture",
     "type": "normal"
   },
   {
@@ -26,13 +26,13 @@
   {
     "name": "Chemistry",
     "image_name": "chemistry",
-    "filter": "chemistry",
+    "filter": "Chemistry",
     "type": "normal"
   },
   {
     "name": "Communication",
     "image_name": "communication",
-    "filter": "communication",
+    "filter": "Communication",
     "type": "normal"
   },
   {
@@ -50,7 +50,7 @@
   {
     "name": "Design",
     "image_name": "design",
-    "filter": "design",
+    "filter": "Design",
     "type": "normal"
   },
   {
@@ -68,7 +68,7 @@
   {
     "name": "Electronics",
     "image_name": "electronics",
-    "filter": "electronics",
+    "filter": "Electronics",
     "type": "normal"
   },
   {
@@ -80,7 +80,7 @@
   {
     "name": "Engineering",
     "image_name": "engineering",
-    "filter": "engineering",
+    "filter": "Engineering",
     "type": "normal"
   },
   {
@@ -92,7 +92,7 @@
   {
     "name": "Ethics",
     "image_name": "ethics",
-    "filter": "ethics",
+    "filter": "Ethics",
     "type": "normal"
   },
   {
@@ -110,55 +110,55 @@
   {
     "name": "History",
     "image_name": "history",
-    "filter": "history",
+    "filter": "History",
     "type": "normal"
   },
   {
     "name": "Humanities",
     "image_name": "humanities",
-    "filter": "humanities",
+    "filter": "Humanities",
     "type": "popular"
   },
   {
     "name": "Language",
     "image_name": "language",
-    "filter": "language",
+    "filter": "Language",
     "type": "popular"
   },
   {
     "name": "Law",
     "image_name": "law",
-    "filter": "law",
+    "filter": "Law",
     "type": "normal"
   },
   {
     "name": "Literature",
     "image_name": "literature",
-    "filter": "literature",
+    "filter": "Literature",
     "type": "normal"
   },
   {
     "name": "Math",
     "image_name": "math",
-    "filter": "math",
+    "filter": "Math",
     "type": "normal"
   },
   {
     "name": "Medicine",
     "image_name": "medicine",
-    "filter": "medicine",
+    "filter": "Medicine",
     "type": "normal"
   },
   {
     "name": "Music",
     "image_name": "music",
-    "filter": "music",
+    "filter": "Music",
     "type": "normal"
   },
   {
     "name": "Philanthropy",
     "image_name": "philanthropy",
-    "filter": "philanthropy",
+    "filter": "Philanthropy",
     "type": "normal"
   },
   {
@@ -170,13 +170,13 @@
   {
     "name": "Physics",
     "image_name": "physics",
-    "filter": "physics",
+    "filter": "Physics",
     "type": "normal"
   },
   {
     "name": "Science",
     "image_name": "science",
-    "filter": "science",
+    "filter": "Science",
     "type": "normal"
   },
   {
