@@ -42,6 +42,7 @@ import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.TaskProgressCallback;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,6 +91,14 @@ public class CourseAPI {
     @NonNull
     public Call<List<EnrolledCoursesResponse>> getEnrolledCourses() {
         return courseService.getEnrolledCourses(getUsername(), config.getOrganizationCode());
+    }
+
+    /**
+     * @return Server response on video completion.
+     */
+    @NonNull
+    public Call<JSONObject> markBlocksCompletion(@NonNull String courseId, @NonNull String[] blockIds) {
+        return courseService.markBlocksCompletion(new CourseService.BlocksCompletionBody(getUsername(), courseId, blockIds));
     }
 
     /**
