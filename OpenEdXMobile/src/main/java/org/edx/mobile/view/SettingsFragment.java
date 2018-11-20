@@ -14,10 +14,11 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.event.MediaStatusEvent;
+import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
@@ -38,7 +39,7 @@ public class SettingsFragment extends BaseFragment {
 
     private Switch wifiSwitch;
     private Switch sdCardSwitch;
-    private LinearLayout sdCardSettinglayout;
+    private LinearLayout sdCardSettingsLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,12 +54,7 @@ public class SettingsFragment extends BaseFragment {
         final View layout = inflater.inflate(R.layout.fragment_settings, container, false);
         wifiSwitch = (Switch) layout.findViewById(R.id.wifi_setting);
         sdCardSwitch = (Switch) layout.findViewById(R.id.download_location_switch);
-        sdCardSettinglayout = (LinearLayout) layout.findViewById(R.id.sd_card_setting_layout);
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            sdCardSettinglayout.setVisibility(View.GONE);
-        }
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().registerSticky(this);
+        sdCardSettingsLayout = (LinearLayout) layout.findViewById(R.id.sd_card_setting_layout);
         updateWifiSwitch();
         updateSDCardSwitch();
         final LinearLayout settingsLayout = (LinearLayout) layout.findViewById(R.id.settings_layout);
@@ -71,8 +67,9 @@ public class SettingsFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
+        }
     }
 
     private void updateWifiSwitch() {
@@ -96,17 +93,19 @@ public class SettingsFragment extends BaseFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaStatusEvent event) {
+    public void onEventMainThread(MediaStatusChangeEvent event) {
         sdCardSwitch.setEnabled(event.isSdCardAvailable());
     }
 
     private void updateSDCardSwitch() {
         final PrefManager prefManager =
                 new PrefManager(getActivity().getBaseContext(), PrefManager.Pref.SD_CARD);
-
-        if (!environment.getConfig().isSDCardDownloadEnabled()) {
-            sdCardSettinglayout.setVisibility(View.GONE);
+        if (!environment.getConfig().isSDCardDownloadEnabled() || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            sdCardSettingsLayout.setVisibility(View.GONE);
         } else {
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().registerSticky(this);
+            }
             sdCardSwitch.setOnCheckedChangeListener(null);
             sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false));
             sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -115,6 +114,7 @@ public class SettingsFragment extends BaseFragment {
                     prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, isChecked);
                 }
             });
+            sdCardSwitch.setEnabled(FileUtil.isRemovableStorageAvailable(getActivity()));
         }
     }
 

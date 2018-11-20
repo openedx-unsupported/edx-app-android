@@ -1,6 +1,5 @@
 package org.edx.mobile.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
@@ -29,16 +28,14 @@ public class FileUtil {
      * @param context The current context
      * @return True if there is removable storage available on the device.
      */
-    @TargetApi(21)
     public static boolean isRemovableStorageAvailable(@NonNull Context context){
         return getRemovableStorageAppDir(context) != null;
     }
 
     @Nullable
-    @TargetApi(21)
     public static File getRemovableStorageAppDir(@NonNull Context context) {
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion >= Build.VERSION_CODES.LOLLIPOP) {
             File[] fileList = context.getExternalFilesDirs(null);
             for (File extFile : fileList){
                 if (extFile != null && Environment.isExternalStorageRemovable(extFile)){

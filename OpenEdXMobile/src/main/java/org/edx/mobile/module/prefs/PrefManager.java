@@ -29,9 +29,6 @@ public class PrefManager {
         this.prefName = prefName;
     }
 
-    public boolean contains(String key){
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE).contains(key);
-    }
     /**
      * Puts given key-value pair to the Shared Preferences.
      *

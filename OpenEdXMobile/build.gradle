@@ -352,7 +352,7 @@ android {
                                 branchKey: branchKey,
                                 facebookAppId: facebookAppId,
                                 fbLoginProtocolScheme: fbLoginProtocolScheme,
-                                sdCardEnabled: config.get('SD_CARD_DOWNLOAD')?:false]
+                                sdCardEnabled: config.get('SD_CARD_DOWNLOAD_ENABLED')?:false]
 
         javaCompileOptions {
             annotationProcessorOptions {
