@@ -7,6 +7,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RawRes;
 
+import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.prefs.UserPrefs;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +30,11 @@ public class FileUtil {
 
     /**
      * Utility method to determine if any removable storage (such as an SD card) is available.
+     *
      * @param context The current context
      * @return True if there is removable storage available on the device.
      */
-    public static boolean isRemovableStorageAvailable(@NonNull Context context){
+    public static boolean isRemovableStorageAvailable(@NonNull Context context) {
         return getRemovableStorageAppDir(context) != null;
     }
 
@@ -37,8 +43,8 @@ public class FileUtil {
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion >= Build.VERSION_CODES.LOLLIPOP) {
             File[] fileList = context.getExternalFilesDirs(null);
-            for (File extFile : fileList){
-                if (extFile != null && Environment.isExternalStorageRemovable(extFile)){
+            for (File extFile : fileList) {
+                if (extFile != null && Environment.isExternalStorageRemovable(extFile)) {
                     return extFile;
                 }
             }
@@ -56,6 +62,46 @@ public class FileUtil {
     public static File getExternalAppDir(@NonNull Context context) {
         File externalFilesDir = context.getExternalFilesDir(null);
         return (externalFilesDir != null ? externalFilesDir.getParentFile() : null);
+    }
+
+    /**
+     * Returns user storage directory under /Android/data/ folder for the currently logged in user
+     * or if the sd-card download is enabled the sd-card data location will be used.
+     * This is the folder where all video downloads should be kept.
+     *
+     * @param context
+     * @param environment
+     * @param logger
+     * @return
+     */
+    @Nullable
+    public static File getDownloadDirectory(Context context, IEdxEnvironment environment, Logger logger) {
+        File downloadDir;
+        UserPrefs userPref = environment.getUserPrefs();
+        if (environment.getConfig().isSDCardDownloadEnabled() && userPref.isSDCardDownloadEnabled()
+                && FileUtil.isRemovableStorageAvailable(context)) {
+            downloadDir = FileUtil.getRemovableStorageAppDir(context);
+        } else {
+            // If no removable storage found, set app internal storage directory
+            // as download directory
+            downloadDir = FileUtil.getExternalAppDir(context);
+        }
+
+        final ProfileModel profile = userPref.getProfile();
+        if (downloadDir != null && profile != null) {
+            File videosDir = new File(downloadDir, AppConstants.Directories.VIDEOS);
+            File usersVideosDir = new File(videosDir, Sha1Util.SHA1(profile.username));
+            usersVideosDir.mkdirs();
+            try {
+                File noMediaFile = new File(usersVideosDir, ".nomedia");
+                noMediaFile.createNewFile();
+            } catch (IOException ioException) {
+                logger.error(ioException);
+            }
+
+            return usersVideosDir;
+        }
+        return null;
     }
 
     /**

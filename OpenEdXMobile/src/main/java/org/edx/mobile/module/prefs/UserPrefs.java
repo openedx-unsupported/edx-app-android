@@ -22,13 +22,9 @@ import java.io.IOException;
 public class UserPrefs {
 
     private Context context;
-    private final Logger logger = new Logger(getClass().getName());
 
     @NonNull
     private final LoginPrefs loginPrefs;
-
-    @Inject
-    protected IEdxEnvironment environment;
 
     @Inject
     public UserPrefs(Context context, @NonNull LoginPrefs loginPrefs) {
@@ -51,46 +47,8 @@ public class UserPrefs {
     }
 
     public boolean isSDCardDownloadEnabled(){
-        if (!environment.getConfig().isSDCardDownloadEnabled()){
-            return false;
-        }
         final PrefManager prefManger = new PrefManager(context, PrefManager.Pref.SD_CARD);
         return prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
-    }
-
-    /**
-     * Returns user storage directory under /Android/data/ folder for the currently logged in user
-     * or if the sd-card download is enabled the sd-card data location will be used.
-     * This is the folder where all video downloads should be kept.
-     *
-     * @return
-     */
-    @Nullable
-    public File getDownloadDirectory() {
-        File downloadDir = null;
-        if (isSDCardDownloadEnabled() && FileUtil.isRemovableStorageAvailable(context)) {
-            downloadDir = FileUtil.getRemovableStorageAppDir(context);
-        } else {
-            // If no removable storage found, set app internal storage directory
-            // as download directory
-            downloadDir = FileUtil.getExternalAppDir(context);
-        }
-
-        final ProfileModel profile = getProfile();
-        if (downloadDir != null && profile != null) {
-            File videosDir = new File(downloadDir, AppConstants.Directories.VIDEOS);
-            File usersVidsDir = new File(videosDir, Sha1Util.SHA1(profile.username));
-            usersVidsDir.mkdirs();
-            try {
-                File noMediaFile = new File(usersVidsDir, ".nomedia");
-                noMediaFile.createNewFile();
-            } catch (IOException ioException) {
-                logger.error(ioException);
-            }
-
-            return usersVidsDir;
-        }
-        return null;
     }
 
     @Nullable
