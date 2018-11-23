@@ -31,6 +31,7 @@ import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;
+import org.edx.mobile.view.dialog.AuthenticatedWebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import de.greenrobot.event.EventBus;
@@ -355,6 +356,10 @@ public class Router {
 
     public void showSubjectsActivityForResult(@NonNull Fragment fragment, int requestCode) {
         fragment.startActivityForResult(ViewSubjectsActivity.newIntent(fragment.getActivity()), requestCode);
+    }
+
+    public void showAuthenticatedWebviewActivity(@NonNull Activity activity, @NonNull String url, @NonNull String title) {
+        activity.startActivity(AuthenticatedWebViewActivity.newIntent(activity, url, title));
     }
 
     /**

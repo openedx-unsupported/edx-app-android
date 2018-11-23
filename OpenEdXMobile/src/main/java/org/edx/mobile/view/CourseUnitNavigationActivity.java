@@ -254,8 +254,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
-        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
-                courseData.getCourse().getId(), selectedUnit.getBlockId());
+        if (selectedUnit != null) {
+            environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
+                    courseData.getCourse().getId(), selectedUnit.getBlockId());
+        }
     }
 
     private void updateUIForOrientation() {

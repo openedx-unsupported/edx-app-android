@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,12 @@ import org.junit.Test;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
-import static org.junit.Assert.assertNotNull;
+import roboguice.activity.RoboFragmentActivity;
+
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 // We should add mock downloads, mock play, and state retention tests
@@ -123,7 +124,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
         testOrientationChange(fragment, Configuration.ORIENTATION_PORTRAIT);
     }
 
-    private static class FragmentUtilActivity extends FragmentActivity implements CourseUnitFragment.HasComponent {
+    private static class FragmentUtilActivity extends RoboFragmentActivity implements CourseUnitFragment.HasComponent {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

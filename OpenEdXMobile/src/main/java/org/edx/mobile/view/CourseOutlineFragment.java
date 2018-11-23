@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
@@ -28,6 +30,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
@@ -54,6 +57,8 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.PermissionsUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
@@ -65,7 +70,7 @@ import retrofit2.Call;
 public class CourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
         VideoDownloadHelper.DownloadManagerCallback,
-        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>> {
+        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>, BaseFragment.PermissionListener {
     private final Logger logger = new Logger(getClass().getName());
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
@@ -78,7 +83,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private boolean isVideoMode;
     private boolean isOnCourseOutline;
     private boolean isFetchingLastAccessed;
+    // Flag to differentiate between single or multiple video download
+    private boolean isSingleVideoDownload;
     private ActionMode deleteMode;
+    private DownloadEntry downloadEntry;
+    private List<? extends HasDownloadEntry> downloadEntries;
+    private SwipeRefreshLayout swipeContainer;
 
     private Call<CourseStructureV1Model> getHierarchyCall;
 
@@ -130,9 +140,21 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         final View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView) view.findViewById(R.id.outline_list);
-        errorNotification = new FullScreenErrorNotification(listView);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
 
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Hide the progress bar as swipe layout has its own progress indicator
+                loadingIndicator.setVisibility(View.GONE);
+                errorNotification.hideError();
+                getCourseComponentFromServer(false);
+            }
+        });
+        UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
+        
         restore(bundle);
         initListView(view);
         fetchCourseComponent();
@@ -143,6 +165,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        permissionListener = this;
         updateRowSelection(getArguments().getString(Router.EXTRA_LAST_ACCESSED_ID));
     }
 
@@ -152,6 +175,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
             courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
             isVideoMode = savedInstanceState.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
+            isSingleVideoDownload = savedInstanceState.getBoolean("isSingleVideoDownload");
             if (savedInstanceState.containsKey(Router.EXTRA_IS_ON_COURSE_OUTLINE)) {
                 isOnCourseOutline = savedInstanceState.getBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE);
             } else {
@@ -219,6 +243,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             protected void onResponse(@NonNull final CourseComponent courseComponent) {
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
                 loadData(validateCourseComponent(courseComponent));
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -228,6 +253,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     errorNotification.showError(getContext(), error);
                     logger.error(error, true);
                 }
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -235,6 +261,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 if (!EventBus.getDefault().isRegistered(CourseOutlineFragment.this)) {
                     EventBus.getDefault().registerSticky(CourseOutlineFragment.this);
                 }
+                swipeContainer.setRefreshing(false);
             }
         });
     }
@@ -281,7 +308,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (((IconImageView) view.findViewById(R.id.bulk_download)).getIcon() == FontAwesomeIcons.fa_check) {
+                final IconImageView bulkDownloadIcon = (IconImageView) view.findViewById(R.id.bulk_download);
+                if (bulkDownloadIcon != null && bulkDownloadIcon.getIcon() == FontAwesomeIcons.fa_check) {
                     ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
                     listView.setItemChecked(position, true);
                     return true;
@@ -298,12 +326,18 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     new CourseOutlineAdapter.DownloadListener() {
                         @Override
                         public void download(List<? extends HasDownloadEntry> models) {
-                            downloadManager.downloadVideos(models, getActivity(), CourseOutlineFragment.this);
+                            downloadEntries = models;
+                            isSingleVideoDownload = false;
+                            askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                         }
 
                         @Override
                         public void download(DownloadEntry videoData) {
-                            downloadManager.downloadVideo(videoData, getActivity(), CourseOutlineFragment.this);
+                            downloadEntry = videoData;
+                            isSingleVideoDownload = true;
+                            askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                         }
 
                         @Override
@@ -311,6 +345,34 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                             environment.getRouter().showDownloads(getActivity());
                         }
                     }, isVideoMode, isOnCourseOutline);
+        }
+    }
+
+    @Override
+    public void onPermissionGranted(String[] permissions, int requestCode) {
+        switch (requestCode) {
+            case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
+                if (isSingleVideoDownload) {
+                    downloadManager.downloadVideo(downloadEntry, getActivity(), CourseOutlineFragment.this);
+                } else {
+                    downloadManager.downloadVideos(downloadEntries, getActivity(), CourseOutlineFragment.this);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionDenied(String[] permissions, int requestCode) {
+        if (isSingleVideoDownload) {
+            downloadEntry = null;
+        } else {
+            if (downloadEntries != null) {
+                downloadEntries.clear();
+                downloadEntries = null;
+            }
         }
     }
 
@@ -429,7 +491,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
      */
     private void loadData(@NonNull CourseComponent courseComponent) {
         courseComponentId = courseComponent.getId();
-        if (courseData == null)
+        if (courseData == null || getActivity() == null)
             return;
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().registerSticky(this);
@@ -481,6 +543,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         outState.putBundle(Router.EXTRA_BUNDLE, bundle);
         outState.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideoMode);
+        outState.putBoolean("isSingleVideoDownload", isSingleVideoDownload);
         outState.putBoolean(Router.EXTRA_IS_ON_COURSE_OUTLINE, isOnCourseOutline);
     }
 

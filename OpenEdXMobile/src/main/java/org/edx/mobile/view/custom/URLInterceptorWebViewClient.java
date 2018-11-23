@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.webkit.WebChromeClient;
@@ -13,16 +14,14 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.inject.Inject;
-
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.StandardCharsets;
-import org.edx.mobile.util.links.EdxCourseInfoLink;
-import org.edx.mobile.util.links.EdxEnrollLink;
+import org.edx.mobile.util.links.WebViewLink;
 
 import roboguice.RoboGuice;
 
@@ -41,27 +40,20 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     private final Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private final FragmentActivity activity;
-    private IActionListener actionListener;
+    private ActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
 
     /**
      * Tells if the page loading has been finished or not.
      */
-    private boolean loadingFinished = true;
-    /**
-     * Url will be considered as redirected if it will not be the initial page url requested to load.
-     * For example, in case the server redirects us to another URL or the user clicks a link
-     * on the web-page, it will be considered as a redirect.
-     */
-    private boolean redirect = false;
+    private boolean loadingFinished = false;
     /**
      * Tells if the currently loading url is the initial page url requested to load.
      */
     private boolean loadingInitialUrl = true;
 
-    @Inject
-    Config config;
+    private final Config config;
     /*
     To help a few views (like Announcements) to treat every link as external link and open in
     external web browser.
@@ -70,17 +62,17 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView) {
         this.activity = activity;
-        RoboGuice.injectMembers(activity, this);
+        config = RoboGuice.getInjector(MainApplication.instance()).getInstance(Config.class);
         setupWebView(webView);
     }
 
     /**
      * Sets action listener for this client. Use this method to get callbacks
-     * of actions as declared in {@link org.edx.mobile.view.custom.URLInterceptorWebViewClient.IActionListener}.
+     * of actions as declared in {@link ActionListener}.
      *
      * @param actionListener
      */
-    public void setActionListener(IActionListener actionListener) {
+    public void setActionListener(ActionListener actionListener) {
         this.actionListener = actionListener;
     }
 
@@ -104,13 +96,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         //We need to hide the loading progress if the Page starts rendering.
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                if (progress > 25) {
-                    /*
-                     * 'loadingInitialUrl is marked to false on 25% progress of initial page load
-                     * to avoid any problematic scenarios e.g. user presses some link available on
-                     * a web page before 'onPageFinished' has been called.
-                     */
-                    loadingInitialUrl = false;
+                if (progress < 100) {
+                    loadingFinished = false;
                 }
                 if (pageStatusListener != null) {
                     pageStatusListener.onPageLoadProgressChanged(view, progress);
@@ -138,13 +125,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-
         loadingInitialUrl = false;
-        if (!redirect) {
-            loadingFinished = true;
-        }
-        redirect = false;
-
+        loadingFinished = true;
         // Page loading has finished.
         if (pageStatusListener != null) {
             pageStatusListener.onPageFinished();
@@ -169,30 +151,20 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         }
     }
 
-
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        if (!loadingFinished) {
-            redirect = true;
-        }
-        loadingFinished = false;
-
         if (actionListener == null) {
             logger.warn("you have not set IActionLister to this WebViewClient, " +
                     "you might miss some event");
         }
         logger.debug("loading: " + url);
-        if (parseCourseInfoLinkAndCallActionListener(url)) {
+        if (parseRecognizedLinkAndCallListener(url)) {
             // we handled this URL
             return true;
-        } else if (parseEnrollLinkAndCallActionListener(url)) {
-            // we handled this URL
-            return true;
-        } else if (redirect && loadingInitialUrl) {
+        } else if (loadingInitialUrl && !loadingFinished) {
             // Server has redirected the initial url to other hosting url, in this case no need to
             // redirect the user to external browser.
-            // Inspiration of this solution has been taken from: https://stackoverflow.com/questions/3149216/how-to-listen-for-a-webview-finishing-loading-a-url/5172952#5172952
-            loadingInitialUrl = false;
+            // For more details see LEARNER-6596
             // Return false means the current WebView handles the url.
             return false;
         } else if (isAllLinksExternal || isExternalLink(url)) {
@@ -237,25 +209,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     /**
-     * Checks if {@param strUrl} is valid course info link and, if so,
-     * calls {@link org.edx.mobile.view.custom.URLInterceptorWebViewClient.IActionListener#onClickCourseInfo(String)}
-     *
-     * @return true if an action listener is set and URL was a valid course info link, false otherwise
-     */
-    private boolean parseCourseInfoLinkAndCallActionListener(String strUrl) {
-        if (null == actionListener) {
-            return false;
-        }
-        final EdxCourseInfoLink link = EdxCourseInfoLink.parse(strUrl);
-        if (null == link) {
-            return false;
-        }
-        actionListener.onClickCourseInfo(link.pathId);
-        logger.debug("found course-info URL: " + strUrl);
-        return true;
-    }
-
-    /**
      * Returns true if the pattern of the url matches with that of EXTERNAL URL pattern,
      * false otherwise.
      *
@@ -269,47 +222,40 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     /**
      * Checks if {@param strUrl} is valid enroll link and, if so,
-     * calls {@link org.edx.mobile.view.custom.URLInterceptorWebViewClient.IActionListener#onClickEnroll(String, boolean)}
+     * calls {@link ActionListener#onClickEnroll(String, boolean)}
      *
      * @return true if an action listener is set and URL was a valid enroll link, false otherwise
      */
-    private boolean parseEnrollLinkAndCallActionListener(@Nullable String strUrl) {
+    /**
+     * Checks if {@param strUrl} is recognizable link for the app, if so,
+     * calls {@link ActionListener#onLinkRecognized(WebViewLink)}
+     *
+     * @param strUrl The URL to parse.
+     * @return Whether the URL had atleast one recognized link in it.
+     */
+    private boolean parseRecognizedLinkAndCallListener(@Nullable String strUrl) {
         if (null == actionListener) {
             return false;
         }
-        final EdxEnrollLink link = EdxEnrollLink.parse(strUrl);
-        if (null == link) {
+        final WebViewLink helperObj = WebViewLink.parse(strUrl);
+        if (null == helperObj) {
             return false;
         }
-        actionListener.onClickEnroll(link.courseId, link.emailOptIn);
-        logger.debug("found enroll URL: " + strUrl);
+        actionListener.onLinkRecognized(helperObj);
+        logger.debug("found a recognized URL: " + strUrl);
         return true;
     }
 
     /**
-     * Action listener interface for handling enroll link click action
-     * and course-info link click action.
-     * We may need to add more actions to this interface in future.
+     * Action listener interface for handling a user's click on recognized links in a WebView.
      */
-    public static interface IActionListener {
+    public interface ActionListener {
         /**
-         * Callback that gets called when this client has intercepted Course Info URL.
-         * Sub-classes or any implementation of this class should override this method to handle
-         * tap of course info URL.
-         *
-         * @param pathId
+         * Callback that gets called when this client has intercepted a recognizable link in the
+         * WebView. Sub-classes or any implementation of this class should override this method to
+         * handle or further act upon the recognized link.
          */
-        void onClickCourseInfo(String pathId);
-
-        /**
-         * Callback that gets called when this client has intercepted Enroll action.
-         * Sub-classes or any implementation of this class should override this method to handle
-         * enroll action further.
-         *
-         * @param courseId
-         * @param emailOptIn
-         */
-        void onClickEnroll(String courseId, boolean emailOptIn);
+        void onLinkRecognized(@NonNull WebViewLink helper);
     }
 
     /**

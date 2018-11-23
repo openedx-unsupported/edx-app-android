@@ -66,7 +66,8 @@ public class LoginActivity
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
         hideSoftKeypad();
-        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), environment.getLoginPrefs());
+        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this,
+                environment.getConfig(), environment.getLoginPrefs(), SocialLoginDelegate.Feature.SIGN_IN);
 
         activityLoginBinding.socialAuth.facebookButton.getRoot().setOnClickListener(
                 socialLoginDelegate.createSocialButtonClickHandler(

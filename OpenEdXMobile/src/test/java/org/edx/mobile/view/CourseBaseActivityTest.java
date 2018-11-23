@@ -13,7 +13,7 @@ import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
 import org.robolectric.Robolectric;
-import org.robolectric.util.ActivityController;
+import org.robolectric.android.controller.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
@@ -82,7 +82,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     @SuppressLint("RtlHardcoded")
     public void initializeTest() {
         ActivityController<? extends CourseBaseActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
+                Robolectric.buildActivity(getActivityClass(), getIntent());
         CourseBaseActivity activity = controller.get();
 
         controller.create();
@@ -98,7 +98,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         // We need to retrieve the progressWheel view before calling visible(), since that
         // initializes fragment views as well, which might add other views with the same id
         ActivityController<? extends CourseBaseActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent())
+                Robolectric.buildActivity(getActivityClass(), getIntent())
                         .create().start().postCreate(null).resume();
         CourseBaseActivity activity = controller.get();
         ProgressBar progressWheel = (ProgressBar)

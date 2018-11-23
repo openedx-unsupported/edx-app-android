@@ -57,9 +57,9 @@ test:
 validate: quality test
 
 e2e :
-	@./gradlew verifyMode screenshotTests -PdisablePreDex
+	@./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
 
 artifacts:
 	@./gradlew copyLintBuildArtifacts
 	@./gradlew copyUnitTestBuildArtifacts
-	@./gradlew recordMode pullScreenshots -PdisablePreDex
+	@./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex

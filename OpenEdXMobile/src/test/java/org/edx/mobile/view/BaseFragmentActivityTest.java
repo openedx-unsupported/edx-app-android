@@ -19,7 +19,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.util.ActivityController;
+import org.robolectric.android.controller.ActivityController;
 import org.robolectric.util.Scheduler;
 
 import static org.assertj.android.api.Assertions.assertThat;
@@ -85,7 +85,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     @Test
     public void lifecycleTest() {
         ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
+                Robolectric.buildActivity(getActivityClass(), getIntent());
         BaseFragmentActivity activity = controller.get();
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
 
@@ -135,8 +135,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     @Test
     public void setTitleTest() {
         BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().get();
+                Robolectric.buildActivity(getActivityClass(), getIntent()).create().get();
         CharSequence title = "test";
         activity.setTitle(title);
         assertTitle(activity, title);
@@ -178,8 +177,10 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     @Test
     public void animateLayoutsTest() {
         final BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
+                Robolectric.buildActivity(
+                    getActivityClass(),
+                    getIntent()
+                ).setup().get();
         final View view = new View(activity);
         view.setVisibility(View.GONE);
         activity.addContentView(view, new ViewGroup.LayoutParams(
@@ -223,8 +224,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     @Test
     public void showInfoMessageTest() {
         final BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
+                Robolectric.buildActivity(getActivityClass(), getIntent()).setup().get();
         TextView messageView = new TextView(activity);
         messageView.setId(R.id.flying_message);
         messageView.setVisibility(View.GONE);
@@ -284,8 +284,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     @Test
     public void tryToSetUIInteractionTest() {
         BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
+                Robolectric.buildActivity(getActivityClass(), getIntent()).setup().get();
         assertFalse(activity.tryToSetUIInteraction(true));
         assertFalse(activity.tryToSetUIInteraction(false));
     }

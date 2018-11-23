@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.edx.mobile"
     android:installLocation="auto">
 
@@ -17,22 +18,23 @@
     <!-- Required by app for storing downloaded videos to the external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- Required by legacy Google Sign In (TODO: Switch to new Google Sign In) -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-
-    <!-- Required by app for TelephonyManager to determine mobile network carrier ID -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Required by app for capturing image -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Sticky broadcast passing a message from one screen and display on another -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
+    <!-- Setup for Code Coverage -->
+    <instrumentation
+        android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
+        android:targetPackage="org.edx.mobile" />
 
     <application
         android:name=".base.RuntimeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        tools:replace="android:supportsRtl"
         android:supportsRtl="${supportsRtl}"
         android:theme="@style/AppTheme">
 
@@ -40,7 +42,7 @@
             android:name="org.edx.mobile.view.SplashActivity"
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@style/AppTheme.NoDisplayTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -243,6 +245,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.dialog.AuthenticatedWebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
@@ -250,11 +257,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
-        <!-- Setup for Code Coverage -->
-        <instrumentation
-            android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
-            android:targetPackage="org.edx.mobile" />
 
         <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
         <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast">
@@ -264,7 +266,22 @@
         </receiver>
 
         <!-- Setup Facebook -->
-        <activity android:name="com.facebook.LoginActivity" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="${facebookAppId}"/>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${fbLoginProtocolScheme}" />
+            </intent-filter>
+        </activity>
 
         <!-- Setup Google -->
         <meta-data
@@ -272,7 +289,10 @@
             android:value="@integer/google_play_services_version" />
 
         <!-- Setup Firebase -->
-        <meta-data android:name="firebase_analytics_collection_enabled" android:value="${firebaseEnabled}" />
+        <meta-data android:name="firebase_analytics_collection_enabled"
+            android:value="${firebaseEnabled}" />
+        <meta-data android:name="firebase_messaging_auto_init_enabled"
+            android:value="${firebaseEnabled}" />
 
         <!-- Branch -->
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="${branchKey}" />
@@ -283,7 +303,36 @@
             </intent-filter>
         </receiver>
 
+        <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="${applicationId}.provider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/image_provider"/>
+        </provider>
+
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
+
+        <!-- Notifications through Firebase Cloud Messaging (FCM) -->
+        <service
+            android:name="org.edx.mobile.notifications.services.NotificationService"
+            android:enabled="${firebaseEnabled}">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <!-- Set the icon for notifications -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <!-- Set color used with incoming notification messages.  -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/edx_brand_primary_accent" />
+
     </application>
 
 </manifest>

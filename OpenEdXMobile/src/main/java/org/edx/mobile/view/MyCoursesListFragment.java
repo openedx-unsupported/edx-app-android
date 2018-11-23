@@ -30,6 +30,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
 
 import java.util.ArrayList;
@@ -91,9 +92,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
                 loadData(false);
             }
         });
-        binding.swipeContainer.setColorSchemeResources(R.color.edx_brand_primary_accent,
-                R.color.edx_brand_gray_x_back, R.color.edx_brand_gray_x_back,
-                R.color.edx_brand_gray_x_back);
+        UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer);
         // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.addHeaderView(new View(getContext()), null, false);
         binding.myCourseList.setAdapter(adapter);

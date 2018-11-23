@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -11,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import com.facebook.Settings;
-import com.facebook.widget.LikeView;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -29,7 +26,6 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.StandardCharsets;
@@ -50,12 +46,9 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
     private final Logger logger = new Logger(getClass().getName());
 
     private EdxWebView announcementWebView;
-    private View notificationSettingRow;
-    private Switch notificationSwitch;
 
     private EnrolledCoursesResponse courseData;
     private List<AnnouncementsModel> savedAnnouncements;
-    private IUiLifecycleHelper uiHelper;
 
     @Inject
     protected IEdxEnvironment environment;
@@ -74,11 +67,6 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
         logger.debug("created: " + getClass().getName());
 
         final Context context = getContext();
-
-        Settings.sdkInitialize(context);
-
-        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
-        uiHelper.onCreate(savedInstanceState);
     }
 
     @Override
@@ -93,8 +81,6 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
         // treat every link as external link in this view, so that all links will open in external browser
         client.setAllLinksAsExternal(true);
 
-        notificationSettingRow = view.findViewById(R.id.notification_setting_row);
-        notificationSwitch = (Switch) view.findViewById(R.id.notification_switch);
 
         return view;
     }
@@ -133,68 +119,17 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
                     populateAnnouncements(savedAnnouncements);
                 }
             }
-
-            if (environment.getConfig().isNotificationEnabled()
-                    && courseData != null && courseData.getCourse() != null) {
-                notificationSettingRow.setVisibility(View.VISIBLE);
-                final String courseId = courseData.getCourse().getId();
-                final String subscriptionId = courseData.getCourse().getSubscription_id();
-                boolean isSubscribed = environment.getNotificationDelegate().isSubscribedByCourseId(courseId);
-                notificationSwitch.setChecked(isSubscribed);
-                notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        environment.getNotificationDelegate().changeNotificationSetting(
-                                courseId, subscriptionId, isChecked);
-                    }
-                });
-            } else {
-                notificationSwitch.setOnCheckedChangeListener(null);
-                notificationSettingRow.setVisibility(View.GONE);
-            }
         } catch (Exception ex) {
             logger.error(ex);
         }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        LikeView.handleOnActivityResult(getActivity(), requestCode, resultCode, data);
-        //
-        uiHelper.onActivityResult(requestCode, resultCode, data, null);
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        uiHelper.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        uiHelper.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        uiHelper.onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         if (savedAnnouncements != null) {
             outState.putParcelableArrayList(Router.EXTRA_ANNOUNCEMENTS, new ArrayList<Parcelable>(savedAnnouncements));
         }
-        uiHelper.onSaveInstanceState(outState);
-
     }
 
     private void loadAnnouncementData(EnrolledCoursesResponse enrollment) {

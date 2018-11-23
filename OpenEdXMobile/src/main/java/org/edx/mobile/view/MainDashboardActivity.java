@@ -55,7 +55,6 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initWhatsNew();
         addClickListenerOnProfileButton();
     }

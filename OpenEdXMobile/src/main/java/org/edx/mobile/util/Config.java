@@ -2,6 +2,7 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -47,6 +48,7 @@ public class Config {
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
+    private static final String PROGRAM = "PROGRAM";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String GOOGLE = "GOOGLE";
@@ -54,6 +56,7 @@ public class Config {
     private static final String FABRIC = "FABRIC";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
+    private static final String FIREBASE = "FIREBASE";
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
 
@@ -67,7 +70,6 @@ public class Config {
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
-    private static final String FIREBASE_ENABLED = "FIREBASE_ENABLED";
     private static final String APP_REVIEWS_ENABLED = "APP_REVIEWS_ENABLED";
     private static final String VIDEO_TRANSCRIPT_ENABLED = "VIDEO_TRANSCRIPT_ENABLED";
     private static final String USING_VIDEO_PIPELINE = "USING_VIDEO_PIPELINE";
@@ -174,6 +176,30 @@ public class Config {
 
         public boolean isSubjectDiscoveryEnabled() {
             return subjectDiscovery;
+        }
+    }
+
+    public static class ProgramConfig {
+        @SerializedName("ENABLED")
+        private boolean enabled;
+
+        @SerializedName("PROGRAM_URL")
+        private String url;
+
+        @SerializedName("PROGRAM_DETAIL_URL_TEMPLATE")
+        private String detailUrlTemplate;
+
+        public boolean isEnabled() {
+            // TODO Disable program feature for kitkat users, See Jira story LEARNER-6625 for more details.
+            return enabled && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT ;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getDetailUrlTemplate() {
+            return detailUrlTemplate;
         }
     }
 
@@ -406,6 +432,29 @@ public class Config {
         }
     }
 
+    public static class FirebaseConfig {
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("ANALYTICS_ENABLED")
+        private boolean mAnalyticsEnabled;
+
+        @SerializedName("CLOUD_MESSAGING_ENABLED")
+        private boolean mCloudMessagingEnabled;
+
+        public boolean isEnabled() {
+            return mEnabled;
+        }
+
+        public boolean isAnalyticsEnabled() {
+            return mEnabled && mAnalyticsEnabled;
+        }
+
+        public boolean areNotificationsEnabled() {
+            return mEnabled && mCloudMessagingEnabled;
+        }
+    }
+
     @Inject
     public Config(Context context) {
         try {
@@ -514,7 +563,11 @@ public class Config {
         return getString(ORGANIZATION_CODE);
     }
 
-    public boolean isNotificationEnabled() {
+    public boolean areFirebasePushNotificationsEnabled() {
+        return getFirebaseConfig().areNotificationsEnabled() && arePushNotificationEnabled();
+    }
+
+    private boolean arePushNotificationEnabled() {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
 
@@ -564,10 +617,6 @@ public class Config {
         return getBoolean(COURSE_SHARING_ENABLED, false);
     }
 
-    public boolean isFirebaseEnabled() {
-        return getBoolean(FIREBASE_ENABLED, false);
-    }
-
     public boolean isVideoTranscriptEnabled() {
         return getBoolean(VIDEO_TRANSCRIPT_ENABLED, false);
     }
@@ -591,6 +640,11 @@ public class Config {
     @NonNull
     public EnrollmentConfig getCourseDiscoveryConfig() {
         return getObjectOrNewInstance(COURSE_ENROLLMENT, EnrollmentConfig.class);
+    }
+
+    @NonNull
+    public ProgramConfig getProgramConfig() {
+        return getObjectOrNewInstance(PROGRAM, ProgramConfig.class);
     }
 
     @NonNull
@@ -626,6 +680,11 @@ public class Config {
     @NonNull
     public SegmentConfig getSegmentConfig() {
         return getObjectOrNewInstance(SEGMENT_IO, SegmentConfig.class);
+    }
+
+    @NonNull
+    public FirebaseConfig getFirebaseConfig() {
+        return getObjectOrNewInstance(FIREBASE, FirebaseConfig.class);
     }
 
     @NonNull

@@ -1,11 +1,13 @@
+import groovy.json.JsonBuilder
 import org.edx.builder.TaskHelper
 
 buildscript {
     repositories {
+        google()
         jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
@@ -14,11 +16,10 @@ buildscript {
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
 
-        classpath 'com.facebook.testing.screenshot:plugin:0.4.2'
-
+        classpath 'com.facebook.testing.screenshot:plugin:0.8.0'
+        classpath 'com.google.gms:google-services:4.0.1'
     }
 }
-
 
 apply plugin: 'edxapp'
 edx {
@@ -30,32 +31,25 @@ apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
 apply from: 'jacoco.gradle'
 
-repositories {
-    mavenCentral()
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
-
 class AndroidHelper {
-
-    def saveProcessedConfig(project, config) {
+    static def saveProcessedConfig(project, config) {
         def path = project.file('assets/config')
         path.mkdirs()
         def jsonWriter = new FileWriter(path.absolutePath + '/config.json')
-        def builder = new groovy.json.JsonBuilder(config)
+        def builder = new JsonBuilder(config)
         jsonWriter.withWriter {
             builder.writeTo(it)
         }
     }
 }
+
 /**
  * Computes a semantic version string, e.g. "1.0" or "2.5.7" by parsing git branches or tags.
  * Branch name takes priority, otherwise the last annotated tag name will be used.
  * @return The semantic version string, or "0.0.1" if we failed to determine one.
  */
 def getVersionName = { ->
-    def description = "0.0.1";
+    def description = "0.0.1"
     try {
         def branch = System.getenv("BRANCH")
         if (null == branch || branch.isEmpty()) {
@@ -72,7 +66,7 @@ def getVersionName = { ->
             return s.indexOf("rc/") >= 0 || s.indexOf("release/") >= 0
         }
         if (hasSemanticVersion(branch)) {
-            description = branch;
+            description = branch
         } else {
             def stdout = new ByteArrayOutputStream()
             exec {
@@ -81,7 +75,7 @@ def getVersionName = { ->
             }
             def describe = stdout.toString().trim()
             if (hasSemanticVersion(describe)) {
-                description = describe;
+                description = describe
             }
         }
     }
@@ -98,7 +92,7 @@ def getVersionCode = { ->
     try {
         def versionName = getVersionName()
         def semVer = versionName.split('\\.')
-        def vCode;
+        def vCode
         vCode = semVer[0].toInteger() * 1000000 // Major version
         if (semVer.length > 1) {
             vCode += semVer[1].toInteger() * 1000 // Minor version
@@ -109,7 +103,7 @@ def getVersionCode = { ->
         return vCode
     } catch (e) {
         logger.error("Could not determine version code", e)
-        return 1;
+        return 1
     }
 }
 
@@ -117,130 +111,141 @@ task(version) << {
     println String.format('%s (%s)', getVersionName(), getVersionCode())
 }
 
-
 dependencies {
-    compile project (':android-iconify')
+    implementation fileTree(dir: 'libs', include: '*.jar')
+
+    implementation project (':android-iconify')
     // Note that we have the Font Awesome TTF file
     // in the local assets as well, to enable the
     // graphical layout editor to render it. Since
     // that is what will be compiled in the APK now,
     // we need to ensure that it's updated along
     // with module updates.
-    compile project (':android-iconify-fontawesome')
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.facebook.android:facebook-android-sdk:3.23.1'
-    compile 'com.google.android.gms:play-services-plus:10.0.1'
-    compile 'com.google.android.gms:play-services-analytics:10.0.1'
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
-    compile 'com.google.android.gms:play-services-ads:10.0.1'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'de.greenrobot:eventbus:2.4.1'
-    compile 'com.squareup.phrase:phrase:1.1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.0.1'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    implementation project (':android-iconify-fontawesome')
+
+    implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:cardview-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
+    // For the optional Nullable annotation
+    implementation "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}"
+
+    implementation "com.google.android.gms:play-services-plus:15.0.1"
+    implementation "com.google.android.gms:play-services-analytics:16.0.1"
+    implementation "com.google.android.gms:play-services-auth:15.0.1"
+    implementation "com.google.android.gms:play-services-ads:15.0.1"
+    // Google Firebase
+    implementation "com.google.firebase:firebase-core:16.0.1"
+    implementation "com.google.firebase:firebase-messaging:17.1.0"
+
+    implementation 'com.facebook.android:facebook-login:4.36.0'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'de.greenrobot:eventbus:2.4.1'
+    implementation 'com.squareup.phrase:phrase:1.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.0.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     /* Exclude dependencies defined statically at the top-
      * level, to prevent them from being resolved to the
      * latest version as a result of dynamic version
      * definitions in the transitive dependencies.
      */
-    compile ('com.squareup.retrofit2:retrofit:2.1.0') {
+    implementation ('com.squareup.retrofit2:retrofit:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    compile ('com.squareup.retrofit2:converter-gson:2.1.0') {
+    implementation ('com.squareup.retrofit2:converter-gson:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile ('com.github.bumptech.glide:okhttp3-integration:1.4.0'){
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation ('com.github.bumptech.glide:okhttp3-integration:1.4.0'){
         exclude group: 'glide-parent'
     }
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-
-    // Google Firebase
-    compile 'com.google.firebase:firebase-core:10.0.1'
+    implementation 'de.hdodenhof:circleimageview:2.0.0'
+    implementation 'uk.co.chrisjenx:calligraphy:2.1.0'
 
     // Segment Library
-    compile 'com.segment.analytics.android:analytics:4.2.6'
+    implementation 'com.segment.analytics.android:analytics:4.2.6'
 
-    compile('com.segment.analytics.android.integrations:google-analytics:1.0.0') {
+    implementation('com.segment.analytics.android.integrations:google-analytics:1.0.0') {
         exclude module: 'play-services-analytics'
         transitive = true
     }
 
     // Crashlytics Kit
-    compile ('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true
     }
+
+    // A utility library for Android to save objects in a Bundle without any boilerplate
+    implementation ('com.evernote:android-state:1.4.1') {
+        exclude group: 'androidx.core'
+    }
+    annotationProcessor 'com.evernote:android-state-processor:1.4.1'
+
+    // A utility library for avoiding TransactionTooLargeException during state saving and restoration
+    implementation 'com.github.livefront:bridge:v1.1.3'
 
     // Branch SDK
     // Check this link for guide to updating Branch integration:
     // https://github.com/BranchMetrics/android-branch-deep-linking
-    compile ('io.branch.sdk.android:library:2.19.2') {
+    implementation ('io.branch.sdk.android:library:2.19.2') {
         exclude module: 'answers-shim'
     }
 
     //New Relic Integration
-    compile 'com.newrelic.agent.android:android-agent:5.4.1'
+    implementation 'com.newrelic.agent.android:android-agent:5.4.1'
 
     //Include DI framework
-    compile 'org.roboguice:roboguice:3.0.1'
-    provided 'org.roboguice:roboblender:3.0.1'
-
-    // For the optional Nullable annotation
-    compile 'com.android.support:support-annotations:25.3.1'
+    implementation 'org.roboguice:roboguice:3.0.1'
+    compileOnly 'org.roboguice:roboblender:3.0.1'
 
     // test project configuration
-    testCompile 'junit:junit:4.12'
-    testCompile ("org.mockito:mockito-core:1.10.19"){
+    testImplementation 'junit:junit:4.12'
+    testImplementation ("org.mockito:mockito-core:1.10.19"){
         exclude group: 'org.hamcrest'
     }
-    testCompile "org.robolectric:robolectric:3.0"
-    testCompile "org.robolectric:shadows-support-v4:3.0"
-    testCompile "org.robolectric:shadows-multidex:3.0"
-    testCompile 'org.assertj:assertj-core:2.5.0'
-    testCompile ('com.squareup.assertj:assertj-android:1.1.1') {
+    testImplementation 'commons-lang:commons-lang:2.6'
+    testImplementation "org.robolectric:robolectric:3.8"
+    testImplementation "org.robolectric:shadows-supportv4:3.8"
+    testImplementation "org.robolectric:shadows-multidex:3.8"
+    testImplementation 'org.assertj:assertj-core:2.5.0'
+    testImplementation ('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
+    testImplementation ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
+    testImplementation ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
-    testCompile ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.0.1'
+    testImplementation ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
-    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile "com.crittercism.dexmaker:dexmaker:1.4"
-    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:1.4"
-    androidTestCompile ("org.mockito:mockito-core:1.10.19"){
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.crittercism.dexmaker:dexmaker:1.4'
+    androidTestImplementation 'com.crittercism.dexmaker:dexmaker-dx:1.4'
+    androidTestImplementation 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
+    androidTestImplementation ('org.mockito:mockito-core:1.10.19'){
         exclude group: 'org.hamcrest'
     }
 }
 
 configurations {
-    androidTestCompile.exclude group: 'com.android.support', module: 'support-annotations'
-    androidTestCompile.exclude group: 'com.android.support', module: 'multidex'
-    androidTestCompile.exclude group: 'javax.inject'
-    androidTestCompile.exclude group: 'javax.annotation'
+    androidTestImplementation.exclude group: 'javax.inject'
+    androidTestImplementation.exclude group: 'javax.annotation'
 }
 
 def config = new TaskHelper().loadConfig(project)
-
-// https://developers.google.com/android/guides/google-services-plugin
-if (config.get('FIREBASE_ENABLED')?: false) {
+def firebase = config.get('FIREBASE')
+def firebaseEnabled = firebase?.get('ENABLED')
+if (firebaseEnabled?: false) {
     apply plugin: 'com.google.gms.google-services'
 }
 
@@ -265,11 +270,13 @@ android {
         javaMaxHeapSize "2g"
     }
 
+    flavorDimensions "default"
+
     defaultConfig {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.1
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
 
         versionCode getVersionCode()
         versionName getVersionName()
@@ -277,13 +284,17 @@ android {
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
 
+        vectorDrawables.useSupportLibrary = true
+
         // test configuration
         testApplicationId 'org.edx.mobile.test'
 
-        if (project.gradle.startParameter.taskNames.contains("screenshotTests")) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("package", "org.edx.mobile.test.screenshot");
-            setTestInstrumentationRunnerArguments map
+        for (task in project.gradle.startParameter.taskNames) {
+            if (task.contains("ScreenshotTest")) {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("package", "org.edx.mobile.test.screenshot");
+                setTestInstrumentationRunnerArguments map
+            }
         }
 
         testInstrumentationRunner "org.edx.mobile.test.EdXTestRunner"
@@ -334,9 +345,29 @@ android {
             }
         }
 
+        def facebookAppId = ""
+        def fbLoginProtocolScheme = ""
+        def facebook = config.get('FACEBOOK')
+        if (facebook?.get('ENABLED')) {
+            facebookAppId = facebook.get('FACEBOOK_APP_ID')
+            if (null == facebookAppId) {
+                throw new GradleException("You must set FACEBOOK_APP_ID if FACEBOOK is enabled")
+            }
+            fbLoginProtocolScheme = "fb"+facebookAppId
+        }
+
         manifestPlaceholders = [supportsRtl:"false",
-                                firebaseEnabled: config.get('FIREBASE_ENABLED')?: false,
-                                branchKey: branchKey]
+                                firebaseEnabled: firebaseEnabled?: false,
+                                branchKey: branchKey,
+                                facebookAppId: facebookAppId,
+                                fbLoginProtocolScheme: fbLoginProtocolScheme]
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+        testOptions.unitTests.includeAndroidResources = true
     }
     sourceSets {
         main {
@@ -394,9 +425,6 @@ android {
                 applicationId APPLICATION_ID
             }
         }
-        dev {
-            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
-        }
     }
 
     buildTypes {
@@ -408,17 +436,15 @@ android {
         debuggable.initWith(buildTypes.debug)
         debuggable {
             testCoverageEnabled = false // Set to "false" to work around debugger issue: https://code.google.com/p/android/issues/detail?id=123771
+            matchingFallbacks = ["debug"]
         }
 
         release {
             signingConfig signingConfigs.releasekey
             applicationVariants.all { variant ->
-                variant.outputs.each { output ->
+                variant.outputs.all { output ->
                     project.ext { appName = 'edx' }
-                    def newName = output.outputFile.name
-                    newName = newName.replace("OpenEdXMobile-", "$project.ext.appName-")
-                    newName = newName.replace(("-" + variant.buildType.name), ("-" + variant.buildType.name + "-" + versionName))
-                    output.outputFile = new File(output.outputFile.parent, newName)
+                    outputFileName  = "${project.ext.appName}-${variant.buildType.name}-${versionName}.apk"
                 }
             }
         }
@@ -456,9 +482,4 @@ android.applicationVariants.all { variant ->
             task.mustRunAfter(configureTask)
         }
     }
-}
-
-screenshots {
-    testApkTarget = 'packageProdDebuggableAndroidTest'
-    connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
 }

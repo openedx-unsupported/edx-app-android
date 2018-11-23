@@ -27,6 +27,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
+import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.http.HttpStatus;
@@ -92,6 +93,10 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
     public URLInterceptorWebViewClient getWebViewClient() {
         return webViewClient;
+    }
+
+    public WebView getWebView() {
+        return webView;
     }
 
     /**
@@ -318,6 +323,11 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseDashboardRefreshEvent event) {
+        onRefresh();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MainDashboardRefreshEvent event) {
         onRefresh();
     }
 

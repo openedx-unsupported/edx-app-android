@@ -25,6 +25,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.interfaces.WebViewStatusListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.WebViewUtil;
+import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -33,7 +34,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFragment
-        implements URLInterceptorWebViewClient.IActionListener, WebViewStatusListener, RefreshListener {
+        implements URLInterceptorWebViewClient.ActionListener, WebViewStatusListener, RefreshListener {
     protected final Logger logger = new Logger(getClass().getName());
 
     private EdxWebView webView;
@@ -126,17 +127,19 @@ public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFrag
     }
 
     @Override
-    public void onClickCourseInfo(String pathId) {
-        //If Path id is not null or empty then call CourseInfoActivity
-        if (!TextUtils.isEmpty(pathId)) {
-            logger.debug("PathId" + pathId);
-            environment.getRouter().showCourseInfo(getActivity(), pathId);
+    public void onLinkRecognized(@NonNull WebViewLink helper) {
+        switch (helper.authority) {
+            case COURSE_INFO:
+                final String pathId = helper.params.get(WebViewLink.Param.PATH_ID);
+                if (!TextUtils.isEmpty(pathId)) {
+                    logger.debug("PathId" + pathId);
+                    environment.getRouter().showCourseInfo(getActivity(), pathId);
+                }
+                break;
+            case ENROLL:
+                //TODO: Implement this when we will stop using CourseInfoActivity & BaseWebViewFindCoursesActivity (LEARNER-3842)
+                break;
         }
-    }
-
-    @Override
-    public void onClickEnroll(String courseId, boolean emailOptIn) {
-        //TODO: Implement this when we will stop using CourseInfoActivity & BaseWebViewFindCoursesActivity
     }
 
     /**

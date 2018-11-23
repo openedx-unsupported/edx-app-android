@@ -25,7 +25,6 @@ public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseF
     @Override
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         if(getParentFragment() == null) {
             // retain instance is inherited through the fragment tree
             // so don't need it for fragments with parents
@@ -40,6 +39,9 @@ public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseF
                 presenter = createPresenter();
             }
         }
+        // We are having life cycle issues/crash in low memory case when this fragment recreates.
+        // To fix that, its better to call super.onCreate() once the presenter is created. Ref: LEARNER-2519.
+        super.onCreate(savedInstanceState);
     }
 
     @Override

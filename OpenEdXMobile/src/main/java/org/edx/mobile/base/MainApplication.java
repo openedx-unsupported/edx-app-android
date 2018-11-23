@@ -7,17 +7,23 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.evernote.android.state.StateSaver;
+import com.facebook.FacebookSdk;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.livefront.bridge.Bridge;
+import com.livefront.bridge.SavedStateHandler;
 import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.BuildConfig;
@@ -37,6 +43,7 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.NotificationUtil;
 
 import java.io.InputStream;
 
@@ -81,6 +88,10 @@ public abstract class MainApplication extends MultiDexApplication {
      */
     private void init() {
         application = this;
+        // FIXME: Disable RoboBlender to avoid annotation processor issues for now, as we already have plans to move to some other DI framework. See LEARNER-1687.
+        // ref: https://github.com/roboguice/roboguice/wiki/RoboBlender-wiki#disabling-roboblender
+        // ref: https://developer.android.com/studio/build/gradle-plugin-3-0-0-migration
+        RoboGuice.setUseAnnotationDatabases(false);
         injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
@@ -94,7 +105,7 @@ public abstract class MainApplication extends MultiDexApplication {
                 EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
             }
 
-            if (config.getFabricConfig().getKitsConfig().isAnswersEnabled())  {
+            if (config.getFabricConfig().getKitsConfig().isAnswersEnabled()) {
                 analyticsRegistry.addAnalyticsProvider(injector.getInstance(AnswersAnalytics.class));
             }
         }
@@ -112,24 +123,24 @@ public abstract class MainApplication extends MultiDexApplication {
         }
 
         // Add Segment as an analytics provider if enabled in the config
-        if (config.getSegmentConfig().isEnabled())  {
+        if (config.getSegmentConfig().isEnabled()) {
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
         }
 
         // Add Firebase as an analytics provider if enabled in the config
-        if (config.isFirebaseEnabled())  {
+        if (config.getFirebaseConfig().isAnalyticsEnabled()) {
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(FirebaseAnalytics.class));
+        }
+
+        if (config.getFirebaseConfig().areNotificationsEnabled()) {
+            NotificationUtil.subscribeToTopics(config);
+        } else if (!config.getFirebaseConfig().areNotificationsEnabled() &&
+                config.getFirebaseConfig().isEnabled()) {
+            NotificationUtil.unsubscribeFromTopics(config);
         }
 
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
-
-        // initialize Facebook SDK
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
-        if (!isOnZeroRatedNetwork
-                && config.getFacebookConfig().isEnabled()) {
-            com.facebook.Settings.setApplicationId(config.getFacebookConfig().getFacebookAppId());
-        }
 
         checkIfAppVersionUpgraded(this);
 
@@ -153,6 +164,28 @@ public abstract class MainApplication extends MultiDexApplication {
             Glide.get(this).register(GlideUrl.class, InputStream.class,
                     new OkHttpUrlLoader.Factory(injector.getInstance(OkHttpClientProvider.class).get()));
         }
+
+        // Initialize Facebook SDK
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
+        if (!isOnZeroRatedNetwork && config.getFacebookConfig().isEnabled()) {
+            // Facebook sdk should be initialized through AndroidManifest meta data declaration but
+            // we are generating the meta data through gradle script due to which it is necessary
+            // to manually initialize the sdk here.
+            FacebookSdk.setApplicationId(config.getFacebookConfig().getFacebookAppId());
+            FacebookSdk.sdkInitialize(getApplicationContext());
+        }
+
+        Bridge.initialize(this, new SavedStateHandler() {
+            @Override
+            public void saveInstanceState(@NonNull Object target, @NonNull Bundle state) {
+                StateSaver.saveInstanceState(target, state);
+            }
+
+            @Override
+            public void restoreInstanceState(@NonNull Object target, @Nullable Bundle state) {
+                StateSaver.restoreInstanceState(target, state);
+            }
+        });
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
@@ -164,20 +197,20 @@ public abstract class MainApplication extends MultiDexApplication {
             // Save version code and name in preferences
             prefManager.setAppVersionCode(curVersionCode);
             prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
-            logger.debug("App opened first time, VersionCode:"+curVersionCode);
+            logger.debug("App opened first time, VersionCode:" + curVersionCode);
         } else if (previousVersionCode < curVersionCode) {
             final String previousVersionName = prefManager.getAppVersionName();
             // Update version code and name in preferences
             prefManager.setAppVersionCode(curVersionCode);
             prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
-            logger.debug("App updated, VersionCode:"+previousVersionCode+"->"+curVersionCode);
+            logger.debug("App updated, VersionCode:" + previousVersionCode + "->" + curVersionCode);
             // App updated
             onAppUpdated(previousVersionCode, curVersionCode, previousVersionName, BuildConfig.VERSION_NAME);
         }
     }
 
     private void onAppUpdated(final long previousVersionCode, final long curVersionCode,
-                             final String previousVersionName, final String curVersionName) {
+                              final String previousVersionName, final String curVersionName) {
         // Try repair of download data on updating of app version
         injector.getInstance(IStorage.class).repairDownloadCompletionData();
         // Fire app updated event

@@ -128,6 +128,19 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                     }
                 }));
 
+        if (environment.getConfig().getProgramConfig().isEnabled()) {
+            items.add(new FragmentItemModel(WebViewProgramFragment.class,
+                    getResources().getString(R.string.label_my_programs), FontAwesomeIcons.fa_clone,
+                    WebViewProgramFragment.makeArguments(environment.getConfig().getProgramConfig().getUrl(),
+                            null, true),
+                    new FragmentItemModel.FragmentStateListener() {
+                        @Override
+                        public void onFragmentSelected() {
+
+                        }
+                    }));
+        }
+
         if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
             items.add(new FragmentItemModel(
                     environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()

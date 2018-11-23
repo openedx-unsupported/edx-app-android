@@ -4,7 +4,7 @@ import android.os.Handler;
 
 import org.robolectric.annotation.Implements;
 import org.robolectric.annotation.RealObject;
-import org.robolectric.util.concurrent.RoboExecutorService;
+import org.robolectric.android.util.concurrent.RoboExecutorService;
 
 import roboguice.util.SafeAsyncTask;
 
