@@ -32,8 +32,7 @@
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_wifi_top"
                     android:textColor="@color/grey_6"
                     android:textSize="@dimen/edx_small"/>
@@ -43,8 +42,7 @@
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_wifi_bottom"
                     android:textColor="@color/grey_4"
                     android:textSize="@dimen/edx_xx_small" />

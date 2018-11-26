@@ -76,7 +76,7 @@ public class Config {
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
-    private static final String SD_CARD_DOWNLOAD_ENABLED = "SD_CARD_DOWNLOAD_ENABLED";
+    private static final String DOWNLOAD_TO_SD_CARD_ENABLED = "DOWNLOAD_TO_SD_CARD_ENABLED";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -638,8 +638,8 @@ public class Config {
         return getBoolean(COURSE_VIDEOS_ENABLED, true);
     }
 
-    public boolean isSDCardDownloadEnabled(){
-        return getBoolean(SD_CARD_DOWNLOAD_ENABLED, false);
+    public boolean isDownloadToSDCardEnabled() {
+        return getBoolean(DOWNLOAD_TO_SD_CARD_ENABLED, true);
     }
 
     @NonNull

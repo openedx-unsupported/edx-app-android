@@ -45,15 +45,12 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             return;
         }
-        prefManager = new PrefManager(context, PrefManager.Pref.SD_CARD);
-        String username = loginPrefs.getUsername();
-        String hashedUsername = (username != null) ? Sha1Util.SHA1(username) : null;
+        prefManager = new PrefManager(context, PrefManager.Pref.USER_PREF);
+        final String username = loginPrefs.getUsername();
+        final String hashedUsername = (username != null) ? Sha1Util.SHA1(username) : null;
 
-        // TODO: Is this Path a good method for Identifying the path in the DB
-        // should we updated the model to have an SD Card Flag?
         final String sdCardPath = intent.getDataString().replace("file://", "");
-
-        String action = intent.getAction();
+        final String action = intent.getAction();
         if (action != null) {
             boolean sdCardAvailable = false;
             switch (action) {
@@ -98,9 +95,9 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
         db.getAllVideos(hashedUsername, new DataCallback<List<VideoModel>>() {
             @Override
             public void onResult(List<VideoModel> result) {
-                String externalAppDir = FileUtil.getExternalAppDir(context).getAbsolutePath();
-                String removableStorageAppDir = FileUtil.getRemovableStorageAppDir(context).getAbsolutePath();
-                boolean downloadToSdCard = prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
+                final String externalAppDir = FileUtil.getExternalAppDir(context).getAbsolutePath();
+                final String removableStorageAppDir = FileUtil.getRemovableStorageAppDir(context).getAbsolutePath();
+                final boolean downloadToSdCard = prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true);
                 for (VideoModel videoModel : result) {
                     updateVideoDownloadFilePathState(
                             videoModel,
@@ -121,31 +118,36 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
     }
 
     /**
-     * Utility function to update the downloaded video file path(if multiple file are exist in phone memory / SD-Card for
-     * the single video), and state in the database.
+     * Utility method to update the downloaded video file info(if multiple file are exist in phone memory / SD-Card for
+     * the single video).
      *
-     * @param videoModel             video model need to update in the database.
-     * @param downloadToSdCard       user preference to identify the preferred file, and discard the other file.
-     * @param externalAppDir         phone memory path where downloaded video files exist
+     * @param videoModel             Video info need to update.
+     * @param downloadToSdCard       User preference from settings screen.
+     * @param externalAppDir         Phone memory path where downloaded video files exist
      * @param removableStorageAppDir SD-Card storage path where downloaded video files exist.
      */
     private void updateVideoDownloadFilePathState(VideoModel videoModel, boolean downloadToSdCard,
                                                   String externalAppDir, String removableStorageAppDir) {
-        String videoPath = videoModel.getFilePath();
-        File file = new File(videoPath);
+        final String videoPath = videoModel.getFilePath();
+        final File file = new File(videoPath);
         if (file.exists()) {
 
-            File duplicateFile = getDuplicateFile(
+            final File duplicateFile = getDuplicateFile(
                     videoPath,
                     externalAppDir,
                     removableStorageAppDir);
 
             if (duplicateFile != null && duplicateFile.exists()) {
+                /*  If duplicate file exist in SD-Card, and download to SdCard is true from settings screen.
+                    keep the duplicate file and delete file from Phone memory. */
                 if (duplicateFile.getAbsolutePath().contains(removableStorageAppDir) && downloadToSdCard) {
                     videoModel = updateVideoModelWithPreferredFilePath(
                             videoModel,
                             duplicateFile,
                             file);
+
+                    /*  If file exist in Phone memory, and download to SdCard is false from settings screen.
+                    keep the phone memory file and delete duplicate file(file exist in SD-Card). */
                 } else if (file.getAbsolutePath().contains(externalAppDir) && !downloadToSdCard) {
                     videoModel = updateVideoModelWithPreferredFilePath(
                             videoModel,
@@ -164,16 +166,15 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
     }
 
     /**
-     * Utility function to update the video model based on the user preferred file(if exist)
-     * and delete on old file.
+     * Utility method to update the video info based on the preferred file and delete duplicate file.
      *
      * @param videoModel    Video model need to update.
-     * @param preferredFile user preferred file
-     * @param duplicateFile duplicate file need to delete after update the preferred file path
-     * @return return update video model if downloaded file exist.
+     * @param preferredFile User preferred file.
+     * @param duplicateFile Duplicate file need to delete.
+     * @return return updated video model.
      */
     private VideoModel updateVideoModelWithPreferredFilePath(VideoModel videoModel, File preferredFile, File duplicateFile) {
-        DownloadEntry videoDownloadEntry = new DownloadEntry();
+        final DownloadEntry videoDownloadEntry = new DownloadEntry();
         videoDownloadEntry.setDownloadInfo(videoModel);
         videoDownloadEntry.filepath = preferredFile.getAbsolutePath();
         videoDownloadEntry.videoId = videoModel.getVideoId();
@@ -183,9 +184,8 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
     }
 
     /**
-     * Utility function to find the duplicate file path in Phone memory / SD-Card from the given
-     * path if there are two files in for the same video in Phone memory
-     * and SD-Card.
+     * Utility method to find the duplicate file path from Phone memory / SD-Card if there are two
+     * files for the same video in Phone memory and SD-Card.
      *
      * @param videoPath              video path from the database.
      * @param externalAppDir         Phone memory storage path.
@@ -203,14 +203,14 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
     }
 
     /**
-     * Function to update the the status and the video downloaded file info in database.
+     * Utility method to update the downloaded video file info and status in database.
      *
-     * @param videoModel    Video Model need to update in database.
-     * @param downloadState new download status base on file existence.
+     * @param videoModel    Video info need to update in database.
+     * @param downloadState New file status(DOWNLOADED / ONLINE).
      */
     public void updateVideoDownloadState(VideoModel videoModel,
                                          int downloadState) {
-        NativeDownloadModel dm = new NativeDownloadModel();
+        final NativeDownloadModel dm = new NativeDownloadModel();
         dm.dmid = videoModel.getDmId();
         dm.filepath = videoModel.getFilePath();
         dm.size = videoModel.getSize();

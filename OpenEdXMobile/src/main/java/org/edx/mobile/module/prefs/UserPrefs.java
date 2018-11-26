@@ -46,9 +46,9 @@ public class UserPrefs {
         return onlyWifi;
     }
 
-    public boolean isSDCardDownloadEnabled(){
-        final PrefManager prefManger = new PrefManager(context, PrefManager.Pref.SD_CARD);
-        return prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
+    public boolean isDownloadToSDCardEnabled(){
+        final PrefManager prefManger = new PrefManager(context, PrefManager.Pref.USER_PREF);
+        return prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true);
     }
 
     @Nullable

@@ -89,7 +89,7 @@ public class Storage implements IStorage {
             }
 
             // Fail the download if download directory isn't available
-            final File downloadDirectory = FileUtil.getDownloadDirectory(context, environment, logger);
+            final File downloadDirectory = FileUtil.getDownloadDirectory(context, environment);
             if (downloadDirectory == null) return -1;
 
             // there is no any download ever marked for this URL

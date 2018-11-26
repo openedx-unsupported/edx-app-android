@@ -99,15 +99,15 @@ public class SettingsFragment extends BaseFragment {
 
     private void updateSDCardSwitch() {
         final PrefManager prefManager =
-                new PrefManager(getActivity().getBaseContext(), PrefManager.Pref.SD_CARD);
-        if (!environment.getConfig().isSDCardDownloadEnabled() || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                new PrefManager(getActivity().getBaseContext(), PrefManager.Pref.USER_PREF);
+        if (!environment.getConfig().isDownloadToSDCardEnabled() || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             sdCardSettingsLayout.setVisibility(View.GONE);
         } else {
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().registerSticky(this);
             }
             sdCardSwitch.setOnCheckedChangeListener(null);
-            sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false));
+            sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
             sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {

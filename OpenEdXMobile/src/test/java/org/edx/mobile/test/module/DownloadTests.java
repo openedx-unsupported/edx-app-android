@@ -32,9 +32,9 @@ public class DownloadTests extends BaseTestCase {
     public void testAddDownload() throws Exception {
         File dir = null;
         try {
-            Application application = RuntimeEnvironment.application;
-            IEdxEnvironment environment = MainApplication.getEnvironment(application);
-            dir = FileUtil.getDownloadDirectory(application, environment, logger);
+            final Application application = RuntimeEnvironment.application;
+            final IEdxEnvironment environment = MainApplication.getEnvironment(application);
+            dir = FileUtil.getDownloadDirectory(application, environment);
         } catch (Exception ex) {
             // it happens in CI environment and we should skip the test.
             print("dir is null, it happens in CI environment and we should skip the test.");

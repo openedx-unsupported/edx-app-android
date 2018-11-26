@@ -1,6 +1,7 @@
 package org.edx.mobile.base;
 
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -9,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
@@ -29,18 +31,28 @@ import org.edx.mobile.event.AppUpdatedEvent;
 import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.AnswersAnalytics;
 import org.edx.mobile.module.analytics.FirebaseAnalytics;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.NotificationUtil;
+import org.edx.mobile.util.PermissionsUtil;
+import org.edx.mobile.util.Sha1Util;
 
+import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -169,6 +181,10 @@ public abstract class MainApplication extends MultiDexApplication {
             FacebookSdk.setApplicationId(config.getFacebookConfig().getFacebookAppId());
             FacebookSdk.sdkInitialize(getApplicationContext());
         }
+
+        if (PermissionsUtil.checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)) {
+            deleteExtraDownloadedFiles();
+        }
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
@@ -222,5 +238,36 @@ public abstract class MainApplication extends MultiDexApplication {
     @NonNull
     public static IEdxEnvironment getEnvironment(@NonNull Context context) {
         return RoboGuice.getInjector(context.getApplicationContext()).getInstance(IEdxEnvironment.class);
+    }
+
+    /**
+     * Utility function to delete the all extra files (unused files e.g user eject SD-card while
+     * video downloading in SD-Card, video downloading stops but android OS unable to delete the
+     * created file) from the downloads directory in background.
+     */
+    public void deleteExtraDownloadedFiles() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final ProfileModel profile = getEnvironment(MainApplication.this).getUserPrefs().getProfile();
+                final IDatabase db = getEnvironment(MainApplication.this).getDatabase();
+                if (profile != null) {
+                    db.getAllVideos(Sha1Util.SHA1(profile.username), new DataCallback<List<VideoModel>>() {
+                        @Override
+                        public void onResult(List<VideoModel> result) {
+                            ArrayList<File> extraFiles = FileUtil.getAllFileFromExternalStorage(MainApplication.this, profile);
+                            FileUtil.deleteExtraFilesNotInDatabase(result, extraFiles);
+                        }
+
+                        @Override
+                        public void onFail(Exception ex) {
+                            Log.e(this.getClass().getSimpleName(),
+                                    "Unable to get to get list of Videos"
+                            );
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 }

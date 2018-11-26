@@ -253,7 +253,6 @@ public class PrefManager {
         public static final String FEATURES = "features";
         public static final String APP_INFO = "pref_app_info";
         public static final String USER_PREF = "pref_user";
-        public static final String SD_CARD = "pref_sd_card";
 
         public static String[] getAll() {
             return new String[]{LOGIN, WIFI, VIDEOS, FEATURES, APP_INFO, USER_PREF};
