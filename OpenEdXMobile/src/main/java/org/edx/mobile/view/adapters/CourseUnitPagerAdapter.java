@@ -57,30 +57,44 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int pos) {
-        CourseComponent unit = getUnit(pos);
+        final CourseComponent unit = getUnit(pos);
+        // FIXME: Remove this code once LEARNER-6713 is merged
+        final CourseComponent minifiedUnit;
+        {
+            // Create a deep copy of original CourseComponent object with `root` and `parent` objects
+            // removed to save memory.
+            if (unit instanceof VideoBlockModel) {
+                minifiedUnit = new VideoBlockModel((VideoBlockModel) unit);
+            } else if (unit instanceof DiscussionBlockModel) {
+                minifiedUnit = new DiscussionBlockModel((DiscussionBlockModel) unit);
+            } else if (unit instanceof HtmlBlockModel) {
+                minifiedUnit = new HtmlBlockModel((HtmlBlockModel) unit);
+            } else minifiedUnit = new CourseComponent(unit);
+        }
+
         CourseUnitFragment unitFragment;
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
-        if (isCourseUnitVideo(unit)) {
-            unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit, (pos < unitList.size()), (pos > 0));
-        } else if (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
-            unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit);
-        } else if (config.isDiscussionsEnabled() && unit instanceof DiscussionBlockModel) {
-            unitFragment = CourseUnitDiscussionFragment.newInstance(unit, courseData);
-        } else if (!unit.isMultiDevice()) {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
-        } else if (unit.getType() != BlockType.VIDEO &&
-                unit.getType() != BlockType.HTML &&
-                unit.getType() != BlockType.OTHERS &&
-                unit.getType() != BlockType.DISCUSSION &&
-                unit.getType() != BlockType.PROBLEM) {
-            unitFragment = CourseUnitEmptyFragment.newInstance(unit);
-        } else if (unit instanceof HtmlBlockModel) {
-            unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) unit);
+        if (isCourseUnitVideo(minifiedUnit)) {
+            unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
+        } else if (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
+            unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);
+        } else if (config.isDiscussionsEnabled() && minifiedUnit instanceof DiscussionBlockModel) {
+            unitFragment = CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData);
+        } else if (!minifiedUnit.isMultiDevice()) {
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+        } else if (minifiedUnit.getType() != BlockType.VIDEO &&
+                minifiedUnit.getType() != BlockType.HTML &&
+                minifiedUnit.getType() != BlockType.OTHERS &&
+                minifiedUnit.getType() != BlockType.DISCUSSION &&
+                minifiedUnit.getType() != BlockType.PROBLEM) {
+            unitFragment = CourseUnitEmptyFragment.newInstance(minifiedUnit);
+        } else if (minifiedUnit instanceof HtmlBlockModel) {
+            unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) minifiedUnit);
         }
 
         //fallback
         else {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
         }
 
         unitFragment.setHasComponentCallback(callback);
