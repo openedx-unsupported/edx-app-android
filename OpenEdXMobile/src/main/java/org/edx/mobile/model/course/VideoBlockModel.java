@@ -1,5 +1,6 @@
 package org.edx.mobile.model.course;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.edx.mobile.model.db.DownloadEntry;
@@ -13,6 +14,13 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
     private DownloadEntry downloadEntry;
     private VideoData data;
     private String downloadUrl;
+
+    public VideoBlockModel(@NonNull VideoBlockModel other) {
+        super(other);
+        this.downloadEntry = other.downloadEntry;
+        this.data = other.data;
+        this.downloadUrl = other.downloadUrl;
+    }
 
     public VideoBlockModel(BlockModel blockModel, CourseComponent parent){
         super(blockModel,parent);
