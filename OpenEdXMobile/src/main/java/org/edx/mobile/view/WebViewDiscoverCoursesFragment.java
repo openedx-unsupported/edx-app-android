@@ -10,10 +10,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.webkit.URLUtil;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,6 +57,7 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_webview_course_discovery, container, false);
         return binding.getRoot();
     }
@@ -63,11 +68,28 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
 
         errorNotification = new FullScreenErrorNotification(binding.llContent);
 
-        loadUrl(getInitialUrl());
+        // Check for search query in extras
+        String searchQueryExtra = null;
+        if (getArguments() != null) {
+            searchQueryExtra = getArguments().getString(Router.EXTRA_SEARCH_QUERY);
+        }
+
+        if (searchQueryExtra != null) {
+            initSearch(searchQueryExtra);
+        } else {
+            loadUrl(getInitialUrl());
+        }
         if (shouldShowSubjectDiscovery()) {
             initSubjects();
         }
         EventBus.getDefault().register(this);
+    }
+
+    private void initSearch(@NonNull String query) {
+        final String baseUrl = getInitialUrl();
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(QUERY_PARAM_SEARCH, query);
+        loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
     }
 
     private void initSubjects() {
@@ -115,10 +137,22 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        toolbarCallbacks = (MainDashboardToolbarCallbacks) getActivity();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        toolbarCallbacks = getActivity() instanceof MainDashboardToolbarCallbacks ?
+                (MainDashboardToolbarCallbacks) getActivity() : null;
         initSearchView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int itemId = item.getItemId();
+        if (itemId == android.R.id.home && searchView != null && searchView.hasFocus()) {
+            searchView.onActionViewCollapsed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initSearchView() {
@@ -128,11 +162,8 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                final String baseUrl = getInitialUrl();
-                final Map<String, String> queryParams = new HashMap<>();
-                queryParams.put(QUERY_PARAM_SEARCH, query);
+                initSearch(query);
                 searchView.onActionViewCollapsed();
-                loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
                 final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
                 environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
                 return true;
@@ -147,13 +178,26 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
             @Override
             public void onFocusChange(View view, boolean queryTextFocused) {
                 if (!queryTextFocused) {
-                    toolbarCallbacks.getTitleView().setVisibility(View.VISIBLE);
+                    updateTitleVisibility(View.VISIBLE);
                     searchView.onActionViewCollapsed();
                 } else {
-                    toolbarCallbacks.getTitleView().setVisibility(View.GONE);
+                    updateTitleVisibility(View.GONE);
                 }
             }
         });
+        if (getUserVisibleHint()) {
+            searchView.setVisibility(View.VISIBLE);
+        }
+        if (searchView.hasFocus()) {
+            updateTitleVisibility(View.GONE);
+        }
+    }
+
+    private void updateTitleVisibility(int visibility) {
+        final TextView titleView = toolbarCallbacks != null ? toolbarCallbacks.getTitleView() : null;
+        if (titleView != null) {
+            titleView.setVisibility(visibility);
+        }
     }
 
     @NonNull
@@ -222,7 +266,7 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     }
 
     private boolean shouldShowSubjectDiscovery() {
-        return environment.getConfig().getCourseDiscoveryConfig().isSubjectDiscoveryEnabled() &&
+        return getActivity() instanceof MainDashboardActivity && environment.getConfig().getCourseDiscoveryConfig().isSubjectDiscoveryEnabled() &&
                 getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
     }
 

@@ -334,7 +334,7 @@ public class Router {
         }
         final Intent findCoursesIntent;
         if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
-            findCoursesIntent = new Intent(context, WebViewFindCoursesActivity.class);
+            findCoursesIntent = new Intent(context, DiscoverCoursesActivity.class);
             if (searchQuery != null) {
                 findCoursesIntent.putExtra(Router.EXTRA_SEARCH_QUERY, searchQuery);
             }
