@@ -16,6 +16,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.AccountDataLoadedEvent;
+import org.edx.mobile.event.DiscoverCoursesEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.model.api.ProfileModel;
@@ -155,6 +156,16 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         }
 
         return items;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull DiscoverCoursesEvent event) {
+        if (!environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+            return;
+        }
+        if (binding != null) {
+            binding.viewPager.setCurrentItem(binding.viewPager.getAdapter().getCount() - 1, true);
+        }
     }
 
     @SuppressWarnings("unused")
