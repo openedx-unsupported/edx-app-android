@@ -3,6 +3,8 @@ allprojects {
         // The order in which you list these repositories matter.
         google()
         jcenter()
+        maven { url 'https://dl.bintray.com/guardian/android' }
+        maven { url "https://jitpack.io" }
     }
     project.apply from: "${rootDir}/constants.gradle"
 }

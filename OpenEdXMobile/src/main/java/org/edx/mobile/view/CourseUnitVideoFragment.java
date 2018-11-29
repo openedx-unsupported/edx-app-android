@@ -111,8 +111,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        unit = getArguments() == null ? null :
-            (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+        // We've already parsed this in the base class, so cast and use that
+        unit = (VideoBlockModel) super.unit;
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }

@@ -378,8 +378,6 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
      * ViewPager, by supplying its {@link CourseUnitPagerAdapter} with all possible
      * {@link CourseComponent} models.
      */
-    // FIXME: Enable this test once LEARNER-6713 is merged
-    @Ignore
     @Test
     public void testUnitFragmentCreation() {
         FragmentManager fragmentManager = Mockito.mock(FragmentManager.class);

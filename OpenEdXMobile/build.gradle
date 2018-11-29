@@ -178,6 +178,15 @@ dependencies {
         transitive = true
     }
 
+    // A utility library for Android to save objects in a Bundle without any boilerplate
+    implementation ('com.evernote:android-state:1.4.1') {
+        exclude group: 'androidx.core'
+    }
+    annotationProcessor 'com.evernote:android-state-processor:1.4.1'
+
+    // A utility library for avoiding TransactionTooLargeException during state saving and restoration
+    implementation 'com.github.livefront:bridge:v1.1.3'
+
     // Branch SDK
     // Check this link for guide to updating Branch integration:
     // https://github.com/BranchMetrics/android-branch-deep-linking
