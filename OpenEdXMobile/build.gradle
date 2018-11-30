@@ -351,7 +351,8 @@ android {
                                 firebaseEnabled: firebaseEnabled?: false,
                                 branchKey: branchKey,
                                 facebookAppId: facebookAppId,
-                                fbLoginProtocolScheme: fbLoginProtocolScheme]
+                                fbLoginProtocolScheme: fbLoginProtocolScheme,
+                                sdCardEnabled: config.get('DOWNLOAD_TO_SD_CARD_ENABLED') ?: true]
 
         javaCompileOptions {
             annotationProcessorOptions {

@@ -1,22 +1,27 @@
 package org.edx.mobile.test.module;
 
+import android.app.Application;
+
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
-import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.test.BaseTestCase;
+import org.edx.mobile.util.FileUtil;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class DownloadTests extends BaseTestCase {
 
     private IDownloadManager dm;
-    
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -27,10 +32,12 @@ public class DownloadTests extends BaseTestCase {
     public void testAddDownload() throws Exception {
         File dir = null;
         try {
-           dir = new UserPrefs(RuntimeEnvironment.application, MainApplication.getEnvironment(RuntimeEnvironment.application).getLoginPrefs()).getDownloadDirectory();
-        }catch (Exception ex){
+            final Application application = RuntimeEnvironment.application;
+            final IEdxEnvironment environment = MainApplication.getEnvironment(application);
+            dir = FileUtil.getDownloadDirectory(application, environment);
+        } catch (Exception ex) {
             // it happens in CI environment and we should skip the test.
-            print( "dir is null, it happens in CI environment and we should skip the test.");
+            print("dir is null, it happens in CI environment and we should skip the test.");
         }
         if ( dir == null )
             return ;

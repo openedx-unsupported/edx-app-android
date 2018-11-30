@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -28,6 +29,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.prefs.VideoPrefs;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.view.BulkDownloadFragment;
@@ -58,6 +60,9 @@ public class Storage implements IStorage {
     @Inject
     private VideoPrefs videoPrefs;
 
+    @Inject
+    protected IEdxEnvironment environment;
+
     private final Logger logger = new Logger(getClass().getName());
 
 
@@ -84,7 +89,7 @@ public class Storage implements IStorage {
             }
 
             // Fail the download if download directory isn't available
-            final File downloadDirectory = pref.getDownloadDirectory();
+            final File downloadDirectory = FileUtil.getDownloadDirectory(context, environment);
             if (downloadDirectory == null) return -1;
 
             // there is no any download ever marked for this URL

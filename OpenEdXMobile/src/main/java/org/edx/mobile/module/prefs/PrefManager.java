@@ -291,6 +291,7 @@ public class PrefManager {
         public static final String AppNotificationPushHash = "AppNotificationPushHash";
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
+        public static final String DOWNLOAD_TO_SDCARD = "download_to_sdcard";
 
         // Preference to save user app rating
         public static final String APP_RATING = "APP_RATING";

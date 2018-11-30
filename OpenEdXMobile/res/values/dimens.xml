@@ -219,6 +219,7 @@
     <dimen name="edx_line">3px</dimen>
     <dimen name="edx_box_radius">5dp</dimen>
     <dimen name="edx_margin">15dp</dimen>
+    <dimen name="edx_half_margin">8dp</dimen>
     <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="edx_quadruple_margin">60dp</dimen>
     <dimen name="widget_margin_half">5dp</dimen>

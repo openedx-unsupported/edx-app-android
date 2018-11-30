@@ -32,24 +32,20 @@
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_wifi_top"
                     android:textColor="@color/grey_6"
-                    android:textSize="13sp"
-                    tools:targetApi="17" />
+                    android:textSize="@dimen/edx_small"/>
 
                 <TextView
                     android:id="@+id/download_only_tv"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_wifi_bottom"
                     android:textColor="@color/grey_4"
-                    android:textSize="11sp"
-                    tools:targetApi="17" />
+                    android:textSize="@dimen/edx_xx_small" />
             </LinearLayout>
 
             <Switch
@@ -58,5 +54,44 @@
                 android:checked="true" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/sd_card_setting_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="@dimen/edx_margin">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
+                    android:text="@string/settings_download_to_sdcard_title"
+                    android:textColor="@color/grey_6"
+                    android:textSize="@dimen/edx_small" />
+
+                <TextView
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
+                    android:text="@string/settings_download_to_sdcard_subtitle"
+                    android:textColor="@color/grey_4"
+                    android:textSize="@dimen/edx_xx_small" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/download_location_switch"
+                style="@style/edX.Widget.Switch"
+                android:checked="true" />
+        </LinearLayout>
     </LinearLayout>
+
 </ScrollView>
