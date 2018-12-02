@@ -1,5 +1,6 @@
 package org.edx.mobile.core;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 
@@ -30,6 +31,11 @@ import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.tta.data.local.db.ILocalDataSource;
+import org.edx.mobile.tta.data.local.db.LocalDataSource;
+import org.edx.mobile.tta.data.local.db.TADatabase;
+import org.edx.mobile.tta.data.remote.IRemoteDataSource;
+import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.BrowserUtil;
@@ -85,6 +91,14 @@ public class EdxDefaultModule extends AbstractModule {
         bind(UserService.class).toProvider(UserService.Provider.class).in(Singleton.class);
 
         bind(IStorage.class).to(Storage.class);
+        //Room.databaseBuilder(context, AppDatabase.class, dbName).fallbackToDestructiveMigration()
+        //                .build()
+        bind(ILocalDataSource.class).to(LocalDataSource.class);
+
+        bind(IRemoteDataSource.class).toInstance(RetrofitServiceUtil.create());
+
+        bind(TADatabase.class).toInstance(Room.databaseBuilder(context, TADatabase.class, "dbasfsfs").fallbackToDestructiveMigration()
+                .build());
 
         requestStaticInjection(CallUtil.class, BrowserUtil.class, MediaConsentUtils.class,
                 DiscussionTextUtils.class, AppStoreUtils.class);
