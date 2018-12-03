@@ -17,9 +17,6 @@ public class ApiConstants {
 
     public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
 
-    public static final String URL_COURSE_ENROLLMENTS =
-        "/api/mobile/v0.5/users/{username}/course_enrollments/?format=json";
-
     public static final String URL_VIDEO_OUTLINE =
         "/api/mobile/v0.5/video_outlines/courses/{courseId}";
 

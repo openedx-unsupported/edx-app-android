@@ -10,6 +10,7 @@ import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -142,11 +143,11 @@ public class CourseEntry implements Serializable {
     public void setCoursewareAccess(CoursewareAccess access) { this.courseware_access = access; }
 
     public boolean isStarted() {
-        return CourseCardUtils.isStarted(start);
+        return CourseCardUtils.isDatePassed(new Date(), start);
     }
 
     public boolean isEnded() {
-        return CourseCardUtils.isEnded(end);
+        return CourseCardUtils.isDatePassed(new Date(), end);
     }
 
     public boolean hasUpdates() {

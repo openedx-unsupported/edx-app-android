@@ -83,7 +83,7 @@ public interface CourseService {
     /**
      * @return Enrolled courses of given user.
      */
-    @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
+    @GET("/api/mobile/v1/users/{username}/course_enrollments")
     Call<List<EnrolledCoursesResponse>> getEnrolledCourses(@Path("username") final String username,
                                                            @Query("org") final String org);
 
@@ -91,7 +91,7 @@ public interface CourseService {
      * @return Enrolled courses of given user, only from the cache.
      */
     @Headers("Cache-Control: only-if-cached, max-stale")
-    @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
+    @GET("/api/mobile/v1/users/{username}/course_enrollments")
     Call<List<EnrolledCoursesResponse>> getEnrolledCoursesFromCache(
             @Path("username") final String username,
             @Query("org") final String org);
