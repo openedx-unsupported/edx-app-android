@@ -218,6 +218,15 @@
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending {date}</string>
 
+    <!-- Label for date when course is expiring in a specific time frame like in 2 days -->
+    <string name="label_expires" tools:ignore="MissingTranslation">Course access expires {date}</string>
+    <!-- Label for date when course is expiring on a specific date like on December 5 -->
+    <string name="label_expires_on" tools:ignore="MissingTranslation">Course access expires on {date}</string>
+    <!-- Label for date when course expired a specific time ago like 2 days ago -->
+    <string name="label_expired" tools:ignore="MissingTranslation">Course access expired {date}</string>
+    <!-- Label for date when course expired on a specific date like on November 5 -->
+    <string name="label_expired_on" tools:ignore="MissingTranslation">Course access expired on {date}</string>
+
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
     <string name="course_content">Course Content</string>
