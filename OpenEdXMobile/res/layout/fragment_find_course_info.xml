@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:id="@+id/content_error_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.edx.mobile.view.custom.EdxWebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_act_background" />
+
+        <include
+            android:id="@+id/loading_indicator"
+            layout="@layout/loading_indicator" />
+
+        <include layout="@layout/content_error" />
+    </FrameLayout>
+</layout>

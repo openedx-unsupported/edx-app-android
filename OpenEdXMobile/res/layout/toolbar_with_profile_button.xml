@@ -18,19 +18,20 @@
             style="@style/profile_image"
             android:layout_width="@dimen/courses_profile_icon_size"
             android:layout_height="@dimen/courses_profile_icon_size"
-            android:layout_marginLeft="@dimen/courses_profile_icon_left_margin"
             android:layout_marginStart="@dimen/courses_profile_icon_left_margin"
             android:contentDescription="@string/open_profile_button"
+            android:visibility="gone"
             app:civ_border_width="@dimen/drawer_profile_image_border_width"
-            tools:src="@drawable/profile_photo_placeholder" />
+            tools:src="@drawable/profile_photo_placeholder"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/toolbar_title_view"
             style="@style/AppTheme.ToolBar.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/courses_title_text_left_margin"
             android:layout_marginStart="@dimen/courses_title_text_left_margin"
+            android:layout_marginEnd="@dimen/courses_profile_icon_left_margin"
             tools:text="Screen title" />
 
         <LinearLayout
@@ -52,10 +53,8 @@
                 android:id="@+id/toolbar_search_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="@dimen/highest_max_width"
-                android:layout_marginLeft="@dimen/courses_profile_icon_left_margin"
-                android:layout_marginStart="@dimen/courses_profile_icon_left_margin"
                 android:imeOptions="flagNoFullscreen"
+                android:maxWidth="@dimen/highest_max_width"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -66,9 +65,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/toolbar_background_color"
-        app:tabMaxWidth="0dp"
-        app:tabGravity="fill"
         android:visibility="gone"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
         tools:visibility="visible" />
 
     <include layout="@layout/toolbar_shadow_view" />

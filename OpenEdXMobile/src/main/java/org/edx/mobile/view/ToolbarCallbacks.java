@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public interface MainDashboardToolbarCallbacks {
+public interface ToolbarCallbacks {
     @Nullable
     SearchView getSearchView();
 

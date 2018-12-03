@@ -33,7 +33,7 @@ import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
 public class MainDashboardActivity extends OfflineSupportBaseActivity
-        implements MainDashboardToolbarCallbacks {
+        implements ToolbarCallbacks {
 
     @NonNull
     @InjectView(R.id.coordinator_layout)
