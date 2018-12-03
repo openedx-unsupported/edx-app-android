@@ -323,11 +323,7 @@ public class Router {
     public void showCourseDetail(@NonNull Context context, @NonNull CourseDetail courseDetail) {
         context.startActivity(CourseDetailActivity.newIntent(context, courseDetail));
     }
-
-    public void showFindCourses(@NonNull Context context) {
-        showFindCourses(context, null);
-    }
-
+    
     public void showFindCourses(@NonNull Context context, @Nullable String searchQuery) {
         if (!config.getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
             throw new RuntimeException("Course discovery is not enabled");

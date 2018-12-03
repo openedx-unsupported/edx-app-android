@@ -152,7 +152,6 @@
         <activity
             android:name=".view.DiscoverCoursesActivity"
             android:label="@string/label_discover"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
@@ -163,7 +162,6 @@
         <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
             android:label="@string/label_discover"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity

@@ -10,9 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
@@ -49,15 +46,15 @@ import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
 
 public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment {
     private static final int VIEW_SUBJECTS_REQUEST_CODE = 999;
+    private static final String INSTANCE_CURRENT_DISCOVER_URL = "current_discover_url";
 
     private FragmentWebviewCourseDiscoveryBinding binding;
     private SearchView searchView;
-    private MainDashboardToolbarCallbacks toolbarCallbacks;
+    private ToolbarCallbacks toolbarCallbacks;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_webview_course_discovery, container, false);
         return binding.getRoot();
     }
@@ -65,24 +62,39 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        errorNotification = new FullScreenErrorNotification(binding.llContent);
-
         // Check for search query in extras
         String searchQueryExtra = null;
-        if (getArguments() != null) {
+        String searchUrl = null;
+
+        if (savedInstanceState != null) {
+            searchUrl = savedInstanceState.getString(INSTANCE_CURRENT_DISCOVER_URL, null);
+        }
+        if (searchUrl == null && getArguments() != null) {
             searchQueryExtra = getArguments().getString(Router.EXTRA_SEARCH_QUERY);
         }
 
         if (searchQueryExtra != null) {
             initSearch(searchQueryExtra);
         } else {
-            loadUrl(getInitialUrl());
+            loadUrl(searchUrl == null ? getInitialUrl() : searchUrl);
         }
         if (shouldShowSubjectDiscovery()) {
             initSubjects();
         }
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(INSTANCE_CURRENT_DISCOVER_URL, binding.webview.getUrl());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public FullScreenErrorNotification initFullScreenErrorNotification() {
+        return new FullScreenErrorNotification(binding.llContent);
     }
 
     private void initSearch(@NonNull String query) {
@@ -137,22 +149,11 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        toolbarCallbacks = getActivity() instanceof MainDashboardToolbarCallbacks ?
-                (MainDashboardToolbarCallbacks) getActivity() : null;
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        toolbarCallbacks = getActivity() instanceof ToolbarCallbacks ?
+                (ToolbarCallbacks) getActivity() : null;
         initSearchView();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        final int itemId = item.getItemId();
-        if (itemId == android.R.id.home && searchView != null && searchView.hasFocus()) {
-            searchView.onActionViewCollapsed();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     private void initSearchView() {

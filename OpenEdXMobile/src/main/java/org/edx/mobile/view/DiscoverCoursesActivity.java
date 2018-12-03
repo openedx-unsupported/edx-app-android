@@ -4,8 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,22 +12,26 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
-public class DiscoverCoursesActivity extends BaseSingleFragmentActivity implements MainDashboardToolbarCallbacks {
-    private SearchView searchView;
+public class DiscoverCoursesActivity extends BaseSingleFragmentActivity implements ToolbarCallbacks {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
+        setTitle(R.string.label_discover);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
+    }
+
+    @Override
+    protected int getToolbarLayoutId() {
+        return R.layout.toolbar_with_profile_button;
     }
 
     @Override
@@ -40,42 +43,39 @@ public class DiscoverCoursesActivity extends BaseSingleFragmentActivity implemen
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        final boolean result = super.onCreateOptionsMenu(menu);
-
-        final Config config = environment.getConfig();
-        if (!config.getCourseDiscoveryConfig().isWebCourseSearchEnabled()) {
-            //bail out if the search bar is not enabled
-            return result;
-        }
-
-        getMenuInflater().inflate(R.menu.find_courses, menu);
-        // Get the SearchView and set the searchable configuration
-        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
-        searchView = (SearchView) searchItem.getActionView();
-        return result;
+    public void setTitle(int titleId) {
+        setTitle(getResources().getString(titleId));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        final int itemId = item.getItemId();
-        if (itemId == android.R.id.home && searchView != null && searchView.hasFocus()) {
-            searchView.onActionViewCollapsed();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+    public void setTitle(CharSequence title) {
+        final View toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            final TextView titleView = getTitleView();
+            if (titleView != null) {
+                titleView.setText(title);
+            }
         }
+        super.setTitle(title);
     }
 
+    @Override
     @Nullable
-    @Override
     public SearchView getSearchView() {
-        return searchView;
+        final View searchView = findViewById(R.id.toolbar_search_view);
+        if (searchView != null && searchView instanceof SearchView) {
+            return (SearchView) searchView;
+        }
+        return null;
     }
 
-    @Nullable
     @Override
+    @Nullable
     public TextView getTitleView() {
+        final View titleView = findViewById(R.id.toolbar_title_view);
+        if (titleView != null && titleView instanceof TextView) {
+            return (TextView) titleView;
+        }
         return null;
     }
 
