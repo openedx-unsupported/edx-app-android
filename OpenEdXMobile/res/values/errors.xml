@@ -90,6 +90,9 @@
     <!-- Error message shown when a course hasn't started yet -->
     <string name="course_not_started">This course hasn’t started yet.</string>
 
+    <!-- Error message shown when a user's access has expired for a course -->
+    <string name="course_access_expired" tools:ignore="MissingTranslation">Your access to this course has expired.</string>
+
     <!-- Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums -->
     <string name="action_not_completed">Your action could not be completed.</string>
 
