@@ -24,7 +24,8 @@ public class DataManager {
     private static DataManager mDataManager;
     private IRemoteDataSource mRemoteDataSource;
     private ILocalDataSource mLocalDataSource;
-@Inject
+
+    @Inject
     public DataManager(IRemoteDataSource remoteDataSource, ILocalDataSource localDataSource) {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
@@ -43,12 +44,12 @@ public class DataManager {
 
     private <T> Observable<T> preProcess(Observable<BaseResponse<T>> observable) {
         return observable.compose(RxUtil.applyScheduler())
-            .map(RxUtil.unwrapResponse(null));
+                .map(RxUtil.unwrapResponse(null));
     }
 
     private <T> Observable<T> preProcess(Observable<BaseResponse<T>> observable, Class<T> cls) {
         return observable.compose(RxUtil.applyScheduler())
-            .map(RxUtil.unwrapResponse(cls));
+                .map(RxUtil.unwrapResponse(cls));
     }
 
     private Observable<EmptyResponse> preEmptyProcess(Observable<BaseResponse<EmptyResponse>> observable) {
