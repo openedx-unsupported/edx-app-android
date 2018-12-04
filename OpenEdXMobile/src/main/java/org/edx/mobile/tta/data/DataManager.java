@@ -1,5 +1,8 @@
 package org.edx.mobile.tta.data;
 
+import android.app.Application;
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.os.Debug;
 import android.util.Log;
 
@@ -9,6 +12,7 @@ import com.google.inject.Singleton;
 
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
+import org.edx.mobile.tta.data.local.db.TADatabase;
 import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.pref.AppPref;
@@ -25,46 +29,27 @@ import io.reactivex.Observable;
  * Created by Arjun on 2018/9/18.
  */
 
-@Singleton
 public class DataManager {
-//    private IRemoteDataSource mRemoteDataSource;
-//    private ILocalDataSource mLocalDataSource;
+    private static DataManager mDataManager;
+    private IRemoteDataSource mRemoteDataSource;
+    private ILocalDataSource mLocalDataSource;
 
-    private AppPref appPref;
-
-    public static class Provider implements com.google.inject.Provider<DataManager>{
-//        @Inject IRemoteDataSource remoteDataSource;
-//
-//        @Inject ILocalDataSource localDataSource;
-
-//        @Inject AppPref appPref;
-
-        @Override
-        public DataManager get() {
-            Log.d("__________LOG_________", "data manager");
-            return new DataManager();
-        }
-    }
-
-    /*@Inject
-    public DataManager() {
+    private DataManager(IRemoteDataSource remoteDataSource, ILocalDataSource localDataSource) {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
-    }*/
+    }
 
-/*    public static DataManager getInstance() {
+    public static DataManager getInstance( Context context) {
         if (mDataManager == null) {
             synchronized (DataManager.class) {
                 if (mDataManager == null) {
-                    mDataManager = new DataManager(RetrofitServiceUtil.create(), new LocalDataSource());
+                    mDataManager = new DataManager(RetrofitServiceUtil.create(),
+                            new LocalDataSource(Room.databaseBuilder(context, TADatabase.class, "ta-database").fallbackToDestructiveMigration()
+                                    .build()));
                 }
             }
         }
         return mDataManager;
-    }*/
-
-    public AppPref getAppPref() {
-        return appPref;
     }
 
     private <T> Observable<T> preProcess(Observable<BaseResponse<T>> observable) {

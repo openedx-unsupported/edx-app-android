@@ -13,14 +13,17 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 public class BaseViewModel {
     protected TaBaseActivity mActivity;
     protected TaBaseFragment mFragment;
-    //protected DataManager mDataManager = DataManager.getInstance();
+    protected DataManager mDataManager;
 
     public BaseViewModel(BaseVMActivity activity) {
         mActivity = activity;
+        mDataManager = DataManager.getInstance(activity.getApplicationContext());
+
     }
 
     public BaseViewModel(Context context, TaBaseFragment fragment) {
         mActivity = (TaBaseActivity) context;
         mFragment = fragment;
+        mDataManager = DataManager.getInstance(context);
     }
 }
