@@ -31,7 +31,7 @@ public class LoginViewModel extends BaseViewModel {
     DataManager mDataManager;
 
     public void login() {
-        mDataManager.login(new LoginRequest(cellphone.get(), password.get()))
+        /*mDataManager.login(new LoginRequest(cellphone.get(), password.get()))
             .compose(mActivity.bindToLifecycle())
             .subscribe(new NetworkObserver<LoginResponse>(mActivity) {
                 @Override
@@ -42,6 +42,6 @@ public class LoginViewModel extends BaseViewModel {
                         Toast.LENGTH_LONG).show();
                     ActivityUtil.gotoPage(mActivity, SplashActivity.class);
                 }
-            });
+            });*/
     }
 }
