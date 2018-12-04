@@ -28,16 +28,17 @@ public class SplashViewModel extends BaseViewModel {
     private void startRouting(Activity activity){
 
 
-    /*    new Handler().postDelayed(() -> {
-            Log.d("__________LOG_________", "delay over");
+        new Handler().postDelayed(() -> {
+            ActivityUtil.gotoPage(activity, LoginActivity.class);
+           /* Log.d("__________LOG_________", "delay over");
             if (mDataManager.getAppPref().isFirstLaunch()){
                 Toast.makeText(activity, "First launch", Toast.LENGTH_SHORT).show();
                 mDataManager.getAppPref().setFirstLaunch(false);
             } else {
                 activity.finish();
                 ActivityUtil.gotoPage(activity, LoginActivity.class);
-            }
-        }, DELAY);*/
+            }*/
+        }, DELAY);
 
     }
 
