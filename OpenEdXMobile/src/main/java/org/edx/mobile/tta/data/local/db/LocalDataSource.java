@@ -11,27 +11,10 @@ import io.reactivex.Observable;
 /**
  * Created by Arjun on 2018/9/18.
  */
-@Singleton
 public class LocalDataSource implements ILocalDataSource {
 
     private final TADatabase mAppDatabase;
 
-    /*public static class RoomDbProvider implements com.google.inject.Provider<TADatabase>
-    {
-        private  Context mCtx;
-        RoomDbProvider (Context ctx)
-        {
-            this.mCtx=ctx;
-        }
-
-        @Override
-        public TADatabase get() {
-            return Room.databaseBuilder(mCtx, TADatabase.class, "dbasfsfs").fallbackToDestructiveMigration()
-                    .build();
-        }
-    }*/
-
-    @Inject
     public LocalDataSource(TADatabase appDatabase) {
         this.mAppDatabase = appDatabase;
     }

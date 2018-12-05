@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
@@ -18,6 +21,9 @@ import io.branch.referral.BranchError;
 public class SplashActivity extends Activity {
     protected final Logger logger = new Logger(getClass().getName());
     private Config config = new Config(MainApplication.instance());
+
+    @Inject
+    ILocalDataSource dgd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

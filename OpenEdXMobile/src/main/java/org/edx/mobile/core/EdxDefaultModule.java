@@ -96,15 +96,15 @@ public class EdxDefaultModule extends AbstractModule {
         bind(IStorage.class).to(Storage.class);
         //Room.databaseBuilder(context, AppDatabase.class, dbName).fallbackToDestructiveMigration()
         //                .build()
-        bind(ILocalDataSource.class).to(LocalDataSource.class);
+       // bind(ILocalDataSource.class).to(LocalDataSource.class);
 
-        bind(IRemoteDataSource.class).toInstance(RetrofitServiceUtil.create());
+       // bind(IRemoteDataSource.class).toInstance(RetrofitServiceUtil.create());
 
-        bind(TADatabase.class).toInstance(Room.databaseBuilder(context, TADatabase.class, "ta-database").fallbackToDestructiveMigration()
-                .build());
+        //bind(TADatabase.class).toInstance(Room.databaseBuilder(context, TADatabase.class, "dbasfsfs").fallbackToDestructiveMigration()
+          //      .build());
 
-        bind(AppPref.class).toProvider(AppPref.Provider.class);
-        bind(DataManager.class).toProvider(DataManager.Provider.class);
+        //bind(AppPref.class).toProvider(AppPref.Provider.class);
+        //bind(DataManager.class).toProvider(DataManager.Provider.class);
         Log.d("_________LOG_________", "binding");
 
         requestStaticInjection(CallUtil.class, BrowserUtil.class, MediaConsentUtils.class,
