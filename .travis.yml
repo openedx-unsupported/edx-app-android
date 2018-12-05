@@ -71,14 +71,5 @@ before_install:
   - pip install --user codecov
   - pip install --user pillow # For screenshot tests
 
-sudo: required
 after_success:
   - codecov
-  - pip install virtualenv
-  - virtualenv ~/env
-  - source ~/env/bin/activate
-  # Install Transifex client and push strings to Transifex
-  # Reference: https://docs.transifex.com/integrations/github#section-integrating-with-travis-ci
-  - pip install transifex-client
-  - sudo echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\ntoken = '"$TRANSIFEX_API_TOKEN"$'\n' > ~/.transifexrc
-  - tx push --source --no-interactive
