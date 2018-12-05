@@ -100,7 +100,7 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(IRemoteDataSource.class).toInstance(RetrofitServiceUtil.create());
 
-        bind(TADatabase.class).toInstance(Room.databaseBuilder(context, TADatabase.class, "dbasfsfs").fallbackToDestructiveMigration()
+        bind(TADatabase.class).toInstance(Room.databaseBuilder(context, TADatabase.class, "ta-database").fallbackToDestructiveMigration()
                 .build());
 
         bind(AppPref.class).toProvider(AppPref.Provider.class);
