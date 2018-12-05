@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import org.edx.mobile.BR;
+import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.utils.RxV4Fragment;
 
 /**
  * Created by Arjun on 2018/3/15.
  */
 
-public class BaseVMFragment extends RxV4Fragment {
+public class BaseVMFragment extends TaBaseFragment {
     protected ViewDataBinding mBinding;
 
     protected ViewDataBinding binding(LayoutInflater inflater, ViewGroup container, int layoutId, BaseViewModel viewModel) {

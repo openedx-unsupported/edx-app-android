@@ -10,6 +10,6 @@ public class SplashActivity extends BaseVMActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding(R.layout.splash_t_activity, new SplashViewModel(this));
+        binding(R.layout.t_activity_splash, new SplashViewModel(this));
     }
 }

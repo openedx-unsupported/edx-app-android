@@ -2,18 +2,13 @@ package org.edx.mobile.tta.ui.splash;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.inject.Inject;
-
-import org.edx.mobile.tta.data.DataManager;
-import org.edx.mobile.tta.data.local.db.ILocalDataSource;
-import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.login.LoginActivity;
+import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.view.MainDashboardActivity;
 
 public class SplashViewModel extends BaseViewModel {
 
@@ -21,7 +16,6 @@ public class SplashViewModel extends BaseViewModel {
 
     public SplashViewModel(BaseVMActivity activity) {
         super(activity);
-        Log.d("__________LOG_________", "splash");
         startRouting(activity);
     }
 
@@ -29,15 +23,18 @@ public class SplashViewModel extends BaseViewModel {
 
 
         new Handler().postDelayed(() -> {
-            ActivityUtil.gotoPage(activity, LoginActivity.class);
-           /* Log.d("__________LOG_________", "delay over");
             if (mDataManager.getAppPref().isFirstLaunch()){
                 Toast.makeText(activity, "First launch", Toast.LENGTH_SHORT).show();
                 mDataManager.getAppPref().setFirstLaunch(false);
             } else {
                 activity.finish();
-                ActivityUtil.gotoPage(activity, LoginActivity.class);
-            }*/
+                if (mDataManager.getLoginPrefs().getCurrentUserProfile() == null) {
+                    ActivityUtil.gotoPage(activity, SigninRegisterActivity.class);
+                } else {
+                    Toast.makeText(activity, mDataManager.getLoginPrefs().getUsername(), Toast.LENGTH_SHORT).show();
+                    ActivityUtil.gotoPage(activity, MainDashboardActivity.class);
+                }
+            }
         }, DELAY);
 
     }

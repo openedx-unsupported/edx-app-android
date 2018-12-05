@@ -74,4 +74,27 @@
     <color name="edx_error_back">#FEECED</color>
     <color name="edx_warning_accent">#FFC01F</color>
     <color name="edx_warning_back">#FFF9EB</color>
+
+    <!--  TTA color palette start  -->
+    <color name="primary_navy">#3A495F</color>
+    <color name="primary_cyan">#63D0C5</color>
+    <color name="primary_white">#FFFFFF</color>
+
+    <color name="secondary_blue_light">#86D2F2</color>
+    <color name="secondary_red">#E26A6A</color>
+    <color name="secondary_blue">#8083E0</color>
+    <color name="secondary_grey_light">#E0E0E0</color>
+    <color name="secondary_pink">#F75791</color>
+    <color name="secondary_green">#2FD233</color>
+    <color name="secondary_yellow">#FFDB03</color>
+
+    <color name="gray_1">#D2DADF</color>
+    <color name="gray_2">#EDEDED</color>
+    <color name="gray_3">#C0C0C0</color>
+    <color name="gray_4">#94A3B9</color>
+    <color name="gray_5">#4A4A4A</color>
+    <color name="gray_6">#3A495F</color>
+    
+    <color name="app_background">#FCFCFD</color>
+    <!--  TTA color palette end  -->
 </resources>

@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import org.edx.mobile.tta.ui.login.LoginActivity;
+import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
 
 
 /**
@@ -42,7 +42,7 @@ public class ActivityUtil {
     }
 
     public static void gotoLogin(Context context) {
-        Intent intent = new Intent(context, LoginActivity.class);
+        Intent intent = new Intent(context, SigninRegisterActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
