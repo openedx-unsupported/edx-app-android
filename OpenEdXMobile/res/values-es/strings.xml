@@ -44,7 +44,7 @@
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Comparta su certificado</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
-  <string name="share_certificate_message">Acabo de obtener un Certificado en {platform_name}! Dale un vistazo:</string>
+  <string name="share_certificate_message">Acabo de obtener un Certificado en {platform_name}! Dale un vistazo: {certificate_url}</string>
   <!--Tab of tab for certicate for finished course-->
   <string name="tab_label_certificate">Certificado</string>
   <!--Data Usage Dialog-->
