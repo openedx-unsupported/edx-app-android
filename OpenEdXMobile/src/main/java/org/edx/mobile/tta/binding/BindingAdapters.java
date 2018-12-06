@@ -1,10 +1,15 @@
 package org.edx.mobile.tta.binding;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -171,5 +176,25 @@ public class BindingAdapters {
     @BindingAdapter("android:onEditorAction")
     public static void onEditorAction(TextView view, TextView.OnEditorActionListener onEditorActionListener) {
         view.setOnEditorActionListener(onEditorActionListener);
+    }
+
+    @BindingAdapter({"pager_adapter"})
+    public static void bindViewPagerAdapter(ViewPager view, PagerAdapter adapter){
+        view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"pager"})
+    public static void bindViewPagerTabs(TabLayout view, ViewPager pagerView) {
+        view.setupWithViewPager(pagerView, true);
+    }
+
+    @BindingAdapter({"page_change_listener"})
+    public static void addOnPageChangeListener(ViewPager view, ViewPager.OnPageChangeListener listener){
+        view.addOnPageChangeListener(listener);
+    }
+
+    @BindingAdapter({"selected_item_position"})
+    public static void setSelectedItemPosition(ViewPager view, int position){
+        view.setCurrentItem(position);
     }
 }

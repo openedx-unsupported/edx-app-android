@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="SigninRegisterViewModel" />
+
+        <import type="org.edx.mobile.tta.ui.login.view_model.SigninRegisterViewModel" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,13 +20,22 @@
         <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            android:id="@+id/tab_layout"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/primary_cyan"
             app:tabIndicatorHeight="2dp"
             android:elevation="2dp"
             app:tabSelectedTextColor="@color/primary_cyan"
-            app:tabTextColor="@color/black"
-            android:textSize="14sp"/>
+            app:tabTextColor="@color/primary_navy"
+            android:textSize="14sp"
+            android:background="@color/app_background"/>
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/view_pager"
+            selected_item_position="@{viewModel.initialPosition}"
+            pager_adapter="@{viewModel.adapter}"/>
         
     </LinearLayout>
     

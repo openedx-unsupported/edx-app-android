@@ -12,6 +12,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.login.model.LoginRequest;
 import org.edx.mobile.tta.ui.login.model.LoginResponse;
+import org.edx.mobile.tta.ui.reset_password.EnterNumberActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.view.SplashActivity;
 
@@ -42,5 +43,13 @@ public class SigninViewModel extends BaseViewModel {
                     ActivityUtil.gotoPage(mActivity, SplashActivity.class);
                 }
             });
+    }
+
+    public void changePassword(){
+        ActivityUtil.gotoPage(mActivity, EnterNumberActivity.class);
+    }
+
+    public void register(){
+
     }
 }

@@ -96,5 +96,6 @@
     <color name="gray_6">#3A495F</color>
     
     <color name="app_background">#FCFCFD</color>
+    <color name="launch_background">#EDF8FA</color>
     <!--  TTA color palette end  -->
 </resources>

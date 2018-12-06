@@ -154,5 +154,6 @@ public class PrefManager {
 
     public static final class Key{
         public static final String FIRST_LAUNCH = "first_launch";
+        public static final String FIRST_LOGIN = "first_login";
     }
 }

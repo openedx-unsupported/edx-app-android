@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="EnterNumberViewModel" />
+
+        <import type="org.edx.mobile.tta.ui.reset_password.view_model.EnterNumberViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_password"
+            android:textSize="20sp"
+            android:textColor="@color/primary_navy"
+            android:fontFamily="@font/hind_medium"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="98dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_password_msg"
+            android:textSize="15sp"
+            android:textColor="@color/primary_navy"
+            android:fontFamily="@font/hind_medium"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="16dp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="98dp"
+            android:layout_marginEnd="40dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/mobile_number"
+                android:text="@{viewModel.cellphone}"
+                android:textColorHint="@color/gray_1"
+                android:textColor="@color/gray_4"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:fontFamily="@font/hind_medium"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="199dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_marginTop="98dp"
+            android:text="@string/verify"
+            android:fontFamily="@font/hind_semibold"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_selector_filled"
+            android:enabled="false"
+            android:onClick="@{()->viewModel.verify()}"/>
+
+    </LinearLayout>
+
+</layout>

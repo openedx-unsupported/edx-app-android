@@ -73,7 +73,7 @@
     <!-- Hint text for password field -->
     <string name="password">Password</string>
     <!-- Button text allowing user to reset their password -->
-    <string name="forgot_password">Forgot your password?</string>
+    <string name="forgot_password">Forgot your password ?</string>
     <!-- Button initiating login process after user enters credentials like username and password -->
     <string name="login">Sign In</string>
     <!-- Accessible content description of sign in button on Log in screen -->
@@ -666,4 +666,25 @@
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">Version {version_number} New Features</string>
+
+    <!-- TTA strings start -->
+    <string name="welcome_back">Welcome back</string>
+    <string name="keep_up_the_spirit">Keep up the spirit</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="register">Register</string>
+    <string name="change_password"><u>Change password</u></string>
+    <string name="create_new_account">Create new account</string>
+    <string name="create_account_and_connect_with_us">Create account and connect with us</string>
+    <string name="already_have_account">Already have an account ?</string>
+    <string name="launch_content">Launch content</string>
+    <string name="launch_text_1">Creative, constructive, audio-visual content for development of teachers</string>
+    <string name="launch_text_2">Opportunities to get accredited by state and fellow teachers</string>
+    <string name="launch_text_3">Opportunities to connect with various teachers across the nation and express personal views</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="reset_password_msg">Enter phone number below to reset your password. You will receive a verification OTP via SMS.</string>
+    <string name="verify">Verify</string>
+    <!-- TTA strings end -->
+
 </resources>

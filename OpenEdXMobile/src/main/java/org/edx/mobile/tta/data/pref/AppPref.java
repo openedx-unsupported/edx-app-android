@@ -22,4 +22,8 @@ public class AppPref {
     public boolean isFirstLaunch(){
         return prefManager.getBoolean(PrefManager.Key.FIRST_LAUNCH, true);
     }
+
+    public boolean isFirstLogin(){
+        return prefManager.getBoolean(PrefManager.Key.FIRST_LOGIN, true);
+    }
 }
