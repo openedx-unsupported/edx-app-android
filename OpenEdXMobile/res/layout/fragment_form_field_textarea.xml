@@ -8,6 +8,16 @@
     android:orientation="vertical"
     android:padding="@dimen/edx_margin">
 
+    <TextView
+        android:id="@+id/label_for_text"
+        style="@style/regular_edx_gray_xdark_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/widget_margin_half"
+        android:labelFor="@+id/text"
+        android:textSize="@dimen/edx_small"
+        tools:text="Label for Edit Text below" />
+
     <EditText
         android:id="@+id/text"
         style="@style/edX.Widget.EditText"
