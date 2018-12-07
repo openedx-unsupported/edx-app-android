@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.user.FormField;
@@ -27,7 +28,11 @@ public class FormFieldTextAreaFragment extends BaseFragment {
         final FormField formField = (FormField) getActivity().getIntent().getSerializableExtra(FormFieldActivity.EXTRA_FIELD);
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(formField.getLabel());
-        final EditText editText = (EditText) view.findViewById(R.id.text);
+
+        final TextView textView = view.findViewById(R.id.label_for_text);
+        textView.setText(formField.getLabel());
+
+        final EditText editText = view.findViewById(R.id.text);
         editText.setHint(formField.getPlaceholder());
         editText.setText(getActivity().getIntent().getStringExtra(FormFieldActivity.EXTRA_VALUE));
         view.findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
