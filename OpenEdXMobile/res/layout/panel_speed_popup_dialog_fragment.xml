@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/speed_layout_popup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_roundedbg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_header_speed"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/grey_top_roundedbg"
+        android:gravity="start|center_vertical"
+        android:padding="@dimen/widget_margin"
+        android:text="@string/lbl_video_speed" />
+
+    <ListView
+        android:id="@+id/speed_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:divider="@color/grey_act_background"
+        android:dividerHeight="@dimen/video_player_settings_divider_width" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/video_player_settings_divider_width"
+        android:background="@color/grey_act_background" />
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_roundedbg"
+        android:gravity="start|center_vertical"
+        android:padding="@dimen/widget_margin"
+        android:text="@string/label_cancel" />
+
+</LinearLayout>

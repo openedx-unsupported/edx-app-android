@@ -44,6 +44,7 @@ public interface PlayerListener extends Serializable {
     void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev);
     void callSettings(Point p);
     void callPlayerSeeked(long previousPos, long nextPos, boolean isRewindClicked);
+    void setPlaybackSpeed(float speed);
     PlayerController getController();
     boolean isReset();
 

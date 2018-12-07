@@ -15,7 +15,7 @@ public abstract class ClosedCaptionAdapter extends BaseListAdapter<HashMap<Strin
     //public int selectedPosition = -1;
     public String selectedLanguage;
     public ClosedCaptionAdapter(Context context, IEdxEnvironment environment) {
-        super(context, R.layout.row_cc_list, environment);
+        super(context, R.layout.row_dialog_list, environment);
     }
 
     @Override
@@ -41,7 +41,7 @@ public abstract class ClosedCaptionAdapter extends BaseListAdapter<HashMap<Strin
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
         holder.tv_ccLang = (TextView) convertView
-                .findViewById(R.id.row_cc_lang);
+                .findViewById(R.id.row_list);
 
         return holder;
     }

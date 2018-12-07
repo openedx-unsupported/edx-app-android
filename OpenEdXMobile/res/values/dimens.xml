@@ -112,6 +112,11 @@
     <dimen name="video_player_seekbar_line_width">4dp</dimen>
     <dimen name="video_player_seekbar_right_margin">6dp</dimen>
     <dimen name="video_player_duration_padding">4dp</dimen>
+    <dimen name="video_player_settings_divider_width">1dp</dimen>
+
+    <!-- Video Player Settings popup dimen values-->
+    <dimen name="settings_popup_height">80dp</dimen>
+    <dimen name="settings_popup_width">150dp</dimen>
 
     <!-- row height for CC language options, NONE option and the header of popup -->
     <dimen name="row_height_cc_option">40dp</dimen>
