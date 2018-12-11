@@ -1,29 +1,43 @@
 package org.edx.mobile.player;
 
+import android.content.Context;
 import android.graphics.Point;
-import android.graphics.SurfaceTexture;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnInfoListener;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.view.Surface;
-import android.view.TextureView;
+import android.net.Uri;
 import android.view.View.OnClickListener;
 
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.analytics.AnalyticsListener;
+import com.google.android.exoplayer2.metadata.Metadata;
+import com.google.android.exoplayer2.metadata.MetadataOutput;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MediaSourceEventListener;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+
+import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.OnSwipeListener;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Locale;
 
+import static com.google.android.exoplayer2.C.TRACK_TYPE_UNKNOWN;
+import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
+
 @SuppressWarnings("serial")
-public class Player extends MediaPlayer implements OnErrorListener,
-        OnPreparedListener, OnBufferingUpdateListener,
-        OnCompletionListener, OnInfoListener, IPlayer {
+public class IPlayerImpl implements Player.EventListener, MetadataOutput, AnalyticsListener, IPlayer {
+
+    private SimpleExoPlayer exoPlayer;
+    private Context context;
 
     // Player states
     public enum PlayerState {
@@ -32,74 +46,56 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     private PlayerState state;
-    private int bufferPercent;
-    private boolean isSeekable;
     private boolean isFullScreen;
     private boolean isPlayingLocally;
     private boolean playWhenPrepared;
     private boolean autoHideControls;
     private transient IPlayerListener callback;
     private transient PlayerController controller;
-    private int lastCurrentPosition;
-    private int lastFreezePosition;
-    private int lastDuration;
+    private long lastCurrentPosition;
+    private long lastFreezePosition;
+    private long lastDuration;
     private boolean isFrozen;
     private PlayerState freezeState;
-    private int seekToWhenPrepared;
+    private long seekToWhenPrepared;
     private String videoTitle;
     private String lmsURL;
     private String videoUri;
-    private static final Logger logger = new Logger(Player.class.getName());
+    private static final Logger logger = new Logger(IPlayerImpl.class.getName());
 
-    public Player() {
-        init();
+    public IPlayerImpl(Context context) {
+        init(context);
+        initExoPlayer();
+    }
 
-        setOnErrorListener(this);
-        setOnPreparedListener(this);
-        setOnBufferingUpdateListener(this);
-        setOnCompletionListener(this);
-        setLooping(true);
-        setOnInfoListener(this);
+    private void initExoPlayer() {
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(this.context);
+        exoPlayer.addListener(this);
+        exoPlayer.addMetadataOutput(this);
+        exoPlayer.addAnalyticsListener(this);
+        exoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
     }
 
     /**
      * Resets all the fields of this player.
+     *
+     * @param context
      */
-    private void init() {
-        state = PlayerState.RESET;
-        bufferPercent = 0;
-        isSeekable = true;
-        isFullScreen = false;
-        isPlayingLocally = true;
-        playWhenPrepared = false;
-        lastCurrentPosition = 0;
-        lastDuration = 0;
-        isFrozen = false;
-        autoHideControls = true;
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        // sometimes, error also causes onCompletion() call
-        // avoid on completion if player got an error
-        if (state != PlayerState.ERROR) {
-            state = PlayerState.PLAYBACK_COMPLETE;
-            if (callback != null) {
-                callback.onPlaybackComplete();
-            }
-            seekTo(0);
-            logger.debug("Playback complete");
-        }
-    }
-
-    @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        bufferPercent = percent;
+    private void init(Context context) {
+        this.context = context;
+        this.state = PlayerState.RESET;
+        this.isFullScreen = false;
+        this.isPlayingLocally = true;
+        this.playWhenPrepared = false;
+        this.lastCurrentPosition = 0;
+        this.lastDuration = 0;
+        this.isFrozen = false;
+        this.autoHideControls = true;
     }
 
     @Override
     public int getBufferPercentage() {
-        return bufferPercent;
+        return exoPlayer.getBufferedPercentage();
     }
 
     @Override
@@ -123,7 +119,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                 || state == PlayerState.STOPPED
                 || state == PlayerState.PAUSED
                 || state == PlayerState.LAGGING)
-                && isSeekable) {
+                && isSeekable()) {
             logger.debug("Can seek back = TRUE");
             return true;
         }
@@ -138,7 +134,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                 || state == PlayerState.STOPPED
                 || state == PlayerState.PAUSED
                 || state == PlayerState.LAGGING)
-                && isSeekable) {
+                && isSeekable()) {
             logger.debug("Can seek forward = TRUE");
             return true;
         }
@@ -161,6 +157,19 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
+    public boolean isSeekable() {
+        final boolean isSeekable = exoPlayer.getCurrentTimeline()
+                .getWindow(exoPlayer.getCurrentWindowIndex(), new Timeline.Window())
+                .isSeekable;
+        if (!isSeekable) {
+            logger.debug("Track not seekable");
+            if (callback != null)
+                callback.onVideoNotSeekable();
+        }
+        return isSeekable;
+    }
+
+    @Override
     public void callSettings(Point p) {
         if (callback != null) {
             callback.callSettings(p);
@@ -168,47 +177,66 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
-        state = PlayerState.PREPARED;
-        if (callback != null) {
-            callback.onPrepared();
-        }
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        switch (playbackState) {
+            case Player.STATE_READY:
+                state = PlayerState.PREPARED;
+                if (callback != null) {
+                    callback.onPrepared();
+                }
 
-        if (seekToWhenPrepared >= 0) {
-            seekTo(seekToWhenPrepared);
-        }
-
-        if (playWhenPrepared) {
-            start();
-            state = PlayerState.PLAYING;
+                if (playWhenReady) {
+                    state = PlayerState.PLAYING;
+                    if (seekToWhenPrepared > 0) {
+                        seekTo(seekToWhenPrepared);
+                    }
+                }
+                break;
+            case Player.STATE_ENDED:
+                // sometimes, error also causes onCompletion() call
+                // avoid on completion if player got an error
+                if (state != PlayerState.ERROR) {
+                    state = PlayerState.PLAYBACK_COMPLETE;
+                    if (callback != null) {
+                        callback.onPlaybackComplete();
+                    }
+                    seekTo(0);
+                    exoPlayer.setPlayWhenReady(false);
+                    logger.debug("Playback complete");
+                }
+                break;
         }
     }
 
     @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        if (what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
-            isSeekable = false;
-            if (callback != null) {
-                callback.onVideoNotSeekable();
-            }
-            logger.debug("Track not seekable");
-        } else if (what == MediaPlayer.MEDIA_INFO_METADATA_UPDATE) {
-            logger.debug("Metadata update received");
-        } else if (what == MediaPlayer.MEDIA_INFO_UNKNOWN) {
+    public void onLoadStarted(EventTime eventTime, MediaSourceEventListener.LoadEventInfo loadEventInfo, MediaSourceEventListener.MediaLoadData mediaLoadData) {
+        if (mediaLoadData.trackType == TRACK_TYPE_UNKNOWN) {
             logger.debug("Unknown info");
-        } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) {
-            state = PlayerState.LAGGING;
-            if (callback != null) {
-                callback.onVideoLagging();
-            }
-            logger.debug("Video track lagging");
         }
-        logger.debug("INFO: what=" + what + ";extra=" + extra);
-        return true;
     }
 
     @Override
-    public boolean onError(MediaPlayer player, int what, int extra) {
+    public void onLoadError(EventTime eventTime, MediaSourceEventListener.LoadEventInfo loadEventInfo, MediaSourceEventListener.MediaLoadData mediaLoadData, IOException error, boolean wasCanceled) {
+        logger.debug("INFO: data_spec =" + loadEventInfo.dataSpec.toString() + ";extra=" + error.getMessage());
+    }
+
+    @Override
+    public void onDroppedVideoFrames(EventTime eventTime, int droppedFrames, long elapsedMs) {
+        state = PlayerState.LAGGING;
+        if (callback != null) {
+            callback.onVideoLagging();
+        }
+        logger.debug("Video track lagging");
+    }
+
+    @Override
+    public void onMetadata(Metadata metadata) {
+        logger.debug("Metadata update received");
+    }
+
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
         if (lastCurrentPosition != 0) {
             seekToWhenPrepared = lastCurrentPosition;
         }
@@ -217,31 +245,28 @@ public class Player extends MediaPlayer implements OnErrorListener,
             callback.onError();
         }
 
-        if (what == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
-            logger.warn("ERROR: unknown");
-        } else if (what == MediaPlayer.MEDIA_ERROR_SERVER_DIED) {
-            logger.warn("ERROR: server died");
-        } else if (what == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
-            logger.warn("ERROR: video container invalid for progressive playback");
+        if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
+            logger.warn("ERROR: unexpected");
+        } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
+            logger.warn("ERROR: renderer");
+        } else if (error.type == ExoPlaybackException.TYPE_SOURCE) {
+            logger.warn("ERROR: occurred while loading data from MediaSource");
         }
-        logger.warn("ERROR: what=" + what + ";extra=" + extra);
-
-        // return TRUE here, so that onCompletionListener will NOT be called
-        return true;
+        logger.warn("ERROR: type=" + error.type + ";message=" + error.getMessage());
     }
 
     @Override
-    public void setUri(String uri, int seekTo) throws Exception {
+    public void setUri(String uri, long seekTo) throws Exception {
         load(uri, seekTo, false);
     }
 
     @Override
-    public void setUriAndPlay(String uri, int seekTo) throws Exception {
+    public void setUriAndPlay(String uri, long seekTo) throws Exception {
         load(uri, seekTo, true);
     }
 
     @Override
-    public void restart(int seekTo) throws Exception {
+    public void restart(long seekTo) throws Exception {
         logger.debug("RestartFreezePosition=" + seekTo);
         lastCurrentPosition = 0;
         // if seekTo=lastCurrentPosition then seekTo() method will not work
@@ -253,7 +278,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
         restart(seekToWhenPrepared);
     }
 
-    private void load(String videoUri, int seekTo, boolean playWhenPrepared) throws Exception {
+    private void load(String videoUri, long seekTo, boolean playWhenPrepared) throws Exception {
         this.videoUri = videoUri;
         this.seekToWhenPrepared = seekTo;
         this.playWhenPrepared = playWhenPrepared;
@@ -267,33 +292,38 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
         reset();
         state = PlayerState.RESET;
-        bufferPercent = 0;
-
-        setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         if (videoUri != null) {
-            if (videoUri.startsWith("http")) {
-                // this is web URL
-                setDataSource(videoUri);
-
-                state = PlayerState.URI_SET;
-                isPlayingLocally = false;
-            } else {
-                // this is file path
-                FileInputStream fs = new FileInputStream(new File(videoUri));
-                setDataSource(fs.getFD());
-                fs.close();
-
-                state = PlayerState.URI_SET;
-                isPlayingLocally = true;
-            }
-
-            prepareAsync();
+            final MediaSource mediaSource = getMediaSource(videoUri);
+            exoPlayer.prepare(mediaSource);
+            state = PlayerState.URI_SET;
+            isPlayingLocally = !videoUri.startsWith("http");
             // notify that the player is now preparing
             if (callback != null) {
                 callback.onPreparing();
             }
         }
+    }
+
+    /**
+     * Function that provides the media source played by ExoPlayer based on media type.
+     *
+     * @param videoUrl Video URL
+     * @return Return MediaSource
+     */
+    private MediaSource getMediaSource(String videoUrl) {
+        final String userAgent = Util.getUserAgent(this.context, this.context.getString(R.string.app_name));
+        final DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this.context, userAgent);
+        final MediaSource mediaSource;
+
+        if (VideoUtil.videoHasFormat(videoUrl, VIDEO_FORMAT_M3U8)) {
+            mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(Uri.parse(videoUrl));
+        } else {
+            mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(Uri.parse(videoUrl));
+        }
+        return mediaSource;
     }
 
     @Override
@@ -321,52 +351,18 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public void setPreview(final Preview preview) {
-        if (preview == null) {
+    public void setPlayerView(final PlayerView playerView) {
+        if (playerView == null) {
             return;
         }
-        preview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width,
-                                                  int height) {
-                try {
-                    logger.debug("Player state=" + state);
-                    Surface surface = new Surface(surfaceTexture);
-                    setSurface(surface);
-
-                    // Keep screen ON while playing
-                    // if using SurfaceHolder, just call setScreenOnWhilePlaying(true);
-                    // When not using SurfaceHolder, need to use
-                    // WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-
-                    logger.debug("Surface created and set to the player");
-
-                    // preview last shown frame if not playing
-                    if (!isPlaying()) {
-                        seekTo(lastCurrentPosition);
-                    }
-                } catch (Exception ex) {
-                    logger.error(ex);
-                }
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                return true;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
-        });
-        preview.setOnTouchListener(new OnSwipeListener(preview.getContext()) {
+        playerView.setPlayer(exoPlayer);
+        // hide default controls of Exo Player
+        playerView.setUseController(false);
+        logger.debug("Player state=" + state);
+        if (!isPlaying()) {
+            seekTo(lastCurrentPosition);
+        }
+        playerView.setOnTouchListener(new OnSwipeListener(playerView.getContext()) {
 
             @Override
             public void onSwipeLeft() {
@@ -405,16 +401,20 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
+    public void release() {
+        exoPlayer.removeListener(this);
+        exoPlayer.removeMetadataOutput(this);
+        exoPlayer.removeAnalyticsListener(this);
+        exoPlayer.release();
+    }
+
+    @Override
     public void setPlayerListener(IPlayerListener listener) {
         this.callback = listener;
     }
 
     @Override
     public void setController(PlayerController cont) {
-        // handle old controller object first
-        if (controller == null && this.controller != null) {
-            this.controller.setMediaPlayer(null);
-        }
 
         if (this.controller != null) {
             // hide old controller while setting new
@@ -431,15 +431,12 @@ public class Player extends MediaPlayer implements OnErrorListener,
         }
     }
 
-    @Override
     /**
      * Controls will be hidden immediately if changed to false
      */
+    @Override
     public void setAutoHideControls(boolean autoHide) {
         autoHideControls = autoHide;
-        if (!autoHide && autoHideControls) {
-            hideController();
-        }
     }
 
     @Override
@@ -456,8 +453,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
             if (autoHideControls) {
                 controller.resetShowTimeoutMS();
-            }
-            else {
+            } else {
                 controller.setShowTimeoutMS(0);
             }
 
@@ -491,7 +487,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
         isFrozen = true;
         freezeState = state;
 
-        setPreview(null);
+        setPlayerView(null);
         setController(null);
         if (isPlaying()) {
             pause();
@@ -539,18 +535,19 @@ public class Player extends MediaPlayer implements OnErrorListener,
         this.videoTitle = title;
     }
 
-    public int getLastFreezePosition() {
+    public long getLastFreezePosition() {
         return lastFreezePosition;
     }
 
     // -------------------------------------------------------------------
-        /*
-         * Player Methods below.
-         */
+    /*
+     * Player Methods below.
+     */
 
     @Override
     public void reset() {
-        super.reset();
+        // stop and reset Exo Player
+        exoPlayer.stop(true);
         state = PlayerState.RESET;
     }
 
@@ -561,7 +558,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                 || state == PlayerState.STOPPED
                 || state == PlayerState.LAGGING
                 || state == PlayerState.PLAYBACK_COMPLETE) {
-            super.start();
+            exoPlayer.setPlayWhenReady(true);
             if (callback != null) {
                 // mark playing
                 callback.onPlaybackStarted();
@@ -585,7 +582,8 @@ public class Player extends MediaPlayer implements OnErrorListener,
                 || state == PlayerState.PAUSED
                 || state == PlayerState.LAGGING
                 || state == PlayerState.PLAYBACK_COMPLETE) {
-            super.stop();
+            // Stop the Exo Player
+            exoPlayer.stop(false);
             state = PlayerState.STOPPED;
 
             logger.debug("Playback stopped");
@@ -597,7 +595,9 @@ public class Player extends MediaPlayer implements OnErrorListener,
     @Override
     public void pause() throws IllegalStateException {
         if (isPlaying()) {
-            super.pause();
+            seekToWhenPrepared = getCurrentPosition();
+            // Pause media playback
+            exoPlayer.setPlayWhenReady(false);
             state = PlayerState.PAUSED;
             if (callback != null) {
                 callback.onPlaybackPaused();
@@ -610,8 +610,8 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public synchronized void seekTo(int msec) throws IllegalStateException {
-        int delta = lastCurrentPosition - msec;
+    public synchronized void seekTo(long msec) throws IllegalStateException {
+        long delta = lastCurrentPosition - msec;
         if (delta < 0) {
             delta = delta * (-1);
         }
@@ -638,8 +638,10 @@ public class Player extends MediaPlayer implements OnErrorListener,
                 || state == PlayerState.LAGGING) {
             logger.debug(String.format(Locale.US, "seeking to %d from %d ; state=%s",
                     msec, lastCurrentPosition, state.toString()));
-            super.seekTo(msec);
+            exoPlayer.seekTo(msec);
             lastCurrentPosition = msec;
+            seekToWhenPrepared = msec;
+
             logger.debug("playback seeked");
 
             try {
@@ -654,7 +656,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public synchronized int getCurrentPosition() {
+    public synchronized long getCurrentPosition() {
         try {
             if (state == PlayerState.PREPARED
                     || state == PlayerState.PLAYING
@@ -662,7 +664,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                     || state == PlayerState.STOPPED
                     || state == PlayerState.PLAYBACK_COMPLETE
                     || state == PlayerState.LAGGING) {
-                lastCurrentPosition = super.getCurrentPosition();
+                lastCurrentPosition = exoPlayer.getCurrentPosition();
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -672,7 +674,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public int getDuration() {
+    public long getDuration() {
         try {
             if (state == PlayerState.PREPARED
                     || state == PlayerState.PLAYING
@@ -680,7 +682,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                     || state == PlayerState.STOPPED
                     || state == PlayerState.PLAYBACK_COMPLETE
                     || state == PlayerState.LAGGING) {
-                lastDuration = super.getDuration();
+                lastDuration = exoPlayer.getDuration();
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -693,7 +695,9 @@ public class Player extends MediaPlayer implements OnErrorListener,
         if (state == PlayerState.PLAYING
                 || state == PlayerState.LAGGING) {
             logger.debug("isPlaying = TRUE");
-            return super.isPlaying();
+            return (exoPlayer.getPlaybackState() == Player.STATE_READY ||
+                    exoPlayer.getPlaybackState() == Player.STATE_BUFFERING)
+                    && exoPlayer.getPlayWhenReady();
         }
         logger.debug("isPlaying = FALSE; state=" + state);
         return false;

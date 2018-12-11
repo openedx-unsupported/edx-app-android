@@ -509,7 +509,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
-    public void saveCurrentPlaybackPosition(int offset) {
+    public void saveCurrentPlaybackPosition(long offset) {
         try {
             DownloadEntry v = videoModel;
             if (v != null) {

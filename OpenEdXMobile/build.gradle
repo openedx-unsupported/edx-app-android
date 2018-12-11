@@ -138,6 +138,9 @@ dependencies {
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.google.firebase:firebase-messaging:17.1.0"
 
+//    Exo Player
+    implementation 'com.google.android.exoplayer:exoplayer:2.9.2'
+
     implementation 'com.facebook.android:facebook-login:4.36.0'
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'de.greenrobot:eventbus:2.4.1'
@@ -455,6 +458,11 @@ android {
          unitTests.all {
              maxHeapSize '1g'
          }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
