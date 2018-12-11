@@ -33,6 +33,7 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
@@ -83,7 +84,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     private static final Logger logger = new Logger(PlayerFragment.class.getName());
-    private static final String KEY_PLAYER = "player";
     private static final String KEY_VIDEO = "video";
     private static final String KEY_PREPARED = "isPrepared";
     private static final String KEY_AUTOPLAY_DONE = "isAutoPlayDone";
@@ -101,7 +101,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     protected IPlayer player;
     private boolean isPrepared = false;
     private boolean isAutoPlayDone = false;
-    private boolean stateSaved = false;
     private boolean orientationLocked = false;
     private transient OrientationDetector orientationDetector;
     private transient IPlayerEventCallback callback;
@@ -129,19 +128,19 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private EnumSet<VideoNotPlayMessageType> curMessageTypes =  EnumSet.noneOf(VideoNotPlayMessageType.class);
 
     private boolean isManualFullscreen = false;
-    private int currentPosition = 0;
+    private long currentPosition = 0;
     private boolean pauseDueToDialog;
     private boolean closedCaptionsEnabled = false;
 
     private final transient Handler handler = new Handler() {
-        private int lastSavedPosition;
+        private long lastSavedPosition;
         @Override
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
                     if(player!=null && player.isPlaying()) {
                         // mark last current position
-                        int pos = player.getCurrentPosition();
+                        long pos = player.getCurrentPosition();
                         if (pos > 0 && pos != lastSavedPosition) {
                             lastSavedPosition = pos;
                             callback.saveCurrentPlaybackPosition(pos);
@@ -182,7 +181,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            player = (IPlayer) savedInstanceState.get(KEY_PLAYER);
             videoEntry = (DownloadEntry) savedInstanceState.get(KEY_VIDEO);
             isPrepared = savedInstanceState.getBoolean(KEY_PREPARED);
             isAutoPlayDone = savedInstanceState.getBoolean(KEY_AUTOPLAY_DONE);
@@ -190,9 +188,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if (savedInstanceState.getBoolean(KEY_MESSAGE_DISPLAYED)) {
                 showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
             }
-        } else {
-            if (player == null) player = new Player();
         }
+        if (player == null)
+            player = new IPlayerImpl(getActivity());
     }
 
     private void reAttachPlayEventListener() {
@@ -289,11 +287,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         super.onStart();
         logger.debug("Player fragment start");
 
-        stateSaved = false;
         try{
-            Preview preview = (Preview) getView().findViewById(R.id.preview);
+            final PlayerView playerView = (PlayerView) getView().findViewById(R.id.player_view);
             if(player!=null){
-                player.setPreview(preview);
+                player.setPlayerView(playerView);
 
                 // setup the flat if player is fullscreen
                 player.setFullScreen(isScreenLandscape());
@@ -357,11 +354,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void configureAutoHideControls() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return;
-        }
         player.setAutoHideControls(!getTouchExploreEnabled());
         setTouchExploreChangeListener(new AccessibilityManager.TouchExplorationStateChangeListener() {
             @Override
@@ -402,16 +395,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!stateSaved) {
-            if (player!=null) {
-                // reset player when user goes back, and there is no state saving happened
-                player.reset();
+        if (player!=null) {
+            // reset player when user goes back, and there is no state saving happened
+            player.reset();
 
-                // release the player instance
-                player.release();
-                player = null;
-                logger.debug("player detached, reset and released");
-            }
+            // release the player instance
+            player.release();
+            player = null;
+            logger.debug("player detached, reset and released");
         }
     }
 
@@ -439,10 +430,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onSaveInstanceState(Bundle outState) {
         logger.debug("Saving state ...");
-        stateSaved = true;
         if (player != null) {
             freezePlayer();
-            outState.putSerializable(KEY_PLAYER, player);
         }
         outState.putSerializable(KEY_VIDEO, videoEntry);
         outState.putBoolean(KEY_PREPARED, isPrepared);
@@ -452,12 +441,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         super.onSaveInstanceState(outState);
     }
 
-    public synchronized void prepare(String path, int seekTo, String title,
+    public synchronized void prepare(String path, long seekTo, String title,
                                      TranscriptModel trModel, DownloadEntry video) {
         playOrPrepare(path, seekTo, title, trModel, video, true);
     }
 
-    public synchronized void play(String path, int seekTo, String title,
+    public synchronized void play(String path, long seekTo, String title,
                                   TranscriptModel trModel, DownloadEntry video) {
         playOrPrepare(path, seekTo, title, trModel, video, false);
     }
@@ -470,7 +459,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      * @param title
      * @param prepareOnly  <code>true</code> player will be prepared but not start to play
      */
-    public synchronized void playOrPrepare(String path, int seekTo, String title,
+    public synchronized void playOrPrepare(String path, long seekTo, String title,
                                            TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
         isPrepared = false;
         // block to portrait while preparing
@@ -1115,7 +1104,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             //This has been reset so that previous cc will not be displayed
             resetClosedCaptioning();
             if (player != null && (player.isPlaying() || player.isPaused())) {
-                int currentPos = player.getCurrentPosition();
+                long currentPos = player.getCurrentPosition();
                 if (subtitlesObj != null) {
                     Collection<Caption> subtitles = subtitlesObj.captions.values();
                     int currentSubtitleIndex = 0;
@@ -1697,7 +1686,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         if (player!=null) {
             if (callback != null && player.isPlaying()) {
-                int pos = player.getCurrentPosition();
+                long pos = player.getCurrentPosition();
                 if (pos > 0) {
                     callback.saveCurrentPlaybackPosition(pos);
                 }
