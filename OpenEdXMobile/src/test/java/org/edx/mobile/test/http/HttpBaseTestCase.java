@@ -249,9 +249,6 @@ public class HttpBaseTestCase extends BaseTestCase {
                     String baseMockUrl = getBaseMockUrl();
                     response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_enrollments"), baseMockUrl));
                     response.setResponseCode(HttpStatus.OK);
-                } else if (urlMatches(path, "/api/mobile/v0.5/video_outlines/courses/[^/]+/[^/]+/[^/]+")) {
-                    response.setBody(MockDataUtil.getMockResponse("get_video_outlines_courses"));
-                    response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/course_info/[^/]+/[^/]+/[^/]+/updates")) {
                     response.setBody(MockDataUtil.getMockResponse("get_course_info_updates"));
                     response.setResponseCode(HttpStatus.OK);
