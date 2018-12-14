@@ -653,7 +653,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .into(headerImageView);
 
         courseTextName.setText(courseData.getCourse().getName());
-        courseTextDetails.setText(CourseCardUtils.getFormattedDate(context, courseData.getCourse()));
+        courseTextDetails.setText(CourseCardUtils.getFormattedDate(context, courseData));
 
         return view;
     }

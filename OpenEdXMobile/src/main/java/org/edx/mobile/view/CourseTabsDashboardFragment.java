@@ -26,11 +26,13 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.custom.ProgressWheel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CourseTabsDashboardFragment extends TabsBaseFragment {
@@ -82,12 +84,16 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (courseData.getCourse().getCoursewareAccess().hasAccess()) {
-            return super.onCreateView(inflater, container, savedInstanceState);
-        } else {
+
+        if (!courseData.getCourse().getCoursewareAccess().hasAccess()) {
+            final boolean auditAccessExpired = courseData.getAuditAccessExpires() != null &&
+                    new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
+
             errorLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard_error_layout, container, false);
-            errorLayoutBinding.errorMsg.setText(R.string.course_not_started);
+            errorLayoutBinding.errorMsg.setText(auditAccessExpired ? R.string.course_access_expired : R.string.course_not_started);
             return errorLayoutBinding.getRoot();
+        } else {
+            return super.onCreateView(inflater, container, savedInstanceState);
         }
     }
 
