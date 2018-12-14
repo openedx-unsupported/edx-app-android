@@ -17,9 +17,6 @@ public class ApiConstants {
 
     public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
 
-    public static final String URL_VIDEO_OUTLINE =
-        "/api/mobile/v0.5/video_outlines/courses/{courseId}";
-
     public static final String URL_ACCESS_TOKEN = "/oauth2/access_token/";
 
     public static final String URL_PASSWORD_RESET = "/password_reset/";
