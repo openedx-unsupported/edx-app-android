@@ -402,20 +402,11 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         return filepath;
     }
 
-    private TranscriptModel getTranscriptModel(DownloadEntry video){
+    private TranscriptModel getTranscriptModel(DownloadEntry video) {
         TranscriptModel transcript = null;
-        if(unit!=null && unit.getData() != null &&
-            unit.getData().transcripts != null) {
+        if (unit != null && unit.getData() != null &&
+                unit.getData().transcripts != null) {
             transcript = unit.getData().transcripts;
-        }
-        if ( transcript == null ) {
-            try {
-                if (video.videoId != null) {
-                    transcript =  courseApi.getTranscriptsOfVideo(video.eid, video.videoId);
-                }
-            } catch (Exception e) {
-                logger.error(e);
-            }
         }
         return transcript;
     }

@@ -16,16 +16,13 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.IPathNode;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.SummaryModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
-import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockModel;
 import org.edx.mobile.model.course.BlockType;
@@ -46,7 +43,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -222,161 +218,6 @@ public class CourseAPI {
         }
 
         protected abstract void onResponse(@NonNull final CourseComponent courseComponent);
-    }
-
-    @NonNull
-    public List<SectionItemInterface> getLiveOrganizedVideosByChapter(
-            @NonNull final String courseId, @NonNull final String chapter) throws Exception {
-        CourseComponent course = this.getCourseStructureFromCache(courseId);
-        if (course != null) {
-            return mappingAllVideoResponseModelFrom(course, new Filter<VideoResponseModel>() {
-                @Override
-                public boolean apply(VideoResponseModel videoResponseModel) {
-                    return videoResponseModel != null && videoResponseModel.getChapterName().equals(chapter);
-                }
-            });
-        }
-
-        List<VideoResponseModel> videos = executeStrict(courseService.getVideosByCourseId(courseId));
-
-        ArrayList<SectionItemInterface> list = new ArrayList<SectionItemInterface>();
-
-        // add chapter to the result
-        ChapterModel c = new ChapterModel();
-        c.name = chapter;
-        list.add(c);
-
-        HashMap<String, ArrayList<VideoResponseModel>> sections =
-                new LinkedHashMap<String, ArrayList<VideoResponseModel>>();
-
-        for (VideoResponseModel v : videos) {
-            // filter videos by chapter
-            if (v.getChapter().getDisplayName().equals(chapter)) {
-                // this video is under the specified chapter
-
-                // sort out the section of this video
-                if (sections.containsKey(v.getSection().getDisplayName())) {
-                    ArrayList<VideoResponseModel> sv = sections.get(v.getSection().getDisplayName());
-                    if (sv == null) {
-                        sv = new ArrayList<VideoResponseModel>();
-                    }
-                    sv.add(v);
-                } else {
-                    ArrayList<VideoResponseModel> vlist = new ArrayList<VideoResponseModel>();
-                    vlist.add(v);
-                    sections.put(v.getSection().getDisplayName(), vlist);
-                }
-            }
-        }
-
-        // now add sectioned videos to the result
-        for (Map.Entry<String, ArrayList<VideoResponseModel>> entry : sections.entrySet()) {
-            // add section to the result
-            SectionItemModel s = new SectionItemModel();
-            s.name = entry.getKey();
-            list.add(s);
-
-            // add videos to the result
-            if (entry.getValue() != null) {
-                for (VideoResponseModel v : entry.getValue()) {
-                    list.add(v);
-                }
-            }
-        }
-
-        return list;
-    }
-
-    @NonNull
-    public Map<String, SectionEntry> getCourseHierarchy(@NonNull final String courseId)
-            throws Exception {
-        CourseComponent course = this.getCourseStructureFromCache(courseId);
-        if (course != null) {
-            return mappingCourseHierarchyFrom(course);
-        }
-
-        List<VideoResponseModel> list = executeStrict(courseService.getVideosByCourseId(courseId));
-
-        // create hierarchy with chapters, sections and subsections
-        // HashMap<String, SectionEntry> chapterMap = new HashMap<String, SectionEntry>();
-        Map<String, SectionEntry> chapterMap = new LinkedHashMap<String, SectionEntry>();
-        for (VideoResponseModel m : list) {
-            // add each video to its corresponding chapter and section
-
-            // add this as a chapter
-            String cname = m.getChapter().getDisplayName();
-
-            // carry this courseId with video model
-            m.setCourseId(courseId);
-
-            SectionEntry s = null;
-            if (chapterMap.containsKey(cname)) {
-                s = chapterMap.get(cname);
-            } else {
-                s = new SectionEntry();
-                s.chapter = cname;
-                s.isChapter = true;
-                s.section_url = m.getSectionUrl();
-                chapterMap.put(cname, s);
-            }
-
-            // add this video to section inside in this chapter
-            ArrayList<VideoResponseModel> videos = s.sections.get(m.getSection().getDisplayName());
-            if (videos == null) {
-                s.sections.put(m.getSection().getDisplayName(),
-                        new ArrayList<VideoResponseModel>());
-                videos = s.sections.get(m.getSection().getDisplayName());
-            }
-
-            videos.add(m);
-        }
-
-        return chapterMap;
-    }
-
-    @Nullable
-    public VideoResponseModel getVideoById(@NonNull final String courseId,
-                                           @NonNull final String videoId)
-            throws Exception {
-        CourseComponent course = this.getCourseStructureFromCache(courseId);
-        if (course == null) {
-            return getVideoById(course, videoId);
-        }
-
-        Map<String, SectionEntry> map = getCourseHierarchy(courseId);
-
-        // iterate chapters
-        for (Map.Entry<String, SectionEntry> chapterentry : map.entrySet()) {
-            // iterate lectures
-            for (Map.Entry<String, ArrayList<VideoResponseModel>> entry :
-                    chapterentry.getValue().sections.entrySet()) {
-                // iterate videos
-                for (VideoResponseModel v : entry.getValue()) {
-
-                    // identify the video
-                    if (videoId.equals(v.getSummary().getId())) {
-                        return v;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    @Nullable
-    public TranscriptModel getTranscriptsOfVideo(@NonNull final String enrollmentId,
-                                                 @NonNull final String videoId)
-            throws Exception {
-        TranscriptModel transcript;
-        VideoResponseModel vidModel = getVideoById(enrollmentId, videoId);
-        if (vidModel != null) {
-            if (vidModel.getSummary() != null) {
-                transcript = vidModel.getSummary().getTranscripts();
-                return transcript;
-            }
-        }
-        return null;
     }
 
     /**
