@@ -156,12 +156,6 @@
     "type": "normal"
   },
   {
-    "name": "Philanthropy",
-    "image_name": "philanthropy",
-    "filter": "Philanthropy",
-    "type": "normal"
-  },
-  {
     "name": "Philosophy & Ethics",
     "image_name": "philosophy_ethics",
     "filter": "Philosophy & Ethics",
