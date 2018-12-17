@@ -11,11 +11,8 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
-import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.metadata.MetadataOutput;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MediaSourceEventListener;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -27,14 +24,12 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.OnSwipeListener;
 
-import java.io.IOException;
 import java.util.Locale;
 
-import static com.google.android.exoplayer2.C.TRACK_TYPE_UNKNOWN;
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
 
 @SuppressWarnings("serial")
-public class IPlayerImpl implements Player.EventListener, MetadataOutput, AnalyticsListener, IPlayer {
+public class VideoPlayer implements Player.EventListener, AnalyticsListener, PlayerListener {
 
     private SimpleExoPlayer exoPlayer;
     private Context context;
@@ -61,19 +56,11 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
     private String videoTitle;
     private String lmsURL;
     private String videoUri;
-    private static final Logger logger = new Logger(IPlayerImpl.class.getName());
+    private static final Logger logger = new Logger(VideoPlayer.class.getName());
 
-    public IPlayerImpl(Context context) {
+    public VideoPlayer(Context context) {
         init(context);
         initExoPlayer();
-    }
-
-    private void initExoPlayer() {
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(this.context);
-        exoPlayer.addListener(this);
-        exoPlayer.addMetadataOutput(this);
-        exoPlayer.addAnalyticsListener(this);
-        exoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
     }
 
     /**
@@ -91,6 +78,13 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
         this.lastDuration = 0;
         this.isFrozen = false;
         this.autoHideControls = true;
+    }
+
+    private void initExoPlayer() {
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(this.context);
+        exoPlayer.addListener(this);
+        exoPlayer.addAnalyticsListener(this);
+        exoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
     }
 
     @Override
@@ -193,6 +187,11 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
                 }
                 break;
             case Player.STATE_ENDED:
+                // onPlayerStateChanged with Player.STATE_ENDED called twice after calling
+                // setPlayWhenReady(false) in STATE_ENDED
+                // so if already called then avoid on completion again.
+                if (state == PlayerState.PLAYBACK_COMPLETE)
+                    return;
                 // sometimes, error also causes onCompletion() call
                 // avoid on completion if player got an error
                 if (state != PlayerState.ERROR) {
@@ -209,18 +208,6 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
     }
 
     @Override
-    public void onLoadStarted(EventTime eventTime, MediaSourceEventListener.LoadEventInfo loadEventInfo, MediaSourceEventListener.MediaLoadData mediaLoadData) {
-        if (mediaLoadData.trackType == TRACK_TYPE_UNKNOWN) {
-            logger.debug("Unknown info");
-        }
-    }
-
-    @Override
-    public void onLoadError(EventTime eventTime, MediaSourceEventListener.LoadEventInfo loadEventInfo, MediaSourceEventListener.MediaLoadData mediaLoadData, IOException error, boolean wasCanceled) {
-        logger.debug("INFO: data_spec =" + loadEventInfo.dataSpec.toString() + ";extra=" + error.getMessage());
-    }
-
-    @Override
     public void onDroppedVideoFrames(EventTime eventTime, int droppedFrames, long elapsedMs) {
         state = PlayerState.LAGGING;
         if (callback != null) {
@@ -228,12 +215,6 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
         }
         logger.debug("Video track lagging");
     }
-
-    @Override
-    public void onMetadata(Metadata metadata) {
-        logger.debug("Metadata update received");
-    }
-
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
@@ -256,17 +237,17 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
     }
 
     @Override
-    public void setUri(String uri, long seekTo) throws Exception {
+    public void setUri(String uri, long seekTo) {
         load(uri, seekTo, false);
     }
 
     @Override
-    public void setUriAndPlay(String uri, long seekTo) throws Exception {
+    public void setUriAndPlay(String uri, long seekTo) {
         load(uri, seekTo, true);
     }
 
     @Override
-    public void restart(long seekTo) throws Exception {
+    public void restart(long seekTo) {
         logger.debug("RestartFreezePosition=" + seekTo);
         lastCurrentPosition = 0;
         // if seekTo=lastCurrentPosition then seekTo() method will not work
@@ -274,11 +255,11 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
     }
 
     @Override
-    public void restart() throws Exception {
+    public void restart() {
         restart(seekToWhenPrepared);
     }
 
-    private void load(String videoUri, long seekTo, boolean playWhenPrepared) throws Exception {
+    private void load(String videoUri, long seekTo, boolean playWhenPrepared) {
         this.videoUri = videoUri;
         this.seekToWhenPrepared = seekTo;
         this.playWhenPrepared = playWhenPrepared;
@@ -309,7 +290,7 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
      * Function that provides the media source played by ExoPlayer based on media type.
      *
      * @param videoUrl Video URL
-     * @return Return MediaSource
+     * @return The {@link MediaSource} to play.
      */
     private MediaSource getMediaSource(String videoUrl) {
         final String userAgent = Util.getUserAgent(this.context, this.context.getString(R.string.app_name));
@@ -403,7 +384,6 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
     @Override
     public void release() {
         exoPlayer.removeListener(this);
-        exoPlayer.removeMetadataOutput(this);
         exoPlayer.removeAnalyticsListener(this);
         exoPlayer.release();
     }
@@ -415,8 +395,9 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
 
     @Override
     public void setController(PlayerController cont) {
-
         if (this.controller != null) {
+            if (cont == null)
+                this.controller.setMediaPlayer(null);
             // hide old controller while setting new
             this.controller.hide();
             this.controller = null;
@@ -436,6 +417,9 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
      */
     @Override
     public void setAutoHideControls(boolean autoHide) {
+        if (!autoHide && autoHideControls) {
+            hideController();
+        }
         autoHideControls = autoHide;
     }
 
@@ -643,13 +627,6 @@ public class IPlayerImpl implements Player.EventListener, MetadataOutput, Analyt
             seekToWhenPrepared = msec;
 
             logger.debug("playback seeked");
-
-            try {
-                // wait for a while, so that Player gets into a stable state after seek
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                logger.error(e);
-            }
         } else {
             logger.warn("Cannot seek");
         }

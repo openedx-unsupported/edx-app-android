@@ -98,7 +98,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Inject
     IEdxEnvironment environment;
 
-    protected IPlayer player;
+    protected PlayerListener player;
     private boolean isPrepared = false;
     private boolean isAutoPlayDone = false;
     private boolean orientationLocked = false;
@@ -190,7 +190,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             }
         }
         if (player == null)
-            player = new IPlayerImpl(getActivity());
+            player = new VideoPlayer(getActivity());
     }
 
     private void reAttachPlayEventListener() {
