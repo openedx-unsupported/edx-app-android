@@ -82,7 +82,7 @@ public class PlayerController extends FrameLayout {
     public static final long    DEFAULT_TIMEOUT_MS = 3000L;
 
     private long                mTimeoutMS = DEFAULT_TIMEOUT_MS;
-    private IPlayer             mPlayer;
+    private PlayerListener mPlayer;
     private Context             mContext;
     private ViewGroup           mAnchor;
     private View                mRoot;
@@ -140,7 +140,7 @@ public class PlayerController extends FrameLayout {
             initControllerView(mRoot);
     }
 
-    public void setMediaPlayer(IPlayer player) {
+    public void setMediaPlayer(PlayerListener player) {
         mPlayer = player;
         updatePausePlay();
         updateFullScreen();

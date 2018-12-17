@@ -7,7 +7,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 
 import java.io.Serializable;
 
-public interface IPlayer extends Serializable {
+public interface PlayerListener extends Serializable {
 
     long serialVersionUID = 5689385691113719237L;
 
