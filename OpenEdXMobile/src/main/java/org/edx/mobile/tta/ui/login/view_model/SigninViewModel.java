@@ -3,20 +3,12 @@ package org.edx.mobile.tta.ui.login.view_model;
 
 import android.content.Context;
 import android.databinding.ObservableField;
-import android.widget.Toast;
 
-import org.edx.mobile.tta.data.DataManager;
-import org.edx.mobile.tta.data.remote.NetworkObserver;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
-import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.login.model.LoginRequest;
-import org.edx.mobile.tta.ui.login.model.LoginResponse;
+import org.edx.mobile.tta.ui.dashboard.DashboardActivity;
 import org.edx.mobile.tta.ui.reset_password.EnterNumberActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
-import org.edx.mobile.view.SplashActivity;
-
-import javax.inject.Inject;
 
 /**
  * Created by Arjun on 2018/6/20.
@@ -31,7 +23,8 @@ public class SigninViewModel extends BaseViewModel {
     }
 
     public void login() {
-        mDataManager.login(new LoginRequest(cellphone.get(), password.get()))
+        ActivityUtil.gotoPage(mActivity, DashboardActivity.class);
+        /*mDataManager.login(new LoginRequest(cellphone.get(), password.get()))
             .compose(mActivity.bindToLifecycle())
             .subscribe(new NetworkObserver<LoginResponse>(mActivity) {
                 @Override
@@ -42,7 +35,7 @@ public class SigninViewModel extends BaseViewModel {
                         Toast.LENGTH_LONG).show();
                     ActivityUtil.gotoPage(mActivity, SplashActivity.class);
                 }
-            });
+            });*/
     }
 
     public void changePassword(){

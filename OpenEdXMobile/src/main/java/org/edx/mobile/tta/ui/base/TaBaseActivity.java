@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.google.inject.Key;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -88,7 +89,9 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         focusDummy.setFocusable(true);
         focusDummy.setFocusableInTouchMode(true);
         if (root instanceof ViewGroup) {
-            ((ViewGroup)root).addView(focusDummy, 0, new LinearLayout.LayoutParams(0, 0));
+            if (!(root instanceof ScrollView)) {
+                ((ViewGroup)root).addView(focusDummy, 0, new LinearLayout.LayoutParams(0, 0));
+            }
         } else {
             content.addView(focusDummy, 0, new LinearLayout.LayoutParams(0, 0));
         }

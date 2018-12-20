@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.dashboard.view_model.DashboardViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/dashboard_fragment"/>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_50px"
+            android:elevation="@dimen/_2px"
+            android:background="@drawable/bottom_bar_nav_background"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/library"
+                android:textColor="@color/gray_5"
+                android:textSize="10sp"
+                android:fontFamily="@font/hind_medium"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:drawableTop="@drawable/library"
+                android:drawablePadding="@dimen/_4px"
+                android:onClick="@{()->viewModel.showLibrary()}"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/feed"
+                android:textColor="@color/gray_5"
+                android:textSize="10sp"
+                android:fontFamily="@font/hind_medium"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:drawableTop="@drawable/feed"
+                android:drawablePadding="@dimen/_4px"
+                android:onClick="@{()->viewModel.showFeed()}"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/search"
+                android:textColor="@color/gray_5"
+                android:textSize="10sp"
+                android:fontFamily="@font/hind_medium"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:drawableTop="@drawable/search"
+                android:drawablePadding="@dimen/_4px"
+                android:onClick="@{()->viewModel.showSearch()}"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/agenda"
+                android:textColor="@color/gray_5"
+                android:textSize="10sp"
+                android:fontFamily="@font/hind_medium"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:drawableTop="@drawable/agenda"
+                android:drawablePadding="@dimen/_4px"
+                android:onClick="@{()->viewModel.showAgenda()}"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/profile"
+                android:textColor="@color/gray_5"
+                android:textSize="10sp"
+                android:fontFamily="@font/hind_medium"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:drawableTop="@drawable/profile"
+                android:drawablePadding="@dimen/_4px"
+                android:onClick="@{()->viewModel.showProfile()}"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

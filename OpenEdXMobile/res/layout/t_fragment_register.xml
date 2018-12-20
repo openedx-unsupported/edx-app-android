@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="viewModel"
-            type="RegisterViewModel" />
-
-        <import type="org.edx.mobile.tta.ui.login.view_model.RegisterViewModel" />
+            type="org.edx.mobile.tta.ui.login.view_model.RegisterViewModel" />
     </data>
 
     <ScrollView
@@ -44,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
                 android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp">
+                android:layout_marginEnd="40dp"
+                app:hintTextAppearance="@color/primary_navy">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
@@ -55,7 +54,9 @@
                     android:textSize="14sp"
                     android:inputType="number"
                     android:fontFamily="@font/hind_regular"
-                    android:text="@{viewModel.cellphone}"/>
+                    android:text="@{viewModel.cellphone}"
+                    android:maxLength="10"
+                    text_changed_listener="@{viewModel.numWatcher}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -64,7 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="34dp"
-                android:layout_marginEnd="40dp">
+                android:layout_marginEnd="40dp"
+                app:hintTextAppearance="@color/primary_navy">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
@@ -73,10 +75,11 @@
                     android:textColorHint="@color/gray_1"
                     android:textColor="@color/gray_4"
                     android:textSize="14sp"
-                    android:drawableEnd="@drawable/ic_visibility_gray_4_24dp"
+                    android:drawablePadding="16dp"
                     android:inputType="textPassword"
                     android:fontFamily="@font/hind_regular"
-                    android:text="@{viewModel.password}"/>
+                    android:text="@{viewModel.password}"
+                    text_changed_listener="@{viewModel.passWatcher}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -85,7 +88,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="34dp"
-                android:layout_marginEnd="40dp">
+                android:layout_marginEnd="40dp"
+                app:hintTextAppearance="@color/primary_navy">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
@@ -94,10 +98,11 @@
                     android:textColorHint="@color/gray_1"
                     android:textColor="@color/gray_4"
                     android:textSize="14sp"
-                    android:drawableEnd="@drawable/ic_visibility_gray_4_24dp"
+                    android:drawablePadding="16dp"
                     android:inputType="textPassword"
                     android:fontFamily="@font/hind_regular"
-                    android:text="@{viewModel.confirmPassword}"/>
+                    android:text="@{viewModel.confirmPassword}"
+                    text_changed_listener="@{viewModel.ConfirmPassWatcher}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -111,7 +116,7 @@
                 android:fontFamily="@font/hind_semibold"
                 android:textColor="@color/white"
                 android:background="@drawable/btn_selector_filled"
-                android:enabled="false"
+                view_enabled="@{viewModel.cellValid &amp;&amp; viewModel.passValid &amp;&amp; viewModel.confirmPassValid}"
                 android:onClick="@{()->viewModel.register()}"/>
 
             <View
@@ -142,7 +147,7 @@
                 android:textColor="@color/primary_cyan"
                 android:background="@drawable/btn_selector_hollow"
                 android:layout_marginBottom="80dp"
-                android:enabled="false"
+                android:enabled="true"
                 android:onClick="@{()->viewModel.signIn()}"/>
 
         </LinearLayout>

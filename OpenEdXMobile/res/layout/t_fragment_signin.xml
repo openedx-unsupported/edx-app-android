@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -44,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="60dp"
-                android:layout_marginEnd="40dp">
+                android:layout_marginEnd="40dp"
+                app:hintTextAppearance="@color/primary_navy">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
@@ -55,7 +57,8 @@
                     android:textColor="@color/gray_4"
                     android:textSize="14sp"
                     android:inputType="number"
-                    android:fontFamily="@font/hind_medium"/>
+                    android:fontFamily="@font/hind_medium"
+                    android:maxLength="10"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -64,13 +67,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="34dp"
-                android:layout_marginEnd="40dp">
+                android:layout_marginEnd="40dp"
+                app:hintTextAppearance="@color/primary_navy">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
-                    android:text="@{viewModel.cellphone}"
+                    android:text="@{viewModel.password}"
                     android:textColorHint="@color/gray_1"
                     android:textColor="@color/gray_4"
                     android:textSize="14sp"
@@ -90,7 +94,7 @@
                 android:textColor="@color/white"
                 android:fontFamily="@font/hind_semibold"
                 android:background="@drawable/btn_selector_filled"
-                android:enabled="false"
+                android:enabled="true"
                 android:onClick="@{()->viewModel.login()}"/>
 
             <LinearLayout
@@ -148,7 +152,7 @@
                 android:fontFamily="@font/hind_semibold"
                 android:background="@drawable/btn_selector_hollow"
                 android:layout_marginBottom="96dp"
-                android:enabled="false"
+                android:enabled="true"
                 android:onClick="@{()->viewModel.register()}"/>
 
         </LinearLayout>

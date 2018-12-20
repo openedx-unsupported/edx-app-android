@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="OtpViewModel" />
+
+        <import type="org.edx.mobile.tta.ui.otp.view_model.OtpViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_40px"
+                android:layout_marginTop="@dimen/_98px"
+                android:layout_marginEnd="@dimen/_40px"
+                android:fontFamily="@font/hind_medium"
+                android:text="@string/otp_verification"
+                android:textColor="@color/primary_navy"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_40px"
+                android:layout_marginTop="@dimen/_16px"
+                android:layout_marginEnd="@dimen/_40px"
+                android:fontFamily="@font/hind_medium"
+                android:text="@string/otp_verification_msg"
+                android:textColor="@color/primary_navy"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_98px"
+                android:fontFamily="@font/hind_regular"
+                android:text="@string/verify_otp"
+                android:textColor="@color/gray_1"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_20px"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/digit1"
+                    android:layout_marginEnd="@dimen/_10px"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@{viewModel.digit1}"
+                    android:textColor="@color/primary_navy"
+                    android:textSize="24sp"
+                    android:gravity="center_horizontal"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:nextFocusDown="@id/digit2"/>
+
+                <EditText
+                    android:layout_width="@dimen/_40px"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/digit2"
+                    android:layout_marginEnd="@dimen/_10px"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@{viewModel.digit2}"
+                    android:textColor="@color/primary_navy"
+                    android:textSize="24sp"
+                    android:gravity="center_horizontal"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:nextFocusDown="@id/digit3" />
+
+                <EditText
+                    android:layout_width="@dimen/_40px"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/digit3"
+                    android:layout_marginEnd="@dimen/_10px"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@{viewModel.digit3}"
+                    android:textColor="@color/primary_navy"
+                    android:textSize="24sp"
+                    android:gravity="center_horizontal"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:nextFocusDown="@id/digit4" />
+
+                <EditText
+                    android:layout_width="@dimen/_40px"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/digit4"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@{viewModel.digit4}"
+                    android:textColor="@color/primary_navy"
+                    android:textSize="24sp"
+                    android:gravity="center_horizontal"
+                    android:inputType="number"
+                    android:maxLength="1" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_40px"
+                android:fontFamily="@font/hind_medium"
+                android:text="@string/resend_otp"
+                android:textColor="@color/primary_cyan"
+                android:textSize="12sp" />
+
+            <Button
+                android:layout_width="@dimen/_200px"
+                android:layout_height="@dimen/_36px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_40px"
+                android:background="@drawable/btn_selector_filled"
+                android:enabled="true"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.verify()}"
+                android:text="@string/verify"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

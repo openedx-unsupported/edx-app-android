@@ -6,12 +6,16 @@ import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -183,6 +187,16 @@ public class BindingAdapters {
         view.setAdapter(adapter);
     }
 
+    @BindingAdapter({"recycler_adapter"})
+    public static void bindRecyclerAdapter(RecyclerView view, RecyclerView.Adapter adapter){
+        view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"layout_manager"})
+    public static void bindLayoutManager(RecyclerView view, RecyclerView.LayoutManager layoutManager){
+        view.setLayoutManager(layoutManager);
+    }
+
     @BindingAdapter({"pager"})
     public static void bindViewPagerTabs(TabLayout view, ViewPager pagerView) {
         view.setupWithViewPager(pagerView, true);
@@ -196,5 +210,20 @@ public class BindingAdapters {
     @BindingAdapter({"selected_item_position"})
     public static void setSelectedItemPosition(ViewPager view, int position){
         view.setCurrentItem(position);
+    }
+
+    @BindingAdapter({"text_changed_listener"})
+    public static void addTextChangedListener(EditText view, TextWatcher watcher){
+        view.addTextChangedListener(watcher);
+    }
+
+    @BindingAdapter({"view_enabled"})
+    public static void enableView(View view, boolean b){
+        view.setEnabled(b);
+    }
+
+    @BindingAdapter({"drawable_right"})
+    public static void setDrawableRight(EditText view, int drawableId){
+        view.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableId, 0);
     }
 }

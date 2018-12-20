@@ -97,5 +97,7 @@
     
     <color name="app_background">#FCFCFD</color>
     <color name="launch_background">#EDF8FA</color>
+
+    <color name="transparent">#00FFFFFF</color>
     <!--  TTA color palette end  -->
 </resources>

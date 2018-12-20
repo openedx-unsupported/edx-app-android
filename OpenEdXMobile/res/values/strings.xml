@@ -685,6 +685,24 @@
     <string name="reset_password">Reset Password</string>
     <string name="reset_password_msg">Enter phone number below to reset your password. You will receive a verification OTP via SMS.</string>
     <string name="verify">Verify</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="otp_verification_msg">Your phone will receive an SMS. Verification code provided in the SMS will be automatically filled below.</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="resend_otp">Resend OTP ?</string>
+    <string name="set_password">Please set your account password.</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="submit">Submit</string>
+    <string name="library">Library</string>
+    <string name="feed">Feed</string>
+    <string name="search">Search</string>
+    <string name="agenda">Agenda</string>
+    <string name="profile">Profile</string>
+    <string name="all">All</string>
+    <string name="course">Course</string>
+    <string name="chatshala">Chatshala</string>
+    <string name="hois">HOIS</string>
+    <string name="toolkit">Toolkit</string>
+    <string name="view_more">View More</string>
     <!-- TTA strings end -->
 
 </resources>
