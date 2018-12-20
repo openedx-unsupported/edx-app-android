@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.webkit.URLUtil;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,10 +46,11 @@ import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
 
 public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment {
     private static final int VIEW_SUBJECTS_REQUEST_CODE = 999;
+    private static final String INSTANCE_CURRENT_DISCOVER_URL = "current_discover_url";
 
     private FragmentWebviewCourseDiscoveryBinding binding;
     private SearchView searchView;
-    private MainDashboardToolbarCallbacks toolbarCallbacks;
+    private ToolbarCallbacks toolbarCallbacks;
 
     @Nullable
     @Override
@@ -60,14 +62,46 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Check for search query in extras
+        String searchQueryExtra = null;
+        String searchUrl = null;
 
-        errorNotification = new FullScreenErrorNotification(binding.llContent);
+        if (savedInstanceState != null) {
+            searchUrl = savedInstanceState.getString(INSTANCE_CURRENT_DISCOVER_URL, null);
+        }
+        if (searchUrl == null && getArguments() != null) {
+            searchQueryExtra = getArguments().getString(Router.EXTRA_SEARCH_QUERY);
+        }
 
-        loadUrl(getInitialUrl());
+        if (searchQueryExtra != null) {
+            initSearch(searchQueryExtra);
+        } else {
+            loadUrl(searchUrl == null ? getInitialUrl() : searchUrl);
+        }
         if (shouldShowSubjectDiscovery()) {
             initSubjects();
         }
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(INSTANCE_CURRENT_DISCOVER_URL, binding.webview.getUrl());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public FullScreenErrorNotification initFullScreenErrorNotification() {
+        return new FullScreenErrorNotification(binding.llContent);
+    }
+
+    private void initSearch(@NonNull String query) {
+        final String baseUrl = getInitialUrl();
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(QUERY_PARAM_SEARCH, query);
+        loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
     }
 
     private void initSubjects() {
@@ -117,7 +151,8 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        toolbarCallbacks = (MainDashboardToolbarCallbacks) getActivity();
+        toolbarCallbacks = getActivity() instanceof ToolbarCallbacks ?
+                (ToolbarCallbacks) getActivity() : null;
         initSearchView();
     }
 
@@ -128,11 +163,8 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                final String baseUrl = getInitialUrl();
-                final Map<String, String> queryParams = new HashMap<>();
-                queryParams.put(QUERY_PARAM_SEARCH, query);
+                initSearch(query);
                 searchView.onActionViewCollapsed();
-                loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
                 final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
                 environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
                 return true;
@@ -147,13 +179,26 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
             @Override
             public void onFocusChange(View view, boolean queryTextFocused) {
                 if (!queryTextFocused) {
-                    toolbarCallbacks.getTitleView().setVisibility(View.VISIBLE);
+                    updateTitleVisibility(View.VISIBLE);
                     searchView.onActionViewCollapsed();
                 } else {
-                    toolbarCallbacks.getTitleView().setVisibility(View.GONE);
+                    updateTitleVisibility(View.GONE);
                 }
             }
         });
+        if (getUserVisibleHint()) {
+            searchView.setVisibility(View.VISIBLE);
+        }
+        if (searchView.hasFocus()) {
+            updateTitleVisibility(View.GONE);
+        }
+    }
+
+    private void updateTitleVisibility(int visibility) {
+        final TextView titleView = toolbarCallbacks != null ? toolbarCallbacks.getTitleView() : null;
+        if (titleView != null) {
+            titleView.setVisibility(visibility);
+        }
     }
 
     @NonNull
@@ -222,7 +267,7 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     }
 
     private boolean shouldShowSubjectDiscovery() {
-        return environment.getConfig().getCourseDiscoveryConfig().isSubjectDiscoveryEnabled() &&
+        return getActivity() instanceof MainDashboardActivity && environment.getConfig().getCourseDiscoveryConfig().isSubjectDiscoveryEnabled() &&
                 getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
     }
 

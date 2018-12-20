@@ -15,6 +15,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
+import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
@@ -253,7 +254,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
                 @Override
                 public void onClick(View v) {
                     environment.getAnalyticsRegistry().trackUserFindsCourses();
-                    environment.getRouter().showFindCourses(getActivity());
+                    EventBus.getDefault().post(new MoveToDiscoveryTabEvent());
                 }
             });
         }
