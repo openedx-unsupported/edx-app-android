@@ -21,7 +21,7 @@ help :
 
 clean :
 	@echo 'Cleaning the workspace and any previously created AVDs'
-	./gradlew clean -Dorg.gradle.warning.mode=all
+	./gradlew clean --all
 	rm -Rf $$HOME/.android/avd/screenshotDevice.avd
 	rm -f $$HOME/.android/avd/screenshotDevice.ini
 
@@ -49,17 +49,17 @@ emulator :
 # flag prints too many logs that are mostly not needed, which make it exceed
 # the 4mb limit enforced by travis (so use it with caution)
 quality:
-	@./gradlew assembleDebug -Dorg.gradle.warning.mode=all
+	@./gradlew assembleDebug --all
 
 test:
-	@./gradlew testProdDebugUnitTestCoverage -Dorg.gradle.warning.mode=all
+	@./gradlew testProdDebugUnitTestCoverage --all
 
 validate: quality test
 
 e2e :
-	@./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex -Dorg.gradle.warning.mode=all
+	@./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex --all
 
 artifacts:
 	@./gradlew copyLintBuildArtifacts
 	@./gradlew copyUnitTestBuildArtifacts
-	@./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex -Dorg.gradle.warning.mode=all
+	@./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex --all
