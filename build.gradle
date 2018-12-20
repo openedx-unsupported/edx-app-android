@@ -22,25 +22,29 @@ buildscript {
 }
 
 // task that creates 'artifacts' directory
-task createBuildArtifactsDirectory << { task ->
-    def hashPipe = new ByteArrayOutputStream()
-    task.project.exec {
-        commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
-        standardOutput = hashPipe
-    }
+task createBuildArtifactsDirectory { task ->
+    doLast {
+        def hashPipe = new ByteArrayOutputStream()
+        task.project.exec {
+            commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
+            standardOutput = hashPipe
+        }
 
-    def destDir = "artifacts"
-    task.project.exec {
-        commandLine = ['mkdir', '-p', destDir]
+        def destDir = "artifacts"
+        task.project.exec {
+            commandLine = ['mkdir', '-p', destDir]
+        }
     }
 }
 
 // Copies unit test reports to the 'artifacts' directory
-task copyUnitTestBuildArtifacts << { task ->
-    // copy unit test reports
-    def srcPath = "OpenEdXMobile/build/reports"
-    task.project.exec {
-        commandLine = ['cp', '-R', srcPath, 'artifacts']
+task copyUnitTestBuildArtifacts { task ->
+    doLast {
+        // copy unit test reports
+        def srcPath = "OpenEdXMobile/build/reports"
+        task.project.exec {
+            commandLine = ['cp', '-R', srcPath, 'artifacts']
+        }
     }
 }
 copyUnitTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
@@ -55,15 +59,16 @@ task copyLintBuildArtifacts(type: Copy) {
 copyLintBuildArtifacts.dependsOn createBuildArtifactsDirectory
 
 // Copies acceptance test reports to the 'artifacts' directory
-task copyAcceptanceTestBuildArtifacts << { task ->
-    // copy acceptance test reports
-    srcPath = "AcceptanceTests/Test-Reports"
-    task.project.exec {
-        commandLine = ['cp', '-R', srcPath, 'artifacts']
+task copyAcceptanceTestBuildArtifacts { task ->
+    doLast {
+        // copy acceptance test reports
+        srcPath = "AcceptanceTests/Test-Reports"
+        task.project.exec {
+            commandLine = ['cp', '-R', srcPath, 'artifacts']
+        }
     }
 }
 copyAcceptanceTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
-
 
 // Disables preDex which reduces the amount of memory required to build an APK. This is important
 // for CI where there is a memory limit. PreDex is also not useful in CI where a new build is
