@@ -22,16 +22,18 @@ buildscript {
 }
 
 // task that creates 'artifacts' directory
-task createBuildArtifactsDirectory << { task ->
-    def hashPipe = new ByteArrayOutputStream()
-    task.project.exec {
-        commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
-        standardOutput = hashPipe
-    }
+task createBuildArtifactsDirectory { task ->
+    doLast {
+        def hashPipe = new ByteArrayOutputStream()
+        task.project.exec {
+            commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
+            standardOutput = hashPipe
+        }
 
-    def destDir = "artifacts"
-    task.project.exec {
-        commandLine = ['mkdir', '-p', destDir]
+        def destDir = "artifacts"
+        task.project.exec {
+            commandLine = ['mkdir', '-p', destDir]
+        }
     }
 }
 
@@ -63,7 +65,6 @@ task copyAcceptanceTestBuildArtifacts << { task ->
     }
 }
 copyAcceptanceTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
-
 
 // Disables preDex which reduces the amount of memory required to build an APK. This is important
 // for CI where there is a memory limit. PreDex is also not useful in CI where a new build is
