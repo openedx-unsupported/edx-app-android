@@ -38,11 +38,13 @@ task createBuildArtifactsDirectory { task ->
 }
 
 // Copies unit test reports to the 'artifacts' directory
-task copyUnitTestBuildArtifacts << { task ->
-    // copy unit test reports
-    def srcPath = "OpenEdXMobile/build/reports"
-    task.project.exec {
-        commandLine = ['cp', '-R', srcPath, 'artifacts']
+task copyUnitTestBuildArtifacts { task ->
+    doLast {
+        // copy unit test reports
+        def srcPath = "OpenEdXMobile/build/reports"
+        task.project.exec {
+            commandLine = ['cp', '-R', srcPath, 'artifacts']
+        }
     }
 }
 copyUnitTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
