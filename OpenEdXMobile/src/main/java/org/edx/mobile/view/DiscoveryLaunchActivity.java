@@ -20,7 +20,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     @NonNull
     @Override
     protected DiscoveryLaunchPresenter createPresenter(@Nullable Bundle savedInstanceState) {
-        return new DiscoveryLaunchPresenter(environment.getLoginPrefs(), environment.getConfig().getCourseDiscoveryConfig());
+        return new DiscoveryLaunchPresenter(environment.getLoginPrefs(), environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig());
     }
 
     @NonNull

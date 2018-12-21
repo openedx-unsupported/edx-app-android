@@ -54,6 +54,7 @@ public class Router {
     public static final String EXTRA_IS_VIDEOS_MODE = "videos_mode";
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
     public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
+    public static final String EXTRA_PATH_ID = "path_id";
 
     @Inject
     Config config;
@@ -79,8 +80,14 @@ public class Router {
 
     public void showCourseInfo(Activity sourceActivity, String pathId) {
         Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
-        courseInfoIntent.putExtra(CourseInfoActivity.EXTRA_PATH_ID, pathId);
+        courseInfoIntent.putExtra(EXTRA_PATH_ID, pathId);
         sourceActivity.startActivity(courseInfoIntent);
+    }
+
+    public void showProgramInfo(Activity sourceActivity, String pathId) {
+        Intent programInfoIntent = new Intent(sourceActivity, ProgramInfoActivity.class);
+        programInfoIntent.putExtra(EXTRA_PATH_ID, pathId);
+        sourceActivity.startActivity(programInfoIntent);
     }
 
     public void showSettings(Activity sourceActivity) {
@@ -323,23 +330,18 @@ public class Router {
     public void showCourseDetail(@NonNull Context context, @NonNull CourseDetail courseDetail) {
         context.startActivity(CourseDetailActivity.newIntent(context, courseDetail));
     }
-    
+
     public void showFindCourses(@NonNull Context context, @Nullable String searchQuery) {
-        if (!config.getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+        if (!config.getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
             throw new RuntimeException("Course discovery is not enabled");
         }
-        final Intent findCoursesIntent;
-        if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
-            findCoursesIntent = new Intent(context, DiscoverCoursesActivity.class);
-            if (searchQuery != null) {
-                findCoursesIntent.putExtra(Router.EXTRA_SEARCH_QUERY, searchQuery);
-            }
-        } else {
-            findCoursesIntent = NativeFindCoursesActivity.newIntent(context);
+        final Intent discoveryIntent = DiscoveryActivity.newIntent(context);
+        if (searchQuery != null) {
+            discoveryIntent.putExtra(Router.EXTRA_SEARCH_QUERY, searchQuery);
         }
         //Add this flag as multiple activities need to be created
-        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(findCoursesIntent);
+        discoveryIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(discoveryIntent);
     }
 
     public void showWhatsNewActivity(@NonNull Activity activity) {

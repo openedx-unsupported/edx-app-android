@@ -1,12 +1,9 @@
 package org.edx.mobile.view;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -24,9 +21,7 @@ import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.interfaces.WebViewStatusListener;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.WebViewUtil;
-import org.edx.mobile.util.links.DefaultActionListener;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -34,22 +29,18 @@ import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
-public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFragment
+/**
+ * An abstract fragment providing basic functionality for URL interception, its follow up action,
+ * error handling and show page progress based on page status.
+ */
+public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
         implements WebViewStatusListener, RefreshListener {
     protected final Logger logger = new Logger(getClass().getName());
 
-    private static final int LOG_IN_REQUEST_CODE = 42;
-    private static final String INSTANCE_COURSE_ID = "enrollCourseId";
-    private static final String INSTANCE_EMAIL_OPT_IN = "enrollEmailOptIn";
-
     private EdxWebView webView;
-    private ProgressBar progressWheel;
-    private DefaultActionListener defaultActionListener;
+    protected ProgressBar progressWheel;
 
     protected FullScreenErrorNotification errorNotification;
-
-    private String lastClickEnrollCourseId;
-    private boolean lastClickEnrollEmailOptIn;
 
     @Inject
     protected IEdxEnvironment environment;
@@ -70,11 +61,6 @@ public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFrag
         progressWheel = (ProgressBar) view.findViewById(R.id.loading_indicator);
 
         initWebView();
-
-        if (null != savedInstanceState) {
-            lastClickEnrollCourseId = savedInstanceState.getString(INSTANCE_COURSE_ID);
-            lastClickEnrollEmailOptIn = savedInstanceState.getBoolean(INSTANCE_EMAIL_OPT_IN);
-        }
     }
 
     @Override
@@ -96,40 +82,12 @@ public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFrag
     }
 
     private void initWebView() {
-        defaultActionListener = new DefaultActionListener(getActivity(), progressWheel,
-                new DefaultActionListener.EnrollCallback() {
-                    @Override
-                    public void onResponse(@NonNull EnrolledCoursesResponse course) {
-
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Throwable error) {
-                    }
-
-                    @Override
-                    public void onUserNotLoggedIn(@NonNull String courseId, boolean emailOptIn) {
-                        lastClickEnrollCourseId = courseId;
-                        lastClickEnrollEmailOptIn = emailOptIn;
-                        startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
-                    }
-                });
-
         client = new URLInterceptorWebViewClient(getActivity(), webView);
 
         // if all the links are to be treated as external
         client.setAllLinksAsExternal(isAllLinksExternal());
 
-        client.setActionListener(defaultActionListener);
         client.setPageStatusListener(pageStatusListener);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            defaultActionListener.onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
-        }
     }
 
     /**
@@ -170,13 +128,6 @@ public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFrag
     @Override
     public void clearWebView() {
         WebViewUtil.clearWebviewHtml(webView);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(INSTANCE_COURSE_ID, lastClickEnrollCourseId);
-        outState.putBoolean(INSTANCE_EMAIL_OPT_IN, lastClickEnrollEmailOptIn);
     }
 
     /**

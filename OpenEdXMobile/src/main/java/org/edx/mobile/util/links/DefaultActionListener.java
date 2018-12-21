@@ -77,7 +77,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
         switch (helper.authority) {
             case ENROLLED_PROGRAM_INFO: {
                 final CharSequence url = ResourceUtil.getFormattedString(
-                        environment.getConfig().getProgramConfig().getDetailUrlTemplate(),
+                        environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().getInfoUrlTemplate(),
                         WebViewLink.Param.PATH_ID,
                         helper.params.get(WebViewLink.Param.PATH_ID));
                 environment.getRouter().showAuthenticatedWebviewActivity(activity, url.toString(),
@@ -111,6 +111,15 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
                 if (!TextUtils.isEmpty(pathId)) {
                     logger.debug("PathId" + pathId);
                     environment.getRouter().showCourseInfo(activity, pathId);
+                }
+                break;
+            }
+            case PROGRAM_INFO: {
+                final String pathId = helper.params.get(WebViewLink.Param.PATH_ID);
+                if (!TextUtils.isEmpty(pathId)) {
+                    logger.debug("PathId" + pathId);
+                    // Program info coming soon
+                    environment.getRouter().showProgramInfo(activity, pathId);
                 }
                 break;
             }
