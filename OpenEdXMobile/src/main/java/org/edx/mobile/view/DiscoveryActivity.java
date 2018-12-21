@@ -1,6 +1,9 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
@@ -9,18 +12,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
-public class DiscoverCoursesActivity extends BaseSingleFragmentActivity implements ToolbarCallbacks {
+public class DiscoveryActivity extends BaseSingleFragmentActivity implements ToolbarCallbacks {
+    public static Intent newIntent(@NonNull Context context) {
+        return new Intent(context, DiscoveryActivity.class);
+    }
+
+    @Override
+    public Fragment getFirstFragment() {
+        final Fragment fragment = new MainDiscoveryFragment();
+        fragment.setArguments(getIntent().getExtras());
+        return fragment;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
         setTitle(R.string.label_discover);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
     }
 
     @Override
@@ -34,13 +45,6 @@ public class DiscoverCoursesActivity extends BaseSingleFragmentActivity implemen
         return R.layout.toolbar_with_profile_button;
     }
 
-    @Override
-    public Fragment getFirstFragment() {
-        final BaseFragment fragment = environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()
-                ? new WebViewDiscoverCoursesFragment() : new NativeFindCoursesFragment();
-        fragment.setArguments(getIntent().getExtras());
-        return fragment;
-    }
 
     @Override
     public void setTitle(int titleId) {

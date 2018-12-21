@@ -151,17 +151,17 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.DiscoverCoursesActivity"
-            android:label="@string/label_discover"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name=".view.ViewSubjectsActivity"
             android:label="@string/browse_by_subject"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
+            android:label="@string/label_discover"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.ProgramInfoActivity"
             android:label="@string/label_discover"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
@@ -177,9 +177,8 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.NativeFindCoursesActivity"
-            android:label="@string/label_find_courses"
-            android:screenOrientation="portrait"
+            android:name=".view.DiscoveryActivity"
+            android:label="@string/label_discover"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity

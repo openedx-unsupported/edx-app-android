@@ -513,6 +513,8 @@
     <string name="email_client_not_present">No e-mail clients installed</string>
     <!-- Search for a course prompt -->
     <string name="search_for_courses">Search for courses</string>
+    <!-- Search for a program prompt -->
+    <string name="search_for_programs" tools:ignore="MissingTranslation">Search for programs</string>
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->

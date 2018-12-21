@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/ll_subject_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/widget_margin"
+        android:layout_marginRight="@dimen/widget_margin"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_browse_subjects"
+            style="@style/regular_edx_gray_dark_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/widget_margin"
+            android:text="@string/browse_by_subject"
+            android:textSize="@dimen/edx_x_small" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_subjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/widget_margin"
+            android:layout_marginTop="@dimen/widget_margin" />
+
+        <include layout="@layout/edx_divider" />
+    </LinearLayout>
+
+</layout>
