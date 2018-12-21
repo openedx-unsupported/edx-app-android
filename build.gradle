@@ -59,11 +59,13 @@ task copyLintBuildArtifacts(type: Copy) {
 copyLintBuildArtifacts.dependsOn createBuildArtifactsDirectory
 
 // Copies acceptance test reports to the 'artifacts' directory
-task copyAcceptanceTestBuildArtifacts << { task ->
-    // copy acceptance test reports
-    srcPath = "AcceptanceTests/Test-Reports"
-    task.project.exec {
-        commandLine = ['cp', '-R', srcPath, 'artifacts']
+task copyAcceptanceTestBuildArtifacts { task ->
+    doLast {
+        // copy acceptance test reports
+        srcPath = "AcceptanceTests/Test-Reports"
+        task.project.exec {
+            commandLine = ['cp', '-R', srcPath, 'artifacts']
+        }
     }
 }
 copyAcceptanceTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
