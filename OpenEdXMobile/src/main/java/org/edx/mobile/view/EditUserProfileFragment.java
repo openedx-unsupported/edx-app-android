@@ -473,7 +473,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         }
         if (readOnly) {
             group.setEnabled(false);
-            view.setBackgroundColor(view.getResources().getColor(R.color.edx_brand_gray_x_back));
         } else {
             group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -501,7 +500,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                         .sizeDp(context, 24), null);
         if (readOnly) {
             textView.setEnabled(false);
-            textView.setBackgroundColor(textView.getResources().getColor(R.color.edx_brand_gray_x_back));
         } else {
             textView.setOnClickListener(onClickListener);
         }
