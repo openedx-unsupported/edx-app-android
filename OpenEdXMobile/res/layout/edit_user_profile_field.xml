@@ -10,4 +10,5 @@
     android:background="?android:attr/selectableItemBackground"
     android:textSize="@dimen/edx_base"
     android:textColor="@color/edx_brand_gray_base"
-    tools:text="Birth year: 2008" />
+    tools:text="Birth year: 2008"
+    android:focusable="true" />

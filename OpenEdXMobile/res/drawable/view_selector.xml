@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/edx_brand_gray_back" android:state_pressed="true"/>
+    <item android:drawable="@drawable/focus_disabled_drawable" android:state_enabled="false" android:state_focused="true"/>
+    <item android:drawable="@color/edx_brand_gray_x_back" android:state_enabled="false"/>
+    <item android:drawable="@drawable/focus_drawable" android:state_focused="true"/>
     <item android:drawable="@android:color/transparent"/>
 </selector>
