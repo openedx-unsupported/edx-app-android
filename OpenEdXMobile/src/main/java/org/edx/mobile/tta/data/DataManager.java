@@ -3,6 +3,7 @@ package org.edx.mobile.tta.data;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import org.edx.mobile.core.EdxDataManager;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
@@ -29,6 +30,8 @@ public class DataManager {
     private static DataManager mDataManager;
     private IRemoteDataSource mRemoteDataSource;
     private ILocalDataSource mLocalDataSource;
+    @Inject
+    EdxDataManager edxDataManager;
 
     private AppPref mAppPref;
     private LoginPrefs loginPrefs;

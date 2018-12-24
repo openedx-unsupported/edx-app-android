@@ -106,6 +106,7 @@ public class EdxDefaultModule extends AbstractModule {
         //bind(AppPref.class).toProvider(AppPref.Provider.class);
         //bind(DataManager.class).toProvider(DataManager.Provider.class);
 
+       //ac bind(IEdxDataManager.class).to(EdxDataManager.class);
         requestStaticInjection(CallUtil.class, BrowserUtil.class, MediaConsentUtils.class,
                 DiscussionTextUtils.class, AppStoreUtils.class);
     }
