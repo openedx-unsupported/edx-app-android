@@ -74,6 +74,7 @@
                     android:paddingLeft="@dimen/edx_margin"
                     android:paddingRight="@dimen/edx_margin"
                     android:text="@string/edit_user_profile_change_photo"
+                    android:focusable="true"
                     android:textColor="@color/disableable_button_text"
                     android:textSize="@dimen/edx_x_small" />
             </LinearLayout>

@@ -1,48 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_checked="true" android:state_enabled="false">
-        <shape
-            android:shape="rectangle">
+    <item android:state_checked="true" android:state_enabled="false" android:state_focused="true">
+        <shape android:shape="rectangle">
             <solid android:color="@color/edx_brand_gray_back" />
-            <stroke
-                android:width="@dimen/edx_hairline"
-                android:color="@color/edx_brand_gray_back" />
-            <corners
-                android:bottomLeftRadius="@dimen/edx_box_radius"
-                android:bottomRightRadius="0dp"
-                android:radius="@dimen/edx_box_radius"
-                android:topLeftRadius="@dimen/edx_box_radius"
-                android:topRightRadius="0dp" />
+            <stroke android:width="@dimen/edx_line" android:color="@color/black" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="0dp" android:radius="@dimen/edx_box_radius" android:topLeftRadius="@dimen/edx_box_radius" android:topRightRadius="0dp" />
+        </shape>
+    </item>
+    <item android:state_checked="true" android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/edx_brand_gray_back" />
+            <stroke android:width="@dimen/edx_hairline" android:color="@color/edx_brand_gray_back" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="0dp" android:radius="@dimen/edx_box_radius" android:topLeftRadius="@dimen/edx_box_radius" android:topRightRadius="0dp" />
+        </shape>
+    </item>
+    <item android:state_checked="true" android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/edx_brand_primary_base" />
+            <stroke android:width="@dimen/edx_line" android:color="@color/black" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="0dp" android:radius="@dimen/edx_box_radius" android:topLeftRadius="@dimen/edx_box_radius" android:topRightRadius="0dp" />
         </shape>
     </item>
     <item android:state_checked="true">
-        <shape
-            android:shape="rectangle">
+        <shape android:shape="rectangle">
             <solid android:color="@color/edx_brand_primary_base" />
-            <stroke
-                android:width="@dimen/edx_hairline"
-                android:color="@color/edx_brand_primary_base" />
-            <corners
-                android:bottomLeftRadius="@dimen/edx_box_radius"
-                android:bottomRightRadius="0dp"
-                android:radius="@dimen/edx_box_radius"
-                android:topLeftRadius="@dimen/edx_box_radius"
-                android:topRightRadius="0dp" />
+            <stroke android:width="@dimen/edx_hairline" android:color="@color/edx_brand_primary_base" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="0dp" android:radius="@dimen/edx_box_radius" android:topLeftRadius="@dimen/edx_box_radius" android:topRightRadius="0dp" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />
+            <stroke android:width="@dimen/edx_line" android:color="@color/black" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="0dp" android:radius="@dimen/edx_box_radius" android:topLeftRadius="@dimen/edx_box_radius" android:topRightRadius="0dp" />
         </shape>
     </item>
     <item>
-        <shape
-            android:shape="rectangle">
+        <shape android:shape="rectangle">
             <solid android:color="@color/white" />
-            <stroke
-                android:width="@dimen/edx_hairline"
-                android:color="@color/edx_brand_gray_back" />
-            <corners
-                android:bottomLeftRadius="@dimen/edx_box_radius"
-                android:bottomRightRadius="0dp"
-                android:radius="@dimen/edx_box_radius"
-                android:topLeftRadius="@dimen/edx_box_radius"
-                android:topRightRadius="0dp" />
+            <stroke android:width="@dimen/edx_hairline" android:color="@color/edx_brand_gray_back" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="0dp" android:radius="@dimen/edx_box_radius" android:topLeftRadius="@dimen/edx_box_radius" android:topRightRadius="0dp" />
         </shape>
     </item>
 </selector>
