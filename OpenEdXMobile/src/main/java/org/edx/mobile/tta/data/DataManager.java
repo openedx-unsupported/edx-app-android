@@ -4,6 +4,8 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 
 import org.edx.mobile.core.EdxDataManager;
+import org.edx.mobile.core.IEdxDataManager;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
@@ -26,17 +28,18 @@ import io.reactivex.Observable;
  * Created by Arjun on 2018/9/18.
  */
 
-public class DataManager {
+public class DataManager extends  BaseRoboInjector {
     private static DataManager mDataManager;
     private IRemoteDataSource mRemoteDataSource;
     private ILocalDataSource mLocalDataSource;
     @Inject
-    EdxDataManager edxDataManager;
+    IEdxDataManager edxDataManager;
 
     private AppPref mAppPref;
     private LoginPrefs loginPrefs;
 
     private DataManager(Context context, IRemoteDataSource remoteDataSource, ILocalDataSource localDataSource) {
+        super(context);
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
 
