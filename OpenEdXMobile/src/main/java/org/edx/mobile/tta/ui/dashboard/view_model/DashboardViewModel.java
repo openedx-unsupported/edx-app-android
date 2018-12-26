@@ -4,6 +4,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.listing.ListingFragment;
+import org.edx.mobile.tta.utils.ActivityUtil;
 
 public class DashboardViewModel extends BaseViewModel {
     public DashboardViewModel(BaseVMActivity activity) {
@@ -12,9 +13,14 @@ public class DashboardViewModel extends BaseViewModel {
     }
 
     public void showLibrary(){
-        mActivity.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.dashboard_fragment, new ListingFragment(), ListingFragment.TAG)
-                .commit();
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                new ListingFragment(),
+                R.id.dashboard_fragment,
+                ListingFragment.TAG,
+                false,
+                null
+        );
     }
 
     public void showFeed(){

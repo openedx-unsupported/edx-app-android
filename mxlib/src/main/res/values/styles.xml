@@ -1,0 +1,5 @@
+<resources>
+    <style name="mx_more_button_style" parent="Base.Widget.AppCompat.Button.Borderless.Colored">
+
+    </style>
+</resources>

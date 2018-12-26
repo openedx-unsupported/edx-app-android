@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.maurya.mx.mxlib.core.MxBaseAdapter;
+import com.maurya.mx.mxlib.core.MxFiniteAdapter;
+import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowContentBinding;
@@ -22,7 +25,6 @@ import org.edx.mobile.databinding.TRowContentSliderBinding;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseRecyclerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.interfaces.OnRecyclerItemClickListener;
 import org.edx.mobile.tta.ui.listing.model.Content;
 import org.edx.mobile.tta.ui.listing.model.ContentList;
 
@@ -39,16 +41,16 @@ public class ListingTabViewModel extends BaseViewModel {
     public ListingTabViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
         contents = new ArrayList<>();
-        contents.add(new Content("Content 1", null, "Category"));
-        contents.add(new Content("Content 2", null, "Category"));
-        contents.add(new Content("Content 3", null, "Category"));
-        contents.add(new Content("Content 4", null, "Category"));
-        contents.add(new Content("Content 5", null, "Category"));
-        contents.add(new Content("Content 6", null, "Category"));
-        contents.add(new Content("Content 7", null, "Category"));
-        contents.add(new Content("Content 8", null, "Category"));
-        contents.add(new Content("Content 9", null, "Category"));
-        contents.add(new Content("Content 10", null, "Category"));
+        contents.add(new Content("Content 1", null, "Category A"));
+        contents.add(new Content("Content 2", null, "Category B"));
+        contents.add(new Content("Content 3", null, "Category C"));
+        contents.add(new Content("Content 4", null, "Category D"));
+        contents.add(new Content("Content 5", null, "Category A"));
+        contents.add(new Content("Content 6", null, "Category B"));
+        contents.add(new Content("Content 7", null, "Category C"));
+        contents.add(new Content("Content 8", null, "Category D"));
+        contents.add(new Content("Content 9", null, "Category A"));
+        contents.add(new Content("Content 10", null, "Category B"));
 
         contentLists = new ArrayList<>();
         contentLists.add(new ContentList("Slider list"));
@@ -63,7 +65,7 @@ public class ListingTabViewModel extends BaseViewModel {
         layoutManager = new LinearLayoutManager(mActivity);
     }
 
-    public class ListingRecyclerAdapter extends BaseRecyclerAdapter<ContentList> {
+    public class ListingRecyclerAdapter extends MxBaseAdapter<ContentList> {
         public ListingRecyclerAdapter(Context context) {
             super(context);
         }
@@ -111,7 +113,6 @@ public class ListingTabViewModel extends BaseViewModel {
             } else if (binding instanceof TRowContentListBinding){
 
                 TRowContentListBinding listBinding = (TRowContentListBinding) binding;
-                listBinding.contentListTitle.setText(model.getTitle());
                 ContentListAdapter listAdapter = new ContentListAdapter(mActivity);
                 listAdapter.addAll(contents);
                 listAdapter.setItemClickListener(new OnRecyclerItemClickListener<Content>() {
@@ -120,8 +121,13 @@ public class ListingTabViewModel extends BaseViewModel {
                         Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
                     }
                 });
-                listBinding.contentFiniteList.setLayoutManager(
-                        new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
+                listBinding.contentFiniteList.setTitleText(model.getTitle());
+                listBinding.contentFiniteList.setOnMoreButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mActivity, "View more of " + model.getTitle(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 listBinding.contentFiniteList.setAdapter(listAdapter);
 
             }
@@ -137,7 +143,7 @@ public class ListingTabViewModel extends BaseViewModel {
         }
     }
 
-    public class ContentListAdapter extends BaseRecyclerAdapter<Content>{
+    public class ContentListAdapter extends MxFiniteAdapter<Content> {
 
         public ContentListAdapter(Context context) {
             super(context);
@@ -157,11 +163,6 @@ public class ListingTabViewModel extends BaseViewModel {
                     }
                 });
             }
-        }
-
-        @Override
-        public int getItemLayout(int position) {
-            return R.layout.t_row_content;
         }
     }
 }

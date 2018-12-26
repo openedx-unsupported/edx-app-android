@@ -13,7 +13,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/content_finite_list"
+            app:mx_itemLayout="@layout/t_row_content"
+            app:mx_moreButtonText="@string/view_more"
+            app:mx_moreButtomDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
+            app:mx_moreButtonTextColor="@color/primary_cyan"
+            app:mx_moreButtonTextSize="@dimen/_12px_sp"
+            app:mx_moreButtonTextFont="@font/hind_medium"
+            app:mx_moreButtonMarginEnd="20dp"
+            app:mx_titleTextColor="@color/gray_5"
+            app:mx_titleTextSize="@dimen/_14px_sp"
+            app:mx_titleTextFont="@font/hind_semibold"
+            app:mx_titleMarginStart="20dp"
+            app:mx_itemLimit="5" />
+
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -46,7 +63,7 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/content_finite_list"/>
+            android:id="@+id/content_finite_list"/>-->
 
     </LinearLayout>
 

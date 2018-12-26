@@ -23,6 +23,17 @@ public class ActivityUtil {
         transaction.commit();
     }
 
+    public static void replaceFragmentInActivity(@NonNull FragmentManager fragmentManager,
+                                             @NonNull Fragment fragment, int frameId, String tag,
+                                                 boolean addToBackStack, String stackName) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(frameId, fragment, tag);
+        if (addToBackStack){
+            transaction.addToBackStack(stackName);
+        }
+        transaction.commit();
+    }
+
     public static void gotoPage(Context context, Class<?> activityClass) {
         context.startActivity(new Intent(context, activityClass));
     }

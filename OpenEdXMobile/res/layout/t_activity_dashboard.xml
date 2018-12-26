@@ -22,8 +22,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/_50px"
-            android:elevation="@dimen/_2px"
+            android:minHeight="50dp"
+            android:elevation="2dp"
             android:background="@drawable/bottom_bar_nav_background"
             android:orientation="horizontal">
 
@@ -38,7 +38,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_horizontal"
                 android:drawableTop="@drawable/library"
-                android:drawablePadding="@dimen/_4px"
+                android:drawablePadding="4dp"
                 android:onClick="@{()->viewModel.showLibrary()}"/>
 
             <TextView
@@ -52,7 +52,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_horizontal"
                 android:drawableTop="@drawable/feed"
-                android:drawablePadding="@dimen/_4px"
+                android:drawablePadding="4dp"
                 android:onClick="@{()->viewModel.showFeed()}"/>
 
             <TextView
@@ -66,7 +66,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_horizontal"
                 android:drawableTop="@drawable/search"
-                android:drawablePadding="@dimen/_4px"
+                android:drawablePadding="4dp"
                 android:onClick="@{()->viewModel.showSearch()}"/>
 
             <TextView
@@ -80,7 +80,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_horizontal"
                 android:drawableTop="@drawable/agenda"
-                android:drawablePadding="@dimen/_4px"
+                android:drawablePadding="4dp"
                 android:onClick="@{()->viewModel.showAgenda()}"/>
 
             <TextView
@@ -94,7 +94,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_horizontal"
                 android:drawableTop="@drawable/profile"
-                android:drawablePadding="@dimen/_4px"
+                android:drawablePadding="4dp"
                 android:onClick="@{()->viewModel.showProfile()}"/>
 
         </LinearLayout>

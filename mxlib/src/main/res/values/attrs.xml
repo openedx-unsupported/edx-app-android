@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MxRecyclerView">
+        <attr name="mx_itemLayout" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="MxFiniteRecyclerView">
+
+        <attr name="mx_titleText" format="string"/>
+        <attr name="mx_titleDrawableStart" format="reference" />
+        <attr name="mx_titleDrawableTop" format="reference" />
+        <attr name="mx_titleDrawableEnd" format="reference" />
+        <attr name="mx_titleDrawableBottom" format="reference" />
+        <attr name="mx_titleTextSize" format="dimension" />
+        <attr name="mx_titleTextColor" format="color"/>
+        <attr name="mx_titleTextFont" format="reference"/>
+        <attr name="mx_titleMarginStart" format="dimension" />
+        <attr name="mx_titleMarginTop" format="dimension" />
+        <attr name="mx_titleMarginEnd" format="dimension" />
+        <attr name="mx_titleMarginBottom" format="dimension" />
+
+        <attr name="mx_moreButtonText" format="string"/>
+        <attr name="mx_moreButtomDrawableStart" format="reference" />
+        <attr name="mx_moreButtomDrawableTop" format="reference" />
+        <attr name="mx_moreButtomDrawableEnd" format="reference" />
+        <attr name="mx_moreButtomDrawableBottom" format="reference" />
+        <attr name="mx_moreButtonTextSize" format="dimension" />
+        <attr name="mx_moreButtonTextColor" format="color"/>
+        <attr name="mx_moreButtonTextFont" format="reference"/>
+        <attr name="mx_moreButtonMarginStart" format="dimension" />
+        <attr name="mx_moreButtonMarginTop" format="dimension" />
+        <attr name="mx_moreButtonMarginEnd" format="dimension" />
+        <attr name="mx_moreButtonMarginBottom" format="dimension" />
+
+        <attr name="mx_itemLimit" format="integer"/>
+        <attr name="mx_headerLayout" format="reference" />
+        <attr name="mx_itemLayout" />
+        <attr name="mx_footerLayout" format="reference" />
+        <attr name="mx_canShowVertical" format="boolean" />
+        <attr name="mx_hideTitleLayout" format="boolean" />
+        <attr name="mx_titleDivider" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="EmptyView">
+        <attr name="mx_message" format="string"/>
+        <attr name="mx_image" format="reference" />
+    </declare-styleable>
+</resources>

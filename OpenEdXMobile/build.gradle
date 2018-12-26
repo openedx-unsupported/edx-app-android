@@ -129,6 +129,9 @@ dependencies {
     // with module updates.
     implementation project (':android-iconify-fontawesome')
 
+    // Mx module for listing
+    implementation project (':mxlib')
+
     //MVVM ::Start Arjun
     implementation "com.android.support:support-vector-drawable:${supportLibraryVersion}"
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
@@ -189,7 +192,7 @@ dependencies {
     implementation ('com.github.bumptech.glide:okhttp3-integration:1.4.0'){
         exclude group: 'glide-parent'
     }
-    implementation 'de.hdodenhof:circleimageview:2.0.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.1.0'
 
     // Segment Library
