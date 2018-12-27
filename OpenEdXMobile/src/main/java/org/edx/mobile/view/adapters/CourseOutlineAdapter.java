@@ -1,5 +1,6 @@
 package org.edx.mobile.view.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -24,6 +25,7 @@ import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.RoboAppCompatActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -185,15 +187,18 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     break;
                 }
                 case SectionRow.BULK_DOWNLOAD: {
-                    final FrameLayout layout = new FrameLayout(parentFragment.getContext());
-                    final int id = UiUtil.generateViewId();
-                    layout.setId(id);
+                    final Activity activity = parentFragment.getActivity();
+                    if (activity != null && ((RoboAppCompatActivity) activity).isInForeground()) {
+                        final FrameLayout layout = new FrameLayout(parentFragment.getContext());
+                        final int id = UiUtil.generateViewId();
+                        layout.setId(id);
 
-                    final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
-                    parentFragment.getChildFragmentManager().
-                            beginTransaction().replace(id, fragment).commit();
-                    convertView = layout;
-                    convertView.setTag(fragment);
+                        final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
+                        parentFragment.getChildFragmentManager().
+                                beginTransaction().replace(id, fragment).commit();
+                        convertView = layout;
+                        convertView.setTag(fragment);
+                    }
                     break;
                 }
                 default: {
