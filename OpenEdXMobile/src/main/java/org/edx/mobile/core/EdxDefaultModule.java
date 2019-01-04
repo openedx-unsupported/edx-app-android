@@ -1,9 +1,7 @@
 package org.edx.mobile.core;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -32,13 +30,7 @@ import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
-import org.edx.mobile.tta.data.DataManager;
-import org.edx.mobile.tta.data.local.db.ILocalDataSource;
-import org.edx.mobile.tta.data.local.db.LocalDataSource;
-import org.edx.mobile.tta.data.local.db.TADatabase;
-import org.edx.mobile.tta.data.pref.AppPref;
-import org.edx.mobile.tta.data.remote.IRemoteDataSource;
-import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
+import org.edx.mobile.tta.data.remote.service.TaService;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.BrowserUtil;
@@ -105,6 +97,8 @@ public class EdxDefaultModule extends AbstractModule {
 
         //bind(AppPref.class).toProvider(AppPref.Provider.class);
         //bind(DataManager.class).toProvider(DataManager.Provider.class);
+
+        bind(TaService.class).toProvider(TaService.TaProvider.class);
 
         bind(IEdxDataManager.class).to(EdxDataManager.class);
         requestStaticInjection(CallUtil.class, BrowserUtil.class, MediaConsentUtils.class,

@@ -18,86 +18,20 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/dashboard_fragment"/>
-        
-        <LinearLayout
+
+        <android.support.design.widget.BottomNavigationView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="50dp"
-            android:elevation="2dp"
+            app:elevation="2dp"
             android:background="@drawable/bottom_bar_nav_background"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/library"
-                android:textColor="@color/gray_5"
-                android:textSize="10sp"
-                android:fontFamily="@font/hind_medium"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:drawableTop="@drawable/library"
-                android:drawablePadding="4dp"
-                android:onClick="@{()->viewModel.showLibrary()}"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/feed"
-                android:textColor="@color/gray_5"
-                android:textSize="10sp"
-                android:fontFamily="@font/hind_medium"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:drawableTop="@drawable/feed"
-                android:drawablePadding="4dp"
-                android:onClick="@{()->viewModel.showFeed()}"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/search"
-                android:textColor="@color/gray_5"
-                android:textSize="10sp"
-                android:fontFamily="@font/hind_medium"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:drawableTop="@drawable/search"
-                android:drawablePadding="4dp"
-                android:onClick="@{()->viewModel.showSearch()}"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/agenda"
-                android:textColor="@color/gray_5"
-                android:textSize="10sp"
-                android:fontFamily="@font/hind_medium"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:drawableTop="@drawable/agenda"
-                android:drawablePadding="4dp"
-                android:onClick="@{()->viewModel.showAgenda()}"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/profile"
-                android:textColor="@color/gray_5"
-                android:textSize="10sp"
-                android:fontFamily="@font/hind_medium"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:drawableTop="@drawable/profile"
-                android:drawablePadding="4dp"
-                android:onClick="@{()->viewModel.showProfile()}"/>
-
-        </LinearLayout>
+            app:menu="@menu/dashboard_bottom_nav_menu"
+            app:itemTextColor="@color/dashboard_bottom_nav_item_color_selector"
+            app:itemIconTint="@color/dashboard_bottom_nav_item_color_selector"
+            bottom_nav_item_selected_listener="@{viewModel.itemSelectedListener}"
+            bottom_nav_item_selected_id="@{viewModel.selectedId}"
+            bottom_nav_enable_shift_mode="@{viewModel.navShiftMode}"
+            android:textSize="10sp" />
 
     </LinearLayout>
 

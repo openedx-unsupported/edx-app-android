@@ -38,9 +38,6 @@ com_crashlytics_export_strings.xml
 
 # Google Firebase
 *google-services.json
-
-# Other files and directories to be ignored
-OpenEdXMobile/default_config/local.yaml
 bin
 gen
 .classpath
@@ -63,3 +60,6 @@ gradle.properties
 
 # reports directory
 /artifacts
+# Other files and directories to be ignored
+OpenEdXMobile/default_config/local.yaml
+OpenEdXMobile/default_config/config.yaml

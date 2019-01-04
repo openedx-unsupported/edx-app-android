@@ -1,10 +1,11 @@
 package org.edx.mobile.tta.data.local.db;
 
 import org.edx.mobile.tta.data.local.db.table.User;
+import org.edx.mobile.tta.data.model.ConfigurationResponse;
+import org.edx.mobile.tta.data.local.db.table.Content;
+
 import java.util.List;
 import java.util.concurrent.Callable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 
@@ -24,7 +25,7 @@ public class LocalDataSource implements ILocalDataSource {
         return Observable.fromCallable(new Callable<List<User>>() {
             @Override
             public List<User> call() throws Exception {
-                return mAppDatabase.userDao().loadAll();
+                return mAppDatabase.userDao().getAll();
             }
         });
     }
@@ -38,5 +39,32 @@ public class LocalDataSource implements ILocalDataSource {
                 return true;
             }
         });
+    }
+
+    @Override
+    public ConfigurationResponse getConfiguration() {
+        ConfigurationResponse response = new ConfigurationResponse();
+        response.setCategory(mAppDatabase.categoryDao().getAll());
+        response.setList(mAppDatabase.contentListDao().getAll());
+        response.setSource(mAppDatabase.sourceDao().getAll());
+
+        return response;
+    }
+
+    @Override
+    public void insertConfiguration(ConfigurationResponse response) {
+        mAppDatabase.categoryDao().insert(response.getCategory());
+        mAppDatabase.contentListDao().insert(response.getList());
+        mAppDatabase.sourceDao().insert(response.getSource());
+    }
+
+    @Override
+    public List<Content> getContents() {
+        return mAppDatabase.contentDao().getAll();
+    }
+
+    @Override
+    public void insertContents(List<Content> contents) {
+        mAppDatabase.contentDao().insert(contents);
     }
 }

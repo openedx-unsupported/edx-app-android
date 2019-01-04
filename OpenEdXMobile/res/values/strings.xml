@@ -703,6 +703,8 @@
     <string name="hois">HOIS</string>
     <string name="toolkit">Toolkit</string>
     <string name="view_more">View More</string>
+
+    <string name="no_connection_exception">No Internet Connection</string>
     <!-- TTA strings end -->
 
 </resources>

@@ -28,6 +28,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.profiles.UserProfileActivity;
+import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;
@@ -99,7 +100,7 @@ public class Router {
     }
 
     public void showSplashScreen(Context context) {
-        final Intent launchIntent = new Intent(context, SplashActivity.class);
+        final Intent launchIntent = new Intent(context, SigninRegisterActivity.class);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(launchIntent);
     }

@@ -36,7 +36,7 @@ import static org.edx.mobile.http.constants.ApiConstants.PARAM_PAGE_SIZE;
 
 public interface DiscussionService {
     /**
-     * A RoboGuice Provider implementation for DiscussionService.
+     * A RoboGuice TaProvider implementation for DiscussionService.
      */
     class Provider implements com.google.inject.Provider<DiscussionService> {
         @Inject

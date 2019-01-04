@@ -25,7 +25,7 @@ import static org.edx.mobile.http.constants.ApiConstants.PARAM_PAGE_SIZE;
 
 public interface UserService {
     /**
-     * A RoboGuice Provider implementation for UserService.
+     * A RoboGuice TaProvider implementation for UserService.
      */
     class Provider implements com.google.inject.Provider<UserService> {
         @Inject

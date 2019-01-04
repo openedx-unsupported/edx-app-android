@@ -22,47 +22,75 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
+import org.edx.mobile.tta.data.enums.ContentListType;
+import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
-import org.edx.mobile.tta.ui.base.mvvm.BaseRecyclerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.listing.model.Content;
-import org.edx.mobile.tta.ui.listing.model.ContentList;
+import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.ContentList;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ListingTabViewModel extends BaseViewModel {
 
-    private List<Content> contents;
+    private ConfigurationResponse cr;
+    private Category category;
     private List<ContentList> contentLists;
+
+    private Map<Long, List<Content>> contentListMap;
+    private Map<Long, Source> sourceMap;
+
     public ListingRecyclerAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
 
-    public ListingTabViewModel(Context context, TaBaseFragment fragment) {
+    public ListingTabViewModel(Context context, TaBaseFragment fragment, ConfigurationResponse cr, Category category, List<Content> contents) {
         super(context, fragment);
-        contents = new ArrayList<>();
-        contents.add(new Content("Content 1", null, "Category A"));
-        contents.add(new Content("Content 2", null, "Category B"));
-        contents.add(new Content("Content 3", null, "Category C"));
-        contents.add(new Content("Content 4", null, "Category D"));
-        contents.add(new Content("Content 5", null, "Category A"));
-        contents.add(new Content("Content 6", null, "Category B"));
-        contents.add(new Content("Content 7", null, "Category C"));
-        contents.add(new Content("Content 8", null, "Category D"));
-        contents.add(new Content("Content 9", null, "Category A"));
-        contents.add(new Content("Content 10", null, "Category B"));
+        this.cr = cr;
+        this.category = category;
 
+//        contentLists = cr.getList();
         contentLists = new ArrayList<>();
-        contentLists.add(new ContentList("Slider list"));
-        contentLists.add(new ContentList("Content List 1"));
-        contentLists.add(new ContentList("Content List 2"));
-        contentLists.add(new ContentList("Content List 3"));
-        contentLists.add(new ContentList("Content List 4"));
-        contentLists.add(new ContentList("Content List 5"));
+        for (ContentList list: cr.getList()){
+            if (list.getCategory() == category.getId()){
+                contentLists.add(list);
+            }
+        }
+        Collections.sort(contentLists);
+        contentListMap = new HashMap<>();
+        sourceMap = new HashMap<>();
+        setContents(contents);
+
+        for (Source source: cr.getSource()){
+            sourceMap.put(source.getId(), source);
+        }
 
         adapter = new ListingRecyclerAdapter(mActivity);
         adapter.addAll(contentLists);
         layoutManager = new LinearLayoutManager(mActivity);
+    }
+
+    private void setContents(List<Content> allContents){
+
+        for (Content content: allContents){
+            if (content.getSource() == category.getSource() || category.getSource() == -1) {
+                for (Long listId: content.getLists()){
+                    if (contentListMap.containsKey(listId)){
+                        contentListMap.get(listId).add(content);
+                    } else {
+                        List<Content> l = new ArrayList<>();
+                        l.add(content);
+                        contentListMap.put(listId, l);
+                    }
+                }
+            }
+        }
+
     }
 
     public class ListingRecyclerAdapter extends MxBaseAdapter<ContentList> {
@@ -78,7 +106,7 @@ public class ListingTabViewModel extends BaseViewModel {
                 sliderBinding.contentViewPager.setAdapter(new PagerAdapter() {
                     @Override
                     public int getCount() {
-                        return contents.size();
+                        return contentListMap.get(model.getId()).size();
                     }
 
                     @Override
@@ -97,12 +125,12 @@ public class ListingTabViewModel extends BaseViewModel {
                         View view = LayoutInflater.from(mActivity)
                                 .inflate(R.layout.t_row_slider_item, container, false);
                         ImageView imageView = view.findViewById(R.id.slider_image);
-                        Glide.with(mActivity).load(R.drawable.slider_image).into(imageView);
+                        Glide.with(mActivity).load(contentListMap.get(model.getId()).get(position).getIcon()).into(imageView);
                         container.addView(view);
                         view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(mActivity, contents.get(position).getName(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mActivity, contentListMap.get(model.getId()).get(position).getName(), Toast.LENGTH_SHORT).show();
                             }
                         });
                         return view;
@@ -114,18 +142,18 @@ public class ListingTabViewModel extends BaseViewModel {
 
                 TRowContentListBinding listBinding = (TRowContentListBinding) binding;
                 ContentListAdapter listAdapter = new ContentListAdapter(mActivity);
-                listAdapter.addAll(contents);
+                listAdapter.addAll(contentListMap.get(model.getId()));
                 listAdapter.setItemClickListener(new OnRecyclerItemClickListener<Content>() {
                     @Override
                     public void onItemClick(View view, Content item) {
                         Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
                     }
                 });
-                listBinding.contentFiniteList.setTitleText(model.getTitle());
+                listBinding.contentFiniteList.setTitleText(model.getName());
                 listBinding.contentFiniteList.setOnMoreButtonClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mActivity, "View more of " + model.getTitle(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "View more of " + model.getName(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 listBinding.contentFiniteList.setAdapter(listAdapter);
@@ -135,7 +163,7 @@ public class ListingTabViewModel extends BaseViewModel {
 
         @Override
         public int getItemLayout(int position) {
-            if (position == 0){
+            if (getItem(position).getFormat_type().equals(ContentListType.feature.toString())){
                 return R.layout.t_row_content_slider;
             } else {
                 return R.layout.t_row_content_list;
@@ -153,9 +181,9 @@ public class ListingTabViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Content model, @Nullable OnRecyclerItemClickListener<Content> listener) {
             if (binding instanceof TRowContentBinding){
                 TRowContentBinding contentBinding = (TRowContentBinding) binding;
-                contentBinding.contentCategory.setText(model.getCategory());
+                contentBinding.contentCategory.setText(sourceMap.get(model.getSource()).getName());
                 contentBinding.contentTitle.setText(model.getName());
-                Glide.with(mActivity).load(R.drawable.content_image).into(contentBinding.contentImage);
+                Glide.with(mActivity).load(model.getIcon()).into(contentBinding.contentImage);
                 contentBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

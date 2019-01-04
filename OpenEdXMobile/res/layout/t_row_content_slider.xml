@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.listing.model.ContentList" />
+            type="org.edx.mobile.tta.data.local.db.table.ContentList" />
     </data>
 
     <RelativeLayout

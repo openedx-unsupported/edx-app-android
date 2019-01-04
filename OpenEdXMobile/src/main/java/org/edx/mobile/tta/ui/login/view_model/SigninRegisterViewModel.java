@@ -1,7 +1,9 @@
 package org.edx.mobile.tta.ui.login.view_model;
 
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,7 +26,24 @@ public class SigninRegisterViewModel extends BaseViewModel {
 
     public String[] titles;
 
-    public ObservableField<Integer> initialPosition = new ObservableField<>();
+    public ObservableInt initialPosition = new ObservableInt();
+
+    public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
+
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            initialPosition.set(i);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
 
     public SigninRegisterViewModel(BaseVMActivity activity) {
         super(activity);
@@ -60,5 +79,9 @@ public class SigninRegisterViewModel extends BaseViewModel {
         public CharSequence getPageTitle(int position) {
             return titles[position];
         }
+    }
+
+    public void toggleTab(){
+        initialPosition.set((initialPosition.get() + 1) % 2);
     }
 }

@@ -18,4 +18,9 @@ public class RegisterFragment extends TaBaseFragment {
         return binding(inflater, container, R.layout.t_fragment_register, new RegisterViewModel(getActivity(), this))
                 .getRoot();
     }
+
+    @Override
+    public void onPermissionGranted(String[] permissions, int requestCode) {
+        ((RegisterViewModel) getViewModel()).generateOTP();
+    }
 }

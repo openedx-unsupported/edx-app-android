@@ -1,21 +1,76 @@
 package org.edx.mobile.tta.ui.reset_password.view_model;
 
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 
+import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.task.authentication.MobileNumberVerificationTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.otp.OtpActivity;
+import org.edx.mobile.tta.ui.reset_password.model.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.utils.ActivityUtil;
+
+import static org.edx.mobile.tta.Constants.KEY_MOBILE_NUMBER;
 
 public class EnterNumberViewModel extends BaseViewModel {
 
     public ObservableField<String> cellphone = new ObservableField<>("");
+    public ObservableBoolean cellValid = new ObservableBoolean();
+
+    public TextWatcher cellWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            cellphone.set(s.toString());
+            String numString = s.toString().trim();
+            if (numString.length() == 10 && numString.matches("[0-9]+")){
+                cellValid.set(true);
+            } else {
+                cellValid.set(false);
+            }
+        }
+    };
 
     public EnterNumberViewModel(BaseVMActivity activity) {
         super(activity);
     }
 
     public void verify(){
-        ActivityUtil.gotoPage(mActivity, OtpActivity.class);
+        mActivity.show();
+
+        Bundle parameters = new Bundle();
+        parameters.putString(KEY_MOBILE_NUMBER, cellphone.get());
+        new MobileNumberVerificationTask(mActivity, parameters){
+            @Override
+            protected void onSuccess(MobileNumberVerificationResponse mobileNumberVerificationResponse) throws Exception {
+                super.onSuccess(mobileNumberVerificationResponse);
+                mActivity.hide();
+
+                if (mobileNumberVerificationResponse.mobile_number() != null && !mobileNumberVerificationResponse.mobile_number().equals("")){
+                    parameters.putString(Constants.KEY_OTP_SOURCE, Constants.OTP_SOURCE_RESET_PASSWORD);
+                    ActivityUtil.gotoPage(mActivity, OtpActivity.class, parameters);
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                mActivity.hide();
+                mActivity.showErrorDialog("User not exist", "User with this mobile number doesn't exist.");
+            }
+        }.execute();
+
     }
 }

@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.dashboard.DashboardActivity;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
@@ -32,7 +33,7 @@ public class SplashViewModel extends BaseViewModel {
                 if (mDataManager.getLoginPrefs().getCurrentUserProfile() == null) {
                     ActivityUtil.gotoPage(activity, SigninRegisterActivity.class);
                 } else {
-                    ActivityUtil.gotoPage(activity, MainDashboardActivity.class);
+                    ActivityUtil.gotoPage(activity, DashboardActivity.class);
                 }
             }
         }, DELAY);

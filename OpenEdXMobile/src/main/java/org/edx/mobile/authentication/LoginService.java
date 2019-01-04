@@ -10,6 +10,11 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.tta.ui.login.model.SendOTPResponse;
+import org.edx.mobile.tta.ui.otp.model.VerifyOTPForgotedPasswordResponse;
+import org.edx.mobile.tta.ui.otp.model.VerifyOTPResponse;
+import org.edx.mobile.tta.ui.reset_password.model.MobileNumberVerificationResponse;
+import org.edx.mobile.tta.ui.reset_password.model.ResetForgotedPasswordResponse;
 
 import java.util.Map;
 
@@ -29,7 +34,7 @@ import static org.edx.mobile.http.constants.ApiConstants.URL_MY_USER_INFO;
 public interface LoginService {
 
     /**
-     * A RoboGuice Provider implementation for LoginService.
+     * A RoboGuice TaProvider implementation for LoginService.
      */
     class Provider implements com.google.inject.Provider<LoginService> {
         @Inject
@@ -125,4 +130,24 @@ public interface LoginService {
     @NonNull
     @GET(URL_MY_USER_INFO)
     Call<ProfileModel> getProfile();
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_MOBILE_NUMBER_VERIFICATION)
+    Call<MobileNumberVerificationResponse> mxMobileNumberVerification(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_VERIFY_OTP_FOR_FORGOTED_PASSWORD)
+    Call<VerifyOTPForgotedPasswordResponse> mxOTPVerification_For_ForgotedPassword(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_RESET_FORGOTED_PASSWORD)
+    Call<ResetForgotedPasswordResponse> mxResetForgotedPassword(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_GENERATE_OTP)
+    Call<SendOTPResponse> mxGenerateOTP(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_VERIFY_OTP)
+    Call<VerifyOTPResponse> mxVerifyOTP(@FieldMap Map<String, String> parameters);
 }

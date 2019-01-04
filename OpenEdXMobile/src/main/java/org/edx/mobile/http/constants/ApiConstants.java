@@ -41,6 +41,36 @@ public class ApiConstants {
 
     public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
 
+    //TTA start
+
+    //forgot password urls ::start
+    public static final String URL_MX_MOBILE_NUMBER_VERIFICATION = "/api/otp/reset_password/send_otp";
+
+    public static final String URL_MX_VERIFY_OTP_FOR_FORGOTED_PASSWORD= "/api/otp/reset_password/check_otp";
+
+    public static final String URL_MX_RESET_FORGOTED_PASSWORD = "/api/otp/reset_password/reset_password";
+    //forgot password urls ::end
+
+    //Reset mobile number APIs::start
+    public static final String URL_MX_USER_RESET_SEND_OTP = "/api/otp/update_username/send_otp";
+
+    public static final String URL_MX_VERIFY_OTP_AND_RESET_USERNAME = "/api/otp/update_username/update_username";
+    //Reset mobile number APIs::end
+
+    public static final String URL_MX_GENERATE_OTP = "/api/otp/otp_api/";
+    public static final String URL_MX_CUSTOM_FIELD_ATTRIBUTES= "/api/otp/get-teacher-id-field-info/";
+    public static final String URL_MX_VERIFY_OTP = "api/otp/otp_api/verify/";
+    public static final String URL_MX_REGISTER_ME = "/user_api/v1/account/registration/";
+    public static final String URL_MX_UPDATE_PROFILE = "/api/otp/user_account/update/";
+
+    public static final String URL_MX_GET_CONFIGURATION = "api url here";
+
+    public static final String URL_MX_GET_MODIFICATION = "api url here";
+
+    public static final String URL_MX_GET_CONTENTS = "api url here";
+
+    //TTA end
+
     public static final String TOKEN_TYPE_ACCESS = "access_token";
 
     public static final String TOKEN_TYPE_REFRESH = "refresh_token";

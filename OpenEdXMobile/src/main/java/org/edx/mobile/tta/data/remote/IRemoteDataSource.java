@@ -1,7 +1,11 @@
 package org.edx.mobile.tta.data.remote;
 
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.tta.data.model.BaseResponse;
+import org.edx.mobile.tta.data.model.ConfigurationResponse;
+import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.EmptyResponse;
+import org.edx.mobile.tta.data.model.ModificationResponse;
 import org.edx.mobile.tta.ui.login.model.LoginRequest;
 import org.edx.mobile.tta.ui.login.model.LoginResponse;
 
@@ -26,4 +30,14 @@ public interface IRemoteDataSource {
 
     @GET("empty/")
     Observable<BaseResponse<EmptyResponse>> getEmpty();
+
+    @GET(ApiConstants.URL_MX_GET_CONFIGURATION)
+    Observable<ConfigurationResponse> getConfiguration();
+
+    @GET(ApiConstants.URL_MX_GET_MODIFICATION)
+    Observable<ModificationResponse> getModification();
+
+    @GET(ApiConstants.URL_MX_GET_CONTENTS)
+    Observable<List<Content>> getContents();
+
 }

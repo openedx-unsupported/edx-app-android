@@ -77,6 +77,9 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
 
+    //TTA
+    private static final String TTA_OTP_SENDER_ADDRESS = "TTA_OTP_SENDER_ADDRESS";
+
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
         private boolean mEnabled;
@@ -707,5 +710,10 @@ public class Config {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    //MX:Arjun For TTA OTP sender url
+    public String get_TTA_OTP_SENDER_ADDRESS() {
+        return getString(TTA_OTP_SENDER_ADDRESS);
     }
 }

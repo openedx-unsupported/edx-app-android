@@ -11,9 +11,9 @@ import java.util.List;
 @Dao
 public interface  UserDao {
     @Query("SELECT * FROM users")
-    List<User> loadAll();
+    List<User> getAll();
 
     @Insert
-    Long insert(User user);
+    void insert(User user);
 
 }

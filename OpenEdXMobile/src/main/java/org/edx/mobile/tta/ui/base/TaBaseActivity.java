@@ -6,7 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -17,6 +19,7 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.edx.mobile.tta.widget.loading.ILoading;
 import org.edx.mobile.tta.widget.loading.ProgressDialogLoading;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,6 +82,14 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
     @Override
     public void dismiss() {
         mLoading.dismiss();
+    }
+
+    public void showErrorDialog(@Nullable String title, @NonNull String message) {
+        AlertDialogFragment.showDialog(getSupportFragmentManager(),title, message);
+    }
+
+    public void showShortSnack(String msg){
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
 
     private void preventInitialFocus() {

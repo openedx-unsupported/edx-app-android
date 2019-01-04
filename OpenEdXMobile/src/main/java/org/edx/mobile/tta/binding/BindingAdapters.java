@@ -5,7 +5,9 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
@@ -20,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
 
 import java.lang.reflect.Constructor;
 
@@ -207,7 +211,7 @@ public class BindingAdapters {
         view.addOnPageChangeListener(listener);
     }
 
-    @BindingAdapter({"selected_item_position"})
+    @BindingAdapter({"selected_tab_position"})
     public static void setSelectedItemPosition(ViewPager view, int position){
         view.setCurrentItem(position);
     }
@@ -224,6 +228,43 @@ public class BindingAdapters {
 
     @BindingAdapter({"drawable_right"})
     public static void setDrawableRight(EditText view, int drawableId){
-        view.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableId, 0);
+        view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, drawableId, 0);
+    }
+
+    @BindingAdapter({"on_touch_listener"})
+    public static void setOnTouchListener(View view, View.OnTouchListener listener){
+        view.setOnTouchListener(listener);
+    }
+
+    @BindingAdapter({"input_type"})
+    public static void setInputType(EditText view, int inputType){
+        view.setInputType(inputType);
+    }
+
+    @BindingAdapter({"password_toggle_enabled"})
+    public static void setPasswordToggleEnabled(TextInputLayout view, boolean enabled){
+        view.setPasswordVisibilityToggleEnabled(enabled);
+    }
+
+    @BindingAdapter({"password_toggle_drawable"})
+    public static void setPasswordToggleDrawable(TextInputLayout view, int id){
+        view.setPasswordVisibilityToggleDrawable(id);
+    }
+
+    @BindingAdapter({"bottom_nav_item_selected_listener"})
+    public static void setBottomNavItemSelectedListener(BottomNavigationView view, BottomNavigationView.OnNavigationItemSelectedListener listener){
+        view.setOnNavigationItemSelectedListener(listener);
+    }
+
+    @BindingAdapter({"bottom_nav_item_selected_id"})
+    public static void setBottomNavItemSelectedId(BottomNavigationView view, int id){
+        view.setSelectedItemId(id);
+    }
+
+    @BindingAdapter({"bottom_nav_enable_shift_mode"})
+    public static void enableBottomNavShiftMode(BottomNavigationView view, boolean b){
+        if (!b){
+            BottomNavigationViewHelper.disableShiftMode(view);
+        }
     }
 }

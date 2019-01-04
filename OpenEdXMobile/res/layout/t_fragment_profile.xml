@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.profile.view_model.ProfileViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="@string/logout"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:enabled="true"
+            android:background="@drawable/btn_selector_filled"
+            android:onClick="@{()->viewModel.logout()}"
+            android:fontFamily="@font/hind_medium"/>
+
+    </RelativeLayout>
+
+</layout>

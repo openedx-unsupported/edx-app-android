@@ -33,7 +33,7 @@ import retrofit2.http.Query;
 
 public interface CourseService {
     /**
-     * A RoboGuice Provider implementation for CourseService.
+     * A RoboGuice TaProvider implementation for CourseService.
      */
     class Provider implements com.google.inject.Provider<CourseService> {
         @Inject

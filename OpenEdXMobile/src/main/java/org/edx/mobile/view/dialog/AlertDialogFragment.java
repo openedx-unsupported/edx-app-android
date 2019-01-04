@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 import org.edx.mobile.R;
@@ -185,5 +186,16 @@ public class AlertDialogFragment extends RoboDialogFragment {
 
         @Nullable
         abstract DialogInterface.OnClickListener getOnClickListener();
+    }
+
+    public static void showDialog(@NonNull FragmentManager manager,
+                                  @Nullable String title, @NonNull String message) {
+
+        // TODO: Re-work this code after migrating to an MVP framework.
+        try {
+            newInstance(title, message, null).show(manager, null);
+        } catch (IllegalStateException e) {
+            // Do nothing, since this is an issue due to improper session management in our tasks.
+        }
     }
 }

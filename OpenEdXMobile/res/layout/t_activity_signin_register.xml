@@ -23,19 +23,20 @@
             android:id="@+id/tab_layout"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/primary_cyan"
-            app:tabIndicatorHeight="@dimen/_2px"
-            android:elevation="@dimen/_2px"
+            app:tabIndicatorHeight="2dp"
+            android:elevation="2dp"
             app:tabSelectedTextColor="@color/primary_cyan"
             app:tabTextColor="@color/primary_navy"
             android:textSize="14sp"
-            android:background="@color/app_background"/>
+            android:background="@color/app_background" />
 
         <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/view_pager"
-            selected_item_position="@{viewModel.initialPosition}"
-            pager_adapter="@{viewModel.adapter}"/>
+            selected_tab_position="@{viewModel.initialPosition}"
+            pager_adapter="@{viewModel.adapter}"
+            page_change_listener="@{viewModel.pageChangeListener}"/>
         
     </LinearLayout>
     
