@@ -64,7 +64,7 @@ To use a custom configuration in place of the default configuration, you will ne
 
 
 The full set of known keys can be found in the
-`org/edx/mobile/util/Config.java` file or see [additional documentation](<https://openedx.atlassian.net/wiki/display/MA/App+Configuration+Flags>).
+`org/edx/mobile/util/Config.java` file or see [additional documentation](<https://openedx.atlassian.net/wiki/spaces/LEARNER/pages/48792067/App+Configuration+Flags>).
 
 
 Build Variants
