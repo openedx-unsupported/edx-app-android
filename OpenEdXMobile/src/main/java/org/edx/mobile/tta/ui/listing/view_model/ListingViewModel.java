@@ -1,17 +1,14 @@
 package org.edx.mobile.tta.ui.listing.view_model;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
-import org.edx.mobile.tta.data.local.db.table.ContentList;
-import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.interfaces.OnResponseListener;
+import org.edx.mobile.tta.ui.base.BaseFragmentPagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.listing.ListingTabFragment;
@@ -23,6 +20,7 @@ import java.util.List;
 public class ListingViewModel extends BaseViewModel {
 
     private List<Fragment> fragments;
+    private List<String> titles;
     public ListingPagerAdapter adapter;
 
     private ConfigurationResponse cr;
@@ -38,6 +36,7 @@ public class ListingViewModel extends BaseViewModel {
         categories = new ArrayList<>();
         contents = new ArrayList<>();
         fragments = new ArrayList<>();
+        titles = new ArrayList<>();
 
         adapter = new ListingPagerAdapter(mFragment.getChildFragmentManager());
 
@@ -98,32 +97,20 @@ public class ListingViewModel extends BaseViewModel {
     private void populateTabs(){
 
         fragments.clear();
+        titles.clear();
         for (Category category: categories){
             fragments.add(ListingTabFragment.newInstance(cr, category, contents));
+            titles.add(category.getName());
         }
+
+        adapter.clear();
+        adapter.addAll(fragments, titles);
 
     }
 
-    public class ListingPagerAdapter extends FragmentStatePagerAdapter {
-
+    public class ListingPagerAdapter extends BaseFragmentPagerAdapter {
         public ListingPagerAdapter(FragmentManager fm) {
             super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return categories.size();
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return categories.get(position).getName();
         }
     }
 }

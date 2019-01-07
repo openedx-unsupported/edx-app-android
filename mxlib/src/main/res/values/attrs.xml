@@ -5,6 +5,7 @@
     </declare-styleable>
     <declare-styleable name="MxFiniteRecyclerView">
 
+        <attr name="mx_titleVisible" format="boolean" />
         <attr name="mx_titleText" format="string"/>
         <attr name="mx_titleDrawableStart" format="reference" />
         <attr name="mx_titleDrawableTop" format="reference" />
@@ -18,11 +19,12 @@
         <attr name="mx_titleMarginEnd" format="dimension" />
         <attr name="mx_titleMarginBottom" format="dimension" />
 
+        <attr name="mx_moreButtonVisible" format="boolean" />
         <attr name="mx_moreButtonText" format="string"/>
-        <attr name="mx_moreButtomDrawableStart" format="reference" />
-        <attr name="mx_moreButtomDrawableTop" format="reference" />
-        <attr name="mx_moreButtomDrawableEnd" format="reference" />
-        <attr name="mx_moreButtomDrawableBottom" format="reference" />
+        <attr name="mx_moreButtonDrawableStart" format="reference" />
+        <attr name="mx_moreButtonDrawableTop" format="reference" />
+        <attr name="mx_moreButtonDrawableEnd" format="reference" />
+        <attr name="mx_moreButtonDrawableBottom" format="reference" />
         <attr name="mx_moreButtonTextSize" format="dimension" />
         <attr name="mx_moreButtonTextColor" format="color"/>
         <attr name="mx_moreButtonTextFont" format="reference"/>

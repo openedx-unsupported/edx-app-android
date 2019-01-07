@@ -34,10 +34,10 @@ public class MxFiniteRecyclerView extends LinearLayout {
     private static final int MX_SPAN_COUNT = 1;
     private boolean mCanShowVertical = false, mCanHideTitleLayout = false;
     private MxFiniteRecyclerViewLayoutBinding mBinding;
-    private boolean isMoreItemEnabled = true;
     private boolean isDividerEnabled = false;
 
     //List title
+    private boolean mTitleVisible;
     private String mTitleText = "";
     private Drawable mTitleDrawableStart = null;
     private Drawable mTitleDrawableTop = null;
@@ -52,6 +52,7 @@ public class MxFiniteRecyclerView extends LinearLayout {
     private float mTitleMarginBottom;
 
     //List view more
+    private boolean mMoreButtonVisible;
     private String mMoreButtonText = "SEE ALL";
     private Drawable mMoreButtonDrawableStart = null;
     private Drawable mMoreButtonDrawableTop = null;
@@ -79,6 +80,7 @@ public class MxFiniteRecyclerView extends LinearLayout {
         super(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MxFiniteRecyclerView);
 
+        mTitleVisible = typedArray.getBoolean(R.styleable.MxFiniteRecyclerView_mx_titleVisible, true);
         mTitleText = typedArray.getString(R.styleable.MxFiniteRecyclerView_mx_titleText);
         mTitleDrawableStart = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_titleDrawableStart);
         mTitleDrawableTop = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_titleDrawableTop);
@@ -100,13 +102,14 @@ public class MxFiniteRecyclerView extends LinearLayout {
         mTitleMarginEnd = typedArray.getDimension(R.styleable.MxFiniteRecyclerView_mx_titleMarginEnd, 0);
         mTitleMarginBottom = typedArray.getDimension(R.styleable.MxFiniteRecyclerView_mx_titleMarginBottom, 0);
 
+        mMoreButtonVisible = typedArray.getBoolean(R.styleable.MxFiniteRecyclerView_mx_moreButtonVisible, true);
         String moreText = typedArray.getString(R.styleable.MxFiniteRecyclerView_mx_moreButtonText);
         if (!TextUtils.isEmpty(moreText))
             mMoreButtonText=moreText;
-        mMoreButtonDrawableStart = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtomDrawableStart);
-        mMoreButtonDrawableTop = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtomDrawableTop);
-        mMoreButtonDrawableEnd = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtomDrawableEnd);
-        mMoreButtonDrawableBottom = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtomDrawableBottom);
+        mMoreButtonDrawableStart = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtonDrawableStart);
+        mMoreButtonDrawableTop = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtonDrawableTop);
+        mMoreButtonDrawableEnd = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtonDrawableEnd);
+        mMoreButtonDrawableBottom = typedArray.getDrawable(R.styleable.MxFiniteRecyclerView_mx_moreButtonDrawableBottom);
         mMoreButtonTextSize = typedArray.getDimension(R.styleable.MxFiniteRecyclerView_mx_moreButtonTextSize, getResources().getDimension(R.dimen.text_size_button_material));
         mMoreButtonTextColor = typedArray.getColor(R.styleable.MxFiniteRecyclerView_mx_moreButtonTextColor, getResources().getColor(R.color.colorAccent));
         try {
@@ -134,7 +137,6 @@ public class MxFiniteRecyclerView extends LinearLayout {
     private void setValues() {
         setTitle();
         setMoreButton();
-        mBinding.mxViewMoreButton.setOnClickListener(mMoreButtonListener);
         mBinding.dividerView.setVisibility(isDividerEnabled ? VISIBLE : GONE);
         hideTitleLayout(mCanHideTitleLayout);
     }
@@ -166,12 +168,22 @@ public class MxFiniteRecyclerView extends LinearLayout {
     }
 
     private void setTitle(){
-        setTitleText(mTitleText);
-        setTitleDrawables();
-        setTitleTextSize(mTitleTextSize);
-        setTitleTextColor(mTitleTextColor);
-        setTitleTextFont(mTitleTextFont);
-        setTitleMargins(mTitleMarginStart, mTitleMarginTop, mTitleMarginEnd, mTitleMarginBottom);
+        if (mTitleVisible) {
+            mBinding.mxTitleText.setVisibility(VISIBLE);
+            setTitleText(mTitleText);
+            setTitleDrawables();
+            setTitleTextSize(mTitleTextSize);
+            setTitleTextColor(mTitleTextColor);
+            setTitleTextFont(mTitleTextFont);
+            setTitleMargins(mTitleMarginStart, mTitleMarginTop, mTitleMarginEnd, mTitleMarginBottom);
+        } else {
+            mBinding.mxTitleText.setVisibility(GONE);
+        }
+    }
+
+    public void setmTitleVisible(boolean mTitleVisible) {
+        this.mTitleVisible = mTitleVisible;
+        setTitle();
     }
 
     public void setTitleText(String title) {
@@ -221,12 +233,23 @@ public class MxFiniteRecyclerView extends LinearLayout {
     }
 
     private void setMoreButton(){
-        setMoreButtonText(mMoreButtonText);
-        setMoreButtonDrawables();
-        setMoreButtonTextSize(mMoreButtonTextSize);
-        setMoreButtonTextColor(mMoreButtonTextColor);
-        setMoreButtonTextFont(mMoreButtonTextFont);
-        setMoreButtonMargins(mMoreButtonMarginStart, mMoreButtonMarginTop, mMoreButtonMarginEnd, mMoreButtonMarginBottom);
+        if (mMoreButtonVisible) {
+            mBinding.mxViewMoreButton.setVisibility(VISIBLE);
+            setMoreButtonText(mMoreButtonText);
+            setMoreButtonDrawables();
+            setMoreButtonTextSize(mMoreButtonTextSize);
+            setMoreButtonTextColor(mMoreButtonTextColor);
+            setMoreButtonTextFont(mMoreButtonTextFont);
+            setMoreButtonMargins(mMoreButtonMarginStart, mMoreButtonMarginTop, mMoreButtonMarginEnd, mMoreButtonMarginBottom);
+            mBinding.mxViewMoreButton.setOnClickListener(mMoreButtonListener);
+        } else {
+            mBinding.mxViewMoreButton.setVisibility(GONE);
+        }
+    }
+
+    public void setmMoreButtonVisible(boolean mMoreButtonVisible) {
+        this.mMoreButtonVisible = mMoreButtonVisible;
+        setMoreButton();
     }
 
     public void setMoreButtonText(String moreButtonText){

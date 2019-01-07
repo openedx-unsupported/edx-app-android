@@ -19,7 +19,7 @@
             android:id="@+id/content_finite_list"
             app:mx_itemLayout="@layout/t_row_content"
             app:mx_moreButtonText="@string/view_more"
-            app:mx_moreButtomDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
+            app:mx_moreButtonDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
             app:mx_moreButtonTextColor="@color/primary_cyan"
             app:mx_moreButtonTextSize="@dimen/_12px_sp"
             app:mx_moreButtonTextFont="@font/hind_medium"

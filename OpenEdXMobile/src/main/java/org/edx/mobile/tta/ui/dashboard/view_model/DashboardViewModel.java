@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.ui.agenda.AgendaFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.listing.ListingFragment;
@@ -70,7 +71,14 @@ public class DashboardViewModel extends BaseViewModel {
     }
 
     public void showAgenda(){
-        mActivity.showShortSnack("Agenda coming soon");
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                new AgendaFragment(),
+                R.id.dashboard_fragment,
+                AgendaFragment.TAG,
+                false,
+                null
+        );
     }
 
     public void showProfile(){
