@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.ui.reset_password.view_model;
 
+import android.Manifest;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.otp.OtpActivity;
 import org.edx.mobile.tta.ui.reset_password.model.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.util.PermissionsUtil;
 
 import static org.edx.mobile.tta.Constants.KEY_MOBILE_NUMBER;
 
@@ -49,6 +51,18 @@ public class EnterNumberViewModel extends BaseViewModel {
     }
 
     public void verify(){
+        //check here for message read and receive for otp feature
+        if (PermissionsUtil.checkPermissions(Manifest.permission.READ_SMS, mActivity) &&
+                PermissionsUtil.checkPermissions(Manifest.permission.RECEIVE_SMS, mActivity)) {
+            generateOTP();
+        } else {
+            mActivity.askForPermissions(new String[]{Manifest.permission.READ_SMS,
+                            Manifest.permission.RECEIVE_SMS},
+                    PermissionsUtil.READ_SMS_PERMISSION_REQUEST);
+        }
+    }
+
+    public void generateOTP(){
         mActivity.show();
 
         Bundle parameters = new Bundle();
@@ -71,6 +85,5 @@ public class EnterNumberViewModel extends BaseViewModel {
                 mActivity.showErrorDialog("User not exist", "User with this mobile number doesn't exist.");
             }
         }.execute();
-
     }
 }

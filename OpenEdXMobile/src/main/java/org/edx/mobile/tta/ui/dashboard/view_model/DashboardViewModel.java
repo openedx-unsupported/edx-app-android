@@ -10,7 +10,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.agenda.AgendaFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.listing.ListingFragment;
+import org.edx.mobile.tta.ui.library.LibraryFragment;
 import org.edx.mobile.tta.ui.profile.ProfileFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
@@ -54,9 +54,9 @@ public class DashboardViewModel extends BaseViewModel {
     public void showLibrary(){
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                new ListingFragment(),
+                new LibraryFragment(),
                 R.id.dashboard_fragment,
-                ListingFragment.TAG,
+                LibraryFragment.TAG,
                 false,
                 null
         );

@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.listing;
+package org.edx.mobile.tta.ui.library;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +12,7 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
-import org.edx.mobile.tta.ui.listing.view_model.ListingTabViewModel;
+import org.edx.mobile.tta.ui.library.view_model.ListingTabViewModel;
 
 import java.util.List;
 

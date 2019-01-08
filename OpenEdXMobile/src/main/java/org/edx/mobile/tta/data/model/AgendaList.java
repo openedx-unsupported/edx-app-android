@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.data.local.db.table;
+package org.edx.mobile.tta.data.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -8,22 +8,19 @@ import org.edx.mobile.tta.data.model.AgendaItem;
 
 import java.util.List;
 
-@Entity(tableName = "agenda_list")
 public class AgendaList {
 
-    @PrimaryKey
-    private String list_id;
+    private long list_id;
 
     private String list_name;
 
-    @Ignore
     private List<AgendaItem> result;
 
-    public String getList_id() {
+    public long getList_id() {
         return list_id;
     }
 
-    public void setList_id(String list_id) {
+    public void setList_id(long list_id) {
         this.list_id = list_id;
     }
 

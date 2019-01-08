@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.google.inject.Singleton;
 
+import org.edx.mobile.tta.data.model.AgendaList;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.ModificationResponse;
@@ -36,5 +37,13 @@ public class TaAPI {
 
     public Call<List<Content>> getContents(){
         return taService.getContents();
+    }
+
+    public Call<AgendaList> getStateAgendaCount(){
+        return taService.getStateAgendaCount();
+    }
+
+    public Call<AgendaList> getMyAgendaCount(){
+        return taService.getMyAgendaCount();
     }
 }

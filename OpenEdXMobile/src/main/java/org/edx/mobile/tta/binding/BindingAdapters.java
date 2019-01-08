@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.maurya.mx.mxlib.core.MxFiniteAdapter;
+import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
 
@@ -266,5 +268,10 @@ public class BindingAdapters {
         if (!b){
             BottomNavigationViewHelper.disableShiftMode(view);
         }
+    }
+
+    @BindingAdapter({"finite_recycler_adapter"})
+    public static void setFiniteAdapter(MxFiniteRecyclerView view, MxFiniteAdapter adapter){
+        view.setAdapter(adapter);
     }
 }

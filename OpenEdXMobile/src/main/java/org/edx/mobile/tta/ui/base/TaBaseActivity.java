@@ -9,6 +9,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -106,6 +107,10 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         } else {
             content.addView(focusDummy, 0, new LinearLayout.LayoutParams(0, 0));
         }
+    }
+
+    public void askForPermissions(String[] permissions, int requestCode){
+        ActivityCompat.requestPermissions(this, permissions, requestCode);
     }
 
     @Override

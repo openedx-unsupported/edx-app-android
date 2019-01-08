@@ -38,7 +38,7 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
         Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
     }
 
-    public void askForPermission(String[] permissions, int requestCode) {
+    public void askForPermissions(String[] permissions, int requestCode) {
         if (getActivity() != null) {
             if (permissionListener != null && getGrantedPermissionsCount(permissions) == permissions.length) {
                 permissionListener.onPermissionGranted(permissions, requestCode);

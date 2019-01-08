@@ -14,6 +14,8 @@ import org.edx.mobile.tta.data.local.db.TADatabase;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.model.AgendaItem;
+import org.edx.mobile.tta.data.model.AgendaList;
 import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
@@ -23,10 +25,10 @@ import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.tta.exception.NoConnectionException;
-import org.edx.mobile.tta.interfaces.OnResponseListener;
-import org.edx.mobile.tta.task.dashboard.GetConfigurationTask;
-import org.edx.mobile.tta.task.dashboard.GetContentsTask;
-import org.edx.mobile.tta.task.dashboard.GetModificationTask;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
+import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
+import org.edx.mobile.tta.task.library.GetModificationTask;
 import org.edx.mobile.tta.ui.login.model.LoginRequest;
 import org.edx.mobile.tta.ui.login.model.LoginResponse;
 import org.edx.mobile.tta.utils.RxUtil;
@@ -132,7 +134,7 @@ public class DataManager extends  BaseRoboInjector {
         return preEmptyProcess(mRemoteDataSource.getEmpty());
     }
 
-    public void getConfiguration(OnResponseListener<ConfigurationResponse> listener){
+    public void getConfiguration(OnResponseCallback<ConfigurationResponse> callback){
 
         //Mocking start
         List<Category> categories = new ArrayList<>();
@@ -177,10 +179,10 @@ public class DataManager extends  BaseRoboInjector {
         response.setCategory(categories);
         response.setList(contentLists);
         response.setSource(sources);
-        listener.onSuccess(response);
+        callback.onSuccess(response);
         //Mocking end
 
-        //Actual code
+        //Actual code   **Do not delete**
         /*if (NetworkUtil.isConnected(context)){
             new GetConfigurationTask(context){
                 @Override
@@ -189,41 +191,41 @@ public class DataManager extends  BaseRoboInjector {
                     if (response != null){
                         mLocalDataSource.insertConfiguration(response);
                     }
-                    listener.onSuccess(response);
+                    callback.onSuccess(response);
                 }
 
                 @Override
                 protected void onException(Exception ex) {
-                    listener.onFailure(ex);
+                    callback.onFailure(ex);
                 }
             }.execute();
         } else {
-            listener.onSuccess(mLocalDataSource.getConfiguration());
+            callback.onSuccess(mLocalDataSource.getConfiguration());
         }*/
 
     }
 
-    public void getModification(OnResponseListener<ModificationResponse> listener){
+    public void getModification(OnResponseCallback<ModificationResponse> callback){
 
         if (NetworkUtil.isConnected(context)){
             new GetModificationTask(context){
                 @Override
                 protected void onSuccess(ModificationResponse modificationResponse) throws Exception {
                     super.onSuccess(modificationResponse);
-                    listener.onSuccess(modificationResponse);
+                    callback.onSuccess(modificationResponse);
                 }
 
                 @Override
                 protected void onException(Exception ex) {
-                    listener.onFailure(ex);
+                    callback.onFailure(ex);
                 }
             }.execute();
         } else {
-            listener.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
+            callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
         }
     }
 
-    public void getContents(OnResponseListener<List<Content>> listener){
+    public void getContents(OnResponseCallback<List<Content>> callback){
 
         //Mocking start
         List<Content> contents = new ArrayList<>();
@@ -249,10 +251,10 @@ public class DataManager extends  BaseRoboInjector {
             content.setSource(i%4);
             contents.add(content);
         }
-        listener.onSuccess(contents);
+        callback.onSuccess(contents);
         //Mocking end
 
-        //Actual code
+        //Actual code   **Do not delete**
         /*if (NetworkUtil.isConnected(context)){
             new GetContentsTask(context){
                 @Override
@@ -261,16 +263,118 @@ public class DataManager extends  BaseRoboInjector {
                     if (contents != null){
                         mLocalDataSource.insertContents(contents);
                     }
-                    listener.onSuccess(contents);
+                    callback.onSuccess(contents);
                 }
 
                 @Override
                 protected void onException(Exception ex) {
-                    listener.onFailure(ex);
+                    callback.onFailure(ex);
                 }
             }.execute();
         } else {
-            listener.onSuccess(mLocalDataSource.getContents());
+            callback.onSuccess(mLocalDataSource.getContents());
+        }*/
+
+    }
+
+    public void getStateAgendaCount(OnResponseCallback<AgendaList> callback){
+
+        //Mocking start
+        AgendaList agendaList = new AgendaList();
+        agendaList.setList_id(1);
+        agendaList.setList_name("State wise Agenda");
+        List<AgendaItem> items = new ArrayList<>();
+        for (int i = 0; i < 4; i++){
+            AgendaItem item = new AgendaItem();
+            item.setContent_count(10 - i);
+            item.setSource(i);
+            switch (i){
+                case 0:
+                    item.setSource_name("Course");
+                    break;
+                case 1:
+                    item.setSource_name("Chatshala");
+                    break;
+                case 2:
+                    item.setSource_name("HOIS");
+                    break;
+                default:
+                    item.setSource_name("Toolkit");
+                    break;
+            }
+            items.add(item);
+        }
+        agendaList.setResult(items);
+        callback.onSuccess(agendaList);
+        //Mocking end
+
+        //Actual code   **Do not delete**
+        /*if (NetworkUtil.isConnected(context)){
+            new GetStateAgendaCountTask(context){
+                @Override
+                protected void onSuccess(AgendaList agendaList) throws Exception {
+                    super.onSuccess(agendaList);
+                    callback.onSuccess(agendaList);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
+        }*/
+
+    }
+
+    public void getMyAgendaCount(OnResponseCallback<AgendaList> callback){
+
+        //Mocking start
+        AgendaList agendaList = new AgendaList();
+        agendaList.setList_id(1);
+        agendaList.setList_name("State wise Agenda");
+        List<AgendaItem> items = new ArrayList<>();
+        for (int i = 0; i < 4; i++){
+            AgendaItem item = new AgendaItem();
+            item.setContent_count(10 - i);
+            item.setSource(i);
+            switch (i){
+                case 0:
+                    item.setSource_name("Course");
+                    break;
+                case 1:
+                    item.setSource_name("Chatshala");
+                    break;
+                case 2:
+                    item.setSource_name("HOIS");
+                    break;
+                default:
+                    item.setSource_name("Toolkit");
+                    break;
+            }
+            items.add(item);
+        }
+        agendaList.setResult(items);
+        callback.onSuccess(agendaList);
+        //Mocking end
+
+        //Actual code   **Do not delete**
+        /*if (NetworkUtil.isConnected(context)){
+            new GetMyAgendaCountTask(context){
+                @Override
+                protected void onSuccess(AgendaList agendaList) throws Exception {
+                    super.onSuccess(agendaList);
+                    callback.onSuccess(agendaList);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
         }*/
 
     }

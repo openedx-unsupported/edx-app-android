@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.listing.view_model.ListingViewModel" />
+            type="org.edx.mobile.tta.ui.library.view_model.LibraryViewModel" />
     </data>
 
     <LinearLayout

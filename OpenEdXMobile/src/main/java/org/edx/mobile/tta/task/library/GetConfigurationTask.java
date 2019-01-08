@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.task.dashboard;
+package org.edx.mobile.tta.task.library;
 
 import android.content.Context;
 

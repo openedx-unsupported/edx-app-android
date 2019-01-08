@@ -1,6 +1,6 @@
 package org.edx.mobile.tta.interfaces;
 
-public interface OnResponseListener<T> {
+public interface OnResponseCallback<T> {
 
     void onSuccess(T data);
 

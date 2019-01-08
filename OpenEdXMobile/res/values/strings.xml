@@ -703,6 +703,9 @@
     <string name="hois">HOIS</string>
     <string name="toolkit">Toolkit</string>
     <string name="view_more">View More</string>
+    <string name="region_agenda">Region wise Agenda</string>
+    <string name="my_agenda">My Agenda</string>
+    <string name="download">Download</string>
 
     <string name="no_connection_exception">No Internet Connection</string>
     <!-- TTA strings end -->

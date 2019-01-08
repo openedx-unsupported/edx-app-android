@@ -69,6 +69,10 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_CONTENTS = "api url here";
 
+    public static final String URL_MX_GET_STATE_AGENDA_COUNT = "api url here";
+
+    public static final String URL_MX_GET_MY_AGENDA_COUNT = "api url here";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

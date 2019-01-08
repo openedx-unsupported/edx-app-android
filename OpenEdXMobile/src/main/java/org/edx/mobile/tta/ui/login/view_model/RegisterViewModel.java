@@ -7,12 +7,8 @@ import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.EditText;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.HttpResponseStatusException;
@@ -124,7 +120,7 @@ public class RegisterViewModel extends BaseViewModel {
                 PermissionsUtil.checkPermissions(Manifest.permission.RECEIVE_SMS, mActivity)) {
             generateOTP();
         } else {
-            mFragment.askForPermission(new String[]{Manifest.permission.READ_SMS,
+            mFragment.askForPermissions(new String[]{Manifest.permission.READ_SMS,
                             Manifest.permission.RECEIVE_SMS},
                     PermissionsUtil.READ_SMS_PERMISSION_REQUEST);
         }

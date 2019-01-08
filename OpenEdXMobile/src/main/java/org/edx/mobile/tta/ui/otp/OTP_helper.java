@@ -2,21 +2,20 @@ package org.edx.mobile.tta.ui.otp;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 
 public class OTP_helper {
 
-    @Inject
-    public static Config config;
-
     public boolean isValidSender(String from) {
         boolean isValid = false;
 
-        if (config.get_TTA_OTP_SENDER_ADDRESS() != null && config.get_TTA_OTP_SENDER_ADDRESS().equals(""))
+        if (BrowserUtil.getConfig().get_TTA_OTP_SENDER_ADDRESS() != null &&
+                BrowserUtil.getConfig().get_TTA_OTP_SENDER_ADDRESS().equals(""))
         {
             isValid=false;
         }
-        else if (!from.equals(config.get_TTA_OTP_SENDER_ADDRESS()) || !from.equals("DM-NOTICE"))
+        else if (!from.equals(BrowserUtil.getConfig().get_TTA_OTP_SENDER_ADDRESS()) || !from.equals("DM-NOTICE"))
         {
             return true;
         }

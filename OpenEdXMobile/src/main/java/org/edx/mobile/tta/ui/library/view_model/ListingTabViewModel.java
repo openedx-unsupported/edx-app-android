@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.listing.view_model;
+package org.edx.mobile.tta.ui.library.view_model;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;

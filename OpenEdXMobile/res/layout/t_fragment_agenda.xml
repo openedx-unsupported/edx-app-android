@@ -3,21 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.agenda.view_model.AgendaViewModel" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.maurya.mx.mxlib.view.MxRecyclerView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/agenda_list"
-            app:mx_itemLayout="@layout/t_row_agenda_list"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                android:id="@+id/region_agenda_list"
+                finite_recycler_adapter="@{viewModel.regionListAdapter}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mx_itemLayout="@layout/t_row_agenda_item"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleMarginStart="@dimen/_20dp"
+                app:mx_titleText="@string/region_agenda"
+                app:mx_titleTextColor="@color/gray_6"
+                app:mx_titleTextFont="@font/hind_semibold"
+                app:mx_titleTextSize="@dimen/_14px_sp"
+                android:layout_marginTop="18dp" />
+
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                android:id="@+id/my_agenda_list"
+                finite_recycler_adapter="@{viewModel.myListAdapter}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mx_itemLayout="@layout/t_row_agenda_item"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleMarginStart="@dimen/_20dp"
+                app:mx_titleText="@string/my_agenda"
+                app:mx_titleTextColor="@color/gray_6"
+                app:mx_titleTextFont="@font/hind_semibold"
+                app:mx_titleTextSize="@dimen/_14px_sp"/>
+
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                android:id="@+id/download_agenda_list"
+                finite_recycler_adapter="@{viewModel.downloadListAdapter}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mx_itemLayout="@layout/t_row_agenda_item"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleMarginStart="@dimen/_20dp"
+                app:mx_titleText="@string/download"
+                app:mx_titleTextColor="@color/gray_6"
+                app:mx_titleTextFont="@font/hind_semibold"
+                app:mx_titleTextSize="@dimen/_14px_sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </layout>

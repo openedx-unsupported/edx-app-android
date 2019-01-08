@@ -1,8 +1,7 @@
 package org.edx.mobile.tta.data.enums;
 
-public enum CategoryType {
+public enum SourceType {
 
-    all,
     course,
     chatshala,
     hois,

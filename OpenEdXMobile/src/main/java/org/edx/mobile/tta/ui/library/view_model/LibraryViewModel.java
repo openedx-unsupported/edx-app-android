@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.listing.view_model;
+package org.edx.mobile.tta.ui.library.view_model;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -7,17 +7,17 @@ import android.support.v4.app.FragmentManager;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
-import org.edx.mobile.tta.interfaces.OnResponseListener;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BaseFragmentPagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.listing.ListingTabFragment;
+import org.edx.mobile.tta.ui.library.ListingTabFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ListingViewModel extends BaseViewModel {
+public class LibraryViewModel extends BaseViewModel {
 
     private List<Fragment> fragments;
     private List<String> titles;
@@ -30,7 +30,7 @@ public class ListingViewModel extends BaseViewModel {
     private boolean configRecieved = false;
     private boolean contentRecieved = false;
 
-    public ListingViewModel(Context context, TaBaseFragment fragment) {
+    public LibraryViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
         categories = new ArrayList<>();
@@ -47,7 +47,7 @@ public class ListingViewModel extends BaseViewModel {
     private void getData(){
         mActivity.show();
 
-        mDataManager.getConfiguration(new OnResponseListener<ConfigurationResponse>() {
+        mDataManager.getConfiguration(new OnResponseCallback<ConfigurationResponse>() {
             @Override
             public void onSuccess(ConfigurationResponse data) {
                 mActivity.hide();
@@ -73,7 +73,7 @@ public class ListingViewModel extends BaseViewModel {
             }
         });
 
-        mDataManager.getContents(new OnResponseListener<List<Content>>() {
+        mDataManager.getContents(new OnResponseCallback<List<Content>>() {
             @Override
             public void onSuccess(List<Content> data) {
                 mActivity.hide();

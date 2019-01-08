@@ -25,6 +25,9 @@ public class BrowserUtil {
     @Inject
     private static IEdxEnvironment environment;
 
+    @Inject
+    private static Config config;
+
     /**
      * Opens given URL in native browser.
      * If app is running on zero-rated network, confirm the user if they really want to proceed
@@ -101,5 +104,9 @@ public class BrowserUtil {
             }
         }
         return false;
+    }
+
+    public static Config getConfig(){
+        return config;
     }
 }

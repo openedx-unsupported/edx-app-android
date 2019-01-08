@@ -295,5 +295,9 @@
     <dimen name="_16px_sp">8sp</dimen>
     <dimen name="_18px_sp">9sp</dimen>
     <dimen name="_20px_sp">10sp</dimen>
+
+    <dimen name="_20dp">20dp</dimen>
+
+    <dimen name="_14sp">14sp</dimen>
     <!-- TTA dimensions end -->
 </resources>

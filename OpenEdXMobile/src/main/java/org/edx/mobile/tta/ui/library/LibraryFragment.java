@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.listing;
+package org.edx.mobile.tta.ui.library;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,15 +11,15 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
-import org.edx.mobile.tta.ui.listing.view_model.ListingViewModel;
+import org.edx.mobile.tta.ui.library.view_model.LibraryViewModel;
 
-public class ListingFragment extends TaBaseFragment {
-    public static final String TAG = ListingFragment.class.getCanonicalName();
+public class LibraryFragment extends TaBaseFragment {
+    public static final String TAG = LibraryFragment.class.getCanonicalName();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = binding(inflater, container, R.layout.t_fragment_listing, new ListingViewModel(getActivity(), this))
+        View view = binding(inflater, container, R.layout.t_fragment_listing, new LibraryViewModel(getActivity(), this))
                 .getRoot();
 
         TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);
