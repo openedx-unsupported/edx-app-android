@@ -395,6 +395,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if(player!=null){
             handler.removeMessages(MSG_TYPE_TICK);
             freezePlayer();
+            removeSubtitleCallBack();
         }
     }
 
@@ -405,7 +406,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if (player!=null) {
                 // reset player when user goes back, and there is no state saving happened
                 player.reset();
-                removeSubtitleCallBack();
 
                 // release the player instance
                 player.release();
