@@ -47,7 +47,7 @@ public interface VideoModel {
 
     String getSectionName();
 
-    int getLastPlayedOffset();
+    long getLastPlayedOffset();
 
     String getLmsUrl();
     

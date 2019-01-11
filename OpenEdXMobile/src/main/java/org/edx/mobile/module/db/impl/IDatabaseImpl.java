@@ -351,7 +351,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public Integer updateVideoLastPlayedOffset(String videoId, int offset,
+    public Integer updateVideoLastPlayedOffset(String videoId, long offset,
                                                final DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.LAST_PLAYED_OFFSET, offset);

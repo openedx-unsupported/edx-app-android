@@ -2,36 +2,38 @@ package org.edx.mobile.player;
 
 import android.graphics.Point;
 import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
+
+import com.google.android.exoplayer2.ui.PlayerView;
 
 import java.io.Serializable;
 
-public interface IPlayer extends Serializable {
-    
+public interface PlayerListener extends Serializable {
+
     long serialVersionUID = 5689385691113719237L;
 
-    void setUri(String uri, int seekTo) throws Exception;
-    void setUriAndPlay(String uri, int seekTo) throws Exception;
+    void setUri(String uri, long seekTo) throws Exception;
+    void setUriAndPlay(String uri, long seekTo) throws Exception;
     void restart() throws Exception;
-    void restart(int seekTo) throws Exception;
+    void restart(long seekTo) throws Exception;
     boolean isInError();
     boolean isPlayingLocally();
     void start();
     boolean isPlaying();
     boolean isPaused();
     boolean isFrozen();
+    void stop();
     void pause();
-    int getCurrentPosition();
+    long getCurrentPosition();
     void setFullScreen(boolean isFullScreen);
     boolean isFullScreen();
-    void setPreview(Preview preview);
+    void setPlayerView(PlayerView preview);
     void release();
     void setPlayerListener(IPlayerListener listener);
     void setController(PlayerController controller);
     void freeze();
     void unfreeze();
     void setVideoTitle(String title);
-    int getLastFreezePosition();
+    long getLastFreezePosition();
     void setAutoHideControls(boolean autoHide);
     boolean getAutoHideControls();
     void showController();
@@ -46,11 +48,12 @@ public interface IPlayer extends Serializable {
     boolean isReset();
 
     // methods from PlayerController.MediaPlayerControl interface
-    int     getDuration();
-    void    seekTo(int pos);
+    long    getDuration();
+    void    seekTo(long pos);
     int     getBufferPercentage();
     boolean canPause();
     boolean canSeekBackward();
     boolean canSeekForward();
     void    toggleFullScreen();
+    boolean  isSeekable();
 }

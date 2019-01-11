@@ -232,11 +232,10 @@ public interface IDatabase {
 
     /**
      * Update a Video's last watched time
-     *
      * @param videoId - Id of video for which status needs to change
      * @param offset  - Last Played offset
      */
-    Integer updateVideoLastPlayedOffset(String videoId, int offset, DataCallback<Integer> callback);
+    Integer updateVideoLastPlayedOffset(String videoId, long offset, DataCallback<Integer> callback);
 
 
     /**

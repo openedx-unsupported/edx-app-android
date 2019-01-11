@@ -82,7 +82,7 @@ public class PlayerController extends FrameLayout {
     public static final long    DEFAULT_TIMEOUT_MS = 3000L;
 
     private long                mTimeoutMS = DEFAULT_TIMEOUT_MS;
-    private IPlayer             mPlayer;
+    private PlayerListener mPlayer;
     private Context             mContext;
     private ViewGroup           mAnchor;
     private View                mRoot;
@@ -140,7 +140,7 @@ public class PlayerController extends FrameLayout {
             initControllerView(mRoot);
     }
 
-    public void setMediaPlayer(IPlayer player) {
+    public void setMediaPlayer(PlayerListener player) {
         mPlayer = player;
         updatePausePlay();
         updateFullScreen();
@@ -378,12 +378,12 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    private String stringForTime(int timeMs) {
-        int totalSeconds = timeMs / 1000;
+    private String stringForTime(long timeMs) {
+        long totalSeconds = timeMs / 1000;
 
-        int seconds = totalSeconds % 60;
-        int minutes = (totalSeconds / 60) % 60;
-        int hours   = totalSeconds / 3600;
+        long seconds = totalSeconds % 60;
+        long minutes = (totalSeconds / 60) % 60;
+        long hours   = totalSeconds / 3600;
 
         mFormatBuilder.setLength(0);
         if (hours > 0) {
@@ -393,13 +393,13 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    private synchronized int setProgress() {
+    private synchronized long setProgress() {
         if (mPlayer == null || mDragging) {
             return 0;
         }
 
-        int position = mPlayer.getCurrentPosition();
-        int duration = mPlayer.getDuration();
+        long position = mPlayer.getCurrentPosition();
+        long duration = mPlayer.getDuration();
         if (mProgress != null) {
             if (duration > 0) {
                 // use long to avoid overflow
@@ -713,7 +713,7 @@ public class PlayerController extends FrameLayout {
             if (mPlayer == null) {
                 return;
             }
-            int pos = mPlayer.getCurrentPosition();
+            long pos = mPlayer.getCurrentPosition();
             try{
                 mPlayer.callPlayerSeeked(pos, pos-30000, true);
             }catch(Exception e){
@@ -791,7 +791,7 @@ public class PlayerController extends FrameLayout {
                     return;
                 }
 
-                int pos;
+                long pos;
                 switch (msg.what) {
                 case FADE_OUT:
                     if (view.mIsAutoHide) {
