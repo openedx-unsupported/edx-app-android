@@ -3,41 +3,47 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/widget_margin"
-        android:paddingRight="@dimen/widget_margin">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/panel_course_layout"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_panel_find_courses"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/edx_margin"
-            android:paddingRight="@dimen/edx_margin">
+            android:layout_marginLeft="@dimen/widget_margin"
+            android:layout_marginRight="@dimen/widget_margin"
+            style="@style/edX.Widget.CardView">
 
-            <TextView
-                android:id="@+id/findcourse_tv"
-                style="@style/semibold_text"
+            <LinearLayout
+                android:id="@+id/panel_course_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/edx_margin"
-                android:layout_marginBottom="@dimen/edx_margin"
+                android:background="@drawable/bg_panel_find_courses"
+                android:descendantFocusability="blocksDescendants"
                 android:gravity="center"
-                android:text="@string/find_course_text"
-                android:textColor="@color/edx_brand_gray_base"
-                android:textSize="@dimen/edx_base" />
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/edx_margin"
+                android:paddingRight="@dimen/edx_margin">
 
-            <Button
-                android:id="@+id/course_btn"
-                style="@style/edX.Widget.BrandPillButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/find_course_btn_text"
-                android:layout_marginBottom="@dimen/edx_margin" />
+                <TextView
+                    android:id="@+id/findcourse_tv"
+                    style="@style/semibold_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edx_margin"
+                    android:layout_marginTop="@dimen/edx_margin"
+                    android:gravity="center"
+                    android:text="@string/find_course_text"
+                    android:textColor="@color/edx_brand_gray_base"
+                    android:textSize="@dimen/edx_base" />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/course_btn"
+                    style="@style/edX.Widget.BrandPillButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edx_margin"
+                    android:text="@string/find_course_btn_text" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </FrameLayout>
 </layout>

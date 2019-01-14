@@ -13,9 +13,11 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
-        android:dividerHeight="@dimen/widget_margin"
+        android:dividerHeight="@dimen/widget_margin_half"
         android:drawSelectorOnTop="false"
         android:listSelector="@android:color/transparent"
+        android:paddingBottom="@dimen/widget_margin_half"
+        android:paddingTop="@dimen/widget_margin_half"
         tools:listitem="@layout/row_course_list" />
 
     <include layout="@layout/loading_indicator" />

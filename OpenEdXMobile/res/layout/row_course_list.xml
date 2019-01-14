@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fl_row_course_list_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/widget_margin"
     android:paddingRight="@dimen/widget_margin">
 
-    <FrameLayout
-        android:id="@+id/fl_background"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_background"
+        style="@style/edX.Widget.CardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:foreground="@drawable/fg_course_row">
+        android:foreground="@drawable/selectable_rounded_box_overlay">
 
         <include layout="@layout/course_card" />
 
-    </FrameLayout>
+        <View
+            android:id="@+id/view_foreground_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/fg_course_row"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+
+    </android.support.v7.widget.CardView>
 
 </FrameLayout>
