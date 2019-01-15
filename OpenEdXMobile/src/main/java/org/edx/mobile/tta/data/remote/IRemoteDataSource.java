@@ -6,8 +6,8 @@ import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.ModificationResponse;
-import org.edx.mobile.tta.ui.login.model.LoginRequest;
-import org.edx.mobile.tta.ui.login.model.LoginResponse;
+import org.edx.mobile.tta.ui.logistration.model.LoginRequest;
+import org.edx.mobile.tta.ui.logistration.model.LoginResponse;
 
 import java.util.List;
 

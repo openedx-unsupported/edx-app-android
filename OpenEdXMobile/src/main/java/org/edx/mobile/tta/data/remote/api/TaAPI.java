@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import org.edx.mobile.tta.data.model.AgendaList;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.ContentResponse;
 import org.edx.mobile.tta.data.model.ModificationResponse;
 import org.edx.mobile.tta.data.remote.service.TaService;
 
@@ -35,11 +36,11 @@ public class TaAPI {
         return taService.getModification();
     }
 
-    public Call<List<Content>> getContents(){
+    public Call<ContentResponse> getContents(){
         return taService.getContents();
     }
 
-    public Call<AgendaList> getStateAgendaCount(){
+    public Call<List<AgendaList>> getStateAgendaCount(){
         return taService.getStateAgendaCount();
     }
 

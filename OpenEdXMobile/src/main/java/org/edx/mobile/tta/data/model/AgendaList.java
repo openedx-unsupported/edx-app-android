@@ -1,35 +1,22 @@
 package org.edx.mobile.tta.data.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-
-import org.edx.mobile.tta.data.model.AgendaItem;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class AgendaList {
 
-    private long list_id;
-
-    private String list_name;
+    @SerializedName("Level")
+    private String level;
 
     private List<AgendaItem> result;
 
-    public long getList_id() {
-        return list_id;
+    public String getLevel() {
+        return level;
     }
 
-    public void setList_id(long list_id) {
-        this.list_id = list_id;
-    }
-
-    public String getList_name() {
-        return list_name;
-    }
-
-    public void setList_name(String list_name) {
-        this.list_name = list_name;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
     public List<AgendaItem> getResult() {

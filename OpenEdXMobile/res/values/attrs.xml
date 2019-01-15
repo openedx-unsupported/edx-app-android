@@ -32,4 +32,14 @@
     <declare-styleable name="DisableableViewPager">
         <attr name="android:enabled" />
     </declare-styleable>
+
+    <!-- TTA attributes start -->
+
+    <declare-styleable name="FormEditText">
+        <attr name="android:inputType" />
+        <attr name="android:text" />
+        <attr name="android:hint" />
+    </declare-styleable>
+
+    <!-- TTA attributes end -->
 </resources>

@@ -10,7 +10,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.launch.LaunchFragment;
-import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
+import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
 import java.util.ArrayList;

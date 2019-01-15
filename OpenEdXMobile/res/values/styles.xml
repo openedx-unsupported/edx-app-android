@@ -3,11 +3,11 @@
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/edx_brand_primary_base</item>
-        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
-        <item name="colorAccent">@color/edx_brand_primary_accent</item>
+        <item name="colorPrimary">@color/primary_cyan</item>
+        <item name="colorPrimaryDark">@color/primary_cyan</item>
+        <item name="colorAccent">@color/primary_cyan</item>
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
-        <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
+        <item name="actionModeBackground">@color/primary_cyan</item>
         <item name="actionMenuTextColor">@color/toolbar_controls_color</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
         <item name="actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
@@ -27,7 +27,7 @@
         <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
-        <item name="android:textColorLink">@color/edx_brand_primary_base</item>
+        <item name="android:textColorLink">@color/primary_cyan</item>
         <!-- Default progress bar style is currently the same as large. Which means
              that there is no attribute for the medium one. But since we're not using
              any of the other sizes anywhere currently, it doesn't matter for now. -->
@@ -555,4 +555,42 @@
         <item name="android:windowMinWidthMajor">50%</item>
         <item name="android:windowMinWidthMinor">50%</item>
     </style>
+    
+    <!-- TTA styles start -->
+
+    <style name="AppTheme.NoActionBar.Fullscreen.TaLaunch">
+        <item name="android:windowBackground">@drawable/launch_background_tta</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.CustomStatus" />
+
+    <style name="ta_fab_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">14dp</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+    <style name="ta_dotted_tab_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?actionBarSize</item>
+        <item name="android:clickable">false</item>
+    </style>
+    
+    <style name="ta_tab_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@color/app_background</item>
+    </style>
+
+    <style name="agenda_list_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- TTA styles end -->
+    
 </resources>

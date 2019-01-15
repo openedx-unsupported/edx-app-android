@@ -7,6 +7,8 @@ import android.databinding.Bindable;
 
 import org.edx.mobile.BR;
 
+import androidx.annotation.Nullable;
+
 @Entity(tableName = "content_list")
 public class ContentList implements Comparable<ContentList>
 {
@@ -188,5 +190,10 @@ public class ContentList implements Comparable<ContentList>
     @Override
     public int compareTo(ContentList o) {
         return Long.compare(order, o.order);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (obj instanceof ContentList) && (((ContentList) obj).id == id);
     }
 }

@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
+import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
 
 
 /**

@@ -12,8 +12,10 @@ public class SourceUtil {
             return R.color.secondary_blue_light;
         } else if (sourceName.equalsIgnoreCase(SourceType.hois.toString())){
             return R.color.secondary_red;
-        } else {
+        } else if (sourceName.equalsIgnoreCase(SourceType.toolkit.toString())){
             return R.color.secondary_green;
+        } else {
+            return R.color.secondary_blue_light;
         }
     }
 

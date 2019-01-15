@@ -6,6 +6,8 @@ import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -210,7 +212,7 @@ public class MxFiniteRecyclerView extends LinearLayout {
         mBinding.mxTitleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
     }
 
-    public void setTitleTextColor(int color){
+    public void setTitleTextColor(@ColorInt int color){
         mTitleTextColor = color;
         mBinding.mxTitleText.setTextColor(color);
     }

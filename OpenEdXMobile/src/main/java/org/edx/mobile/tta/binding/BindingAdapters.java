@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 
+import org.edx.mobile.tta.ui.custom.FormEditText;
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
 
 import java.lang.reflect.Constructor;
@@ -273,5 +274,27 @@ public class BindingAdapters {
     @BindingAdapter({"finite_recycler_adapter"})
     public static void setFiniteAdapter(MxFiniteRecyclerView view, MxFiniteAdapter adapter){
         view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"request_focus"})
+    public static void requestFocus(View view, boolean b){
+        if (b) {
+            view.requestFocus();
+        }
+    }
+
+    @BindingAdapter({"form_edittext_input_type"})
+    public static void setInputType(FormEditText view, int type){
+        view.setInputType(type);
+    }
+
+    @BindingAdapter({"form_password_toggle_enabled"})
+    public static void setFormPasswordToggleEnabled(FormEditText view, boolean enabled){
+        view.setPasswordVisibilityToggleEnabled(enabled);
+    }
+
+    @BindingAdapter({"form_password_toggle_drawable"})
+    public static void setFormPasswordToggleDrawable(FormEditText view, int id){
+        view.setPasswordVisibilityToggleDrawable(id);
     }
 }

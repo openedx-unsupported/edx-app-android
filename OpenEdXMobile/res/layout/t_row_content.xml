@@ -13,11 +13,11 @@
         android:layout_height="170dp"
         app:cardCornerRadius="4dp"
         android:background="@color/white"
-        app:cardElevation="15dp"
+        app:cardElevation="@dimen/_16px"
         android:shadowColor="@color/gray_1"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginStart="@dimen/_16px"
+        android:layout_marginTop="@dimen/_14px"
+        android:layout_marginBottom="@dimen/_30px">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -48,8 +48,9 @@
                     android:textColor="@color/white"
                     android:textSize="8sp"
                     android:fontFamily="@font/hind_semibold"
-                    android:layout_margin="8dp"
+                    android:layout_margin="@dimen/_8px"
                     android:drawableStart="@drawable/ic_camera_white_24dp"
+                    android:drawablePadding="2dp"
                     android:gravity="center_vertical"/>
 
             </LinearLayout>
@@ -62,18 +63,18 @@
                 android:textSize="12sp"
                 android:fontFamily="@font/hind_medium"
                 android:singleLine="false"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginStart="@dimen/_8px"
+                android:layout_marginTop="@dimen/_18px"
                 android:layout_below="@id/content_image"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/content_status_image"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10px"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                app:srcCompat="@drawable/ic_arrow_right_cyan_24dp"/>
+                app:srcCompat="@drawable/refresh"/>
 
         </RelativeLayout>
 

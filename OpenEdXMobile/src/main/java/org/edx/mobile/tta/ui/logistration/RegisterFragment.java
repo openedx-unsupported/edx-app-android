@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.login;
+package org.edx.mobile.tta.ui.logistration;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
-import org.edx.mobile.tta.ui.login.view_model.RegisterViewModel;
+import org.edx.mobile.tta.ui.logistration.view_model.RegisterViewModel;
 
 public class RegisterFragment extends TaBaseFragment {
     @Nullable

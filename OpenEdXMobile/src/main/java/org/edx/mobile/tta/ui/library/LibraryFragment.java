@@ -19,7 +19,7 @@ public class LibraryFragment extends TaBaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = binding(inflater, container, R.layout.t_fragment_listing, new LibraryViewModel(getActivity(), this))
+        View view = binding(inflater, container, R.layout.t_fragment_library, new LibraryViewModel(getActivity(), this))
                 .getRoot();
 
         TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);

@@ -12,7 +12,7 @@ import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.task.authentication.ResetForgotedPasswordTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
+import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
 import org.edx.mobile.tta.ui.reset_password.model.ResetForgotedPasswordResponse;
 import org.edx.mobile.tta.utils.ActivityUtil;
 

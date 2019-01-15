@@ -19,6 +19,7 @@ import org.edx.mobile.tta.data.model.AgendaList;
 import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.ContentResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.ModificationResponse;
 import org.edx.mobile.tta.data.pref.AppPref;
@@ -26,11 +27,9 @@ import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.tta.exception.NoConnectionException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
-import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
-import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.library.GetModificationTask;
-import org.edx.mobile.tta.ui.login.model.LoginRequest;
-import org.edx.mobile.tta.ui.login.model.LoginResponse;
+import org.edx.mobile.tta.ui.logistration.model.LoginRequest;
+import org.edx.mobile.tta.ui.logistration.model.LoginResponse;
 import org.edx.mobile.tta.utils.RxUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
@@ -143,7 +142,23 @@ public class DataManager extends  BaseRoboInjector {
         for (int i = 0; i < 5; i++){
             Category category = new Category();
             category.setId(i);
-            category.setName("Category " + (i+1));
+            switch (i){
+                case 0:
+                    category.setName(context.getString(R.string.all));
+                    break;
+                case 1:
+                    category.setName(context.getString(R.string.course));
+                    break;
+                case 2:
+                    category.setName(context.getString(R.string.chatshala));
+                    break;
+                case 3:
+                    category.setName(context.getString(R.string.hois));
+                    break;
+                case 4:
+                    category.setName(context.getString(R.string.toolkit));
+                    break;
+            }
             category.setOrder(i);
             category.setSource(i-1);
             categories.add(category);
@@ -154,7 +169,7 @@ public class DataManager extends  BaseRoboInjector {
                 contentList.setCategory(i);
                 contentList.setFormat_type(ContentListType.feature.toString());
                 contentList.setOrder(i);
-                contentList.setName("Content List " + (i+1));
+                contentList.setName("Featured");
                 contentLists.add(contentList);
             }
 
@@ -164,14 +179,40 @@ public class DataManager extends  BaseRoboInjector {
                 contentList.setCategory(i);
                 contentList.setFormat_type(ContentListType.normal.toString());
                 contentList.setOrder(j);
-                contentList.setName("Content List " + (j+1));
+                switch (j){
+                    case 1:
+                        contentList.setName("Must See");
+                        break;
+                    case 2:
+                        contentList.setName("Continue Watching");
+                        break;
+                    case 3:
+                        contentList.setName("Recently Added");
+                        break;
+                    case 4:
+                        contentList.setName("Favourites");
+                        break;
+                }
                 contentLists.add(contentList);
             }
 
             if (i < 4){
                 Source source = new Source();
                 source.setId(i);
-                source.setName("Source " + (i+1));
+                switch (i){
+                    case 0:
+                        source.setName(context.getString(R.string.course));
+                        break;
+                    case 1:
+                        source.setName(context.getString(R.string.chatshala));
+                        break;
+                    case 2:
+                        source.setName(context.getString(R.string.hois));
+                        break;
+                    case 3:
+                        source.setName(context.getString(R.string.toolkit));
+                        break;
+                }
                 sources.add(source);
             }
         }
@@ -189,7 +230,12 @@ public class DataManager extends  BaseRoboInjector {
                 protected void onSuccess(ConfigurationResponse response) throws Exception {
                     super.onSuccess(response);
                     if (response != null){
-                        mLocalDataSource.insertConfiguration(response);
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertConfiguration(response);
+                            }
+                        }.start();
                     }
                     callback.onSuccess(response);
                 }
@@ -225,7 +271,7 @@ public class DataManager extends  BaseRoboInjector {
         }
     }
 
-    public void getContents(OnResponseCallback<List<Content>> callback){
+    public void getContents(OnResponseCallback<ContentResponse> callback){
 
         //Mocking start
         List<Content> contents = new ArrayList<>();
@@ -240,30 +286,50 @@ public class DataManager extends  BaseRoboInjector {
         for (int i = 0; i < 50; i++){
             Content content = new Content();
             content.setId(i);
-            content.setName("Content " + (i+1));
+            switch (i%4){
+                case 0:
+                    content.setName("संख्या की शुरूआती समझ");
+                    break;
+                case 1:
+                    content.setName("भिन्न - एक परिचय");
+                    break;
+                case 2:
+                    content.setName("बीजगणित की सोच बनाना");
+                    break;
+                case 3:
+                    content.setName("स्थानीय मान की समझ");
+                    break;
+            }
             if (i%10 == 0){
                 content.setLists(lists1);
-                content.setIcon("https://cdn1.imggmi.com/uploads/2019/1/3/cd6880f554501535b2bb4832870362fd-full.jpg");
+                content.setIcon("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
             } else {
                 content.setLists(lists2);
-                content.setIcon("https://cdn1.imggmi.com/uploads/2019/1/3/0880fd66016bae2b8052fbcf3aeaf267-full.jpg");
+                content.setIcon("http://theteacherapp.org/asset-v1:Language+01+201706_Lan_01+type@asset+block@Emergent_Literacy_ICON_93_kb.png");
             }
             content.setSource(i%4);
             contents.add(content);
         }
-        callback.onSuccess(contents);
+        ContentResponse contentResponse = new ContentResponse();
+        contentResponse.setResults(contents);
+        callback.onSuccess(contentResponse);
         //Mocking end
 
         //Actual code   **Do not delete**
         /*if (NetworkUtil.isConnected(context)){
             new GetContentsTask(context){
                 @Override
-                protected void onSuccess(List<Content> contents) throws Exception {
-                    super.onSuccess(contents);
-                    if (contents != null){
-                        mLocalDataSource.insertContents(contents);
+                protected void onSuccess(ContentResponse contentResponse) throws Exception {
+                    super.onSuccess(contentResponse);
+                    if (contentResponse != null && contentResponse.getResults() != null){
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertContents(contentResponse.getResults());
+                            }
+                        }.start();
                     }
-                    callback.onSuccess(contents);
+                    callback.onSuccess(contentResponse);
                 }
 
                 @Override
@@ -272,17 +338,23 @@ public class DataManager extends  BaseRoboInjector {
                 }
             }.execute();
         } else {
-            callback.onSuccess(mLocalDataSource.getContents());
+            ContentResponse contentResponse = new ContentResponse();
+            contentResponse.setCount(mLocalDataSource.getContents().size());
+            contentResponse.setResults(mLocalDataSource.getContents());
+            callback.onSuccess(contentResponse);
         }*/
 
     }
 
-    public void getStateAgendaCount(OnResponseCallback<AgendaList> callback){
+    public void getStateAgendaCount(OnResponseCallback<List<AgendaList>> callback){
 
         //Mocking start
-        AgendaList agendaList = new AgendaList();
-        agendaList.setList_id(1);
-        agendaList.setList_name("State wise Agenda");
+        AgendaList agendaList1 = new AgendaList();
+        AgendaList agendaList2 = new AgendaList();
+        AgendaList agendaList3 = new AgendaList();
+        agendaList1.setLevel("State");
+        agendaList2.setLevel("District");
+        agendaList3.setLevel("Block");
         List<AgendaItem> items = new ArrayList<>();
         for (int i = 0; i < 4; i++){
             AgendaItem item = new AgendaItem();
@@ -304,17 +376,24 @@ public class DataManager extends  BaseRoboInjector {
             }
             items.add(item);
         }
-        agendaList.setResult(items);
-        callback.onSuccess(agendaList);
+        agendaList1.setResult(items);
+        agendaList2.setResult(items);
+        agendaList3.setResult(items);
+
+        List<AgendaList> agendaLists = new ArrayList<>();
+        agendaLists.add(agendaList1);
+        agendaLists.add(agendaList2);
+        agendaLists.add(agendaList3);
+        callback.onSuccess(agendaLists);
         //Mocking end
 
         //Actual code   **Do not delete**
         /*if (NetworkUtil.isConnected(context)){
             new GetStateAgendaCountTask(context){
                 @Override
-                protected void onSuccess(AgendaList agendaList) throws Exception {
-                    super.onSuccess(agendaList);
-                    callback.onSuccess(agendaList);
+                protected void onSuccess(List<AgendaList> agendaLists) throws Exception {
+                    super.onSuccess(agendaLists);
+                    callback.onSuccess(agendaLists);
                 }
 
                 @Override
@@ -332,8 +411,7 @@ public class DataManager extends  BaseRoboInjector {
 
         //Mocking start
         AgendaList agendaList = new AgendaList();
-        agendaList.setList_id(1);
-        agendaList.setList_name("State wise Agenda");
+        agendaList.setLevel("My Agenda");
         List<AgendaItem> items = new ArrayList<>();
         for (int i = 0; i < 4; i++){
             AgendaItem item = new AgendaItem();
@@ -376,6 +454,38 @@ public class DataManager extends  BaseRoboInjector {
         } else {
             callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
         }*/
+
+    }
+
+    public void getDownloadAgendaCount(OnResponseCallback<AgendaList> callback){
+
+        //Mocking start
+        AgendaList agendaList = new AgendaList();
+        agendaList.setLevel("Download");
+        List<AgendaItem> items = new ArrayList<>();
+        for (int i = 0; i < 4; i++){
+            AgendaItem item = new AgendaItem();
+            item.setContent_count(10 - i);
+            item.setSource(i);
+            switch (i){
+                case 0:
+                    item.setSource_name("Course");
+                    break;
+                case 1:
+                    item.setSource_name("Chatshala");
+                    break;
+                case 2:
+                    item.setSource_name("HOIS");
+                    break;
+                default:
+                    item.setSource_name("Toolkit");
+                    break;
+            }
+            items.add(item);
+        }
+        agendaList.setResult(items);
+        callback.onSuccess(agendaList);
+        //Mocking end
 
     }
 

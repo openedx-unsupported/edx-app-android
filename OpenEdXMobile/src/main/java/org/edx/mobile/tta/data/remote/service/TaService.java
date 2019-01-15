@@ -7,6 +7,7 @@ import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.tta.data.model.AgendaList;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.ContentResponse;
 import org.edx.mobile.tta.data.model.ModificationResponse;
 
 import java.util.List;
@@ -36,10 +37,10 @@ public interface TaService {
     Call<ModificationResponse> getModification();
 
     @GET(ApiConstants.URL_MX_GET_CONTENTS)
-    Call<List<Content>> getContents();
+    Call<ContentResponse> getContents();
 
     @GET(ApiConstants.URL_MX_GET_STATE_AGENDA_COUNT)
-    Call<AgendaList> getStateAgendaCount();
+    Call<List<AgendaList>> getStateAgendaCount();
 
     @GET(ApiConstants.URL_MX_GET_MY_AGENDA_COUNT)
     Call<AgendaList> getMyAgendaCount();

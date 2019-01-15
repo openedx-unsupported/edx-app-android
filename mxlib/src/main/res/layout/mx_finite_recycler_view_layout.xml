@@ -15,7 +15,8 @@
                 android:id="@+id/mx_title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"/>
 
             <View
                 android:layout_width="0dp"

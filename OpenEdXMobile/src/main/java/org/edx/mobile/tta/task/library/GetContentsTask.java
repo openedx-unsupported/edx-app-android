@@ -6,11 +6,12 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.ContentResponse;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 import java.util.List;
 
-public class GetContentsTask extends Task<List<Content>> {
+public class GetContentsTask extends Task<ContentResponse> {
 
     @Inject
     private TaAPI taAPI;
@@ -20,7 +21,7 @@ public class GetContentsTask extends Task<List<Content>> {
     }
 
     @Override
-    public List<Content> call() throws Exception {
+    public ContentResponse call() throws Exception {
         return taAPI.getContents().execute().body();
     }
 }

@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.login.view_model;
+package org.edx.mobile.tta.ui.logistration.view_model;
 
 import android.Manifest;
 import android.content.Context;
@@ -17,7 +17,7 @@ import org.edx.mobile.tta.task.authentication.GenerateOtpTask;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.login.model.SendOTPResponse;
+import org.edx.mobile.tta.ui.logistration.model.SendOTPResponse;
 import org.edx.mobile.tta.ui.otp.OtpActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.PermissionsUtil;

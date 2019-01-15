@@ -28,7 +28,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.profiles.UserProfileActivity;
-import org.edx.mobile.tta.ui.login.SigninRegisterActivity;
+import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;

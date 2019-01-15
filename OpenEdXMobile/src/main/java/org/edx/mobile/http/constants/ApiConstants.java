@@ -63,15 +63,15 @@ public class ApiConstants {
     public static final String URL_MX_REGISTER_ME = "/user_api/v1/account/registration/";
     public static final String URL_MX_UPDATE_PROFILE = "/api/otp/user_account/update/";
 
-    public static final String URL_MX_GET_CONFIGURATION = "api url here";
+    public static final String URL_MX_GET_CONFIGURATION = "api/mx_catalog/v1/config/";
 
-    public static final String URL_MX_GET_MODIFICATION = "api url here";
+    public static final String URL_MX_GET_MODIFICATION = "api/mx_catalog/v1/modifications/";
 
-    public static final String URL_MX_GET_CONTENTS = "api url here";
+    public static final String URL_MX_GET_CONTENTS = "api/mx_catalog/v1/contents";
 
-    public static final String URL_MX_GET_STATE_AGENDA_COUNT = "api url here";
+    public static final String URL_MX_GET_STATE_AGENDA_COUNT = "api/mx_catalog/v1/stateagenda/";
 
-    public static final String URL_MX_GET_MY_AGENDA_COUNT = "api url here";
+    public static final String URL_MX_GET_MY_AGENDA_COUNT = "api/mx_catalog/v1/myagenda/";
 
     //TTA end
 

@@ -9,6 +9,7 @@
             type="SwipeLaunchViewModel" />
 
         <import type="org.edx.mobile.tta.ui.launch.view_model.SwipeLaunchViewModel" />
+
         <import type="android.view.View" />
     </data>
 
@@ -16,41 +17,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            page_change_listener="@{viewModel.listener}"
+            pager_adapter="@{viewModel.adapter}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/launch_background"
-            android:orientation="vertical">
+            android:layout_height="match_parent" />
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/view_pager"
-                pager_adapter="@{viewModel.adapter}"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                page_change_listener="@{viewModel.listener}"/>
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:clickable="false"
-                app:tabBackground="@drawable/tab_dot_selector"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp" />
-
-        </LinearLayout>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            style="@style/ta_dotted_tab_style"
+            app:tabBackground="@drawable/tab_dot_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_20px"/>
 
         <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="14dp"
-            app:srcCompat="@drawable/ic_arrow_forward_cyan_24dp"
-            app:backgroundTint="@color/white"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            style="@style/ta_fab_style"
+            android:onClick="@{()->viewModel.next()}"
             android:visibility="@{viewModel.fabVisible?View.VISIBLE:View.GONE}"
-            android:onClick="@{()->viewModel.next()}"/>
+            app:backgroundTint="@color/white"
+            app:srcCompat="@drawable/ic_arrow_forward_cyan_24dp" />
 
     </RelativeLayout>
 

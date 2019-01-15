@@ -10,31 +10,30 @@
         <import type="org.edx.mobile.tta.ui.launch.view_model.LaunchViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:contentDescription="@string/launch_content"
             android:src="@{viewModel.image}"
-            android:scaleType="fitXY"/>
+            android:scaleType="center"/>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:text="@{viewModel.text}"
-            android:gravity="top|center_horizontal"
+            android:gravity="center_horizontal"
             android:textStyle="bold"
             android:textColor="@color/primary_cyan"
             android:textSize="16sp"
-            android:paddingStart="40dp"
-            android:paddingEnd="40dp"
-            android:lineSpacingMultiplier="1.2"/>
+            android:paddingStart="@dimen/_40px"
+            android:paddingEnd="@dimen/_40px"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_marginTop="440dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </layout>

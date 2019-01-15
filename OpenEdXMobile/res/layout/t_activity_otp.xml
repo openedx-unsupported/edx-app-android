@@ -22,9 +22,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="98dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginStart="@dimen/_40px"
+                android:layout_marginTop="@dimen/_98px"
+                android:layout_marginEnd="@dimen/_40px"
                 android:fontFamily="@font/hind_medium"
                 android:text="@string/otp_verification"
                 android:textColor="@color/primary_navy"
@@ -33,9 +33,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginStart="@dimen/_40px"
+                android:layout_marginTop="@dimen/_16px"
+                android:layout_marginEnd="@dimen/_40px"
                 android:fontFamily="@font/hind_medium"
                 android:text="@string/otp_verification_msg"
                 android:textColor="@color/primary_navy"
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="98dp"
+                android:layout_marginTop="@dimen/_98px"
                 android:fontFamily="@font/hind_regular"
                 android:text="@string/verify_otp"
                 android:textColor="@color/gray_1"
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/_20px"
                 android:orientation="horizontal">
 
                 <EditText
@@ -71,7 +71,9 @@
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusDown="@id/digit2"
-                    text_changed_listener="@{viewModel.watcher1}" />
+                    text_changed_listener="@{viewModel.watcher1}"
+                    request_focus="@{viewModel.focus1}"
+                    android:paddingBottom="@dimen/_14px"/>
 
                 <EditText
                     android:layout_width="40dp"
@@ -86,7 +88,9 @@
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusDown="@id/digit3"
-                    text_changed_listener="@{viewModel.watcher2}" />
+                    text_changed_listener="@{viewModel.watcher2}"
+                    request_focus="@{viewModel.focus2}"
+                    android:paddingBottom="@dimen/_14px" />
 
                 <EditText
                     android:layout_width="40dp"
@@ -101,7 +105,9 @@
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusDown="@id/digit4"
-                    text_changed_listener="@{viewModel.watcher3}" />
+                    text_changed_listener="@{viewModel.watcher3}"
+                    request_focus="@{viewModel.focus3}"
+                    android:paddingBottom="@dimen/_14px" />
 
                 <EditText
                     android:layout_width="40dp"
@@ -116,7 +122,9 @@
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusDown="@id/digit5"
-                    text_changed_listener="@{viewModel.watcher4}" />
+                    text_changed_listener="@{viewModel.watcher4}"
+                    request_focus="@{viewModel.focus4}"
+                    android:paddingBottom="@dimen/_14px" />
 
                 <EditText
                     android:layout_width="40dp"
@@ -131,7 +139,9 @@
                     android:inputType="number"
                     android:maxLength="1"
                     android:nextFocusDown="@id/digit6"
-                    text_changed_listener="@{viewModel.watcher5}" />
+                    text_changed_listener="@{viewModel.watcher5}"
+                    request_focus="@{viewModel.focus5}"
+                    android:paddingBottom="@dimen/_14px" />
 
                 <EditText
                     android:layout_width="40dp"
@@ -144,7 +154,9 @@
                     android:gravity="center_horizontal"
                     android:inputType="number"
                     android:maxLength="1"
-                    text_changed_listener="@{viewModel.watcher6}" />
+                    text_changed_listener="@{viewModel.watcher6}"
+                    request_focus="@{viewModel.focus6}"
+                    android:paddingBottom="@dimen/_14px" />
 
             </LinearLayout>
 
@@ -152,17 +164,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="@dimen/_40px"
                 android:fontFamily="@font/hind_medium"
                 android:text="@string/resend_otp"
                 android:textColor="@color/primary_cyan"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:onClick="@{()->viewModel.resendOtp()}"/>
 
             <Button
-                android:layout_width="200dp"
-                android:layout_height="36dp"
+                android:layout_width="240dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="@dimen/_40px"
                 android:background="@drawable/btn_selector_filled"
                 android:enabled="@{viewModel.valid1 &amp;&amp; viewModel.valid2 &amp;&amp; viewModel.valid3 &amp;&amp; viewModel.valid4 &amp;&amp; viewModel.valid5 &amp;&amp; viewModel.valid6}"
                 android:fontFamily="@font/hind_medium"

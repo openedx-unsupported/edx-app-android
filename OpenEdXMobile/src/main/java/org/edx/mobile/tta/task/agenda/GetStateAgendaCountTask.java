@@ -8,7 +8,9 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.data.model.AgendaList;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
-public class GetStateAgendaCountTask extends Task<AgendaList> {
+import java.util.List;
+
+public class GetStateAgendaCountTask extends Task<List<AgendaList>> {
 
     @Inject
     private TaAPI taAPI;
@@ -18,7 +20,7 @@ public class GetStateAgendaCountTask extends Task<AgendaList> {
     }
 
     @Override
-    public AgendaList call() throws Exception {
+    public List<AgendaList> call() throws Exception {
         return taAPI.getStateAgendaCount().execute().body();
     }
 }

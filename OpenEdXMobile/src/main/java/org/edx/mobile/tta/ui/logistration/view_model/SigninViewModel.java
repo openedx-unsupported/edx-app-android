@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.login.view_model;
+package org.edx.mobile.tta.ui.logistration.view_model;
 
 
 import android.content.Context;

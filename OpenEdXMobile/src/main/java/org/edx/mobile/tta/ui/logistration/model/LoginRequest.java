@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.login.model;
+package org.edx.mobile.tta.ui.logistration.model;
 
 /**
  * Created by Arjun on 2018/6/20.

@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.ui.login.model.RegisterResponse;
+import org.edx.mobile.tta.ui.logistration.model.RegisterResponse;
 
 public class RegisterTask extends Task<RegisterResponse> {
     private Bundle parameters;

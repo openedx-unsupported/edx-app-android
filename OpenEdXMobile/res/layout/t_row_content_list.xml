@@ -21,13 +21,13 @@
             app:mx_moreButtonText="@string/view_more"
             app:mx_moreButtonDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
             app:mx_moreButtonTextColor="@color/primary_cyan"
-            app:mx_moreButtonTextSize="@dimen/_12px_sp"
+            app:mx_moreButtonTextSize="@dimen/list_view_more_size"
             app:mx_moreButtonTextFont="@font/hind_medium"
-            app:mx_moreButtonMarginEnd="20dp"
+            app:mx_moreButtonMarginEnd="@dimen/_20px"
             app:mx_titleTextColor="@color/gray_5"
-            app:mx_titleTextSize="@dimen/_14px_sp"
+            app:mx_titleTextSize="@dimen/list_title_size"
             app:mx_titleTextFont="@font/hind_semibold"
-            app:mx_titleMarginStart="20dp"
+            app:mx_titleMarginStart="@dimen/_20px"
             app:mx_itemLimit="5" />
 
         <!--<LinearLayout

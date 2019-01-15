@@ -16,39 +16,50 @@ import org.edx.mobile.tta.utils.ActivityUtil;
 
 public class DashboardViewModel extends BaseViewModel {
 
-    public ObservableInt selectedId = new ObservableInt();
+    private int selectedId = R.id.action_library;
 
     public ObservableBoolean navShiftMode = new ObservableBoolean();
 
     public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            if (item.getItemId() == selectedId){
+                return true;
+            }
             switch (item.getItemId()){
                 case R.id.action_library:
+                    selectedId = R.id.action_library;
                     showLibrary();
                     return true;
                 case R.id.action_feed:
+                    selectedId = R.id.action_feed;
                     showFeed();
                     return true;
                 case R.id.action_search:
+                    selectedId = R.id.action_search;
                     showSearch();
                     return true;
                 case R.id.action_agenda:
+                    selectedId = R.id.action_agenda;
                     showAgenda();
                     return true;
                 case R.id.action_profile:
+                    selectedId = R.id.action_profile;
                     showProfile();
                     return true;
                 default:
-                    return false;
+                    selectedId = R.id.action_library;
+                    showLibrary();
+                    return true;
             }
         }
     };
 
     public DashboardViewModel(BaseVMActivity activity) {
         super(activity);
-        selectedId.set(R.id.action_library);
         navShiftMode.set(false);
+        selectedId = R.id.action_library;
+        showLibrary();
     }
 
     public void showLibrary(){

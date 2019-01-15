@@ -12,22 +12,27 @@ import android.text.TextWatcher;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.task.authentication.GenerateOtpTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
+import org.edx.mobile.tta.task.authentication.MobileNumberVerificationTask;
 import org.edx.mobile.tta.task.authentication.OTPVerificationForgotedPasswordTask;
 import org.edx.mobile.tta.task.authentication.RegisterTask;
 import org.edx.mobile.tta.task.authentication.VerifyOtpTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.dashboard.DashboardActivity;
-import org.edx.mobile.tta.ui.login.model.RegisterResponse;
+import org.edx.mobile.tta.ui.logistration.model.RegisterResponse;
+import org.edx.mobile.tta.ui.logistration.model.SendOTPResponse;
 import org.edx.mobile.tta.ui.otp.IMessageReceiver;
 import org.edx.mobile.tta.ui.otp.IncomingSms;
 import org.edx.mobile.tta.ui.otp.OTP_helper;
 import org.edx.mobile.tta.ui.otp.model.VerifyOTPForgotedPasswordResponse;
 import org.edx.mobile.tta.ui.otp.model.VerifyOTPResponse;
 import org.edx.mobile.tta.ui.reset_password.ResetPasswordActivity;
+import org.edx.mobile.tta.ui.reset_password.model.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 
@@ -46,6 +51,13 @@ public class OtpViewModel extends BaseViewModel {
     public ObservableBoolean valid4 = new ObservableBoolean();
     public ObservableBoolean valid5 = new ObservableBoolean();
     public ObservableBoolean valid6 = new ObservableBoolean();
+
+    public ObservableBoolean focus1 = new ObservableBoolean();
+    public ObservableBoolean focus2 = new ObservableBoolean();
+    public ObservableBoolean focus3 = new ObservableBoolean();
+    public ObservableBoolean focus4 = new ObservableBoolean();
+    public ObservableBoolean focus5 = new ObservableBoolean();
+    public ObservableBoolean focus6 = new ObservableBoolean();
 
     private String otp = "";
 
@@ -74,6 +86,7 @@ public class OtpViewModel extends BaseViewModel {
             String numString = s.toString().trim();
             if (numString.length() == 1 && numString.matches("[0-9]+")){
                 valid1.set(true);
+                shiftFocusTo(digit2);
             } else {
                 valid1.set(false);
             }
@@ -99,6 +112,7 @@ public class OtpViewModel extends BaseViewModel {
             String numString = s.toString().trim();
             if (numString.length() == 1 && numString.matches("[0-9]+")){
                 valid2.set(true);
+                shiftFocusTo(digit3);
             } else {
                 valid2.set(false);
             }
@@ -124,6 +138,7 @@ public class OtpViewModel extends BaseViewModel {
             String numString = s.toString().trim();
             if (numString.length() == 1 && numString.matches("[0-9]+")){
                 valid3.set(true);
+                shiftFocusTo(digit4);
             } else {
                 valid3.set(false);
             }
@@ -149,6 +164,7 @@ public class OtpViewModel extends BaseViewModel {
             String numString = s.toString().trim();
             if (numString.length() == 1 && numString.matches("[0-9]+")){
                 valid4.set(true);
+                shiftFocusTo(digit5);
             } else {
                 valid4.set(false);
             }
@@ -174,6 +190,7 @@ public class OtpViewModel extends BaseViewModel {
             String numString = s.toString().trim();
             if (numString.length() == 1 && numString.matches("[0-9]+")){
                 valid5.set(true);
+                shiftFocusTo(digit6);
             } else {
                 valid5.set(false);
             }
@@ -238,6 +255,102 @@ public class OtpViewModel extends BaseViewModel {
 
     }
 
+    private void shiftFocusTo(ObservableField<String> digit){
+
+        focus1.set(false);
+        focus2.set(false);
+        focus3.set(false);
+        focus4.set(false);
+        focus5.set(false);
+        focus6.set(false);
+
+        if (digit.equals(digit1)){
+            focus1.set(true);
+        } else if (digit.equals(digit2)){
+            focus2.set(true);
+        } else if (digit.equals(digit3)){
+            focus3.set(true);
+        } else if (digit.equals(digit4)){
+            focus4.set(true);
+        } else if (digit.equals(digit5)){
+            focus5.set(true);
+        } else {
+            focus6.set(true);
+        }
+
+    }
+
+    public void resendOtp(){
+        mActivity.show();
+
+        Bundle parameters = new Bundle();
+        parameters.putString(Constants.KEY_MOBILE_NUMBER, number);
+
+        if (otpSource.equals(Constants.OTP_SOURCE_RESET_PASSWORD)) {
+            generateOtpForResetPassword(parameters);
+        } else if (otpSource.equals(Constants.OTP_SOURCE_REGISTER)) {
+            generateOtpForRegistration(parameters);
+        }
+
+    }
+
+    private void generateOtpForResetPassword(Bundle parameters){
+        new MobileNumberVerificationTask(mActivity, parameters){
+            @Override
+            protected void onSuccess(MobileNumberVerificationResponse mobileNumberVerificationResponse) throws Exception {
+                super.onSuccess(mobileNumberVerificationResponse);
+                mActivity.hide();
+
+                if (mobileNumberVerificationResponse.mobile_number() != null && !mobileNumberVerificationResponse.mobile_number().equals("")){
+                    mActivity.showShortSnack("OTP sent successfully");
+                } else {
+                    mActivity.showErrorDialog("Reset password failure", "Unable to resend OTP");
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                mActivity.hide();
+                mActivity.showErrorDialog("User not exist", "User with this mobile number doesn't exist.");
+            }
+        }.execute();
+    }
+
+    private void generateOtpForRegistration(Bundle parameters){
+        new GenerateOtpTask(mActivity, parameters){
+            @Override
+            protected void onSuccess(SendOTPResponse sendOTPResponse) throws Exception {
+                super.onSuccess(sendOTPResponse);
+                mActivity.hide();
+
+                if (sendOTPResponse.mobile_number().equals(number)){
+                    mActivity.showShortSnack("OTP sent successfully");
+                } else {
+                    mActivity.showErrorDialog("Registration failure", "Unable to resend OTP");
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                mActivity.hide();
+                String errorMsg = "";
+                try {
+                    if (((HttpResponseStatusException) ex).getStatusCode() == 409) {
+                        errorMsg = "An account with this number already exists. Please try again";
+                    } else if (((HttpResponseStatusException) ex).getStatusCode() == 404) {
+                        errorMsg = "Please enter a valid mobile number";
+                    } else {
+                        errorMsg = "Please try again after sometime,Server not responding";
+                    }
+                } catch (Exception exp) {
+                    errorMsg = "Please try again after sometime,Server not responding";
+                }
+
+                mActivity.showErrorDialog("Registration failure", errorMsg);
+            }
+        }.execute();
+    }
+
     public void verify(){
         mActivity.show();
 
@@ -274,7 +387,7 @@ public class OtpViewModel extends BaseViewModel {
             @Override
             protected void onException(Exception ex) {
                 mActivity.hide();
-                mActivity.showErrorDialog("OTP Verification failure", "Please enter OTP you receive.");
+                mActivity.showErrorDialog("OTP Verification failure", "Error occured during OTP verification");
             }
         }.execute();
     }

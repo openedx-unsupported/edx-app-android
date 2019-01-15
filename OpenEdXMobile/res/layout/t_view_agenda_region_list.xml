@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.maurya.mx.mxlib.view.MxFiniteRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:mx_itemLayout="@layout/t_row_agenda_item"
+    app:mx_moreButtonVisible="false"
+    app:mx_titleMarginStart="@dimen/_20px"
+    app:mx_titleTextColor="@color/gray_6"
+    app:mx_titleTextFont="@font/hind_semibold"
+    app:mx_titleTextSize="@dimen/list_title_size" />

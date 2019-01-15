@@ -22,14 +22,13 @@
         <android.support.design.widget.BottomNavigationView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/dashboard_bottom_nav"
             android:minHeight="50dp"
             app:elevation="2dp"
             android:background="@drawable/bottom_bar_nav_background"
             app:menu="@menu/dashboard_bottom_nav_menu"
             app:itemTextColor="@color/dashboard_bottom_nav_item_color_selector"
-            app:itemIconTint="@color/dashboard_bottom_nav_item_color_selector"
             bottom_nav_item_selected_listener="@{viewModel.itemSelectedListener}"
-            bottom_nav_item_selected_id="@{viewModel.selectedId}"
             bottom_nav_enable_shift_mode="@{viewModel.navShiftMode}"
             android:textSize="10sp" />
 

@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.login.model;
+package org.edx.mobile.tta.ui.logistration.model;
 
 public class SendOTPResponse {
     int id;

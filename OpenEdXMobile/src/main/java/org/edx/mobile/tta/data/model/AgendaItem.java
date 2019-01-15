@@ -8,8 +8,6 @@ public class AgendaItem {
 
     private String source_name;
 
-    private String source_icon;
-
     public long getSource() {
         return source;
     }
@@ -32,13 +30,5 @@ public class AgendaItem {
 
     public void setSource_name(String source_name) {
         this.source_name = source_name;
-    }
-
-    public String getSource_icon() {
-        return source_icon;
-    }
-
-    public void setSource_icon(String source_icon) {
-        this.source_icon = source_icon;
     }
 }

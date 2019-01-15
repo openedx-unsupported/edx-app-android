@@ -42,6 +42,7 @@ public class ListingTabViewModel extends BaseViewModel {
     private ConfigurationResponse cr;
     private Category category;
     private List<ContentList> contentLists;
+    private List<ContentList> emptyLists;
 
     private Map<Long, List<Content>> contentListMap;
     private Map<Long, Source> sourceMap;
@@ -89,6 +90,17 @@ public class ListingTabViewModel extends BaseViewModel {
                     }
                 }
             }
+        }
+
+        emptyLists = new ArrayList<>();
+        for (ContentList list: contentLists){
+            if (!contentListMap.containsKey(list.getId())){
+                emptyLists.add(list);
+            }
+        }
+
+        for (ContentList list: emptyLists){
+            contentLists.remove(list);
         }
 
     }

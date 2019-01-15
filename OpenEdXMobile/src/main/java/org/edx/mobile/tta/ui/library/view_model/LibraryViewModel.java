@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.ConfigurationResponse;
+import org.edx.mobile.tta.data.model.ContentResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BaseFragmentPagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
@@ -73,13 +74,18 @@ public class LibraryViewModel extends BaseViewModel {
             }
         });
 
-        mDataManager.getContents(new OnResponseCallback<List<Content>>() {
+        mDataManager.getContents(new OnResponseCallback<ContentResponse>() {
             @Override
-            public void onSuccess(List<Content> data) {
+            public void onSuccess(ContentResponse data) {
                 mActivity.hide();
-                contents = data;
-
                 contentRecieved = true;
+                if (data == null || data.getResults() == null || data.getResults().isEmpty()){
+                    mActivity.hide();
+                    mActivity.showShortSnack("No data to show at the  moment.");
+                    return;
+                }
+                contents = data.getResults();
+
                 if (configRecieved){
                     populateTabs();
                 }
