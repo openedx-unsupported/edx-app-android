@@ -451,6 +451,13 @@
         <item name="overlapAnchor">true</item>
     </style>
 
+    <style name="edX.Widget.CardView" parent="CardView">
+        <item name="cardCornerRadius">@dimen/edx_box_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
     <style name="edX.Widget.DropDownListView" parent="Widget.AppCompat.ListView.DropDown" />
 
     <!-- Spinner with the popup style -->

@@ -8,9 +8,7 @@
     android:layout_marginRight="@dimen/discussion_responses_standard_margin"
     android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
     android:layout_marginBottom="@dimen/discussion_responses_standard_half_margin"
-    app:cardCornerRadius="@dimen/edx_box_radius"
-    app:cardPreventCornerOverlap="false"
-    app:cardUseCompatPadding="true">
+    style="@style/edX.Widget.CardView">
 
     <LinearLayout
         android:id="@+id/row_discussion_comment_layout"
