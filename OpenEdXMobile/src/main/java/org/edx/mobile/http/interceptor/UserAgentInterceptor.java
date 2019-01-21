@@ -3,6 +3,7 @@ package org.edx.mobile.http.interceptor;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
+import java.text.Normalizer;
 
 import okhttp3.Interceptor;
 import okhttp3.Response;
@@ -13,7 +14,7 @@ public class UserAgentInterceptor implements Interceptor {
     private final String userAgent;
 
     public UserAgentInterceptor(@NonNull String userAgent) {
-        this.userAgent = userAgent;
+        this.userAgent = Normalizer.normalize(userAgent, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");;
     }
 
     @Override
