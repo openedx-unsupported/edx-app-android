@@ -62,6 +62,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        removeFragment();
     }
 
     public void initializeYoutubePlayer() {
@@ -126,11 +127,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     @Override
     public void onPageDisappear() {
         super.onPageDisappear();
-        try {
-            getChildFragmentManager().beginTransaction().replace(R.id.player_container, new Fragment()).commit();
-        } catch (IllegalStateException ex) {
-            logger.error(ex);
-        }
+        removeFragment();
         subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
     }
 
@@ -258,5 +255,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             return true;
         }
         return false;
+    }
+
+    private void removeFragment(){
+        try {
+            getChildFragmentManager().beginTransaction().replace(R.id.player_container, new Fragment()).commit();
+        } catch (IllegalStateException ex) {
+            logger.error(ex);
+        }
     }
 }
