@@ -1,17 +1,22 @@
 package org.edx.mobile.tta.data.remote.api;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.google.inject.Singleton;
 
-import org.edx.mobile.tta.data.model.AgendaList;
-import org.edx.mobile.tta.data.model.ConfigurationResponse;
+import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
-import org.edx.mobile.tta.data.model.ContentResponse;
-import org.edx.mobile.tta.data.model.ModificationResponse;
+import org.edx.mobile.tta.data.model.AgendaList;
+import org.edx.mobile.tta.data.model.BookmarkResponse;
+import org.edx.mobile.tta.data.model.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.CollectionItemsResponse;
+import org.edx.mobile.tta.data.model.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.remote.service.TaService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -28,16 +33,28 @@ public class TaAPI {
         this.taService = taService;
     }
 
-    public Call<ConfigurationResponse> getConfiguration(){
-        return taService.getConfiguration();
+    public Call<CollectionConfigResponse> getCollectionConfig(){
+        return taService.getCollectionConfig();
     }
 
-    public Call<ModificationResponse> getModification(){
-        return taService.getModification();
+    public Call<ConfigModifiedDateResponse> getConfigModifiedDate(){
+        return taService.getConfigModifiedDate();
     }
 
-    public Call<ContentResponse> getContents(){
-        return taService.getContents();
+    public Call<List<CollectionItemsResponse>> getCollectionItems(Bundle parameters){
+        long[] listIds = parameters.getLongArray(Constants.KEY_LIST_IDS);
+        int skip = parameters.getInt(Constants.KEY_SKIP);
+        int take = parameters.getInt(Constants.KEY_TAKE);
+        StringBuilder builder = new StringBuilder();
+        if (listIds != null){
+            for (long id: listIds){
+                builder.append(id).append(",");
+            }
+        }
+        if (builder.length() > 0){
+            builder.deleteCharAt(builder.length() - 1);
+        }
+        return taService.getCollectionItems(builder.toString(), skip, take);
     }
 
     public Call<List<AgendaList>> getStateAgendaCount(){
@@ -46,5 +63,15 @@ public class TaAPI {
 
     public Call<AgendaList> getMyAgendaCount(){
         return taService.getMyAgendaCount();
+    }
+
+    public Call<List<Content>> getMyAgendaContent(){
+        return taService.getMyAgendaContent();
+    }
+
+    public Call<BookmarkResponse> setBookmark(long contentId){
+        Map<String, Long> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_CONTENT_ID, contentId);
+        return taService.setBookmark(parameters);
     }
 }

@@ -6,13 +6,13 @@ import org.edx.mobile.tta.data.local.db.table.Source;
 
 import java.util.List;
 
-public class ConfigurationResponse
+public class CollectionConfigResponse
 {
     private List<Category> category;
 
     private List<Source> source;
 
-    private List<ContentList> list;
+    private List<ContentList> content_list;
 
     public List<Category> getCategory ()
     {
@@ -34,19 +34,19 @@ public class ConfigurationResponse
         this.source = source;
     }
 
-    public List<ContentList> getList ()
+    public List<ContentList> getContent_list()
     {
-        return list;
+        return content_list;
     }
 
-    public void setList (List<ContentList> list)
+    public void setContent_list(List<ContentList> content_list)
     {
-        this.list = list;
+        this.content_list = content_list;
     }
 
     @Override
     public String toString()
     {
-        return "ConfigurationResponse [category = "+category+", source = "+source+", list = "+list+"]";
+        return "CollectionConfigResponse [category = "+category+", source = "+source+", content_list = "+ content_list +"]";
     }
 }

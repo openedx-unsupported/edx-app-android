@@ -2,10 +2,10 @@ package org.edx.mobile.tta.data.remote;
 
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.tta.data.model.BaseResponse;
-import org.edx.mobile.tta.data.model.ConfigurationResponse;
+import org.edx.mobile.tta.data.model.CollectionConfigResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
-import org.edx.mobile.tta.data.model.ModificationResponse;
 import org.edx.mobile.tta.ui.logistration.model.LoginRequest;
 import org.edx.mobile.tta.ui.logistration.model.LoginResponse;
 
@@ -31,13 +31,13 @@ public interface IRemoteDataSource {
     @GET("empty/")
     Observable<BaseResponse<EmptyResponse>> getEmpty();
 
-    @GET(ApiConstants.URL_MX_GET_CONFIGURATION)
-    Observable<ConfigurationResponse> getConfiguration();
+    @GET(ApiConstants.URL_MX_GET_COLLECTION_CONFIG)
+    Observable<CollectionConfigResponse> getConfiguration();
 
-    @GET(ApiConstants.URL_MX_GET_MODIFICATION)
-    Observable<ModificationResponse> getModification();
+    @GET(ApiConstants.URL_MX_GET_CONFIG_MODIFIED_DATE)
+    Observable<ConfigModifiedDateResponse> getModification();
 
-    @GET(ApiConstants.URL_MX_GET_CONTENTS)
+    @GET(ApiConstants.URL_MX_GET_COLLECTION_ITEMS)
     Observable<List<Content>> getContents();
 
 }

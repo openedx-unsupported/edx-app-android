@@ -300,8 +300,11 @@
     <dimen name="_20px_sp">20sp</dimen>
 
     <dimen name="_20dp">20dp</dimen>
+    <dimen name="_14dp">14dp</dimen>
 
     <dimen name="list_title_size">7sp</dimen>
     <dimen name="list_view_more_size">6sp</dimen>
+    <dimen name="btn_width">240dp</dimen>
+    <dimen name="btn_height">32dp</dimen>
     <!-- TTA dimensions end -->
 </resources>

@@ -22,7 +22,7 @@ public class EnterNumberActivity extends BaseVMActivity {
         switch (requestCode){
             case PermissionsUtil.READ_SMS_PERMISSION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    ((EnterNumberViewModel) getViewModel()).generateOTP();
+                    ((EnterNumberViewModel) mViewModel).generateOTP();
                 }
         }
     }

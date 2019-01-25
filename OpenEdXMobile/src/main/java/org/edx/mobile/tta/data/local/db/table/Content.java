@@ -1,13 +1,16 @@
 package org.edx.mobile.tta.data.local.db.table;
 
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.RoomWarnings;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import java.util.List;
 
+@SuppressWarnings(RoomWarnings.PRIMARY_KEY_FROM_EMBEDDED_IS_DROPPED)
 @Entity(tableName = "content")
 public class Content
 {
@@ -18,7 +21,8 @@ public class Content
 
     private String icon;
 
-    private long source;
+    @Embedded(prefix = "source_")
+    private Source source;
 
     private long modified_by;
 
@@ -62,12 +66,12 @@ public class Content
         this.icon = icon;
     }
 
-    public long getSource ()
+    public Source getSource ()
     {
         return source;
     }
 
-    public void setSource (long source)
+    public void setSource (Source source)
     {
         this.source = source;
     }

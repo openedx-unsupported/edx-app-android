@@ -2,7 +2,7 @@
 
 # edX Android
 
-This is the source code for the edX mobile Android app. It is changing rapidly
+This is the source_id code for the edX mobile Android app. It is changing rapidly
 and its structure should not be relied upon. See http://code.edx.org for other
 parts of the edX code base.
 
@@ -20,7 +20,7 @@ Building
 
 This project is meant to be built using Android Studio. It can also be built from the `gradle` command line.
 
-1. Check out the source code:
+1. Check out the source_id code:
 
         git clone https://github.com/edx/edx-app-android
 
@@ -54,7 +54,7 @@ To use a custom configuration in place of the default configuration, you will ne
         edx.dir = '../../my_config'
 
 3.  In the configuration directory that you added in step 1, create another
-`edx.properties` file. This properties file contains a list of filenames. The files should be in YAML format and are for storing specific keys. These files are specified relative to the configuration directory. Keys in files earlier in the list will be overridden by keys from files later in the list. For example, if I had two files, one shared between ios and android called `shared.yaml` and one with Android specific keys called `android.yaml`, I would have the following `edx.properties`:
+`edx.properties` file. This properties file contains a content_list of filenames. The files should be in YAML format and are for storing specific keys. These files are specified relative to the configuration directory. Keys in files earlier in the content_list will be overridden by keys from files later in the content_list. For example, if I had two files, one shared between ios and android called `shared.yaml` and one with Android specific keys called `android.yaml`, I would have the following `edx.properties`:
 
         edx.android {
             configFiles = ['shared.yaml', 'android.yaml']

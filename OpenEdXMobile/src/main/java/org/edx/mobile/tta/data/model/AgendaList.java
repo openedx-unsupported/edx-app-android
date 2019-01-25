@@ -6,7 +6,6 @@ import java.util.List;
 
 public class AgendaList {
 
-    @SerializedName("Level")
     private String level;
 
     private List<AgendaItem> result;

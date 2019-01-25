@@ -1,7 +1,7 @@
 package org.edx.mobile.tta.data.local.db;
 
 import org.edx.mobile.tta.data.local.db.table.User;
-import org.edx.mobile.tta.data.model.ConfigurationResponse;
+import org.edx.mobile.tta.data.model.CollectionConfigResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
 
 import java.util.List;
@@ -42,19 +42,19 @@ public class LocalDataSource implements ILocalDataSource {
     }
 
     @Override
-    public ConfigurationResponse getConfiguration() {
-        ConfigurationResponse response = new ConfigurationResponse();
+    public CollectionConfigResponse getConfiguration() {
+        CollectionConfigResponse response = new CollectionConfigResponse();
         response.setCategory(mAppDatabase.categoryDao().getAll());
-        response.setList(mAppDatabase.contentListDao().getAll());
+        response.setContent_list(mAppDatabase.contentListDao().getAll());
         response.setSource(mAppDatabase.sourceDao().getAll());
 
         return response;
     }
 
     @Override
-    public void insertConfiguration(ConfigurationResponse response) {
+    public void insertConfiguration(CollectionConfigResponse response) {
         mAppDatabase.categoryDao().insert(response.getCategory());
-        mAppDatabase.contentListDao().insert(response.getList());
+        mAppDatabase.contentListDao().insert(response.getContent_list());
         mAppDatabase.sourceDao().insert(response.getSource());
     }
 

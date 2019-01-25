@@ -22,10 +22,12 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
+import org.edx.mobile.tta.data.enums.CategoryType;
 import org.edx.mobile.tta.data.enums.ContentListType;
 import org.edx.mobile.tta.data.local.db.table.Category;
-import org.edx.mobile.tta.data.local.db.table.Source;
-import org.edx.mobile.tta.data.model.ConfigurationResponse;
+import org.edx.mobile.tta.data.model.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.CollectionItemsResponse;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.data.local.db.table.Content;
@@ -37,72 +39,97 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListingTabViewModel extends BaseViewModel {
+public class LibraryTabViewModel extends BaseViewModel {
 
-    private ConfigurationResponse cr;
     private Category category;
     private List<ContentList> contentLists;
-    private List<ContentList> emptyLists;
 
     private Map<Long, List<Content>> contentListMap;
-    private Map<Long, Source> sourceMap;
 
     public ListingRecyclerAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
 
-    public ListingTabViewModel(Context context, TaBaseFragment fragment, ConfigurationResponse cr, Category category, List<Content> contents) {
+    public LibraryTabViewModel(Context context, TaBaseFragment fragment, CollectionConfigResponse cr, Category category) {
         super(context, fragment);
-        this.cr = cr;
         this.category = category;
 
-//        contentLists = cr.getList();
         contentLists = new ArrayList<>();
-        for (ContentList list: cr.getList()){
-            if (list.getCategory() == category.getId()){
+        for (ContentList list: cr.getContent_list()){
+            if (list.getCategory_id() == category.getId()){
                 contentLists.add(list);
             }
         }
         Collections.sort(contentLists);
-        contentListMap = new HashMap<>();
-        sourceMap = new HashMap<>();
-        setContents(contents);
-
-        for (Source source: cr.getSource()){
-            sourceMap.put(source.getId(), source);
-        }
+        getContents();
 
         adapter = new ListingRecyclerAdapter(mActivity);
-        adapter.addAll(contentLists);
         layoutManager = new LinearLayoutManager(mActivity);
     }
 
-    private void setContents(List<Content> allContents){
+    private void getContents(){
 
-        for (Content content: allContents){
-            if (content.getSource() == category.getSource() || category.getSource() == -1) {
-                for (Long listId: content.getLists()){
-                    if (contentListMap.containsKey(listId)){
-                        contentListMap.get(listId).add(content);
-                    } else {
-                        List<Content> l = new ArrayList<>();
-                        l.add(content);
-                        contentListMap.put(listId, l);
+        Long[] listIds = new Long[contentLists.size()];
+        for (int i = 0; i < contentLists.size(); i++){
+            listIds[i] = contentLists.get(i).getId();
+        }
+        mDataManager.getCollectionItems(listIds, 0, 5,
+                new OnResponseCallback<List<CollectionItemsResponse>>() {
+                    @Override
+                    public void onSuccess(List<CollectionItemsResponse> data) {
+                        setContents(data);
                     }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.showShortSnack(e.getLocalizedMessage());
+                    }
+                });
+
+    }
+
+    private void setContents(List<CollectionItemsResponse> data){
+        contentListMap = new HashMap<>();
+        List<ContentList> emptyLists = new ArrayList<>();
+
+        if (data != null){
+            for (CollectionItemsResponse response: data){
+
+                if (response.getContent() != null && !response.getContent().isEmpty()){
+                    List<Content> contents = new ArrayList<>();
+
+                    for (Content content: response.getContent()){
+                        if (category.getName().equalsIgnoreCase(CategoryType.all.toString()) || content.getSource().getId() == category.getSource_id()){
+                            contents.add(content);
+                        }
+                    }
+
+                    if (contents.isEmpty()){
+                        for (ContentList contentList: contentLists){
+                            if (contentList.getId() == response.getId()){
+                                emptyLists.add(contentList);
+                                break;
+                            }
+                        }
+                    } else {
+                        contentListMap.put(response.getId(), contents);
+                    }
+                } else {
+
+                    for (ContentList contentList: contentLists){
+                        if (contentList.getId() == response.getId()){
+                            emptyLists.add(contentList);
+                            break;
+                        }
+                    }
+
                 }
             }
         }
-
-        emptyLists = new ArrayList<>();
-        for (ContentList list: contentLists){
-            if (!contentListMap.containsKey(list.getId())){
-                emptyLists.add(list);
-            }
+        for (ContentList contentList: emptyLists){
+            contentLists.remove(contentList);
         }
 
-        for (ContentList list: emptyLists){
-            contentLists.remove(list);
-        }
-
+        adapter.setItems(contentLists);
     }
 
     public class ListingRecyclerAdapter extends MxBaseAdapter<ContentList> {
@@ -139,12 +166,8 @@ public class ListingTabViewModel extends BaseViewModel {
                         ImageView imageView = view.findViewById(R.id.slider_image);
                         Glide.with(mActivity).load(contentListMap.get(model.getId()).get(position).getIcon()).into(imageView);
                         container.addView(view);
-                        view.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(mActivity, contentListMap.get(model.getId()).get(position).getName(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        view.setOnClickListener(v ->
+                                Toast.makeText(mActivity, contentListMap.get(model.getId()).get(position).getName(), Toast.LENGTH_SHORT).show());
                         return view;
                     }
                 });
@@ -155,19 +178,15 @@ public class ListingTabViewModel extends BaseViewModel {
                 TRowContentListBinding listBinding = (TRowContentListBinding) binding;
                 ContentListAdapter listAdapter = new ContentListAdapter(mActivity);
                 listAdapter.addAll(contentListMap.get(model.getId()));
-                listAdapter.setItemClickListener(new OnRecyclerItemClickListener<Content>() {
-                    @Override
-                    public void onItemClick(View view, Content item) {
-                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                listAdapter.setItemClickListener((view, item) ->
+                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show());
                 listBinding.contentFiniteList.setTitleText(model.getName());
-                listBinding.contentFiniteList.setOnMoreButtonClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(mActivity, "View more of " + model.getName(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if (listAdapter.getItemCount() > listBinding.contentFiniteList.getmMaxItem()) {
+                    listBinding.contentFiniteList.setOnMoreButtonClickListener(v ->
+                            Toast.makeText(mActivity, "View more of " + model.getName(), Toast.LENGTH_SHORT).show());
+                } else {
+                    listBinding.contentFiniteList.setmMoreButtonVisible(false);
+                }
                 listBinding.contentFiniteList.setAdapter(listAdapter);
 
             }
@@ -193,15 +212,10 @@ public class ListingTabViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Content model, @Nullable OnRecyclerItemClickListener<Content> listener) {
             if (binding instanceof TRowContentBinding){
                 TRowContentBinding contentBinding = (TRowContentBinding) binding;
-                contentBinding.contentCategory.setText(sourceMap.get(model.getSource()).getName());
+                contentBinding.contentCategory.setText(model.getSource().getTitle());
                 contentBinding.contentTitle.setText(model.getName());
                 Glide.with(mActivity).load(model.getIcon()).into(contentBinding.contentImage);
-                contentBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listener.onItemClick(v, model);
-                    }
-                });
+                contentBinding.getRoot().setOnClickListener(v -> listener.onItemClick(v, model));
             }
         }
     }

@@ -156,11 +156,20 @@ public class MxFiniteRecyclerView extends LinearLayout {
     public void setAdapter(MxFiniteAdapter<?> adapter) {
         this.mAdapter = adapter;
         mAdapter.setItemLayout(getItemLayout());//it's required
-        mAdapter.setItemLimit(mMaxItem);
+        setmMaxItem(mMaxItem);
         //set here header & footer layout into adapter
         mAdapter.setHeaderLayout(getHeaderLayout());
         mAdapter.setFooterLayout(getFooterLayout());
         mBinding.mxRecyclerView.setAdapter(mAdapter);
+    }
+
+    public int getmMaxItem() {
+        return mMaxItem;
+    }
+
+    public void setmMaxItem(int mMaxItem) {
+        this.mMaxItem = mMaxItem;
+        mAdapter.setItemLimit(mMaxItem);
     }
 
     public void setOnMoreButtonClickListener(OnClickListener listener) {

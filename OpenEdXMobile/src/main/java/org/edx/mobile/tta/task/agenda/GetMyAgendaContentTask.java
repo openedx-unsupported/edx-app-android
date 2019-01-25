@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.task.library;
+package org.edx.mobile.tta.task.agenda;
 
 import android.content.Context;
 
@@ -6,22 +6,21 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.data.local.db.table.Content;
-import org.edx.mobile.tta.data.model.ContentResponse;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 import java.util.List;
 
-public class GetContentsTask extends Task<ContentResponse> {
+public class GetMyAgendaContentTask extends Task<List<Content>> {
 
     @Inject
     private TaAPI taAPI;
 
-    public GetContentsTask(Context context) {
+    public GetMyAgendaContentTask(Context context) {
         super(context);
     }
 
     @Override
-    public ContentResponse call() throws Exception {
-        return taAPI.getContents().execute().body();
+    public List<Content> call() throws Exception {
+        return taAPI.getMyAgendaContent().execute().body();
     }
 }

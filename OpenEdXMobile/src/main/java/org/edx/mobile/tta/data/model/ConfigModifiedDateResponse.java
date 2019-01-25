@@ -3,7 +3,7 @@ package org.edx.mobile.tta.data.model;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
 
-public class ModificationResponse {
+public class ConfigModifiedDateResponse {
 
     /**
      * Only contains 'modified_at' field

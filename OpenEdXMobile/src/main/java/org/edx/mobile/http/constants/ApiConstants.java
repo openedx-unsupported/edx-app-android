@@ -63,15 +63,22 @@ public class ApiConstants {
     public static final String URL_MX_REGISTER_ME = "/user_api/v1/account/registration/";
     public static final String URL_MX_UPDATE_PROFILE = "/api/otp/user_account/update/";
 
-    public static final String URL_MX_GET_CONFIGURATION = "api/mx_catalog/v1/config/";
+    public static final String URL_MX_GET_COLLECTION_CONFIG = "api/mx_catalog/v1/config/";
 
-    public static final String URL_MX_GET_MODIFICATION = "api/mx_catalog/v1/modifications/";
+    public static final String URL_MX_GET_CONFIG_MODIFIED_DATE = "api/mx_catalog/v1/modifications/";
 
-    public static final String URL_MX_GET_CONTENTS = "api/mx_catalog/v1/contents";
+    public static final String URL_MX_GET_COLLECTION_ITEMS = "api/mx_catalog/v1/contents/";
 
     public static final String URL_MX_GET_STATE_AGENDA_COUNT = "api/mx_catalog/v1/stateagenda/";
 
     public static final String URL_MX_GET_MY_AGENDA_COUNT = "api/mx_catalog/v1/myagenda/";
+
+    public static final String URL_MX_GET_MY_AGENDA_CONTENT = "api/mx_catalog/v1/myagendacontent/";
+
+    public static final String URL_MX_SET_BOOKMARK = "api/mx_catalog/v1/bookmark/";
+
+    //Get user district and block API
+    public static final String URL_MX_GET_USER_ADDRESS = "/api/otp/serve-state-data/";
 
     //TTA end
 

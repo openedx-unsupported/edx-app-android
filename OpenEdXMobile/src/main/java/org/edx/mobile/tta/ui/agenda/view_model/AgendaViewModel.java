@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.ui.agenda.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
@@ -32,6 +33,9 @@ public class AgendaViewModel extends BaseViewModel {
     public AgendaListAdapter regionListAdapter, myListAdapter, downloadListAdapter;
 
     public boolean regionListRecieved, myListRecieved, downloadListRecieved;
+
+    public ObservableBoolean myAgendaVisible = new ObservableBoolean();
+    public ObservableBoolean downloadAgendaVisible = new ObservableBoolean();
 
     public AgendaViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
@@ -94,6 +98,13 @@ public class AgendaViewModel extends BaseViewModel {
                 if (data != null && data.getResult() != null){
                     myListAdapter.clear();
                     myListAdapter.addAll(data.getResult());
+                    if (myListAdapter.getItemCount() > 0) {
+                        myAgendaVisible.set(true);
+                    } else {
+                        myAgendaVisible.set(false);
+                    }
+                } else {
+                    myAgendaVisible.set(false);
                 }
             }
 
@@ -101,6 +112,7 @@ public class AgendaViewModel extends BaseViewModel {
             public void onFailure(Exception e) {
                 myListRecieved = true;
                 hideLoader();
+                myAgendaVisible.set(false);
                 mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
@@ -118,6 +130,13 @@ public class AgendaViewModel extends BaseViewModel {
                 if (data != null && data.getResult() != null){
                     //downloadListAdapter.clear();
                     downloadListAdapter.setItems(data.getResult());
+                    if (downloadListAdapter.getItemCount() > 0) {
+                        downloadAgendaVisible.set(true);
+                    } else {
+                        downloadAgendaVisible.set(false);
+                    }
+                } else {
+                    downloadAgendaVisible.set(false);
                 }
             }
 
@@ -125,6 +144,7 @@ public class AgendaViewModel extends BaseViewModel {
             public void onFailure(Exception e) {
                 downloadListRecieved = true;
                 hideLoader();
+                downloadAgendaVisible.set(false);
                 mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });

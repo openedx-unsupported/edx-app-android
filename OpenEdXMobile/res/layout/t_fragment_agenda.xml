@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -29,7 +30,7 @@
 
             <!--<com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/region_agenda_list"
-                finite_recycler_adapter="@{viewModel.regionListAdapter}"
+                finite_recycler_adapter="@{mViewModel.regionListAdapter}"
                 style="@style/agenda_list_style"
                 app:mx_itemLayout="@layout/t_row_agenda_item"
                 app:mx_moreButtonVisible="false"
@@ -49,7 +50,8 @@
                 app:mx_titleText="@string/my_agenda"
                 app:mx_titleTextColor="@color/gray_6"
                 app:mx_titleTextFont="@font/hind_semibold"
-                app:mx_titleTextSize="@dimen/list_title_size"/>
+                app:mx_titleTextSize="@dimen/list_title_size"
+                android:visibility="@{viewModel.myAgendaVisible ? View.VISIBLE : View.GONE}"/>
 
             <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/download_agenda_list"
@@ -61,7 +63,8 @@
                 app:mx_titleText="@string/download"
                 app:mx_titleTextColor="@color/gray_6"
                 app:mx_titleTextFont="@font/hind_semibold"
-                app:mx_titleTextSize="@dimen/list_title_size" />
+                app:mx_titleTextSize="@dimen/list_title_size"
+                android:visibility="@{viewModel.downloadAgendaVisible ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>
 

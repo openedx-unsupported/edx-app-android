@@ -2,10 +2,6 @@ package org.edx.mobile.tta.data.local.db.table;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-
-import org.edx.mobile.BR;
 
 import androidx.annotation.Nullable;
 
@@ -27,7 +23,7 @@ public class ContentList implements Comparable<ContentList>
 
     private String auto_function;
 
-    private long category;
+    private long category_id;
 
     private long order;
 
@@ -111,14 +107,14 @@ public class ContentList implements Comparable<ContentList>
         this.auto_function = auto_function;
     }
 
-    public long getCategory ()
+    public long getCategory_id()
     {
-        return category;
+        return category_id;
     }
 
-    public void setCategory (long category)
+    public void setCategory_id(long category_id)
     {
-        this.category = category;
+        this.category_id = category_id;
     }
 
     public long getOrder ()
@@ -184,7 +180,7 @@ public class ContentList implements Comparable<ContentList>
     @Override
     public String toString()
     {
-        return "ContentList [region = "+region+", created_by = "+created_by+", sort_as = "+sort_as+", sort_by = "+sort_by+", mode = "+mode+", id = "+id+", auto_function = "+auto_function+", category = "+category+", order = "+order+", modified_by = "+modified_by+", name = "+name+", format_type = "+format_type+", created_at = "+created_at+", modified_at = "+modified_at+"]";
+        return "ContentList [region = "+region+", created_by = "+created_by+", sort_as = "+sort_as+", sort_by = "+sort_by+", mode = "+mode+", id = "+id+", auto_function = "+auto_function+", category_id = "+ category_id +", order = "+order+", modified_by = "+modified_by+", name = "+name+", format_type = "+format_type+", created_at = "+created_at+", modified_at = "+modified_at+"]";
     }
 
     @Override

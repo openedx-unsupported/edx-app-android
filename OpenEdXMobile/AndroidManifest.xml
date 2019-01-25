@@ -286,6 +286,9 @@
                 <data android:scheme="${fbLoginProtocolScheme}" />
             </intent-filter>
         </activity>
+
+        <!-- TTA activities start -->
+
         <activity android:name=".tta.ui.splash.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -306,35 +309,60 @@
         <activity
             android:name=".tta.ui.logistration.SigninRegisterActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar.Fullscreen">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity
             android:name=".tta.ui.launch.SwipeLaunchActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen">
         </activity>
 
         <activity
             android:name=".tta.ui.reset_password.EnterNumberActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar.Fullscreen">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity
             android:name=".tta.ui.otp.OtpActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar.Fullscreen"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name=".tta.ui.reset_password.ResetPasswordActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar.Fullscreen"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name=".tta.ui.dashboard.DashboardActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar.CustomStatus"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
+
+        <activity
+            android:name=".tta.ui.logistration.UserInfoActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="stateHidden | adjustResize" />
+
+        <activity
+            android:name=".tta.ui.course.CourseDashboardActivity"
+            android:label="@string/course"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <!-- TTA activities end -->
 
         <!-- Setup Google -->
         <meta-data

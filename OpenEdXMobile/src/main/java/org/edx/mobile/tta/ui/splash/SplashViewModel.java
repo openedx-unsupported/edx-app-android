@@ -8,6 +8,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.dashboard.DashboardActivity;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
+import org.edx.mobile.tta.ui.logistration.UserInfoActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
 public class SplashViewModel extends BaseViewModel {

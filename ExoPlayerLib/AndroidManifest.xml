@@ -33,7 +33,7 @@
       <activity android:name="PlayerDemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category_id android:name="android.intent.category_id.LAUNCHER" />
             </intent-filter>
       </activity>
   </application>

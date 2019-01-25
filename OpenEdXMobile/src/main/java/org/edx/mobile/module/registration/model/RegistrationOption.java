@@ -7,6 +7,14 @@ public class RegistrationOption {
     private @SerializedName("name")     String name;
     private @SerializedName("value")    String value;
 
+    public RegistrationOption() {
+    }
+
+    public RegistrationOption(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

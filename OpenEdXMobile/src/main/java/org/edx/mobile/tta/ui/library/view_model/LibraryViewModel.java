@@ -5,14 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import org.edx.mobile.tta.data.local.db.table.Category;
-import org.edx.mobile.tta.data.local.db.table.Content;
-import org.edx.mobile.tta.data.model.ConfigurationResponse;
-import org.edx.mobile.tta.data.model.ContentResponse;
+import org.edx.mobile.tta.data.model.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BaseFragmentPagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.library.ListingTabFragment;
+import org.edx.mobile.tta.ui.library.LibraryTab;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,18 +22,13 @@ public class LibraryViewModel extends BaseViewModel {
     private List<String> titles;
     public ListingPagerAdapter adapter;
 
-    private ConfigurationResponse cr;
+    private CollectionConfigResponse cr;
     private List<Category> categories;
-    private List<Content> contents;
-
-    private boolean configRecieved = false;
-    private boolean contentRecieved = false;
 
     public LibraryViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
         categories = new ArrayList<>();
-        contents = new ArrayList<>();
         fragments = new ArrayList<>();
         titles = new ArrayList<>();
 
@@ -48,9 +41,9 @@ public class LibraryViewModel extends BaseViewModel {
     private void getData(){
         mActivity.show();
 
-        mDataManager.getConfiguration(new OnResponseCallback<ConfigurationResponse>() {
+        mDataManager.getCollectionConfig(new OnResponseCallback<CollectionConfigResponse>() {
             @Override
-            public void onSuccess(ConfigurationResponse data) {
+            public void onSuccess(CollectionConfigResponse data) {
                 mActivity.hide();
                 cr = data;
 
@@ -60,35 +53,8 @@ public class LibraryViewModel extends BaseViewModel {
                     Collections.sort(categories);
                 }
 
-                configRecieved = true;
-                if (contentRecieved){
-                    populateTabs();
-                }
+                populateTabs();
 
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                mActivity.hide();
-                mActivity.showShortSnack(e.getLocalizedMessage());
-            }
-        });
-
-        mDataManager.getContents(new OnResponseCallback<ContentResponse>() {
-            @Override
-            public void onSuccess(ContentResponse data) {
-                mActivity.hide();
-                contentRecieved = true;
-                if (data == null || data.getResults() == null || data.getResults().isEmpty()){
-                    mActivity.hide();
-                    mActivity.showShortSnack("No data to show at the  moment.");
-                    return;
-                }
-                contents = data.getResults();
-
-                if (configRecieved){
-                    populateTabs();
-                }
             }
 
             @Override
@@ -105,7 +71,7 @@ public class LibraryViewModel extends BaseViewModel {
         fragments.clear();
         titles.clear();
         for (Category category: categories){
-            fragments.add(ListingTabFragment.newInstance(cr, category, contents));
+            fragments.add(LibraryTab.newInstance(cr, category));
             titles.add(category.getName());
         }
 

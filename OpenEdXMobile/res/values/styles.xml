@@ -562,7 +562,7 @@
         <item name="android:windowBackground">@drawable/launch_background_tta</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.CustomStatus" />
+    <style name="AppTheme.NoActionBar.CustomStatusBar" />
 
     <style name="ta_fab_style">
         <item name="android:layout_width">wrap_content</item>

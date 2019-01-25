@@ -20,6 +20,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.tta.ui.logistration.model.RegisterResponse;
 import org.edx.mobile.tta.ui.logistration.model.SendOTPResponse;
+import org.edx.mobile.tta.ui.logistration.model.UserAddressResponse;
 import org.edx.mobile.tta.ui.otp.model.VerifyOTPForgotedPasswordResponse;
 import org.edx.mobile.tta.ui.otp.model.VerifyOTPResponse;
 import org.edx.mobile.tta.ui.reset_password.model.MobileNumberVerificationResponse;
@@ -318,6 +319,11 @@ public class LoginAPI {
     }
 
     @NonNull
+    public UserAddressResponse getUserAddress(@NonNull Bundle parameters) throws Exception {
+        return mxGetUserAddress(parameters);
+    }
+
+    @NonNull
     private MobileNumberVerificationResponse mxMobileNumberVerification(Bundle parameters) throws Exception
     {
         final Map<String, String> parameterMap = new HashMap<>();
@@ -439,6 +445,32 @@ public class LoginAPI {
             parameterMap.put(key, parameters.getString(key));
         }
         Response<VerifyOTPResponse> res = loginService.mxVerifyOTP(parameterMap).execute();
+
+        if (!res.isSuccessful()) {
+            final int errorCode = res.code();
+            final String errorBody = res.errorBody().string();
+            if ((errorCode == HttpStatus.BAD_REQUEST || errorCode == HttpStatus.CONFLICT) && !android.text.TextUtils.isEmpty(errorBody)) {
+                try {
+                    final FormFieldMessageBody body = gson.fromJson(errorBody, FormFieldMessageBody.class);
+                    if (body != null && body.size() > 0) {
+                        throw new RegistrationException(body);
+                    }
+                } catch (JsonSyntaxException ex) {
+                    // Looks like the response does not contain form validation errors.
+                }
+            }
+            throw new HttpResponseStatusException(errorCode);
+        }
+        return res.body();
+    }
+
+    private UserAddressResponse mxGetUserAddress (Bundle parameters) throws Exception {
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+
+        Response<UserAddressResponse> res = loginService.mxGetUserAddress(parameterMap).execute();
 
         if (!res.isSuccessful()) {
             final int errorCode = res.code();

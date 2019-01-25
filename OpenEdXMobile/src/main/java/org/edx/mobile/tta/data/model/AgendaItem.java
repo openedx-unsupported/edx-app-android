@@ -2,18 +2,20 @@ package org.edx.mobile.tta.data.model;
 
 public class AgendaItem {
 
-    private long source;
+    private long source_id;
 
     private long content_count;
 
     private String source_name;
 
-    public long getSource() {
-        return source;
+    private String source_icon;
+
+    public long getSource_id() {
+        return source_id;
     }
 
-    public void setSource(long source) {
-        this.source = source;
+    public void setSource_id(long source_id) {
+        this.source_id = source_id;
     }
 
     public long getContent_count() {
@@ -30,5 +32,13 @@ public class AgendaItem {
 
     public void setSource_name(String source_name) {
         this.source_name = source_name;
+    }
+
+    public String getSource_icon() {
+        return source_icon;
+    }
+
+    public void setSource_icon(String source_icon) {
+        this.source_icon = source_icon;
     }
 }

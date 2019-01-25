@@ -155,7 +155,7 @@ public class LastAccessManager {
 
         /**
          * Stores information of last accesses subsection for given id.
-         * ModificationResponse date is also stored for current time.
+         * ConfigModifiedDateResponse date is also stored for current time.
          * Synced is marked as FALSE.
          */
         public void putLastAccessedSubsection(String subsectionId, boolean lastAccessedFlag) {

@@ -100,7 +100,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.7</source>
+					<source_id>1.7</source_id>
 					<target>1.7</target>
 				</configuration>
 			</plugin>

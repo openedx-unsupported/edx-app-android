@@ -13,7 +13,7 @@ public class Category implements Comparable<Category>
 
     private String icon;
 
-    private long source;
+    private long source_id;
 
     private long order;
 
@@ -55,14 +55,14 @@ public class Category implements Comparable<Category>
         this.icon = icon;
     }
 
-    public long getSource ()
+    public long getSource_id()
     {
-        return source;
+        return source_id;
     }
 
-    public void setSource (long source)
+    public void setSource_id(long source_id)
     {
-        this.source = source;
+        this.source_id = source_id;
     }
 
     public long getOrder ()
@@ -118,7 +118,7 @@ public class Category implements Comparable<Category>
     @Override
     public String toString()
     {
-        return "Category [created_by = "+created_by+", id = "+id+", icon = "+icon+", source = "+source+", order = "+order+", modified_by = "+modified_by+", name = "+name+", created_at = "+created_at+", modified_at = "+modified_at+"]";
+        return "Category [created_by = "+created_by+", id = "+id+", icon = "+icon+", source_id = "+ source_id +", order = "+order+", modified_by = "+modified_by+", name = "+name+", created_at = "+created_at+", modified_at = "+modified_at+"]";
     }
 
     @Override

@@ -21,6 +21,10 @@ public class Constants {
     public static final String KEY_USERNAME = "username";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_STATE = "state";
+    public static final String KEY_LIST_IDS = "list_ids";
+    public static final String KEY_TAKE = "take";
+    public static final String KEY_SKIP = "skip";
+    public static final String KEY_CONTENT_ID = "content_id";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

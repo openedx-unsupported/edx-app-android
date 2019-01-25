@@ -97,6 +97,7 @@
     
     <color name="app_background">#FCFCFD</color>
     <color name="launch_background">#EDF8FA</color>
+    <color name="material_red_500">#f44336</color>
 
     <color name="transparent">#00FFFFFF</color>
     <!--  TTA color palette end  -->

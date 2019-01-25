@@ -26,6 +26,6 @@ public class OtpActivity extends BaseVMActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ((OtpViewModel) getViewModel()).unregisterMessageListener();
+        ((OtpViewModel) mViewModel).unregisterMessageListener();
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-content_list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
             <stroke android:color="@color/edx_brand_primary_base" android:width="1dp" />
@@ -8,4 +8,4 @@
         </shape>
     </item>
     <item android:drawable="@drawable/selectable_rounded_box_overlay" />
-</layer-list>
+</layer-content_list>

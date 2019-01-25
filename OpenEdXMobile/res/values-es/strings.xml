@@ -74,9 +74,9 @@
   <!--Error during log in.-->
   <string name="login_failed">Por favor, asegúrese de que su nombre de usuario o dirección de correo electrónico y la contraseña son correctos e inténtelo de nuevo.</string>
   <!--License Agreement related string on Login and Regiser screens-->
-  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Create account agreement. Followed by content_list of agreement names like "End User License Agreement"-->
   <string name="by_creating_account">Al crear una cuenta, usted acepta la {license} y {tos_and_honor_code} y reconoce la {privacy_policy}</string>
-  <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Sign In agreement. Followed by content_list of agreement names like "End User License Agreement"-->
   <string name="by_signing_in">Al registrarse, usted acepta la {license} y {tos_and_honor_code} y reconoce la {privacy_policy}</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">{platform_name} Acuerdo de Licencia de Usuario Final</string>
@@ -94,9 +94,9 @@
   <string name="label_current_downloads">Ver descargas</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Abrir su perfil</string>
-  <!--Title of user's course list screen-->
+  <!--Title of user's course content_list screen-->
   <string name="label_my_courses">Cursos</string>
-  <!--Title of user's program list screen-->
+  <!--Title of user's program content_list screen-->
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
   <!--Title of webview based Find Courses Screen-->
@@ -221,9 +221,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Hint displayed in search view for discussion posts-->
   <string name="topics_search">Buscar en todas las publicaciones</string>
   <!--Discussion Posts Fragment-->
-  <!--Title for discussion post search results-->
+  <!--Title for discussion post search content-->
   <string name="discussion_posts_search_title">Resultados de busqueda</string>
-  <!--Label for the the filter and sort options for refining the thread list-->
+  <!--Label for the the filter and sort options for refining the thread content_list-->
   <string name="discussion_posts_refine">Refinar:</string>
   <!--Label for creating a new post-->
   <string name="discussion_post_create_new_post">Crear una nueva entrada</string>
@@ -299,7 +299,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="discussion_add_comment_title">Agregue un comentario</string>
   <!--Title when adding a new comment is disabled-->
   <string name="discussion_add_comment_disabled_title">Los comentarios están cerrados para esta respuesta</string>
-  <!--Title in showing list of comments-->
+  <!--Title in showing content_list of comments-->
   <string name="discussion_comments">Comentarios</string>
   <!--Add comment button title in adding a new comment-->
   <string name="discussion_add_comment_button_label">Añadir comentario</string>
