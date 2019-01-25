@@ -17,7 +17,7 @@ buildscript {
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
 
         classpath 'com.facebook.testing.screenshot:plugin:0.8.0'
-        classpath 'com.google.gms:google-services:4.0.1'
+        classpath 'com.google.gms:google-services:4.2.0'
     }
 }
 
@@ -130,13 +130,12 @@ dependencies {
     // For the optional Nullable annotation
     implementation "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}"
 
-    implementation "com.google.android.gms:play-services-plus:15.0.1"
-    implementation "com.google.android.gms:play-services-analytics:16.0.1"
-    implementation "com.google.android.gms:play-services-auth:15.0.1"
-    implementation "com.google.android.gms:play-services-ads:15.0.1"
+    implementation "com.google.android.gms:play-services-plus:16.0.0"
+    implementation "com.google.android.gms:play-services-analytics:16.0.6"
+    implementation "com.google.android.gms:play-services-auth:16.0.1"
     // Google Firebase
-    implementation "com.google.firebase:firebase-core:16.0.1"
-    implementation "com.google.firebase:firebase-messaging:17.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.6"
+    implementation "com.google.firebase:firebase-messaging:17.3.4"
 
 //    Exo Player
     implementation 'com.google.android.exoplayer:exoplayer:2.9.2'
