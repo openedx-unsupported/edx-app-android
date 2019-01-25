@@ -18,6 +18,7 @@ public class WebViewLink {
 
     public enum Authority {
         COURSE_INFO("course_info"),
+        PROGRAM_INFO("program_info"),
         ENROLL("enroll"),
         ENROLLED_PROGRAM_INFO("enrolled_program_info"),
         ENROLLED_COURSE_INFO("enrolled_course_info");

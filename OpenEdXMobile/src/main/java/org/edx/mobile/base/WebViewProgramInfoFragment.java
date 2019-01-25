@@ -1,7 +1,5 @@
 package org.edx.mobile.base;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,18 +19,8 @@ import org.edx.mobile.view.BaseWebViewFragment;
 
 import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
 
-public class WebViewCourseInfoFragment extends BaseWebViewFragment
+public class WebViewProgramInfoFragment extends BaseWebViewFragment
         implements WebViewStatusListener {
-
-    private static final int LOG_IN_REQUEST_CODE = 42;
-    private static final String INSTANCE_COURSE_ID = "enrollCourseId";
-    private static final String INSTANCE_EMAIL_OPT_IN = "enrollEmailOptIn";
-
-    private String lastClickEnrollCourseId;
-    private boolean lastClickEnrollEmailOptIn;
-
-    private DefaultActionListener defaultActionListener;
-
     private FragmentWebviewBinding binding;
 
     @Nullable
@@ -47,25 +35,13 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
         super.onViewCreated(view, savedInstanceState);
         loadUrl(getInitialUrl());
         setWebViewActionListener();
-        if (null != savedInstanceState) {
-            lastClickEnrollCourseId = savedInstanceState.getString(INSTANCE_COURSE_ID);
-            lastClickEnrollEmailOptIn = savedInstanceState.getBoolean(INSTANCE_EMAIL_OPT_IN);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(INSTANCE_COURSE_ID, lastClickEnrollCourseId);
-        outState.putBoolean(INSTANCE_EMAIL_OPT_IN, lastClickEnrollEmailOptIn);
     }
 
     public void setWebViewActionListener() {
-        defaultActionListener = new DefaultActionListener(getActivity(), progressWheel,
+        client.setActionListener(new DefaultActionListener(getActivity(), progressWheel,
                 new DefaultActionListener.EnrollCallback() {
                     @Override
                     public void onResponse(@NonNull EnrolledCoursesResponse course) {
-
                     }
 
                     @Override
@@ -74,25 +50,13 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
 
                     @Override
                     public void onUserNotLoggedIn(@NonNull String courseId, boolean emailOptIn) {
-                        lastClickEnrollCourseId = courseId;
-                        lastClickEnrollEmailOptIn = emailOptIn;
-                        startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
                     }
-                });
-        client.setActionListener(defaultActionListener);
+                }));
     }
 
     @Override
     public FullScreenErrorNotification initFullScreenErrorNotification() {
         return new FullScreenErrorNotification(binding.webview);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            defaultActionListener.onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
-        }
     }
 
     /**
@@ -129,11 +93,11 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
             return binding.webview.getUrl();
         } else if (getArguments() != null) {
             final String pathId = getArguments().getString(EXTRA_PATH_ID);
-            return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig()
+            return environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig()
                     .getInfoUrlTemplate()
                     .replace("{" + EXTRA_PATH_ID + "}", pathId);
         }
-        return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl();
+        return environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().getBaseUrl();
     }
 
     @Override

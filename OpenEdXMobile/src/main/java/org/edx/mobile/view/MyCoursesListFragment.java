@@ -154,7 +154,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
             addFindCoursesFooter();
             adapter.notifyDataSetChanged();
 
-            if (adapter.isEmpty() && !environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+            if (adapter.isEmpty() && !environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
                 errorNotification.showError(R.string.no_courses_to_display,
                         FontAwesomeIcons.fa_exclamation_circle, 0, null);
                 binding.myCourseList.setVisibility(View.GONE);
@@ -245,7 +245,8 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
         if (binding.myCourseList.getFooterViewsCount() > 0) {
             return;
         }
-        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+        if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig() != null &&
+                environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
             // Add 'Find a Course' list item as a footer.
             final PanelFindCourseBinding footer = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
                     R.layout.panel_find_course, binding.myCourseList, false);

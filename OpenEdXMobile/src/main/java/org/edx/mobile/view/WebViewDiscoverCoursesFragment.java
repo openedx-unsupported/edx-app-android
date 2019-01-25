@@ -5,26 +5,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SearchView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
-import android.webkit.URLUtil;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
-import org.edx.mobile.databinding.FragmentWebviewCourseDiscoveryBinding;
-import org.edx.mobile.event.MainDashboardRefreshEvent;
-import org.edx.mobile.event.NetworkConnectivityChangeEvent;
-import org.edx.mobile.http.notifications.FullScreenErrorNotification;
+import org.edx.mobile.databinding.PanelFilterBySubjectBinding;
 import org.edx.mobile.model.SubjectModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
@@ -38,73 +28,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.greenrobot.event.EventBus;
-
-import static org.edx.mobile.util.UrlUtil.QUERY_PARAM_SEARCH;
 import static org.edx.mobile.util.UrlUtil.QUERY_PARAM_SUBJECT;
 import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
 
-public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment {
+public class WebViewDiscoverCoursesFragment extends WebViewDiscoverFragment {
     private static final int VIEW_SUBJECTS_REQUEST_CODE = 999;
-    private static final String INSTANCE_CURRENT_DISCOVER_URL = "current_discover_url";
-
-    private FragmentWebviewCourseDiscoveryBinding binding;
-    private SearchView searchView;
-    private ToolbarCallbacks toolbarCallbacks;
 
     @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_webview_course_discovery, container, false);
-        return binding.getRoot();
-    }
+    private PanelFilterBySubjectBinding panelBinding;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Check for search query in extras
-        String searchQueryExtra = null;
-        String searchUrl = null;
-
-        if (savedInstanceState != null) {
-            searchUrl = savedInstanceState.getString(INSTANCE_CURRENT_DISCOVER_URL, null);
-        }
-        if (searchUrl == null && getArguments() != null) {
-            searchQueryExtra = getArguments().getString(Router.EXTRA_SEARCH_QUERY);
-        }
-
-        if (searchQueryExtra != null) {
-            initSearch(searchQueryExtra);
-        } else {
-            loadUrl(searchUrl == null ? getInitialUrl() : searchUrl);
-        }
         if (shouldShowSubjectDiscovery()) {
             initSubjects();
         }
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+    }
+
+    private boolean shouldShowSubjectDiscovery() {
+        return getActivity() instanceof MainDashboardActivity &&
+                environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isSubjectFilterEnabled() &&
+                getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putString(INSTANCE_CURRENT_DISCOVER_URL, binding.webview.getUrl());
-        super.onSaveInstanceState(outState);
+    protected String getSearchUrl() {
+        return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl();
     }
 
     @Override
-    public FullScreenErrorNotification initFullScreenErrorNotification() {
-        return new FullScreenErrorNotification(binding.llContent);
-    }
-
-    private void initSearch(@NonNull String query) {
-        final String baseUrl = getInitialUrl();
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(QUERY_PARAM_SEARCH, query);
-        loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
+    protected int getQueryHint() {
+        return R.string.search_for_courses;
     }
 
     private void initSubjects() {
+        panelBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.panel_filter_by_subject,
+                binding.flAddOnContainer, true);
+        binding.flAddOnContainer.setVisibility(View.VISIBLE);
+
         final String subjectItemsJson;
         try {
             subjectItemsJson = FileUtil.loadTextFileFromResources(getContext(), R.raw.subjects);
@@ -121,7 +82,7 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
             final PopularSubjectsAdapter adapter = new PopularSubjectsAdapter(popularSubjects, new PopularSubjectsAdapter.ClickListener() {
                 @Override
                 public void onSubjectClick(View view) {
-                    final int position = binding.rvSubjects.getChildAdapterPosition(view);
+                    final int position = panelBinding.rvSubjects.getChildAdapterPosition(view);
                     final String baseUrl = getInitialUrl();
                     final String subjectFilter = popularSubjects.get(position).filter;
                     final Map<String, String> queryParams = new HashMap<>();
@@ -141,71 +102,11 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
 
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
                     LinearLayoutManager.HORIZONTAL, false);
-            binding.rvSubjects.setLayoutManager(linearLayoutManager);
-            binding.rvSubjects.setAdapter(adapter);
+            panelBinding.rvSubjects.setLayoutManager(linearLayoutManager);
+            panelBinding.rvSubjects.setAdapter(adapter);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        toolbarCallbacks = getActivity() instanceof ToolbarCallbacks ?
-                (ToolbarCallbacks) getActivity() : null;
-        initSearchView();
-    }
-
-    private void initSearchView() {
-        searchView = toolbarCallbacks.getSearchView();
-        searchView.setQueryHint(getResources().getString(R.string.search_for_courses));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                initSearch(query);
-                searchView.onActionViewCollapsed();
-                final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
-                environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean queryTextFocused) {
-                if (!queryTextFocused) {
-                    updateTitleVisibility(View.VISIBLE);
-                    searchView.onActionViewCollapsed();
-                } else {
-                    updateTitleVisibility(View.GONE);
-                }
-            }
-        });
-        if (getUserVisibleHint()) {
-            searchView.setVisibility(View.VISIBLE);
-        }
-        if (searchView.hasFocus()) {
-            updateTitleVisibility(View.GONE);
-        }
-    }
-
-    private void updateTitleVisibility(int visibility) {
-        final TextView titleView = toolbarCallbacks != null ? toolbarCallbacks.getTitleView() : null;
-        if (titleView != null) {
-            titleView.setVisibility(visibility);
-        }
-    }
-
-    @NonNull
-    protected String getInitialUrl() {
-        return URLUtil.isValidUrl(binding.webview.getUrl()) ?
-                binding.webview.getUrl() :
-                environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
     }
 
     @Override
@@ -221,32 +122,14 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
         }
     }
 
-    @SuppressWarnings("unused")
-    public void onEvent(MainDashboardRefreshEvent event) {
-        loadUrl(getInitialUrl());
-    }
-
-    @Override
-    public void onRefresh() {
-        EventBus.getDefault().post(new MainDashboardRefreshEvent());
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(NetworkConnectivityChangeEvent event) {
-        onNetworkConnectivityChangeEvent(event);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (searchView != null) {
-            searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+    private void setSubjectLayoutVisibility(int visibility) {
+        if (panelBinding != null) {
+            if (shouldShowSubjectDiscovery()) {
+                ViewAnimationUtil.fadeViewTo(panelBinding.llSubjectContent, visibility);
+            } else {
+                panelBinding.llSubjectContent.setVisibility(View.GONE);
+            }
         }
-    }
-
-    @Override
-    protected boolean isShowingFullScreenError() {
-        return errorNotification != null && errorNotification.isShowing();
     }
 
     @Override
@@ -263,19 +146,6 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
                     setSubjectLayoutVisibility(View.GONE);
                 }
                 break;
-        }
-    }
-
-    private boolean shouldShowSubjectDiscovery() {
-        return getActivity() instanceof MainDashboardActivity && environment.getConfig().getCourseDiscoveryConfig().isSubjectDiscoveryEnabled() &&
-                getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
-    }
-
-    private void setSubjectLayoutVisibility(int visibility) {
-        if (shouldShowSubjectDiscovery()) {
-            ViewAnimationUtil.fadeViewTo(binding.llSubjectContent, visibility);
-        } else {
-            binding.llSubjectContent.setVisibility(View.GONE);
         }
     }
 }
