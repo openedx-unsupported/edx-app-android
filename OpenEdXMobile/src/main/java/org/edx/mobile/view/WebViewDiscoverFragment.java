@@ -43,6 +43,8 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
 
     protected abstract int getQueryHint();
 
+    protected abstract boolean isSearchEnabled();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -212,10 +214,13 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
 
     private void onFragmentVisibilityChange(boolean isVisible) {
         if (searchView != null) {
-            if (isVisible) {
+            if (isVisible && isSearchEnabled()) {
+                searchView.setVisibility(View.VISIBLE);
                 searchView.setQueryHint(getResources().getString(getQueryHint()));
                 searchView.setOnQueryTextListener(onQueryTextListener);
                 searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+            } else {
+                searchView.setVisibility(View.GONE);
             }
         }
     }
