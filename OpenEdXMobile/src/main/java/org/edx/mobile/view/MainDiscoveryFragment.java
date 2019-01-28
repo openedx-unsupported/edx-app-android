@@ -129,16 +129,23 @@ public class MainDiscoveryFragment extends BaseFragment {
         }
     }
 
-    private void onFragmentSelected(@IdRes int resId, final boolean isUserSelected) {
+    private void onFragmentSelected(@IdRes int fragmentTabId, final boolean isUserSelected) {
+        // First we need to hide all the fragments along with their shared search view,
+        // then show the required fragment and check either that fragment needs to show the
+        // search view or not through its `onHiddenChanged` method.
+        Fragment selectedFragment = null;
         for (int i = 0; i < fragmentsArray.size(); i++) {
-            if (resId == fragmentsArray.keyAt(i)) {
-                showFragment(fragmentsArray.valueAt(i));
+            if (fragmentTabId == fragmentsArray.keyAt(i)) {
+                selectedFragment = fragmentsArray.valueAt(i);
             } else {
                 hideFragment(fragmentsArray.valueAt(i));
             }
         }
+        if (selectedFragment != null) {
+            showFragment(selectedFragment);
+        }
         if (isUserSelected) {
-            switch (resId) {
+            switch (fragmentTabId) {
                 case R.id.option_courses:
                     environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
                     break;
@@ -221,13 +228,28 @@ public class MainDiscoveryFragment extends BaseFragment {
                 @Override
                 public void run() {
                     final Fragment nativeCoursesFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_native");
-                    if (nativeCoursesFragment != null && nativeCoursesFragment.isVisible()) {
+                    if ((nativeCoursesFragment != null && nativeCoursesFragment.isVisible()) || !isVisibleToUser) {
                         toolbarCallbacks.getSearchView().setVisibility(View.GONE);
                     } else {
-                        toolbarCallbacks.getSearchView().setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+                        updateShownFragmentsVisibility();
                     }
                 }
             });
+        }
+    }
+
+    /**
+     * This function lets the currently shown Fragment know that it has now become visible to
+     * the user by calling its {@link Fragment#setUserVisibleHint(boolean)} function.
+     */
+    private void updateShownFragmentsVisibility() {
+        for (int i = 0; i < fragmentsArray.size(); i++) {
+            final Fragment fragment = fragmentsArray.get(fragmentsArray.keyAt(i));
+            if (fragment != null && fragment.getUserVisibleHint()
+                    && fragment.isVisible()) {
+                fragment.setUserVisibleHint(true);
+                return;
+            }
         }
     }
 
