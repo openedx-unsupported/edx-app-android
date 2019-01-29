@@ -3,4 +3,5 @@
     <item name="content_error_root" type="id" />
     <item name="option_courses" type="id" />
     <item name="option_programs" type="id" />
+    <item name="option_degrees" type="id" />
 </resources>

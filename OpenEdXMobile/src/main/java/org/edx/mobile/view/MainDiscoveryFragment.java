@@ -78,13 +78,13 @@ public class MainDiscoveryFragment extends BaseFragment {
                 if (courseDiscoveryFragment == null) {
                     courseDiscoveryFragment = new WebViewDiscoverCoursesFragment();
                     courseDiscoveryFragment.setArguments(getArguments());
-                    commitFragmentTransaction(R.id.fl_container, courseDiscoveryFragment, "fragment_courses_webview");
+                    commitFragmentTransaction(courseDiscoveryFragment, "fragment_courses_webview");
                 }
             } else {
                 courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_native");
                 if (courseDiscoveryFragment == null) {
                     courseDiscoveryFragment = new NativeFindCoursesFragment();
-                    commitFragmentTransaction(R.id.fl_container, courseDiscoveryFragment, "fragment_courses_native");
+                    commitFragmentTransaction(courseDiscoveryFragment, "fragment_courses_native");
                 }
             }
 
@@ -98,22 +98,34 @@ public class MainDiscoveryFragment extends BaseFragment {
             Fragment programDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_programs");
             if (programDiscoveryFragment == null) {
                 programDiscoveryFragment = new WebViewDiscoverProgramsFragment();
-                commitFragmentTransaction(R.id.fl_container, programDiscoveryFragment, "fragment_programs");
+                commitFragmentTransaction(programDiscoveryFragment, "fragment_programs");
             }
 
             fragmentsArray.put(R.id.option_programs, programDiscoveryFragment);
             addTabItem(R.id.option_programs, R.string.label_my_programs);
         }
 
-        if (fragmentsArray.size() > 1) {
+        // Degree discovery
+        if (environment.getConfig().getDiscoveryConfig().getDegreeDiscoveryConfig() != null &&
+                environment.getConfig().getDiscoveryConfig().getDegreeDiscoveryConfig().isDiscoveryEnabled(environment)) {
+            Fragment degreeDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_degrees");
+            if (degreeDiscoveryFragment == null) {
+                degreeDiscoveryFragment = new WebViewDiscoverDegreesFragment();
+                commitFragmentTransaction(degreeDiscoveryFragment, "fragment_degrees");
+            }
+
+            fragmentsArray.put(R.id.option_degrees, degreeDiscoveryFragment);
+            addTabItem(R.id.option_degrees, R.string.label_degrees);
+        }
+
+        if (fragmentsArray.size() < 2) {
+            hideTabsBar();
+        }
+        if (fragmentsArray.size() > 0) {
             setTabsBackground(binding.options);
             final int firstBtnId = fragmentsArray.keyAt(0);
-            if (firstBtnId != -1) {
-                onFragmentSelected(firstBtnId, false);
-                binding.options.check(firstBtnId);
-            }
-        } else {
-            hideTabsBar();
+            onFragmentSelected(firstBtnId, false);
+            binding.options.check(firstBtnId);
         }
     }
 
@@ -133,14 +145,16 @@ public class MainDiscoveryFragment extends BaseFragment {
                 case R.id.option_programs:
                     environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_PROGRAMS);
                     break;
+                case R.id.option_degrees:
+                    environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_DEGREES);
+                    break;
             }
         }
     }
 
-    private void commitFragmentTransaction(@IdRes int containerViewId, Fragment fragment,
-                                           @Nullable String tag) {
+    private void commitFragmentTransaction(@NonNull Fragment fragment, @Nullable String tag) {
         final FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(containerViewId, fragment, tag);
+        fragmentTransaction.add(R.id.fl_container, fragment, tag);
         fragmentTransaction.commit();
     }
 

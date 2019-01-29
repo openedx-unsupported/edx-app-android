@@ -193,7 +193,9 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         // the fragment visibility is changed to user but in the case of WebViewDiscoverCoursesFragment
         // & WebViewDiscoverProgramsFragment setUserVisibleHint is not getting called on tab selection
         // that's why we need to call it manually.
-        setUserVisibleHint(getUserVisibleHint());
+        if (!isHidden()) {
+            setUserVisibleHint(getUserVisibleHint());
+        }
     }
 
     @Override
