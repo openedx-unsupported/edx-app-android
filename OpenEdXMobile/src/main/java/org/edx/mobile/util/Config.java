@@ -109,6 +109,9 @@ public class Config {
         @SerializedName("PROGRAM")
         private ProgramDiscoveryConfig programDiscoveryConfig;
 
+        @SerializedName("DEGREE")
+        private DegreeDiscoveryConfig degreeDiscoveryConfig;
+
         public enum DiscoveryType {
             WEBVIEW,
             NATIVE
@@ -120,6 +123,10 @@ public class Config {
 
         public ProgramDiscoveryConfig getProgramDiscoveryConfig() {
             return programDiscoveryConfig;
+        }
+
+        public DegreeDiscoveryConfig getDegreeDiscoveryConfig() {
+            return degreeDiscoveryConfig;
         }
     }
 
@@ -187,7 +194,51 @@ public class Config {
                     environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig() != null &&
                     environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled() &&
                     environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled()
-            ;
+                    ;
+        }
+
+        public boolean isWebviewDiscoveryEnabled() {
+            return getDiscoveryType() == DiscoveryConfig.DiscoveryType.WEBVIEW;
+        }
+
+        public WebViewConfig getWebViewConfig() {
+            return webViewConfig;
+        }
+
+        public String getBaseUrl() {
+            return null == webViewConfig ? null : webViewConfig.getBaseUrl();
+        }
+
+        public String getInfoUrlTemplate() {
+            return null == webViewConfig ? null : webViewConfig.getInfoUrlTemplate();
+        }
+
+        public boolean isSearchEnabled() {
+            return null != webViewConfig && webViewConfig.isSearchEnabled();
+        }
+    }
+
+    public static class DegreeDiscoveryConfig {
+        @SerializedName("TYPE")
+        private String typeConfig;
+
+        @SerializedName("WEBVIEW")
+        private WebViewConfig webViewConfig;
+
+        @Nullable
+        private DiscoveryConfig.DiscoveryType getDiscoveryType() {
+            if (null == typeConfig) {
+                return null;
+            }
+            return DiscoveryConfig.DiscoveryType.valueOf(typeConfig.toUpperCase(Locale.US));
+        }
+
+        public boolean isDiscoveryEnabled(@NonNull IEdxEnvironment environment) {
+            return getDiscoveryType() != null &&
+                    environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig() != null &&
+                    environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isDiscoveryEnabled(environment) &&
+                    environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isWebviewDiscoveryEnabled()
+                    ;
         }
 
         public WebViewConfig getWebViewConfig() {
