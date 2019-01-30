@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.google.inject.Inject;
@@ -34,8 +37,7 @@ public class MainDiscoveryFragment extends BaseFragment {
 
     private ToolbarCallbacks toolbarCallbacks;
 
-    private Fragment courseDiscoveryFragment;
-    private Fragment programDiscoveryFragment;
+    private SparseArray<Fragment> fragmentsArray = new SparseArray<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,77 +68,83 @@ public class MainDiscoveryFragment extends BaseFragment {
         onFragmentVisibilityChanged(getUserVisibleHint());
     }
 
-    public void initFragments() {
-        @IdRes
-        int checkedId = -1;
-
-        if (environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig() != null &&
-                environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isDiscoveryEnabled(environment)) {
-            programDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_programs");
-            if (programDiscoveryFragment == null) {
-                programDiscoveryFragment = new WebViewDiscoverProgramsFragment();
-                commitFragmentTransaction(R.id.fl_programs, programDiscoveryFragment, "fragment_programs");
-            }
-            checkedId = R.id.option_programs;
-        } else {
-            hideTabsBar();
-        }
-
+    private void initFragments() {
+        // Course discovery
         if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig() != null &&
                 environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
+            Fragment courseDiscoveryFragment;
             if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled()) {
                 courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_webview");
                 if (courseDiscoveryFragment == null) {
                     courseDiscoveryFragment = new WebViewDiscoverCoursesFragment();
                     courseDiscoveryFragment.setArguments(getArguments());
-                    commitFragmentTransaction(R.id.fl_courses, courseDiscoveryFragment, "fragment_courses_webview");
+                    commitFragmentTransaction(R.id.fl_container, courseDiscoveryFragment, "fragment_courses_webview");
                 }
             } else {
                 courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_native");
                 if (courseDiscoveryFragment == null) {
                     courseDiscoveryFragment = new NativeFindCoursesFragment();
-                    commitFragmentTransaction(R.id.fl_courses, courseDiscoveryFragment, "fragment_courses_native");
+                    commitFragmentTransaction(R.id.fl_container, courseDiscoveryFragment, "fragment_courses_native");
                 }
             }
 
-            checkedId = R.id.option_courses;
+            fragmentsArray.put(R.id.option_courses, courseDiscoveryFragment);
+            addTabItem(R.id.option_courses, R.string.label_my_courses);
+        }
+
+        // Program discovery
+        if (environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig() != null &&
+                environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isDiscoveryEnabled(environment)) {
+            Fragment programDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_programs");
+            if (programDiscoveryFragment == null) {
+                programDiscoveryFragment = new WebViewDiscoverProgramsFragment();
+                commitFragmentTransaction(R.id.fl_container, programDiscoveryFragment, "fragment_programs");
+            }
+
+            fragmentsArray.put(R.id.option_programs, programDiscoveryFragment);
+            addTabItem(R.id.option_programs, R.string.label_my_programs);
+        }
+
+        if (fragmentsArray.size() > 1) {
+            setTabsBackground(binding.options);
+            final int firstBtnId = fragmentsArray.keyAt(0);
+            if (firstBtnId != -1) {
+                onFragmentSelected(firstBtnId, false);
+                binding.options.check(firstBtnId);
+            }
         } else {
             hideTabsBar();
         }
-
-        if (checkedId != -1) {
-            onFragmentSelected(checkedId, false);
-            binding.options.check(checkedId);
-        }
     }
 
-    public void onFragmentSelected(@IdRes int resId, final boolean isUserSelected) {
-        switch (resId) {
-            case R.id.option_courses:
-                showFragment(courseDiscoveryFragment);
-                hideFragment(programDiscoveryFragment);
-                if (isUserSelected) {
+    private void onFragmentSelected(@IdRes int resId, final boolean isUserSelected) {
+        for (int i = 0; i < fragmentsArray.size(); i++) {
+            if (resId == fragmentsArray.keyAt(i)) {
+                showFragment(fragmentsArray.valueAt(i));
+            } else {
+                hideFragment(fragmentsArray.valueAt(i));
+            }
+        }
+        if (isUserSelected) {
+            switch (resId) {
+                case R.id.option_courses:
                     environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
-                }
-                break;
-            case R.id.option_programs:
-                showFragment(programDiscoveryFragment);
-                hideFragment(courseDiscoveryFragment);
-                if (isUserSelected) {
+                    break;
+                case R.id.option_programs:
                     environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_PROGRAMS);
-                }
-                break;
+                    break;
+            }
         }
     }
 
-    public void commitFragmentTransaction(@IdRes int containerViewId, Fragment fragment,
+    private void commitFragmentTransaction(@IdRes int containerViewId, Fragment fragment,
                                            @Nullable String tag) {
         final FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.replace(containerViewId, fragment, tag);
+        fragmentTransaction.add(containerViewId, fragment, tag);
         fragmentTransaction.commit();
     }
 
-    public void showFragment(@Nullable Fragment fragment) {
+    private void showFragment(@Nullable Fragment fragment) {
         if (fragment == null || !fragment.isHidden()) {
             return;
         }
@@ -145,7 +153,7 @@ public class MainDiscoveryFragment extends BaseFragment {
                 .commit();
     }
 
-    public void hideFragment(@Nullable Fragment fragment) {
+    private void hideFragment(@Nullable Fragment fragment) {
         if (fragment == null || fragment.isHidden()) {
             return;
         }
@@ -154,7 +162,28 @@ public class MainDiscoveryFragment extends BaseFragment {
                 .commit();
     }
 
-    public void hideTabsBar() {
+    private void addTabItem(@IdRes int id, @StringRes int label) {
+        final RadioButton radioButton = (RadioButton) getLayoutInflater().inflate(
+                R.layout.segment_control_button_base, binding.options, false);
+        radioButton.setId(id);
+        radioButton.setText(label);
+        binding.options.addView(radioButton);
+    }
+
+    private void setTabsBackground(@NonNull RadioGroup options) {
+        final int childCount = options.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            if (i == 0) {
+                options.getChildAt(i).setBackgroundResource(R.drawable.edx_segmented_control_left_background);
+            } else if (i == childCount - 1) {
+                options.getChildAt(i).setBackgroundResource(R.drawable.edx_segmented_control_right_background);
+            } else {
+                options.getChildAt(i).setBackgroundResource(R.drawable.edx_segmented_control_middle_background);
+            }
+        }
+    }
+
+    private void hideTabsBar() {
         binding.options.setVisibility(View.GONE);
     }
 

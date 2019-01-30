@@ -1,0 +1,5 @@
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/edX.Widget.SegmentedControlSegment.Start"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1" />

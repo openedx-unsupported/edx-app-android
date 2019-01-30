@@ -12,42 +12,12 @@
             android:layout_height="wrap_content"
             android:clipToPadding="true"
             android:orientation="horizontal"
-            android:padding="@dimen/edx_margin">
-
-            <RadioButton
-                android:id="@+id/option_courses"
-                style="@style/edX.Widget.SegmentedControlSegment.Start"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:tag="@string/label_my_courses"
-                android:text="@string/label_my_courses" />
-
-            <RadioButton
-                android:id="@+id/option_programs"
-                style="@style/edX.Widget.SegmentedControlSegment.End"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:tag="@string/label_my_programs"
-                android:text="@string/label_my_programs" />
-        </RadioGroup>
+            android:padding="@dimen/edx_margin" />
 
         <FrameLayout
             android:id="@+id/fl_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/fl_courses"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <FrameLayout
-                android:id="@+id/fl_programs"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 </layout>
