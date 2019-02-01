@@ -15,6 +15,8 @@ public interface ILocalDataSource {
     Observable<List<User>> getAllUsers();
     Observable<Boolean> insertUser(final User user);
 
+    void clear();
+
     CollectionConfigResponse getConfiguration();
     void insertConfiguration(CollectionConfigResponse response);
 

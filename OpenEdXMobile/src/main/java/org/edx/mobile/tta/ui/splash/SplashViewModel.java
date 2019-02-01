@@ -1,11 +1,12 @@
 package org.edx.mobile.tta.ui.splash;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.dashboard.DashboardActivity;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
 import org.edx.mobile.tta.ui.logistration.UserInfoActivity;
@@ -32,7 +33,14 @@ public class SplashViewModel extends BaseViewModel {
                 if (mDataManager.getLoginPrefs().getCurrentUserProfile() == null) {
                     ActivityUtil.gotoPage(activity, SigninRegisterActivity.class);
                 } else {
-                    ActivityUtil.gotoPage(activity, DashboardActivity.class);
+                    if (mDataManager.getLoginPrefs().getCurrentUserProfile().name == null ||
+                            mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals("") ||
+                            mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals(mDataManager.getLoginPrefs().getUsername())
+                    ) {
+                        ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    } else {
+                        ActivityUtil.gotoPage(activity, LandingActivity.class);
+                    }
                 }
             }
         }, DELAY);

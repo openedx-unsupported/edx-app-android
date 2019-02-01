@@ -381,7 +381,7 @@ public class ProgressWheel extends View {
      * Set the text in the progress bar
      * Doesn't invalidate the view
      *
-     * @param text the text to show ('\n' constitutes a new line)
+     * @param text the text to showLoading ('\n' constitutes a new line)
      */
     public void setText(String text) {
         this.text = text;

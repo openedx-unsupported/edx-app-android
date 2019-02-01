@@ -1,5 +1,7 @@
 package org.edx.mobile.tta.data.model;
 
+import androidx.annotation.Nullable;
+
 public class AgendaItem {
 
     private long source_id;
@@ -7,6 +9,8 @@ public class AgendaItem {
     private long content_count;
 
     private String source_name;
+
+    private String source_title;
 
     private String source_icon;
 
@@ -34,11 +38,24 @@ public class AgendaItem {
         this.source_name = source_name;
     }
 
+    public String getSource_title() {
+        return source_title;
+    }
+
+    public void setSource_title(String source_title) {
+        this.source_title = source_title;
+    }
+
     public String getSource_icon() {
         return source_icon;
     }
 
     public void setSource_icon(String source_icon) {
         this.source_icon = source_icon;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (obj instanceof AgendaItem) && source_name.equalsIgnoreCase(((AgendaItem) obj).source_name);
     }
 }

@@ -40,7 +40,7 @@ public class WebViewActivityTest extends BaseTestCase {
      * Generic method for testing proper display of WebViewDialogFragment
      *
      * @param url   The url to load
-     * @param title The title to show, if any
+     * @param title The title to showLoading, if any
      */
     private void test_StartWebViewActivity_LoadsUrlAndShowsTitle(@NonNull String url,
                                                                  @Nullable String title)

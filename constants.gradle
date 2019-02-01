@@ -21,7 +21,7 @@ project.ext {
     stethoVersion = '1.5.0'
     bkVersion = '8.6.0'
 
-    roomDatabase = '1.0.0'
+    roomDatabase = '1.1.0'
 
     rxLifecycleVersion = "2.0.1"
 

@@ -108,7 +108,7 @@
     <string name="dropdown_list_prefix">Dropdown content_list.</string>
 
     <!-- Navigation Drawer Labels -->
-    <!-- Button text to show user current downloads screen -->
+    <!-- Button text to showLoading user current downloads screen -->
     <string name="label_current_downloads">View current downloads</string>
     <!-- Content description for edit profile button -->
     <string name="open_profile_button">Open your profile</string>
@@ -134,7 +134,7 @@
     <string name="settings_txt">Settings</string>
     <!-- Settings screen version -->
     <string name="label_version">App Version</string>
-    <!-- Button text to show user Settings screen -->
+    <!-- Button text to showLoading user Settings screen -->
     <string name="label_settings">Settings</string>
     <!-- Title of Account screen -->
     <string name="title_account">Account</string>
@@ -378,11 +378,11 @@
     <string name="assessment_not_available">This interactive component isn’t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
     <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
-    <!-- Button to show wiew on web for assessment-->
+    <!-- Button to showLoading wiew on web for assessment-->
     <string name="assessment_view_on_web">View on Web</string>
-    <!-- Label to show empty assessment -->
+    <!-- Label to showLoading empty assessment -->
     <string name="assessment_empty">There are no learning material in this section.</string>
-    <!-- Label to show a course will be starting soon -->
+    <!-- Label to showLoading a course will be starting soon -->
     <string name="assessment_soon">Soon</string>
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
     <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
@@ -520,9 +520,9 @@
     <string name="launch_search_courses">Search Courses</string>
 
     <!-- Registration Screen -->
-    <!-- Button text allowing user to show hidden optional registration fields -->
+    <!-- Button text allowing user to showLoading hidden optional registration fields -->
     <string name="show_optional_text">Show optional fields</string>
-    <!-- Button text allowing user to hide visible optional registration fields -->
+    <!-- Button text allowing user to hideLoading visible optional registration fields -->
     <string name="hide_optional_text">Hide optional fields</string>
     <!-- Button text allowing user create an account -->
     <string name="create_account_text">Create my account</string>
@@ -706,9 +706,14 @@
     <string name="region_agenda">Region wise Agenda</string>
     <string name="my_agenda">My Agenda</string>
     <string name="download">Download</string>
+    <string name="registered_successfully">Registered successfully.</string>
+    <string name="block_wise_list">Block wise list</string>
+    <string name="district_wise_list">District wise list</string>
+    <string name="state_wise_list">State wise list</string>
 
     <string name="no_connection_exception">No Internet Connection</string>
     <string name="asterisk_red" translatable="false"><font color='#f44336'>*</font></string>
+
     <!-- TTA strings end -->
 
 </resources>

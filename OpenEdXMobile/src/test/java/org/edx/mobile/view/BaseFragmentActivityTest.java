@@ -197,7 +197,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     }
 
     /**
-     * Generic message for asserting show info method functionality
+     * Generic message for asserting showLoading info method functionality
      *
      * @param activity The activity instance
      * @param message  The message that is expected to be displayed
@@ -219,7 +219,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     }
 
     /**
-     * Testing show info method
+     * Testing showLoading info method
      */
     @Test
     public void showInfoMessageTest() {

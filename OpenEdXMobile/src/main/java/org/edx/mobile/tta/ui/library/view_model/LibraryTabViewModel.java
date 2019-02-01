@@ -22,7 +22,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
-import org.edx.mobile.tta.data.enums.CategoryType;
 import org.edx.mobile.tta.data.enums.ContentListType;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.CollectionConfigResponse;
@@ -32,6 +31,7 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.utils.ContentSourceUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,6 +67,7 @@ public class LibraryTabViewModel extends BaseViewModel {
     }
 
     private void getContents(){
+        mActivity.showLoading();
 
         Long[] listIds = new Long[contentLists.size()];
         for (int i = 0; i < contentLists.size(); i++){
@@ -77,10 +78,12 @@ public class LibraryTabViewModel extends BaseViewModel {
                     @Override
                     public void onSuccess(List<CollectionItemsResponse> data) {
                         setContents(data);
+                        mActivity.hideLoading();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
+                        mActivity.hideLoading();
                         mActivity.showShortSnack(e.getLocalizedMessage());
                     }
                 });
@@ -95,24 +98,7 @@ public class LibraryTabViewModel extends BaseViewModel {
             for (CollectionItemsResponse response: data){
 
                 if (response.getContent() != null && !response.getContent().isEmpty()){
-                    List<Content> contents = new ArrayList<>();
-
-                    for (Content content: response.getContent()){
-                        if (category.getName().equalsIgnoreCase(CategoryType.all.toString()) || content.getSource().getId() == category.getSource_id()){
-                            contents.add(content);
-                        }
-                    }
-
-                    if (contents.isEmpty()){
-                        for (ContentList contentList: contentLists){
-                            if (contentList.getId() == response.getId()){
-                                emptyLists.add(contentList);
-                                break;
-                            }
-                        }
-                    } else {
-                        contentListMap.put(response.getId(), contents);
-                    }
+                    contentListMap.put(response.getId(), response.getContent());
                 } else {
 
                     for (ContentList contentList: contentLists){
@@ -176,12 +162,30 @@ public class LibraryTabViewModel extends BaseViewModel {
             } else if (binding instanceof TRowContentListBinding){
 
                 TRowContentListBinding listBinding = (TRowContentListBinding) binding;
+                listBinding.contentFiniteList.setTitleText(model.getName());
+
                 ContentListAdapter listAdapter = new ContentListAdapter(mActivity);
                 listAdapter.addAll(contentListMap.get(model.getId()));
-                listAdapter.setItemClickListener((view, item) ->
-                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show());
-                listBinding.contentFiniteList.setTitleText(model.getName());
-                if (listAdapter.getItemCount() > listBinding.contentFiniteList.getmMaxItem()) {
+                listAdapter.setItemClickListener((view, item) -> {
+                    if (item.getSource().getType().equalsIgnoreCase("edx") ||
+                            item.getSource().getType().equalsIgnoreCase("course")
+                    ) {
+                        /*ActivityUtil.replaceFragmentInActivity(
+                                mActivity.getSupportFragmentManager(),
+                                CourseDashboardFragment.newInstance(item),
+                                R.id.dashboard_fragment,
+                                CourseDashboardFragment.TAG,
+                                true,
+                                null
+                        );*/
+                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                if (contentListMap.get(model.getId()).size() >= listBinding.contentFiniteList.getmMaxItem()) {
+                    listBinding.contentFiniteList.setmMoreButtonVisible(true);
                     listBinding.contentFiniteList.setOnMoreButtonClickListener(v ->
                             Toast.makeText(mActivity, "View more of " + model.getName(), Toast.LENGTH_SHORT).show());
                 } else {
@@ -213,6 +217,9 @@ public class LibraryTabViewModel extends BaseViewModel {
             if (binding instanceof TRowContentBinding){
                 TRowContentBinding contentBinding = (TRowContentBinding) binding;
                 contentBinding.contentCategory.setText(model.getSource().getTitle());
+                contentBinding.contentCategory.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        ContentSourceUtil.getSourceDrawable_10x10(model.getSource().getName()),
+                        0, 0, 0);
                 contentBinding.contentTitle.setText(model.getName());
                 Glide.with(mActivity).load(model.getIcon()).into(contentBinding.contentImage);
                 contentBinding.getRoot().setOnClickListener(v -> listener.onItemClick(v, model));

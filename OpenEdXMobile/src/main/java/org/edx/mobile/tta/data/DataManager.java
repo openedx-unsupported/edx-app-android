@@ -2,12 +2,15 @@ package org.edx.mobile.tta.data;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
@@ -30,8 +33,10 @@ import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
+import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.ui.logistration.model.LoginRequest;
 import org.edx.mobile.tta.ui.logistration.model.LoginResponse;
+import org.edx.mobile.tta.ui.logistration.model.UserAddressResponse;
 import org.edx.mobile.tta.utils.RxUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
@@ -130,6 +135,13 @@ public class DataManager extends  BaseRoboInjector {
                 context,
                 mDataManager.getEdxEnvironment().getAnalyticsRegistry(),
                 mDataManager.getEdxEnvironment().getNotificationDelegate());
+
+        new Thread(){
+            @Override
+            public void run() {
+                mLocalDataSource.clear();
+            }
+        }.start();
     }
 
     public Observable<EmptyResponse> getEmpty() {
@@ -255,7 +267,26 @@ public class DataManager extends  BaseRoboInjector {
     }
 
     private void getCollectionConfigFromLocal(OnResponseCallback<CollectionConfigResponse> callback, Exception ex) {
-        new Thread(){
+        new AsyncTask<Void, Void, CollectionConfigResponse>(){
+
+            @Override
+            protected CollectionConfigResponse doInBackground(Void... voids) {
+                return mLocalDataSource.getConfiguration();
+            }
+
+            @Override
+            protected void onPostExecute(CollectionConfigResponse collectionConfigResponse) {
+                super.onPostExecute(collectionConfigResponse);
+                if (collectionConfigResponse == null ||
+                        collectionConfigResponse.getCategory() == null ||
+                        collectionConfigResponse.getCategory().isEmpty()) {
+                    callback.onFailure(ex);
+                } else {
+                    callback.onSuccess(collectionConfigResponse);
+                }
+            }
+        }.execute();
+        /*new Thread(){
             @Override
             public void run() {
                 CollectionConfigResponse response = mLocalDataSource.getConfiguration();
@@ -265,7 +296,7 @@ public class DataManager extends  BaseRoboInjector {
                     callback.onSuccess(response);
                 }
             }
-        }.start();
+        }.start();*/
     }
 
     public void getConfigModifiedDate(OnResponseCallback<ConfigModifiedDateResponse> callback){
@@ -373,7 +404,48 @@ public class DataManager extends  BaseRoboInjector {
     }
 
     private void getCollectionItemsFromLocal(Long[] listIds, OnResponseCallback<List<CollectionItemsResponse>> callback, Exception ex) {
-        new Thread(){
+        new AsyncTask<Void, Void, List<Content>>(){
+
+            @Override
+            protected List<Content> doInBackground(Void... voids) {
+                return mLocalDataSource.getContents();
+            }
+
+            @Override
+            protected void onPostExecute(List<Content> contents) {
+                super.onPostExecute(contents);
+                List<CollectionItemsResponse> responses = new ArrayList<>();
+                if (contents != null){
+                    for (Long listId: listIds){
+                        CollectionItemsResponse response = new CollectionItemsResponse();
+                        response.setId(listId);
+                        response.setContent(new ArrayList<>());
+                        responses.add(response);
+                    }
+                    List<Long> requiredListIds = Arrays.asList(listIds);
+                    for (Content content: contents){
+                        for (long listId: content.getLists()){
+                            if (requiredListIds.contains(listId)){
+                                for (CollectionItemsResponse response: responses){
+                                    if (response.getId() == listId){
+                                        response.getContent().add(content);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (responses.isEmpty()){
+                    callback.onFailure(ex);
+                } else {
+                    callback.onSuccess(responses);
+                }
+            }
+        }.execute();
+
+        /*new Thread(){
             @Override
             public void run() {
                 List<Content> contents = mLocalDataSource.getContents();
@@ -411,7 +483,7 @@ public class DataManager extends  BaseRoboInjector {
                     callback.onSuccess(responses);
                 }
             }
-        }.start();
+        }.start();*/
     }
 
     public void getStateAgendaCount(OnResponseCallback<List<AgendaList>> callback){
@@ -478,35 +550,35 @@ public class DataManager extends  BaseRoboInjector {
     public void getMyAgendaCount(OnResponseCallback<AgendaList> callback){
 
         //Mocking start
-        /*AgendaList agendaList = new AgendaList();
-        agendaList.setLevel("My Agenda");
+        AgendaList agendaList = new AgendaList();
+        agendaList.setLevel("My");
         List<AgendaItem> items = new ArrayList<>();
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 3; i++){
             AgendaItem item = new AgendaItem();
             item.setContent_count(10 - i);
             item.setSource_id(i);
             switch (i){
                 case 0:
-                    item.setSource_name("Course");
+                    item.setSource_title("कोर्स");
+                    item.setSource_name("course");
                     break;
                 case 1:
-                    item.setSource_name("Chatshala");
-                    break;
-                case 2:
-                    item.setSource_name("HOIS");
+                    item.setSource_title("शिक्षण सामग्री");
+                    item.setSource_name("toolkit");
                     break;
                 default:
-                    item.setSource_name("Toolkit");
+                    item.setSource_title("प्रेरणा स्त्रोत");
+                    item.setSource_name("hois");
                     break;
             }
             items.add(item);
         }
         agendaList.setResult(items);
-        callback.onSuccess(agendaList);*/
+        callback.onSuccess(agendaList);
         //Mocking end
 
         //Actual code   **Do not delete**
-        if (NetworkUtil.isConnected(context)){
+        /*if (NetworkUtil.isConnected(context)){
             new GetMyAgendaCountTask(context){
                 @Override
                 protected void onSuccess(AgendaList agendaList) throws Exception {
@@ -521,7 +593,7 @@ public class DataManager extends  BaseRoboInjector {
             }.execute();
         } else {
             callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
-        }
+        }*/
 
     }
 
@@ -537,16 +609,20 @@ public class DataManager extends  BaseRoboInjector {
             item.setSource_id(i);
             switch (i){
                 case 0:
-                    item.setSource_name("Course");
+                    item.setSource_title("कोर्स");
+                    item.setSource_name("course");
                     break;
                 case 1:
-                    item.setSource_name("Chatshala");
+                    item.setSource_title("Chatशाला");
+                    item.setSource_name("chatshala");
                     break;
                 case 2:
-                    item.setSource_name("HOIS");
+                    item.setSource_title("शिक्षण सामग्री");
+                    item.setSource_name("toolkit");
                     break;
                 default:
-                    item.setSource_name("Toolkit");
+                    item.setSource_title("प्रेरणा स्त्रोत");
+                    item.setSource_name("hois");
                     break;
             }
             items.add(item);
@@ -554,6 +630,30 @@ public class DataManager extends  BaseRoboInjector {
         agendaList.setResult(items);
         callback.onSuccess(agendaList);
         //Mocking end
+
+    }
+
+    public void getBlocks(OnResponseCallback<List<RegistrationOption>> callback, Bundle parameters,
+                          @NonNull List<RegistrationOption> blocks){
+
+        new GetUserAddressTask(context, parameters){
+            @Override
+            protected void onSuccess(UserAddressResponse userAddressResponse) throws Exception {
+                super.onSuccess(userAddressResponse);
+                blocks.clear();
+                if (userAddressResponse != null && userAddressResponse.getBlock() != null){
+                    for (Object o: userAddressResponse.getBlock()){
+                        blocks.add(new RegistrationOption(o.toString(), o.toString()));
+                    }
+                    callback.onSuccess(blocks);
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(ex);
+            }
+        }.execute();
 
     }
 

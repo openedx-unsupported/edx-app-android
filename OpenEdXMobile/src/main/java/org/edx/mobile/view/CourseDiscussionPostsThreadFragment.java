@@ -262,7 +262,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
-        // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
+        // If a listed thread's following status has changed, we need to replace it to showLoading/hideLoading the "following" label
         for (int i = 0; i < discussionPostsAdapter.getCount(); ++i) {
             if (discussionPostsAdapter.getItem(i).hasSameId(event.getDiscussionThread())) {
                 discussionPostsAdapter.replace(event.getDiscussionThread(), i);
@@ -310,7 +310,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             discussionPostsAdapter.insert(newThread, i);
             // move the ListView's scroll to that newly added post's position
             discussionPostsListView.setSelection(i);
-            // In case this is the first addition, we need to hide the no-item-view
+            // In case this is the first addition, we need to hideLoading the no-item-view
             setScreenStateUponResult();
         }
     }
@@ -356,7 +356,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         final Activity activity = getActivity();
         final boolean isRefreshingSilently = callback.isRefreshingSilently();
         getThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(activity,
-                // Initially we need to show the spinner at the center of the screen. After that,
+                // Initially we need to showLoading the spinner at the center of the screen. After that,
                 // the ListView will start showing a footer-based loading indicator.
                 nextPage > 1 || isRefreshingSilently ? null :
                         new ProgressViewController(loadingIndicator),

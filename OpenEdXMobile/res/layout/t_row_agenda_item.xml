@@ -46,7 +46,8 @@
                 android:layout_marginEnd="@dimen/_24px"
                 android:layout_marginBottom="@dimen/_20px"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:drawablePadding="2dp"/>
 
         </RelativeLayout>
 

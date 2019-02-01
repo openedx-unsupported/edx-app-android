@@ -583,12 +583,29 @@
         <item name="android:layout_height">50dp</item>
         <item name="android:elevation">2dp</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:background">@color/app_background</item>
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="agenda_list_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">235dp</item>
+    </style>
+
+    <style name="ta_toolbar_title_style" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/hind_medium</item>
+        <item name="android:textColor">@color/primary_navy</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ta_snackbar_wrapper_style">
+
+    </style>
+
+    <style name="ta_tab_text_appearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!-- TTA styles end -->

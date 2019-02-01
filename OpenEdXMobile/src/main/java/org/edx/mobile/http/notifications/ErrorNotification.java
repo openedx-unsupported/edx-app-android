@@ -16,7 +16,7 @@ import org.edx.mobile.util.images.ErrorUtils;
 import java.io.IOException;
 
 /**
- * A notification to show errors while loading content from or submitting content to a remote server.
+ * A notification to showLoading errors while loading content from or submitting content to a remote server.
  */
 public abstract class ErrorNotification {
     /**

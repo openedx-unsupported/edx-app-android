@@ -417,7 +417,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
         }
 
         if (this.controller != null) {
-            // hide old controller while setting new
+            // hideLoading old controller while setting new
             this.controller.hide();
             this.controller = null;
         }

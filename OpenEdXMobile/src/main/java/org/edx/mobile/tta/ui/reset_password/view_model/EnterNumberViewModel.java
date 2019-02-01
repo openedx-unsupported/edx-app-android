@@ -63,7 +63,7 @@ public class EnterNumberViewModel extends BaseViewModel {
     }
 
     public void generateOTP(){
-        mActivity.show();
+        mActivity.showLoading();
 
         Bundle parameters = new Bundle();
         parameters.putString(KEY_MOBILE_NUMBER, cellphone.get());
@@ -71,7 +71,7 @@ public class EnterNumberViewModel extends BaseViewModel {
             @Override
             protected void onSuccess(MobileNumberVerificationResponse mobileNumberVerificationResponse) throws Exception {
                 super.onSuccess(mobileNumberVerificationResponse);
-                mActivity.hide();
+                mActivity.hideLoading();
 
                 if (mobileNumberVerificationResponse.mobile_number() != null && !mobileNumberVerificationResponse.mobile_number().equals("")){
                     parameters.putString(Constants.KEY_OTP_SOURCE, Constants.OTP_SOURCE_RESET_PASSWORD);
@@ -81,7 +81,7 @@ public class EnterNumberViewModel extends BaseViewModel {
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 mActivity.showErrorDialog("User not exist", "User with this mobile number doesn't exist.");
             }
         }.execute();

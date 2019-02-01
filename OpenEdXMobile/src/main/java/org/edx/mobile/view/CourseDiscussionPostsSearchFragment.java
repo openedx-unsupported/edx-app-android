@@ -96,7 +96,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
         final boolean isRefreshingSilently = callback.isRefreshingSilently();
         searchThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(
                 activity,
-                // Initially we need to show the spinner at the center of the screen. After that,
+                // Initially we need to showLoading the spinner at the center of the screen. After that,
                 // the ListView will start showing a footer-based loading indicator.
                 nextPage > 1 || isRefreshingSilently ? null : progressCallback,
                 mCallback, CallTrigger.LOADING_UNCACHED) {

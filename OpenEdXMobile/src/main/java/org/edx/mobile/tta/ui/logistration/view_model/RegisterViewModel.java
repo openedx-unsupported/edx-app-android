@@ -161,7 +161,7 @@ public class RegisterViewModel extends BaseViewModel {
     }
 
     public void generateOTP(){
-        mActivity.show();
+        mActivity.showLoading();
 
         Bundle parameters = new Bundle();
         parameters.putString(Constants.KEY_MOBILE_NUMBER, cellphone.get());
@@ -179,7 +179,7 @@ public class RegisterViewModel extends BaseViewModel {
             @Override
             protected void onSuccess(SendOTPResponse sendOTPResponse) throws Exception {
                 super.onSuccess(sendOTPResponse);
-                mActivity.hide();
+                mActivity.hideLoading();
 
                 if(sendOTPResponse.mobile_number().equals(cellphone.get())){
 
@@ -192,7 +192,7 @@ public class RegisterViewModel extends BaseViewModel {
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 String errorMsg = "";
                 try {
                     if (((HttpResponseStatusException) ex).getStatusCode() == 409) {

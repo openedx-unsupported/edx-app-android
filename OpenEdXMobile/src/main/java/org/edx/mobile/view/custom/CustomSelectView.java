@@ -128,7 +128,7 @@ public class CustomSelectView<T> extends AppCompatTextView implements View.OnCli
     protected void select(T item) {
         //Check if the selected options value is empty
         //The current json contains '--' as the first value
-        //and hence show the hint text instead of '--' in the select view
+        //and hence showLoading the hint text instead of '--' in the select view
         if (TextUtils.isEmpty(item.toString())
                 || item.toString().equalsIgnoreCase("--")) {
             showHint();

@@ -16,12 +16,12 @@ public class ProgressDialogLoading implements ILoading {
     }
 
     @Override
-    public void show() {
+    public void showLoading() {
         mPd.show();
     }
 
     @Override
-    public void hide() {
+    public void hideLoading() {
         mPd.dismiss();
     }
 

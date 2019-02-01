@@ -61,11 +61,11 @@ import java.util.Locale;
  * The window will disappear if left idle for three seconds and reappear
  * when the user touches the anchor view.
  * <p>
- * Functions like show() and hide() have no effect when MediaController
+ * Functions like showLoading() and hideLoading() have no effect when MediaController
  * is created in an xml layout.
  * 
- * MediaController will hide and
- * show the buttons according to these rules:
+ * MediaController will hideLoading and
+ * showLoading the buttons according to these rules:
  * <ul>
  * <li> The "previous" and "next" buttons are hidden until setNextPreviousListeners()
  *   has been called
@@ -239,7 +239,7 @@ public class PlayerController extends FrameLayout {
     /**
      * @param timeoutMS The timeout in milliseconds that controls should be shown on screen,
      *                  or 0 for no timeout
-     *                  The value will be applied to next call of show()
+     *                  The value will be applied to next call of showLoading()
      */
     public void setShowTimeoutMS(long timeoutMS) {
         if (timeoutMS <= 0L) {
@@ -267,10 +267,10 @@ public class PlayerController extends FrameLayout {
 
     /**
      * Show the controller for a specified timeout.
-     * Use this as opposed to show() when you want to show the controls for a time inconsistent with
+     * Use this as opposed to showLoading() when you want to showLoading the controls for a time inconsistent with
      *  tapping the screen, activating a control, etc
      *
-     * @param timeoutMS The timeout to show controls for.
+     * @param timeoutMS The timeout to showLoading controls for.
      *                  Value of <= 0 means no timeout
      */
     public void showSpecial(long timeoutMS) {
@@ -468,7 +468,7 @@ public class PlayerController extends FrameLayout {
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
                 || keyCode == KeyEvent.KEYCODE_VOLUME_UP
                 || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
-            // don't show the controls for volume adjustment
+            // don't showLoading the controls for volume adjustment
             return super.dispatchKeyEvent(event);
         } else if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_MENU) {
             if (uniqueDown) {
@@ -656,7 +656,7 @@ public class PlayerController extends FrameLayout {
             show();
 
             // Ensure that progress is properly updated in the future,
-            // the call to show() does not guarantee this because it is a
+            // the call to showLoading() does not guarantee this because it is a
             // no-op if we are already showing.
             mHandler.sendEmptyMessage(SHOW_PROGRESS);
 

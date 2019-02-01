@@ -55,7 +55,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
             return;
         }
 
-        // No need to show tabs if we only have
+        // No need to showLoading tabs if we only have
         if (fragmentItems.size() <= 1) {
             tabLayout.setVisibility(View.GONE);
         } else {
@@ -141,7 +141,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
     }
 
     /**
-     * Tells if we need to show the title text with icons in a tab.
+     * Tells if we need to showLoading the title text with icons in a tab.
      *
      * @return <code>true</code> if title needs to be shown, <code>false</code> otherwise.
      */

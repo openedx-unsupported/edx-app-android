@@ -33,7 +33,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/mx_list_card_top_gradient"
+                android:background="@drawable/t_list_card_top_gradient"
                 android:layout_alignParentTop="true">
 
                 <View
@@ -49,7 +49,6 @@
                     android:textSize="8sp"
                     android:fontFamily="@font/hind_semibold"
                     android:layout_margin="@dimen/_8px"
-                    android:drawableStart="@drawable/ic_camera_white_24dp"
                     android:drawablePadding="2dp"
                     android:gravity="center_vertical"/>
 
@@ -60,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/content_title"
                 android:textColor="@color/gray_5"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:fontFamily="@font/hind_medium"
                 android:singleLine="false"
                 android:layout_marginStart="@dimen/_8px"
@@ -74,7 +73,8 @@
                 android:layout_margin="@dimen/_10px"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                app:srcCompat="@drawable/refresh"/>
+                app:srcCompat="@drawable/refresh"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 

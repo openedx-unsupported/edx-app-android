@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.course.view_model.CourseMaterialViewModel" />
+    </data>
+
+    <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:mx_canShowVertical="true"
+        app:mx_titleVisible="false"
+        app:mx_moreButtonVisible="false"
+        app:mx_headerLayout="@layout/t_row_course_material_header"
+        app:mx_footerLayout="@layout/t_row_course_material_footer"
+        app:mx_itemLayout="@layout/t_row_course_material_item"
+        app:mx_itemLimit="1000"/>
+
+</layout>

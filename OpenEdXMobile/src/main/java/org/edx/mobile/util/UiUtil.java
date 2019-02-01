@@ -32,7 +32,7 @@ public class UiUtil {
 
     public static void showMessage(View root, String message) {
         if (root == null) {
-            logger.warn("cannot show message, no views available");
+            logger.warn("cannot showLoading message, no views available");
             return;
         }
         TextView downloadMessageTv = (TextView) root.findViewById(R.id.flying_message);

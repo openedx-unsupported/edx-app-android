@@ -258,7 +258,7 @@ public class LoginActivity
         ResetPasswordDialogFragment.newInstance(getEmail()).show(getSupportFragmentManager(), null);
     }
 
-    // make sure that on the login activity, all errors show up as a dialog as opposed to a flying snackbar
+    // make sure that on the login activity, all errors showLoading up as a dialog as opposed to a flying snackbar
     @Override
     public void showAlertDialog(@Nullable String header, @NonNull String message) {
         super.showAlertDialog(header, message);

@@ -72,7 +72,7 @@ public class Storage implements IStorage {
 
         if(model.isVideoForWebOnly())
             return -1;  //we may need to return different error code.
-                        //but for now we show same generic error message
+                        //but for now we showLoading same generic error message
         //IVideoModel videoById = db.getVideoEntryByVideoId(model.getVideoId(), null);
 
         if (videoByUrl == null || videoByUrl.getDmId() < 0) {

@@ -4,12 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import org.edx.mobile.tta.ui.base.TaBaseActivity;
-import org.edx.mobile.tta.utils.RxUtil;
-import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.widget.loading.ILoading;
-
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 
 
 import io.reactivex.Observer;
@@ -49,7 +44,7 @@ public class NetworkObserver<T> implements Observer<T> {
     @Override
     public void onSubscribe(Disposable d) {
         if (mLoading != null) {
-            mLoading.show();
+            mLoading.showLoading();
         }
     }
 
@@ -62,7 +57,7 @@ public class NetworkObserver<T> implements Observer<T> {
     public void onError(Throwable e) {
 
         if (mLoading != null) {
-            mLoading.hide();
+            mLoading.hideLoading();
         }
 
         String errorMsg = e.getMessage();
@@ -96,7 +91,7 @@ public class NetworkObserver<T> implements Observer<T> {
     @Override
     public void onComplete() {
         if (mLoading != null) {
-            mLoading.hide();
+            mLoading.hideLoading();
         }
         onHandleFinal();
     }

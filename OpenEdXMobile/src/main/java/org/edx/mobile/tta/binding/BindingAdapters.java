@@ -67,7 +67,7 @@ public class BindingAdapters {
         }
     }
 
-    @BindingAdapter({"android:show"})
+    @BindingAdapter({"android:showLoading"})
     public static void setViewShowOrHide(View view, Boolean show) {
         if (show) {
             view.setVisibility(View.VISIBLE);
@@ -280,6 +280,9 @@ public class BindingAdapters {
     public static void requestFocus(View view, boolean b){
         if (b) {
             view.requestFocus();
+            if (view instanceof EditText){
+                ((EditText) view).setSelection(((EditText) view).getText().length());
+            }
         }
     }
 
@@ -296,5 +299,10 @@ public class BindingAdapters {
     @BindingAdapter({"form_password_toggle_drawable"})
     public static void setFormPasswordToggleDrawable(FormEditText view, int id){
         view.setPasswordVisibilityToggleDrawable(id);
+    }
+
+    @BindingAdapter({"on_key_listener"})
+    public static void onSetKeyListener(View view, View.OnKeyListener listener){
+        view.setOnKeyListener(listener);
     }
 }

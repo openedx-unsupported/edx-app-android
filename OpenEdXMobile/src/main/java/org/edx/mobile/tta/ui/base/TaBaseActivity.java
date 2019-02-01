@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.google.inject.Key;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -70,14 +71,12 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         mLoading = loading;
     }
 
-    @Override
-    public void show() {
-        mLoading.show();
+    public void showLoading() {
+        mLoading.showLoading();
     }
 
-    @Override
-    public void hide() {
-        mLoading.hide();
+    public void hideLoading() {
+        mLoading.hideLoading();
     }
 
     @Override
@@ -92,6 +91,28 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
     public void showShortSnack(String msg){
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
+
+    public void showLongSnack(String msg){
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void showShortToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showLongToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    /*@SuppressLint("Range")
+    public void showShortSnackOnApplicationLevel(String msg){
+        SnackbarWrapper.make(getApplicationContext(), msg, Snackbar.LENGTH_SHORT).showLoading();
+    }
+
+    @SuppressLint("Range")
+    public void showLongSnackOnApplicationLevel(String msg){
+        SnackbarWrapper.make(getApplicationContext(), msg, Snackbar.LENGTH_LONG).showLoading();
+    }*/
 
     private void preventInitialFocus() {
         final ViewGroup content = this.findViewById(android.R.id.content);

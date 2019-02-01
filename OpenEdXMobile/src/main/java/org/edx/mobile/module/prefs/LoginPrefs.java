@@ -177,4 +177,22 @@ public class LoginPrefs {
                 throw new IllegalArgumentException(backend.name());
         }
     }
+
+    //TTA
+
+    @Nullable
+    public void setCurrentUserProfileInCache(ProfileModel model) {
+        if(model==null)
+            return;
+        if(model.name==null || model.name.equals(""))
+            model.name=getCurrentUserProfile().name;
+
+        if(model.email==null || model.email.equals(""))
+            model.email=getCurrentUserProfile().email;
+
+        //user name can't be modified
+        model.username=getUsername();
+
+        pref.put(PrefManager.Key.PROFILE_JSON, gson.toJson(model));
+    }
 }

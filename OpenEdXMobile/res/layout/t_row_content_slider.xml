@@ -11,7 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:layout_marginBottom="@dimen/_30px">
+        android:layout_marginBottom="@dimen/_30px"
+        android:animateLayoutChanges="true">
 
         <android.support.v4.view.ViewPager
             android:layout_width="match_parent"

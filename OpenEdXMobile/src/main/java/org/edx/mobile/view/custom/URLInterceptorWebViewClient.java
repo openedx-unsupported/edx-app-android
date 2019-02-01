@@ -93,7 +93,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private void setupWebView(WebView webView) {
         webView.setWebViewClient(this);
-        //We need to hide the loading progress if the Page starts rendering.
+        //We need to hideLoading the loading progress if the Page starts rendering.
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {

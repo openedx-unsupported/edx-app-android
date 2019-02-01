@@ -131,7 +131,7 @@ public class GoogleOauth2 extends ISocialImpl{
                 return GoogleAuthUtil.getToken(activity, mEmail, mScope);
             } catch (UserRecoverableAuthException userRecoverableException) {
                 // GooglePlayServices.apk is either old, disabled, or not present
-                // so we need to show the user some UI in the activity to recover.
+                // so we need to showLoading the user some UI in the activity to recover.
                 logger.debug("User recoverable error occurred");
                 logger.error(userRecoverableException);
                 
@@ -164,7 +164,7 @@ public class GoogleOauth2 extends ISocialImpl{
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // The account picker dialog closed without selecting an account.
                 // Notify users that they must pick an account to proceed.
-                // Toast.makeText(this, R.string.pick_account, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, R.string.pick_account, Toast.LENGTH_SHORT).showLoading();
             }
         }
         else if (requestCode == REQUEST_AUTHORIZATION) {

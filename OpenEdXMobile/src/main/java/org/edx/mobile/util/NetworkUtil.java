@@ -131,7 +131,7 @@ public class NetworkUtil {
      * Verify that there is an active network connection on which downloading is allowed. If
      * there is no such connection, then an appropriate message is displayed.
      *
-     * @param activity Delegate of type {@link BaseFragmentActivity} to show proper error messages
+     * @param activity Delegate of type {@link BaseFragmentActivity} to showLoading proper error messages
      * @return If downloads can be performed, returns true; else returns false.
      */
 

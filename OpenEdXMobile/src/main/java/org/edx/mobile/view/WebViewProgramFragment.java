@@ -150,7 +150,7 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     public void onEvent(NetworkConnectivityChangeEvent event) {
         if (getActivity() != null) {
             if (!tryEnablingSwipeContainer()) {
-                //Disable swipe functionality and hide the loading view
+                //Disable swipe functionality and hideLoading the loading view
                 swipeContainer.setEnabled(false);
                 swipeContainer.setRefreshing(false);
             }

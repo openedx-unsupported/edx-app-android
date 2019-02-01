@@ -2761,7 +2761,7 @@ public class SubsamplingScaleImageView extends View {
         /**
          * Called when the dimensions of the image and view are known, and either a preview image,
          * the full size image, or base layer tiles are loaded. This indicates the scale and translate
-         * are known and the next draw will display an image. This event can be used to hide a loading
+         * are known and the next draw will display an image. This event can be used to hideLoading a loading
          * graphic, or inform a subclass that it is safe to draw overlays.
          */
         void onReady();

@@ -11,6 +11,7 @@ import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.tta.ui.logistration.model.SendOTPResponse;
+import org.edx.mobile.tta.ui.logistration.model.UpdateMyProfileResponse;
 import org.edx.mobile.tta.ui.logistration.model.UserAddressResponse;
 import org.edx.mobile.tta.ui.otp.model.VerifyOTPForgotedPasswordResponse;
 import org.edx.mobile.tta.ui.otp.model.VerifyOTPResponse;
@@ -155,4 +156,8 @@ public interface LoginService {
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_GET_USER_ADDRESS)
     Call<UserAddressResponse> mxGetUserAddress(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_UPDATE_PROFILE)
+    Call<UpdateMyProfileResponse> mxUpdateProfile(@FieldMap Map<String, String> parameters);
 }

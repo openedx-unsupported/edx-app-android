@@ -121,7 +121,7 @@ public enum ShareUtils {
         }
 
         // TODO: Find an alternative to following usage of support MenuPopupHelper which is hidden in the support package
-        // As PopupMenu doesn't support to show icons in main menu, use MenuPopupHelper for it
+        // As PopupMenu doesn't support to showLoading icons in main menu, use MenuPopupHelper for it
         final MenuPopupHelper menuHelper = new MenuPopupHelper(activity, (MenuBuilder) popupMenu.getMenu(), anchor);
         menuHelper.setForceShowIcon(true);
         menuHelper.show();

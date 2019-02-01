@@ -90,7 +90,7 @@
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">Lista desplegable.</string>
   <!--Navigation Drawer Labels-->
-  <!--Button text to show user current downloads screen-->
+  <!--Button text to showLoading user current downloads screen-->
   <string name="label_current_downloads">Ver descargas</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Abrir su perfil</string>
@@ -115,7 +115,7 @@
   <string name="settings_txt">Opciones</string>
   <!--Settings screen version-->
   <string name="label_version">Versión de la aplicación</string>
-  <!--Button text to show user Settings screen-->
+  <!--Button text to showLoading user Settings screen-->
   <string name="label_settings">Configuración</string>
   <!--Title of Account screen-->
   <string name="title_account">Cuenta</string>
@@ -340,11 +340,11 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="assessment_not_available">Este componente interactivo no está disponible aún en versión móvil.</string>
   <!--Label showing assessment only available on website-->
   <string name="assessment_explore_on_web">Explorar otras partes de este curso o ver este contenido en la web.</string>
-  <!--Button to show wiew on web for assessment-->
+  <!--Button to showLoading wiew on web for assessment-->
   <string name="assessment_view_on_web">Ver en la web</string>
-  <!--Label to show empty assessment-->
+  <!--Label to showLoading empty assessment-->
   <string name="assessment_empty">No hay contenidos en esta sección.</string>
-  <!--Label to show a course will be starting soon-->
+  <!--Label to showLoading a course will be starting soon-->
   <string name="assessment_soon">Próximamente</string>
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">Gire su dispositivo para ver este video en pantalla completa.</string>
@@ -472,9 +472,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
   <string name="launch_search_courses">Buscar cursos</string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
+  <!--Button text allowing user to showLoading hidden optional registration fields-->
   <string name="show_optional_text">Mostrar campos opcionales</string>
-  <!--Button text allowing user to hide visible optional registration fields-->
+  <!--Button text allowing user to hideLoading visible optional registration fields-->
   <string name="hide_optional_text">Ocultar campos opcionales</string>
   <!--Button text allowing user create an account-->
   <string name="create_account_text">Crear mi cuenta</string>

@@ -458,7 +458,7 @@ public class SegmentAnalytics implements Analytics {
      * This function is used to track if user clicks on Enroll in the FindCourses Activity
      *
      * @param courseId     - Course Id for which user selected enroll
-     * @param email_opt_in - Flag to show user wants to opt in for email notification
+     * @param email_opt_in - Flag to showLoading user wants to opt in for email notification
      */
     @Override
     public void trackEnrollClicked(@NonNull String courseId, boolean email_opt_in) {

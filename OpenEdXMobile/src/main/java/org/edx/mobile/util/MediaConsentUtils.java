@@ -55,7 +55,7 @@ public class MediaConsentUtils {
             consentCallback.onPositiveClicked();
         } else {
             // No dialog for user consent implemented at
-            // the moment, so just show the error messages.
+            // the moment, so just showLoading the error messages.
             consentCallback.onNegativeClicked();
         }
     }

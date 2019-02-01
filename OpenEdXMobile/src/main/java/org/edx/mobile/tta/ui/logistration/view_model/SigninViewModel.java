@@ -15,7 +15,7 @@ import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.dashboard.DashboardActivity;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.reset_password.EnterNumberActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
@@ -84,21 +84,21 @@ public class SigninViewModel extends BaseViewModel {
     }
 
     public void login() {
-//        ActivityUtil.gotoPage(mActivity, DashboardActivity.class);
-        mActivity.show();
+//        ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+        mActivity.showLoading();
         new LoginTask(mActivity, cellphone.get(), password.get()){
             @Override
             protected void onSuccess(AuthResponse authResponse) throws Exception {
                 super.onSuccess(authResponse);
-                mActivity.hide();
-                ActivityUtil.gotoPage(mActivity, DashboardActivity.class);
+                mActivity.hideLoading();
+                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
                 mActivity.finish();
             }
 
             @Override
             protected void onException(Exception ex) {
 //                super.onException(ex);
-                mActivity.hide();
+                mActivity.hideLoading();
                 if (ex instanceof AuthException){
                     mFragment.showErrorDialog(mActivity.getString(R.string.login_error),
                             mActivity.getString(R.string.login_failed));

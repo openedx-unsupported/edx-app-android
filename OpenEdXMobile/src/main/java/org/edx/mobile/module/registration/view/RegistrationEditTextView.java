@@ -60,7 +60,7 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
         // set default
         mTextInputEditText.setText(mField.getDefaultValue());
 
-        // hide error text view
+        // hideLoading error text view
         mErrorTextView.setVisibility(View.GONE);
 
         // This tag is necessary for End-to-End tests to work properly
@@ -157,7 +157,7 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
 
     @Override
     public boolean isValidInput() {
-        // hide error as we are re-validating the input
+        // hideLoading error as we are re-validating the input
         mErrorTextView.setVisibility(View.GONE);
 
         // Update a11y content for mTextInputLayout

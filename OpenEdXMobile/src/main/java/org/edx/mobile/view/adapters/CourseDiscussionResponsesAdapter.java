@@ -264,7 +264,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
         int responsesCount = discussionThread.getResponseCount();
         if (responsesCount < 0) {
-            // The responses count is not available yet, so hide the view.
+            // The responses count is not available yet, so hideLoading the view.
             holder.numberResponsesOrCommentsLabel.setVisibility(View.GONE);
         } else {
             holder.numberResponsesOrCommentsLabel.setVisibility(View.VISIBLE);

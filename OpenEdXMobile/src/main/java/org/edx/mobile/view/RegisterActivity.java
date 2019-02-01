@@ -451,7 +451,7 @@ public class RegisterActivity extends BaseFragmentActivity
         showRegularMessage(socialType);
         //populate the field with value from social site
         populateEmailFromSocialSite(socialType, accessToken);
-        //hide email and password field
+        //hideLoading email and password field
         for (IRegistrationFieldView field : this.mFieldViews) {
             String fieldname = field.getField().getName();
             if ("password".equalsIgnoreCase(fieldname)) {

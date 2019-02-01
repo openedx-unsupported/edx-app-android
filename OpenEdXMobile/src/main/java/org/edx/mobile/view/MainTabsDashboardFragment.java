@@ -107,7 +107,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                 getActivity(),
                 profile.username,
                 null, // Disable global loading indicator
-                null)); // No place to show an error notification
+                null)); // No place to showLoading an error notification
     }
 
     @Override

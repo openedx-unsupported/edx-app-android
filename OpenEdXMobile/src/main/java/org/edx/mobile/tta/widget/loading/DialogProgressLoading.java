@@ -1,11 +1,15 @@
 package org.edx.mobile.tta.widget.loading;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AlertDialog;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -19,7 +23,7 @@ import org.edx.mobile.R;
  * Created by Arjun on 20/09/18.
  */
 
-public class DialogProgressLoading extends AlertDialog {
+public class DialogProgressLoading extends Dialog {
 
     private ImageView mLogoImageView;
 
@@ -34,7 +38,8 @@ public class DialogProgressLoading extends AlertDialog {
     private AnimationDrawable mAnimationDrawable;
 
     public DialogProgressLoading(@NonNull Context context) {
-        this(context, R.style.dialog_progress_loading);
+        super(context);
+        mContext = context;
     }
 
     public DialogProgressLoading(@NonNull Context context, @StyleRes int themeResId) {
@@ -46,6 +51,8 @@ public class DialogProgressLoading extends AlertDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_progress_loading);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         mLogoImageView = (ImageView) findViewById(R.id.iv_logo);
         mMsgTextView = (TextView) findViewById(R.id.tv_msg);
         setCanceledOnTouchOutside(false);

@@ -7,7 +7,7 @@ public class Constants {
 
     public static final String KEY_MOBILE_NUMBER = "mobile_number";
     public static final String KEY_OTP = "otp";
-    public static final String KEY_OTP_TRANSACTION_ID = "otp_transaction_id";
+    public static final String KEY_OTP_TRANSACTION_ID = "transaction_id";
     public static final String KEY_NEW_PASSWORD = "new_password";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_REPASSWORD = "repassword";

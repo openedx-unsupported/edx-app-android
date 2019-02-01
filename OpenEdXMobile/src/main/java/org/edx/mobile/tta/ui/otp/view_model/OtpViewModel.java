@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
@@ -23,7 +25,7 @@ import org.edx.mobile.tta.task.authentication.RegisterTask;
 import org.edx.mobile.tta.task.authentication.VerifyOtpTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.dashboard.DashboardActivity;
+import org.edx.mobile.tta.ui.logistration.UserInfoActivity;
 import org.edx.mobile.tta.ui.logistration.model.RegisterResponse;
 import org.edx.mobile.tta.ui.logistration.model.SendOTPResponse;
 import org.edx.mobile.tta.ui.otp.IMessageReceiver;
@@ -68,6 +70,8 @@ public class OtpViewModel extends BaseViewModel {
     private String password;
 
     private String otpSource;
+
+    private boolean receiverRegistered = false;
 
     public TextWatcher watcher1 = new TextWatcher() {
         @Override
@@ -115,6 +119,7 @@ public class OtpViewModel extends BaseViewModel {
                 shiftFocusTo(digit3);
             } else {
                 valid2.set(false);
+//                shiftFocusTo(digit1);
             }
 
             otp = digit1.get() + digit2.get() + digit3.get() + digit4.get() + digit5.get() + digit6.get();
@@ -141,6 +146,7 @@ public class OtpViewModel extends BaseViewModel {
                 shiftFocusTo(digit4);
             } else {
                 valid3.set(false);
+//                shiftFocusTo(digit2);
             }
 
             otp = digit1.get() + digit2.get() + digit3.get() + digit4.get() + digit5.get() + digit6.get();
@@ -167,6 +173,7 @@ public class OtpViewModel extends BaseViewModel {
                 shiftFocusTo(digit5);
             } else {
                 valid4.set(false);
+//                shiftFocusTo(digit3);
             }
 
             otp = digit1.get() + digit2.get() + digit3.get() + digit4.get() + digit5.get() + digit6.get();
@@ -193,6 +200,7 @@ public class OtpViewModel extends BaseViewModel {
                 shiftFocusTo(digit6);
             } else {
                 valid5.set(false);
+//                shiftFocusTo(digit4);
             }
 
             otp = digit1.get() + digit2.get() + digit3.get() + digit4.get() + digit5.get() + digit6.get();
@@ -218,10 +226,51 @@ public class OtpViewModel extends BaseViewModel {
                 valid6.set(true);
             } else {
                 valid6.set(false);
+//                shiftFocusTo(digit5);
             }
 
             otp = digit1.get() + digit2.get() + digit3.get() + digit4.get() + digit5.get() + digit6.get();
         }
+    };
+
+    public View.OnKeyListener keyListener2 = (v, keyCode, event) -> {
+        if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL && (digit2.get() == null || digit2.get().equals(""))) {
+            digit1.set("");
+            shiftFocusTo(digit1);
+        }
+        return false;
+    };
+
+    public View.OnKeyListener keyListener3 = (v, keyCode, event) -> {
+        if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL && (digit3.get() == null || digit3.get().equals(""))) {
+            digit2.set("");
+            shiftFocusTo(digit2);
+        }
+        return false;
+    };
+
+    public View.OnKeyListener keyListener4 = (v, keyCode, event) -> {
+        if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL && (digit4.get() == null || digit4.get().equals(""))) {
+            digit3.set("");
+            shiftFocusTo(digit3);
+        }
+        return false;
+    };
+
+    public View.OnKeyListener keyListener5 = (v, keyCode, event) -> {
+        if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL && (digit5.get() == null || digit5.get().equals(""))) {
+            digit4.set("");
+            shiftFocusTo(digit4);
+        }
+        return false;
+    };
+
+    public View.OnKeyListener keyListener6 = (v, keyCode, event) -> {
+        if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL && (digit6.get() == null || digit6.get().equals(""))) {
+            digit5.set("");
+            shiftFocusTo(digit5);
+        }
+        return false;
     };
 
     public OtpViewModel(BaseVMActivity activity, String mobile_number, String password, String otpSource) {
@@ -245,8 +294,8 @@ public class OtpViewModel extends BaseViewModel {
                     digit5.set(String.valueOf(otp.charAt(4)));
                     digit6.set(String.valueOf(otp.charAt(5)));
 
-                    //Toast.makeText(ctx,text, Toast.LENGTH_LONG).show();
-                    mActivity.unregisterReceiver(incomingSms);
+                    //Toast.makeText(ctx,text, Toast.LENGTH_LONG).showLoading();
+                    unregisterMessageListener();
                     //mFrag.incomingSms = null;
                 }
             }
@@ -281,7 +330,7 @@ public class OtpViewModel extends BaseViewModel {
     }
 
     public void resendOtp(){
-        mActivity.show();
+        mActivity.showLoading();
 
         Bundle parameters = new Bundle();
         parameters.putString(Constants.KEY_MOBILE_NUMBER, number);
@@ -299,9 +348,10 @@ public class OtpViewModel extends BaseViewModel {
             @Override
             protected void onSuccess(MobileNumberVerificationResponse mobileNumberVerificationResponse) throws Exception {
                 super.onSuccess(mobileNumberVerificationResponse);
-                mActivity.hide();
+                mActivity.hideLoading();
 
                 if (mobileNumberVerificationResponse.mobile_number() != null && !mobileNumberVerificationResponse.mobile_number().equals("")){
+                    registerMessageListner();
                     mActivity.showShortSnack("OTP sent successfully");
                 } else {
                     mActivity.showErrorDialog("Reset password failure", "Unable to resend OTP");
@@ -310,7 +360,7 @@ public class OtpViewModel extends BaseViewModel {
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 mActivity.showErrorDialog("User not exist", "User with this mobile number doesn't exist.");
             }
         }.execute();
@@ -321,9 +371,10 @@ public class OtpViewModel extends BaseViewModel {
             @Override
             protected void onSuccess(SendOTPResponse sendOTPResponse) throws Exception {
                 super.onSuccess(sendOTPResponse);
-                mActivity.hide();
+                mActivity.hideLoading();
 
                 if (sendOTPResponse.mobile_number().equals(number)){
+                    registerMessageListner();
                     mActivity.showShortSnack("OTP sent successfully");
                 } else {
                     mActivity.showErrorDialog("Registration failure", "Unable to resend OTP");
@@ -332,7 +383,7 @@ public class OtpViewModel extends BaseViewModel {
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 String errorMsg = "";
                 try {
                     if (((HttpResponseStatusException) ex).getStatusCode() == 409) {
@@ -352,7 +403,7 @@ public class OtpViewModel extends BaseViewModel {
     }
 
     public void verify(){
-        mActivity.show();
+        mActivity.showLoading();
 
         if (otpSource.equals(Constants.OTP_SOURCE_RESET_PASSWORD)) {
             verifyOtpForForgottenPassword();
@@ -370,7 +421,7 @@ public class OtpViewModel extends BaseViewModel {
             @Override
             protected void onSuccess(VerifyOTPForgotedPasswordResponse verifyOTPForgotedPasswordResponse) throws Exception {
                 super.onSuccess(verifyOTPForgotedPasswordResponse);
-                mActivity.hide();
+                mActivity.hideLoading();
 
                 if(verifyOTPForgotedPasswordResponse.transaction_id() != null && !verifyOTPForgotedPasswordResponse.transaction_id().equals("")) {
                     String user_otp_transation_id = verifyOTPForgotedPasswordResponse.transaction_id();
@@ -380,13 +431,14 @@ public class OtpViewModel extends BaseViewModel {
                     parameters.putString(Constants.KEY_OTP_TRANSACTION_ID, user_otp_transation_id);
 
                     ActivityUtil.gotoPage(mActivity, ResetPasswordActivity.class, parameters);
+                    mActivity.finish();
 
                 }
             }
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 mActivity.showErrorDialog("OTP Verification failure", "Error occured during OTP verification");
             }
         }.execute();
@@ -406,7 +458,7 @@ public class OtpViewModel extends BaseViewModel {
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 mActivity.showErrorDialog("OTP Verification failure", "Please enter a valid otp or try again.");
             }
         }.execute();
@@ -425,7 +477,7 @@ public class OtpViewModel extends BaseViewModel {
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 mActivity.showErrorDialog("Registration failure", "Unable to register, try again later.");
             }
         }.execute();
@@ -437,14 +489,14 @@ public class OtpViewModel extends BaseViewModel {
             @Override
             protected void onSuccess(AuthResponse authResponse) throws Exception {
                 super.onSuccess(authResponse);
-                mActivity.hide();
-                ActivityUtil.gotoPage(mActivity, DashboardActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mActivity.hideLoading();
+                ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mActivity.finish();
             }
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
 
                 if (ex instanceof AuthException) {
                     mActivity.showErrorDialog(
@@ -487,16 +539,22 @@ public class OtpViewModel extends BaseViewModel {
 
     private void registerMessageListner()
     {
-        IntentFilter ifilter = new IntentFilter();
-        // Use number higher than 999 if you want to be able to stop processing and not to put
-        // auth messages into the inbox.
-        ifilter.setPriority(1000);
-        ifilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        // Create and hold the receiver. We need to unregister on shutdown
-        mActivity.registerReceiver(incomingSms, ifilter );
+        if (!receiverRegistered) {
+            IntentFilter ifilter = new IntentFilter();
+            // Use number higher than 999 if you want to be able to stop processing and not to put
+            // auth messages into the inbox.
+            ifilter.setPriority(1000);
+            ifilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+            // Create and hold the receiver. We need to unregister on shutdown
+            mActivity.registerReceiver(incomingSms, ifilter );
+            receiverRegistered = true;
+        }
     }
 
     public void unregisterMessageListener(){
-        mActivity.unregisterReceiver(incomingSms);
+        if (receiverRegistered) {
+            mActivity.unregisterReceiver(incomingSms);
+            receiverRegistered = false;
+        }
     }
 }

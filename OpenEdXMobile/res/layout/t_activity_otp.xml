@@ -90,7 +90,8 @@
                     android:nextFocusDown="@id/digit3"
                     text_changed_listener="@{viewModel.watcher2}"
                     request_focus="@{viewModel.focus2}"
-                    android:paddingBottom="@dimen/_14px" />
+                    android:paddingBottom="@dimen/_14px"
+                    on_key_listener="@{viewModel.keyListener2}"/>
 
                 <EditText
                     android:layout_width="40dp"
@@ -107,7 +108,8 @@
                     android:nextFocusDown="@id/digit4"
                     text_changed_listener="@{viewModel.watcher3}"
                     request_focus="@{viewModel.focus3}"
-                    android:paddingBottom="@dimen/_14px" />
+                    android:paddingBottom="@dimen/_14px"
+                    on_key_listener="@{viewModel.keyListener3}" />
 
                 <EditText
                     android:layout_width="40dp"
@@ -124,7 +126,8 @@
                     android:nextFocusDown="@id/digit5"
                     text_changed_listener="@{viewModel.watcher4}"
                     request_focus="@{viewModel.focus4}"
-                    android:paddingBottom="@dimen/_14px" />
+                    android:paddingBottom="@dimen/_14px"
+                    on_key_listener="@{viewModel.keyListener4}" />
 
                 <EditText
                     android:layout_width="40dp"
@@ -141,7 +144,8 @@
                     android:nextFocusDown="@id/digit6"
                     text_changed_listener="@{viewModel.watcher5}"
                     request_focus="@{viewModel.focus5}"
-                    android:paddingBottom="@dimen/_14px" />
+                    android:paddingBottom="@dimen/_14px"
+                    on_key_listener="@{viewModel.keyListener5}" />
 
                 <EditText
                     android:layout_width="40dp"
@@ -156,7 +160,8 @@
                     android:maxLength="1"
                     text_changed_listener="@{viewModel.watcher6}"
                     request_focus="@{viewModel.focus6}"
-                    android:paddingBottom="@dimen/_14px" />
+                    android:paddingBottom="@dimen/_14px"
+                    on_key_listener="@{viewModel.keyListener6}" />
 
             </LinearLayout>
 

@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.ui.reset_password.view_model;
 
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -90,7 +91,7 @@ public class ResetPasswordViewModel extends BaseViewModel {
     }
 
     public void submit(){
-        mActivity.show();
+        mActivity.showLoading();
 
         Bundle parameters = new Bundle();
         parameters.putString(Constants.KEY_NEW_PASSWORD, password.get());
@@ -102,19 +103,19 @@ public class ResetPasswordViewModel extends BaseViewModel {
             protected void onSuccess(ResetForgotedPasswordResponse resetForgotedPasswordResponse) throws Exception {
                 super.onSuccess(resetForgotedPasswordResponse);
 
-                if(resetForgotedPasswordResponse.success()==true ) {
+                if(resetForgotedPasswordResponse.success() ) {
 
                     //rHelper.replaceFragment(R.id.verif_forgeted_password_otp_fragment_id, new ResetForgetedPasswordFagment(), getFragmentManager());
-                    mActivity.showShortSnack("Password successfully updated.");
+                    mActivity.showLongToast("Password successfully updated. Please login to continue");
 
-                    ActivityUtil.gotoPage(mActivity, SigninRegisterActivity.class);
+                    ActivityUtil.gotoPage(mActivity, SigninRegisterActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mActivity.finish();
                 }
             }
 
             @Override
             protected void onException(Exception ex) {
-                mActivity.hide();
+                mActivity.hideLoading();
                 mActivity.showErrorDialog("Reset password failure", "Please try again later.");
             }
         }.execute();

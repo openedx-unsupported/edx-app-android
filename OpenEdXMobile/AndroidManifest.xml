@@ -344,7 +344,7 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:name=".tta.ui.dashboard.DashboardActivity"
+            android:name=".tta.ui.landing.LandingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
@@ -357,7 +357,7 @@
             android:windowSoftInputMode="stateHidden | adjustResize" />
 
         <activity
-            android:name=".tta.ui.course.CourseDashboardActivity"
+            android:name=".tta.ui.course.CourseDashboardFragment"
             android:label="@string/course"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />

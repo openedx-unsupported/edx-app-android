@@ -5,9 +5,9 @@ package org.edx.mobile.tta.widget.loading;
  */
 
 public interface ILoading {
-    void show();
+    void showLoading();
 
-    void hide();
+    void hideLoading();
 
     void dismiss();
 }

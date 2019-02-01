@@ -66,7 +66,7 @@ public class WebViewUtil {
      * WebViews prior to Marshmallow (API Level 23) don't provide a way to get the HTTP status
      * codes if the url being loaded fails.<br/>
      * This utility function solves this by making a server call using the url provided to query if
-     * an error is being return and show error or move on to load the url in WebView, if the server
+     * an error is being return and showLoading error or move on to load the url in WebView, if the server
      * is responding correctly.
      * <p>
      * Inspiration for this solution has been taken from this link:
@@ -95,7 +95,7 @@ public class WebViewUtil {
      * WebViews prior to Marshmallow (API Level 23) don't provide a way to get the HTTP status
      * codes if the url being loaded fails.<br/>
      * This utility function solves this by making a server call using the url provided to query if
-     * an error is being return and show error or move on to load the url in WebView, if the server
+     * an error is being return and showLoading error or move on to load the url in WebView, if the server
      * is responding correctly.
      * <p>
      * Inspiration for this solution has been taken from this link:

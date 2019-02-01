@@ -20,17 +20,17 @@
             android:orientation="vertical"
             android:animateLayoutChanges="true">
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/region_lists"
                 android:orientation="vertical"
                 android:layout_marginTop="@dimen/_18px"
-                android:animateLayoutChanges="true" />
+                android:animateLayoutChanges="true" />-->
 
             <!--<com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/region_agenda_list"
-                finite_recycler_adapter="@{mViewModel.regionListAdapter}"
+                finite_recycler_adapter="@{mViewModel.stateListAdapter}"
                 style="@style/agenda_list_style"
                 app:mx_itemLayout="@layout/t_row_agenda_item"
                 app:mx_moreButtonVisible="false"
@@ -39,6 +39,42 @@
                 app:mx_titleTextColor="@color/gray_6"
                 app:mx_titleTextFont="@font/hind_semibold"
                 app:mx_titleTextSize="@dimen/list_title_size" />-->
+
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                android:id="@+id/state_agenda_list"
+                finite_recycler_adapter="@{viewModel.stateListAdapter}"
+                style="@style/agenda_list_style"
+                app:mx_itemLayout="@layout/t_row_agenda_item"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleMarginStart="@dimen/_20px"
+                app:mx_titleText="@string/state_wise_list"
+                app:mx_titleTextColor="@color/gray_6"
+                app:mx_titleTextFont="@font/hind_semibold"
+                app:mx_titleTextSize="@dimen/list_title_size"/>
+
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                android:id="@+id/district_agenda_list"
+                style="@style/agenda_list_style"
+                app:mx_itemLayout="@layout/t_row_agenda_item"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleMarginStart="@dimen/_20px"
+                app:mx_titleText="@string/district_wise_list"
+                app:mx_titleTextColor="@color/gray_6"
+                app:mx_titleTextFont="@font/hind_semibold"
+                app:mx_titleTextSize="@dimen/list_title_size"
+                android:visibility="gone"/>
+
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                android:id="@+id/block_agenda_list"
+                style="@style/agenda_list_style"
+                app:mx_itemLayout="@layout/t_row_agenda_item"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleMarginStart="@dimen/_20px"
+                app:mx_titleText="@string/block_wise_list"
+                app:mx_titleTextColor="@color/gray_6"
+                app:mx_titleTextFont="@font/hind_semibold"
+                app:mx_titleTextSize="@dimen/list_title_size"
+                android:visibility="gone"/>
 
             <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/my_agenda_list"
@@ -50,8 +86,7 @@
                 app:mx_titleText="@string/my_agenda"
                 app:mx_titleTextColor="@color/gray_6"
                 app:mx_titleTextFont="@font/hind_semibold"
-                app:mx_titleTextSize="@dimen/list_title_size"
-                android:visibility="@{viewModel.myAgendaVisible ? View.VISIBLE : View.GONE}"/>
+                app:mx_titleTextSize="@dimen/list_title_size"/>
 
             <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/download_agenda_list"
@@ -63,8 +98,7 @@
                 app:mx_titleText="@string/download"
                 app:mx_titleTextColor="@color/gray_6"
                 app:mx_titleTextFont="@font/hind_semibold"
-                app:mx_titleTextSize="@dimen/list_title_size"
-                android:visibility="@{viewModel.downloadAgendaVisible ? View.VISIBLE : View.GONE}" />
+                app:mx_titleTextSize="@dimen/list_title_size" />
 
         </LinearLayout>
 

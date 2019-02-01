@@ -226,7 +226,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     /**
-     * Animate / show the download started message
+     * Animate / showLoading the download started message
      *
      * @param message - Message to display on the Download Panel
      * @return boolean - Returns true if message shown, false otherwise.
@@ -238,7 +238,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             animateLayouts(infoMessageTv);
             return true;
         } else {
-            logger.warn("TextView not available, so couldn't show flying message");
+            logger.warn("TextView not available, so couldn't showLoading flying message");
         }
 
         return false;
@@ -252,7 +252,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     public boolean hideInfoMessage() {
         View messageView = findViewById(R.id.flying_message);
         if (messageView == null) {
-            logger.warn("Message view not available, so couldn't hide flying message");
+            logger.warn("Message view not available, so couldn't hideLoading flying message");
             return false;
         }
         ViewAnimationUtil.hideMessageBar(messageView);
@@ -336,7 +336,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     public boolean showErrorMessage(String header, String message, boolean isPersistent) {
         LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
         if (error_layout == null) {
-            logger.warn("Error Layout not available, so couldn't show flying message");
+            logger.warn("Error Layout not available, so couldn't showLoading flying message");
             return false;
         }
         TextView errorHeader = (TextView) findViewById(R.id.error_header);

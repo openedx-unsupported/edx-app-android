@@ -42,6 +42,11 @@ public class LocalDataSource implements ILocalDataSource {
     }
 
     @Override
+    public void clear() {
+        mAppDatabase.clearAllTables();
+    }
+
+    @Override
     public CollectionConfigResponse getConfiguration() {
         CollectionConfigResponse response = new CollectionConfigResponse();
         response.setCategory(mAppDatabase.categoryDao().getAll());

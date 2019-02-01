@@ -1,7 +1,6 @@
-package org.edx.mobile.tta.ui.dashboard.view_model;
+package org.edx.mobile.tta.ui.landing.view_model;
 
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
@@ -14,7 +13,7 @@ import org.edx.mobile.tta.ui.library.LibraryFragment;
 import org.edx.mobile.tta.ui.profile.ProfileFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
-public class DashboardViewModel extends BaseViewModel {
+public class LandingViewModel extends BaseViewModel {
 
     private int selectedId = R.id.action_library;
 
@@ -55,7 +54,7 @@ public class DashboardViewModel extends BaseViewModel {
         }
     };
 
-    public DashboardViewModel(BaseVMActivity activity) {
+    public LandingViewModel(BaseVMActivity activity) {
         super(activity);
         navShiftMode.set(false);
         selectedId = R.id.action_library;

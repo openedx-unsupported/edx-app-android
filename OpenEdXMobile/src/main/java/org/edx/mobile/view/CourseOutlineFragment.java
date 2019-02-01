@@ -497,7 +497,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             EventBus.getDefault().registerSticky(this);
         }
         if (!isOnCourseOutline) {
-            // We only need to set the title of Course Outline screen, where we show a subsection's units
+            // We only need to set the title of Course Outline screen, where we showLoading a subsection's units
             getActivity().setTitle(courseComponent.getDisplayName());
         }
         adapter.setData(courseComponent);
@@ -668,7 +668,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     }
 
                     // Handling the border case that if the Last Accessed component turns out
-                    // to be the course root component itself, then we don't need to show it
+                    // to be the course root component itself, then we don't need to showLoading it
                     if (!lastAccessComponent.getId().equals(courseId)) {
                         final CourseComponent finalLastAccessComponent = lastAccessComponent;
                         adapter.addLastAccessedView(finalLastAccessComponent, new View.OnClickListener() {

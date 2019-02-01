@@ -57,7 +57,7 @@ public class RegistrationSelectView implements IRegistrationFieldView {
 
         setInstructions(field.getInstructions());
 
-        // hide error text view
+        // hideLoading error text view
         mErrorView.setVisibility(View.GONE);
 
         // This tag is necessary for End-to-End tests to work properly
@@ -154,7 +154,7 @@ public class RegistrationSelectView implements IRegistrationFieldView {
 
     @Override
     public boolean isValidInput() {
-        // hide error as we are re-validating the input
+        // hideLoading error as we are re-validating the input
         mErrorView.setVisibility(View.GONE);
 
         mInputView.setContentDescription(String.format("%s. %s.", mInputView.getSelectedItemName(), mField.getInstructions()));

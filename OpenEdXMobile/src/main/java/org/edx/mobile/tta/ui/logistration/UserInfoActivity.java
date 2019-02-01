@@ -50,16 +50,18 @@ public class UserInfoActivity extends BaseVMActivity {
             return;
         }
 
+        showLoading();
         mViewModel.getBlocks(
                 new OnResponseCallback<List<RegistrationOption>>() {
                     @Override
                     public void onSuccess(List<RegistrationOption> data) {
+                        hideLoading();
                         blockSpinner.setItems(mViewModel.blocks, mViewModel.blocks.get(0));
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-
+                        hideLoading();
                     }
                 });
     }
@@ -161,5 +163,10 @@ public class UserInfoActivity extends BaseVMActivity {
         }
 
         return valid;
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
     }
 }

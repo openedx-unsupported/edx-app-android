@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.dashboard.view_model.DashboardViewModel" />
+            type="org.edx.mobile.tta.ui.landing.view_model.LandingViewModel" />
     </data>
 
     <LinearLayout

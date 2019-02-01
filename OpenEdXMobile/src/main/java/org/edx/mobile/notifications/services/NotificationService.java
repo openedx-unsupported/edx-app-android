@@ -61,7 +61,7 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     /**
-     * Create and show a simple notification containing the message data.
+     * Create and showLoading a simple notification containing the message data.
      */
     private void sendNotification(String title, String messageBody) {
         final Intent intent = new Intent(this, SplashActivity.class);

@@ -32,7 +32,7 @@ public class ViewPagerDownloadManager implements TaskCallback {
 
     private WeakList<RunnableCourseComponent> runnableCourseComponentWeakList;
 
-    //it is the first component to show
+    //it is the first component to showLoading
     private CourseComponent mainComponent;
     private CourseComponent nextComponent;
     private CourseComponent prevComponent;

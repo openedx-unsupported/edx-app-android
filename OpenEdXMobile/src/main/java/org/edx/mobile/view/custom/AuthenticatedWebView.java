@@ -105,7 +105,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
      * @param fragmentActivity     Reference of fragment activity.
      * @param isAllLinksExternal   A flag to treat every link as external link and open in external
      *                             web browser.
-     * @param isManuallyReloadable A flag that decides if we should give show/hide reload button
+     * @param isManuallyReloadable A flag that decides if we should give showLoading/hideLoading reload button
      *                             with full screen error.
      */
     @SuppressLint("SetJavaScriptEnabled")
@@ -202,7 +202,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
             });
         } else {
             webView.loadUrl("javascript:" + javascript);
-            // Javascript evaluation takes some time, so hide progressbar after 1 sec
+            // Javascript evaluation takes some time, so hideLoading progressbar after 1 sec
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -267,8 +267,8 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     /**
      * Shows the error message with the given icon, if the web page failed to load
      *
-     * @param errorMsg  The error message to show
-     * @param errorIcon The error icon to show with the error message
+     * @param errorMsg  The error message to showLoading
+     * @param errorIcon The error icon to showLoading with the error message
      */
     private void showErrorMessage(@StringRes int errorMsg, @NonNull Icon errorIcon) {
         if (!pageIsLoaded) {

@@ -72,7 +72,7 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
 
                     @Override
                     protected void onFailure(@NonNull Throwable error) {
-                        // do nothing. Better to just deal show what we can
+                        // do nothing. Better to just deal showLoading what we can
                     }
                 });
             }
