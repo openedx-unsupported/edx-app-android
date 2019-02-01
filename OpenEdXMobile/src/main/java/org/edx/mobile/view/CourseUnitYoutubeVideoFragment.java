@@ -10,12 +10,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.player.TranscriptManager;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.adapters.TranscriptAdapter;
 
 
 import com.google.android.youtube.player.YouTubePlayer;
@@ -36,7 +41,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private static final int SUBTITLES_DISPLAY_DELAY_MS = 100;
 
-    private YouTubePlayerSupportFragment youTubePlayerFragment;
     private YouTubePlayer youTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
     private TimedTextObject subtitlesObj;
@@ -66,7 +70,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     public void initializeYoutubePlayer() {
-        youTubePlayerFragment = new YouTubePlayerSupportFragment();
+        YouTubePlayerSupportFragment youTubePlayerFragment = new YouTubePlayerSupportFragment();
         String apiKey =environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
         if (apiKey == null || apiKey.isEmpty()) {
             return;
@@ -135,6 +139,10 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onInitializationSuccess(Provider provider,
                                         YouTubePlayer player,
                                         boolean wasRestored) {
+        if(!NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())){
+            player.pause();
+            return;
+        }
         final int orientation = getResources().getConfiguration().orientation;
         if (!wasRestored) {
             Uri uri = Uri.parse(unit.getData().encodedVideos.getYoutubeVideoInfo().url);
@@ -260,8 +268,25 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private void removeFragment(){
         try {
             getChildFragmentManager().beginTransaction().replace(R.id.player_container, new Fragment()).commit();
+            youTubePlayer = null;
         } catch (IllegalStateException ex) {
             logger.error(ex);
         }
+    }
+
+    @Override
+    protected void initTranscriptListView(){
+        transcriptAdapter = new TranscriptAdapter(getContext(), environment);
+        transcriptListView.setAdapter(transcriptAdapter);
+        transcriptListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Caption currentCaption = transcriptAdapter.getItem(position);
+                if (currentCaption != null) {
+                    youTubePlayer.seekToMillis(currentCaption.start.getMseconds());
+
+                }
+            }
+        });
     }
 }

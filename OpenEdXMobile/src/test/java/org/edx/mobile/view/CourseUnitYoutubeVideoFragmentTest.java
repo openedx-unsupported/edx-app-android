@@ -30,6 +30,7 @@ import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
 
@@ -53,7 +54,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
             throw new RuntimeException(e);
         }
 
-        return (VideoBlockModel) courseComponent.getVideos().get(0);
+        return courseComponent.getVideos().get(0);
     }
     private void testOrientationChange(
             CourseUnitYoutubeVideoFragment fragment, int orientation) {
@@ -109,7 +110,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
 
         Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
         assertNotNull(playerContainer);
-        assertTrue(playerContainer instanceof Fragment);
+        assertFalse(playerContainer instanceof YouTubePlayerSupportFragment);
     }
 
     private static class FragmentUtilActivity extends RoboFragmentActivity implements CourseUnitFragment.HasComponent {

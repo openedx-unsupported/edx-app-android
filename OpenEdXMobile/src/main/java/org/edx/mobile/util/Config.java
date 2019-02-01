@@ -595,17 +595,17 @@ public class Config {
 
     public static class EmbeddedYoutubeConfig {
         @SerializedName("ENABLED")
-        private boolean mEnabled;
+        private boolean enabled;
 
         @SerializedName("YOUTUBE_API_KEY")
-        private String mYoutubeApiKey;
+        private String youtubeApiKey;
 
         public boolean isYoutubeEnabled() {
-            return mEnabled;
+            return enabled;
         }
 
         public String getYoutubeApiKey() {
-            return mYoutubeApiKey;
+            return youtubeApiKey;
         }
     }
 

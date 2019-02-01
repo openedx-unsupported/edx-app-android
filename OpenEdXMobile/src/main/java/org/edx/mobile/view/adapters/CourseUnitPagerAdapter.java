@@ -75,7 +75,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         }
 
         CourseUnitFragment unitFragment;
-        Boolean youtubeVideo = (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null);
+        boolean youtubeVideo = (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null);
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
             unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
         }

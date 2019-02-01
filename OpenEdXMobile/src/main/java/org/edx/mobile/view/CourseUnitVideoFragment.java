@@ -72,8 +72,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
-    private ListView transcriptListView;
-    private TranscriptAdapter transcriptAdapter;
+    protected ListView transcriptListView;
+    protected TranscriptAdapter transcriptAdapter;
 
     private boolean hasNextUnit;
 
