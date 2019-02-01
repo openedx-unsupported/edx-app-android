@@ -4,7 +4,7 @@
 nick: andr
 oeps: {}
 owner: edx/edx-mobile-push
+openedx-release: {ref: release/latest}
 tags:
   - mobile
   - android
-track-pulls: true
