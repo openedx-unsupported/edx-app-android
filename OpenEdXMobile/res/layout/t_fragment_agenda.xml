@@ -50,7 +50,8 @@
                 app:mx_titleText="@string/state_wise_list"
                 app:mx_titleTextColor="@color/gray_6"
                 app:mx_titleTextFont="@font/hind_semibold"
-                app:mx_titleTextSize="@dimen/list_title_size"/>
+                app:mx_titleTextSize="@dimen/list_title_size"
+                android:layout_marginTop="12dp"/>
 
             <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/district_agenda_list"

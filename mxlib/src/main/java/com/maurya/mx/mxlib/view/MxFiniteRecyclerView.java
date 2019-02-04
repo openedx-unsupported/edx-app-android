@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -15,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -149,7 +149,7 @@ public class MxFiniteRecyclerView extends LinearLayout {
         if (mCanShowVertical)
             mBinding.mxRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         else
-            mBinding.mxRecyclerView.setLayoutManager(new GridLayoutManager(context, MX_SPAN_COUNT, LinearLayoutManager.HORIZONTAL, false));
+            mBinding.mxRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
     }
 
@@ -161,6 +161,14 @@ public class MxFiniteRecyclerView extends LinearLayout {
         mAdapter.setHeaderLayout(getHeaderLayout());
         mAdapter.setFooterLayout(getFooterLayout());
         mBinding.mxRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void addItemDecoration(RecyclerView.ItemDecoration decoration){
+        mBinding.mxRecyclerView.addItemDecoration(decoration);
+    }
+
+    public int getRecyclerViewOrientation(){
+        return ((LinearLayoutManager) mBinding.mxRecyclerView.getLayoutManager()).getOrientation();
     }
 
     public int getmMaxItem() {

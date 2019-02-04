@@ -2,9 +2,11 @@ package org.edx.mobile.tta.ui.library.view_model;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -150,7 +152,10 @@ public class LibraryTabViewModel extends BaseViewModel {
                         View view = LayoutInflater.from(mActivity)
                                 .inflate(R.layout.t_row_slider_item, container, false);
                         ImageView imageView = view.findViewById(R.id.slider_image);
-                        Glide.with(mActivity).load(contentListMap.get(model.getId()).get(position).getIcon()).into(imageView);
+                        Glide.with(mActivity)
+                                .load(contentListMap.get(model.getId()).get(position).getIcon())
+                                .placeholder(R.drawable.placeholder_course_card_image)
+                                .into(imageView);
                         container.addView(view);
                         view.setOnClickListener(v ->
                                 Toast.makeText(mActivity, contentListMap.get(model.getId()).get(position).getName(), Toast.LENGTH_SHORT).show());
@@ -192,6 +197,14 @@ public class LibraryTabViewModel extends BaseViewModel {
                     listBinding.contentFiniteList.setmMoreButtonVisible(false);
                 }
                 listBinding.contentFiniteList.setAdapter(listAdapter);
+                /*listBinding.contentFiniteList.addItemDecoration(new DividerItemDecoration(
+                        listBinding.contentFiniteList.getContext(),
+                        listBinding.contentFiniteList.getRecyclerViewOrientation()) {
+                    @Override
+                    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
+                    }
+                });*/
 
             }
         }
@@ -221,7 +234,10 @@ public class LibraryTabViewModel extends BaseViewModel {
                         ContentSourceUtil.getSourceDrawable_10x10(model.getSource().getName()),
                         0, 0, 0);
                 contentBinding.contentTitle.setText(model.getName());
-                Glide.with(mActivity).load(model.getIcon()).into(contentBinding.contentImage);
+                Glide.with(mActivity)
+                        .load(model.getIcon())
+                        .placeholder(R.drawable.placeholder_course_card_image)
+                        .into(contentBinding.contentImage);
                 contentBinding.getRoot().setOnClickListener(v -> listener.onItemClick(v, model));
             }
         }

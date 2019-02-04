@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_40px"
                 android:layout_marginTop="@dimen/_50px"
-                android:text="@string/welcome_back"
+                android:text="@string/welcome"
                 android:textColor="@color/primary_navy"
                 android:textSize="20sp"
                 android:fontFamily="@font/hind_medium" />

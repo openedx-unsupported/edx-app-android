@@ -404,16 +404,11 @@ public class DataManager extends  BaseRoboInjector {
     }
 
     private void getCollectionItemsFromLocal(Long[] listIds, OnResponseCallback<List<CollectionItemsResponse>> callback, Exception ex) {
-        new AsyncTask<Void, Void, List<Content>>(){
+        new AsyncTask<Void, Void, List<CollectionItemsResponse>>(){
 
             @Override
-            protected List<Content> doInBackground(Void... voids) {
-                return mLocalDataSource.getContents();
-            }
-
-            @Override
-            protected void onPostExecute(List<Content> contents) {
-                super.onPostExecute(contents);
+            protected List<CollectionItemsResponse> doInBackground(Void... voids) {
+                List<Content> contents = mLocalDataSource.getContents();
                 List<CollectionItemsResponse> responses = new ArrayList<>();
                 if (contents != null){
                     for (Long listId: listIds){
@@ -436,8 +431,14 @@ public class DataManager extends  BaseRoboInjector {
                         }
                     }
                 }
+                return responses;
+            }
 
-                if (responses.isEmpty()){
+            @Override
+            protected void onPostExecute(List<CollectionItemsResponse> responses) {
+                super.onPostExecute(responses);
+
+                if (responses == null || responses.isEmpty()){
                     callback.onFailure(ex);
                 } else {
                     callback.onSuccess(responses);

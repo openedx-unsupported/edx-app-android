@@ -12,20 +12,24 @@ import static org.edx.mobile.tta.Constants.KEY_OTP_SOURCE;
 import static org.edx.mobile.tta.Constants.KEY_PASSWORD;
 
 public class OtpActivity extends BaseVMActivity {
+
+    private OtpViewModel viewModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle parameters = getIntent().getExtras();
-        binding(R.layout.t_activity_otp, new OtpViewModel(this,
+        viewModel = new OtpViewModel(this,
                 parameters.getString(KEY_MOBILE_NUMBER),
                 parameters.getString(KEY_PASSWORD, null),
                 parameters.getString(KEY_OTP_SOURCE)
-        ));
+        );
+        binding(R.layout.t_activity_otp, viewModel);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ((OtpViewModel) mViewModel).unregisterMessageListener();
+        viewModel.unregisterMessageListener();
     }
 }

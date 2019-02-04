@@ -4,6 +4,7 @@ package org.edx.mobile.base;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -41,6 +42,7 @@ import org.edx.mobile.module.analytics.SegmentAnalytics;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
+import org.edx.mobile.tta.utils.LocaleHelper;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.NotificationUtil;
@@ -96,6 +98,8 @@ public abstract class MainApplication extends MultiDexApplication {
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
         injector.injectMembers(this);
+
+        LocaleHelper.setLocale(getApplicationContext(), "hi");
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
@@ -186,6 +190,11 @@ public abstract class MainApplication extends MultiDexApplication {
                 StateSaver.restoreInstanceState(target, state);
             }
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, "hi"));
     }
 
     private void checkIfAppVersionUpgraded(Context context) {

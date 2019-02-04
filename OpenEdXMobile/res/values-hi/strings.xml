@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_back">वापसी पर आपका स्वागत है</string>
+    <string name="create_account_and_connect_with_us">अकाउंट बनाइये और हमारे साथ जुड़िये</string>
+    <string name="mobile_number">मोबाइल नंबर</string>
+    <string name="password">पासवर्ड</string>
+    <string name="confirm_password">पासवर्ड पक्का करें</string>
+    <string name="register">रजिस्टर</string>
+    <string name="already_have_account">पहले से अकाउंट है?</string>
+    <string name="sign_in">साइन इन</string>
+    <string name="welcome">स्वागत</string>
+    <string name="keep_up_the_spirit">जारी रखें अपना उत्साह</string>
+    <string name="forgot_password">पासवर्ड भूल गए?</string>
+    <string name="change_password"><u>पासवर्ड बदलें</u></string>
+    <string name="create_new_account">नया अकाउंट बनाएं</string>
+    <string name="launch_text_1">शिक्षकों के व्यवसायिक विकास के लिए रचनात्मक, निर्णात्मक, ऑडियो-विज़ुअल सामग्री</string>
+    <string name="launch_text_2">अपने राज्य और साथी शिक्षकों द्वारा मान्यता पाने के अवसर</string>
+    <string name="launch_text_3">देश भर के विभिन्न शिक्षकों के साथ जुड़ने और अपने विचार साझा करने के अवसर</string>
+    <string name="reset_password_msg">आपके password reset करने के लिए फ़ोन पर नंबर नीचे भरिये। आपके फ़ोन पर फिर verification OTP SMS नंबर द्वारा आएगा।</string>
+    <string name="otp_verification_msg">आपके फ़ोन पर अभी एक SMS आएगा SMS में दिया verification number नीचे अपने आप भर जाएगा।</string>
+    <string name="resend_otp">पुनः भेजें OTP?</string>
+    <string name="set_password">कृपया अपने खाते के लिए पासवर्ड सेट करें।</string>
+    <string name="confirm_new_password">कन्फर्म नया पासवर्ड</string>
+    <string name="library">लाइब्रेरी</string>
+    <string name="feed">खबर</string>
+    <string name="search">खोज</string>
+    <string name="agenda">लक्ष्य</string>
+    <string name="profile">प्रोफाइल</string>
+    <string name="view_more">और देखें</string>
+    <string name="course">कोर्स</string>
+    <string name="toolkit">शिक्षण सामग्री</string>
+    <string name="hois">प्रेरणा स्त्रोत</string>
+    <string name="chatshala">Chatशाला</string>
+    <string name="all">पूरी सूची</string>
+    <string name="state_wise_list">राज्य निर्धारित लक्ष्य</string>
+    <string name="my_agenda">मेरा लक्ष्य</string>
+    <string name="download">डाउनलोड</string>
+</resources>

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="6dp">
 
         <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
             android:layout_width="match_parent"

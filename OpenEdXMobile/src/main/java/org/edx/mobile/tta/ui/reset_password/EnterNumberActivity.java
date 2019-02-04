@@ -11,10 +11,13 @@ import org.edx.mobile.tta.ui.reset_password.view_model.EnterNumberViewModel;
 import org.edx.mobile.util.PermissionsUtil;
 
 public class EnterNumberActivity extends BaseVMActivity {
+
+    private EnterNumberViewModel viewModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding(R.layout.t_activity_enter_number, new EnterNumberViewModel(this));
+        viewModel = new EnterNumberViewModel(this);
+        binding(R.layout.t_activity_enter_number, viewModel);
     }
 
     @Override
@@ -22,7 +25,7 @@ public class EnterNumberActivity extends BaseVMActivity {
         switch (requestCode){
             case PermissionsUtil.READ_SMS_PERMISSION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    ((EnterNumberViewModel) mViewModel).generateOTP();
+                    viewModel.generateOTP();
                 }
         }
     }

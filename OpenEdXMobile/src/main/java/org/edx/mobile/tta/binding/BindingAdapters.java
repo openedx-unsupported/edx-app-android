@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextWatcher;
 import android.view.View;
@@ -304,5 +305,10 @@ public class BindingAdapters {
     @BindingAdapter({"on_key_listener"})
     public static void onSetKeyListener(View view, View.OnKeyListener listener){
         view.setOnKeyListener(listener);
+    }
+
+    @BindingAdapter({"divider_item_decoration"})
+    public static void addDividerItemDecoration(RecyclerView view, DividerItemDecoration decoration){
+        view.addItemDecoration(decoration);
     }
 }

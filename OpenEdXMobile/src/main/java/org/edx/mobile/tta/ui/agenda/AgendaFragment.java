@@ -20,10 +20,17 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 public class AgendaFragment extends TaBaseFragment {
     public static final String TAG = AgendaFragment.class.getCanonicalName();
 
+    private AgendaViewModel viewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new AgendaViewModel(getActivity(), this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AgendaViewModel viewModel = new AgendaViewModel(getActivity(), this);
         View view = binding(inflater, container, R.layout.t_fragment_agenda, viewModel)
                 .getRoot();
         viewModel.getAgenda();

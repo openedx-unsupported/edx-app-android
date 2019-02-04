@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.ui.base;
 
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
@@ -20,11 +21,10 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
     protected ViewDataBinding mBinding;
     protected PermissionListener permissionListener;
 
-    private BaseViewModel viewModel;
+    private int requestCode;
 
     protected ViewDataBinding binding(LayoutInflater inflater, ViewGroup container, int layoutId, BaseViewModel viewModel) {
         mBinding = DataBindingUtil.inflate(inflater, layoutId, container, false);
-        this.viewModel = viewModel;
         mBinding.setVariable(BR.viewModel, viewModel);
 
         return mBinding;
@@ -39,6 +39,7 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
     }
 
     public void askForPermissions(String[] permissions, int requestCode) {
+        this.requestCode = requestCode;
         if (getActivity() != null) {
             if (permissionListener != null && getGrantedPermissionsCount(permissions) == permissions.length) {
                 permissionListener.onPermissionGranted(permissions, requestCode);
@@ -48,8 +49,11 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
         }
     }
 
-    public BaseViewModel getViewModel() {
-        return viewModel;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == this.requestCode && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            onPermissionGranted(permissions, requestCode);
+        }
     }
 
     public int getGrantedPermissionsCount(String[] permissions) {

@@ -16,10 +16,18 @@ import org.edx.mobile.tta.ui.library.view_model.LibraryViewModel;
 public class LibraryFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
 
+    private LibraryViewModel viewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new LibraryViewModel(getActivity(), this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = binding(inflater, container, R.layout.t_fragment_library, new LibraryViewModel(getActivity(), this))
+        View view = binding(inflater, container, R.layout.t_fragment_library, viewModel)
                 .getRoot();
 
         TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);

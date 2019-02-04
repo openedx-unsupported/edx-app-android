@@ -668,6 +668,7 @@
     <string name="whats_new_title">Version {version_number} New Features</string>
 
     <!-- TTA strings start -->
+    <string name="welcome">Welcome</string>
     <string name="welcome_back">Welcome back</string>
     <string name="keep_up_the_spirit">Keep up the spirit</string>
     <string name="mobile_number">Mobile Number</string>

@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.ui.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.inject.Key;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import org.edx.mobile.tta.utils.LocaleHelper;
 import org.edx.mobile.tta.widget.loading.ILoading;
 import org.edx.mobile.tta.widget.loading.ProgressDialogLoading;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
@@ -132,6 +134,11 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
 
     public void askForPermissions(String[] permissions, int requestCode){
         ActivityCompat.requestPermissions(this, permissions, requestCode);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
     @Override

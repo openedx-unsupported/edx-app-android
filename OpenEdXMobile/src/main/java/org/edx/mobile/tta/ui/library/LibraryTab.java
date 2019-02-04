@@ -19,6 +19,8 @@ public class LibraryTab extends TaBaseFragment {
 
     private Category category;
 
+    private LibraryTabViewModel viewModel;
+
     public static LibraryTab newInstance(CollectionConfigResponse cr, Category category){
         LibraryTab fragment = new LibraryTab();
         fragment.cr = cr;
@@ -26,11 +28,16 @@ public class LibraryTab extends TaBaseFragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new LibraryTabViewModel(getActivity(), this, cr, category);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = binding(inflater, container, R.layout.t_fragment_library_tab, new LibraryTabViewModel(
-                getActivity(), this, cr, category))
+        View view = binding(inflater, container, R.layout.t_fragment_library_tab, viewModel)
                 .getRoot();
 
         return view;

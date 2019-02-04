@@ -44,7 +44,7 @@ public class LibraryViewModel extends BaseViewModel {
         mDataManager.getCollectionConfig(new OnResponseCallback<CollectionConfigResponse>() {
             @Override
             public void onSuccess(CollectionConfigResponse data) {
-                mActivity.hideLoading();
+//                mActivity.hideLoading();
                 cr = data;
 
                 if (cr != null) {
@@ -59,7 +59,7 @@ public class LibraryViewModel extends BaseViewModel {
 
             @Override
             public void onFailure(Exception e) {
-                mActivity.hideLoading();
+//                mActivity.hideLoading();
                 mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
