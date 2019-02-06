@@ -555,6 +555,7 @@ public interface Analytics {
         String DOWNLOADS = "Downloads";
         String FIND_COURSES = "Find Courses";
         String FIND_PROGRAMS = "Find Programs";
+        String FIND_DEGREES = "Find Degrees";
         String MY_COURSES = "My Courses";
         String SETTINGS = "Settings";
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
