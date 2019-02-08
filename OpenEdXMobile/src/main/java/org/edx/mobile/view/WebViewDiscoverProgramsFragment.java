@@ -12,4 +12,9 @@ public class WebViewDiscoverProgramsFragment extends WebViewDiscoverFragment {
     protected int getQueryHint() {
         return R.string.search_for_programs;
     }
+
+    @Override
+    protected boolean isSearchEnabled() {
+        return environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isSearchEnabled();
+    }
 }
