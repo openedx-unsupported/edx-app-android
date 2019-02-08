@@ -54,5 +54,23 @@ pipeline {
                 archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true
             }
         }
+        stage('setup emulator'){
+           steps {               
+               sh 'bash ./resources/setup_emulator.sh'
+               } 
+        }
+        stage('checkout test repo') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]])
+
+            }
+        }
+        stage('start execution') {
+            steps {
+                sh 'bash ./resources/execute_testing.sh'
+                
+            }
+        }
+
     }
 } 
