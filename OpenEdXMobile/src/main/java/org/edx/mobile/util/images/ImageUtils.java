@@ -118,11 +118,7 @@ public class ImageUtils {
         }
         if (context instanceof Activity) {
             final Activity activity = (Activity) context;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                return !activity.isDestroyed() && !activity.isFinishing();
-            } else {
-                return activity.isFinishing();
-            }
+            return !activity.isDestroyed() && !activity.isFinishing();
         }
         return true;
     }

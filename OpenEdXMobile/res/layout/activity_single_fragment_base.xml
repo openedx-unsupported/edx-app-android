@@ -48,7 +48,6 @@
         <TextView
             android:id="@+id/flying_message"
             style="@style/flying_message"
-            android:layout_alignParentTop="true"
             android:visibility="gone" />
 
         <include layout="@layout/loading_indicator" />

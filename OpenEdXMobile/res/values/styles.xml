@@ -230,14 +230,6 @@
         <item name="colorAccent">@color/edx_success_accent</item>
     </style>
 
-    <style name="spinner">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:background">@drawable/spinner_selector</item>
-        <item name="android:layout_marginTop">2dp</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
     <style name="section_lbl">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -476,7 +468,7 @@
         <item name="indeterminateIconColor">@color/edx_brand_primary_base</item>
         <item name="indeterminateIconPulse">true</item>
         <item name="android:indeterminateDuration">600</item>
-        <item name="android:mirrorForRtl" tools:targetApi="jelly_bean_mr2">true</item>
+        <item name="android:mirrorForRtl">true</item>
         <!-- Since we use xx_large for the standard ProgressBar
              style, we'll have xxxx_large as the large style,
              android base as the small style. -->
@@ -513,20 +505,6 @@
     </style>
 
     <style name="edX.Widget.ProgressBar.Small.Title" />
-
-    <!-- Unfortunately, TabLayout doesn't define a global theme
-         attribute for it's default style, so this would need to be
-         manually defined as the style for each instance of it. If this
-         gets problematic, then a subclass could be implemented that
-         addresses this deficiency. This issue has been reported at
-         http://b.android.com/200144 -->
-    <style name="edX.Widget.TabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@color/edx_brand_primary_base</item>
-        <item name="tabIndicatorHeight">@dimen/tab_indicator_selected_height</item>
-        <item name="tabBackground">@drawable/tab_bg</item>
-        <item name="tabTextColor">@color/tab_selector</item>
-        <item name="tabSelectedTextColor">@null</item>
-    </style>
 
     <style name="edX.Widget.SegmentedControlSegment">
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
