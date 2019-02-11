@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.18",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Program & Degree Discovery",
+        "message": "You can now search edX programs and degrees using the mobile application!"
+      }
+    ]
+  },
+  {
     "version": "2.16",
     "messages": [
       {
