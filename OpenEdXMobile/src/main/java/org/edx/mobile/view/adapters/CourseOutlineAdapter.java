@@ -433,9 +433,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
                     viewHolder.rowSubtitle.getLayoutParams();
             params.setMargins(0, 0, rightMargin, 0);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                params.setMarginEnd(rightMargin);
-            }
+            params.setMarginEnd(rightMargin);
         }
 
         dbStore.getWatchedStateForVideoId(videoData.videoId,

@@ -33,14 +33,13 @@
                 style="@style/semibold_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|right|end"
+                android:layout_gravity="top|end"
                 android:background="@drawable/selectable_box_overlay"
                 android:contentDescription="@string/label_close"
                 android:padding="@dimen/widget_margin"
                 android:text="{fa-close}"
                 android:textColor="@color/white"
-                android:textSize="@dimen/edx_x_large"
-                tools:targetApi="JELLY_BEAN_MR1" />
+                android:textSize="@dimen/edx_x_large" />
         </FrameLayout>
 
         <android.support.v4.view.ViewPager
@@ -65,13 +64,12 @@
                 android:id="@+id/done_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right|end"
+                android:layout_gravity="bottom|end"
                 android:background="@drawable/selectable_box_overlay"
                 android:padding="@dimen/widget_margin"
                 android:text="@string/label_done"
                 android:textColor="@color/white"
                 android:visibility="gone"
-                tools:targetApi="JELLY_BEAN_MR1"
                 tools:visibility="visible" />
         </FrameLayout>
     </LinearLayout>
