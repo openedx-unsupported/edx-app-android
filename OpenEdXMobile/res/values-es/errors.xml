@@ -77,6 +77,8 @@
   <string name="error_max_length">%1$s no puede tener más de %2$d caracteres.</string>
   <!--Error message shown when a course hasn't started yet-->
   <string name="course_not_started">Este curso aún no ha empezado. </string>
+  <!--Error message shown when a user's access has expired for a course-->
+  <string name="course_access_expired">Tu Acceso a este curso ha expirado</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
   <string name="action_not_completed">Su acción no pudo ser completada.</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
@@ -85,5 +87,5 @@
   <string name="app_version_unsupported_register_msg">Su versión de la aplicación ya no es compatible. Actualice a la última versión para registrarse.</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
-  <string name="permission_not_granted">Permiso denegado</string>
+  <string name="permission_not_granted">Permiso no concedido</string>
 </resources>

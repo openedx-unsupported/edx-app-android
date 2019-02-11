@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.18",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Descubre Programas y Maestrías",
+        "message": "Ahora puede descubrir programas y maestrías de edX en cualquier lugar!"
+      }
+    ]
+  },
+  {
     "version": "2.16",
     "messages": [
       {

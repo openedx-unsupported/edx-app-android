@@ -40,6 +40,8 @@
   <string name="settings_wifi_top">Descargar solo por Wi-Fi</string>
   <!--Label explaining what wifi only means in detail-->
   <string name="settings_wifi_bottom">Sólo descargar contenido cuando el Wifi está encendido</string>
+  <!--Label for the Download to sd-card setting-->
+  <!--Label explaining the download location setting in detail-->
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Comparta su certificado</string>
@@ -101,6 +103,7 @@
   <string name="label_find_courses">Encontrar cursos</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Exploración</string>
+  <!--Title of Degrees tab on Discovery screen-->
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Descubrir</string>
   <!--Button allowing users to send an email for feedback-->
@@ -190,6 +193,10 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="label_ended">Terminado el {date}</string>
   <!--Label for date when course is ending-->
   <string name="label_ending">Terminando el {date}</string>
+  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
+  <!--Label for date when course is expiring on a specific date like on December 5-->
+  <!--Label for date when course expired a specific time ago like 2 days ago-->
+  <!--Label for date when course expired on a specific date like on November 5-->
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Contenido del curso</string>
@@ -454,6 +461,8 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="email_client_not_present">No hay apps de correo instaladas</string>
   <!--Search for a course prompt-->
   <string name="search_for_courses">Buscar cursos</string>
+  <!--Search for a program prompt-->
+  <!--Search for a degree prompt-->
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">¿Ya tiene una cuenta? Inicie sesión</string>
@@ -467,6 +476,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="launch_register">Crea tu Cuenta</string>
   <!--Button leading user to log in screen-->
   <string name="launch_login">Iniciar sesión</string>
+  <!--Introduction text on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
   <string name="launch_search_courses">Buscar cursos</string>
   <!--Registration Screen-->
