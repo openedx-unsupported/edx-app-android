@@ -50,8 +50,8 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
     protected UserProfileAccomplishmentsPresenter.ViewInterface createView() {
         final FragmentUserProfileAccomplishmentsBinding binding = DataBindingUtil.getBinding(getView());
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        binding.contentList.setLayoutManager(linearLayoutManager);
-        binding.contentList.addOnScrollListener(new InfiniteScrollUtils.RecyclerViewOnScrollListener(linearLayoutManager, new Runnable() {
+        binding.list.setLayoutManager(linearLayoutManager);
+        binding.list.addOnScrollListener(new InfiniteScrollUtils.RecyclerViewOnScrollListener(linearLayoutManager, new Runnable() {
             @Override
             public void run() {
                 presenter.onScrolledToEnd();
@@ -64,7 +64,7 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
                         presenter.onClickShare(badgeAssertion);
                     }
                 });
-        binding.contentList.setAdapter(adapter);
+        binding.list.setAdapter(adapter);
         return new UserProfileAccomplishmentsPresenter.ViewInterface() {
             @Override
             public void setModel(@NonNull UserProfileAccomplishmentsPresenter.ViewModel model) {

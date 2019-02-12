@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-content_list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle">
@@ -11,5 +11,5 @@
         </shape>
     </item>
     <item android:drawable="@drawable/selectable_rounded_box_overlay" />
-</layer-content_list>
+</layer-list>
 

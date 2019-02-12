@@ -8,11 +8,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.model.authentication.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.task.authentication.MobileNumberVerificationTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.otp.OtpActivity;
-import org.edx.mobile.tta.ui.reset_password.model.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.PermissionsUtil;
 

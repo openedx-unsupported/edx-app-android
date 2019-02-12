@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.data.local.db.table.Category;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.view_model.LibraryTabViewModel;
 

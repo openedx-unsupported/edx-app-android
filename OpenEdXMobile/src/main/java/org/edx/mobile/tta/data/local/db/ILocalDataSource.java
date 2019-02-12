@@ -1,8 +1,9 @@
 package org.edx.mobile.tta.data.local.db;
 
+import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.User;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 
 import java.util.List;
 
@@ -22,4 +23,7 @@ public interface ILocalDataSource {
 
     List<Content> getContents();
     void insertContents(List<Content> contents);
+
+    List<Feed> getFeeds();
+    void insertFeeds(List<Feed> feeds);
 }

@@ -6,10 +6,10 @@
 
     <!-- Certificates -->
 
-    <!-- Label congratulation user on finishing course -->
+    <!-- Label congratulation user on finishing content -->
     <string name="course_details_congratulations">Congratulations!</string>
-    <!-- Message for user who has successfully completed a certificate course -->
-    <string name="course_details_earned_cert">You’ve passed the course.</string>
+    <!-- Message for user who has successfully completed a certificate content -->
+    <string name="course_details_earned_cert">You’ve passed the content.</string>
     <!-- Button that opens a full view of an earned certificate -->
     <string name="course_details_view_cert_button">View Certificate</string>
 
@@ -22,13 +22,13 @@
     <!-- Effort field name -->
     <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
-    In that case, a play icon is shown on top of the course image. This is the content description. -->
+    In that case, a play icon is shown on top of the content image. This is the content description. -->
     <string name="go_to_video">Go to video</string>
     <!-- View Course button text text-->
-    <string name="view_course_button_text">View course</string>
-    <!-- Floating overlay text shown to user when they succeed at enrolling in a course -->
-    <string name="you_are_now_enrolled">You are now enrolled in this course.</string>
-    <!-- Error message shown when dashboard cannot be shown from course detail view -->
+    <string name="view_course_button_text">View content</string>
+    <!-- Floating overlay text shown to user when they succeed at enrolling in a content -->
+    <string name="you_are_now_enrolled">You are now enrolled in this content.</string>
+    <!-- Error message shown when dashboard cannot be shown from content detail view -->
     <string name="cannot_show_dashboard">Unable to show dashboard.</string>
 
     <!-- Subjects Discovery -->
@@ -42,10 +42,10 @@
 
     <!-- Course Sharing -->
 
-    <!-- Description of button that will open the share course menu -->
-    <string name="share_course_button">Share your course</string>
-    <!-- Share course -->
-    <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
+    <!-- Description of button that will open the share content menu -->
+    <string name="share_course_button">Share your content</string>
+    <!-- Share content -->
+    <string name="share_course_message">I’m taking a content on {platform_name}! Check it out:</string>
 
     <!-- Settings Page -->
     <!-- Label for wifi only switch -->
@@ -58,7 +58,7 @@
     <string name="share_certificate_button">Share your certificate</string>
     <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
     <string name="share_certificate_message">I just earned a Certificate on {platform_name}! Check it out: {certificate_url}</string>
-    <!-- Tab of tab for certicate for finished course -->
+    <!-- Tab of tab for certicate for finished content -->
     <string name="tab_label_certificate">Certificate</string>
 
     <!-- Data Usage Dialog -->
@@ -90,9 +90,9 @@
     <string name="login_failed">Please make sure that your user name or e-mail address and password are correct and try again.</string>
 
     <!-- License Agreement related string on Login and Regiser screens -->
-    <!-- Create account agreement. Followed by content_list of agreement names like "End User License Agreement" -->
+    <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
     <string name="by_creating_account">By creating an account, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
-    <!-- Sign In agreement. Followed by content_list of agreement names like "End User License Agreement" -->
+    <!-- Sign In agreement. Followed by list of agreement names like "End User License Agreement" -->
     <string name="by_signing_in">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
     <!-- Label for End User License Agreement -->
     <string name="licensing_agreement">{platform_name} End User License Agreement</string>
@@ -105,16 +105,16 @@
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
     <string name="close">Close</string>
     <!-- Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns -->
-    <string name="dropdown_list_prefix">Dropdown content_list.</string>
+    <string name="dropdown_list_prefix">Dropdown list.</string>
 
     <!-- Navigation Drawer Labels -->
     <!-- Button text to showLoading user current downloads screen -->
     <string name="label_current_downloads">View current downloads</string>
     <!-- Content description for edit profile button -->
     <string name="open_profile_button">Open your profile</string>
-    <!-- Title of user's course content_list screen -->
+    <!-- Title of user's content list screen -->
     <string name="label_my_courses">Courses</string>
-    <!-- Title of user's program content_list screen -->
+    <!-- Title of user's program list screen -->
     <string name="label_my_programs" tools:ignore="MissingTranslation">Programs</string>
     <!-- Title of native Find Courses Screen -->
     <string name="label_find_courses">Find Courses</string>
@@ -172,15 +172,15 @@
     <string name="terms_of_service_title">Terms of Service</string>
 
     <!-- My Courses -->
-    <!-- Row of course on dashboard screen -->
+    <!-- Row of content on dashboard screen -->
     <string name="courseware_title">Course</string>
-    <!-- Row of course on dashboard screen -->
+    <!-- Row of content on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="courseware_subtitle">Access videos and assignments</string>
     <!-- Row title of videos on dashboard screen -->
     <string name="videos_title">Videos</string>
     <!-- Row subtitle of videos on dashboard screen -->
-    <string name="videos_subtitle">Watch course videos</string>
+    <string name="videos_subtitle">Watch content videos</string>
     <!-- Row of Discussion on dashboard screen -->
     <string name="discussion_title">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
@@ -190,53 +190,53 @@
     <string name="handouts_title">Handouts</string>
     <!-- Row of Handouts on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="handouts_subtitle">Find important course information</string>
+    <string name="handouts_subtitle">Find important content information</string>
     <!-- Row of announcement on dashboard screen -->
     <string name="announcement_title">Announcements</string>
-    <!-- Title text for the important dates section on the course dashboard  -->
+    <!-- Title text for the important dates section on the content dashboard  -->
     <string name="course_dates_title">Important Dates</string>
-    <!-- Title text for the additional resources section on the tabular course dashboard  -->
+    <!-- Title text for the additional resources section on the tabular content dashboard  -->
     <string name="resources_title">Resources</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
-    <!-- Subtitle text describing the important dates section on the course dashboard -->
+    <!-- Subtitle text describing the important dates section on the content dashboard -->
     <string name="course_dates_subtitle">Keep track of deadlines and stay on track</string>
-    <!-- Accessible content description of course name label field -->
+    <!-- Accessible content description of content name label field -->
     <string name="course_name">Course Name</string>
-    <!-- Label indicating new course content has been downloaded -->
+    <!-- Label indicating new content content has been downloaded -->
     <string name="new_course_content">New Course Content</string>
-    <!-- Label for date when course starts -->
+    <!-- Label for date when content starts -->
     <string name="label_starting">Starting {date}</string>
-    <!-- Label for course that has ended -->
+    <!-- Label for content that has ended -->
     <string name="label_ended">Ended {date}</string>
-    <!-- Label for date when course is ending -->
+    <!-- Label for date when content is ending -->
     <string name="label_ending">Ending {date}</string>
 
     <!-- Course Details -->
-    <!-- Accessible content description of label for course content -->
+    <!-- Accessible content description of label for content content -->
     <string name="course_content">Course Content</string>
-    <!-- Tab title for course handouts section -->
+    <!-- Tab title for content handouts section -->
     <string name="tab_label_handouts">Handouts</string>
-    <!-- Button for last accessed course section. Will be followed by course name -->
+    <!-- Button for last accessed content section. Will be followed by content name -->
     <string name="last_accessed">Last Accessed</string>
     <!-- Label shown when no courseware content is available -->
-    <string name="no_chapter_text">No course content is currently available.</string>
-    <!-- Label shown when no mobile-friendly videos are available in a course -->
-    <string name="no_videos_text">This course does not include any videos.</string>
+    <string name="no_chapter_text">No content content is currently available.</string>
+    <!-- Label shown when no mobile-friendly videos are available in a content -->
+    <string name="no_videos_text">This content does not include any videos.</string>
     <!-- Label shown when user is enrolled in no courses -->
     <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
-    <!-- Label shown when no announcements are available for a course -->
-    <string name="no_announcements_to_display">There are currently no announcements for this course.</string>
-    <!-- Label shown when no handouts are available for a course -->
-    <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
-    <!-- Label shown when no important dates are available for a course -->
+    <!-- Label shown when no announcements are available for a content -->
+    <string name="no_announcements_to_display">There are currently no announcements for this content.</string>
+    <!-- Label shown when no handouts are available for a content -->
+    <string name="no_handouts_to_display">There are currently no handouts for this content.</string>
+    <!-- Label shown when no important dates are available for a content -->
     <string name="no_course_dates_to_display">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
     <string name="delete_videos_title">Delete Videos</string>
-    <!-- Label for a course item's due date for same day -->
+    <!-- Label for a content item's due date for same day -->
     <string name="due_date_today">due today at {due_date}</string>
-    <!-- Label for a course item's due date -->
+    <!-- Label for a content item's due date -->
     <string name="due_date_past_future">due {due_date}</string>
 
     <!-- Discussion Topics -->
@@ -248,7 +248,7 @@
     <!--Discussion Posts Fragment-->
     <!--Title for discussion post search content-->
     <string name="discussion_posts_search_title">Search content</string>
-    <!--Label for the the filter and sort options for refining the thread content_list -->
+    <!--Label for the the filter and sort options for refining the thread list -->
     <string name="discussion_posts_refine">Refine:</string>
     <!--Label for creating a new post-->
     <string name="discussion_post_create_new_post">Create a new post</string>
@@ -330,7 +330,7 @@
     <string name="discussion_add_comment_title">Add a comment</string>
     <!-- Title when adding a new comment is disabled -->
     <string name="discussion_add_comment_disabled_title">Comments are closed for this response</string>
-    <!-- Title in showing content_list of comments -->
+    <!-- Title in showing list of comments -->
     <string name="discussion_comments">Comments</string>
     <!-- Add comment button title in adding a new comment -->
     <string name="discussion_add_comment_button_label">Add comment</string>
@@ -377,12 +377,12 @@
     <!-- Label showing assessment only available on website-->
     <string name="assessment_not_available">This interactive component isn’t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
-    <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
+    <string name="assessment_explore_on_web">Explore other parts of this content or view this on web.</string>
     <!-- Button to showLoading wiew on web for assessment-->
     <string name="assessment_view_on_web">View on Web</string>
     <!-- Label to showLoading empty assessment -->
     <string name="assessment_empty">There are no learning material in this section.</string>
-    <!-- Label to showLoading a course will be starting soon -->
+    <!-- Label to showLoading a content will be starting soon -->
     <string name="assessment_soon">Soon</string>
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
     <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
@@ -443,11 +443,11 @@
     <!-- Title for bulk videos download view when in downloaded state -->
     <string name="download_complete">All Videos Downloaded</string>
     <!-- Accessibility label of bulk download switch, when its state is OFF and no download is happening -->
-    <string name="switch_off_no_downloading">Toggling the switch on, will download all videos of this course.</string>
+    <string name="switch_off_no_downloading">Toggling the switch on, will download all videos of this content.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos are downloading -->
-    <string name="switch_on_all_downloading">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
+    <string name="switch_on_all_downloading">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this content.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded -->
-    <string name="switch_on_all_downloaded">Toggling the switch off, will delete all downloaded videos of this course.</string>
+    <string name="switch_on_all_downloaded">Toggling the switch off, will delete all downloaded videos of this content.</string>
     <!-- Accessibility label of full bulk download view when videos are being downloaded -->
     <string name="view_downloads">Double tap to view current downloads.</string>
 
@@ -483,9 +483,9 @@
     <!-- Accessibility Label for Exiting Fullscreen button on Video Player bottom bar -->
     <string name="video_player_exit_fullscreen">Exit fullscreen mode</string>
 
-    <!-- Button label to bring up course finder -->
+    <!-- Button label to bring up content finder -->
     <string name="find_course_text">Looking for a new challenge?</string>
-    <!-- Button label to bring up course finder -->
+    <!-- Button label to bring up content finder -->
     <string name="find_course_btn_text">Find a Course</string>
     <!-- Message between sign in button and social login buttons -->
     <string name="or_sign_in_with">Or sign in with</string>
@@ -497,7 +497,7 @@
     <string name="email_chooser_header">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
     <string name="email_client_not_present">No e-mail clients installed</string>
-    <!-- Search for a course prompt -->
+    <!-- Search for a content prompt -->
     <string name="search_for_courses">Search for courses</string>
 
     <!-- Landing Activity text -->
@@ -538,8 +538,8 @@
     <string name="sign_up_with_social_ok">We just need a little more information before you start learning with {platform_name}.</string>
     <!-- Continue registration after social login -->
     <string name="complete_registration">Complete your registration</string>
-    <!-- Message shown when enrolling in a course fails-->
-    <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
+    <!-- Message shown when enrolling in a content fails-->
+    <string name="enrollment_failure">We could not enroll you in this content at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->
     <string name="try_again">Try again</string>
     <!-- Registration error -->
@@ -568,9 +568,9 @@
     <string name="insert_feedback">Feedback: </string>
 
     <!-- Notification related -->
-    <!-- toggle between subscribe and unsubscribe to course announcement -->
+    <!-- toggle between subscribe and unsubscribe to content announcement -->
     <string name="notification_toggle">Allow Notifications</string>
-    <!-- Placeholder title for course content with no title -->
+    <!-- Placeholder title for content content with no title -->
     <string name="untitled_block">Untitled</string>
     <!-- Title for default channel notifications -->
     <string name="default_notification_channel_title">General Notification</string>
@@ -578,7 +578,7 @@
 
     <!-- Discussion/Forum -->
     <string name="forum_no_results_for_search_query">No content found for “{search_query}”. Try another search term or select a discussion category_id to browse.</string>
-    <string name="forum_no_results_for_all_posts">There are no posts in this course discussion.</string>
+    <string name="forum_no_results_for_all_posts">There are no posts in this content discussion.</string>
     <string name="forum_no_results_for_following">You are not following any posts.</string>
     <string name="forum_no_results_for_filtered_following">Filter content do not include any followed posts.</string>
     <string name="forum_no_results_in_category">There are no posts in this discussion category_id.</string>
@@ -711,6 +711,22 @@
     <string name="block_wise_list">Block wise list</string>
     <string name="district_wise_list">District wise list</string>
     <string name="state_wise_list">State wise list</string>
+    <string name="suggested_teachers">Suggested Teachers</string>
+    <string name="follow">Follow</string>
+    <string name="view">View</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="course_material">Course Material</string>
+    <string name="discussion">Discussion</string>
+    <string name="handouts">Handouts</string>
+    <string name="about">About</string>
+    <string name="add_to_my_agenda">Add to my agenda</string>
+    <string name="download_all">Download All</string>
+    <string name="viewed">Viewed</string>
+    <string name="viewing">Viewing</string>
+    <string name="assessment">Assessment</string>
+    <string name="view_certificate">View Certificate</string>
+    <string name="estimated_duration">Estimated duration</string>
 
     <string name="no_connection_exception">No Internet Connection</string>
     <string name="asterisk_red" translatable="false"><font color='#f44336'>*</font></string>

@@ -31,6 +31,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.tta.data.remote.service.TaService;
+import org.edx.mobile.tta.scorm.ScormService;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.BrowserUtil;
@@ -99,6 +100,8 @@ public class EdxDefaultModule extends AbstractModule {
         //bind(DataManager.class).toProvider(DataManager.Provider.class);
 
         bind(TaService.class).toProvider(TaService.TaProvider.class);
+
+        bind(ScormService.class).toProvider(ScormService.Provider.class);
 
         bind(IEdxDataManager.class).to(EdxDataManager.class);
         requestStaticInjection(CallUtil.class, BrowserUtil.class, MediaConsentUtils.class,

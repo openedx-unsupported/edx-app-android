@@ -26,13 +26,15 @@ import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
 import org.edx.mobile.tta.data.enums.ContentListType;
 import org.edx.mobile.tta.data.local.db.table.Category;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
-import org.edx.mobile.tta.data.model.CollectionItemsResponse;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.ui.course.CourseDashboardFragment;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
 
 import java.util.ArrayList;
@@ -65,6 +67,10 @@ public class LibraryTabViewModel extends BaseViewModel {
         getContents();
 
         adapter = new ListingRecyclerAdapter(mActivity);
+    }
+
+    @Override
+    public void onResume() {
         layoutManager = new LinearLayoutManager(mActivity);
     }
 
@@ -175,15 +181,15 @@ public class LibraryTabViewModel extends BaseViewModel {
                     if (item.getSource().getType().equalsIgnoreCase("edx") ||
                             item.getSource().getType().equalsIgnoreCase("course")
                     ) {
-                        /*ActivityUtil.replaceFragmentInActivity(
+                        ActivityUtil.replaceFragmentInActivity(
                                 mActivity.getSupportFragmentManager(),
                                 CourseDashboardFragment.newInstance(item),
                                 R.id.dashboard_fragment,
                                 CourseDashboardFragment.TAG,
                                 true,
                                 null
-                        );*/
-                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
+                        );
+//                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
                     }

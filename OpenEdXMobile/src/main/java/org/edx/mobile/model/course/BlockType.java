@@ -24,6 +24,8 @@ public enum  BlockType {
     HTML{ @Override public boolean isContainer() {return false;} },
     PROBLEM{ @Override public boolean isContainer() {return false;} },
     DISCUSSION{ @Override public boolean isContainer() {return false;} },
+    SCORM{ @Override public boolean isContainer() {return false;} },
+    PDF{ @Override public boolean isContainer() {return false;} },
     OTHERS{ @Override public boolean isContainer() {return false;} };
 
     abstract boolean isContainer();

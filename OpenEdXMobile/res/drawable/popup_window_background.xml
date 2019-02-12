@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-content_list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
             <solid android:color="@color/edx_brand_gray_accent" />
@@ -15,4 +15,4 @@
                 android:top="3dp" android:bottom="3dp" />
         </shape>
     </item>
-</layer-content_list>
+</layer-list>

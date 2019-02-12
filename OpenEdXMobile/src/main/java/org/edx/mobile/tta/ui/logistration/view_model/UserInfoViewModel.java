@@ -6,12 +6,12 @@ import android.os.Bundle;
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.registration.model.RegistrationOption;
+import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
-import org.edx.mobile.tta.ui.logistration.model.UpdateMyProfileResponse;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.DataUtil;
 

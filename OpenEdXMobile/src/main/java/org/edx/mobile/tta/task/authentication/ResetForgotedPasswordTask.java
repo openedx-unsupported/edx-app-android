@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.ui.reset_password.model.ResetForgotedPasswordResponse;
+import org.edx.mobile.tta.data.model.authentication.ResetForgotedPasswordResponse;
 
 public class ResetForgotedPasswordTask extends Task<ResetForgotedPasswordResponse> {
     private Bundle parameters;

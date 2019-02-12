@@ -4,13 +4,16 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.edx.mobile.http.constants.ApiConstants;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
-import org.edx.mobile.tta.data.model.AgendaList;
-import org.edx.mobile.tta.data.model.BookmarkResponse;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
-import org.edx.mobile.tta.data.model.CollectionItemsResponse;
-import org.edx.mobile.tta.data.model.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.StatusResponse;
+import org.edx.mobile.tta.data.model.agenda.AgendaList;
+import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
+import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +23,7 @@ import retrofit2.Retrofit;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -62,5 +66,25 @@ public interface TaService {
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_SET_BOOKMARK)
     Call<BookmarkResponse> setBookmark(@FieldMap Map<String, Long> parameters);
+
+    @GET(ApiConstants.URL_MX_IS_CONTENT_MY_AGENDA)
+    Call<StatusResponse> isContentMyAgenda(@Query(Constants.KEY_CONTENT_ID) long contentId);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_SET_LIKE)
+    Call<StatusResponse> setLike(@FieldMap Map<String, Long> parameters);
+
+    @GET(ApiConstants.URL_MX_TOTAL_LIKE)
+    Call<TotalLikeResponse> totalLike(@Query(Constants.KEY_CONTENT_ID) long contentId);
+
+    @GET(ApiConstants.URL_MX_IS_LIKE)
+    Call<StatusResponse> isLike(@Query(Constants.KEY_CONTENT_ID) long contentId);
+
+    @GET(ApiConstants.URL_MX_USER_ENROLLMENT_COURSE)
+    Call<EnrolledCoursesResponse> userEnrollmentCourse(@Query(Constants.KEY_COURSE_ID) String courseId);
+
+    @Headers("Cache-Control: only-if-cached, max-stale")
+    @GET(ApiConstants.URL_MX_USER_ENROLLMENT_COURSE)
+    Call<EnrolledCoursesResponse> userEnrollmentCourseFromCache(@Query(Constants.KEY_COURSE_ID) String courseId);
 
 }

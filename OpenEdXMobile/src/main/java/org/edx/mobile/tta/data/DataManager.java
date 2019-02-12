@@ -9,37 +9,57 @@ import android.support.annotation.NonNull;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.exception.CourseContentNotValidException;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
+import org.edx.mobile.interfaces.RefreshListener;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationOption;
+import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
 import org.edx.mobile.tta.data.local.db.TADatabase;
 import org.edx.mobile.tta.data.local.db.table.Content;
-import org.edx.mobile.tta.data.model.AgendaItem;
-import org.edx.mobile.tta.data.model.AgendaList;
+import org.edx.mobile.tta.data.model.StatusResponse;
+import org.edx.mobile.tta.data.model.agenda.AgendaItem;
+import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.BaseResponse;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
-import org.edx.mobile.tta.data.model.CollectionItemsResponse;
-import org.edx.mobile.tta.data.model.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
+import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
-import org.edx.mobile.tta.exception.NoConnectionException;
+import org.edx.mobile.tta.exception.TaException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
+import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
+import org.edx.mobile.tta.task.content.IsLikeTask;
+import org.edx.mobile.tta.task.content.SetBookmarkTask;
+import org.edx.mobile.tta.task.content.SetLikeTask;
+import org.edx.mobile.tta.task.content.TotalLikeTask;
+import org.edx.mobile.tta.task.content.course.GetCourseDataFromPersistableCacheTask;
+import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseFromCacheTask;
+import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
 import org.edx.mobile.tta.task.profile.GetUserAddressTask;
-import org.edx.mobile.tta.ui.logistration.model.LoginRequest;
-import org.edx.mobile.tta.ui.logistration.model.LoginResponse;
-import org.edx.mobile.tta.ui.logistration.model.UserAddressResponse;
+import org.edx.mobile.tta.data.model.authentication.LoginRequest;
+import org.edx.mobile.tta.data.model.authentication.LoginResponse;
+import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.utils.RxUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
 
 import java.util.ArrayList;
@@ -48,7 +68,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import io.reactivex.Observable;
+import retrofit2.Call;
 
 import static org.edx.mobile.tta.Constants.TA_DATABASE;
 
@@ -56,7 +78,7 @@ import static org.edx.mobile.tta.Constants.TA_DATABASE;
  * Created by Arjun on 2018/9/18.
  */
 
-public class DataManager extends  BaseRoboInjector {
+public class DataManager extends BaseRoboInjector {
     private Context context;
     private static DataManager mDataManager;
     private IRemoteDataSource mRemoteDataSource;
@@ -69,6 +91,12 @@ public class DataManager extends  BaseRoboInjector {
 
     @com.google.inject.Inject
     private Config config;
+
+    @com.google.inject.Inject
+    private CourseManager courseManager;
+
+    @com.google.inject.Inject
+    private CourseAPI courseApi;
 
     private AppPref mAppPref;
     private LoginPrefs loginPrefs;
@@ -83,7 +111,7 @@ public class DataManager extends  BaseRoboInjector {
         loginPrefs = new LoginPrefs(context);
     }
 
-    public static DataManager getInstance( Context context) {
+    public static DataManager getInstance(Context context) {
         if (mDataManager == null) {
             synchronized (DataManager.class) {
                 if (mDataManager == null) {
@@ -130,13 +158,13 @@ public class DataManager extends  BaseRoboInjector {
         return preProcess(mRemoteDataSource.login(loginRequest));
     }
 
-    public void logout(){
+    public void logout() {
         edxEnvironment.getRouter().performManualLogout(
                 context,
                 mDataManager.getEdxEnvironment().getAnalyticsRegistry(),
                 mDataManager.getEdxEnvironment().getNotificationDelegate());
 
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 mLocalDataSource.clear();
@@ -148,7 +176,7 @@ public class DataManager extends  BaseRoboInjector {
         return preEmptyProcess(mRemoteDataSource.getEmpty());
     }
 
-    public void getCollectionConfig(OnResponseCallback<CollectionConfigResponse> callback){
+    public void getCollectionConfig(OnResponseCallback<CollectionConfigResponse> callback) {
 
         //Mocking start
         /*List<Category> categories = new ArrayList<>();
@@ -239,13 +267,13 @@ public class DataManager extends  BaseRoboInjector {
         //Mocking end
 
         //Actual code   **Do not delete**
-        if (NetworkUtil.isConnected(context)){
-            new GetCollectionConfigTask(context){
+        if (NetworkUtil.isConnected(context)) {
+            new GetCollectionConfigTask(context) {
                 @Override
                 protected void onSuccess(CollectionConfigResponse response) throws Exception {
                     super.onSuccess(response);
-                    if (response != null){
-                        new Thread(){
+                    if (response != null) {
+                        new Thread() {
                             @Override
                             public void run() {
                                 mLocalDataSource.insertConfiguration(response);
@@ -261,13 +289,13 @@ public class DataManager extends  BaseRoboInjector {
                 }
             }.execute();
         } else {
-            getCollectionConfigFromLocal(callback, new NoConnectionException(context.getString(R.string.no_connection_exception)));
+            getCollectionConfigFromLocal(callback, new TaException(context.getString(R.string.no_connection_exception)));
         }
 
     }
 
     private void getCollectionConfigFromLocal(OnResponseCallback<CollectionConfigResponse> callback, Exception ex) {
-        new AsyncTask<Void, Void, CollectionConfigResponse>(){
+        new AsyncTask<Void, Void, CollectionConfigResponse>() {
 
             @Override
             protected CollectionConfigResponse doInBackground(Void... voids) {
@@ -299,10 +327,10 @@ public class DataManager extends  BaseRoboInjector {
         }.start();*/
     }
 
-    public void getConfigModifiedDate(OnResponseCallback<ConfigModifiedDateResponse> callback){
+    public void getConfigModifiedDate(OnResponseCallback<ConfigModifiedDateResponse> callback) {
 
-        if (NetworkUtil.isConnected(context)){
-            new GetConfigModifiedDateTask(context){
+        if (NetworkUtil.isConnected(context)) {
+            new GetConfigModifiedDateTask(context) {
                 @Override
                 protected void onSuccess(ConfigModifiedDateResponse configModifiedDateResponse) throws Exception {
                     super.onSuccess(configModifiedDateResponse);
@@ -315,11 +343,11 @@ public class DataManager extends  BaseRoboInjector {
                 }
             }.execute();
         } else {
-            callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
     }
 
-    public void getCollectionItems(Long[] listIds, int skip, int take, OnResponseCallback<List<CollectionItemsResponse>> callback){
+    public void getCollectionItems(Long[] listIds, int skip, int take, OnResponseCallback<List<CollectionItemsResponse>> callback) {
 
         //Mocking start
         /*List<Content> contents = new ArrayList<>();
@@ -364,25 +392,25 @@ public class DataManager extends  BaseRoboInjector {
         //Mocking end
 
         //Actual code   **Do not delete**
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
             Bundle parameters = new Bundle();
             long[] listIds_long = new long[listIds.length];
-            for (int i = 0; i < listIds.length; i++){
+            for (int i = 0; i < listIds.length; i++) {
                 listIds_long[i] = listIds[i];
             }
             parameters.putLongArray(Constants.KEY_LIST_IDS, listIds_long);
             parameters.putInt(Constants.KEY_SKIP, skip);
             parameters.putInt(Constants.KEY_TAKE, take);
-            new GetCollectionItemsTask(context, parameters){
+            new GetCollectionItemsTask(context, parameters) {
                 @Override
                 protected void onSuccess(List<CollectionItemsResponse> collectionItemsList) throws Exception {
                     super.onSuccess(collectionItemsList);
-                    if (collectionItemsList != null && !collectionItemsList.isEmpty()){
-                        new Thread(){
+                    if (collectionItemsList != null && !collectionItemsList.isEmpty()) {
+                        new Thread() {
                             @Override
                             public void run() {
-                                for (CollectionItemsResponse collectionItemsResponse: collectionItemsList){
-                                    if (collectionItemsResponse.getContent() != null){
+                                for (CollectionItemsResponse collectionItemsResponse : collectionItemsList) {
+                                    if (collectionItemsResponse.getContent() != null) {
                                         mLocalDataSource.insertContents(collectionItemsResponse.getContent());
                                     }
                                 }
@@ -398,31 +426,31 @@ public class DataManager extends  BaseRoboInjector {
                 }
             }.execute();
         } else {
-            getCollectionItemsFromLocal(listIds, callback, new NoConnectionException(context.getString(R.string.no_connection_exception)));
+            getCollectionItemsFromLocal(listIds, callback, new TaException(context.getString(R.string.no_connection_exception)));
         }
 
     }
 
     private void getCollectionItemsFromLocal(Long[] listIds, OnResponseCallback<List<CollectionItemsResponse>> callback, Exception ex) {
-        new AsyncTask<Void, Void, List<CollectionItemsResponse>>(){
+        new AsyncTask<Void, Void, List<CollectionItemsResponse>>() {
 
             @Override
             protected List<CollectionItemsResponse> doInBackground(Void... voids) {
                 List<Content> contents = mLocalDataSource.getContents();
                 List<CollectionItemsResponse> responses = new ArrayList<>();
-                if (contents != null){
-                    for (Long listId: listIds){
+                if (contents != null) {
+                    for (Long listId : listIds) {
                         CollectionItemsResponse response = new CollectionItemsResponse();
                         response.setId(listId);
                         response.setContent(new ArrayList<>());
                         responses.add(response);
                     }
                     List<Long> requiredListIds = Arrays.asList(listIds);
-                    for (Content content: contents){
-                        for (long listId: content.getLists()){
-                            if (requiredListIds.contains(listId)){
-                                for (CollectionItemsResponse response: responses){
-                                    if (response.getId() == listId){
+                    for (Content content : contents) {
+                        for (long listId : content.getLists()) {
+                            if (requiredListIds.contains(listId)) {
+                                for (CollectionItemsResponse response : responses) {
+                                    if (response.getId() == listId) {
                                         response.getContent().add(content);
                                         break;
                                     }
@@ -438,7 +466,7 @@ public class DataManager extends  BaseRoboInjector {
             protected void onPostExecute(List<CollectionItemsResponse> responses) {
                 super.onPostExecute(responses);
 
-                if (responses == null || responses.isEmpty()){
+                if (responses == null || responses.isEmpty()) {
                     callback.onFailure(ex);
                 } else {
                     callback.onSuccess(responses);
@@ -487,7 +515,7 @@ public class DataManager extends  BaseRoboInjector {
         }.start();*/
     }
 
-    public void getStateAgendaCount(OnResponseCallback<List<AgendaList>> callback){
+    public void getStateAgendaCount(OnResponseCallback<List<AgendaList>> callback) {
 
         //Mocking start
         /*AgendaList agendaList1 = new AgendaList();
@@ -529,8 +557,8 @@ public class DataManager extends  BaseRoboInjector {
         //Mocking end
 
         //Actual code   **Do not delete**
-        if (NetworkUtil.isConnected(context)){
-            new GetStateAgendaCountTask(context){
+        if (NetworkUtil.isConnected(context)) {
+            new GetStateAgendaCountTask(context) {
                 @Override
                 protected void onSuccess(List<AgendaList> agendaLists) throws Exception {
                     super.onSuccess(agendaLists);
@@ -543,15 +571,15 @@ public class DataManager extends  BaseRoboInjector {
                 }
             }.execute();
         } else {
-            callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
 
     }
 
-    public void getMyAgendaCount(OnResponseCallback<AgendaList> callback){
+    public void getMyAgendaCount(OnResponseCallback<AgendaList> callback) {
 
         //Mocking start
-        AgendaList agendaList = new AgendaList();
+        /*AgendaList agendaList = new AgendaList();
         agendaList.setLevel("My");
         List<AgendaItem> items = new ArrayList<>();
         for (int i = 0; i < 3; i++){
@@ -575,12 +603,12 @@ public class DataManager extends  BaseRoboInjector {
             items.add(item);
         }
         agendaList.setResult(items);
-        callback.onSuccess(agendaList);
+        callback.onSuccess(agendaList);*/
         //Mocking end
 
         //Actual code   **Do not delete**
-        /*if (NetworkUtil.isConnected(context)){
-            new GetMyAgendaCountTask(context){
+        if (NetworkUtil.isConnected(context)) {
+            new GetMyAgendaCountTask(context) {
                 @Override
                 protected void onSuccess(AgendaList agendaList) throws Exception {
                     super.onSuccess(agendaList);
@@ -593,22 +621,22 @@ public class DataManager extends  BaseRoboInjector {
                 }
             }.execute();
         } else {
-            callback.onFailure(new NoConnectionException(context.getString(R.string.no_connection_exception)));
-        }*/
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
 
     }
 
-    public void getDownloadAgendaCount(OnResponseCallback<AgendaList> callback){
+    public void getDownloadAgendaCount(OnResponseCallback<AgendaList> callback) {
 
         //Mocking start
         AgendaList agendaList = new AgendaList();
         agendaList.setLevel("Download");
         List<AgendaItem> items = new ArrayList<>();
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             AgendaItem item = new AgendaItem();
             item.setContent_count(10 - i);
             item.setSource_id(i);
-            switch (i){
+            switch (i) {
                 case 0:
                     item.setSource_title("कोर्स");
                     item.setSource_name("course");
@@ -635,15 +663,15 @@ public class DataManager extends  BaseRoboInjector {
     }
 
     public void getBlocks(OnResponseCallback<List<RegistrationOption>> callback, Bundle parameters,
-                          @NonNull List<RegistrationOption> blocks){
+                          @NonNull List<RegistrationOption> blocks) {
 
-        new GetUserAddressTask(context, parameters){
+        new GetUserAddressTask(context, parameters) {
             @Override
             protected void onSuccess(UserAddressResponse userAddressResponse) throws Exception {
                 super.onSuccess(userAddressResponse);
                 blocks.clear();
-                if (userAddressResponse != null && userAddressResponse.getBlock() != null){
-                    for (Object o: userAddressResponse.getBlock()){
+                if (userAddressResponse != null && userAddressResponse.getBlock() != null) {
+                    for (Object o : userAddressResponse.getBlock()) {
                         blocks.add(new RegistrationOption(o.toString(), o.toString()));
                     }
                     callback.onSuccess(blocks);
@@ -658,5 +686,235 @@ public class DataManager extends  BaseRoboInjector {
 
     }
 
+    public void getCourse(String courseId, OnResponseCallback<EnrolledCoursesResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+            new UserEnrollmentCourseTask(context, courseId) {
+                @Override
+                protected void onSuccess(EnrolledCoursesResponse enrolledCoursesResponse) throws Exception {
+                    super.onSuccess(enrolledCoursesResponse);
+                    if (enrolledCoursesResponse == null ||
+                            enrolledCoursesResponse.getMode() == null ||
+                            enrolledCoursesResponse.getMode().equals("")
+                    ) {
+                        callback.onFailure(new TaException("Invalid Course"));
+                    } else {
+                        callback.onSuccess(enrolledCoursesResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getCourseFromLocal(courseId, callback, ex);
+                }
+            }.execute();
+        } else {
+            getCourseFromLocal(courseId, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getCourseFromLocal(String courseId, OnResponseCallback<EnrolledCoursesResponse> callback, Exception e) {
+        new UserEnrollmentCourseFromCacheTask(context, courseId) {
+            @Override
+            protected void onSuccess(EnrolledCoursesResponse enrolledCoursesResponse) throws Exception {
+                super.onSuccess(enrolledCoursesResponse);
+                if (enrolledCoursesResponse == null ||
+                        enrolledCoursesResponse.getMode() == null ||
+                        enrolledCoursesResponse.getMode().equals("")
+                ) {
+                    callback.onFailure(new TaException("Invalid Course"));
+                } else {
+                    callback.onSuccess(enrolledCoursesResponse);
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(e);
+            }
+        }.execute();
+    }
+
+    public void getTotalLikes(long contentId, OnResponseCallback<TotalLikeResponse> callback) {
+        if (NetworkUtil.isConnected(context)) {
+            new TotalLikeTask(context, contentId) {
+                @Override
+                protected void onSuccess(TotalLikeResponse totalLikeResponse) throws Exception {
+                    super.onSuccess(totalLikeResponse);
+                    if (totalLikeResponse == null) {
+                        callback.onFailure(new TaException("No response for total likes."));
+                    } else {
+                        callback.onSuccess(totalLikeResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+    }
+
+    public void isLike(long contentId, OnResponseCallback<StatusResponse> callback) {
+        if (NetworkUtil.isConnected(context)) {
+            new IsLikeTask(context, contentId) {
+                @Override
+                protected void onSuccess(StatusResponse statusResponse) throws Exception {
+                    super.onSuccess(statusResponse);
+                    if (statusResponse == null) {
+                        callback.onFailure(new TaException("No response for is like."));
+                    } else {
+                        callback.onSuccess(statusResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+    }
+
+    public void isContentMyAgenda(long contentId, OnResponseCallback<StatusResponse> callback) {
+        if (NetworkUtil.isConnected(context)) {
+            new IsContentMyAgendaTask(context, contentId) {
+                @Override
+                protected void onSuccess(StatusResponse statusResponse) throws Exception {
+                    super.onSuccess(statusResponse);
+                    if (statusResponse == null) {
+                        callback.onFailure(new TaException("No response for is content my agenda."));
+                    } else {
+                        callback.onSuccess(statusResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+    }
+
+    public void setLike(long contentId, OnResponseCallback<StatusResponse> callback) {
+        if (NetworkUtil.isConnected(context)) {
+            new SetLikeTask(context, contentId) {
+                @Override
+                protected void onSuccess(StatusResponse statusResponse) throws Exception {
+                    super.onSuccess(statusResponse);
+                    if (statusResponse == null) {
+                        callback.onFailure(new TaException("Error occured. Couldn't like."));
+                    } else {
+                        callback.onSuccess(statusResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+    }
+
+    public void setBookmark(long contentId, OnResponseCallback<BookmarkResponse> callback) {
+        if (NetworkUtil.isConnected(context)) {
+            new SetBookmarkTask(context, contentId) {
+                @Override
+                protected void onSuccess(BookmarkResponse bookmarkResponse) throws Exception {
+                    super.onSuccess(bookmarkResponse);
+                    if (bookmarkResponse == null) {
+                        callback.onFailure(new TaException("Error occured. Couldn't add to My Agenda."));
+                    } else {
+                        callback.onSuccess(bookmarkResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+    }
+
+    public void getCourseComponent(String courseId, OnResponseCallback<CourseComponent> callback){
+
+        CourseComponent courseComponent = courseManager.getComponentByCourseId(courseId);
+        if (courseComponent != null) {
+            // Course data exist in app session cache
+            callback.onSuccess(courseComponent);
+            return;
+        }
+
+        new GetCourseDataFromPersistableCacheTask(context, courseId){
+            @Override
+            protected void onSuccess(CourseComponent courseComponent) throws Exception {
+                super.onSuccess(courseComponent);
+                courseComponent = courseManager.getComponentByCourseId(courseId);
+                if (courseComponent != null){
+                    callback.onSuccess(courseComponent);
+                } else {
+                    getCourseComponentFromServer(courseId, callback);
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                getCourseComponentFromServer(courseId, callback);
+            }
+        }.execute();
+
+    }
+
+    public void getCourseComponentFromServer(String courseId, OnResponseCallback<CourseComponent> callback) {
+
+        if (!NetworkUtil.isConnected(context)){
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+            return;
+        }
+
+        Call<CourseStructureV1Model> getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
+        getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(context, courseId,
+                null, null, null, null) {
+            @Override
+            protected void onResponse(@NonNull CourseComponent courseComponent) {
+                courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
+                courseComponent = courseManager.getComponentByCourseId(courseId);
+                if (courseComponent != null) {
+                    callback.onSuccess(courseComponent);
+                } else {
+                    callback.onFailure(new TaException("Empty course."));
+                }
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                super.onFailure(error);
+                callback.onFailure(new TaException(error.getLocalizedMessage()));
+            }
+        });
+    }
+
+    @NonNull
+    private CourseComponent validateCourseComponent(@NonNull CourseComponent courseComponent, String courseId, String courseComponentId) {
+        final CourseComponent cached = courseManager.getComponentByIdFromAppLevelCache(
+                courseId, courseComponentId);
+        courseComponent = cached != null ? cached : courseComponent;
+        return courseComponent;
+    }
 }
 

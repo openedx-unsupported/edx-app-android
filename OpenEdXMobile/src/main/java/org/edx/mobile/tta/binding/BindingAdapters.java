@@ -24,7 +24,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
+import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
+import com.maurya.mx.mxlib.view.MxRecyclerView;
 
 import org.edx.mobile.tta.ui.custom.FormEditText;
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
@@ -127,7 +129,7 @@ public class BindingAdapters {
         view.setLayoutParams(layoutParams);
     }
 
-    @BindingAdapter({"android:src", "android:placeholder"})
+    @BindingAdapter({"android:src", "placeholder"})
     public static void setImageSrcFromUrl(ImageView imageView, String url, int placeholder) {
         if (url == null) {
             return;
@@ -148,6 +150,11 @@ public class BindingAdapters {
         Glide.with(imageView.getContext())
             .load(url)
             .into(imageView);
+    }
+
+    @BindingAdapter("android:src")
+    public static void setImageResource(ImageView imageView, int resource){
+        imageView.setImageResource(resource);
     }
 
     @BindingAdapter({"android:widthScale", "android:heightScale"})
@@ -274,6 +281,11 @@ public class BindingAdapters {
 
     @BindingAdapter({"finite_recycler_adapter"})
     public static void setFiniteAdapter(MxFiniteRecyclerView view, MxFiniteAdapter adapter){
+        view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"infinite_recycler_adapter"})
+    public static void setInfiniteAdapter(MxRecyclerView view, MxInfiniteAdapter adapter){
         view.setAdapter(adapter);
     }
 

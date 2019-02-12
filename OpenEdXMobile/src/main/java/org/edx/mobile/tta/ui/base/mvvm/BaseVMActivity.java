@@ -38,4 +38,10 @@ public class BaseVMActivity extends TaBaseActivity {
     public BaseViewModel getViewModel(){
         return mViewModel;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mViewModel.onResume();
+    }
 }

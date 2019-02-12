@@ -27,4 +27,8 @@ public class BaseViewModel {
         mFragment = fragment;
         mDataManager = DataManager.getInstance(context);
     }
+
+    public void onResume(){
+
+    }
 }

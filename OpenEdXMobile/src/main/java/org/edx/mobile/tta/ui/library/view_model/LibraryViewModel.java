@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import org.edx.mobile.tta.data.local.db.table.Category;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BaseFragmentPagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;

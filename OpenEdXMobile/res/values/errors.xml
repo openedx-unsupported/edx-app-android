@@ -51,7 +51,7 @@
     <string name="error_account_not_linked_desc_google_2">This Google account is not linked with any {platform_name} account. Please register.</string>
 
     <!-- Download error messages -->
-    <!-- Label shown on video content_list item whose download failed -->
+    <!-- Label shown on video list item whose download failed -->
     <string name="error_download_failed">Download failed</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="file_size_exceeded">The size of the download exceeds the remaining device storage space.</string>

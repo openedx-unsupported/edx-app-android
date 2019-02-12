@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.data.model.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 public class SetBookmarkTask extends Task<BookmarkResponse> {

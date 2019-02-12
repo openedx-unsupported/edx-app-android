@@ -8,6 +8,7 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
 
 import java.util.EnumSet;
 
@@ -21,6 +22,8 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
     private String section_url;
     private String unit_url;
     public VideoBlockModel videoBlockModel;
+
+    public ScormBlockModel scormBlockModel;
 
     private DownloadEntry downloadEntry;
 
@@ -158,5 +161,39 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
 
     public long getSize(){
         return summary == null ? 0 : summary.getSize();
+    }
+
+    //for scorm
+    public IPathNode getScromChapter() {
+        // not being depend on array index
+        // check if the object is really a chapter object
+        if ( scormBlockModel != null)
+            return scormBlockModel.getAncestor(EnumSet.of(BlockType.CHAPTER));
+
+        for (int i = 0; i < path.length; i++) {
+            if (path[i].isChapter())
+                return path[i];
+        }
+        return null;
+    }
+
+    /**
+     * Returns section object of this model. The section object is found
+     * by traversing down a PathModel[]. If the section cannot be found,
+     * returns null
+     *
+     * @return      Section object of this PathModel
+     */
+    public IPathNode getScromSection() {
+        // not being depend on array index
+        // check if the object is really a section object
+        if ( scormBlockModel != null)
+            return scormBlockModel.getAncestor(EnumSet.of(BlockType.SECTION, BlockType.SEQUENTIAL));
+
+        for (int i = 0; i < path.length; i++) {
+            if (path[i].isSequential())
+                return path[i];
+        }
+        return null;
     }
 }

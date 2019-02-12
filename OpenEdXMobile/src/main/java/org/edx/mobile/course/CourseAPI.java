@@ -40,6 +40,10 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.tta.scorm.PDFBlockModel;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
+import org.edx.mobile.tta.scorm.ScormData;
+import org.edx.mobile.tta.scorm.ScormManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
@@ -64,6 +68,10 @@ public class CourseAPI {
     private final CourseService courseService;
     @NonNull
     private final UserPrefs userPrefs;
+
+    @Inject
+    @NonNull
+    public static ScormManager scormManager;
 
 
     @Inject
@@ -179,6 +187,11 @@ public class CourseAPI {
         CourseStructureV1Model model = executeStrict(
                 courseService.getCourseStructure("only-if-cached, max-stale", getUsername(), courseId));
         return (CourseComponent) normalizeCourseStructure(model, courseId);
+    }
+
+    public String downloadScorm(String url, String file) throws Exception {
+//        return api.downloadScorm(url,file);
+        return null;
     }
 
     public static abstract class GetCourseStructureCallback
@@ -495,6 +508,15 @@ public class CourseAPI {
                 new VideoBlockModel(block, parent);
             } else if (BlockType.DISCUSSION == block.type && block.data instanceof DiscussionData) {
                 new DiscussionBlockModel(block, parent);
+            } else if (BlockType.SCORM == block.type && block.data instanceof ScormData) {
+                new ScormBlockModel(block, parent);
+            }
+            //added by Arjun to integrate pdf xblock in android.
+            else if (BlockType.PDF == block.type && block.data instanceof ScormData)
+            {
+                ///TODO :need to work on Arjun
+                new PDFBlockModel(block, parent);
+                //new ScormBlockModel(block, parent);
             } else { //everything else.. we fallback to html component
                 new HtmlBlockModel(block, parent);
             }
@@ -522,6 +544,39 @@ public class CourseAPI {
                 }
             }
         }
+
+        //Arjun: for binding scorm entries if they exist on android storage add them too.
+
+        for(ScormBlockModel scromItem : courseComponent.getScorms()) {
+            if (scormManager.has(scromItem.getId())) {
+                VideoResponseModel model = mappingVideoResponseModelFrom(scromItem);
+
+                if (filter == null)
+                    items.add(model);
+                else {
+                    if (filter.apply(model)) {
+                        items.add(model);
+                    }
+                }
+            }
+        }
+
+        //Arjun: for binding PDF entries if they exist on android storage add them too.
+
+        for(PDFBlockModel pdfItem : courseComponent.getPDFs()) {
+            if (scormManager.has(pdfItem.getId())) {
+                VideoResponseModel model = mappingVideoResponseModelFrom(pdfItem);
+
+                if (filter == null)
+                    items.add(model);
+                else {
+                    if (filter.apply(model)) {
+                        items.add(model);
+                    }
+                }
+            }
+        }
+
         return items;
     }
 
@@ -589,5 +644,52 @@ public class CourseAPI {
             }
         }
         return map;
+    }
+
+    //for scrom:Arjun
+    public static VideoResponseModel mappingVideoResponseModelFrom(ScormBlockModel scormBlockModel){
+        VideoResponseModel model = new VideoResponseModel();
+        model.setCourseId(scormBlockModel.getCourseId());
+        SummaryModel summaryModel = mappingSummaryModelFrom(scormBlockModel);
+        model.setSummary(summaryModel);
+        model.scormBlockModel = scormBlockModel;
+        model.setSectionUrl(scormBlockModel.getParent().getBlockUrl());
+        model.setUnitUrl(scormBlockModel.getBlockUrl());
+
+        return model;
+    }
+
+    //for PDF Xblock:Arjun
+    public static VideoResponseModel mappingVideoResponseModelFrom(PDFBlockModel pdfBlockModel){
+        VideoResponseModel model = new VideoResponseModel();
+        model.setCourseId(pdfBlockModel.getCourseId());
+        SummaryModel summaryModel = mappingSummaryModelFrom(pdfBlockModel);
+        model.setSummary(summaryModel);
+        model.scormBlockModel = pdfBlockModel;
+        model.setSectionUrl(pdfBlockModel.getParent().getBlockUrl());
+        model.setUnitUrl(pdfBlockModel.getBlockUrl());
+
+        return model;
+    }
+
+    //for scrom:Arjun
+    private static SummaryModel mappingSummaryModelFrom(ScormBlockModel scormBlockModel){
+        SummaryModel model = new SummaryModel();
+        model.setType(scormBlockModel.getType());
+        model.setDisplayName(scormBlockModel.getDisplayName());
+        model.setDuration(0);
+        model.setOnlyOnWeb(true);
+        model.setId(scormBlockModel.getId());
+
+        //because we don't have info for scrom
+        final VideoInfo videoInfo = null;
+        if (null != videoInfo) {
+            model.setVideoUrl(videoInfo.url);
+            model.setSize(videoInfo.fileSize);
+        }
+        model.setTranscripts(null);
+        //FIXME = is this field missing?
+        // private EncodingsModel encodings;
+        return model;
     }
 }

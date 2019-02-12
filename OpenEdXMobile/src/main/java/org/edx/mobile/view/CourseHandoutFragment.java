@@ -39,7 +39,7 @@ import roboguice.inject.InjectView;
 public class CourseHandoutFragment extends BaseFragment implements RefreshListener {
     protected final Logger logger = new Logger(getClass().getName());
 
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
+//    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
     @Inject
@@ -61,7 +61,15 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_HANDOUTS, courseData.getCourse().getId(), null);
+
+        //Mx: Chirag: Get EnrolledCoursesResponse from bundle argument
+        if (getArguments() != null) {
+            courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
+        }
+
+        if (courseData != null) {
+            analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_HANDOUTS, courseData.getCourse().getId(), null);
+        }
     }
 
     @Override
@@ -81,6 +89,9 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     }
 
     private void loadData() {
+        if (courseData == null){
+            return;
+        }
         okHttpClientProvider.getWithOfflineCache().newCall(new Request.Builder()
                 .url(courseData.getCourse().getCourse_handouts())
                 .get()

@@ -10,13 +10,13 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.tta.ui.logistration.model.SendOTPResponse;
-import org.edx.mobile.tta.ui.logistration.model.UpdateMyProfileResponse;
-import org.edx.mobile.tta.ui.logistration.model.UserAddressResponse;
-import org.edx.mobile.tta.ui.otp.model.VerifyOTPForgotedPasswordResponse;
-import org.edx.mobile.tta.ui.otp.model.VerifyOTPResponse;
-import org.edx.mobile.tta.ui.reset_password.model.MobileNumberVerificationResponse;
-import org.edx.mobile.tta.ui.reset_password.model.ResetForgotedPasswordResponse;
+import org.edx.mobile.tta.data.model.authentication.MobileNumberVerificationResponse;
+import org.edx.mobile.tta.data.model.authentication.ResetForgotedPasswordResponse;
+import org.edx.mobile.tta.data.model.authentication.SendOTPResponse;
+import org.edx.mobile.tta.data.model.authentication.VerifyOTPForgotedPasswordResponse;
+import org.edx.mobile.tta.data.model.authentication.VerifyOTPResponse;
+import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
+import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 
 import java.util.Map;
 

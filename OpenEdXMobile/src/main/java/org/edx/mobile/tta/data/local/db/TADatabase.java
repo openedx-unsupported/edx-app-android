@@ -6,8 +6,10 @@ import android.arch.persistence.room.TypeConverters;
 import org.edx.mobile.tta.data.local.db.dao.CategoryDao;
 import org.edx.mobile.tta.data.local.db.dao.ContentDao;
 import org.edx.mobile.tta.data.local.db.dao.ContentListDao;
+import org.edx.mobile.tta.data.local.db.dao.FeedDao;
 import org.edx.mobile.tta.data.local.db.dao.SourceDao;
 import org.edx.mobile.tta.data.local.db.dao.UserDao;
+import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
@@ -20,9 +22,10 @@ import org.edx.mobile.tta.data.local.db.table.Source;
                 Category.class,
                 Content.class,
                 ContentList.class,
-                Source.class
+                Source.class,
+                Feed.class
         },
-        version = 3,
+        version = 4,
         exportSchema = false
 )
 @TypeConverters({DbTypeConverters.class})
@@ -33,4 +36,5 @@ public abstract class TADatabase extends RoomDatabase {
     public abstract ContentDao contentDao();
     public abstract ContentListDao contentListDao();
     public abstract SourceDao sourceDao();
+    public abstract FeedDao feedDao();
 }

@@ -20,13 +20,14 @@ import org.edx.mobile.view.dialog.AlertDialogFragment;
 public abstract class TaBaseFragment extends RxV4Fragment implements PermissionListener {
     protected ViewDataBinding mBinding;
     protected PermissionListener permissionListener;
+    private BaseViewModel viewModel;
 
     private int requestCode;
 
     protected ViewDataBinding binding(LayoutInflater inflater, ViewGroup container, int layoutId, BaseViewModel viewModel) {
         mBinding = DataBindingUtil.inflate(inflater, layoutId, container, false);
         mBinding.setVariable(BR.viewModel, viewModel);
-
+        this.viewModel = viewModel;
         return mBinding;
     }
 
@@ -75,5 +76,11 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
     @Override
     public void onPermissionDenied(String[] permissions, int requestCode) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.onResume();
     }
 }

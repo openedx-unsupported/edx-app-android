@@ -158,8 +158,12 @@ public class MxFiniteRecyclerView extends LinearLayout {
         mAdapter.setItemLayout(getItemLayout());//it's required
         setmMaxItem(mMaxItem);
         //set here header & footer layout into adapter
-        mAdapter.setHeaderLayout(getHeaderLayout());
-        mAdapter.setFooterLayout(getFooterLayout());
+        if (getHeaderLayout() != 0) {
+            mAdapter.setHeaderLayout(getHeaderLayout());
+        }
+        if (getFooterLayout() != 0) {
+            mAdapter.setFooterLayout(getFooterLayout());
+        }
         mBinding.mxRecyclerView.setAdapter(mAdapter);
     }
 

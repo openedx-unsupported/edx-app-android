@@ -2,12 +2,12 @@ package org.edx.mobile.tta.data.remote;
 
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.tta.data.model.BaseResponse;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
-import org.edx.mobile.tta.data.model.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
-import org.edx.mobile.tta.ui.logistration.model.LoginRequest;
-import org.edx.mobile.tta.ui.logistration.model.LoginResponse;
+import org.edx.mobile.tta.data.model.authentication.LoginRequest;
+import org.edx.mobile.tta.data.model.authentication.LoginResponse;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 
 import java.util.List;
 

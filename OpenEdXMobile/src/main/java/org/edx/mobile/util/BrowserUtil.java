@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
@@ -27,6 +28,9 @@ public class BrowserUtil {
 
     @Inject
     private static Config config;
+
+    @Inject
+    public static LoginPrefs loginPrefs;
 
     /**
      * Opens given URL in native browser.

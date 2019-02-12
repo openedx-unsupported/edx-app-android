@@ -35,4 +35,20 @@
     <string name="state_wise_list">राज्य निर्धारित लक्ष्य</string>
     <string name="my_agenda">मेरा लक्ष्य</string>
     <string name="download">डाउनलोड</string>
+    <string name="suggested_teachers">ज़रूर देखें  अध्यापक</string>
+    <string name="follow">फॉलो करें</string>
+    <string name="view">देखें</string>
+    <string name="like">लाइक</string>
+    <string name="comment">टिप्पणी</string>
+    <string name="about">सन्दर्भ</string>
+    <string name="handouts">संसाधन</string>
+    <string name="discussion">चर्चा</string>
+    <string name="course_material">विषय-सूची</string>
+    <string name="add_to_my_agenda">अपने लक्ष्य में जोड़ें</string>
+    <string name="download_all">पूरा डाउनलोड</string>
+    <string name="viewed">देख लिया है</string>
+    <string name="viewing">देख रहे हैं</string>
+    <string name="assessment">समझ परखें</string>
+    <string name="view_certificate">सर्टिफिकेट देखें</string>
+    <string name="estimated_duration">अनुमानित अवधि</string>
 </resources>

@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 public class GetCollectionConfigTask extends Task<CollectionConfigResponse> {

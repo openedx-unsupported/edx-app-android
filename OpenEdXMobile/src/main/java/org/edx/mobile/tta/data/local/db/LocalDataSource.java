@@ -1,8 +1,9 @@
 package org.edx.mobile.tta.data.local.db;
 
+import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.User;
-import org.edx.mobile.tta.data.model.CollectionConfigResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -71,5 +72,15 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void insertContents(List<Content> contents) {
         mAppDatabase.contentDao().insert(contents);
+    }
+
+    @Override
+    public List<Feed> getFeeds() {
+        return mAppDatabase.feedDao().getAll();
+    }
+
+    @Override
+    public void insertFeeds(List<Feed> feeds) {
+        mAppDatabase.feedDao().insert(feeds);
     }
 }

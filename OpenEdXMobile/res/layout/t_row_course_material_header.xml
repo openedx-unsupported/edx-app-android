@@ -1,9 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.course.view_model.CourseMaterialViewModel" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/_30px"
+        android:paddingBottom="@dimen/_30px">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/course_description"
+            android:text="@{viewModel.description}"
+            android:textColor="@color/gray_5"
+            android:textSize="14sp"
+            android:fontFamily="@font/hind_regular"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginEnd="@dimen/_20px"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/_26px"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/course_likes"
+                    android:textSize="12sp"
+                    android:textColor="@color/gray_3"
+                    android:fontFamily="@font/hind_medium"
+                    android:layout_gravity="center_vertical"
+                    android:text="@{viewModel.likes}"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/course_like_image"
+                    android:layout_marginStart="3dp"
+                    android:src="@{viewModel.likeIcon}"
+                    android:layout_gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:contentDescription="@string/like" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/gray_3"
+                    android:fontFamily="@font/hind_medium"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/like"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/course_bookmark_image"
+                    android:layout_marginStart="3dp"
+                    android:src="@{viewModel.bookmarkIcon}"
+                    android:layout_gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:contentDescription="@string/add_to_my_agenda" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray_4"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/hind_medium"
+                    android:text="@string/add_to_my_agenda"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="bottom"
+                    android:layout_marginStart="2dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/course_download_image"
+                    android:layout_marginStart="3dp"
+                    android:src="@{viewModel.allDownloadStatusIcon}"
+                    android:layout_gravity="center_vertical"
+                    android:paddingBottom="3dp"
+                    android:contentDescription="@string/download" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray_4"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/hind_medium"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/download_all"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="bottom"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

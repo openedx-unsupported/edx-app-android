@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mx="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.feed.view_model.FeedViewModel" />
@@ -9,9 +12,71 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_26px" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/tta_launcher_icon"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_20px"
+                app:srcCompat="@drawable/t_icon_notification"
+                android:onClick="@{()->viewModel.showNotifications()}"/>
+
+        </RelativeLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/app_background">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/t_row_content_slider" />
+
+                <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:mx_itemLayout="@layout/t_row_suggested_teacher"
+                    app:mx_itemLimit="5"
+                    app:mx_moreButtonDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
+                    app:mx_moreButtonMarginEnd="@dimen/_20px"
+                    app:mx_moreButtonText="@string/view_more"
+                    app:mx_moreButtonTextColor="@color/primary_cyan"
+                    app:mx_moreButtonTextFont="@font/hind_medium"
+                    app:mx_moreButtonTextSize="@dimen/list_view_more_size"
+                    app:mx_titleMarginStart="@dimen/_20px"
+                    app:mx_titleText="@string/suggested_teachers"
+                    app:mx_titleTextColor="@color/gray_5"
+                    app:mx_titleTextFont="@font/hind_medium"
+                    app:mx_titleTextSize="@dimen/list_title_size" />
+
+                <com.maurya.mx.mxlib.view.MxRecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    mx:infinite_recycler_adapter="@{viewModel.feedAdapter}"/>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
 
     </LinearLayout>
 

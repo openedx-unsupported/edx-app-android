@@ -14,7 +14,7 @@ import android.widget.SpinnerAdapter;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TViewFormSpinnerBinding;
 import org.edx.mobile.module.registration.model.RegistrationOption;
-import org.edx.mobile.tta.ui.interfaces.OnTaItemSelectedListener;
+import org.edx.mobile.tta.ui.interfaces.OnTaItemClickListener;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class FormSpinner extends LinearLayout {
 
     private RegistrationOption selectedOption;
 
-    private OnTaItemSelectedListener<RegistrationOption> listener;
+    private OnTaItemClickListener<RegistrationOption> listener;
     private String label;
 
     public FormSpinner(Context context) {
@@ -94,7 +94,7 @@ public class FormSpinner extends LinearLayout {
         mBinding.spinner.setOnItemSelectedListener(onItemSelectedListener);
     }
 
-    public void setOnItemSelectedListener(OnTaItemSelectedListener<RegistrationOption> listener) {
+    public void setOnItemSelectedListener(OnTaItemClickListener<RegistrationOption> listener) {
         this.listener = listener;
     }
 

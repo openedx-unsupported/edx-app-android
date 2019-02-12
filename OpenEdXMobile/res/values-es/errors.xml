@@ -46,7 +46,7 @@
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_desc_google_2">Esta cuenta de Google no está asociada con ninguna cuenta de {platform_name}. Por favor regístrela.</string>
   <!--Download error messages-->
-  <!--Label shown on video content_list item whose download failed-->
+  <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">Descarga fallida.</string>
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
   <string name="file_size_exceeded">El tamaño de la descarga excede el espacio disponible en el dispositivo.</string>

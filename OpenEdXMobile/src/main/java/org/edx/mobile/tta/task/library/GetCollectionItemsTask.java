@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.data.model.CollectionItemsResponse;
+import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 import java.util.List;

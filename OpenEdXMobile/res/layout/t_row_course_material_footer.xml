@@ -1,9 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mx="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.course.view_model.CourseMaterialViewModel" />
+        <import type="android.view.View" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/assessment"
+            android:textColor="@color/gray_6"
+            android:textSize="14sp"
+            android:fontFamily="@font/hind_medium"
+            android:layout_marginTop="@dimen/_6px"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginEnd="@dimen/_20px"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
+            android:layout_marginStart="@dimen/_18px"
+            android:layout_marginEnd="@dimen/_18px"
+            android:layout_marginTop="@dimen/_10px"/>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginEnd="@dimen/_20px"
+            android:layout_marginBottom="@dimen/_20px"
+            android:layout_marginTop="@dimen/_20px"
+            app:cardElevation="@dimen/_10px"
+            android:shadowColor="@color/gray_1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_20px"
+                android:layout_marginEnd="@dimen/_20px">
+
+                <FrameLayout
+                    android:layout_width="90dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/item_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@{viewModel.footerImageUrl}"
+                        mx:placeholder="@drawable/placeholder_course_card_image"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/t_icon_play"
+                        android:layout_gravity="center"
+                        android:visibility="visible"/>
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/_20px">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/item_title"
+                        android:text="@{viewModel.footerTitle}"
+                        android:visibility="@{viewModel.footerTitleVisible?View.VISIBLE:View.GONE}"
+                        android:textColor="@color/gray_5"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/hind_medium"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/item_delete_download"
+                            android:src="@{viewModel.footerDownloadIcon}" />
+
+                        <Button
+                            android:layout_width="100dp"
+                            android:layout_height="25dp"
+                            android:id="@+id/item_btn"
+                            android:background="@drawable/btn_selector_hollow"
+                            android:gravity="center"
+                            android:layout_marginStart="@dimen/_40px"
+                            android:text="@{viewModel.footerBtnText}"
+                            android:textSize="12sp"
+                            android:textColor="@color/primary_cyan"
+                            android:fontFamily="@font/hind_regular"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 

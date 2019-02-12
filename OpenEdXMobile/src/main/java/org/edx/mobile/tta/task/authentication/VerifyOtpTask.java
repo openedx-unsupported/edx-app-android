@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.ui.otp.model.VerifyOTPResponse;
+import org.edx.mobile.tta.data.model.authentication.VerifyOTPResponse;
 
 public class VerifyOtpTask extends Task<VerifyOTPResponse> {
     private Bundle parameters;

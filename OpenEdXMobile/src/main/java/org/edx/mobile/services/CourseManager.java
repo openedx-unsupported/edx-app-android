@@ -131,4 +131,15 @@ public class CourseManager {
             }
         });
     }
+
+    public CourseComponent getComponentByCourseId(String courseId){
+
+        if(courseId==null || courseId.isEmpty() || courseId.equals(""))
+            return null;
+
+        CourseComponent courseComponent = getCachedCourseData(courseId);
+        if ( courseComponent == null )
+            return null;
+        return courseComponent.findMxFirstComponent();
+    }
 }

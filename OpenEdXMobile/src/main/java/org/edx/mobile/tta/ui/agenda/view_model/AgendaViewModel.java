@@ -12,8 +12,8 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAgendaItemBinding;
-import org.edx.mobile.tta.data.model.AgendaItem;
-import org.edx.mobile.tta.data.model.AgendaList;
+import org.edx.mobile.tta.data.model.agenda.AgendaItem;
+import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;

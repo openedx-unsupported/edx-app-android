@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.ui.logistration.model.UpdateMyProfileResponse;
+import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 
 public class UpdateMyProfileTask extends Task<UpdateMyProfileResponse> {
 

@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.data.model.AgendaList;
+import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 public class GetMyAgendaCountTask extends Task<AgendaList> {

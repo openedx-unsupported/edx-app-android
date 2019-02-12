@@ -67,7 +67,8 @@ public abstract class MxFiniteAdapter<T> extends MxBaseAdapter<T> {
     }
 
     public boolean isFooterDisplayable() {
-        return isFooterViewEnabled()&&super.getItemCount() > mItemLimit;
+//        return isFooterViewEnabled()&&super.getItemCount() > mItemLimit;
+        return isFooterViewEnabled();
     }
 
     public int getItemLayout() {

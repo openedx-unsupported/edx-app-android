@@ -78,7 +78,20 @@ public class ApiConstants {
     public static final String URL_MX_SET_BOOKMARK = "api/mx_catalog/v1/bookmark/";
 
     //Get user district and block API
-    public static final String URL_MX_GET_USER_ADDRESS = "/api/otp/serve-state-data/";
+    public static final String URL_MX_GET_USER_ADDRESS = "api/otp/serve-state-data/";
+
+    public static final String URL_MX_SET_LIKE = "api/mx_catalog/v1/like/";
+
+    public static final String URL_MX_TOTAL_LIKE = "api/mx_catalog/v1/totallike/";
+
+    public static final String URL_MX_IS_LIKE = "api/mx_catalog/v1/islike/";
+
+    public static final String URL_MX_IS_CONTENT_MY_AGENDA = "api/mx_catalog/v1/ismyagenda/";
+
+    public static final String URL_MX_USER_ENROLLMENT_COURSE = "api/mx_enrollment/v1/enrollmentcourse/";
+
+    //Post scorm start request
+    public static final String URL_MX_SCORM_START = "/api/mx_scorm/scorm_started/";
 
     //TTA end
 

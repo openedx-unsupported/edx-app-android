@@ -52,7 +52,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     @InjectView(R.id.discussion_topics_listview)
     private ListView discussionTopicsListView;
 
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
+//    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
     @Inject
@@ -70,6 +70,16 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     private Call<CourseTopics> getTopicListCall;
 
     private FullScreenErrorNotification errorNotification;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //Mx: Chirag: Get EnrolledCoursesResponse from bundle argument
+        if (getArguments() != null) {
+            courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
+        }
+    }
 
     @Nullable
     @Override
@@ -142,6 +152,9 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     }
 
     private void getTopicList() {
+        if (courseData == null){
+            return;
+        }
         if (getTopicListCall != null) {
             getTopicListCall.cancel();
         }

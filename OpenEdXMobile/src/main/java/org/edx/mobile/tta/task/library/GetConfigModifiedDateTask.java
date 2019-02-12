@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.data.model.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 public class GetConfigModifiedDateTask extends Task<ConfigModifiedDateResponse> {
