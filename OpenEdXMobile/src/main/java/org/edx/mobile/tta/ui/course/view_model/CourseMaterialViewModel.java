@@ -16,7 +16,9 @@ import org.edx.mobile.databinding.TRowCourseMaterialFooterBinding;
 import org.edx.mobile.databinding.TRowCourseMaterialHeaderBinding;
 import org.edx.mobile.databinding.TRowCourseMaterialItemBinding;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
@@ -34,6 +36,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     private Content content;
     private EnrolledCoursesResponse course;
+    private CourseComponent assessmentComponent;
+    private CourseComponent aboutComponent;
 
     public CourseMaterialAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -102,58 +106,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
         fetchCourseComponent();
 
-        List<Content> contents = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            contents.add(new Content());
-        }
-
-        if (true) {
-            allDownloadStatusIcon.set(R.drawable.t_icon_done);
-            description.set(
-                    "अकसर शिक्षक होने के नाते हम अपनी कक्षाओं को रोचक बनाने की चुनौतियों से जूझते हैं| हम अलग-अलग गतिविधियाँ अपनाते हैं ताकि बच्चे मनोरंजक तरीकों से सीख सकें| लेकिन ऐसा करना हमेशा आसान नहीं होता| यह कोर्स एक कोशिश है जहां हम ‘गतिविधि क्या है’, ‘कैसी गतिविधियाँ चुनी जायें?’ और इन्हें कराने में क्या-क्या मुश्किलें आ सकती हैं, के बारे में बात कर रहे हैं| इस कोर्स में इन पहलुओं को टटोलने के लिए प्राइमरी कक्षा के EVS (पर्यावरण विज्ञान) विषय के उदाहरण लिए गए हैं| \n" +
-                            "\n" +
-                            "इस कोर्स को पर्यावरण-विज्ञान पढ़ानेवाले शिक्षक और वे शिक्षक जो ‘गतिविधियों को कक्षा में कैसे कराया जाये’ जानना चाहते हैं, कर सकते हैं| आशा है इस कोर्स को पढ़ने के बाद आपके लिए कक्षा में गतिविधियाँ कराना आसान हो जाएगा|"
-            );
-
-            adapter.setHeaderLayout(R.layout.t_row_course_material_header);
-            adapter.setHeaderClickListener(v -> {
-                switch (v.getId()) {
-                    case R.id.course_like_image:
-                        like();
-                        break;
-                    case R.id.course_bookmark_image:
-                        bookmark();
-                        break;
-                    case R.id.course_download_image:
-                        mActivity.showShortSnack("Course download");
-                        break;
-                }
-            });
-        }
-
-        if (true) {
-            footerImageUrl.set("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
-            footerTitleVisible.set(true);
-            footerTitle.set("Assessment title");
-            footerDownloadIcon.set(R.drawable.t_icon_download);
-            footerBtnText.set(mActivity.getString(R.string.assessment));
-
-            adapter.setFooterLayout(R.layout.t_row_course_material_footer);
-            adapter.setFooterClickListener(v -> {
-                switch (v.getId()) {
-                    case R.id.item_delete_download:
-                        mActivity.showShortSnack("Item delete");
-                        break;
-                    case R.id.item_btn:
-                        mActivity.showShortSnack("Certicate view");
-                        break;
-                    default:
-                        mActivity.showShortSnack("Item clicked");
-                        break;
-                }
-            });
-        }
-
         adapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.item_delete_download:
@@ -164,7 +116,57 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     break;
             }
         });
-        adapter.addAll(contents);
+
+    }
+
+    private void enableHeader(){
+
+        allDownloadStatusIcon.set(R.drawable.t_icon_done);
+        description.set(aboutComponent.getDisplayName() + "\n\n" +
+                "अकसर शिक्षक होने के नाते हम अपनी कक्षाओं को रोचक बनाने की चुनौतियों से जूझते हैं| हम अलग-अलग गतिविधियाँ अपनाते हैं ताकि बच्चे मनोरंजक तरीकों से सीख सकें| लेकिन ऐसा करना हमेशा आसान नहीं होता| यह कोर्स एक कोशिश है जहां हम ‘गतिविधि क्या है’, ‘कैसी गतिविधियाँ चुनी जायें?’ और इन्हें कराने में क्या-क्या मुश्किलें आ सकती हैं, के बारे में बात कर रहे हैं| इस कोर्स में इन पहलुओं को टटोलने के लिए प्राइमरी कक्षा के EVS (पर्यावरण विज्ञान) विषय के उदाहरण लिए गए हैं| \n" +
+                        "\n" +
+                        "इस कोर्स को पर्यावरण-विज्ञान पढ़ानेवाले शिक्षक और वे शिक्षक जो ‘गतिविधियों को कक्षा में कैसे कराया जाये’ जानना चाहते हैं, कर सकते हैं| आशा है इस कोर्स को पढ़ने के बाद आपके लिए कक्षा में गतिविधियाँ कराना आसान हो जाएगा|"
+        );
+
+        adapter.setHeaderLayout(R.layout.t_row_course_material_header);
+        adapter.setHeaderClickListener(v -> {
+            switch (v.getId()) {
+                case R.id.course_like_image:
+                    like();
+                    break;
+                case R.id.course_bookmark_image:
+                    bookmark();
+                    break;
+                case R.id.course_download_image:
+                    mActivity.showShortSnack("Course download");
+                    break;
+            }
+        });
+
+    }
+
+    private void enableFooter(){
+
+        footerImageUrl.set("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+        footerTitleVisible.set(true);
+        footerTitle.set(assessmentComponent.getDisplayName());
+        footerDownloadIcon.set(R.drawable.t_icon_download);
+        footerBtnText.set(mActivity.getString(R.string.assessment));
+
+        adapter.setFooterLayout(R.layout.t_row_course_material_footer);
+        adapter.setFooterClickListener(v -> {
+            switch (v.getId()) {
+                case R.id.item_delete_download:
+                    mActivity.showShortSnack("Item delete");
+                    break;
+                case R.id.item_btn:
+                    mActivity.showShortSnack("Certicate view");
+                    break;
+                default:
+                    mActivity.showShortSnack("Item clicked");
+                    break;
+            }
+        });
 
     }
 
@@ -241,14 +243,60 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     private void populateData(CourseComponent component){
 
-
+        adapter.setData(component);
 
     }
 
-    public class CourseMaterialAdapter extends BaseRecyclerAdapter<Content> {
+    public class CourseMaterialAdapter extends BaseRecyclerAdapter<CourseComponent> {
+
+        private CourseComponent rootComponent;
+        private int numOfTotalUnits = 0;
+        private List<CourseComponent> components;
+
+        public CourseMaterialAdapter() {
+            components = new ArrayList<>();
+        }
+
+        private void setData(CourseComponent component){
+            rootComponent = component;
+            if (rootComponent != null){
+                List<IBlock> children = rootComponent.getChildren();
+                this.numOfTotalUnits = children.size();
+
+                for (IBlock block : children) {
+                    CourseComponent comp = (CourseComponent) block;
+
+                    if (comp.isContainer()){
+                        for (IBlock childBlock : comp.getChildren()) {
+                            CourseComponent child = (CourseComponent) childBlock;
+                            if (child.getDisplayName().contains("अपनी समझ")){
+                                assessmentComponent = child;
+                                enableFooter();
+                            } else if (child.getDisplayName().contains("कोर्स के बारे में")){
+                                aboutComponent = child;
+                                enableHeader();
+                            } else {
+                                components.add(child);
+                            }
+                        }
+                    }else {
+                        if (comp.getDisplayName().contains("अपनी समझ")){
+                            assessmentComponent = comp;
+                            enableFooter();
+                        } else if (comp.getDisplayName().contains("कोर्स के बारे में")){
+                            aboutComponent = comp;
+                            enableHeader();
+                        } else {
+                            components.add(comp);
+                        }
+                    }
+                }
+            }
+            addAll(components);
+        }
 
         @Override
-        public void onBind(ViewDataBinding binding, Content item, OnHeaderClickListener headerClickListener, OnFooterClickListener footerClickListener, OnTaItemClickListener<Content> itemClickListener) {
+        public void onBind(ViewDataBinding binding, CourseComponent item, OnHeaderClickListener headerClickListener, OnFooterClickListener footerClickListener, OnTaItemClickListener<CourseComponent> itemClickListener) {
 
             if (binding instanceof TRowCourseMaterialHeaderBinding) {
                 TRowCourseMaterialHeaderBinding headerBinding = (TRowCourseMaterialHeaderBinding) binding;
@@ -302,7 +350,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         .load("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png")
                         .placeholder(R.drawable.placeholder_course_card_image)
                         .into(itemBinding.itemImage);
-                itemBinding.itemTitle.setText("Scorm block");
+                itemBinding.itemTitle.setText(item.getDisplayName());
 
                 itemBinding.itemDeleteDownload.setOnClickListener(v -> {
                     if (itemClickListener != null) {

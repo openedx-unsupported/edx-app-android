@@ -5,20 +5,21 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.exception.CourseContentNotValidException;
-import org.edx.mobile.http.notifications.FullScreenErrorNotification;
-import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
+import org.edx.mobile.model.course.HasDownloadEntry;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
@@ -59,7 +60,6 @@ import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.utils.RxUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.common.TaskProgressCallback;
 
 
 import java.util.ArrayList;
@@ -68,7 +68,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import io.reactivex.Observable;
 import retrofit2.Call;
 
@@ -97,6 +96,9 @@ public class DataManager extends BaseRoboInjector {
 
     @com.google.inject.Inject
     private CourseAPI courseApi;
+
+    @com.google.inject.Inject
+    private VideoDownloadHelper downloadManager;
 
     private AppPref mAppPref;
     private LoginPrefs loginPrefs;
@@ -915,6 +917,18 @@ public class DataManager extends BaseRoboInjector {
                 courseId, courseComponentId);
         courseComponent = cached != null ? cached : courseComponent;
         return courseComponent;
+    }
+
+    public void downloadSingle(DownloadEntry downloadEntry,
+                               FragmentActivity activity,
+                               VideoDownloadHelper.DownloadManagerCallback callback){
+        downloadManager.downloadVideo(downloadEntry, activity, callback);
+    }
+
+    public void downloadMultiple(List<? extends HasDownloadEntry> downloadEntries,
+                                 FragmentActivity activity,
+                                 VideoDownloadHelper.DownloadManagerCallback callback){
+        downloadManager.downloadVideos(downloadEntries, activity, callback);
     }
 }
 

@@ -45,6 +45,9 @@ public final class DbStructure {
         public static final String UNIT_URL = "unit_url";
         public static final String VIDEO_FOR_WEB_ONLY = "video_for_web_only";
 
+        //for differnciating content (wordpress,scrom,pdf)
+        public static final String TYPE = "type";
+
 
         //table for assessment learning history
         public static final String ASSESSMENT_TB_ID = "_id";

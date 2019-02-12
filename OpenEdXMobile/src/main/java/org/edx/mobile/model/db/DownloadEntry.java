@@ -37,6 +37,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public String url_low_quality;
     public String url_youtube;
     public long dmId = -1;
+    public String type;
     // enrollment id
     public String eid;
     public String chapter;

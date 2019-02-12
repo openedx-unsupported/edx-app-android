@@ -52,6 +52,7 @@ public class DatabaseModelFactory {
         de.isCourseActive = c.getInt(c.getColumnIndex(DbStructure.Column.IS_COURSE_ACTIVE));
         de.isVideoForWebOnly = c.getInt(c.getColumnIndex(DbStructure.Column.VIDEO_FOR_WEB_ONLY)) == 1;
         de.lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
+        de.type = c.getString(c.getColumnIndex(DbStructure.Column.TYPE));
 
         return de;
     }

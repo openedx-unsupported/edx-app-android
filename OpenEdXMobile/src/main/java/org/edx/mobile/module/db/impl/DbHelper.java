@@ -60,6 +60,7 @@ class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.LAST_PLAYED_OFFSET     + " INTEGER, "
                 + DbStructure.Column.IS_COURSE_ACTIVE       + " BOOLEAN, "
                 + DbStructure.Column.UNIT_URL               + " TEXT, "
+                + DbStructure.Column.TYPE               + " TEXT, "
                 + DbStructure.Column.VIDEO_FOR_WEB_ONLY     + " BOOLEAN "
                 + ")";
         db.execSQL(sql);
