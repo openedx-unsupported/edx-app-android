@@ -12,6 +12,9 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
+import org.edx.mobile.tta.scorm.ScormData;
 
 /**
  * Model Factory class for the database models.
@@ -112,6 +115,33 @@ public class DatabaseModelFactory {
         e.transcript = vrm.transcripts;
         e.lmsUrl = block.getBlockUrl();
         e.isVideoForWebOnly = vrm.onlyOnWeb;
+        return e;
+    }
+
+    public static VideoModel getModel(ScormData scormData, ScormBlockModel block) {
+        DownloadEntry e = new DownloadEntry();
+        //FIXME - current database schema is not suitable for arbitary level of course structure tree
+        //solution - store the navigation path info in into one column field in the database,
+        //rather than individual column fields.
+        BlockPath path = block.getPath();
+        e.chapter = path.get(1) == null ? "" : path.get(1).getDisplayName();
+        e.section = path.get(2) == null ? "" : path.get(2).getDisplayName();
+        IBlock root = block.getRoot();
+        e.eid = root.getCourseId();
+//        e.duration = scormData.duration;
+//        final VideoInfo preferredVideoInfo = scormData.encodedVideos.getPreferredVideoInfoForDownloading();
+//        e.size = preferredVideoInfo.fileSize;
+        e.title = block.getDisplayName();
+//        e.url = preferredVideoInfo.url;
+//        e.url_hls = getVideoNetworkUrlOrNull(scormData.encodedVideos.hls);
+//        e.url_high_quality = getVideoNetworkUrlOrNull(scormData.encodedVideos.mobileHigh);
+//        e.url_low_quality = getVideoNetworkUrlOrNull(scormData.encodedVideos.mobileLow);
+//        e.url_youtube = getVideoNetworkUrlOrNull(scormData.encodedVideos.youtube);
+        e.videoId = block.getId();
+//        e.transcript = scormData.transcripts;
+        e.lmsUrl = block.getBlockUrl();
+//        e.isVideoForWebOnly = scormData.onlyOnWeb;
+        e.type = DownloadType.SCORM.name();
         return e;
     }
 

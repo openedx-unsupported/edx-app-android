@@ -19,11 +19,13 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.IBlock;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.ui.base.BaseRecyclerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -38,6 +40,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private EnrolledCoursesResponse course;
     private CourseComponent assessmentComponent;
     private CourseComponent aboutComponent;
+    private List<ScormBlockModel> remainingScorms;
 
     public CourseMaterialAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -138,7 +141,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     bookmark();
                     break;
                 case R.id.course_download_image:
-                    mActivity.showShortSnack("Course download");
+                    downloadAllRemaining();
                     break;
             }
         });
@@ -217,6 +220,39 @@ public class CourseMaterialViewModel extends BaseViewModel {
         });
     }
 
+    private void downloadAllRemaining(){
+
+        mDataManager.downloadMultiple(remainingScorms, mActivity,
+                new VideoDownloadHelper.DownloadManagerCallback() {
+                    @Override
+                    public void onDownloadStarted(Long result) {
+                        Log.d("Download", "Started " + result);
+                    }
+
+                    @Override
+                    public void onDownloadFailedToStart() {
+                        Log.d("Download", "FailedToStart");
+                    }
+
+                    @Override
+                    public void showProgressDialog(int numDownloads) {
+                        Log.d("Download", "showProgressDialog " + numDownloads);
+                    }
+
+                    @Override
+                    public void updateListUI() {
+                        Log.d("Download", "updateListUI");
+                    }
+
+                    @Override
+                    public boolean showInfoMessage(String message) {
+                        Log.d("Download", "showInfoMessage " + message);
+                        return false;
+                    }
+                });
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -258,6 +294,11 @@ public class CourseMaterialViewModel extends BaseViewModel {
         }
 
         private void setData(CourseComponent component){
+            if (remainingScorms == null){
+                remainingScorms = new ArrayList<>();
+            } else {
+                remainingScorms.clear();
+            }
             rootComponent = component;
             if (rootComponent != null){
                 List<IBlock> children = rootComponent.getChildren();
@@ -277,6 +318,13 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 enableHeader();
                             } else {
                                 components.add(child);
+                            }
+
+                            if (child.isContainer()){
+                                CourseComponent childComp = (CourseComponent) child.getChildren().get(0);
+                                if (childComp instanceof ScormBlockModel){
+                                    remainingScorms.add((ScormBlockModel) childComp);
+                                }
                             }
                         }
                     }else {

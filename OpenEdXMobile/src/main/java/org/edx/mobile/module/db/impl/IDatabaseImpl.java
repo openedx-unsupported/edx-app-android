@@ -306,6 +306,46 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         return enqueue(op);
     }
 
+    //Added by Arjun to get downloaded scrom conut in device
+    @Override
+    public Integer getDownloadedScromCountByCourse(String courseId,
+                                                   final DataCallback<Integer> callback) {
+        DbOperationGetCount op = new DbOperationGetCount(true, DbStructure.Table.DOWNLOADS,
+                new String[]{DbStructure.Column.VIDEO_ID},
+
+
+                DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "+DbStructure.Column.FILEPATH+"=? AND "
+                        + DbStructure.Column.USERNAME + "=?",
+
+
+                new String[]{courseId, String.valueOf(DownloadedState.DOWNLOADED.ordinal()),"Scrom",
+                        username()}, null);
+
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+
+
+    //Added by Arjun to get downloaded Pdf conut in device
+    @Override
+    public Integer getDownloadedPdfCountByCourse(String courseId,
+                                                 final DataCallback<Integer> callback) {
+        DbOperationGetCount op = new DbOperationGetCount(true, DbStructure.Table.DOWNLOADS,
+                new String[]{DbStructure.Column.VIDEO_ID},
+
+
+                DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "+DbStructure.Column.FILEPATH+"=? AND "
+                        + DbStructure.Column.USERNAME + "=?",
+
+
+                new String[]{courseId, String.valueOf(DownloadedState.DOWNLOADED.ordinal()),"Pdf",
+                        username()}, null);
+
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
     @Override
     public Integer getVideosCountBySection(String enrollmentId, String chapter,
                                            String section, final DataCallback<Integer> callback) {
@@ -447,6 +487,22 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationDelete op = new DbOperationDelete(DbStructure.Table.DOWNLOADS,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[]{video.getVideoId(), username});
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    //Arjun:To remove scrom entry from db
+    @Override
+    public Integer deleteScromEntryByScromId(String scormBlockId, DataCallback<Integer> callback) {
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.Column.DOWNLOADED, DownloadedState.ONLINE.ordinal());
+        values.put(DbStructure.Column.DM_ID, -1);
+        values.put(DbStructure.Column.FILEPATH, "");
+        values.put(DbStructure.Column.VIDEO_ID, "");
+
+        DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
+                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+                new String[]{scormBlockId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }

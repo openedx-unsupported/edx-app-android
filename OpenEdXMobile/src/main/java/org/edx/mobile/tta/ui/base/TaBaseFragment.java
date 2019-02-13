@@ -54,6 +54,8 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == this.requestCode && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
             onPermissionGranted(permissions, requestCode);
+        } else {
+            onPermissionDenied(permissions, requestCode);
         }
     }
 

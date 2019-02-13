@@ -3,6 +3,7 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import com.google.inject.Singleton;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
@@ -27,6 +29,8 @@ import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.prefs.VideoPrefs;
+import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.Sha1Util;
@@ -62,7 +66,17 @@ public class Storage implements IStorage {
 
 
     public long addDownload(VideoModel model) {
-        if(model.getVideoUrl()==null||model.getVideoUrl().length()<=0){
+        if((model.getVideoUrl()==null||model.getVideoUrl().length()<=0) && model.getFilePath()!=null &&
+                (!model.getFilePath().equalsIgnoreCase(String.valueOf(DownloadType.SCORM)) ||
+                        !model.getFilePath().equalsIgnoreCase(String.valueOf(DownloadType.PDF)) )){
+            return -1;
+        }
+        else if(model!=null && model.getFilePath()!=null &&(model.getFilePath().equalsIgnoreCase(String.valueOf(DownloadType.SCORM)) ||
+                model.getFilePath().equalsIgnoreCase(String.valueOf(DownloadType.PDF))))
+        {
+            model.setDownloadedStateForScrom();
+
+            db.addVideoData(model, null);
             return -1;
         }
 
@@ -87,10 +101,15 @@ public class Storage implements IStorage {
             final File downloadDirectory = pref.getDownloadDirectory();
             if (downloadDirectory == null) return -1;
 
+            long dmid=-1;
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
-            long dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
-                    downloadPreference, model.getTitle());
+            if (model.getattachType()){
+                dmid = dm.addMXDownload(downloadDirectory, model.getVideoUrl(), model.getattachType());
+            } else {
+                dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
+                        downloadPreference, model.getTitle());
+            }
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager
                 return -1;
@@ -197,6 +216,14 @@ public class Storage implements IStorage {
             deleteFile(model.getFilePath());
         }
         return downloadsRemoved;
+    }
+
+    //remove scorm item from db
+    @Override
+    public int removeDownloadedScromEntry(String blockId) {
+        int videosDeleted = db.deleteScromEntryByScromId(blockId, null);
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+        return videosDeleted;
     }
 
     /**
@@ -369,6 +396,16 @@ public class Storage implements IStorage {
     }
 
     @Override
+    public VideoModel getDownloadEntryFromScormModel(ScormBlockModel block) {
+        VideoModel video = db.getVideoEntryByVideoId(block.getId(), null);
+        if (video != null) {
+            return video;
+        }
+
+        return DatabaseModelFactory.getModel(block.getData(), block);
+    }
+
+    @Override
     public NativeDownloadModel getNativeDownload(long dmId) {
         return dm.getDownload(dmId);
     }
@@ -531,5 +568,63 @@ public class Storage implements IStorage {
         } catch (Exception ex) {
             logger.error(ex);
         }
+    }
+
+    @Nullable
+    private String getUsername() {
+        String ret = null;
+        ProfileModel profile = pref.getProfile();
+        if (profile != null) {
+            ret = profile.username;
+        }
+
+        return ret;
+    }
+
+    @NonNull
+    public Integer  getDownloadedScromCount () throws Exception
+    {
+        String username = getUsername();
+        Integer allCoursesScromCount=0;
+
+        /*if (username != null) {
+            for (EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, true, context)) {
+                int scromCount = db.getDownloadedScromCountByCourse(
+                        enrolledCoursesResponse.getCourse().getId(), null);
+
+                if (scromCount > 0) {
+                    allCoursesScromCount=allCoursesScromCount+scromCount;
+                }
+            }
+
+            for (EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, true, context)) {
+                int PdfCount = db.getDownloadedPdfCountByCourse(
+                        enrolledCoursesResponse.getCourse().getId(), null);
+
+                if (PdfCount > 0) {
+                    allCoursesScromCount=allCoursesScromCount+PdfCount;
+                }
+            }
+        }*/
+        return allCoursesScromCount;
+    }
+
+    @NonNull
+    public Integer  getDownloadedPdfCount () throws Exception
+    {
+        String username = getUsername();
+        Integer allCoursesScromCount=0;
+
+        /*if (username != null) {
+            for (EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, true, context)) {
+                int scromCount = db.getDownloadedScromCountByCourse(
+                        enrolledCoursesResponse.getCourse().getId(), null);
+
+                if (scromCount > 0) {
+                    allCoursesScromCount=allCoursesScromCount+scromCount;
+                }
+            }
+        }*/
+        return allCoursesScromCount;
     }
 }

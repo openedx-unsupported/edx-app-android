@@ -12,6 +12,7 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.view_model.LibraryTabViewModel;
+import org.edx.mobile.util.PermissionsUtil;
 
 public class LibraryTab extends TaBaseFragment {
 
@@ -41,5 +42,14 @@ public class LibraryTab extends TaBaseFragment {
                 .getRoot();
 
         return view;
+    }
+
+    @Override
+    public void onPermissionGranted(String[] permissions, int requestCode) {
+        switch (requestCode){
+            case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
+                viewModel.showCourseDashboard();
+                break;
+        }
     }
 }

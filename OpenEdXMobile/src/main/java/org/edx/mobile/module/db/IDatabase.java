@@ -208,6 +208,12 @@ public interface IDatabase {
     int getDownloadedVideosCountForSection(String enrollmentId, String chapter, String section,
                                            final DataCallback<Integer> callback);
 
+    //Added by Arjun to get downloaded scrom count in device
+    Integer getDownloadedScromCountByCourse(String courseId, DataCallback<Integer> callback);
+
+    //Added by Arjun to get downloaded Pdf count in device
+    Integer getDownloadedPdfCountByCourse(String courseId, DataCallback<Integer> callback);
+
     /**
      * get number of videos marked as webOnly
      *
@@ -293,6 +299,8 @@ public interface IDatabase {
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
     Integer deleteVideoByVideoId(VideoModel video, String username, DataCallback<Integer> callback);
+
+    Integer deleteScromEntryByScromId(String scormBlockId, DataCallback<Integer> callback);
 
     /**
      * Returns if a IVideoModel with the same video URL is downloaded

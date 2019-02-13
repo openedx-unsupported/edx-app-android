@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.ui.library.view_model;
 
+import android.Manifest;
 import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.graphics.Rect;
@@ -36,6 +37,7 @@ import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.ui.course.CourseDashboardFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
+import org.edx.mobile.util.PermissionsUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +49,7 @@ public class LibraryTabViewModel extends BaseViewModel {
 
     private Category category;
     private List<ContentList> contentLists;
+    private Content selectedContent;
 
     private Map<Long, List<Content>> contentListMap;
 
@@ -126,6 +129,19 @@ public class LibraryTabViewModel extends BaseViewModel {
         adapter.setItems(contentLists);
     }
 
+    public void showCourseDashboard(){
+
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                CourseDashboardFragment.newInstance(selectedContent),
+                R.id.dashboard_fragment,
+                CourseDashboardFragment.TAG,
+                true,
+                null
+        );
+
+    }
+
     public class ListingRecyclerAdapter extends MxBaseAdapter<ContentList> {
         public ListingRecyclerAdapter(Context context) {
             super(context);
@@ -181,14 +197,17 @@ public class LibraryTabViewModel extends BaseViewModel {
                     if (item.getSource().getType().equalsIgnoreCase("edx") ||
                             item.getSource().getType().equalsIgnoreCase("course")
                     ) {
-                        ActivityUtil.replaceFragmentInActivity(
+                        selectedContent = item;
+                        mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                        /*ActivityUtil.replaceFragmentInActivity(
                                 mActivity.getSupportFragmentManager(),
                                 CourseDashboardFragment.newInstance(item),
                                 R.id.dashboard_fragment,
                                 CourseDashboardFragment.TAG,
                                 true,
                                 null
-                        );
+                        );*/
 //                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();

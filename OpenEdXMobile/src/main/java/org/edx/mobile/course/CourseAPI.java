@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.google.gson.JsonArray;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -47,6 +48,8 @@ import org.edx.mobile.tta.scorm.ScormManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -692,4 +695,35 @@ public class CourseAPI {
         // private EncodingsModel encodings;
         return model;
     }
+
+    /*public
+    @NonNull
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache,Context ctx) throws Exception {
+
+        String json = null;
+        List<EnrolledCoursesResponse> ret = null;
+        final String cacheKey = getUserEnrolledCoursesURL(username);
+
+        //if only cash required
+        try {
+            json = cache.get(cacheKey);
+        } catch (IOException | NoSuchAlgorithmException e) {
+            logger.debug(e.toString());
+        }
+
+        //if cash is empty get it from web
+        if (json == null)
+        {
+            json=getFromUserEnrolledCoursesfromWeb(username,ctx);
+        }
+
+        // We aren't use TypeToken here because it throws NoClassDefFoundError
+        final JsonArray ary = gson.fromJson(json, JsonArray.class);
+        //final List<EnrolledCoursesResponse> ret = new ArrayList<>(ary.size());
+        ret = new ArrayList<>(ary.size());
+        for (int cnt = 0; cnt < ary.size(); ++cnt) {
+            ret.add(gson.fromJson(ary.get(cnt), EnrolledCoursesResponse.class));
+        }
+        return ret;
+    }*/
 }

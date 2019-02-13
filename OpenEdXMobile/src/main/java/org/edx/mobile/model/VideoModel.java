@@ -77,5 +77,10 @@ public interface VideoModel {
      * @param download
      */
     void setDownloadingInfo(NativeDownloadModel download);
-    
+
+    void setDownloadedStateForScrom();
+
+    boolean getattachType();
+
+    String getDownloadType();
 }

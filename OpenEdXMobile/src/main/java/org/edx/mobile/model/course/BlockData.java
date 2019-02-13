@@ -6,6 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import org.edx.mobile.tta.scorm.ScormData;
+
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
@@ -25,6 +27,8 @@ public class BlockData implements Serializable{
                 return context.deserialize(jsonObject, VideoData.class);
             } else if (jsonObject.has("topic_id")) {
                 return context.deserialize(jsonObject, DiscussionData.class);
+            } else if (jsonObject.has("scorm_data")) {
+                return context.deserialize(jsonObject, ScormData.class);
             }
             return new BlockData();
         }

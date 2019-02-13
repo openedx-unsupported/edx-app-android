@@ -113,6 +113,48 @@ public class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
+    public long addMXDownload(File destFolder, String url, boolean attachType) {
+        long dmid = -1;
+
+        //Need to check first if the download manager service is enabled
+        if(!isDownloadManagerEnabled())
+            return dmid;
+
+        try {
+            // skip if URL is not valid
+            if(url == null) {
+                // URL is null
+                return dmid;
+            }
+            url = url.trim();
+            if (url.length() == 0) {
+                // URL is empty
+                return dmid;
+            }
+
+            logger.debug("Starting download for mx download: " + url);
+
+            String fileName = Sha1Util.SHA1(url);
+            if(attachType) {
+                String[] arr = url.split("\\.");
+                fileName += "." + arr[arr.length - 1];
+            }
+            Uri target = Uri.fromFile(new File(destFolder, fileName));
+            Request request = new Request(Uri.parse(url));
+            request.setDestinationUri(target);
+            request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
+            request.setVisibleInDownloadsUi(false);
+            request.setAllowedNetworkTypes(Request.NETWORK_WIFI | Request.NETWORK_MOBILE);
+
+            dmid = dm.enqueue(request);
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        return dmid;
+    }
+
+    @Override
     public synchronized int removeDownloads(long... dmids) {
         //Need to check first if the download manager service is enabled
         if (isDownloadManagerEnabled()) {

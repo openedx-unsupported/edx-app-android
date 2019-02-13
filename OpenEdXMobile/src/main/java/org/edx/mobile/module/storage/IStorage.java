@@ -10,6 +10,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
 
 import java.util.List;
 
@@ -46,6 +47,8 @@ public interface IStorage {
      * and then calls the {@link #removeDownload(VideoModel)} method for each video
      */
     void removeAllDownloads();
+
+    int removeDownloadedScromEntry(String blockId);
 
     /**
      * This method fetches all unenrolledVideos from the DB.
@@ -117,6 +120,11 @@ public interface IStorage {
      * @return
      */
     VideoModel getDownloadEntryFromVideoModel(VideoBlockModel block);
+
+    VideoModel getDownloadEntryFromScormModel(ScormBlockModel block);
+
+    @NonNull
+    Integer  getDownloadedScromCount() throws Exception;
 
     /**
      * Returns NativeDownload Entry for the given DMID

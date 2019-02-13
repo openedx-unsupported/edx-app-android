@@ -37,7 +37,10 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public String url_low_quality;
     public String url_youtube;
     public long dmId = -1;
+
     public String type;
+    public boolean attachType;
+
     // enrollment id
     public String eid;
     public String chapter;
@@ -128,6 +131,16 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     @Override
     public String getFilePath() {
         return filepath;
+    }
+
+    @Override
+    public boolean getattachType() {
+        return attachType;
+    }
+
+    @Override
+    public String getDownloadType() {
+        return type;
     }
 
     @Override
@@ -234,6 +247,12 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         // duration can't be updated here
     }
 
+    //added by Arjun for Scrom handeling
+    @Override
+    public void setDownloadedStateForScrom() {
+        downloaded = DownloadedState.DOWNLOADED;
+    }
+
     @Override
     public void setDownloadInfo(VideoModel video) {
         dmId = video.getDmId();
@@ -270,4 +289,112 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
         return getVideoUrl();
     }
+
+    public void setDownloadEntryForScrom(String username,String  title,String  filepath,String  videoId,
+                                         String  url,String  eid,String  chapter,
+                                         String  section,Long  downloadedOn,String type)
+    {
+        this.username=username;
+        this.title=title;
+        //null for fresh download but because we are not changing default behaviour so we put "Scrom" to identify that entry is for scrom
+        this.filepath=filepath;
+
+        //it will be that block which contain data i.e comp.id
+        this.videoId=videoId;
+
+        this.size=0;
+        this.duration=0;
+
+        this.url_high_quality="";
+        this.url_low_quality="";
+        this.url_youtube="";
+        this.watched=WatchedState.UNWATCHED;
+        this.downloaded=DownloadedState.DOWNLOADED;
+        this.dmId=-1;
+
+        //it will be root course .courseId.
+        this.eid=eid;
+
+        //it will be chapter name
+        this.chapter=chapter;
+
+        //it will be content type
+        this.type=type;
+
+        //it will be section name
+        this.section=section;
+
+        this.lastPlayedOffset=0;
+
+        //lms url or unit url
+        this.url="http://dummyurl";
+
+        this.isCourseActive=1;
+        this.isVideoForWebOnly=false;
+
+        //downloadedOn it will be null for fresh download and set only for update case
+        this.downloadedOn=System.currentTimeMillis();
+    }
+
+    /*public void setDownloadEntryForPost(String  category_id, String  category_name,Post post)
+    {
+        String download_url="";
+        //find the downloaded obj
+        if(post.getFilter()!=null && post.getFilter().size()>0)
+        {
+            for (CustomFilter item:post.getFilter())
+            {
+                if(item==null || TextUtils.isEmpty(item.getName()))
+                    continue;
+
+                if(item.getName().toLowerCase().equals(String.valueOf(MxFilterType.MX_VIDEODOWNLOAD).toLowerCase())
+                        && item.getChoices()!=null && item.getChoices().length > 0)
+                {
+                    download_url=item.getChoices()[0];
+                    break;
+                }
+            }
+        }
+        this.attachType =true;
+        this.username= BrowserUtil.loginPrefs.getUsername();
+        this.title=post.getTitle().getRendered();
+
+        //this.filepath=filepath;
+
+        //need to work on
+        this.videoId=String.valueOf(post.getId());
+        this.size=0;
+        this.duration=0;
+
+        this.url_high_quality=download_url;
+        this.url_low_quality=download_url;
+        this.url=download_url;
+        this.url_youtube="";
+        this.watched=WatchedState.UNWATCHED;
+        this.downloaded=DownloadedState.DOWNLOADED;
+        this.dmId=-1;
+
+        //it will be category id,in which post lies
+        this.eid=category_id;
+
+        //it will be chapter name
+        this.chapter=category_name;
+
+        //it will be content type
+        this.ContentType= String.valueOf(org.tta.mobile.model.ContentType.CONNECTVIDEO);
+
+        //it will be section name
+        this.section=post.getTitle().getRendered();
+
+        this.lastPlayedOffset=0;
+
+        //lms url or unit url
+        this.url=download_url;
+
+        this.isCourseActive=1;
+        this.isVideoForWebOnly=false;
+
+        //downloadedOn it will be null for fresh download and set only for update case
+        this.downloadedOn=0;
+    }*/
 }
