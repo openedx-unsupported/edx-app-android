@@ -113,13 +113,11 @@ public class CourseDashboardViewModel extends BaseViewModel {
                     for (IBlock childBlock : comp.getChildren()) {
                         CourseComponent child = (CourseComponent) childBlock;
 
-                        if (child.isContainer()) {
+                        if (child.getDisplayName().contains("कोर्स के बारे में")) {
                             CourseComponent childComp = (CourseComponent) child.getChildren().get(0);
-                            if (childComp instanceof HtmlBlockModel) {
-                                fragments.add(AuthenticatedWebViewFragment.newInstance(childComp.getBlockUrl()));
-                                titles.add(mActivity.getString(R.string.about));
-                                break;
-                            }
+                            fragments.add(AuthenticatedWebViewFragment.newInstance(childComp.getBlockUrl()));
+                            titles.add(mActivity.getString(R.string.about));
+                            break;
                         }
                     }
                 }
