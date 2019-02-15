@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -104,6 +106,17 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
 
     public void showLongToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public void showAlertDailog(String title, String msg, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(msg)
+                .setPositiveButton("OK", positiveListener);
+        if (negativeListener != null){
+            builder.setNegativeButton("Cancel", negativeListener);
+        }
+        builder.create().show();
     }
 
     /*@SuppressLint("Range")

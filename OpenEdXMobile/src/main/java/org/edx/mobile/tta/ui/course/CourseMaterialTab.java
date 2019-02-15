@@ -45,6 +45,7 @@ public class CourseMaterialTab extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new CourseMaterialViewModel(getActivity(), this, content, courseData);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -54,4 +55,9 @@ public class CourseMaterialTab extends TaBaseFragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unregisterEvnetBus();
+    }
 }

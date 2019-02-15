@@ -24,6 +24,7 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import okhttp3.HttpUrl;
 import retrofit2.Call;
 
 @Singleton
@@ -103,5 +104,9 @@ public class TaAPI {
 
     public Call<EnrolledCoursesResponse> userEnrollmentCourseFromCache(String courseId) {
         return taService.userEnrollmentCourseFromCache(courseId);
+    }
+
+    public Call<Void> getHtmlFromUrl(HttpUrl absoluteUrl) {
+        return taService.getHtmlFromUrl(absoluteUrl);
     }
 }

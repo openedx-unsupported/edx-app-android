@@ -16,15 +16,19 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
+import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
 import org.edx.mobile.tta.data.local.db.TADatabase;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
@@ -40,6 +44,8 @@ import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.tta.exception.TaException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
+import org.edx.mobile.tta.task.GetHtmlFromUrlTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
@@ -65,11 +71,18 @@ import org.edx.mobile.util.NetworkUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import okhttp3.ConnectionPool;
+import okhttp3.Dispatcher;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
+import retrofit2.Retrofit;
 
 import static org.edx.mobile.tta.Constants.TA_DATABASE;
 
@@ -117,7 +130,7 @@ public class DataManager extends BaseRoboInjector {
         if (mDataManager == null) {
             synchronized (DataManager.class) {
                 if (mDataManager == null) {
-                    mDataManager = new DataManager(context, RetrofitServiceUtil.create(),
+                    mDataManager = new DataManager(context, RetrofitServiceUtil.create(context, true),
                             new LocalDataSource(Room.databaseBuilder(context, TADatabase.class, TA_DATABASE).fallbackToDestructiveMigration()
                                     .build()));
                 }
@@ -919,16 +932,90 @@ public class DataManager extends BaseRoboInjector {
         return courseComponent;
     }
 
-    public void downloadSingle(DownloadEntry downloadEntry,
+    public void downloadSingle(ScormBlockModel scorm,
                                FragmentActivity activity,
                                VideoDownloadHelper.DownloadManagerCallback callback){
-        downloadManager.downloadVideo(downloadEntry, activity, callback);
+        DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
+        de.url = scorm.getDownloadUrl();
+        de.title = scorm.getParent().getDisplayName();
+        downloadManager.downloadVideo(de, activity, callback);
     }
 
     public void downloadMultiple(List<? extends HasDownloadEntry> downloadEntries,
                                  FragmentActivity activity,
                                  VideoDownloadHelper.DownloadManagerCallback callback){
         downloadManager.downloadVideos(downloadEntries, activity, callback);
+    }
+
+    public void getDownloadedStateForVideoId(String videoId, DataCallback<DownloadEntry.DownloadedState> callback){
+        edxEnvironment.getDatabase().getDownloadedStateForVideoId(videoId, callback);
+    }
+
+    public boolean scormNotDownloaded(ScormBlockModel scorm){
+        return getScormStatus(scorm).equals(ScormStatus.not_downloaded);
+    }
+
+    public ScormStatus getScormStatus(ScormBlockModel scorm){
+
+        DownloadEntry entry = scorm.getDownloadEntry(edxEnvironment.getStorage());
+        if (entry == null || entry.downloaded.equals(DownloadEntry.DownloadedState.ONLINE)){
+            return ScormStatus.not_downloaded;
+        } else if (entry.downloaded.equals(DownloadEntry.DownloadedState.DOWNLOADING)){
+            return ScormStatus.downloading;
+        } else if (entry.watched.equals(DownloadEntry.WatchedState.UNWATCHED)) {
+            return ScormStatus.downloaded;
+        } else if (entry.watched.equals(DownloadEntry.WatchedState.PARTIALLY_WATCHED)) {
+            return ScormStatus.watching;
+        } else {
+            return ScormStatus.watched;
+        }
+
+    }
+
+    public void deleteScorm(ScormBlockModel scormBlockModel){
+        DownloadEntry de = scormBlockModel.getDownloadEntry(edxEnvironment.getStorage());
+        de.url = scormBlockModel.getDownloadUrl();
+        de.title = scormBlockModel.getParent().getDisplayName();
+        edxEnvironment.getStorage().removeDownload(de);
+    }
+
+    public void getHtmlFromUrl(HttpUrl absoluteUrl, OnResponseCallback<String> callback){
+        if (NetworkUtil.isConnected(context)){
+
+            new Task<HtmlResponse>(context) {
+                @Override
+                public HtmlResponse call() throws Exception {
+                    IRemoteDataSource source = RetrofitServiceUtil.create(context, false);
+                    return source.getHtmlFromUrl(absoluteUrl).execute().body();
+                }
+
+                @Override
+                protected void onSuccess(HtmlResponse htmlResponse) throws Exception {
+                    super.onSuccess(htmlResponse);
+                    callback.onSuccess(htmlResponse.getContent());
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+            /*new GetHtmlFromUrlTask(context, absoluteUrl){
+                @Override
+                protected void onSuccess(Void s) throws Exception {
+                    super.onSuccess(s);
+                    callback.onSuccess(s.toString());
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();*/
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
     }
 }
 

@@ -31,4 +31,8 @@ public class BaseViewModel {
     public void onResume(){
 
     }
+
+    public DataManager getDataManager(){
+        return mDataManager;
+    }
 }

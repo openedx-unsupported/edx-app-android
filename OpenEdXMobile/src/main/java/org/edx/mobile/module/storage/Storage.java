@@ -36,9 +36,15 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.view.BulkDownloadFragment;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import de.greenrobot.event.EventBus;
 
@@ -74,7 +80,7 @@ public class Storage implements IStorage {
         else if(model!=null && model.getFilePath()!=null &&(model.getFilePath().equalsIgnoreCase(String.valueOf(DownloadType.SCORM)) ||
                 model.getFilePath().equalsIgnoreCase(String.valueOf(DownloadType.PDF))))
         {
-            model.setDownloadedStateForScrom();
+            model.setDownloadedStateForScrom(DownloadEntry.DownloadedState.DOWNLOADED);
 
             db.addVideoData(model, null);
             return -1;
@@ -105,7 +111,8 @@ public class Storage implements IStorage {
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
             if (model.getattachType()){
-                dmid = dm.addMXDownload(downloadDirectory, model.getVideoUrl(), model.getattachType());
+                dmid = dm.addMXDownload(downloadDirectory, model.getVideoUrl(),
+                        model.getattachType(), model.getTitle());
             } else {
                 dmid = dm.addDownload(downloadDirectory, model.getVideoUrl(),
                         downloadPreference, model.getTitle());
@@ -477,6 +484,9 @@ public class Storage implements IStorage {
                     }
                     db.updateDownloadCompleteInfoByDmId(dmId, e, null);
                     callback.sendResult(e);
+                    if (e.filepath.contains(".zip")) {
+                        unpackZip(e.filepath);
+                    }
                     EventBus.getDefault().post(new DownloadCompletedEvent());
                 }
 
@@ -488,6 +498,72 @@ public class Storage implements IStorage {
             callback.sendException(e);
             logger.error(e);
         }
+    }
+
+    private boolean unpackZip(String file)
+    {
+        InputStream is;
+        ZipInputStream zis;
+
+        File withExt = new File(file);
+        try
+        {
+
+            String filename;
+            String folder = withExt.getParent();
+            String name = withExt.getName().substring(0, withExt.getName().length()-4);
+
+            is = new FileInputStream(withExt.getAbsoluteFile());
+            zis = new ZipInputStream(new BufferedInputStream(is));
+            ZipEntry ze;
+            byte[] buffer = new byte[1024];
+            int count;
+
+            while ((ze = zis.getNextEntry()) != null)
+            {
+
+                filename = ze.getName();
+
+
+                if (ze.isDirectory()) {
+                    File fmd = new File(folder+"/" +name+"/"+ filename);
+
+                    fmd.mkdirs();
+                    continue;
+                }
+
+
+                File tmp = new File(folder+"/" +name+"/"+ filename);
+
+                File foldertmp = tmp.getParentFile();
+                if(!foldertmp.exists()){
+                    foldertmp.mkdirs();
+                }
+
+                FileOutputStream fout = new FileOutputStream(folder+"/" +name+"/"+ filename);
+
+
+                while ((count = zis.read(buffer)) != -1)
+                {
+                    fout.write(buffer, 0, count);
+                }
+
+                fout.close();
+                zis.closeEntry();
+            }
+
+            zis.close();
+
+            withExt.delete();
+        }
+        catch(IOException e)
+        {
+            withExt.delete();
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     /**

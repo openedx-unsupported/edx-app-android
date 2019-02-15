@@ -3,9 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.course.view_model.CourseMaterialViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -16,59 +19,67 @@
         android:paddingBottom="@dimen/_30px">
 
         <TextView
+            android:id="@+id/course_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/course_description"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginEnd="@dimen/_20px"
+            android:fontFamily="@font/hind_regular"
             android:text="@{viewModel.description}"
             android:textColor="@color/gray_5"
-            android:textSize="14sp"
-            android:fontFamily="@font/hind_regular"
-            android:layout_marginStart="@dimen/_20px"
-            android:layout_marginEnd="@dimen/_20px"/>
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="@dimen/_26px"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/like_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/course_likes"
-                    android:textSize="12sp"
-                    android:textColor="@color/gray_3"
-                    android:fontFamily="@font/hind_medium"
-                    android:layout_gravity="center_vertical"
-                    android:text="@{viewModel.likes}"/>
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/course_like_image"
-                    android:layout_marginStart="3dp"
-                    android:src="@{viewModel.likeIcon}"
-                    android:layout_gravity="center_vertical"
-                    android:paddingBottom="4dp"
-                    android:contentDescription="@string/like" />
+                    <TextView
+                        android:id="@+id/course_likes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/hind_medium"
+                        android:text="@{viewModel.likes}"
+                        android:textColor="@color/gray_3"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/gray_3"
-                    android:fontFamily="@font/hind_medium"
-                    android:layout_marginStart="2dp"
-                    android:text="@string/like"
-                    android:layout_gravity="center_vertical"/>
+                    <ImageView
+                        android:id="@+id/course_like_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="3dp"
+                        android:contentDescription="@string/like"
+                        android:paddingBottom="4dp"
+                        android:src="@{viewModel.likeIcon}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="2dp"
+                        android:fontFamily="@font/hind_medium"
+                        android:text="@string/like"
+                        android:textColor="@color/gray_3"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -76,29 +87,37 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/bookmark_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/course_bookmark_image"
-                    android:layout_marginStart="3dp"
-                    android:src="@{viewModel.bookmarkIcon}"
-                    android:layout_gravity="center_vertical"
-                    android:paddingBottom="4dp"
-                    android:contentDescription="@string/add_to_my_agenda" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/gray_4"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/hind_medium"
-                    android:text="@string/add_to_my_agenda"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="bottom"
-                    android:layout_marginStart="2dp"/>
+                    <ImageView
+                        android:id="@+id/course_bookmark_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="3dp"
+                        android:contentDescription="@string/add_to_my_agenda"
+                        android:paddingBottom="4dp"
+                        android:src="@{viewModel.bookmarkIcon}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="2dp"
+                        android:fontFamily="@font/hind_medium"
+                        android:gravity="bottom"
+                        android:text="@string/add_to_my_agenda"
+                        android:textColor="@color/gray_4"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -106,29 +125,44 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/all_download_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/course_download_image"
-                    android:layout_marginStart="3dp"
-                    android:src="@{viewModel.allDownloadStatusIcon}"
-                    android:layout_gravity="center_vertical"
-                    android:paddingBottom="3dp"
-                    android:contentDescription="@string/download" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/gray_4"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/hind_medium"
-                    android:layout_marginStart="2dp"
-                    android:text="@string/download_all"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="bottom"/>
+                    <org.edx.mobile.view.custom.IconProgressBar
+                        android:id="@+id/loading_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{viewModel.allDownloadProgressVisible ? View.VISIBLE : View.GONE}" />
+
+                    <ImageView
+                        android:id="@+id/course_download_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="3dp"
+                        android:contentDescription="@string/download"
+                        android:paddingBottom="3dp"
+                        android:src="@{viewModel.allDownloadStatusIcon}"
+                        android:visibility="@{viewModel.allDownloadIconVisible ? View.VISIBLE : View.GONE}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="2dp"
+                        android:fontFamily="@font/hind_medium"
+                        android:gravity="bottom"
+                        android:text="@string/download_all"
+                        android:textColor="@color/gray_4"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

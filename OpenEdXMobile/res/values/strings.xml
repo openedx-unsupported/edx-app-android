@@ -722,8 +722,8 @@
     <string name="about">About</string>
     <string name="add_to_my_agenda">Add to my agenda</string>
     <string name="download_all">Download All</string>
-    <string name="viewed">Viewed</string>
-    <string name="viewing">Viewing</string>
+    <string name="viewed"><font color="#2FD233">Viewed</font></string>
+    <string name="viewing"><font color="#FFDB03">Viewing</font></string>
     <string name="assessment">Assessment</string>
     <string name="view_certificate">View Certificate</string>
     <string name="estimated_duration">Estimated duration</string>

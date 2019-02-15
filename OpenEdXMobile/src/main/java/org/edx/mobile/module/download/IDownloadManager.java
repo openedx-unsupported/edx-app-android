@@ -26,7 +26,7 @@ public interface IDownloadManager {
      */
     long addDownload(File destFolder, String url, boolean wifiOnly, String title);
 
-    long addMXDownload(File destFolder, String url,boolean attachType);
+    long addMXDownload(File destFolder, String url,boolean attachType, String title);
 
     /**
      * Cancel downloads and remove them from the download manager.  Each download will be stopped if

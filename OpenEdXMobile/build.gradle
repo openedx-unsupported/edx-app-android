@@ -146,6 +146,7 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-android:${rxLifecycleVersion}"
     implementation "com.trello.rxlifecycle2:rxlifecycle-components:${rxLifecycleVersion}"
 
+    implementation 'org.jsoup:jsoup:1.11.3'
 
     //adding Room ORM for Database
     // database
@@ -291,6 +292,9 @@ android {
 
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
+
+    //MX: Chirag: Used in CourseScormViewActivity
+    useLibrary 'org.apache.http.legacy'
 
     //MVVM Lambda
     dataBinding {

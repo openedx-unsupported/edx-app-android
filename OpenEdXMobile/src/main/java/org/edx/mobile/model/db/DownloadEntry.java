@@ -13,6 +13,7 @@ import org.edx.mobile.model.api.EncodingsModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.util.JavaUtil;
 
 public class DownloadEntry implements SectionItemInterface, VideoModel {
@@ -39,7 +40,6 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public long dmId = -1;
 
     public String type;
-    public boolean attachType;
 
     // enrollment id
     public String eid;
@@ -135,7 +135,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
     @Override
     public boolean getattachType() {
-        return attachType;
+        return type != null && (type.equalsIgnoreCase(DownloadType.SCORM.name()));
     }
 
     @Override
@@ -249,8 +249,8 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
     //added by Arjun for Scrom handeling
     @Override
-    public void setDownloadedStateForScrom() {
-        downloaded = DownloadedState.DOWNLOADED;
+    public void setDownloadedStateForScrom(DownloadedState downloadedState) {
+        downloaded = downloadedState;
     }
 
     @Override

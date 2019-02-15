@@ -70,6 +70,12 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
+                    <org.edx.mobile.view.custom.IconProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/loading_indicator"
+                        android:visibility="gone"/>
+
                     <ImageView
                         android:id="@+id/item_delete_download"
                         android:layout_width="wrap_content"
@@ -85,7 +91,6 @@
                         android:drawablePadding="2dp"
                         android:fontFamily="@font/hind_regular"
                         android:text="@string/viewed"
-                        android:textColor="@color/secondary_green"
                         android:textSize="10sp" />
 
                 </LinearLayout>

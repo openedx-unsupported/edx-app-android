@@ -79,6 +79,10 @@ public class Config {
 
     //TTA
     private static final String TTA_OTP_SENDER_ADDRESS = "TTA_OTP_SENDER_ADDRESS";
+    //Tincan LRS
+    private static final String TINCAN_LRS_URL = "TINCAN_LRS_URL";
+    //Analytics Url
+    private static final String ANALYTICS_STORE_URL = "ANALYTICS_STORE_URL";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -712,8 +716,20 @@ public class Config {
         }
     }
 
+    //TTA
+
     //MX:Arjun For TTA OTP sender url
     public String get_TTA_OTP_SENDER_ADDRESS() {
         return getString(TTA_OTP_SENDER_ADDRESS);
+    }
+
+    //Tincan url
+    public String getTincanLrsUrl() {
+        return getString(TINCAN_LRS_URL);
+    }
+
+    //Analyytics store url
+    public String getAnalyticsStoreUrl() {
+        return getString(ANALYTICS_STORE_URL);
     }
 }

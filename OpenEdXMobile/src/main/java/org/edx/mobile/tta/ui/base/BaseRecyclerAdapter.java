@@ -73,6 +73,13 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<MxView
         return count;
     }
 
+    public int getItemPosition(T item){
+        if (items == null){
+            return -1;
+        }
+        return items.indexOf(item);
+    }
+
     public void setHeaderLayout(int headerLayout) {
         this.headerLayout = headerLayout;
     }

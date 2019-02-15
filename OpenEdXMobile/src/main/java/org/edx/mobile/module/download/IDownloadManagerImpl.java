@@ -113,7 +113,7 @@ public class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public long addMXDownload(File destFolder, String url, boolean attachType) {
+    public long addMXDownload(File destFolder, String url, boolean attachType, String title) {
         long dmid = -1;
 
         //Need to check first if the download manager service is enabled
@@ -142,8 +142,9 @@ public class IDownloadManagerImpl implements IDownloadManager {
             Uri target = Uri.fromFile(new File(destFolder, fileName));
             Request request = new Request(Uri.parse(url));
             request.setDestinationUri(target);
-            request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
-            request.setVisibleInDownloadsUi(false);
+            request.setTitle(title);
+//            request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
+//            request.setVisibleInDownloadsUi(false);
             request.setAllowedNetworkTypes(Request.NETWORK_WIFI | Request.NETWORK_MOBILE);
 
             dmid = dm.enqueue(request);

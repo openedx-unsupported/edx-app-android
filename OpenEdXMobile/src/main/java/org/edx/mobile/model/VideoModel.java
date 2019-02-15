@@ -1,6 +1,7 @@
 package org.edx.mobile.model;
 
 import org.edx.mobile.model.api.TranscriptModel;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 
 /**
@@ -78,7 +79,7 @@ public interface VideoModel {
      */
     void setDownloadingInfo(NativeDownloadModel download);
 
-    void setDownloadedStateForScrom();
+    void setDownloadedStateForScrom(DownloadEntry.DownloadedState downloadedState);
 
     boolean getattachType();
 

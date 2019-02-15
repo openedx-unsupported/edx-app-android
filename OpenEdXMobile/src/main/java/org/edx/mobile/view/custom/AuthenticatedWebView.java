@@ -36,6 +36,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 
@@ -68,6 +69,8 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     private boolean pageIsLoaded;
     private boolean didReceiveError;
     private boolean isManuallyReloadable;
+
+    private OnResponseCallback<String> htmlCallback;
 
     public AuthenticatedWebView(Context context) {
         super(context);
@@ -179,6 +182,10 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         webViewClient.setAllLinksAsExternal(isAllLinksExternal);
     }
 
+    public void setHtmlCallback(OnResponseCallback<String> htmlCallback) {
+        this.htmlCallback = htmlCallback;
+    }
+
     public void loadUrl(boolean forceLoad, @NonNull String url) {
         loadUrlWithJavascript(forceLoad, url, null);
     }
@@ -197,6 +204,9 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
             webView.evaluateJavascript(javascript, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
+                    if (htmlCallback != null){
+                        htmlCallback.onSuccess(value);
+                    }
                     hideLoadingProgress();
                 }
             });

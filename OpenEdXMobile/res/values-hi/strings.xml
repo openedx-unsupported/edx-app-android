@@ -46,8 +46,8 @@
     <string name="course_material">विषय-सूची</string>
     <string name="add_to_my_agenda">अपने लक्ष्य में जोड़ें</string>
     <string name="download_all">पूरा डाउनलोड</string>
-    <string name="viewed">देख लिया है</string>
-    <string name="viewing">देख रहे हैं</string>
+    <string name="viewed"><font color="#2FD233">देख लिया है</font></string>
+    <string name="viewing"><font color="#FFDB03">देख रहे हैं</font></string>
     <string name="assessment">समझ परखें</string>
     <string name="view_certificate">सर्टिफिकेट देखें</string>
     <string name="estimated_duration">अनुमानित अवधि</string>

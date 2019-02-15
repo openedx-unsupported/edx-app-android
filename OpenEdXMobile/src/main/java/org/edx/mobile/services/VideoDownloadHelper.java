@@ -17,6 +17,7 @@ import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.edx.mobile.module.storage.BulkVideosDownloadStartedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.task.EnqueueDownloadTask;
+import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
@@ -88,6 +89,9 @@ public class VideoDownloadHelper {
             if (!TextUtils.isEmpty(v.getDownloadUrl())) {
                 // Prefer download url to download
                 de.url = v.getDownloadUrl();
+                if (v instanceof ScormBlockModel){
+                    de.title = ((ScormBlockModel) v).getParent().getDisplayName();
+                }
             }
             if (null == de
                     || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING

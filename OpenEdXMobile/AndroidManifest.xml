@@ -28,6 +28,9 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <!-- TTA To download without notification -->
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
     <!-- Setup for Code Coverage -->
     <instrumentation
         android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
@@ -357,10 +360,13 @@
             android:windowSoftInputMode="stateHidden | adjustResize" />
 
         <activity
-            android:name=".tta.ui.course.CourseDashboardFragment"
-            android:label="@string/course"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:name=".tta.ui.course.CourseScormViewActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:keepScreenOn="true"
+            android:label="Scorm"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- TTA activities end -->
 
