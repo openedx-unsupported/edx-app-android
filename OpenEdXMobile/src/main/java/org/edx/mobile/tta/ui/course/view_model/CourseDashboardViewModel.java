@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentManager;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
@@ -32,6 +35,7 @@ public class CourseDashboardViewModel extends BaseViewModel {
 
     public Content content;
     private EnrolledCoursesResponse course;
+    private CourseComponent rootComponent;
 
     public CourseDashboardViewModel(Context context, TaBaseFragment fragment, Content content) {
         super(context, fragment);
@@ -49,7 +53,22 @@ public class CourseDashboardViewModel extends BaseViewModel {
             @Override
             public void onSuccess(EnrolledCoursesResponse data) {
                 course = data;
-                setTabs();
+                mDataManager.getCourseComponent(course.getCourse().getId(),
+                        new OnResponseCallback<CourseComponent>() {
+                            @Override
+                            public void onSuccess(CourseComponent data) {
+                                rootComponent = data;
+                                mActivity.hideLoading();
+                                setTabs();
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                                setTabs();
+                            }
+                        });
             }
 
             @Override
@@ -63,7 +82,7 @@ public class CourseDashboardViewModel extends BaseViewModel {
     }
 
     public void setTabs(){
-        fragments.add(CourseMaterialTab.newInstance(content, course));
+        fragments.add(CourseMaterialTab.newInstance(content, course, rootComponent));
         titles.add(mActivity.getString(R.string.course_material));
 
         CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();
@@ -86,9 +105,25 @@ public class CourseDashboardViewModel extends BaseViewModel {
         fragments.add(handoutFragment);
         titles.add(mActivity.getString(R.string.handouts));
 
-        if (course != null && course.getCourse() != null) {
-            fragments.add(AuthenticatedWebViewFragment.newInstance(course.getCourse().getCourse_about()));
-            titles.add(mActivity.getString(R.string.about));
+        if (rootComponent != null) {
+            for (IBlock block: rootComponent.getChildren()){
+                CourseComponent comp = (CourseComponent) block;
+
+                if (comp.isContainer()) {
+                    for (IBlock childBlock : comp.getChildren()) {
+                        CourseComponent child = (CourseComponent) childBlock;
+
+                        if (child.isContainer()) {
+                            CourseComponent childComp = (CourseComponent) child.getChildren().get(0);
+                            if (childComp instanceof HtmlBlockModel) {
+                                fragments.add(AuthenticatedWebViewFragment.newInstance(childComp.getBlockUrl()));
+                                titles.add(mActivity.getString(R.string.about));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         try {

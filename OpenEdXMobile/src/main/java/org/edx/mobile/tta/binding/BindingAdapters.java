@@ -30,6 +30,7 @@ import com.maurya.mx.mxlib.view.MxRecyclerView;
 
 import org.edx.mobile.tta.ui.custom.FormEditText;
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
+import org.edx.mobile.view.custom.AuthenticatedWebView;
 
 import java.lang.reflect.Constructor;
 

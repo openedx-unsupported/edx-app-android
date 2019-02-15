@@ -33,18 +33,20 @@ public class CourseMaterialTab extends TaBaseFragment {
 
     private Content content;
     private EnrolledCoursesResponse courseData;
+    private CourseComponent rootComponent;
 
-    public static CourseMaterialTab newInstance(Content content, EnrolledCoursesResponse course){
+    public static CourseMaterialTab newInstance(Content content, EnrolledCoursesResponse course, CourseComponent rootComponent){
         CourseMaterialTab courseMaterialTab = new CourseMaterialTab();
         courseMaterialTab.content = content;
         courseMaterialTab.courseData = course;
+        courseMaterialTab.rootComponent = rootComponent;
         return courseMaterialTab;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new CourseMaterialViewModel(getActivity(), this, content, courseData);
+        viewModel = new CourseMaterialViewModel(getActivity(), this, content, courseData, rootComponent);
         viewModel.registerEventBus();
     }
 

@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -85,15 +86,16 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private int numberOfDownloadedVideos;
     private boolean downloadModeIsAll;
 
-    public CourseMaterialViewModel(Context context, TaBaseFragment fragment, Content content, EnrolledCoursesResponse course) {
+    public CourseMaterialViewModel(Context context, TaBaseFragment fragment, Content content, EnrolledCoursesResponse course, CourseComponent rootComponent) {
         super(context, fragment);
         this.content = content;
         this.course = course;
+        this.rootComponent = rootComponent;
         adapter = new CourseMaterialAdapter();
         loadData();
     }
 
-    private void loadData(){
+    public void loadData(){
 
         mDataManager.getTotalLikes(content.getId(), new OnResponseCallback<TotalLikeResponse>() {
             @Override
@@ -208,7 +210,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private void enableHeader(){
 
         allDownloadStatusIcon.set(R.drawable.t_icon_done);
-        String aboutUrl = aboutComponent.getChildren().get(0).getWebUrl();
+        String aboutUrl = aboutComponent.getChildren().get(0).getBlockUrl();
 
 //        AuthenticatedWebView webView = new AuthenticatedWebView(mActivity);
 //        webView.initWebView(mActivity, false, false);
@@ -226,11 +228,11 @@ public class CourseMaterialViewModel extends BaseViewModel {
 //        webView.loadUrlWithJavascript(true, aboutUrl,
 //                "javascript:(function() { $(\".xblock.xblock-student_view.xblock-student_view-html.xmodule_display.xmodule_HtmlModule.xblock-initialized\").html() })()");
 
-        description.set(aboutComponent.getDisplayName() + "\n\n" +
+        /*description.set(aboutComponent.getDisplayName() + "\n\n" +
                 "अकसर शिक्षक होने के नाते हम अपनी कक्षाओं को रोचक बनाने की चुनौतियों से जूझते हैं| हम अलग-अलग गतिविधियाँ अपनाते हैं ताकि बच्चे मनोरंजक तरीकों से सीख सकें| लेकिन ऐसा करना हमेशा आसान नहीं होता| यह कोर्स एक कोशिश है जहां हम ‘गतिविधि क्या है’, ‘कैसी गतिविधियाँ चुनी जायें?’ और इन्हें कराने में क्या-क्या मुश्किलें आ सकती हैं, के बारे में बात कर रहे हैं| इस कोर्स में इन पहलुओं को टटोलने के लिए प्राइमरी कक्षा के EVS (पर्यावरण विज्ञान) विषय के उदाहरण लिए गए हैं| \n" +
                         "\n" +
                         "इस कोर्स को पर्यावरण-विज्ञान पढ़ानेवाले शिक्षक और वे शिक्षक जो ‘गतिविधियों को कक्षा में कैसे कराया जाये’ जानना चाहते हैं, कर सकते हैं| आशा है इस कोर्स को पढ़ने के बाद आपके लिए कक्षा में गतिविधियाँ कराना आसान हो जाएगा|"
-        );
+        );*/
 
         adapter.setHeaderLayout(R.layout.t_row_course_material_header);
         adapter.setHeaderClickListener(v -> {
@@ -510,7 +512,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     }
 
     public void fetchCourseComponent() {
-        mActivity.showLoading();
+        /*mActivity.showLoading();
         mDataManager.getCourseComponent(course.getCourse().getId(),
                 new OnResponseCallback<CourseComponent>() {
                     @Override
@@ -532,7 +534,16 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         mActivity.hideLoading();
                         mActivity.showLongSnack(e.getLocalizedMessage());
                     }
-                });
+                });*/
+
+        populateData();
+        if (remainingScorms.isEmpty()){
+            allDownloadStatusIcon.set(R.drawable.t_icon_done);
+            allDownloadIconVisible.set(true);
+        } else {
+            allDownloadStatusIcon.set(R.drawable.t_icon_download);
+            allDownloadIconVisible.set(true);
+        }
     }
 
     private void populateData(){
@@ -610,6 +621,11 @@ public class CourseMaterialViewModel extends BaseViewModel {
             if (binding instanceof TRowCourseMaterialHeaderBinding) {
                 TRowCourseMaterialHeaderBinding headerBinding = (TRowCourseMaterialHeaderBinding) binding;
                 headerBinding.setViewModel(CourseMaterialViewModel.this);
+                headerBinding.descriptionWebview.setOnTouchListener((v, event) -> (event.getAction() == MotionEvent.ACTION_MOVE));
+                if (!headerBinding.descriptionWebview.isInitiated()){
+                    headerBinding.descriptionWebview.initWebView(mActivity, false, false);
+                    headerBinding.descriptionWebview.loadUrl(true, aboutComponent.getChildren().get(0).getBlockUrl());
+                }
 
                 headerBinding.likeLayout.setOnClickListener(v -> {
                     if (headerClickListener != null) {

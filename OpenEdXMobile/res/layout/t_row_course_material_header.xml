@@ -18,7 +18,7 @@
         android:paddingTop="@dimen/_30px"
         android:paddingBottom="@dimen/_30px">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/course_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +27,13 @@
             android:fontFamily="@font/hind_regular"
             android:text="@{viewModel.description}"
             android:textColor="@color/gray_5"
-            android:textSize="14sp" />
+            android:textSize="14sp" />-->
+
+        <org.edx.mobile.view.custom.AuthenticatedWebView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/description_webview"
+            android:scrollbars="none"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -71,6 +71,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     private boolean isManuallyReloadable;
 
     private OnResponseCallback<String> htmlCallback;
+    private boolean isInitiated = false;
 
     public AuthenticatedWebView(Context context) {
         super(context);
@@ -114,6 +115,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     @SuppressLint("SetJavaScriptEnabled")
     public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal,
                             boolean isManuallyReloadable) {
+        isInitiated = true;
         this.isManuallyReloadable = isManuallyReloadable;
         webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -184,6 +186,10 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
     public void setHtmlCallback(OnResponseCallback<String> htmlCallback) {
         this.htmlCallback = htmlCallback;
+    }
+
+    public boolean isInitiated() {
+        return isInitiated;
     }
 
     public void loadUrl(boolean forceLoad, @NonNull String url) {
