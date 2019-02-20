@@ -26,11 +26,13 @@ This project is meant to be built using Android Studio. It can also be built fro
 
         git clone https://github.com/edx/edx-app-android
 
-2. Open Android Studio and choose **Open an Existing Android Studio Project**
+2. Setup the Android Studio. The latest tested Android Studio version is v3.1.3, you can download it from [the previous versions archive](https://developer.android.com/studio/archive).
 
-3. Choose `edx-app-android`.
+3. Open Android Studio and choose **Open an Existing Android Studio Project**
 
-4. Click the **Run** button.
+4. Choose `edx-app-android`.
+
+5. Click the **Run** button.
 
 Configuration
 =============
