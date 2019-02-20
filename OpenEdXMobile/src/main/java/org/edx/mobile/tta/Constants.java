@@ -29,6 +29,7 @@ public class Constants {
     public static final String KEY_FILE_PATH = "file_path";
     public static final String KEY_COURSE_NAME = "course_name";
     public static final String KEY_UNIT_ID = "unit_id";
+    public static final String KEY_CONTENT = "content";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

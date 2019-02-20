@@ -125,7 +125,7 @@ public class CourseDashboardViewModel extends BaseViewModel {
         }
 
         try {
-            adapter.addFragments(fragments, titles);
+            adapter.setFragments(fragments, titles);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mx="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.connect.view_model.ConnectDashboardViewModel" />
@@ -12,13 +17,313 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/app_background">
 
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                app:elevation="0dp">
 
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="top"
+                    android:background="@color/white"
+                    android:gravity="start|center_vertical"
+                    app:contentInsetLeft="0dp"
+                    app:contentInsetStart="0dp"
+                    app:contentInsetStartWithNavigation="0dp"
+                    app:navigationIcon="@drawable/back"
+                    app:title="@{viewModel.content.name}"
+                    app:titleMarginStart="0dp"
+                    app:titleTextAppearance="@style/ta_toolbar_title_style"
+                    app:layout_scrollFlags="scroll|enterAlways" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+                <!--<android.support.design.widget.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:paddingBottom="@dimen/_40px">-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/_40px"
+                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                        android:background="@color/white">
+
+                        <FrameLayout
+                            android:id="@+id/header_image_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="170dp">
+
+                            <ImageView
+                                android:id="@+id/item_image"
+                                placeholder="@{viewModel.headerImagePlaceholder}"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@{viewModel.content.icon}" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:visibility="visible"
+                                app:srcCompat="@drawable/t_icon_play" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/header_duration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_20px"
+                            android:layout_marginTop="@dimen/_6px"
+                            android:layout_marginEnd="@dimen/_20px"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="@{viewModel.duration}"
+                            android:gravity="end"
+                            android:textColor="@color/gray_4"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/header_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_20px"
+                            android:layout_marginTop="@dimen/_20px"
+                            android:layout_marginEnd="@dimen/_20px"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="@{viewModel.description}"
+                            android:textColor="@color/gray_5"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20px"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:id="@+id/like_layout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="@{()->viewModel.like()}"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/course_likes"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:fontFamily="@font/hind_medium"
+                                        android:text="@{viewModel.likes}"
+                                        android:textColor="@color/gray_3"
+                                        android:textSize="12sp" />
+
+                                    <ImageView
+                                        android:id="@+id/course_like_image"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginStart="3dp"
+                                        android:contentDescription="@string/like"
+                                        android:paddingBottom="4dp"
+                                        android:src="@{viewModel.likeIcon}" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginStart="2dp"
+                                        android:fontFamily="@font/hind_medium"
+                                        android:text="@string/like"
+                                        android:textColor="@color/gray_3"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:id="@+id/bookmark_layout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="@{()->viewModel.bookmark()}"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/course_bookmark_image"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginStart="3dp"
+                                        android:contentDescription="@string/add_to_my_agenda"
+                                        android:paddingBottom="4dp"
+                                        android:src="@{viewModel.bookmarkIcon}" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginStart="2dp"
+                                        android:fontFamily="@font/hind_medium"
+                                        android:gravity="bottom"
+                                        android:text="@string/add_to_my_agenda"
+                                        android:textColor="@color/gray_4"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:id="@+id/all_download_layout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="@{()->viewModel.downloadAll()}"
+                                    android:orientation="horizontal">
+
+                                    <org.edx.mobile.view.custom.IconProgressBar
+                                        android:id="@+id/loading_indicator"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:visibility="@{viewModel.allDownloadProgressVisible ? View.VISIBLE : View.GONE}" />
+
+                                    <ImageView
+                                        android:id="@+id/course_download_image"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginStart="3dp"
+                                        android:contentDescription="@string/download"
+                                        android:paddingBottom="3dp"
+                                        android:src="@{viewModel.allDownloadStatusIcon}"
+                                        android:visibility="@{viewModel.allDownloadIconVisible ? View.VISIBLE : View.GONE}" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginStart="2dp"
+                                        android:fontFamily="@font/hind_medium"
+                                        android:gravity="bottom"
+                                        android:text="@string/download_all"
+                                        android:textColor="@color/gray_4"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tab_layout"
+                    style="@style/ta_tab_style"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/primary_cyan"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabSelectedTextColor="@color/gray_4"
+                    app:tabTextAppearance="@style/ta_tab_text_appearance"
+                    app:tabTextColor="@color/gray_5"
+                    android:layout_marginTop="1dp"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"/>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <!--<android.support.v4.widget.NestedScrollView
+                android:id="@+id/nested_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    mx:pager_adapter="@{viewModel.adapter}"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            <!--</android.support.v4.widget.NestedScrollView>-->
+
+        </android.support.design.widget.CoordinatorLayout>
+
+        <LinearLayout
+            android:id="@+id/enter_comment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:minHeight="50dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/_10px">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector_hollow"
+                android:fontFamily="@font/hind_light"
+                android:hint="@string/add_a_comment"
+                android:padding="@dimen/_10px"
+                android:textColor="@color/gray_4"
+                android:textColorHint="@color/gray_4"
+                android:textSize="12sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_8px"
+                android:background="@drawable/btn_selector_hollow"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:minWidth="78dp"
+                android:padding="@dimen/_10px"
+                android:text="@string/comment_en"
+                android:textAllCaps="false"
+                android:textColor="@color/secondary_grey_light"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

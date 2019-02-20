@@ -213,6 +213,11 @@ public class BindingAdapters {
         view.setLayoutManager(layoutManager);
     }
 
+    @BindingAdapter({"layout_manager"})
+    public static void bindLayoutManager(MxRecyclerView view, RecyclerView.LayoutManager layoutManager){
+        view.setLayoutManager(layoutManager);
+    }
+
     @BindingAdapter({"pager"})
     public static void bindViewPagerTabs(TabLayout view, ViewPager pagerView) {
         view.setupWithViewPager(pagerView, true);

@@ -345,7 +345,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
             public void onFailure(Exception e) {
                 mActivity.hideLoading();
                 mActivity.showLongSnack(e.getLocalizedMessage());
-//                bookmarkIcon.set(R.drawable.t_icon_bookmark);
             }
         });
     }
@@ -374,7 +373,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
             public void onFailure(Exception e) {
                 mActivity.hideLoading();
                 mActivity.showLongSnack(e.getLocalizedMessage());
-//                likeIcon.set(R.drawable.t_icon_like);
             }
         });
     }
@@ -512,30 +510,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
     }
 
     public void fetchCourseComponent() {
-        /*mActivity.showLoading();
-        mDataManager.getCourseComponent(course.getCourse().getId(),
-                new OnResponseCallback<CourseComponent>() {
-                    @Override
-                    public void onSuccess(CourseComponent data) {
-                        mActivity.hideLoading();
-                        rootComponent = data;
-                        populateData();
-                        if (remainingScorms.isEmpty()){
-                            allDownloadStatusIcon.set(R.drawable.t_icon_done);
-                            allDownloadIconVisible.set(true);
-                        } else {
-                            allDownloadStatusIcon.set(R.drawable.t_icon_download);
-                            allDownloadIconVisible.set(true);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        mActivity.showLongSnack(e.getLocalizedMessage());
-                    }
-                });*/
-
         populateData();
         if (remainingScorms.isEmpty()){
             allDownloadStatusIcon.set(R.drawable.t_icon_done);

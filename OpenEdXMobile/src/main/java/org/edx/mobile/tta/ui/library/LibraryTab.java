@@ -48,7 +48,7 @@ public class LibraryTab extends TaBaseFragment {
     public void onPermissionGranted(String[] permissions, int requestCode) {
         switch (requestCode){
             case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
-                viewModel.showCourseDashboard();
+                viewModel.showContentDashboard();
                 break;
         }
     }

@@ -371,7 +371,8 @@
         <activity
             android:name=".tta.ui.connect.ConnectDashboardActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <!-- TTA activities end -->
 

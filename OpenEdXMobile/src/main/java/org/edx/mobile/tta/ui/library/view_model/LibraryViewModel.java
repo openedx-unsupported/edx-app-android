@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
-import org.edx.mobile.tta.ui.base.BaseFragmentPagerAdapter;
+import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.library.LibraryTab;
@@ -75,12 +75,15 @@ public class LibraryViewModel extends BaseViewModel {
             titles.add(category.getName());
         }
 
-        adapter.clear();
-        adapter.addAll(fragments, titles);
+        try {
+            adapter.setFragments(fragments, titles);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public class ListingPagerAdapter extends BaseFragmentPagerAdapter {
+    public class ListingPagerAdapter extends BasePagerAdapter {
         public ListingPagerAdapter(FragmentManager fm) {
             super(fm);
         }

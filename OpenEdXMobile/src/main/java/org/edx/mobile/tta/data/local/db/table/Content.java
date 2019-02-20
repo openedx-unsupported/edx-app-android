@@ -7,13 +7,15 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.RoomWarnings;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings(RoomWarnings.PRIMARY_KEY_FROM_EMBEDDED_IS_DROPPED)
 @Entity(tableName = "content")
-public class Content
-{
+public class Content implements Parcelable {
     private long created_by;
 
     @PrimaryKey
@@ -35,6 +37,37 @@ public class Content
     private String modified_at;
 
     private List<Long> lists;
+
+    public Content() {
+    }
+
+    protected Content(Parcel in) {
+        created_by = in.readLong();
+        id = in.readLong();
+        icon = in.readString();
+        source = in.readParcelable(Source.class.getClassLoader());
+        modified_by = in.readLong();
+        source_identity = in.readString();
+        name = in.readString();
+        created_at = in.readString();
+        modified_at = in.readString();
+        if (lists == null){
+            lists = new ArrayList<>();
+        }
+        in.readList(lists, Long.class.getClassLoader());
+    }
+
+    public static final Creator<Content> CREATOR = new Creator<Content>() {
+        @Override
+        public Content createFromParcel(Parcel in) {
+            return new Content(in);
+        }
+
+        @Override
+        public Content[] newArray(int size) {
+            return new Content[size];
+        }
+    };
 
     public long getCreated_by ()
     {
@@ -140,5 +173,24 @@ public class Content
     public String toString()
     {
         return "Content [created_by = "+created_by+", id = "+id+", icon = "+icon+", source = "+source+", modified_by = "+modified_by+", source_identity = "+source_identity+", name = "+name+", created_at = "+created_at+", modified_at = "+modified_at+", lists = "+lists+"]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(created_by);
+        dest.writeLong(id);
+        dest.writeString(icon);
+        dest.writeParcelable(source, flags);
+        dest.writeLong(modified_by);
+        dest.writeString(source_identity);
+        dest.writeString(name);
+        dest.writeString(created_at);
+        dest.writeString(modified_at);
+        dest.writeList(lists);
     }
 }

@@ -51,4 +51,8 @@
     <string name="assessment">समझ परखें</string>
     <string name="view_certificate">सर्टिफिकेट देखें</string>
     <string name="estimated_duration">अनुमानित अवधि</string>
+    <string name="reply">जवाब दें</string>
+    <string name="all_list">सभी</string>
+    <string name="recently_added_list">अभी शामिल</string>
+    <string name="no_connection_exception">सबसे ज़रूरी</string>
 </resources>

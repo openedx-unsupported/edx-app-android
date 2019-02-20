@@ -727,9 +727,15 @@
     <string name="assessment">Assessment</string>
     <string name="view_certificate">View Certificate</string>
     <string name="estimated_duration">Estimated duration</string>
+    <string name="add_a_comment">Add a comment...</string>
+    <string name="reply">Reply</string>
+    <string name="all_list">All</string>
+    <string name="recently_added_list">Recently added</string>
+    <string name="most_relevant_list">Most relevant</string>
 
     <string name="no_connection_exception">No Internet Connection</string>
     <string name="asterisk_red" translatable="false"><font color='#f44336'>*</font></string>
+    <string name="comment_en" translatable="false">Comment</string>
 
     <!-- TTA strings end -->
 

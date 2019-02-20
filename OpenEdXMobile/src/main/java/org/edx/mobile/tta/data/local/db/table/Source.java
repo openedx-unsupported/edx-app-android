@@ -2,9 +2,11 @@ package org.edx.mobile.tta.data.local.db.table;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 @Entity(tableName = "source")
-public class Source
+public class Source implements Parcelable
 {
     private long created_by;
 
@@ -24,6 +26,33 @@ public class Source
     private String type;
 
     private String modified_at;
+
+    public Source() {
+    }
+
+    protected Source(Parcel in) {
+        created_by = in.readLong();
+        id = in.readLong();
+        icon = in.readString();
+        title = in.readString();
+        modified_by = in.readLong();
+        name = in.readString();
+        created_at = in.readString();
+        type = in.readString();
+        modified_at = in.readString();
+    }
+
+    public static final Creator<Source> CREATOR = new Creator<Source>() {
+        @Override
+        public Source createFromParcel(Parcel in) {
+            return new Source(in);
+        }
+
+        @Override
+        public Source[] newArray(int size) {
+            return new Source[size];
+        }
+    };
 
     public long getCreated_by ()
     {
@@ -119,5 +148,23 @@ public class Source
     public String toString()
     {
         return "Source [created_by = "+created_by+", id = "+id+", icon = "+icon+", title = "+title+", modified_by = "+modified_by+", name = "+name+", created_at = "+created_at+", type = "+type+", modified_at = "+modified_at+"]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(created_by);
+        dest.writeLong(id);
+        dest.writeString(icon);
+        dest.writeString(title);
+        dest.writeLong(modified_by);
+        dest.writeString(name);
+        dest.writeString(created_at);
+        dest.writeString(type);
+        dest.writeString(modified_at);
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.connect.view_model.ConnectCommentsTabViewModel" />
+    </data>
+
+    <com.maurya.mx.mxlib.view.MxRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:mx_itemLayout="@layout/t_row_comments"
+        layout_manager="@{viewModel.layoutManager}"
+        infinite_recycler_adapter="@{viewModel.adapter}"/>
+
+</layout>

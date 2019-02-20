@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -25,6 +26,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
+import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ContentListType;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
@@ -34,6 +36,7 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
 import org.edx.mobile.tta.ui.course.CourseDashboardFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
@@ -129,16 +132,23 @@ public class LibraryTabViewModel extends BaseViewModel {
         adapter.setItems(contentLists);
     }
 
-    public void showCourseDashboard(){
+    public void showContentDashboard(){
 
-        ActivityUtil.replaceFragmentInActivity(
-                mActivity.getSupportFragmentManager(),
-                CourseDashboardFragment.newInstance(selectedContent),
-                R.id.dashboard_fragment,
-                CourseDashboardFragment.TAG,
-                true,
-                null
-        );
+        if (selectedContent.getSource().getType().equalsIgnoreCase("edx") ||
+                selectedContent.getSource().getType().equalsIgnoreCase("course")) {
+            ActivityUtil.replaceFragmentInActivity(
+                    mActivity.getSupportFragmentManager(),
+                    CourseDashboardFragment.newInstance(selectedContent),
+                    R.id.dashboard_fragment,
+                    CourseDashboardFragment.TAG,
+                    true,
+                    null
+            );
+        } else {
+            Bundle parameters = new Bundle();
+            parameters.putParcelable(Constants.KEY_CONTENT, selectedContent);
+            ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
+        }
 
     }
 
@@ -179,8 +189,12 @@ public class LibraryTabViewModel extends BaseViewModel {
                                 .placeholder(R.drawable.placeholder_course_card_image)
                                 .into(imageView);
                         container.addView(view);
-                        view.setOnClickListener(v ->
-                                Toast.makeText(mActivity, contentListMap.get(model.getId()).get(position).getName(), Toast.LENGTH_SHORT).show());
+                        view.setOnClickListener(v -> {
+//                            Toast.makeText(mActivity, contentListMap.get(model.getId()).get(position).getName(), Toast.LENGTH_SHORT).show();
+                            selectedContent = contentListMap.get(model.getId()).get(position);
+                            mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                        });
                         return view;
                     }
                 });
@@ -194,24 +208,27 @@ public class LibraryTabViewModel extends BaseViewModel {
                 ContentListAdapter listAdapter = new ContentListAdapter(mActivity);
                 listAdapter.addAll(contentListMap.get(model.getId()));
                 listAdapter.setItemClickListener((view, item) -> {
-                    if (item.getSource().getType().equalsIgnoreCase("edx") ||
+                    /*if (item.getSource().getType().equalsIgnoreCase("edx") ||
                             item.getSource().getType().equalsIgnoreCase("course")
                     ) {
                         selectedContent = item;
                         mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                 PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
-                        /*ActivityUtil.replaceFragmentInActivity(
+                        *//*ActivityUtil.replaceFragmentInActivity(
                                 mActivity.getSupportFragmentManager(),
                                 CourseDashboardFragment.newInstance(item),
                                 R.id.dashboard_fragment,
                                 CourseDashboardFragment.TAG,
                                 true,
                                 null
-                        );*/
+                        );*//*
 //                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
+                    selectedContent = item;
+                    mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                 });
 
                 if (contentListMap.get(model.getId()).size() >= listBinding.contentFiniteList.getmMaxItem()) {
