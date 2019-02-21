@@ -732,10 +732,112 @@
     <string name="all_list">All</string>
     <string name="recently_added_list">Recently added</string>
     <string name="most_relevant_list">Most relevant</string>
+    <string name="duration">Duration</string>
 
     <string name="no_connection_exception">No Internet Connection</string>
     <string name="asterisk_red" translatable="false"><font color='#f44336'>*</font></string>
     <string name="comment_en" translatable="false">Comment</string>
+
+    <!--Arjun integrated wordpress native code-->
+    <!-- WP defaults -->
+    <string name="user_role" translatable="false">author</string>
+
+    <string name="post_type" translatable="false">gallery</string>
+    <string name="content_image_uri" translatable="false"><![CDATA[<a href="%1$s"><img src="%1$s" alt="%2$s" /></a>]]></string>
+    <string name="content_video_uri" translatable="false">
+        <![CDATA[<div id="thePlayer%2$s"></div><script type="text/javascript">jwplayer(\"thePlayer%2$s\").setup({
+            flashplayer: \"http://static.videoninja101.com/jwplayer/player.swf\", file: \"%1$s\"});
+            jwplayer(\"thePlayer%2$s\").addButton(
+    \"https://www.afrozaar.com/wp-content/uploads/2016/04/download.png\",
+    \"Download Video\",
+    function() {
+      window.location.href = jwplayer(\"thePlayer%2$s\").getPlaylist()[0].sources[0].file;
+    },
+    \"download\"
+);
+            </script>
+        ]]>
+    </string>
+
+    <string name="content_video_uri_transcode" translatable="false">
+        <![CDATA[
+        <div class=\"player-wrapper%2$s\">
+        <div id=\"player%2$s\">
+        </div>
+        <div id="downloads">
+            <a class=\"raw-video-download\" href=\"http://cdn.mojoreporter.com/%1$s.mp4\" download><img src="http://cdn.mojoreporter.com/conf/downloadVideo.png" alt="Download the raw video"></a>
+            <a href=\"http://cdn.mojoreporter.com/%1$s.mp3\" download><img src="http://cdn.mojoreporter.com/conf/downloadAudio.png" alt="Download the audio"></a>
+        </div>
+
+        <script type="text/javascript">
+            var player = bitdash(\"player%2$s\");
+
+            var conf = {
+                key: \'00fd7ae2-a611-40b3-8fdf-813166e6b78a\',
+                source: {
+                    dash: \'http://cdn.mojoreporter.com/%1$s.mpd\',
+                    hls: \'http://cdn.mojoreporter.com/%1$s.m3u8\',
+                    progressive: \'http://cdn.mojoreporter.com/%1$s.mp4\'
+                },
+                style: {
+                    aspectratio: \'16:9\',
+                    controls: true
+                },
+                skin: \'http://cdn.mojoreporter.com/conf/mojoskin.json\'
+            };
+
+            player.setup(conf).then(function (value) {
+                console.log(\"Successfully created bitdash player instance\");
+            }, function (reason) {
+                console.log(\"Error while creating bitdash player instance\");
+            });
+        </script>
+        </div>]]>
+    </string>
+
+    <string name="content_video_shortcode" translatable="false">
+        [baobab_video url=http://cdn.mojoreporter.com/%1$s.mp4]
+    </string>
+
+    <!--,advertising: {
+         client: \'vast\',
+         tag: \'https://pubads.g.doubleclick.net/gampad/ads?sz=400x300|640x480&iu=/175217832/IOL/Video&ciu_szs=300x250,300x600,728x90&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url=http://afrozaar.com&description_url=http://afrozaar.com&correlator=4345645667\'
+         }-->
+
+    <!--<string name="content_audio_uri">[audio m4a="%s"][/audio]</string>-->
+
+    <string name="content_audio_uri" translatable="false">
+        <![CDATA[
+            <div class="player-wrapper">
+                [audio m4a=https://cdn.mojoreporter.com/%1$s.m4a][/audio]
+                <div id="downloads">
+                    <a href="https://cdn.mojoreporter.com/%1$s.m4a" download=""><img src="http://cdn.mojoreporter.com/conf/downloadAudio.png" alt="Download the audio"/></a>
+                </div>
+            </div>
+        ]]>
+    </string>
+
+    <string name="content_location" translatable="false">[wp_gmaps address=\""%s\"" zoom="13" marker="1"]</string>
+
+
+    <!-- PW Prefs -->
+    <string name="pref_title_wp" translatable="false">WordPress</string>
+
+    <string name="pref_id_wp_login_user" translatable="false">pref.ftp.login.user</string>
+    <string name="pref_id_wp_login_pass" translatable="false">pref.ftp.login.password</string>
+    <string name="pref_id_wp_server_ip" translatable="false">pref.ftp.server.ip</string>
+    <string name="pref_id_wp_server_port" translatable="false">pref.ftp.server.port</string>
+
+    <string name="pref_id_wordpress_id" translatable="false">pref.wp.id</string>
+    <string name="pref_id_wordpress_username" translatable="false">pref.wp.username</string>
+    <string name="pref_id_wordpress_password" translatable="false">pref.wp.password</string>
+    <string name="title_activity_all_posts_based_on_category" translatable="false">AllPostsBasedOnCategoryActivity
+    </string>
+    <string name="title_activity_wppost" translatable="false">Post</string>
+
+    <string name="Connect_video_pre_download_msg">Please click here to see in offline mode</string>
+    <string name="connect_video_post_download_msg">Please click on Play button to see in offline mode</string>
+    <string name="connect_video_post_downloading_msg">Video is downloading, please wait.</string>
 
     <!-- TTA strings end -->
 

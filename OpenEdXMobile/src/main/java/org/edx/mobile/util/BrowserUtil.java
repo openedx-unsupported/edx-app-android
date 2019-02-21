@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
@@ -27,10 +28,13 @@ public class BrowserUtil {
     private static IEdxEnvironment environment;
 
     @Inject
-    private static Config config;
+    public static Config config;
 
     @Inject
     public static LoginPrefs loginPrefs;
+
+    @Inject
+    public static LoginAPI loginAPI;
 
     /**
      * Opens given URL in native browser.

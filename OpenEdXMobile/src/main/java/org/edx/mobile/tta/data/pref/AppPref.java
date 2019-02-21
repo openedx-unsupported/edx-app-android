@@ -2,6 +2,7 @@ package org.edx.mobile.tta.data.pref;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import org.edx.mobile.module.prefs.PrefManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,7 +13,7 @@ public class AppPref {
     private final PrefManager prefManager;
 
     public AppPref(@NonNull Context context) {
-        prefManager = new PrefManager(context, PrefManager.Pref.APP);
+        prefManager = new PrefManager(context, PrefManager.Pref.APP_INFO);
     }
 
     public void setFirstLaunch(boolean firstLaunch){

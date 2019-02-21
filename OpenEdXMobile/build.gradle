@@ -154,6 +154,14 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:${roomDatabase}"
     //MVVM ::End Arjun
 
+    //TTA start
+
+    implementation "com.fasterxml.jackson.core:jackson-core:2.5.3"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.5.3"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.5.3"
+
+    //TTA end
+
     implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
     implementation "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY_VERSION}"
     implementation "com.android.support:cardview-v7:${SUPPORT_LIBRARY_VERSION}"

@@ -549,4 +549,20 @@ public class LoginAPI {
         }
         return res.body();
     }
+
+    //set shaired pref for connect::login user
+    @NonNull
+    public void setConnectCookiesAndTimeStamp(@NonNull String cookie,  @NonNull String timeStamp)
+    {
+        loginPrefs.storeMxConnectCookie(cookie);
+        loginPrefs.storeMxConnectCookieTimeStamp(timeStamp);
+    }
+
+
+    public String getConnectCookies() {
+        return loginPrefs.getMxConnectCookie();
+    }
+    public String getConnectCookiesTimeStamp() {
+        return loginPrefs.getMxConnectCookieTimeStamp();
+    }
 }

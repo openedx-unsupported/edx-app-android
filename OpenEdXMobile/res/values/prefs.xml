@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pref_id_has_profile" translatable="false">pref.user.has_profile</string>
+    <string name="pref_id_username" translatable="false">pref.user.id</string>
+    <string name="pref_id_email" translatable="false">pref.user.email</string>
+    <string name="pref_id_name" translatable="false">pref.user.name</string>
+    <string name="pref_id_first_name" translatable="false">pref.user.first_name</string>
+    <string name="pref_id_last_name" translatable="false">pref.user.last_name</string>
+    <string name="pref_id_profile_pic" translatable="false">pref.user.profile_pic</string>
+    <string name="pref_id_acc_type" translatable="false">pref.user.acc_type</string>
+
+</resources>

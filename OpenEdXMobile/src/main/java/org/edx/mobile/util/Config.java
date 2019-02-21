@@ -77,12 +77,19 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
 
-    //TTA
+    //TTA start
+
     private static final String TTA_OTP_SENDER_ADDRESS = "TTA_OTP_SENDER_ADDRESS";
     //Tincan LRS
     private static final String TINCAN_LRS_URL = "TINCAN_LRS_URL";
     //Analytics Url
     private static final String ANALYTICS_STORE_URL = "ANALYTICS_STORE_URL";
+
+    private static final String EDX_CONNECT_URL = "EDX_CONNECT_URL";
+    private static final String WP_OAUTH_CLIENT_ID = "WP_OAUTH_CLIENT_ID";
+    private static final String WP_OAUTH_CLIENT_SECRET = "WP_OAUTH_CLIENT_SECRET";
+
+    //TTA end
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -731,5 +738,54 @@ public class Config {
     //Analyytics store url
     public String getAnalyticsStoreUrl() {
         return getString(ANALYTICS_STORE_URL);
+    }
+
+    //wordpress Client ID
+    public String getWPOAuthClientId() {
+        return getString(WP_OAUTH_CLIENT_ID);
+    }
+
+    //wordpress Client Secret
+    public String getWPOAuthClientSecret() {
+        return getString(WP_OAUTH_CLIENT_SECRET);
+    }
+
+    //MX:Arjun For connect url
+    public String getConnectUrl() {
+        return getString(EDX_CONNECT_URL);
+    }
+
+    //MX:Arjun For connect url
+    public String getConnectDomainUrl() {
+
+        String url = getString(EDX_CONNECT_URL);
+        if(url != null && !url.equals(""))
+        {
+            url = url.toLowerCase();
+            url = url.replace("http://", "").replace("https://", "").split("/")[0];
+            if(url.contains(":"))
+            {
+                url = url.split(":")[0];
+            }
+        }
+
+        return  url;
+    }
+
+    //MX:Arjun For connect url
+    public String getEDXDomainUrl() {
+
+        String url = getString(API_HOST_URL);
+        if(url != null && !url.equals(""))
+        {
+            url = url.toLowerCase();
+            url = url.replace("http://", "").replace("https://", "").split("/")[0];
+            if(url.contains(":"))
+            {
+                url = url.split(":")[0];
+            }
+        }
+
+        return  url;
     }
 }

@@ -300,6 +300,39 @@ public class PrefManager {
         public static final String WHATS_NEW_SHOWN_FOR_VERSION = "WHATS_NEW_SHOWN_FOR_VERSION";
         // Preference to keep track of Bulk download switch for a Course ID
         public static final String BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s";
+
+        //TTA
+
+        public static final String FIRST_LAUNCH = "first_launch";
+        public static final String FIRST_LOGIN = "first_login";
+
+        //mx:Arjun cookies and its entry time
+        public static final String USER_CONNECT_LOGIN_COOKIE = "UserConnectLoginCookie";
+        public static final String USER_CONNECT_LOGIN_COOKIE_TIME_STAMP = "UserConnectLoginCookieStamp";
+        public static final String USER_COURSE_ANSWER_DATA = "UserCourseAnswerData";
+        public static final String USER_CURRENT_FRAG_NAME_DATA = "UserCurrentFragNameData";
+        public static final String USER_OLD_DATA_MIGRATION_STATUS="UserOldDataMigrationStatus";
+        public static final String USER_APP_MIN_MIGRATION_STATUS="UserAppMiniMigrationStatus";
+        public static final String USER_CURRENTDOWNLOADING_SCROM_INFO="UserCurrentDownloadingScromInfo";
+        public static final String USER_GENERIC_FIELD_ATTRIBUTE_INFO="UserGenericFieldAttributeInfo";
+
+
+        public static final String USER_PROFIILE_UPDATE_PAGE_NAME_INFO="UserProfileUpdatePageNameInfo";
+        public static final String USER_PROFIILE_UPDATE_PAGE_GENDER_INFO="UserProfileUpdatePageGenderInfo";
+        public static final String USER_PROFIILE_UPDATE_PAGE_PMIS_CODE_INFO="UserProfileUpdatePagePMISCodeInfo";
+        public static final String USER_PROFIILE_UPDATE_PAGE_CLASSES_TAUGHT_INFO="UserProfileUpdatePageClassesTaughtInfo";
+
+        public static final String USER_PROFIILE_UPDATE_PAGE_STATE_INFO="UserProfileUpdatePageStateInfo";
+        public static final String USER_PROFIILE_UPDATE_PAGE_DISTRICT_INFO="UserProfileUpdatePageDistrictInfo";
+        public static final String USER_PROFIILE_UPDATE_PAGE_DIET_INFO="UserProfileUpdatePageDietInfo";
+        public static final String USER_PROFIILE_UPDATE_PAGE_BLOCK_INFO="UserProfileUpdatePageBlockInfo";
+        public static final String USER_PROFIILE_UPDATE_PAGE_TITLE_INFO="UserProfileUpdatePageTitleInfo";
+
+        public static final String IS_USER_COURSE_DASHBOARD_LOADED="Is_User_Course_Dashboard_Loaded";
+
+
+        public static final String WP_AUTH_JSON = "wp_auth_json";
+        public static final String WP_PROFILE_JSON = "wp_profile_json";
     }
 
     public static final class Value {
