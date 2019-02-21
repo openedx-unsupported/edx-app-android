@@ -13,6 +13,7 @@ import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.tta.scorm.PDFBlockModel;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.scorm.ScormData;
 

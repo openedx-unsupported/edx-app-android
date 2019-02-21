@@ -1,14 +1,19 @@
 package org.edx.mobile.tta.utils;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
+
+import java.io.File;
 
 
 /**
@@ -56,5 +61,24 @@ public class ActivityUtil {
         Intent intent = new Intent(context, SigninRegisterActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    public static void viewPDF(Context ctx, File filePath)
+    {
+        /** PDF reader code */
+        // File file = new File(Environment.getExternalStorageDirectory() + "/" + "abc.pdf");
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(filePath),"application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try
+        {
+            ctx.startActivity(intent);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            Toast.makeText(ctx, "NO Pdf Viewer", Toast.LENGTH_SHORT).show();
+        }
     }
 }

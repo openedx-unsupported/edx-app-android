@@ -484,7 +484,7 @@ public class Storage implements IStorage {
                     }
                     db.updateDownloadCompleteInfoByDmId(dmId, e, null);
                     callback.sendResult(e);
-                    if (e.filepath.contains(".zip")) {
+                    if (e.filepath.endsWith(".zip")) {
                         unpackZip(e.filepath);
                     }
                     EventBus.getDefault().post(new DownloadCompletedEvent());
