@@ -23,6 +23,7 @@ import org.edx.mobile.databinding.TRowCourseMaterialFooterBinding;
 import org.edx.mobile.databinding.TRowCourseMaterialHeaderBinding;
 import org.edx.mobile.databinding.TRowCourseMaterialItemBinding;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
@@ -34,6 +35,7 @@ import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.scorm.PDFBlockModel;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.ui.base.BaseRecyclerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
@@ -43,6 +45,7 @@ import org.edx.mobile.tta.ui.interfaces.OnTaItemClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,7 +144,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 case R.id.item_delete_download:
                     if (item.isContainer()){
                         CourseComponent component = (CourseComponent) item.getChildren().get(0);
-                        if (component instanceof ScormBlockModel){
+                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
                             ScormBlockModel scorm = (ScormBlockModel) component;
                             switch (mDataManager.getScormStatus(scorm)){
                                 case not_downloaded:
@@ -162,7 +165,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 default:
                     if (item.isContainer()){
                         CourseComponent component = (CourseComponent) item.getChildren().get(0);
-                        if (component instanceof ScormBlockModel){
+                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
                             ScormBlockModel scorm = (ScormBlockModel) component;
                             switch (mDataManager.getScormStatus(scorm)){
                                 case not_downloaded:
@@ -197,14 +200,18 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private void showScorm(ScormBlockModel scorm) {
         Bundle parameters = new Bundle();
         String filePath = scorm.getDownloadEntry(mDataManager.getEdxEnvironment().getStorage()).getFilePath();
-        if (filePath.contains(".zip")){
-            filePath = filePath.substring(0, filePath.length()-4);
+        if (scorm.getType().equals(BlockType.SCORM)) {
+            if (filePath.contains(".zip")){
+                filePath = filePath.substring(0, filePath.length()-4);
+            }
+            parameters.putString(Constants.KEY_FILE_PATH, filePath);
+            parameters.putString(Constants.KEY_COURSE_NAME, scorm.getRoot().getDisplayName());
+            parameters.putString(Constants.KEY_COURSE_ID, scorm.getRoot().getId());
+            parameters.putString(Constants.KEY_UNIT_ID, scorm.getId());
+            ActivityUtil.gotoPage(mActivity, CourseScormViewActivity.class, parameters);
+        } else if (scorm.getType().equals(BlockType.PDF)) {
+            ActivityUtil.viewPDF(mActivity, new File(filePath));
         }
-        parameters.putString(Constants.KEY_FILE_PATH, filePath);
-        parameters.putString(Constants.KEY_COURSE_NAME, scorm.getRoot().getDisplayName());
-        parameters.putString(Constants.KEY_COURSE_ID, scorm.getRoot().getId());
-        parameters.putString(Constants.KEY_UNIT_ID, scorm.getId());
-        ActivityUtil.gotoPage(mActivity, CourseScormViewActivity.class, parameters);
     }
 
     private void enableHeader(){
@@ -267,7 +274,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 case R.id.item_delete_download:
                     if (assessmentComponent.isContainer()){
                         CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                        if (component instanceof ScormBlockModel){
+                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
                             ScormBlockModel scorm = (ScormBlockModel) component;
                             switch (mDataManager.getScormStatus(scorm)){
                                 case not_downloaded:
@@ -288,7 +295,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 case R.id.item_btn:
                     if (assessmentComponent.isContainer()){
                         CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                        if (component instanceof ScormBlockModel){
+                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
                             ScormBlockModel scorm = (ScormBlockModel) component;
                             switch (mDataManager.getScormStatus(scorm)){
                                 case not_downloaded:
@@ -309,7 +316,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 default:
                     if (assessmentComponent.isContainer()){
                         CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                        if (component instanceof ScormBlockModel){
+                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
                             ScormBlockModel scorm = (ScormBlockModel) component;
                             switch (mDataManager.getScormStatus(scorm)){
                                 case not_downloaded:
@@ -566,7 +573,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
                             if (child.isContainer()){
                                 CourseComponent childComp = (CourseComponent) child.getChildren().get(0);
-                                if (childComp instanceof ScormBlockModel){
+                                if (childComp instanceof PDFBlockModel || childComp instanceof ScormBlockModel){
                                     if (mDataManager.scormNotDownloaded((ScormBlockModel) childComp)){
                                         remainingScorms.add((ScormBlockModel) childComp);
                                     }
@@ -626,7 +633,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
                 if (assessmentComponent.isContainer()){
                     CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                    if (component instanceof ScormBlockModel){
+                    if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
                         ScormBlockModel scorm = (ScormBlockModel) component;
                         switch (mDataManager.getScormStatus(scorm)){
                             case not_downloaded:
@@ -681,7 +688,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 itemBinding.loadingIndicator.setVisibility(View.GONE);
                 if (item.isContainer()){
                     CourseComponent component = (CourseComponent) item.getChildren().get(0);
-                    if (component instanceof ScormBlockModel){
+                    if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
                         ScormBlockModel scorm = (ScormBlockModel) component;
                         switch (mDataManager.getScormStatus(scorm)){
                             case not_downloaded:

@@ -135,7 +135,8 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
     @Override
     public boolean getattachType() {
-        return type != null && (type.equalsIgnoreCase(DownloadType.SCORM.name()));
+        return type != null && (type.equalsIgnoreCase(DownloadType.SCORM.name()) ||
+                type.equalsIgnoreCase(DownloadType.PDF.name()));
     }
 
     @Override
