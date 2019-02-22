@@ -1,11 +1,14 @@
 package org.edx.mobile.tta.ui.agenda.view_model;
 
+import android.Manifest;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Toast;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -18,6 +21,7 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
+import org.edx.mobile.util.PermissionsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,8 @@ public class AgendaViewModel extends BaseViewModel {
     public AgendaListAdapter stateListAdapter, myListAdapter, downloadListAdapter;
 
     public boolean regionListRecieved, myListRecieved, downloadListRecieved;
+
+    private AgendaItem agendaItem;
 
     public AgendaViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
@@ -287,6 +293,11 @@ public class AgendaViewModel extends BaseViewModel {
                         ContentSourceUtil.getSourceDrawable_15x15(model.getSource_name()),
                         0,0,0
                 );
+                itemBinding.agendaCard.setOnClickListener(v -> {
+                    agendaItem = model;
+                    mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                });
             }
         }
     }

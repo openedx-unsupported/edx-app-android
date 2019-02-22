@@ -22,10 +22,10 @@ public class LandingViewModel extends BaseViewModel {
     public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            if (item.getItemId() == selectedId){
+            if (item.getItemId() == selectedId) {
                 return true;
             }
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.action_library:
                     selectedId = R.id.action_library;
                     showLibrary();
@@ -61,26 +61,25 @@ public class LandingViewModel extends BaseViewModel {
         showLibrary();
     }
 
-    public void showLibrary(){
+    public void showLibrary() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                new LibraryFragment(),
-                R.id.dashboard_fragment,
+                new LibraryFragment(), R.id.dashboard_fragment,
                 LibraryFragment.TAG,
                 false,
                 null
         );
     }
 
-    public void showFeed(){
+    public void showFeed() {
         mActivity.showShortSnack("Feed coming soon");
     }
 
-    public void showSearch(){
+    public void showSearch() {
         mActivity.showShortSnack("Search coming soon");
     }
 
-    public void showAgenda(){
+    public void showAgenda() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 new AgendaFragment(),
@@ -91,7 +90,7 @@ public class LandingViewModel extends BaseViewModel {
         );
     }
 
-    public void showProfile(){
+    public void showProfile() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 new ProfileFragment(),
