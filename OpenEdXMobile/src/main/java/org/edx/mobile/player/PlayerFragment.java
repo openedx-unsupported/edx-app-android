@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -118,7 +120,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private LinkedHashMap<String, TimedTextObject> srtList;
     private LinkedHashMap<String, String> langList;
     private TimedTextObject subtitlesObj;
-    private LayoutInflater layoutInflater;
     @Inject
     private TranscriptManager transcriptManager;
     private TranscriptModel transcript;
@@ -171,7 +172,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.panel_player, null);
-        this.layoutInflater = inflater;
 
         return view;
     }
@@ -1346,14 +1346,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     private boolean getTouchExploreEnabled() {
         boolean ret = false;
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            AccessibilityManager am = getAccessibilityManager();
-            if (am != null && am.isTouchExplorationEnabled()) {
-                ret = true;
-            }
+        AccessibilityManager am = getAccessibilityManager();
+        if (am != null && am.isTouchExplorationEnabled()) {
+            ret = true;
         }
-
         return ret;
     }
 
@@ -1362,7 +1358,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      * @param listener Null value unregisters the current listener, non-null unregisters previous one and registers new one
      *                 If the current listener is the same as the previous one, no operation is performed.
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     protected void setTouchExploreChangeListener(@Nullable AccessibilityManager.TouchExplorationStateChangeListener listener) {
 
         // if current touchExplorerStateChangeListener is identical to previous one, no operation is necessary
@@ -1424,7 +1419,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 });
 
                 // Clear the default translucent background
-                settingPopup.setBackgroundDrawable(new BitmapDrawable());
+                settingPopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 // Displaying the popup at the specified location, + offsets.
                 settingPopup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x-(int)popupWidth, p.y-(int)popupHeight);
@@ -1557,23 +1552,21 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             String languageSubtitle = getSubtitleLanguage();
 
             // Check if captioning is enabled in accessibility settings and set the captioning language implicitly
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (languageSubtitle == null) {
-                    final CaptioningManager cManager = (CaptioningManager) getContext().getSystemService(Context.CAPTIONING_SERVICE);
-                    if (cManager.isEnabled()) {
-                        final String defaultCcLanguage;
-                        {
-                            final Locale cManagerLocale = cManager.getLocale();
-                            if (cManagerLocale != null) {
-                                defaultCcLanguage = cManagerLocale.getLanguage();
-                            } else {
-                                defaultCcLanguage = Locale.getDefault().getLanguage();
-                            }
+            if (languageSubtitle == null) {
+                final CaptioningManager cManager = (CaptioningManager) getContext().getSystemService(Context.CAPTIONING_SERVICE);
+                if (cManager.isEnabled()) {
+                    final String defaultCcLanguage;
+                    {
+                        final Locale cManagerLocale = cManager.getLocale();
+                        if (cManagerLocale != null) {
+                            defaultCcLanguage = cManagerLocale.getLanguage();
+                        } else {
+                            defaultCcLanguage = Locale.getDefault().getLanguage();
                         }
-                        if (srtList.containsKey(defaultCcLanguage)) {
-                            languageSubtitle = defaultCcLanguage;
-                            setSubtitleLanguage(languageSubtitle);
-                        }
+                    }
+                    if (srtList.containsKey(defaultCcLanguage)) {
+                        languageSubtitle = defaultCcLanguage;
+                        setSubtitleLanguage(languageSubtitle);
                     }
                 }
             }

@@ -19,7 +19,6 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        tools:text="@string/delete_single_video_dialog"
         android:textAllCaps="true"
         android:textSize="17sp" />
 

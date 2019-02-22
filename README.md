@@ -76,7 +76,7 @@ There are 3 Build Variants in this project:
 
 - **prodDebug**: Uses prod flavor for debug builds.
 - **prodDebuggable**: Uses prod flavor for debug builds with debugging enabled.
-- **prodRelease**: Uses prod flavor for release builds that'll work on devices with Android 4.1.x (Jelly Bean) and above.
+- **prodRelease**: Uses prod flavor for release builds that'll work on devices with Android 4.4.x (KitKat) and above.
 
 Building For Release
 --------------------
