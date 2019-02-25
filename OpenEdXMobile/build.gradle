@@ -16,6 +16,7 @@ buildscript {
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
 
+//        TODO : Need to update when available, ( In order to resolve "variant.getConnectedInstrumentTest()" warning)
         classpath 'com.facebook.testing.screenshot:plugin:0.8.0'
         classpath 'com.google.gms:google-services:4.0.1'
     }
