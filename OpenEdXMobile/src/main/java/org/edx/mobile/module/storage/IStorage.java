@@ -48,8 +48,6 @@ public interface IStorage {
      */
     void removeAllDownloads();
 
-    int removeDownloadedScromEntry(String blockId);
-
     /**
      * This method fetches all unenrolledVideos from the DB.
      * Iterates through the list and then calls the remove Download method for each video
@@ -163,4 +161,8 @@ public interface IStorage {
     void markVideoPlaying(DownloadEntry videoModel, DataCallback<Integer> watchedStateCallback);
 
     void repairDownloadCompletionData();
+
+    DownloadEntry getPostVideo(String postId);
+
+    DownloadEntry getPostVideo(String p_id, String video_url);
 }

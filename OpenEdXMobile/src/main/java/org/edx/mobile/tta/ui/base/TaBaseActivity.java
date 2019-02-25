@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.inject.Key;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.tta.utils.LocaleHelper;
 import org.edx.mobile.tta.widget.loading.ILoading;
 import org.edx.mobile.tta.widget.loading.ProgressDialogLoading;
@@ -53,6 +54,7 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
     protected EventManager eventManager;
     protected HashMap<Key<?>, Object> scopedObjects = new HashMap<Key<?>, Object>();
     protected boolean isInForeground = false;
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +108,14 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
 
     public void showLongToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public void logD(String msg){
+        logger.debug(msg);
+    }
+
+    public void logW(String msg){
+        logger.warn(msg);
     }
 
     public void showAlertDailog(String title, String msg, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){

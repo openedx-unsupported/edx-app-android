@@ -11,6 +11,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.tta.wordpress_client.rest.HttpServerErrorResponse;
 
 import java.util.List;
 
@@ -149,5 +150,38 @@ public class NetworkUtil {
             }
         }
         return true;
+    }
+
+    public static boolean isLimitedAcess(HttpServerErrorResponse  response) {
+        boolean status=false;
+        try {
+            if (response == null || response.getMessage().toString().toLowerCase().contains("unable to resolve host") ||
+                    response.getMessage().toString().toLowerCase().contains("failed to connect")|| response.getCode() == null)
+                status = true;
+            else
+                status = false;
+        }
+        catch (Exception ex)
+        {
+            return status;
+        }
+
+        return status;
+    }
+
+    public static boolean isUnauthorize(HttpServerErrorResponse response) {
+        boolean status=false;
+        try {
+            if (response.getCode().trim().equals("401")|| response.getCode().trim().equals("rest_not_logged_in"))
+                status = true;
+            else
+                status = false;
+        }
+        catch (Exception ex)
+        {
+            return status;
+        }
+
+        return status;
     }
 }

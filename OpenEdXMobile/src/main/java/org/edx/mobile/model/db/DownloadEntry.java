@@ -14,6 +14,10 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.tta.wordpress_client.model.CustomFilter;
+import org.edx.mobile.tta.wordpress_client.model.Post;
+import org.edx.mobile.tta.wordpress_client.util.MxFilterType;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.JavaUtil;
 
 public class DownloadEntry implements SectionItemInterface, VideoModel {
@@ -136,7 +140,8 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     @Override
     public boolean getattachType() {
         return type != null && (type.equalsIgnoreCase(DownloadType.SCORM.name()) ||
-                type.equalsIgnoreCase(DownloadType.PDF.name()));
+                type.equalsIgnoreCase(DownloadType.PDF.name()) ||
+                type.equalsIgnoreCase(DownloadType.WP_VIDEO.name()));
     }
 
     @Override
@@ -337,7 +342,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         this.downloadedOn=System.currentTimeMillis();
     }
 
-    /*public void setDownloadEntryForPost(String  category_id, String  category_name,Post post)
+    public void setDownloadEntryForPost(String  category_id, String  category_name, Post post)
     {
         String download_url="";
         //find the downloaded obj
@@ -356,7 +361,6 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
                 }
             }
         }
-        this.attachType =true;
         this.username= BrowserUtil.loginPrefs.getUsername();
         this.title=post.getTitle().getRendered();
 
@@ -382,7 +386,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         this.chapter=category_name;
 
         //it will be content type
-        this.ContentType= String.valueOf(org.tta.mobile.model.ContentType.CONNECTVIDEO);
+        this.type= DownloadType.WP_VIDEO.name();
 
         //it will be section name
         this.section=post.getTitle().getRendered();
@@ -397,5 +401,5 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
         //downloadedOn it will be null for fresh download and set only for update case
         this.downloadedOn=0;
-    }*/
+    }
 }

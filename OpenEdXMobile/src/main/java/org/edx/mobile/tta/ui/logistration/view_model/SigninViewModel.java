@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -84,9 +85,25 @@ public class SigninViewModel extends BaseViewModel {
     }
 
     public void login() {
-//        ActivityUtil.gotoPage(mActivity, LandingActivity.class);
         mActivity.showLoading();
-        new LoginTask(mActivity, cellphone.get(), password.get()){
+        mDataManager.login(cellphone.get(), password.get(), new OnResponseCallback<AuthResponse>() {
+            @Override
+            public void onSuccess(AuthResponse data) {
+                mActivity.hideLoading();
+                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                mActivity.finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                mActivity.hideLoading();
+                if (e instanceof AuthException){
+                    mFragment.showErrorDialog(mActivity.getString(R.string.login_error),
+                            mActivity.getString(R.string.login_failed));
+                }
+            }
+        });
+        /*new LoginTask(mActivity, cellphone.get(), password.get()){
             @Override
             protected void onSuccess(AuthResponse authResponse) throws Exception {
                 super.onSuccess(authResponse);
@@ -104,7 +121,7 @@ public class SigninViewModel extends BaseViewModel {
                             mActivity.getString(R.string.login_failed));
                 }
             }
-        }.execute();
+        }.execute();*/
     }
 
     public void changePassword(){

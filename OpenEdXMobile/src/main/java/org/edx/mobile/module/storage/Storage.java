@@ -166,7 +166,7 @@ public class Storage implements IStorage {
         int videosDeleted = db.deleteVideoByVideoId(model, null);
         // Reset the state of Videos Bulk Download view whenever a delete happens
         videoPrefs.setBulkDownloadSwitchState(BulkDownloadFragment.SwitchState.DEFAULT, model.getEnrollmentId());
-        EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent(model.getDownloadType()));
         return videosDeleted;
     }
 
@@ -174,7 +174,7 @@ public class Storage implements IStorage {
     public int removeDownloads(List<VideoModel> modelList) {
         final int deletedVideos = removeDownloadsFromApp(modelList, null);
         logger.debug("Number of downloads removed by Download Manager: " + deletedVideos);
-        EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent(modelList.isEmpty()?null:modelList.get(0).getDownloadType()));
         return deletedVideos;
     }
 
@@ -192,7 +192,7 @@ public class Storage implements IStorage {
             @Override
             public void onResult(List<VideoModel> result) {
                 removeDownloadsFromApp(result, sha1Username);
-                EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+                EventBus.getDefault().post(new DownloadedVideoDeletedEvent(result.isEmpty()?null:result.get(0).getDownloadType()));
             }
 
             @Override
@@ -223,14 +223,6 @@ public class Storage implements IStorage {
             deleteFile(model.getFilePath());
         }
         return downloadsRemoved;
-    }
-
-    //remove scorm item from db
-    @Override
-    public int removeDownloadedScromEntry(String blockId) {
-        int videosDeleted = db.deleteScromEntryByScromId(blockId, null);
-        EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
-        return videosDeleted;
     }
 
     /**
@@ -487,7 +479,7 @@ public class Storage implements IStorage {
                     if (e.filepath.endsWith(".zip")) {
                         unpackZip(e.filepath);
                     }
-                    EventBus.getDefault().post(new DownloadCompletedEvent());
+                    EventBus.getDefault().post(new DownloadCompletedEvent(e.type));
                 }
 
             } else {
@@ -611,6 +603,28 @@ public class Storage implements IStorage {
                 }
             });
             maintenanceThread.start();
+    }
+
+    @Override
+    public DownloadEntry getPostVideo(String postId) {
+        VideoModel video = db.getPostVideo(postId);
+        if (video != null) {
+            // we have a db entry, so return it
+            return (DownloadEntry)video;
+        }
+
+        return null;
+    }
+
+    @Override
+    public DownloadEntry getPostVideo(String p_id, String video_url) {
+        VideoModel video = db.getPostVideo(p_id,video_url, null);
+        if (video != null) {
+            // we have a db entry, so return it
+            return (DownloadEntry)video;
+        }
+
+        return null;
     }
 
     @Override

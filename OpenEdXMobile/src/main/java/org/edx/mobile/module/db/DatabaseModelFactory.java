@@ -7,6 +7,7 @@ import android.webkit.URLUtil;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockPath;
+import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
@@ -116,6 +117,7 @@ public class DatabaseModelFactory {
         e.transcript = vrm.transcripts;
         e.lmsUrl = block.getBlockUrl();
         e.isVideoForWebOnly = vrm.onlyOnWeb;
+        e.type = DownloadType.EDX_VIDEO.name();
         return e;
     }
 
@@ -142,7 +144,11 @@ public class DatabaseModelFactory {
 //        e.transcript = scormData.transcripts;
         e.lmsUrl = block.getBlockUrl();
 //        e.isVideoForWebOnly = scormData.onlyOnWeb;
-        e.type = DownloadType.SCORM.name();
+        if (block.getType().equals(BlockType.SCORM)) {
+            e.type = DownloadType.SCORM.name();
+        } else if (block.getType().equals(BlockType.PDF)) {
+            e.type = DownloadType.PDF.name();
+        }
         return e;
     }
 

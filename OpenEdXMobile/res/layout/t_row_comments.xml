@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:id="@+id/divider"
-                android:background="@color/primary_cyan"
+                android:background="@color/gray_1"
                 app:layout_constraintBottom_toTopOf="@id/comment_bottom_layout"/>
 
             <LinearLayout
@@ -111,7 +111,8 @@
                             android:layout_gravity="center_vertical"
                             android:fontFamily="@font/hind_medium"
                             android:textColor="@color/gray_3"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:visibility="gone"/>
 
                         <ImageView
                             android:id="@+id/comment_like_image"
@@ -157,7 +158,8 @@
                             android:layout_gravity="center_vertical"
                             android:fontFamily="@font/hind_medium"
                             android:textColor="@color/gray_3"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:visibility="gone"/>
 
                         <ImageView
                             android:id="@+id/comment_reply_image"

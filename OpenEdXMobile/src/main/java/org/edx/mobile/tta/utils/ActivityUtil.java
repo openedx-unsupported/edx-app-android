@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.utils;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -80,5 +81,13 @@ public class ActivityUtil {
         {
             Toast.makeText(ctx, "NO Pdf Viewer", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void playVideo(String filePath, Context context){
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse(filePath), "video/*");
+        context.startActivity(Intent.createChooser(intent, "Complete action using"));
+
     }
 }

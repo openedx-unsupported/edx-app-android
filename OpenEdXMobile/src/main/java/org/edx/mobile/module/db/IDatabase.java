@@ -496,4 +496,7 @@ public interface IDatabase {
      */
     boolean isUnitAccessed(DataCallback<Boolean> callback, String unitId);
 
+    VideoModel getPostVideo(String postId);
+
+    VideoModel getPostVideo(String p_id, String video_url , final DataCallback<VideoModel> callback);
 }

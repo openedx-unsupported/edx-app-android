@@ -6,11 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -48,6 +54,7 @@ import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.task.GetHtmlFromUrlTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
+import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
 import org.edx.mobile.tta.task.content.IsLikeTask;
 import org.edx.mobile.tta.task.content.SetBookmarkTask;
@@ -64,7 +71,17 @@ import org.edx.mobile.tta.data.model.authentication.LoginRequest;
 import org.edx.mobile.tta.data.model.authentication.LoginResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.utils.RxUtil;
+import org.edx.mobile.tta.wordpress_client.model.Comment;
+import org.edx.mobile.tta.wordpress_client.model.CustomComment;
+import org.edx.mobile.tta.wordpress_client.model.Post;
+import org.edx.mobile.tta.wordpress_client.model.User;
+import org.edx.mobile.tta.wordpress_client.model.WPProfileModel;
+import org.edx.mobile.tta.wordpress_client.model.WpAuthResponse;
+import org.edx.mobile.tta.wordpress_client.rest.HttpServerErrorResponse;
+import org.edx.mobile.tta.wordpress_client.rest.WordPressRestResponse;
+import org.edx.mobile.tta.wordpress_client.rest.WpClientRetrofit;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 
 
@@ -113,6 +130,8 @@ public class DataManager extends BaseRoboInjector {
     @com.google.inject.Inject
     private VideoDownloadHelper downloadManager;
 
+    private WpClientRetrofit wpClientRetrofit;
+
     private AppPref mAppPref;
     private LoginPrefs loginPrefs;
 
@@ -136,6 +155,7 @@ public class DataManager extends BaseRoboInjector {
                 }
             }
         }
+        mDataManager.wpClientRetrofit = new WpClientRetrofit(true,false);
         return mDataManager;
     }
 
@@ -169,8 +189,42 @@ public class DataManager extends BaseRoboInjector {
         return loginPrefs;
     }
 
-    public Observable<LoginResponse> login(LoginRequest loginRequest) {
-        return preProcess(mRemoteDataSource.login(loginRequest));
+    public void login(String username, String password, OnResponseCallback<AuthResponse> callback) {
+
+        wpClientRetrofit.getAccessToken(username, password, new WordPressRestResponse<WpAuthResponse>() {
+            @Override
+            public void onSuccess(WpAuthResponse result) {
+                loginPrefs.storeWPAuthTokenResponse(result);
+                doEdxLogin(username, password, callback);
+            }
+
+            @Override
+            public void onFailure(HttpServerErrorResponse errorResponse) {
+                if (config.isWordpressAuthentication()){
+                    callback.onFailure(new TaException(errorResponse.getMessage()));
+                } else {
+                    doEdxLogin(username, password, callback);
+                }
+            }
+        });
+
+    }
+
+    private void doEdxLogin(String username, String password, OnResponseCallback<AuthResponse> callback){
+
+        new LoginTask(context, username, password){
+            @Override
+            protected void onSuccess(AuthResponse authResponse) throws Exception {
+                super.onSuccess(authResponse);
+                callback.onSuccess(authResponse);
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(ex);
+            }
+        }.execute();
+
     }
 
     public void logout() {
@@ -958,6 +1012,11 @@ public class DataManager extends BaseRoboInjector {
     public ScormStatus getScormStatus(ScormBlockModel scorm){
 
         DownloadEntry entry = scorm.getDownloadEntry(edxEnvironment.getStorage());
+        return getDownloadStatus(entry);
+
+    }
+
+    private ScormStatus getDownloadStatus(DownloadEntry entry) {
         if (entry == null || entry.downloaded.equals(DownloadEntry.DownloadedState.ONLINE)){
             return ScormStatus.not_downloaded;
         } else if (entry.downloaded.equals(DownloadEntry.DownloadedState.DOWNLOADING)){
@@ -969,7 +1028,6 @@ public class DataManager extends BaseRoboInjector {
         } else {
             return ScormStatus.watched;
         }
-
     }
 
     public void deleteScorm(ScormBlockModel scormBlockModel){
@@ -1016,6 +1074,151 @@ public class DataManager extends BaseRoboInjector {
         } else {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
+    }
+
+    public void getPostById(long postId, OnResponseCallback<Post> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            wpClientRetrofit.getPost(postId, new WordPressRestResponse<Post>() {
+                @Override
+                public void onSuccess(Post result) {
+                    if (result != null){
+                        callback.onSuccess(result);
+                    } else {
+                        callback.onFailure(new TaException("Invalid post"));
+                    }
+                }
+
+                @Override
+                public void onFailure(HttpServerErrorResponse errorResponse) {
+                    callback.onFailure(new TaException(errorResponse.getMessage()));
+                }
+            });
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getCommentsByPost(long postId, OnResponseCallback<List<Comment>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            wpClientRetrofit.getCommentsByPost(postId, new WordPressRestResponse<List<Comment>>() {
+                @Override
+                public void onSuccess(List<Comment> result) {
+                    if (result == null){
+                        result = new ArrayList<>();
+                    }
+                    callback.onSuccess(result);
+                }
+
+                @Override
+                public void onFailure(HttpServerErrorResponse errorResponse) {
+                    callback.onFailure(new TaException(errorResponse.getMessage()));
+                }
+            });
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void downloadPost(Post post, String category_id,String category_name,
+                             FragmentActivity activity,
+                             VideoDownloadHelper.DownloadManagerCallback callback){
+
+        DownloadEntry videoData=new DownloadEntry();
+        videoData.setDownloadEntryForPost(category_id,category_name,post);
+        downloadManager.downloadVideo(videoData, activity, callback);
+
+    }
+
+    public void deletePost(Post post){
+
+        DownloadEntry entry = edxEnvironment.getStorage().getPostVideo(String.valueOf(post.getId()));
+        if (entry != null)
+            edxEnvironment.getStorage().removeDownload(entry);
+
+    }
+
+    public ScormStatus getPostDownloadStatus(Post post){
+
+        DownloadEntry entry = edxEnvironment.getStorage().getPostVideo(String.valueOf(post.getId()));
+        return getDownloadStatus(entry);
+
+    }
+
+    public void addComment(String comment, int commentParentId, long postId, OnResponseCallback<Comment> callback) {
+        if(loginPrefs.getWPCurrentUserProfile()==null||loginPrefs.getWPCurrentUserProfile().id==null) {
+            callback.onFailure(new TaException("Not authenticated to comment."));
+            return;
+        }
+
+        String ua=new WebView(context).getSettings().getUserAgentString();
+        CustomComment obj=new CustomComment();
+        obj.author=loginPrefs.getWPCurrentUserProfile().id;
+        //obj.author_ip=ip;
+        obj.author_url ="";
+        obj.author_user_agent=ua;
+        obj.content=comment;
+        obj.date= DateUtil.getCurrentDateForServerLocal();
+        obj.date_gmt=DateUtil.getCurrentDateForServerGMT();
+        obj.parent=commentParentId;
+        obj.post=postId;
+
+        addComment(obj, callback);
+    }
+
+    private void addComment(CustomComment comment, OnResponseCallback<Comment> callback)
+    {
+        wpClientRetrofit.createComment(comment, new WordPressRestResponse<Comment>() {
+            @Override
+            public void onSuccess(Comment result) {
+                callback.onSuccess(result);
+            }
+            @Override
+            public void onFailure(HttpServerErrorResponse errorResponse) {
+                callback.onFailure(new TaException(errorResponse.getMessage()));
+            }
+        });
+    }
+
+    public void setWpProfileCache()
+    {
+        wpClientRetrofit.getUserMe(new WordPressRestResponse<User>() {
+            @Override
+            public void onSuccess(User result) {
+                WPProfileModel model = new WPProfileModel();
+                model.name = result.getName();
+                model.username = result.getUsername();
+                model.id = result.getId();
+                if (result.getRoles() != null && result.getRoles().size() > 0)
+                    model.roles = result.getRoles();
+                loginPrefs.setWPCurrentUserProfileInCache(model);
+            }
+
+            @Override
+            public void onFailure(HttpServerErrorResponse errorResponse) {
+                if(!NetworkUtil.isLimitedAcess(errorResponse) && NetworkUtil.isUnauthorize(errorResponse))
+                {
+                    logout();
+                    Toast.makeText(context, "Session expire", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public DownloadEntry getDownloadedVideo(Post post, String categoryId, String categoryName)
+    {
+        DownloadEntry videoData=new DownloadEntry();
+        videoData.setDownloadEntryForPost(categoryId,categoryName,post);
+
+        return edxEnvironment.getStorage().getPostVideo(videoData.videoId,videoData.url);
+
     }
 }
 

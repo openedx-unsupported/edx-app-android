@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 
 import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -16,40 +17,45 @@ import org.edx.mobile.databinding.TRowCommentsBinding;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.wordpress_client.model.Comment;
+import org.edx.mobile.tta.wordpress_client.model.Post;
+import org.edx.mobile.util.DateUtil;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ConnectCommentsTabViewModel extends BaseViewModel {
 
     private Content content;
+    private Post post;
+    private List<Comment> comments;
 
     public CommentsAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
 
-    public ConnectCommentsTabViewModel(Context context, TaBaseFragment fragment, Content content) {
+    public ConnectCommentsTabViewModel(Context context, TaBaseFragment fragment, Content content, Post post, List<Comment> comments) {
         super(context, fragment);
         this.content = content;
+        this.post = post;
+        this.comments = comments;
         adapter = new CommentsAdapter(mActivity);
         layoutManager = new LinearLayoutManager(mActivity);
-        loadData();
+        adapter.setItems(comments);
     }
 
-    private void loadData() {
-        List<Content> contents = new ArrayList<>();
-        for (int i = 0; i < 5; i++){
-            contents.add(new Content());
-        }
-        adapter.setItems(contents);
+    public void refreshList(){
+        adapter.notifyDataSetChanged();
     }
 
-    public class CommentsAdapter extends MxInfiniteAdapter<Content> {
+    public class CommentsAdapter extends MxInfiniteAdapter<Comment> {
         public CommentsAdapter(Context context) {
             super(context);
         }
 
         @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull Content model, @Nullable OnRecyclerItemClickListener<Content> listener) {
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull Comment model, @Nullable OnRecyclerItemClickListener<Comment> listener) {
             if (binding instanceof TRowCommentsBinding){
                 TRowCommentsBinding commentsBinding = (TRowCommentsBinding) binding;
 
@@ -58,12 +64,9 @@ public class ConnectCommentsTabViewModel extends BaseViewModel {
                         .placeholder(R.drawable.placeholder_course_card_image)
                         .into(commentsBinding.roundedUserImage);
 
-                commentsBinding.userName.setText("User Name");
-                commentsBinding.date.setText("19 Feb 2019");
-                commentsBinding.comment.setText(
-                        "अगर हम एक एक कर के सभी छात्रों का निवारन लें तो हम यह ज्ञात कर" +
-                                " सकते हैं की हम किस प्रकार एक जुट होकर एक सलूशन निकले जिस्सेय " +
-                                "हमें और छात्रों को आसानी रहे सब सिखने में");
+                commentsBinding.userName.setText(model.getAuthorName());
+                commentsBinding.date.setText(DateUtil.getDisplayTime(model.getDate()));
+                commentsBinding.comment.setText(Html.fromHtml(model.getContent().getRendered()));
                 commentsBinding.commentLikes.setText("80");
                 commentsBinding.commentReplies.setText("5");
 
