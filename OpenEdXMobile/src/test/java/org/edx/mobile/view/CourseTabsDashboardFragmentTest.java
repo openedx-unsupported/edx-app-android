@@ -30,7 +30,7 @@ public class CourseTabsDashboardFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() {
-        CourseTabsDashboardFragment fragment = CourseTabsDashboardFragment.newInstance(getCourseData());
+        CourseTabsDashboardFragment fragment = CourseTabsDashboardFragment.newInstance(getCourseData(), "testsCourseId");
         SupportFragmentTestUtil.startVisibleFragment(fragment, RoboFragmentActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);
