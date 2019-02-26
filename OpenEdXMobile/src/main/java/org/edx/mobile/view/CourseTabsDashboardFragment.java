@@ -49,7 +49,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable updateDownloadProgressRunnable;
     private MenuItem downloadsMenuItem;
-    private boolean wasDownloadItemVisibleBeforeStopping = false;
 
     @NonNull
     public static CourseTabsDashboardFragment newInstance(EnrolledCoursesResponse courseData) {
@@ -112,8 +111,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Only re-run the runnable if it was previously running when onStop was called which stopped it
-        if (updateDownloadProgressRunnable != null && wasDownloadItemVisibleBeforeStopping) {
+        if (updateDownloadProgressRunnable != null) {
             updateDownloadProgressRunnable.run();
         }
     }
@@ -123,7 +121,17 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         super.onStop();
         if (updateDownloadProgressRunnable != null) {
             handler.removeCallbacks(updateDownloadProgressRunnable);
-            wasDownloadItemVisibleBeforeStopping = downloadsMenuItem.isVisible();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (updateDownloadProgressRunnable != null) {
+            handler.removeCallbacks(updateDownloadProgressRunnable);
+            /* Assigning null here so that when this fragment is destroyed (e.g. due to orientation
+             * change) the runnable is recreated and the download progress is updated properly.
+             */
             updateDownloadProgressRunnable = null;
         }
     }
@@ -148,6 +156,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                     if (!NetworkUtil.isConnected(getContext()) ||
                             !environment.getDatabase().isAnyVideoDownloading(null)) {
                         downloadsMenuItem.setVisible(false);
+                        progressWheel.setProgressPercent(0);
                     } else {
                         downloadsMenuItem.setVisible(true);
                         environment.getStorage().getAverageDownloadProgress(
