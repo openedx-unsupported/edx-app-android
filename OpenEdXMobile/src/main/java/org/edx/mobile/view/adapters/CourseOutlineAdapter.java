@@ -224,7 +224,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 return getLastAccessedView(position, convertView);
             }
             case SectionRow.BULK_DOWNLOAD: {
-                if (rootComponent != null) {
+                if (rootComponent != null && convertView != null) {
                     final BulkDownloadFragment fragment = (BulkDownloadFragment) convertView.getTag();
                     fragment.populateViewHolder(
                             isOnCourseOutline ? rootComponent.getCourseId() : rootComponent.getId(),
