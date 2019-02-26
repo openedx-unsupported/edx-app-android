@@ -6,13 +6,13 @@ import android.os.Bundle;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
-import org.json.JSONObject;
+import org.json.JSONException;
 
 import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 
 // We are extending the normal Activity class here so that we can use Theme.NoDisplay, which does not support AppCompat activities
 public class SplashActivity extends Activity {
@@ -54,18 +54,22 @@ public class SplashActivity extends Activity {
     public void onStart() {
         super.onStart();
         if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
-            Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
-                @Override
-                public void onInitFinished(JSONObject referringParams, BranchError error) {
-                    if (error == null) {
-                        // params are the deep linked params associated with the link that the user
-                        // clicked -> was re-directed to this app params will be empty if no data found
-                    } else {
-                        // Ignore the logging of errors occurred due to lack of network connectivity
-                        if (NetworkUtil.isConnected(getApplicationContext())) {
-                            logger.error(new Exception("Branch not configured properly, error:\n"
-                                    + error.getMessage()), true);
+            Branch.getInstance().initSession((referringParams, error) -> {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user
+                    // clicked -> was re-directed to this app params will be empty if no data found
+                    if (referringParams.optBoolean(DeepLinkManager.KEY_CLICKED_BRANCH_LINK)) {
+                        try {
+                            DeepLinkManager.parseAndReact(SplashActivity.this, referringParams);
+                        } catch (JSONException e) {
+                            logger.error(e, true);
                         }
+                    }
+                } else {
+                    // Ignore the logging of errors occurred due to lack of network connectivity
+                    if (NetworkUtil.isConnected(getApplicationContext())) {
+                        logger.error(new Exception("Branch not configured properly, error:\n"
+                                + error.getMessage()), true);
                     }
                 }
             }, this.getIntent().getData(), this);
