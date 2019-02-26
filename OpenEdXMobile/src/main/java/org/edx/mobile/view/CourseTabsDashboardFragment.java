@@ -107,7 +107,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         } else {
             // The case where we need to fetch course's data based on its courseId
             fetchCourseById();
-            getActivity().setTitle("");
             final FrameLayout frameLayout = new FrameLayout(getActivity());
             frameLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             frameLayout.addView(inflater.inflate(R.layout.loading_indicator, container, false));
@@ -121,24 +120,20 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             @Override
             protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                 if (getActivity() != null) {
-                    final Bundle args = new Bundle();
-                    args.putSerializable(Router.EXTRA_COURSE_DATA, course);
-                    setArguments(args);
+                    getArguments().putSerializable(Router.EXTRA_COURSE_DATA, course);
                     getFragmentManager().beginTransaction()
                             .detach(CourseTabsDashboardFragment.this)
-                            .attach(CourseTabsDashboardFragment.this).commit();
+                            .attach(CourseTabsDashboardFragment.this).commitAllowingStateLoss();
                 }
             }
 
             @Override
             protected void onFailure(@NonNull final Throwable error) {
                 if (getActivity() != null) {
-                    final Bundle args = new Bundle();
-                    args.putBoolean(ARG_COURSE_NOT_FOUND, true);
-                    setArguments(args);
+                    getArguments().putBoolean(ARG_COURSE_NOT_FOUND, true);
                     getFragmentManager().beginTransaction()
                             .detach(CourseTabsDashboardFragment.this)
-                            .attach(CourseTabsDashboardFragment.this).commit();
+                            .attach(CourseTabsDashboardFragment.this).commitAllowingStateLoss();
                     logger.error(new Exception("Invalid Course ID provided via deeplink: " + courseId), true);
                 }
             }
