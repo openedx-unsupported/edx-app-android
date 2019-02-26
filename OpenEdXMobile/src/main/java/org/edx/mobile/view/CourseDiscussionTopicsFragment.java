@@ -39,7 +39,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
@@ -52,7 +51,6 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     @InjectView(R.id.discussion_topics_listview)
     private ListView discussionTopicsListView;
 
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
     @Inject
@@ -71,9 +69,16 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
 
     private FullScreenErrorNotification errorNotification;
 
+    public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model) {
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(Router.EXTRA_COURSE_DATA, model);
+        return arguments;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
         return inflater.inflate(R.layout.fragment_discussion_topics, container, false);
     }
 
