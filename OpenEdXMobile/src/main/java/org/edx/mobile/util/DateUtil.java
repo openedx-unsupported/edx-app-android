@@ -115,8 +115,9 @@ public class DateUtil {
         }
 
         ParsePosition pos = new ParsePosition(0);
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy");
+        Locale locale = new Locale("en");
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy", locale);
         Date date = inputFormat.parse(timeISO, pos);
         return outputFormat.format(date);
 

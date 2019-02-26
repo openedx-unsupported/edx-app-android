@@ -102,7 +102,10 @@
                         android:id="@+id/comment_like_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/comment_likes"
@@ -149,7 +152,10 @@
                         android:id="@+id/comment_reply_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/comment_replies"

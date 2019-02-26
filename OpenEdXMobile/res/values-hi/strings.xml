@@ -59,4 +59,5 @@
     <string name="connect_video_post_download_msg">ऑफ़लाइन देखने के लिए कृपया प्ले बटन पर क्लिक करें</string>
     <string name="connect_video_post_downloading_msg">वीडियो डाउनलोड हो रहा है। प्रतीक्षा करें।</string>
     <string name="duration">अवधि</string>
+    <string name="most_relevant_list">सबसे ज़रूरी</string>
 </resources>

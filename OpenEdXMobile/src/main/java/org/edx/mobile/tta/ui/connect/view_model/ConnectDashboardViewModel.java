@@ -23,6 +23,7 @@ import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectCommentsTab;
+import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.Post;
@@ -33,7 +34,8 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class ConnectDashboardViewModel extends BaseViewModel {
+public class ConnectDashboardViewModel extends BaseViewModel
+    implements CommentClickListener {
 
     public ConnectPagerAdapter adapter;
     private List<Fragment> fragments;
@@ -46,6 +48,7 @@ public class ConnectDashboardViewModel extends BaseViewModel {
     private Post post;
     private List<Comment> allComments;
     public ObservableField<String> comment = new ObservableField<>("");
+    public ObservableBoolean commentFocus = new ObservableBoolean();
 
     //Header details
     public ObservableInt headerImagePlaceholder = new ObservableInt(R.drawable.placeholder_course_card_image);
@@ -184,15 +187,15 @@ public class ConnectDashboardViewModel extends BaseViewModel {
         fragments.clear();
         titles.clear();
 
-        tab1 = ConnectCommentsTab.newInstance(content, post, allComments);
+        tab1 = ConnectCommentsTab.newInstance(content, post, allComments, this);
         fragments.add(tab1);
         titles.add(mActivity.getString(R.string.all_list));
 
-        tab2 = ConnectCommentsTab.newInstance(content, post, allComments);
+        tab2 = ConnectCommentsTab.newInstance(content, post, allComments, this);
         fragments.add(tab2);
         titles.add(mActivity.getString(R.string.recently_added_list));
 
-        tab3 = ConnectCommentsTab.newInstance(content, post, allComments);
+        tab3 = ConnectCommentsTab.newInstance(content, post, allComments, this);
         fragments.add(tab3);
         titles.add(mActivity.getString(R.string.most_relevant_list));
 
@@ -288,7 +291,13 @@ public class ConnectDashboardViewModel extends BaseViewModel {
         }
     }
 
-    public void comment(){
+    public void addCommentOnPost(){
+
+        addReplyToComment(0);
+
+    }
+
+    public void addReplyToComment(int commentParentId){
 
         String comment = this.comment.get();
         if (comment == null || comment.trim().equals("")){
@@ -297,7 +306,7 @@ public class ConnectDashboardViewModel extends BaseViewModel {
         }
 
         mActivity.showLoading();
-        mDataManager.addComment(comment.trim(), 0, post.getId(),
+        mDataManager.addComment(comment.trim(), commentParentId, post.getId(),
                 new OnResponseCallback<Comment>() {
                     @Override
                     public void onSuccess(Comment data) {
@@ -373,6 +382,24 @@ public class ConnectDashboardViewModel extends BaseViewModel {
 
     public void unregisterEvnetBus(){
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onClickUser(Comment comment) {
+
+    }
+
+    @Override
+    public void onClickLike(Comment comment) {
+
+    }
+
+    @Override
+    public void onClickReply(Comment comment) {
+        if (commentFocus.get()) {
+            commentFocus.set(false);
+        }
+        commentFocus.set(true);
     }
 
     public class ConnectPagerAdapter extends BasePagerAdapter {

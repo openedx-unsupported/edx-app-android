@@ -277,6 +277,7 @@
                         android:id="@+id/tab_layout"
                         style="@style/ta_tab_style"
                         android:layout_marginTop="1dp"
+                        android:layout_marginBottom="4dp"
                         app:layout_scrollFlags="scroll|exitUntilCollapsed"
                         app:tabGravity="fill"
                         app:tabIndicatorColor="@color/primary_cyan"
@@ -326,7 +327,8 @@
                     android:text="@={viewModel.comment}"
                     android:textColor="@color/gray_4"
                     android:textColorHint="@color/gray_4"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    request_focus="@{viewModel.commentFocus}"/>
 
                 <Button
                     android:layout_width="wrap_content"
@@ -337,7 +339,7 @@
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:minWidth="78dp"
-                    android:onClick="@{()->viewModel.comment()}"
+                    android:onClick="@{()->viewModel.addCommentOnPost()}"
                     android:padding="@dimen/_10px"
                     android:text="@string/comment_en"
                     android:textAllCaps="false"

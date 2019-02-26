@@ -112,37 +112,34 @@ public class ConnectDashboardActivity extends BaseVMActivity {
 
         //setting store webpage in cache
 
-        webView.getSettings().setAppCacheMaxSize( 5 * 1024 * 1024 ); // 5MB
-        webView.getSettings().setAppCachePath( getApplicationContext().getCacheDir().getAbsolutePath() );
-        webView.getSettings().setAllowFileAccess( true );
-        webView.getSettings().setAppCacheEnabled( true );
-        webView.getSettings().setJavaScriptEnabled( true );
-        webView.getSettings().setCacheMode( WebSettings.LOAD_DEFAULT );
+        webView.getSettings().setAppCacheMaxSize(5 * 1024 * 1024); // 5MB
+        webView.getSettings().setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        if (!NetworkUtil.isConnected(this))
-        {
-            webView.getSettings().setCacheMode( WebSettings.LOAD_CACHE_ELSE_NETWORK );
+        if (!NetworkUtil.isConnected(this)) {
+            webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
 
         final CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
 
         String domain = config.getConnectDomainUrl();
-        cookieManager.setCookie(domain,loginAPI.getConnectCookies()+"; Domain="+domain);
+        cookieManager.setCookie(domain, loginAPI.getConnectCookies() + "; Domain=" + domain);
 
         WebSettings webSettings = webView.getSettings();
 
-        webSettings.setUserAgentString(webSettings.getUserAgentString()+"/"+"theteacherapp/3.0");
+        webSettings.setUserAgentString(webSettings.getUserAgentString() + "/" + "theteacherapp/3.0");
         webSettings.setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(new WebAppInterfaceConnect(this,webView),"android");
+        webView.addJavascriptInterface(new WebAppInterfaceConnect(this, webView), "android");
 
         webView.setOnKeyListener((v, keyCode, event) -> {
 
-            if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_UP && webView.canGoBack())
-            {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && webView.canGoBack()) {
                 //check for internet ,otherwise connection message
-                if (!NetworkUtil.isConnected(ConnectDashboardActivity.this))
-                {
+                if (!NetworkUtil.isConnected(ConnectDashboardActivity.this)) {
                     webView.setVisibility(View.GONE);
                     return true;
                 }
@@ -160,22 +157,20 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                 }*/
                 return true;
             }
-            return  false;
+            return false;
         });
 
         webChromeClient = new VideoEnabledWebChromeClient(nonVideoLayout, videoLayout, null, webView) // See all available constructors...
         {
             // Subscribe to standard events, such as onProgressChanged()...
             @Override
-            public void onProgressChanged(WebView view, int progress)
-            {
+            public void onProgressChanged(WebView view, int progress) {
                 // Your code...
             }
 
             /// For 3.0+ Devices (Start)
             // onActivityResult attached before constructor
-            protected void openFileChooser(ValueCallback uploadMsg, String acceptType)
-            {
+            protected void openFileChooser(ValueCallback uploadMsg, String acceptType) {
                 mUploadMessage = uploadMsg;
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -184,8 +179,7 @@ public class ConnectDashboardActivity extends BaseVMActivity {
             }
 
             // For Lollipop 5.0+ Devices
-            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams)
-            {
+            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
                 if (uploadMessage != null) {
                     uploadMessage.onReceiveValue(null);
                     uploadMessage = null;
@@ -197,11 +191,9 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     intent = fileChooserParams.createIntent();
                 }
-                try
-                {
+                try {
                     startActivityForResult(intent, REQUEST_SELECT_FILE);
-                } catch (ActivityNotFoundException e)
-                {
+                } catch (ActivityNotFoundException e) {
                     uploadMessage = null;
                     return false;
                 }
@@ -209,8 +201,7 @@ public class ConnectDashboardActivity extends BaseVMActivity {
             }
 
             //For Android 4.1 only
-            protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture)
-            {
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
                 mUploadMessage = uploadMsg;
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -218,8 +209,7 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                 startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
             }
 
-            protected void openFileChooser(ValueCallback<Uri> uploadMsg)
-            {
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg) {
                 mUploadMessage = uploadMsg;
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -234,8 +224,7 @@ public class ConnectDashboardActivity extends BaseVMActivity {
 
 
             @Override
-            public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
-            {
+            public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result) {
                 new AlertDialog.Builder(ConnectDashboardActivity.this)
                         /*.setTitle("Thank you !")*/
                         /*.setMessage(getResources().getString(R.string.mx_connect_uploaded_vedio_success))*/
@@ -250,30 +239,25 @@ public class ConnectDashboardActivity extends BaseVMActivity {
         };
         webChromeClient.setOnToggledFullscreen(fullscreen -> {
             // Your code to handle the full-screen change, for example showing and hiding the title bar. Example:
-            if (fullscreen)
-            {
+            if (fullscreen) {
                 ConnectDashboardActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
                 WindowManager.LayoutParams attrs = getWindow().getAttributes();
                 attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
                 attrs.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                 getWindow().setAttributes(attrs);
-                if (Build.VERSION.SDK_INT >= 14)
-                {
+                if (Build.VERSION.SDK_INT >= 14) {
                     //noinspection all
                     getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
                 }
-            }
-            else
-            {
+            } else {
                 ConnectDashboardActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
                 WindowManager.LayoutParams attrs = getWindow().getAttributes();
                 attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
                 attrs.flags &= ~WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                 getWindow().setAttributes(attrs);
-                if (Build.VERSION.SDK_INT >= 14)
-                {
+                if (Build.VERSION.SDK_INT >= 14) {
                     //noinspection all
                     getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
                 }
@@ -291,9 +275,20 @@ public class ConnectDashboardActivity extends BaseVMActivity {
 
     }
 
-    public void addReplyToComment(final int parent_id)
-    {
+    public void addReplyToComment(final int parent_id) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Notify the VideoEnabledWebChromeClient, and handle it ourselves if it doesn't handle it
+        if (!webChromeClient.onBackPressed()) {
+            if (webView.canGoBack()) {
+                webView.goBack();
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 
     @Override
@@ -307,18 +302,16 @@ public class ConnectDashboardActivity extends BaseVMActivity {
         // Force links to be opened inside WebView and not in Default Browser
         // Thanks http://stackoverflow.com/a/33681975/1815624
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (!NetworkUtil.isConnected(ConnectDashboardActivity.this))
-            {
+            if (!NetworkUtil.isConnected(ConnectDashboardActivity.this)) {
                 //noInternetConnection_tv.setVisibility(View.VISIBLE);
                 showLongSnack(getString(R.string.reset_no_network_message));
                 webView.setVisibility(View.GONE);
                 return true;
             }
-            if(url.startsWith(config.getConnectUrl())) {
+            if (url.startsWith(config.getConnectUrl())) {
                 // Toast.makeText(ctx,url,Toast.LENGTH_LONG).show();
                 view.loadUrl(url);
-            }
-            else if(url.startsWith("whatsapp://")) {
+            } else if (url.startsWith("whatsapp://")) {
                 if (AppUtil.appInstalledOrNot("com.whatsapp", getPackageManager())) {
                     Uri uri = Uri.parse(url);
                     String msg = uri.getQueryParameter("text");
@@ -328,47 +321,41 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                     sendIntent.setType("text/plain");
                     sendIntent.setPackage("com.whatsapp");
                     startActivity(sendIntent);
-                }
-                else
-                {
+                } else {
                     showLongSnack("Whatsapp is not found in your device");
                 }
                 return true;
-            }
-            else if (url.endsWith(".mp4")) {
+            } else if (url.endsWith(".mp4")) {
                 showShortSnack("Download start.");
                 //add analytics
 //                analytic.addMxAnalytics_db(loginPrefs.getUsername(),currentPost.getTitle().getRendered(), Action.DownloadConnect,category_name, Source.Mobile);
-                String name="";
-                if(currentPost.getSlug()==null ||currentPost.getSlug().equals(""))
-                    name="download";
+                String name = "";
+                if (currentPost.getSlug() == null || currentPost.getSlug().equals(""))
+                    name = "download";
                 else
-                    name=currentPost.getSlug().toString().trim();
+                    name = currentPost.getSlug().toString().trim();
 
                 Uri source = Uri.parse(url);
                 // Make a new request pointing to the .mp4 url
                 DownloadManager.Request request = new DownloadManager.Request(source);
                 // appears the same in Notification bar while downloading
                 request.setDescription("Description for the DownloadManager Bar");
-                request.setTitle(name+".mp4");
+                request.setTitle(name + ".mp4");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     request.allowScanningByMediaScanner();
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                 }
 
                 // save the file in the "Downloads" folder of SDCARD
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name+".mp4");
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name + ".mp4");
                 // get download service and enqueue file
                 DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                 manager.enqueue(request);
-            }
-            else{
+            } else {
                 try {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(i);
-                }
-                catch (ActivityNotFoundException ex)
-                {
+                } catch (ActivityNotFoundException ex) {
                     showLongSnack("Application not found in your device to perform this action");
                 }
             }
@@ -395,19 +382,18 @@ public class ConnectDashboardActivity extends BaseVMActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            try{
-                if(view.getTitle()==null || view.getTitle().equals("") || view.getTitle().equals("Web page not available")||
-                        view.getTitle().equals(currentPost.getLink().toString().split("//")[1]))
-                {
+            try {
+                if (view.getTitle() == null || view.getTitle().equals("") || view.getTitle().equals("Web page not available") ||
+                        view.getTitle().equals(currentPost.getLink().toString().split("//")[1])) {
                     // cache failed as well, load a local resource as last resort
                     // or inform the user
                     showLongSnack(getString(R.string.reset_no_network_message));
                 }
 
-            }catch(Exception exception){
+            } catch (Exception exception) {
                 exception.printStackTrace();
             }
-            super.onPageFinished(view,url);
+            super.onPageFinished(view, url);
         }
     }
 }

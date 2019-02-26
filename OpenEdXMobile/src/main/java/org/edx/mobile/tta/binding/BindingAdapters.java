@@ -30,6 +30,7 @@ import com.maurya.mx.mxlib.view.MxRecyclerView;
 
 import org.edx.mobile.tta.ui.custom.FormEditText;
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
+import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 
 import java.lang.reflect.Constructor;
@@ -301,6 +302,7 @@ public class BindingAdapters {
             view.requestFocus();
             if (view instanceof EditText){
                 ((EditText) view).setSelection(((EditText) view).getText().length());
+                SoftKeyboardUtil.show((EditText) view);
             }
         }
     }
