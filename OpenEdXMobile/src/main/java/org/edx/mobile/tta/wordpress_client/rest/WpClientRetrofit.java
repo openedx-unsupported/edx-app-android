@@ -489,6 +489,10 @@ public class WpClientRetrofit {
         doRetrofitCall(mRestInterface.getComments(), callback);
     }
 
+    public void getCommentsByPost(long postId, WordPressRestResponse<List<Comment>> callback) {
+        doRetrofitCall(mRestInterface.getCommentsByPost(postId), callback);
+    }
+
     public void createComment(CustomComment cmt, WordPressRestResponse<Comment> callback) {
         doRetrofitCall(mRestInterface.createComment(cmt.author,cmt.author_ip,cmt.author_url,cmt.author_user_agent,cmt.content,cmt.date,cmt.date_gmt,cmt.parent,cmt.post), callback);
     }

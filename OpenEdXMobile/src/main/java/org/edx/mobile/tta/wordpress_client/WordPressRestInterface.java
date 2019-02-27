@@ -447,6 +447,9 @@ public interface WordPressRestInterface {
     @GET("wp-json/wp/v2/comments")
     Call<List<Comment>> getComments();
 
+    @GET("wp-json/wp/v2/comments")
+    Call<List<Comment>> getCommentsByPost(@Query("post") long postId);
+
     @GET("wp-json/wp/v2/comments/{id}")
     Call<Comment> getComment(@Path("id") long id);
 

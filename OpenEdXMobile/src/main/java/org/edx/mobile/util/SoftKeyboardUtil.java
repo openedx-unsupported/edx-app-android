@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 public class SoftKeyboardUtil {
 
@@ -47,5 +48,14 @@ public class SoftKeyboardUtil {
                 view.clearFocus();
             }
         });
+    }
+
+    /**
+     * Shows the soft keyboard
+     * @param editText
+     */
+    public static void show(@NonNull EditText editText){
+        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 }

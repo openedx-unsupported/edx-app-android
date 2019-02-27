@@ -30,6 +30,7 @@ import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
@@ -116,7 +117,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
             @Override
             public void onSuccess(StatusResponse data) {
                 //TODO: Need filled like icon
-                likeIcon.set(data.getStatus() ? R.drawable.t_icon_like : R.drawable.t_icon_like);
+                likeIcon.set(data.getStatus() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
             }
 
             @Override
@@ -363,7 +364,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
             public void onSuccess(StatusResponse data) {
                 mActivity.hideLoading();
                 //TODO: Need filled like icon
-                likeIcon.set(data.getStatus() ? R.drawable.t_icon_like : R.drawable.t_icon_like);
+                likeIcon.set(data.getStatus() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
                 int n = 0;
                 if (likes.get() != null) {
                     n = Integer.parseInt(likes.get());
@@ -478,28 +479,35 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
-        if (downloadModeIsAll) {
-            numberOfDownloadedVideos++;
-            if (numberOfDownloadedVideos == numberOfDownloadingVideos){
-                numberOfDownloadingVideos = 0;
+        if (e.getType() != null && (e.getType().equalsIgnoreCase(DownloadType.SCORM.name()) ||
+                e.getType().equalsIgnoreCase(DownloadType.PDF.name()))
+        ) {
+            if (downloadModeIsAll) {
+                numberOfDownloadedVideos++;
+                if (numberOfDownloadedVideos == numberOfDownloadingVideos){
+                    numberOfDownloadingVideos = 0;
+                    allDownloadProgressVisible.set(false);
+                    allDownloadStatusIcon.set(R.drawable.t_icon_done);
+                    allDownloadIconVisible.set(true);
+                }
+            } else if (remainingScorms == null || remainingScorms.isEmpty()){
                 allDownloadProgressVisible.set(false);
                 allDownloadStatusIcon.set(R.drawable.t_icon_done);
                 allDownloadIconVisible.set(true);
             }
-        } else if (remainingScorms == null || remainingScorms.isEmpty()){
-            allDownloadProgressVisible.set(false);
-            allDownloadStatusIcon.set(R.drawable.t_icon_done);
-            allDownloadIconVisible.set(true);
-        }
-        if (adapter != null){
-            adapter.notifyDataSetChanged();
+            if (adapter != null){
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadedVideoDeletedEvent e) {
-        populateData();
-        allDownloadStatusIcon.set(R.drawable.t_icon_download);
+        if (e.getType() != null && (e.getType().equalsIgnoreCase(DownloadType.SCORM.name()) ||
+                e.getType().equalsIgnoreCase(DownloadType.PDF.name()))) {
+            populateData();
+            allDownloadStatusIcon.set(R.drawable.t_icon_download);
+        }
     }
 
     public void registerEventBus(){

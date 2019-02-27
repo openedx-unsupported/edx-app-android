@@ -56,6 +56,7 @@ public class LandingViewModel extends BaseViewModel {
 
     public LandingViewModel(BaseVMActivity activity) {
         super(activity);
+        mDataManager.setWpProfileCache();
         navShiftMode.set(false);
         selectedId = R.id.action_library;
         showLibrary();

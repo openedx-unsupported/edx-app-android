@@ -88,6 +88,7 @@ public class Config {
     private static final String EDX_CONNECT_URL = "EDX_CONNECT_URL";
     private static final String WP_OAUTH_CLIENT_ID = "WP_OAUTH_CLIENT_ID";
     private static final String WP_OAUTH_CLIENT_SECRET = "WP_OAUTH_CLIENT_SECRET";
+    private static final String WORDPRESS_AUTHENTICATION = "WORDPRESS_AUTHENTICATION";
 
     //TTA end
 
@@ -748,6 +749,10 @@ public class Config {
     //wordpress Client Secret
     public String getWPOAuthClientSecret() {
         return getString(WP_OAUTH_CLIENT_SECRET);
+    }
+
+    public boolean isWordpressAuthentication(){
+        return getBoolean(WORDPRESS_AUTHENTICATION, true);
     }
 
     //MX:Arjun For connect url

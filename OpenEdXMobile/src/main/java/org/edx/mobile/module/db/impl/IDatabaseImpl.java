@@ -430,6 +430,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             values.put(DbStructure.Column.UNIT_URL, de.getLmsUrl());
             values.put(DbStructure.Column.IS_COURSE_ACTIVE, de.isCourseActive());
             values.put(DbStructure.Column.VIDEO_FOR_WEB_ONLY, de.isVideoForWebOnly());
+            values.put(DbStructure.Column.TYPE, de.getDownloadType());
 
             DbOperationInsert op = new DbOperationInsert(DbStructure.Table.DOWNLOADS, values);
             op.setCallback(callback);
@@ -876,5 +877,27 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         }
         List<Boolean> result = enqueue(op);
         return result != null && result.size() > 0 ? result.get(0) : false;
+    }
+
+    @Override
+    public VideoModel getPostVideo(String postId) {
+        DbOperationGetVideo op = new DbOperationGetVideo(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=? ",
+                new String[]{postId, username()}, null);
+        return enqueue(op);
+    }
+
+    @Override
+    public VideoModel getPostVideo(String p_id , String video_url , final DataCallback<VideoModel> callback) {
+        video_url=video_url.replace("'","''");
+        DbOperationGetVideo op = new DbOperationGetVideo(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.VIDEO_ID + "=? AND "
+                        + DbStructure.Column.USERNAME + "=? AND " +
+                        DbStructure.Column.URL + "=? AND "
+                        +DbStructure.Column.DOWNLOADED + "=? AND "
+                        + DbStructure.Column.FILEPATH +" IS NOT NULL AND "+DbStructure.Column.FILEPATH +" !='' ",
+                new String[]{p_id, username(),video_url,String.valueOf(DownloadedState.DOWNLOADED.ordinal())}, null);
+        op.setCallback(callback);
+        return enqueue(op);
     }
 }

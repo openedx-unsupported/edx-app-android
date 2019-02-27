@@ -22,6 +22,7 @@ import org.edx.mobile.tta.data.model.authentication.RegisterResponse;
 import org.edx.mobile.tta.data.model.authentication.SendOTPResponse;
 import org.edx.mobile.tta.data.model.authentication.VerifyOTPForgotedPasswordResponse;
 import org.edx.mobile.tta.data.model.authentication.VerifyOTPResponse;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.authentication.GenerateOtpTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.task.authentication.MobileNumberVerificationTask;
@@ -485,7 +486,27 @@ public class OtpViewModel extends BaseViewModel {
 
     private void signIn(){
 
-        new LoginTask(mActivity, number, password){
+        mDataManager.login(number, password, new OnResponseCallback<AuthResponse>() {
+            @Override
+            public void onSuccess(AuthResponse data) {
+                mActivity.hideLoading();
+                ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mActivity.finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (e instanceof AuthException) {
+                    mActivity.showErrorDialog(
+                            mActivity.getString(R.string.login_error),
+                            mActivity.getString(R.string.login_failed));
+                } else {
+                    mActivity.showErrorDialog(null, ErrorUtils.getErrorMessage(e, mActivity));
+                }
+            }
+        });
+
+        /*new LoginTask(mActivity, number, password){
             @Override
             protected void onSuccess(AuthResponse authResponse) throws Exception {
                 super.onSuccess(authResponse);
@@ -507,7 +528,7 @@ public class OtpViewModel extends BaseViewModel {
                     mActivity.showErrorDialog(null, ErrorUtils.getErrorMessage(ex, mActivity));
                 }
             }
-        }.execute();
+        }.execute();*/
 
     }
 

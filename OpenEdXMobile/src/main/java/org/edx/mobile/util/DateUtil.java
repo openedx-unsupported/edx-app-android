@@ -10,7 +10,10 @@ import org.edx.mobile.logger.Logger;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
@@ -76,6 +79,88 @@ public class DateUtil {
         } catch (IllegalArgumentException e) {
             logger.error(e);
             return null;
+        }
+    }
+
+    public static String getCurrentDateForServerLocal(){
+        return getDateForServerLocal(System.currentTimeMillis());
+    }
+
+    public static String getDateForServerLocal(long time){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        try{
+            return sdf.format(new Date(time));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getCurrentDateForServerGMT(){
+        // return getDateForServerGMT(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("gmt"));
+
+        try{
+            return sdf.format(new Date(System.currentTimeMillis()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getDisplayTime(String timeISO){
+        if (timeISO == null){
+            return null;
+        }
+
+        ParsePosition pos = new ParsePosition(0);
+        Locale locale = new Locale("en");
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy", locale);
+        Date date = inputFormat.parse(timeISO, pos);
+        return outputFormat.format(date);
+
+        /*Date date = convertToDate(timeISO);
+        if (date == null){
+            return null;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        return day + getMonthInShort(month) + year;*/
+    }
+
+    private static String getMonthInShort(int month) {
+        switch (month){
+            case 0:
+                return "Jan";
+            case 1:
+                return "Feb";
+            case 2:
+                return "Mar";
+            case 3:
+                return "Apr";
+            case 4:
+                return "May";
+            case 5:
+                return "Jun";
+            case 6:
+                return "Jul";
+            case 7:
+                return "Aug";
+            case 8:
+                return "Sep";
+            case 9:
+                return "Oct";
+            case 10:
+                return "Nov";
+            default:
+                return "Dec";
         }
     }
 }
