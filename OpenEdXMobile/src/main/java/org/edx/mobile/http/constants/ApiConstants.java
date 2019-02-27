@@ -75,6 +75,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_MY_AGENDA_CONTENT = "api/mx_catalog/v1/myagendacontent/";
 
+    public static final String URL_MX_GET_STATE_AGENDA_CONTENT = "api/mx_catalog/v1/myagendacontent/";
+
     public static final String URL_MX_SET_BOOKMARK = "api/mx_catalog/v1/bookmark/";
 
     //Get user district and block API

@@ -1,27 +1,26 @@
 package org.edx.mobile.tta.ui.agenda.view_model;
 
-import android.Manifest;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
-import android.widget.Toast;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAgendaItemBinding;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.ui.agenda_items.AgendaItemsAct;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
-import org.edx.mobile.util.PermissionsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +37,9 @@ public class AgendaViewModel extends BaseViewModel {
 
     public AgendaViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
-
-        stateListAdapter = new AgendaListAdapter(mActivity);
-        myListAdapter = new AgendaListAdapter(mActivity);
-        downloadListAdapter = new AgendaListAdapter(mActivity);
+        stateListAdapter = new AgendaListAdapter(mActivity,mActivity.getString(R.string.state_wise_list));
+        myListAdapter = new AgendaListAdapter(mActivity,mActivity.getString(R.string.my_agenda));
+        downloadListAdapter = new AgendaListAdapter(mActivity,mActivity.getString(R.string.download));
 
     }
 
@@ -54,7 +52,6 @@ public class AgendaViewModel extends BaseViewModel {
     private void getRegionAgenda() {
         mActivity.showLoading();
         regionListRecieved = false;
-
         mDataManager.getStateAgendaCount(new OnResponseCallback<List<AgendaList>>() {
             @Override
             public void onSuccess(List<AgendaList> data) {
@@ -101,7 +98,6 @@ public class AgendaViewModel extends BaseViewModel {
                         }
                         stateListAdapter.setItems(list.getResult());
                     }
-
                 } else {
                     showEmptyAgendaList(stateListAdapter);
                 }
@@ -151,7 +147,6 @@ public class AgendaViewModel extends BaseViewModel {
     private void getMyAgenda() {
         mActivity.showLoading();
         myListRecieved = false;
-
         mDataManager.getMyAgendaCount(new OnResponseCallback<AgendaList>() {
             @Override
             public void onSuccess(AgendaList data) {
@@ -272,9 +267,13 @@ public class AgendaViewModel extends BaseViewModel {
         }
     }
 
+
     public class AgendaListAdapter extends MxFiniteAdapter<AgendaItem> {
-        public AgendaListAdapter(Context context) {
+        private String agendaListName;
+
+        public AgendaListAdapter(Context context, String string) {
             super(context);
+            agendaListName =string;
         }
 
         @Override
@@ -295,8 +294,14 @@ public class AgendaViewModel extends BaseViewModel {
                 );
                 itemBinding.agendaCard.setOnClickListener(v -> {
                     agendaItem = model;
-                    mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                    ActivityUtil.replaceFragmentInActivity(
+                            mActivity.getSupportFragmentManager(),
+                            AgendaItemsAct.newInstance(agendaListName, getItems()),
+                            R.id.dashboard_fragment,
+                            AgendaItemsAct.TAG,
+                            true,
+                            null
+                    );
                 });
             }
         }

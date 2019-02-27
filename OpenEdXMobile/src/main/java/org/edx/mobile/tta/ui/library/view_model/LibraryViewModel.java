@@ -67,7 +67,6 @@ public class LibraryViewModel extends BaseViewModel {
     }
 
     private void populateTabs(){
-
         fragments.clear();
         titles.clear();
         for (Category category: categories){

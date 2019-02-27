@@ -10,20 +10,20 @@ import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 import java.util.List;
 
-public class GetMyAgendaContentTask extends Task<List<Content>> {
+public class GetStateAgendaContentTask extends Task<List<Content>> {
 
     private long sourseId;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetMyAgendaContentTask(Context context, long sourseId) {
+    public GetStateAgendaContentTask(Context context, long sourseId) {
         super(context);
         this.sourseId = sourseId;
     }
 
     @Override
     public List<Content> call() throws Exception {
-        return taAPI.getMyAgendaContent(sourseId).execute().body();
+        return taAPI.getStateAgendaContent(sourseId).execute().body();
     }
 }

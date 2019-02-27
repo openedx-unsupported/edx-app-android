@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -69,9 +70,9 @@ public class LibraryTabViewModel extends BaseViewModel {
                 contentLists.add(list);
             }
         }
+
         Collections.sort(contentLists);
         getContents();
-
         adapter = new ListingRecyclerAdapter(mActivity);
     }
 
@@ -87,6 +88,7 @@ public class LibraryTabViewModel extends BaseViewModel {
         for (int i = 0; i < contentLists.size(); i++){
             listIds[i] = contentLists.get(i).getId();
         }
+
         mDataManager.getCollectionItems(listIds, 0, 5,
                 new OnResponseCallback<List<CollectionItemsResponse>>() {
                     @Override
@@ -160,7 +162,6 @@ public class LibraryTabViewModel extends BaseViewModel {
         @Override
         public void onBind(@NonNull ViewDataBinding binding, @NonNull ContentList model, @Nullable OnRecyclerItemClickListener<ContentList> listener) {
             if (binding instanceof TRowContentSliderBinding){
-
                 TRowContentSliderBinding sliderBinding = (TRowContentSliderBinding) binding;
                 sliderBinding.contentViewPager.setAdapter(new PagerAdapter() {
                     @Override

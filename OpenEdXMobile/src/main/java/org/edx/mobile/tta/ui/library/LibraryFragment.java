@@ -15,7 +15,6 @@ import org.edx.mobile.tta.ui.library.view_model.LibraryViewModel;
 
 public class LibraryFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
-
     private LibraryViewModel viewModel;
 
     @Override

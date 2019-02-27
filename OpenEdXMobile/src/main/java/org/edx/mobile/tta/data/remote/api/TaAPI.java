@@ -70,9 +70,13 @@ public class TaAPI {
         return taService.getMyAgendaCount();
     }
 
-    public Call<List<Content>> getMyAgendaContent(){
-        return taService.getMyAgendaContent();
+    public Call<List<Content>> getMyAgendaContent(long sourseId){
+        return taService.getMyAgendaContent(sourseId);
     }
+    public Call<List<Content>> getStateAgendaContent(long sourseId){
+        return taService.getStateAgendaContent(sourseId);
+    }
+
 
     public Call<BookmarkResponse> setBookmark(long contentId){
         Map<String, Long> parameters = new HashMap<>();
