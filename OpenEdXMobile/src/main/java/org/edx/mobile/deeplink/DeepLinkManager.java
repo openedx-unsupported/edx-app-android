@@ -28,9 +28,11 @@ public class DeepLinkManager {
             @ScreenDef final String screenName = paramsJson.getString(KEY_SCREEN_NAME);
             switch (screenName) {
                 case Screen.COURSE_DASHBOARD:
+                case Screen.COURSE_VIDEOS: {
                     final String courseId = paramsJson.getString(KEY_COURSE_ID);
-                    router.showCourseDashboardTabs(activity, null, courseId, false);
+                    router.showCourseDashboardTabs(activity, null, courseId, false, screenName);
                     break;
+                }
             }
         }
     }

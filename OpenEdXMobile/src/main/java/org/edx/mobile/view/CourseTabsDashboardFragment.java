@@ -22,6 +22,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding;
+import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -59,11 +60,14 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     private MenuItem downloadsMenuItem;
 
     @NonNull
-    public static CourseTabsDashboardFragment newInstance(@Nullable EnrolledCoursesResponse courseData, @Nullable String courseId) {
+    public static CourseTabsDashboardFragment newInstance(
+            @Nullable EnrolledCoursesResponse courseData, @Nullable String courseId,
+            @Nullable @ScreenDef String screenName) {
         final CourseTabsDashboardFragment fragment = new CourseTabsDashboardFragment();
         final Bundle bundle = new Bundle();
         bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
         bundle.putSerializable(Router.EXTRA_COURSE_ID, courseId);
+        bundle.putSerializable(Router.EXTRA_SCREEN_NAME, screenName);
         fragment.setArguments(bundle);
         return fragment;
     }

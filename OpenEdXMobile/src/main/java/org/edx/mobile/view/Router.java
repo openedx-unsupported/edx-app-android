@@ -18,6 +18,7 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.course.CourseDetail;
+import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
@@ -55,6 +56,7 @@ public class Router {
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
     public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
     public static final String EXTRA_PATH_ID = "path_id";
+    public static final String EXTRA_SCREEN_NAME = "screen_name";
 
     @Inject
     Config config;
@@ -128,13 +130,14 @@ public class Router {
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
                                         boolean announcements) {
-        showCourseDashboardTabs(activity, model, null, announcements);
+        showCourseDashboardTabs(activity, model, null, announcements, null);
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
-                                        @Nullable String courseId, boolean announcements) {
-        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId, announcements));
+                                        @Nullable String courseId, boolean announcements,
+                                        @Nullable @ScreenDef String screenName) {
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId, announcements, screenName));
     }
 
     /**
