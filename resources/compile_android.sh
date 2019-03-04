@@ -2,9 +2,9 @@
 
 set -e
 
-# Clear old outputs if any 
+# Clear old outputs if any
 rm -rf OpenEdXMobile/build/
 
-# Compile app 
+# Compile app
 echo 'Compiling Android App'
-./gradlew printConfig assembleProdDebuggable 
+./gradlew assembleProdDebuggable
