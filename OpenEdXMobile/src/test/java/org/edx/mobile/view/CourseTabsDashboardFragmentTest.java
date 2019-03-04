@@ -4,6 +4,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.junit.Test;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
@@ -30,7 +31,7 @@ public class CourseTabsDashboardFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() {
-        CourseTabsDashboardFragment fragment = CourseTabsDashboardFragment.newInstance(getCourseData(), "testsCourseId");
+        CourseTabsDashboardFragment fragment = CourseTabsDashboardFragment.newInstance(getCourseData(), "testsCourseId", Screen.COURSE_DASHBOARD);
         SupportFragmentTestUtil.startVisibleFragment(fragment, RoboFragmentActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);
