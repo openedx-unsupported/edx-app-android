@@ -123,8 +123,12 @@ public class Router {
         return RegisterActivity.newIntent();
     }
 
-    public void showMainDashboard(Activity sourceActivity) {
-        sourceActivity.startActivity(MainDashboardActivity.newIntent());
+    public void showMainDashboard(@NonNull Activity sourceActivity) {
+        showMainDashboard(sourceActivity, null);
+    }
+
+    public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName) {
+        sourceActivity.startActivity(MainDashboardActivity.newIntent(screenName));
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
