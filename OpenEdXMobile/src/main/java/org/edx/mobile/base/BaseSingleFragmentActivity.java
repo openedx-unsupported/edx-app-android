@@ -1,5 +1,6 @@
 package org.edx.mobile.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -97,6 +98,15 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     }
 
     public abstract Fragment getFirstFragment();
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        final BaseFragment baseFragment = (BaseFragment) getSupportFragmentManager().findFragmentByTag(FIRST_FRAG_TAG);
+        if (baseFragment != null) {
+            baseFragment.onNewIntent(intent);
+        }
+    }
 
     protected void showLoadingProgress() {
         if (progressSpinner != null) {

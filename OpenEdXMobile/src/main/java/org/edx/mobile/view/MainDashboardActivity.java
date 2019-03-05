@@ -17,6 +17,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.module.notification.NotificationDelegate;
@@ -32,6 +33,8 @@ import java.text.ParseException;
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
+import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
+
 public class MainDashboardActivity extends OfflineSupportBaseActivity
         implements ToolbarCallbacks {
 
@@ -45,11 +48,12 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
     @Inject
     private LoginPrefs loginPrefs;
 
-    public static Intent newIntent() {
+    public static Intent newIntent(@ScreenDef String screenName) {
         // These flags will make it so we only have a single instance of this activity,
         // but that instance will not be restarted if it is already running
         return IntentFactory.newIntentForComponent(MainDashboardActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra(EXTRA_SCREEN_NAME, screenName);
     }
 
     @Override
@@ -112,7 +116,11 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
 
     @Override
     public Fragment getFirstFragment() {
-        return new MainTabsDashboardFragment();
+        final Fragment fragment = new MainTabsDashboardFragment();
+        final Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_SCREEN_NAME, getIntent().getStringExtra(EXTRA_SCREEN_NAME));
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
 
