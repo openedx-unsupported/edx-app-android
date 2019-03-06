@@ -229,7 +229,7 @@
 
         <activity
             android:name=".view.CourseTabsDashboardActivity"
-            android:label="@string/app_name"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
 
         <activity

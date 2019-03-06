@@ -125,9 +125,16 @@ public class Router {
         sourceActivity.startActivity(MainDashboardActivity.newIntent());
     }
 
-    public void showCourseDashboardTabs(Activity activity, EnrolledCoursesResponse model,
+    public void showCourseDashboardTabs(@NonNull Activity activity,
+                                        @Nullable EnrolledCoursesResponse model,
                                         boolean announcements) {
-        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, announcements));
+        showCourseDashboardTabs(activity, model, null, announcements);
+    }
+
+    public void showCourseDashboardTabs(@NonNull Activity activity,
+                                        @Nullable EnrolledCoursesResponse model,
+                                        @Nullable String courseId, boolean announcements) {
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId, announcements));
     }
 
     /**

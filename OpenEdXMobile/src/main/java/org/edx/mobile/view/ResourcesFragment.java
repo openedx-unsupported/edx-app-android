@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,19 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
     @Inject
     private IEdxEnvironment environment;
 
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
+
+    public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model) {
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(Router.EXTRA_COURSE_DATA, model);
+        return arguments;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         EventBus.getDefault().registerSticky(ResourcesFragment.this);
+        courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_resources, container, false);
     }
