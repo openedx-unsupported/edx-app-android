@@ -61,16 +61,17 @@ pipeline {
         }
         stage('checkout test repo') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]])
-
+                sh 'mkdir -p edx-app-test'
+                dir('edx-app-test'){
+                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]]
+                    )
+                }
             }
         }
         stage('start execution') {
             steps {
-                sh 'bash ./resources/execute_testing.sh'
-                
+                sh 'bash ./resources/execute_testing.sh'    
             }
         }
-
     }
 } 

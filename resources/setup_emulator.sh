@@ -52,12 +52,28 @@ then
    $ANDROID_HOME/platform-tools/adb shell input keyevent 3 &
    if [ $? == 0 ]; 
    then
-        exit 0
+        echo "The device looks good"
    else 
         echo "The device is not responding"
         exit 1
     fi
 else
    echo "The device is not accessible"
+   exit 1
+fi
+
+# Install edX app on emulator 
+APK=$APK_PATH/"*.apk"
+echo "Installing $APK"
+$ANDROID_HOME/platform-tools/adb install $APK
+sleep 10
+
+# Verify if edX app is installed successfully
+$ANDROID_HOME/platform-tools/adb shell pm list packages | grep org.edx.mobile
+if [ $? == 0 ]; then
+   echo "edX app is installed successfully"
+   exit 0
+else
+   echo "edX app is not installed successfully"
    exit 1
 fi
