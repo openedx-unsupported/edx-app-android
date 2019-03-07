@@ -12,11 +12,14 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAgendaItemBinding;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.ui.agenda_items.AgendaItemsAct;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
 
 import java.util.ArrayList;
@@ -30,12 +33,13 @@ public class AgendaViewModel extends BaseViewModel {
 
     public boolean regionListRecieved, myListRecieved, downloadListRecieved;
 
+    private AgendaItem agendaItem;
+
     public AgendaViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
-
-        stateListAdapter = new AgendaListAdapter(mActivity);
-        myListAdapter = new AgendaListAdapter(mActivity);
-        downloadListAdapter = new AgendaListAdapter(mActivity);
+        stateListAdapter = new AgendaListAdapter(mActivity,mActivity.getString(R.string.state_wise_list));
+        myListAdapter = new AgendaListAdapter(mActivity,mActivity.getString(R.string.my_agenda));
+        downloadListAdapter = new AgendaListAdapter(mActivity,mActivity.getString(R.string.download));
 
     }
 
@@ -48,7 +52,6 @@ public class AgendaViewModel extends BaseViewModel {
     private void getRegionAgenda() {
         mActivity.showLoading();
         regionListRecieved = false;
-
         mDataManager.getStateAgendaCount(new OnResponseCallback<List<AgendaList>>() {
             @Override
             public void onSuccess(List<AgendaList> data) {
@@ -95,7 +98,6 @@ public class AgendaViewModel extends BaseViewModel {
                         }
                         stateListAdapter.setItems(list.getResult());
                     }
-
                 } else {
                     showEmptyAgendaList(stateListAdapter);
                 }
@@ -145,7 +147,6 @@ public class AgendaViewModel extends BaseViewModel {
     private void getMyAgenda() {
         mActivity.showLoading();
         myListRecieved = false;
-
         mDataManager.getMyAgendaCount(new OnResponseCallback<AgendaList>() {
             @Override
             public void onSuccess(AgendaList data) {
@@ -266,9 +267,13 @@ public class AgendaViewModel extends BaseViewModel {
         }
     }
 
+
     public class AgendaListAdapter extends MxFiniteAdapter<AgendaItem> {
-        public AgendaListAdapter(Context context) {
+        private String agendaListName;
+
+        public AgendaListAdapter(Context context, String string) {
             super(context);
+            agendaListName =string;
         }
 
         @Override
@@ -287,6 +292,17 @@ public class AgendaViewModel extends BaseViewModel {
                         ContentSourceUtil.getSourceDrawable_15x15(model.getSource_name()),
                         0,0,0
                 );
+                itemBinding.agendaCard.setOnClickListener(v -> {
+                    agendaItem = model;
+                    ActivityUtil.replaceFragmentInActivity(
+                            mActivity.getSupportFragmentManager(),
+                            AgendaItemsAct.newInstance(agendaListName, getItems()),
+                            R.id.dashboard_fragment,
+                            AgendaItemsAct.TAG,
+                            true,
+                            null
+                    );
+                });
             }
         }
     }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.agenda_items.view_model.AgendaItemModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@color/app_background"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="start|center_vertical"
+            app:title="@{viewModel.toolabarData}"
+            app:navigationIcon="@drawable/back"
+            app:titleTextAppearance="@style/ta_toolbar_title_style"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleMarginStart="0dp" />
+
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/listing_tab_layout"
+            style="@style/ta_tab_style"
+            app:tabTextColor="@color/gray_5"
+            app:tabSelectedTextColor="@color/gray_4"
+            app:tabIndicatorColor="@color/primary_cyan"
+            app:tabIndicatorHeight="2dp"
+            app:tabMode="fixed"
+            app:tabTextAppearance="@style/ta_tab_text_appearance" />
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listing_view_pager"
+            pager_adapter="@{viewModel.adapter}"/>
+    </LinearLayout>
+</layout>

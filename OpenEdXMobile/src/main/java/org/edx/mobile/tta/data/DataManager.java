@@ -37,6 +37,7 @@ import org.edx.mobile.tta.data.local.db.TADatabase;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
@@ -58,7 +59,9 @@ import org.edx.mobile.tta.exception.TaException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.task.GetHtmlFromUrlTask;
+import org.edx.mobile.tta.task.agenda.GetMyAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
+import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
@@ -944,7 +947,7 @@ public class DataManager extends BaseRoboInjector {
         }
     }
 
-    public void getCourseComponent(String courseId, OnResponseCallback<CourseComponent> callback){
+    public void getCourseComponent(String courseId, OnResponseCallback<CourseComponent> callback) {
 
         CourseComponent courseComponent = courseManager.getComponentByCourseId(courseId);
         if (courseComponent != null) {
@@ -953,12 +956,12 @@ public class DataManager extends BaseRoboInjector {
             return;
         }
 
-        new GetCourseDataFromPersistableCacheTask(context, courseId){
+        new GetCourseDataFromPersistableCacheTask(context, courseId) {
             @Override
             protected void onSuccess(CourseComponent courseComponent) throws Exception {
                 super.onSuccess(courseComponent);
                 courseComponent = courseManager.getComponentByCourseId(courseId);
-                if (courseComponent != null){
+                if (courseComponent != null) {
                     callback.onSuccess(courseComponent);
                 } else {
                     getCourseComponentFromServer(courseId, callback);
@@ -975,7 +978,7 @@ public class DataManager extends BaseRoboInjector {
 
     public void getCourseComponentFromServer(String courseId, OnResponseCallback<CourseComponent> callback) {
 
-        if (!NetworkUtil.isConnected(context)){
+        if (!NetworkUtil.isConnected(context)) {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
             return;
         }
@@ -1012,7 +1015,7 @@ public class DataManager extends BaseRoboInjector {
 
     public void downloadSingle(ScormBlockModel scorm,
                                FragmentActivity activity,
-                               VideoDownloadHelper.DownloadManagerCallback callback){
+                               VideoDownloadHelper.DownloadManagerCallback callback) {
         DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
         de.url = scorm.getDownloadUrl();
         de.title = scorm.getParent().getDisplayName();
@@ -1021,19 +1024,19 @@ public class DataManager extends BaseRoboInjector {
 
     public void downloadMultiple(List<? extends HasDownloadEntry> downloadEntries,
                                  FragmentActivity activity,
-                                 VideoDownloadHelper.DownloadManagerCallback callback){
+                                 VideoDownloadHelper.DownloadManagerCallback callback) {
         downloadManager.downloadVideos(downloadEntries, activity, callback);
     }
 
-    public void getDownloadedStateForVideoId(String videoId, DataCallback<DownloadEntry.DownloadedState> callback){
+    public void getDownloadedStateForVideoId(String videoId, DataCallback<DownloadEntry.DownloadedState> callback) {
         edxEnvironment.getDatabase().getDownloadedStateForVideoId(videoId, callback);
     }
 
-    public boolean scormNotDownloaded(ScormBlockModel scorm){
+    public boolean scormNotDownloaded(ScormBlockModel scorm) {
         return getScormStatus(scorm).equals(ScormStatus.not_downloaded);
     }
 
-    public ScormStatus getScormStatus(ScormBlockModel scorm){
+    public ScormStatus getScormStatus(ScormBlockModel scorm) {
 
         DownloadEntry entry = scorm.getDownloadEntry(edxEnvironment.getStorage());
         return getDownloadStatus(entry);
@@ -1043,7 +1046,7 @@ public class DataManager extends BaseRoboInjector {
     private ScormStatus getDownloadStatus(DownloadEntry entry) {
         if (entry == null || entry.downloaded.equals(DownloadEntry.DownloadedState.ONLINE)){
             return ScormStatus.not_downloaded;
-        } else if (entry.downloaded.equals(DownloadEntry.DownloadedState.DOWNLOADING)){
+        } else if (entry.downloaded.equals(DownloadEntry.DownloadedState.DOWNLOADING)) {
             return ScormStatus.downloading;
         } else if (entry.watched.equals(DownloadEntry.WatchedState.UNWATCHED)) {
             return ScormStatus.downloaded;
@@ -1054,15 +1057,15 @@ public class DataManager extends BaseRoboInjector {
         }
     }
 
-    public void deleteScorm(ScormBlockModel scormBlockModel){
+    public void deleteScorm(ScormBlockModel scormBlockModel) {
         DownloadEntry de = scormBlockModel.getDownloadEntry(edxEnvironment.getStorage());
         de.url = scormBlockModel.getDownloadUrl();
         de.title = scormBlockModel.getParent().getDisplayName();
         edxEnvironment.getStorage().removeDownload(de);
     }
 
-    public void getHtmlFromUrl(HttpUrl absoluteUrl, OnResponseCallback<String> callback){
-        if (NetworkUtil.isConnected(context)){
+    public void getHtmlFromUrl(HttpUrl absoluteUrl, OnResponseCallback<String> callback) {
+        if (NetworkUtil.isConnected(context)) {
 
             new Task<HtmlResponse>(context) {
                 @Override
@@ -1098,6 +1101,82 @@ public class DataManager extends BaseRoboInjector {
         } else {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
+    }
+
+    public void getrMyAgendaContent(long sourceId, OnResponseCallback<List<Content>> callback) {
+
+        List<Content> contents = new ArrayList<>();
+        for (int i=0;i<20;i++){
+            Content content =  new Content();
+            content.setName("course");
+            content.setIcon("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+            Source source =  new Source();
+            source.setType("edx");
+            source.setTitle("course");
+            source.setName("course");
+            content.setSource(source);
+            contents.add(content);
+        }
+        callback.onSuccess(contents);
+        /*if (NetworkUtil.isConnected(context)) {
+            new GetMyAgendaContentTask(context, sourceId) {
+                @Override
+                protected void onSuccess(List<Content> response) throws Exception {
+                    super.onSuccess(response);
+                    if (response != null && response.size() > 0) {
+                        callback.onSuccess(response);
+                    } else {
+                        callback.onFailure(new TaException("No data found"));
+                    }
+
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }*/
+    }
+
+    public void getStateAgendaContent(long sourceId, OnResponseCallback<List<Content>> callback) {
+        List<Content> contents = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            Content content = new Content();
+            content.setName("course");
+            content.setIcon("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+            Source source = new Source();
+            source.setType("edx");
+            source.setTitle("course");
+            source.setName("course");
+            content.setSource(source);
+            contents.add(content);
+        }
+        callback.onSuccess(contents);
+
+//        if (NetworkUtil.isConnected(context)) {
+//            new GetStateAgendaContentTask(context, sourceId) {
+//                @Override
+//                protected void onSuccess(List<Content> response) throws Exception {
+//                    super.onSuccess(response);
+//                    if (response != null && response.size() > 0) {
+//                        callback.onSuccess(response);
+//                    } else {
+//                        callback.onFailure(new TaException("No data found."));
+//                    }
+//
+//                }
+//
+//                @Override
+//                protected void onException(Exception ex) {
+//                    callback.onFailure(ex);
+//                }
+//            }.execute();
+//        } else {
+//            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+//        }
     }
 
     public void getPostById(long postId, OnResponseCallback<Post> callback){

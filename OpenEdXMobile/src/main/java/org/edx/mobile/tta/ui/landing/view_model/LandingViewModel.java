@@ -61,7 +61,7 @@ public class LandingViewModel extends BaseViewModel {
         showLibrary();
     }
 
-    public void showLibrary(){
+    public void showLibrary() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 LibraryFragment.newInstance(new SearchPageOpenedListener() {
@@ -77,7 +77,7 @@ public class LandingViewModel extends BaseViewModel {
         );
     }
 
-    public void showFeed(){
+    public void showFeed() {
         mActivity.showShortSnack("Feed coming soon");
     }
 
@@ -92,7 +92,7 @@ public class LandingViewModel extends BaseViewModel {
         );
     }
 
-    public void showAgenda(){
+    public void showAgenda() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 new AgendaFragment(),
@@ -103,7 +103,7 @@ public class LandingViewModel extends BaseViewModel {
         );
     }
 
-    public void showProfile(){
+    public void showProfile() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 new ProfileFragment(),
