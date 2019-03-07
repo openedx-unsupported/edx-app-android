@@ -484,6 +484,21 @@ public class DataManager extends BaseRoboInjector {
                 protected void onSuccess(List<CollectionItemsResponse> collectionItemsList) throws Exception {
                     super.onSuccess(collectionItemsList);
                     if (collectionItemsList != null && !collectionItemsList.isEmpty()) {
+
+                        for (CollectionItemsResponse itemsResponse: collectionItemsList){
+                            if (itemsResponse.getContent() != null){
+                                for (Content content: itemsResponse.getContent()){
+                                    if (content.getLists() == null){
+                                        List<Long> listIds = new ArrayList<>();
+                                        listIds.add(itemsResponse.getId());
+                                        content.setLists(listIds);
+                                    } else if (!content.getLists().contains(itemsResponse.getId())){
+                                        content.getLists().add(itemsResponse.getId());
+                                    }
+                                }
+                            }
+                        }
+
                         new Thread() {
                             @Override
                             public void run() {
