@@ -3,6 +3,7 @@ package org.edx.mobile.tta.binding;
 import android.app.Activity;
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.databinding.adapters.SearchViewBindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.BottomNavigationView;
@@ -15,9 +16,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +31,9 @@ import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 import com.maurya.mx.mxlib.view.MxRecyclerView;
 
+import org.edx.mobile.tta.ui.base.BaseArrayAdapter;
 import org.edx.mobile.tta.ui.custom.FormEditText;
+import org.edx.mobile.tta.ui.custom.NonScrollListView;
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
@@ -330,5 +335,36 @@ public class BindingAdapters {
     @BindingAdapter({"divider_item_decoration"})
     public static void addDividerItemDecoration(RecyclerView view, DividerItemDecoration decoration){
         view.addItemDecoration(decoration);
+    }
+
+    @BindingAdapter({"infinite_recycler_adapter", "infinite_load_more_listener"})
+    public static void setOnLoadMoreListener(MxRecyclerView view, MxInfiniteAdapter adapter, MxInfiniteAdapter.OnLoadMoreListener listener){
+        adapter.setOnLoadMoreListener(view.getRecyclerView(), listener);
+        view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"on_query_text_listener"})
+    public static void setOnQueryTextListener(SearchView view, SearchView.OnQueryTextListener listener){
+        view.setOnQueryTextListener(listener);
+    }
+
+    @BindingAdapter({"selected"})
+    public static void setChecked(View view, boolean b){
+        view.setSelected(b);
+    }
+
+    @BindingAdapter({"selected_position"})
+    public static void setSelectedPosition(NonScrollListView view, int position){
+        view.setItemChecked(position, true);
+    }
+
+    @BindingAdapter({"item_click_listener"})
+    public static void setItemClickListener(NonScrollListView view, AdapterView.OnItemClickListener listener){
+        view.setOnItemClickListener(listener);
+    }
+
+    @BindingAdapter({"array_adapter"})
+    public static void setArrayAdapter(NonScrollListView view, BaseArrayAdapter adapter){
+        view.setAdapter(adapter);
     }
 }

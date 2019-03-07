@@ -180,7 +180,7 @@ public class ContentList implements Comparable<ContentList>
     @Override
     public String toString()
     {
-        return "ContentList [region = "+region+", created_by = "+created_by+", sort_as = "+sort_as+", sort_by = "+sort_by+", mode = "+mode+", id = "+id+", auto_function = "+auto_function+", category_id = "+ category_id +", order = "+order+", modified_by = "+modified_by+", name = "+name+", format_type = "+format_type+", created_at = "+created_at+", modified_at = "+modified_at+"]";
+        return name;
     }
 
     @Override

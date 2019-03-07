@@ -1,5 +1,8 @@
 package org.edx.mobile.tta.data.local.db;
 
+import org.edx.mobile.tta.data.enums.CategoryType;
+import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.local.db.table.Content;
@@ -26,4 +29,10 @@ public interface ILocalDataSource {
 
     List<Feed> getFeeds();
     void insertFeeds(List<Feed> feeds);
+
+    Category getCategoryBySourceId(long sourceId);
+
+    List<ContentList> getContentListsByCategoryId(long categoryId);
+
+    List<ContentList> getContentListsByCategoryIdAndMode(long categoryId, String mode);
 }

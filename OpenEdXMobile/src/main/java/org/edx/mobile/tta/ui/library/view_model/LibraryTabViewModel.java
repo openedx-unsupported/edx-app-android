@@ -27,6 +27,7 @@ import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.ContentListMode;
 import org.edx.mobile.tta.data.enums.ContentListType;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
@@ -38,6 +39,8 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
 import org.edx.mobile.tta.ui.course.CourseDashboardFragment;
+import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
+import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
 import org.edx.mobile.util.PermissionsUtil;
@@ -53,15 +56,18 @@ public class LibraryTabViewModel extends BaseViewModel {
     private Category category;
     private List<ContentList> contentLists;
     private Content selectedContent;
+    private SearchPageOpenedListener searchPageOpenedListener;
 
     private Map<Long, List<Content>> contentListMap;
 
     public ListingRecyclerAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
 
-    public LibraryTabViewModel(Context context, TaBaseFragment fragment, CollectionConfigResponse cr, Category category) {
+    public LibraryTabViewModel(Context context, TaBaseFragment fragment, CollectionConfigResponse cr, Category category,
+                               SearchPageOpenedListener searchPageOpenedListener) {
         super(context, fragment);
         this.category = category;
+        this.searchPageOpenedListener = searchPageOpenedListener;
 
         contentLists = new ArrayList<>();
         for (ContentList list: cr.getContent_list()){
@@ -132,6 +138,16 @@ public class LibraryTabViewModel extends BaseViewModel {
         adapter.setItems(contentLists);
     }
 
+    private List<ContentList> getAutoLists(){
+        List<ContentList> autoLists = new ArrayList<>();
+        for (ContentList list: contentLists){
+            if (list.getMode().equalsIgnoreCase(ContentListMode.auto.name())){
+                autoLists.add(list);
+            }
+        }
+        return autoLists;
+    }
+
     public void showContentDashboard(){
 
         if (selectedContent.getSource().getType().equalsIgnoreCase("edx") ||
@@ -165,7 +181,11 @@ public class LibraryTabViewModel extends BaseViewModel {
                 sliderBinding.contentViewPager.setAdapter(new PagerAdapter() {
                     @Override
                     public int getCount() {
-                        return contentListMap.get(model.getId()).size();
+                        try {
+                            return contentListMap.get(model.getId()).size();
+                        } catch (Exception e) {
+                            return 0;
+                        }
                     }
 
                     @Override
@@ -208,36 +228,25 @@ public class LibraryTabViewModel extends BaseViewModel {
                 ContentListAdapter listAdapter = new ContentListAdapter(mActivity);
                 listAdapter.addAll(contentListMap.get(model.getId()));
                 listAdapter.setItemClickListener((view, item) -> {
-                    /*if (item.getSource().getType().equalsIgnoreCase("edx") ||
-                            item.getSource().getType().equalsIgnoreCase("course")
-                    ) {
-                        selectedContent = item;
-                        mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
-                        *//*ActivityUtil.replaceFragmentInActivity(
-                                mActivity.getSupportFragmentManager(),
-                                CourseDashboardFragment.newInstance(item),
-                                R.id.dashboard_fragment,
-                                CourseDashboardFragment.TAG,
-                                true,
-                                null
-                        );*//*
-//                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(mActivity, item.getName(), Toast.LENGTH_SHORT).show();
-                    }*/
                     selectedContent = item;
                     mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                 });
 
-                if (contentListMap.get(model.getId()).size() >= listBinding.contentFiniteList.getmMaxItem()) {
-                    listBinding.contentFiniteList.setmMoreButtonVisible(true);
-                    listBinding.contentFiniteList.setOnMoreButtonClickListener(v ->
-                            Toast.makeText(mActivity, "View more of " + model.getName(), Toast.LENGTH_SHORT).show());
-                } else {
-                    listBinding.contentFiniteList.setmMoreButtonVisible(false);
-                }
+                listBinding.contentFiniteList.setmMoreButtonVisible(true);
+                listBinding.contentFiniteList.setOnMoreButtonClickListener(v -> {
+                    ActivityUtil.replaceFragmentInActivity(
+                            mActivity.getSupportFragmentManager(),
+                            SearchFragment.newInstance(category, getAutoLists(), model),
+                            R.id.dashboard_fragment,
+                            SearchFragment.TAG,
+                            false,
+                            null
+                    );
+                    if (searchPageOpenedListener != null){
+                        searchPageOpenedListener.onSearchPageOpened();
+                    }
+                });
                 listBinding.contentFiniteList.setAdapter(listAdapter);
                 /*listBinding.contentFiniteList.addItemDecoration(new DividerItemDecoration(
                         listBinding.contentFiniteList.getContext(),
@@ -280,7 +289,11 @@ public class LibraryTabViewModel extends BaseViewModel {
                         .load(model.getIcon())
                         .placeholder(R.drawable.placeholder_course_card_image)
                         .into(contentBinding.contentImage);
-                contentBinding.getRoot().setOnClickListener(v -> listener.onItemClick(v, model));
+                contentBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
             }
         }
     }

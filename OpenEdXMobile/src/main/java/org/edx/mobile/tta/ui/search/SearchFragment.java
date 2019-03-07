@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.library;
+package org.edx.mobile.tta.ui.search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,42 +9,42 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.data.local.db.table.Category;
-import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
-import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
-import org.edx.mobile.tta.ui.library.view_model.LibraryTabViewModel;
+import org.edx.mobile.tta.ui.search.view_model.SearchViewModel;
 import org.edx.mobile.util.PermissionsUtil;
 
-public class LibraryTab extends TaBaseFragment {
+import java.util.List;
 
-    private CollectionConfigResponse cr;
+public class SearchFragment extends TaBaseFragment {
+
+    public static final String TAG = SearchFragment.class.getCanonicalName();
+
+    private SearchViewModel viewModel;
 
     private Category category;
+    private List<ContentList> contentLists;
+    private ContentList selectedContentList;
 
-    private SearchPageOpenedListener searchPageOpenedListener;
-
-    private LibraryTabViewModel viewModel;
-
-    public static LibraryTab newInstance(CollectionConfigResponse cr, Category category,
-                                         SearchPageOpenedListener searchPageOpenedListener){
-        LibraryTab fragment = new LibraryTab();
-        fragment.cr = cr;
+    public static SearchFragment newInstance(Category category, List<ContentList> contentLists, ContentList selectedContentList){
+        SearchFragment fragment = new SearchFragment();
         fragment.category = category;
-        fragment.searchPageOpenedListener = searchPageOpenedListener;
+        fragment.contentLists = contentLists;
+        fragment.selectedContentList = selectedContentList;
+
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new LibraryTabViewModel(getActivity(), this, cr, category, searchPageOpenedListener);
+        viewModel = new SearchViewModel(getActivity(), this, category, contentLists, selectedContentList);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = binding(inflater, container, R.layout.t_fragment_library_tab, viewModel)
-                .getRoot();
+        View view = binding(inflater, container, R.layout.t_fragment_search, viewModel).getRoot();
 
         return view;
     }

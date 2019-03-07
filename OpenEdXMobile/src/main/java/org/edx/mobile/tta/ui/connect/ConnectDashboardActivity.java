@@ -16,6 +16,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -27,6 +29,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -79,9 +82,10 @@ public class ConnectDashboardActivity extends BaseVMActivity {
         tabLayout.setupWithViewPager(pager);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-        });
+//        toolbar.setNavigationOnClickListener(v -> {
+//            onBackPressed();
+//        });
+        setSupportActionBar(toolbar);
 
         nonVideoLayout = findViewById(R.id.nonVideoLayout);
         videoLayout = findViewById(R.id.videoLayout);
@@ -102,6 +106,25 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                 showLongSnack(e.getLocalizedMessage());
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.connect_dashboard_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_share:
+                viewModel.openShareMenu(findViewById(R.id.action_share));
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupWebview() {

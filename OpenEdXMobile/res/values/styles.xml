@@ -43,6 +43,9 @@
         <item name="android:progressBarStyleLargeInverse">
             @style/edX.Widget.ProgressBar.Large.Inverse
         </item>
+        
+        <!-- TTA -->
+        <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
     </style>
 
     <style name="AppTheme.NoDisplayTheme" parent="android:style/Theme.NoDisplay">
@@ -607,6 +610,11 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/hind_medium</item>
+    </style>
+
+    <style name="SearchAutoCompleteTextView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@color/gray_4</item>
+        <item name="android:fontFamily">@font/hind_regular</item>
     </style>
 
     <!-- TTA styles end -->

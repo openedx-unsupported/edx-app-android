@@ -15,6 +15,7 @@ import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.search.SearchFilter;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.Map;
 import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -92,5 +94,11 @@ public interface TaService {
 
     @GET
     Call<Void> getHtmlFromUrl(@Url HttpUrl absoluteUrl);
+
+    @GET(ApiConstants.URL_MX_GET_SEARCH_FILTER)
+    Call<SearchFilter> getSearchFilter();
+
+    @POST(ApiConstants.URL_MX_SEARCH)
+    Call<List<Content>> search(@Body Map<String, Object> parameters);
 
 }

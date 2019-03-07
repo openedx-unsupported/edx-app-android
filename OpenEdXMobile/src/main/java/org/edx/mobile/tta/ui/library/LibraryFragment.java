@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.view_model.LibraryViewModel;
 
 public class LibraryFragment extends TaBaseFragment {
@@ -18,10 +19,18 @@ public class LibraryFragment extends TaBaseFragment {
 
     private LibraryViewModel viewModel;
 
+    private SearchPageOpenedListener searchPageOpenedListener;
+
+    public static LibraryFragment newInstance(SearchPageOpenedListener searchPageOpenedListener){
+        LibraryFragment fragment = new LibraryFragment();
+        fragment.searchPageOpenedListener = searchPageOpenedListener;
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new LibraryViewModel(getActivity(), this);
+        viewModel = new LibraryViewModel(getActivity(), this, searchPageOpenedListener);
     }
 
     @Nullable

@@ -18,6 +18,12 @@ public interface ContentListDao {
     @Query("Select * from content_list where id = :id")
     ContentList getById(long id);
 
+    @Query("Select * from content_list where category_id = :categoryId")
+    List<ContentList> getAllByCategoryId(long categoryId);
+
+    @Query("Select * from content_list where category_id = :categoryId and mode = :mode")
+    List<ContentList> getAllByCategoryIdAndMode(long categoryId, String mode);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ContentList contentList);
 

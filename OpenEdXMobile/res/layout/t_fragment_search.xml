@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.search.view_model.SearchViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchview_layout"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/_14px"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.v7.widget.SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:searchIcon="@drawable/t_icon_search_blue"
+                app:closeIcon="@drawable/t_icon_close"
+                android:textSize="14sp"
+                android:layout_marginTop="@dimen/_30px"
+                android:layout_marginEnd="@dimen/_20dp"
+                app:iconifiedByDefault="false"
+                on_query_text_listener="@{viewModel.queryTextListener}" />
+
+            <!--<EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_24px"
+                android:layout_marginTop="@dimen/_30px"
+                android:layout_marginEnd="@dimen/_24px"
+                android:drawableStart="@drawable/t_icon_search_blue"
+                android:text="@={viewModel.searchText}" />-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dual_filter_layout"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/searchview_layout"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/t_icon_dropdown_selector"
+                    android:drawablePadding="4dp"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="center"
+                    android:text="Filter"
+                    android:textColor="@color/t_selector_tab_text_color"
+                    android:textSize="14sp"
+                    selected="@{viewModel.filterSelected.get()}"
+                    android:onClick="@{()->viewModel.showFilters()}"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/t_icon_dropdown_selector"
+                    android:drawablePadding="4dp"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="center"
+                    android:text="@{viewModel.contentListText}"
+                    android:textColor="@color/t_selector_tab_text_color"
+                    android:textSize="14sp"
+                    selected="@{viewModel.contentListSelected.get()}"
+                    android:onClick="@{()->viewModel.showContentLists()}"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tags_list"
+            app:mx_titleVisible="false"
+            app:mx_moreButtonVisible="false"
+            app:mx_itemLayout="@layout/t_row_filter_tag"
+            app:mx_itemLimit="1000"
+            android:paddingTop="@dimen/_12px"
+            android:paddingBottom="@dimen/_12px"
+            app:layout_constraintTop_toBottomOf="@id/dual_filter_layout"
+            finite_recycler_adapter="@{viewModel.tagsAdapter}"
+            android:visibility="@{viewModel.tagsLayoutVisible?View.VISIBLE:View.GONE}"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/divider_line"
+            android:background="@color/gray_1"
+            app:layout_constraintTop_toBottomOf="@id/tags_list"
+            android:visibility="@{viewModel.tagsLayoutVisible?View.VISIBLE:View.GONE}"/>
+
+        <com.maurya.mx.mxlib.view.MxRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/contents_list"
+            app:mx_itemLayout="@layout/t_row_content"
+            app:layout_constraintTop_toBottomOf="@id/divider_line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            infinite_recycler_adapter="@{viewModel.contentsAdapter}"
+            layout_manager="@{viewModel.contentsLayoutManager}"
+            infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:id="@+id/filter_expanded"
+            android:background="@color/transparent_black_50"
+            app:layout_constraintTop_toBottomOf="@id/dual_filter_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{viewModel.filterSelected?View.VISIBLE:View.GONE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:orientation="vertical"
+                android:background="@color/white">
+
+                <com.maurya.mx.mxlib.view.MxRecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    app:mx_itemLayout="@layout/t_row_filter_section"
+                    android:layout_marginStart="@dimen/_26px"
+                    android:layout_marginEnd="@dimen/_26px"
+                    android:scrollbars="vertical"
+                    android:fadeScrollbars="false"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    infinite_recycler_adapter="@{viewModel.filterAdapter}"
+                    layout_manager="@{viewModel.filterLayoutManager}"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_1"/>
+
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/btn_selector_hollow"
+                    android:text="Apply"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/hind_regular"
+                    android:layout_marginTop="@dimen/_20px"
+                    android:layout_marginBottom="@dimen/_20px"
+                    android:onClick="@{()->viewModel.hideFilters()}"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="@{()->viewModel.hideFilters()}"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:id="@+id/content_list_expanded"
+            android:background="@color/transparent_black_50"
+            app:layout_constraintTop_toBottomOf="@id/dual_filter_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{viewModel.contentListSelected?View.VISIBLE:View.GONE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white">
+
+                <org.edx.mobile.tta.ui.custom.NonScrollListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:choiceMode="singleChoice"
+                    android:paddingStart="@dimen/_26px"
+                    android:paddingEnd="@dimen/_26px"
+                    selected_position="@{viewModel.selectedContentListPosition}"
+                    item_click_listener="@{viewModel.contentListClickListener}"
+                    array_adapter="@{viewModel.contentListsAdapter}"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_1"/>
+
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/btn_selector_hollow"
+                    android:text="Apply"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/hind_regular"
+                    android:layout_marginTop="@dimen/_20px"
+                    android:layout_marginBottom="@dimen/_20px"
+                    android:onClick="@{()->viewModel.hideFilters()}"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="@{()->viewModel.hideFilters()}"/>
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

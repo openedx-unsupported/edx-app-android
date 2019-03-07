@@ -93,6 +93,10 @@ public class ApiConstants {
     //Post scorm start request
     public static final String URL_MX_SCORM_START = "/api/mx_scorm/scorm_started/";
 
+    public static final String URL_MX_GET_SEARCH_FILTER = "api/mx_catalog/v1/getfilters/";
+
+    public static final String URL_MX_SEARCH = "api/mx_catalog/v3/search/";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

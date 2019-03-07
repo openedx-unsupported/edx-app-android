@@ -33,16 +33,18 @@ public class ConnectCommentsTabViewModel extends BaseViewModel {
     private Content content;
     private Post post;
     private List<Comment> comments;
+    private List<Comment> replies;
 
     public CommentsAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
     private CommentClickListener commentClickListener;
 
-    public ConnectCommentsTabViewModel(Context context, TaBaseFragment fragment, Content content, Post post, List<Comment> comments, CommentClickListener commentClickListener) {
+    public ConnectCommentsTabViewModel(Context context, TaBaseFragment fragment, Content content, Post post, List<Comment> comments, List<Comment> replies, CommentClickListener commentClickListener) {
         super(context, fragment);
         this.content = content;
         this.post = post;
         this.comments = comments;
+        this.replies = replies;
         this.commentClickListener = commentClickListener;
         adapter = new CommentsAdapter(mActivity);
         setListeners();

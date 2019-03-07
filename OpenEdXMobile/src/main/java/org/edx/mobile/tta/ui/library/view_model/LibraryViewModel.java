@@ -10,6 +10,7 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.LibraryTab;
 
 import java.util.ArrayList;
@@ -24,13 +25,15 @@ public class LibraryViewModel extends BaseViewModel {
 
     private CollectionConfigResponse cr;
     private List<Category> categories;
+    private SearchPageOpenedListener searchPageOpenedListener;
 
-    public LibraryViewModel(Context context, TaBaseFragment fragment) {
+    public LibraryViewModel(Context context, TaBaseFragment fragment, SearchPageOpenedListener searchPageOpenedListener) {
         super(context, fragment);
 
         categories = new ArrayList<>();
         fragments = new ArrayList<>();
         titles = new ArrayList<>();
+        this.searchPageOpenedListener = searchPageOpenedListener;
 
         adapter = new ListingPagerAdapter(mFragment.getChildFragmentManager());
 
@@ -71,7 +74,7 @@ public class LibraryViewModel extends BaseViewModel {
         fragments.clear();
         titles.clear();
         for (Category category: categories){
-            fragments.add(LibraryTab.newInstance(cr, category));
+            fragments.add(LibraryTab.newInstance(cr, category, searchPageOpenedListener));
             titles.add(category.getName());
         }
 

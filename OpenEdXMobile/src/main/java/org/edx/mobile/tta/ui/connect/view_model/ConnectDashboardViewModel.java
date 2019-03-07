@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -27,6 +28,8 @@ import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.Post;
+import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.images.ShareUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,9 +49,13 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     public Content content;
     private Post post;
-    private List<Comment> allComments;
+    private List<Comment> comments;
+    private List<Comment> replies;
     public ObservableField<String> comment = new ObservableField<>("");
     public ObservableBoolean commentFocus = new ObservableBoolean();
+    public ObservableField<String> replyingToText = new ObservableField<>();
+    public ObservableBoolean replyingToVisible = new ObservableBoolean();
+    private long commentParentId = 0;
 
     //Header details
     public ObservableInt headerImagePlaceholder = new ObservableInt(R.drawable.placeholder_course_card_image);
@@ -171,7 +178,15 @@ public class ConnectDashboardViewModel extends BaseViewModel
             @Override
             public void onSuccess(List<Comment> data) {
                 mActivity.hideLoading();
-                allComments = data;
+                comments = new ArrayList<>();
+                replies = new ArrayList<>();
+                for (Comment comment: data){
+                    if (comment.getParent() == 0){
+                        comments.add(comment);
+                    } else {
+                        replies.add(comment);
+                    }
+                }
                 setTabs();
             }
 
@@ -187,15 +202,15 @@ public class ConnectDashboardViewModel extends BaseViewModel
         fragments.clear();
         titles.clear();
 
-        tab1 = ConnectCommentsTab.newInstance(content, post, allComments, this);
+        tab1 = ConnectCommentsTab.newInstance(content, post, comments, replies, this);
         fragments.add(tab1);
         titles.add(mActivity.getString(R.string.all_list));
 
-        tab2 = ConnectCommentsTab.newInstance(content, post, allComments, this);
+        tab2 = ConnectCommentsTab.newInstance(content, post, comments, replies, this);
         fragments.add(tab2);
         titles.add(mActivity.getString(R.string.recently_added_list));
 
-        tab3 = ConnectCommentsTab.newInstance(content, post, allComments, this);
+        tab3 = ConnectCommentsTab.newInstance(content, post, comments, replies, this);
         fragments.add(tab3);
         titles.add(mActivity.getString(R.string.most_relevant_list));
 
@@ -291,13 +306,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
         }
     }
 
-    public void addCommentOnPost(){
-
-        addReplyToComment(0);
-
-    }
-
-    public void addReplyToComment(int commentParentId){
+    public void addReplyToComment(){
 
         String comment = this.comment.get();
         if (comment == null || comment.trim().equals("")){
@@ -306,12 +315,24 @@ public class ConnectDashboardViewModel extends BaseViewModel
         }
 
         mActivity.showLoading();
-        mDataManager.addComment(comment.trim(), commentParentId, post.getId(),
+        mDataManager.addComment(comment.trim(), (int) commentParentId, post.getId(),
                 new OnResponseCallback<Comment>() {
                     @Override
                     public void onSuccess(Comment data) {
                         mActivity.hideLoading();
-                        allComments.add(0, data);
+                        if (commentParentId == 0) {
+                            mActivity.showLongSnack("Commented successfully");
+                            comments.add(0, data);
+                            tab1.refreshList();
+                            tab2.refreshList();
+                            tab3.refreshList();
+                        } else {
+                            mActivity.showLongSnack("Replied successfully");
+                            replies.add(0, data);
+                            replyingToVisible.set(false);
+                            commentParentId = 0;
+                        }
+                        ConnectDashboardViewModel.this.comment.set("");
                         tab1.refreshList();
                         tab2.refreshList();
                         tab3.refreshList();
@@ -356,6 +377,44 @@ public class ConnectDashboardViewModel extends BaseViewModel
         }
     }
 
+    //share post link with other apps
+    public void openShareMenu(View anchor) {
+        if (post == null){
+            return;
+        }
+        final String shareTextWithPlatformName = ResourceUtil.getFormattedString(
+                mActivity.getResources(),
+                R.string.share_wp_post_message,
+                "course_name",
+                //getString(R.string.platform_name)).toString() + "\n" + courseData.getCourse().getCourse_about();
+                post.getTitle().getRendered()).toString() + "\n" + post.getLink();
+        ShareUtils.showShareMenu(
+                mActivity,
+                ShareUtils.newShareIntent(shareTextWithPlatformName),
+                anchor,
+                (componentName, shareType) -> {
+                    final String shareText;
+                    final String twitterTag = mDataManager.getConfig().getTwitterConfig().getHashTag();
+                    if (shareType == ShareUtils.ShareType.TWITTER && !TextUtils.isEmpty(twitterTag)) {
+                        shareText = ResourceUtil.getFormattedString(
+                                mActivity.getResources(),
+                                R.string.share_wp_post_message,
+                                "course_name",
+                                //twitterTag).toString() + "\n" + courseData.getCourse().getCourse_about();
+                                twitterTag).toString() + "\n" + post.getLink();
+
+                    } else {
+                        shareText = shareTextWithPlatformName;
+                    }
+
+//                    segIO.courseDetailShared(post.getLink(), shareText, shareType);
+                    final Intent intent = ShareUtils.newShareIntent(shareText);
+                    intent.setComponent(componentName);
+                    mActivity.startActivity(intent);
+                });
+
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
         if (e.getType() != null && e.getType().equalsIgnoreCase(DownloadType.WP_VIDEO.name())){
@@ -396,10 +455,19 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     @Override
     public void onClickReply(Comment comment) {
+        replyingToText.set("Replying to " + comment.getAuthorName());
+        replyingToVisible.set(true);
+        commentParentId = comment.getId();
+
         if (commentFocus.get()) {
             commentFocus.set(false);
         }
         commentFocus.set(true);
+    }
+
+    public void resetReplyToComment(){
+        replyingToVisible.set(false);
+        commentParentId = 0;
     }
 
     public class ConnectPagerAdapter extends BasePagerAdapter {

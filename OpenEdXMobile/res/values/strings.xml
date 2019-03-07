@@ -733,6 +733,10 @@
     <string name="recently_added_list">Recently added</string>
     <string name="most_relevant_list">Most relevant</string>
     <string name="duration">Duration</string>
+    <!-- WP Post Share menu title -->
+    <string name="share_wp_post_popup_header">Share this post via&#8230;</string>
+    <!-- WP Share Post -->
+    <string name="share_wp_post_message">Please watch! {course_name} :</string>
 
     <string name="no_connection_exception">No Internet Connection</string>
     <string name="asterisk_red" translatable="false"><font color='#f44336'>*</font></string>

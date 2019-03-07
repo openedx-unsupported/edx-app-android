@@ -24,14 +24,16 @@ public class ConnectCommentsTab extends TaBaseFragment {
     private Content content;
     private Post post;
     private List<Comment> comments;
+    private List<Comment> replies;
     private CommentClickListener commentClickListener;
 
     public static ConnectCommentsTab newInstance(Content content, Post post, List<Comment> comments,
-                                                 CommentClickListener commentClickListener){
+                                                 List<Comment> replies, CommentClickListener commentClickListener){
         ConnectCommentsTab tab = new ConnectCommentsTab();
         tab.content = content;
         tab.post = post;
         tab.comments = comments;
+        tab.replies = replies;
         tab.commentClickListener = commentClickListener;
         return tab;
     }
@@ -39,7 +41,7 @@ public class ConnectCommentsTab extends TaBaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ConnectCommentsTabViewModel(getActivity(), this, content, post, comments, commentClickListener);
+        viewModel = new ConnectCommentsTabViewModel(getActivity(), this, content, post, comments, replies, commentClickListener);
     }
 
     @Nullable

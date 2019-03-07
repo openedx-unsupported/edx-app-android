@@ -9,8 +9,10 @@ import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.agenda.AgendaFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
 import org.edx.mobile.tta.ui.profile.ProfileFragment;
+import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
 public class LandingViewModel extends BaseViewModel {
@@ -19,38 +21,35 @@ public class LandingViewModel extends BaseViewModel {
 
     public ObservableBoolean navShiftMode = new ObservableBoolean();
 
-    public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            if (item.getItemId() == selectedId){
+    public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = item -> {
+        if (item.getItemId() == selectedId){
+            return true;
+        }
+        switch (item.getItemId()){
+            case R.id.action_library:
+                selectedId = R.id.action_library;
+                showLibrary();
                 return true;
-            }
-            switch (item.getItemId()){
-                case R.id.action_library:
-                    selectedId = R.id.action_library;
-                    showLibrary();
-                    return true;
-                case R.id.action_feed:
-                    selectedId = R.id.action_feed;
-                    showFeed();
-                    return true;
-                case R.id.action_search:
-                    selectedId = R.id.action_search;
-                    showSearch();
-                    return true;
-                case R.id.action_agenda:
-                    selectedId = R.id.action_agenda;
-                    showAgenda();
-                    return true;
-                case R.id.action_profile:
-                    selectedId = R.id.action_profile;
-                    showProfile();
-                    return true;
-                default:
-                    selectedId = R.id.action_library;
-                    showLibrary();
-                    return true;
-            }
+            case R.id.action_feed:
+                selectedId = R.id.action_feed;
+                showFeed();
+                return true;
+            case R.id.action_search:
+                selectedId = R.id.action_search;
+                showSearch();
+                return true;
+            case R.id.action_agenda:
+                selectedId = R.id.action_agenda;
+                showAgenda();
+                return true;
+            case R.id.action_profile:
+                selectedId = R.id.action_profile;
+                showProfile();
+                return true;
+            default:
+                selectedId = R.id.action_library;
+                showLibrary();
+                return true;
         }
     };
 
@@ -65,7 +64,12 @@ public class LandingViewModel extends BaseViewModel {
     public void showLibrary(){
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                new LibraryFragment(),
+                LibraryFragment.newInstance(new SearchPageOpenedListener() {
+                    @Override
+                    public void onSearchPageOpened() {
+                        selectedId = R.id.action_search;
+                    }
+                }),
                 R.id.dashboard_fragment,
                 LibraryFragment.TAG,
                 false,
@@ -78,7 +82,14 @@ public class LandingViewModel extends BaseViewModel {
     }
 
     public void showSearch(){
-        mActivity.showShortSnack("Search coming soon");
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                new SearchFragment(),
+                R.id.dashboard_fragment,
+                SearchFragment.TAG,
+                false,
+                null
+        );
     }
 
     public void showAgenda(){
