@@ -13,7 +13,7 @@ public class BasePagerAdapter extends FragmentStatePagerAdapter {
 
     private List<Fragment> fragments;
     private List<String> titles;
-
+    private int pos=0;
     public BasePagerAdapter(FragmentManager fm) {
         super(fm);
         fragments = new ArrayList<>();
@@ -24,6 +24,7 @@ public class BasePagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int i) {
         return fragments.get(i);
     }
+
 
     @Override
     public int getCount() {
@@ -68,5 +69,24 @@ public class BasePagerAdapter extends FragmentStatePagerAdapter {
             this.titles.addAll(titles);
             notifyDataSetChanged();
         }
+
+
     }
+    public void setFragmentsbyPos( List<Fragment> fragments, List<String> titles,String posi) throws Exception {
+        if (fragments.size() != titles.size()) {
+            throw new Exception("Size of fragments and titles must be equal.");
+        } else {
+            this.fragments.clear();
+            this.titles.clear();
+            this.fragments.addAll(fragments);
+            this.titles.addAll(titles);
+             for (String title : titles){
+                 if (title.equalsIgnoreCase(posi)){
+                     pos++;
+                 }
+             }
+            notifyDataSetChanged();
+        }
+    }
+
 }

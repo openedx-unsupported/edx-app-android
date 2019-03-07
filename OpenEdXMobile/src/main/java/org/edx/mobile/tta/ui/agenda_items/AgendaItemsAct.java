@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -22,19 +23,23 @@ public class AgendaItemsAct extends TaBaseFragment {
     public static final String TAG = AgendaItemsAct.class.getCanonicalName();
     private AgendaItemModel viewModel;
     private String toolabarData;
+    private AgendaItem tabSelected;
     private Toolbar toolbar;
     private  List<AgendaItem> items;
+    ViewPager viewPager;
+    TabLayout tabLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel =  new AgendaItemModel(getActivity(),this, toolabarData,items);
+        viewModel =  new AgendaItemModel(getActivity(),this, toolabarData,items,tabSelected);
     }
 
-    public static AgendaItemsAct newInstance(String toolabarData, List<AgendaItem> items){
+    public static AgendaItemsAct newInstance(String toolabarData, List<AgendaItem>items, AgendaItem tabSelected){
         AgendaItemsAct fragment = new AgendaItemsAct();
         fragment.toolabarData = toolabarData;
         fragment.items = items;
+        fragment.tabSelected = tabSelected;
         return fragment;
     }
 
@@ -44,7 +49,6 @@ public class AgendaItemsAct extends TaBaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_activity_statelistagenda, viewModel)
                 .getRoot();
-
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> {
             if (getActivity() != null) {
@@ -52,10 +56,14 @@ public class AgendaItemsAct extends TaBaseFragment {
             }
         });
 
-        TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);
-        ViewPager viewPager = view.findViewById(R.id.listing_view_pager);
+        tabLayout = view.findViewById(R.id.listing_tab_layout);
+        viewPager  = view.findViewById(R.id.listing_view_pager);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.post(() -> {
+            tabLayout.getTabAt(items.indexOf(tabSelected)).select();
+        });
 
         return view;
     }
+
 }
