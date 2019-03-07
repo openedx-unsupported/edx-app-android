@@ -30,6 +30,10 @@ public class Constants {
     public static final String KEY_COURSE_NAME = "course_name";
     public static final String KEY_UNIT_ID = "unit_id";
     public static final String KEY_CONTENT = "content";
+    public static final String KEY_LIST_ID = "list_id";
+    public static final String KEY_IS_PRIORITY = "is_priority";
+    public static final String KEY_SEARCH_TEXT = "search_text";
+    public static final String KEY_FILTER_DATA = "filter_data";
     public static final String KEY_SOURCE_ID = "source_id";
 
     public static final String OTP_SOURCE_REGISTER = "register";

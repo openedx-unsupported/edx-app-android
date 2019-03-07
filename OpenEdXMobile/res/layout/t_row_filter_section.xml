@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.data.model.search.FilterSection" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/_20px">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary_navy"
+            android:textSize="16sp"
+            android:fontFamily="@font/hind_medium"
+            android:layout_marginStart="@dimen/_4px"
+            android:text="@{viewModel.name}"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
+            android:layout_marginTop="@dimen/_20px"/>
+
+        <org.edx.mobile.tta.ui.custom.NonScrollListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tags_multi_choice_list"
+            android:scrollbars="none"
+            android:choiceMode="multipleChoice" />
+
+    </LinearLayout>
+
+</layout>

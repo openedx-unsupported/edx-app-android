@@ -18,6 +18,9 @@ public interface CategoryDao {
     @Query("Select * from category where id = :id")
     Category getById(long id);
 
+    @Query("Select * from category where source_id = :sourceId")
+    Category getBySourceId(long sourceId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Category category);
 

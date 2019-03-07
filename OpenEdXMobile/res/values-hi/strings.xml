@@ -60,4 +60,5 @@
     <string name="connect_video_post_downloading_msg">वीडियो डाउनलोड हो रहा है। प्रतीक्षा करें।</string>
     <string name="duration">अवधि</string>
     <string name="most_relevant_list">सबसे ज़रूरी</string>
+    <string name="share_wp_post_message">आप भी देखिए! {course_name} :</string>
 </resources>

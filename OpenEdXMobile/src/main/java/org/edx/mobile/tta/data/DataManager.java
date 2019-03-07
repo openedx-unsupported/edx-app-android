@@ -29,11 +29,14 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.CategoryType;
 import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
 import org.edx.mobile.tta.data.local.db.TADatabase;
+import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
@@ -46,6 +49,9 @@ import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
+import org.edx.mobile.tta.data.model.search.FilterSection;
+import org.edx.mobile.tta.data.model.search.FilterTag;
+import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
@@ -73,6 +79,8 @@ import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.data.model.authentication.LoginRequest;
 import org.edx.mobile.tta.data.model.authentication.LoginResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
+import org.edx.mobile.tta.task.search.GetSearchFilterTask;
+import org.edx.mobile.tta.task.search.SearchTask;
 import org.edx.mobile.tta.utils.RxUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.CustomComment;
@@ -90,6 +98,7 @@ import org.edx.mobile.util.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -478,6 +487,21 @@ public class DataManager extends BaseRoboInjector {
                 protected void onSuccess(List<CollectionItemsResponse> collectionItemsList) throws Exception {
                     super.onSuccess(collectionItemsList);
                     if (collectionItemsList != null && !collectionItemsList.isEmpty()) {
+
+                        for (CollectionItemsResponse itemsResponse: collectionItemsList){
+                            if (itemsResponse.getContent() != null){
+                                for (Content content: itemsResponse.getContent()){
+                                    if (content.getLists() == null){
+                                        List<Long> listIds = new ArrayList<>();
+                                        listIds.add(itemsResponse.getId());
+                                        content.setLists(listIds);
+                                    } else if (!content.getLists().contains(itemsResponse.getId())){
+                                        content.getLists().add(itemsResponse.getId());
+                                    }
+                                }
+                            }
+                        }
+
                         new Thread() {
                             @Override
                             public void run() {
@@ -1297,6 +1321,131 @@ public class DataManager extends BaseRoboInjector {
         videoData.setDownloadEntryForPost(categoryId,categoryName,post);
 
         return edxEnvironment.getStorage().getPostVideo(videoData.videoId,videoData.url);
+
+    }
+
+    public void getSearchFilter(OnResponseCallback<SearchFilter> callback){
+
+        //Mocking start
+        /*SearchFilter searchFilter = new SearchFilter();
+        List<FilterSection> sections = new ArrayList<>();
+        for (int i = 0; i < 5; i++){
+            FilterSection section = new FilterSection();
+            section.setName("Section " + (i+1));
+            List<FilterTag> tags = new ArrayList<>();
+            for (int j = 0; j < 5; j++){
+                FilterTag tag = new FilterTag();
+                tag.setDisplay_name("Tag " + (i+1) + (j+1));
+                tags.add(tag);
+            }
+            section.setTags(tags);
+            sections.add(section);
+        }
+        searchFilter.setResult(sections);
+        callback.onSuccess(searchFilter);*/
+        //Mocking start
+
+        //Actual code   **Do not delete**
+        if (NetworkUtil.isConnected(context)){
+            new GetSearchFilterTask(context){
+                @Override
+                protected void onSuccess(SearchFilter searchFilter) throws Exception {
+                    super.onSuccess(searchFilter);
+                    if (searchFilter == null){
+                        callback.onFailure(new TaException("Cannot fetch filters"));
+                    } else {
+                        List<FilterSection> tempSections = new ArrayList<>();
+                        for (FilterSection section: searchFilter.getResult()){
+                            if (section.getTags() == null || section.getTags().isEmpty()){
+                                tempSections.add(section);
+                            }
+                        }
+                        for (FilterSection section: tempSections){
+                            searchFilter.getResult().remove(section);
+                        }
+                        Collections.sort(searchFilter.getResult());
+                        callback.onSuccess(searchFilter);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getCategoryFromLocal(long sourceId, OnResponseCallback<Category> callback){
+
+        new AsyncTask<Void, Void, Category>() {
+            @Override
+            protected Category doInBackground(Void... voids) {
+                return mLocalDataSource.getCategoryBySourceId(sourceId);
+            }
+
+            @Override
+            protected void onPostExecute(Category category) {
+                super.onPostExecute(category);
+                if (category == null){
+                    callback.onFailure(new TaException("Category not found."));
+                } else {
+                    callback.onSuccess(category);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getContentListsFromLocal(long categoryId, String mode, OnResponseCallback<List<ContentList>> callback){
+
+        new AsyncTask<Void, Void, List<ContentList>>() {
+            @Override
+            protected List<ContentList> doInBackground(Void... voids) {
+                return mLocalDataSource.getContentListsByCategoryIdAndMode(categoryId, mode);
+            }
+
+            @Override
+            protected void onPostExecute(List<ContentList> contentLists) {
+                super.onPostExecute(contentLists);
+                if (contentLists == null || contentLists.isEmpty()){
+                    callback.onFailure(new TaException("Content lists not found."));
+                } else {
+                    Collections.sort(contentLists);
+                    callback.onSuccess(contentLists);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void search(int take, int skip, boolean isPriority, long listId, String searchText, List<FilterSection> sections,
+                       OnResponseCallback<List<Content>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new SearchTask(context, take, skip, isPriority, listId, searchText, sections){
+                @Override
+                protected void onSuccess(List<Content> contents) throws Exception {
+                    super.onSuccess(contents);
+                    if (contents == null){
+                        contents = new ArrayList<>();
+                    }
+                    callback.onSuccess(contents);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
 
     }
 }

@@ -312,48 +312,94 @@
                 android:layout_gravity="bottom"
                 android:background="@color/white"
                 android:minHeight="50dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="@dimen/_10px">
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_selector_hollow"
-                    android:fontFamily="@font/hind_light"
-                    android:hint="@string/add_a_comment"
-                    android:padding="@dimen/_10px"
-                    android:text="@={viewModel.comment}"
-                    android:textColor="@color/gray_4"
-                    android:textColorHint="@color/gray_4"
-                    android:textSize="12sp"
-                    request_focus="@{viewModel.commentFocus}"/>
-
-                <Button
+                <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/_8px"
-                    android:background="@drawable/btn_selector_hollow"
-                    android:fontFamily="@font/hind_medium"
-                    android:gravity="center"
-                    android:minWidth="78dp"
-                    android:onClick="@{()->viewModel.addCommentOnPost()}"
-                    android:padding="@dimen/_10px"
-                    android:text="@string/comment_en"
-                    android:textAllCaps="false"
-                    android:textColor="@color/secondary_grey_light"
-                    android:textSize="12sp" />
+                    android:layout_marginBottom="4dp"
+                    app:cardBackgroundColor="@color/primary_navy"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    android:visibility="@{viewModel.replyingToVisible?View.VISIBLE:View.GONE}">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="@{viewModel.replyingToText}"
+                            android:layout_gravity="center_vertical"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            app:srcCompat="@drawable/t_icon_close"
+                            android:onClick="@{()->viewModel.resetReplyToComment()}"/>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        request_focus="@{viewModel.commentFocus}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_selector_hollow"
+                        android:fontFamily="@font/hind_light"
+                        android:hint="@string/add_a_comment"
+                        android:padding="@dimen/_10px"
+                        android:text="@={viewModel.comment}"
+                        android:textColor="@color/gray_4"
+                        android:textColorHint="@color/gray_4"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_8px"
+                        android:background="@drawable/btn_selector_hollow"
+                        android:fontFamily="@font/hind_medium"
+                        android:gravity="center"
+                        android:minWidth="78dp"
+                        android:onClick="@{()->viewModel.addReplyToComment()}"
+                        android:padding="@dimen/_10px"
+                        android:text="@string/comment_en"
+                        android:textAllCaps="false"
+                        android:textColor="@color/secondary_grey_light"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/videoLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/videoLayout"
             android:visibility="visible">
 
 
