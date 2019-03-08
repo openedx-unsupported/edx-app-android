@@ -33,8 +33,6 @@ public class AgendaViewModel extends BaseViewModel {
 
     public boolean regionListRecieved, myListRecieved, downloadListRecieved;
 
-    private AgendaItem agendaItem;
-
     public AgendaViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
         stateListAdapter = new AgendaListAdapter(mActivity,mActivity.getString(R.string.state_wise_list));
@@ -293,10 +291,9 @@ public class AgendaViewModel extends BaseViewModel {
                         0,0,0
                 );
                 itemBinding.agendaCard.setOnClickListener(v -> {
-                    agendaItem = model;
                     ActivityUtil.replaceFragmentInActivity(
                             mActivity.getSupportFragmentManager(),
-                            AgendaItemsAct.newInstance(agendaListName, getItems()),
+                            AgendaItemsAct.newInstance(agendaListName, getItems(),model),
                             R.id.dashboard_fragment,
                             AgendaItemsAct.TAG,
                             true,

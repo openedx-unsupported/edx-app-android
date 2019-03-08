@@ -43,10 +43,9 @@ public class AgendaItemsTab extends TaBaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_fragment_agendaitems_tab, viewModel)
                 .getRoot();
-
-
         return view;
     }
+
     @Override
     public void onPermissionGranted(String[] permissions, int requestCode) {
         switch (requestCode){
