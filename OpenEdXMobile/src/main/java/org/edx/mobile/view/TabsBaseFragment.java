@@ -14,11 +14,14 @@ import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentTabsBaseBinding;
+import org.edx.mobile.deeplink.Screen;
+import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 
@@ -40,6 +43,28 @@ public abstract class TabsBaseFragment extends BaseFragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tabs_base, container, false);
         initializeTabs();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Handle tab-selection through deep link (if available)
+        if (getArguments() != null && binding != null) {
+            @ScreenDef final String screenName = getArguments().getString(Router.EXTRA_SCREEN_NAME);
+            if (screenName != null) {
+                final List<FragmentItemModel> fragmentItems = getFragmentItems();
+                for (int i = 0; i < fragmentItems.size(); i++) {
+                    final FragmentItemModel item = fragmentItems.get(i);
+                    if (screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) {
+                        binding.viewPager.setCurrentItem(i);
+                        break;
+                    }
+                }
+                // Setting this to null, so that upon recreation of the fragment the tab defined in
+                // the deep link is not auto-selected again.
+                getArguments().putString(Router.EXTRA_SCREEN_NAME, null);
+            }
+        }
     }
 
     private void initializeTabs() {
