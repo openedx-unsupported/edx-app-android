@@ -113,4 +113,8 @@ public class LandingViewModel extends BaseViewModel {
                 null
         );
     }
+
+    public void selectLibrary(){
+        selectedId = R.id.action_library;
+    }
 }

@@ -12,18 +12,18 @@ import java.util.List;
 
 public class GetStateAgendaContentTask extends Task<List<Content>> {
 
-    private long sourseId;
+    private long sourceId;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetStateAgendaContentTask(Context context, long sourseId) {
+    public GetStateAgendaContentTask(Context context, long sourceId) {
         super(context);
-        this.sourseId = sourseId;
+        this.sourceId = sourceId;
     }
 
     @Override
     public List<Content> call() throws Exception {
-        return taAPI.getStateAgendaContent(sourseId).execute().body();
+        return taAPI.getStateAgendaContent(sourceId).execute().body();
     }
 }

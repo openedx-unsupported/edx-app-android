@@ -62,7 +62,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private EnrolledCoursesResponse course;
     private CourseComponent rootComponent;
     private CourseComponent assessmentComponent;
-    private CourseComponent aboutComponent;
     private List<ScormBlockModel> remainingScorms;
 
     public CourseMaterialAdapter adapter;
@@ -218,29 +217,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private void enableHeader(){
 
         allDownloadStatusIcon.set(R.drawable.t_icon_done);
-        String aboutUrl = aboutComponent.getChildren().get(0).getBlockUrl();
-
-//        AuthenticatedWebView webView = new AuthenticatedWebView(mActivity);
-//        webView.initWebView(mActivity, false, false);
-//        webView.setHtmlCallback(new OnResponseCallback<String>() {
-//            @Override
-//            public void onSuccess(String data) {
-//                description.set(data);
-//            }
-//
-//            @Override
-//            public void onFailure(Exception e) {
-//                description.set("");
-//            }
-//        });
-//        webView.loadUrlWithJavascript(true, aboutUrl,
-//                "javascript:(function() { $(\".xblock.xblock-student_view.xblock-student_view-html.xmodule_display.xmodule_HtmlModule.xblock-initialized\").html() })()");
-
-        /*description.set(aboutComponent.getDisplayName() + "\n\n" +
-                "अकसर शिक्षक होने के नाते हम अपनी कक्षाओं को रोचक बनाने की चुनौतियों से जूझते हैं| हम अलग-अलग गतिविधियाँ अपनाते हैं ताकि बच्चे मनोरंजक तरीकों से सीख सकें| लेकिन ऐसा करना हमेशा आसान नहीं होता| यह कोर्स एक कोशिश है जहां हम ‘गतिविधि क्या है’, ‘कैसी गतिविधियाँ चुनी जायें?’ और इन्हें कराने में क्या-क्या मुश्किलें आ सकती हैं, के बारे में बात कर रहे हैं| इस कोर्स में इन पहलुओं को टटोलने के लिए प्राइमरी कक्षा के EVS (पर्यावरण विज्ञान) विषय के उदाहरण लिए गए हैं| \n" +
-                        "\n" +
-                        "इस कोर्स को पर्यावरण-विज्ञान पढ़ानेवाले शिक्षक और वे शिक्षक जो ‘गतिविधियों को कक्षा में कैसे कराया जाये’ जानना चाहते हैं, कर सकते हैं| आशा है इस कोर्स को पढ़ने के बाद आपके लिए कक्षा में गतिविधियाँ कराना आसान हो जाएगा|"
-        );*/
+        description.set(course.getCourse().getShort_description());
 
         adapter.setHeaderLayout(R.layout.t_row_course_material_header);
         adapter.setHeaderClickListener(v -> {
@@ -572,10 +549,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                             if (child.getDisplayName().contains("अपनी समझ")){
                                 assessmentComponent = child;
                                 enableFooter();
-                            } else if (child.getDisplayName().contains("कोर्स के बारे में")){
-                                aboutComponent = child;
-                                enableHeader();
-                            } else {
+                            } else if (!child.getDisplayName().contains("कोर्स के बारे में")){
                                 components.add(child);
                             }
 
@@ -592,15 +566,13 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         if (comp.getDisplayName().contains("अपनी समझ")){
                             assessmentComponent = comp;
                             enableFooter();
-                        } else if (comp.getDisplayName().contains("कोर्स के बारे में")){
-                            aboutComponent = comp;
-                            enableHeader();
-                        } else {
+                        } else if (!comp.getDisplayName().contains("कोर्स के बारे में")){
                             components.add(comp);
                         }
                     }
                 }
             }
+            enableHeader();
             set(components);
         }
 
@@ -610,11 +582,11 @@ public class CourseMaterialViewModel extends BaseViewModel {
             if (binding instanceof TRowCourseMaterialHeaderBinding) {
                 TRowCourseMaterialHeaderBinding headerBinding = (TRowCourseMaterialHeaderBinding) binding;
                 headerBinding.setViewModel(CourseMaterialViewModel.this);
-                headerBinding.descriptionWebview.setOnTouchListener((v, event) -> (event.getAction() == MotionEvent.ACTION_MOVE));
+                /*headerBinding.descriptionWebview.setOnTouchListener((v, event) -> (event.getAction() == MotionEvent.ACTION_MOVE));
                 if (!headerBinding.descriptionWebview.isInitiated()){
                     headerBinding.descriptionWebview.initWebView(mActivity, false, false);
                     headerBinding.descriptionWebview.loadUrl(true, aboutComponent.getChildren().get(0).getBlockUrl());
-                }
+                }*/
 
                 headerBinding.likeLayout.setOnClickListener(v -> {
                     if (headerClickListener != null) {

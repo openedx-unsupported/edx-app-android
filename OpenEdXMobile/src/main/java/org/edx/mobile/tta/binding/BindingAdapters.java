@@ -367,4 +367,9 @@ public class BindingAdapters {
     public static void setArrayAdapter(NonScrollListView view, BaseArrayAdapter adapter){
         view.setAdapter(adapter);
     }
+
+    @BindingAdapter({"on_close_listener"})
+    public static void setOnCloseListener(SearchView view, SearchView.OnCloseListener listener){
+        view.setOnCloseListener(listener);
+    }
 }

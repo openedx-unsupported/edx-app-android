@@ -241,7 +241,7 @@ public class LibraryTabViewModel extends BaseViewModel {
                             SearchFragment.newInstance(category, getAutoLists(), model),
                             R.id.dashboard_fragment,
                             SearchFragment.TAG,
-                            false,
+                            true,
                             null
                     );
                     if (searchPageOpenedListener != null){

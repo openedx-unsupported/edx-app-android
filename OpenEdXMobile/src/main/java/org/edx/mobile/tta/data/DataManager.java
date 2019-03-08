@@ -1103,9 +1103,10 @@ public class DataManager extends BaseRoboInjector {
         }
     }
 
-    public void getrMyAgendaContent(long sourceId, OnResponseCallback<List<Content>> callback) {
+    public void getMyAgendaContent(long sourceId, OnResponseCallback<List<Content>> callback) {
 
-        List<Content> contents = new ArrayList<>();
+        //Mocking start
+        /*List<Content> contents = new ArrayList<>();
         for (int i=0;i<20;i++){
             Content content =  new Content();
             content.setName("course");
@@ -1117,8 +1118,11 @@ public class DataManager extends BaseRoboInjector {
             content.setSource(source);
             contents.add(content);
         }
-        callback.onSuccess(contents);
-        /*if (NetworkUtil.isConnected(context)) {
+        callback.onSuccess(contents);*/
+        //Mocking end
+
+        //Actual code   **Do not delete**
+        if (NetworkUtil.isConnected(context)) {
             new GetMyAgendaContentTask(context, sourceId) {
                 @Override
                 protected void onSuccess(List<Content> response) throws Exception {
@@ -1138,11 +1142,13 @@ public class DataManager extends BaseRoboInjector {
             }.execute();
         } else {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
-        }*/
+        }
     }
 
     public void getStateAgendaContent(long sourceId, OnResponseCallback<List<Content>> callback) {
-        List<Content> contents = new ArrayList<>();
+
+        //Mocking start
+        /*List<Content> contents = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Content content = new Content();
             content.setName("course");
@@ -1154,29 +1160,31 @@ public class DataManager extends BaseRoboInjector {
             content.setSource(source);
             contents.add(content);
         }
-        callback.onSuccess(contents);
+        callback.onSuccess(contents);*/
+        //Mocking end
 
-//        if (NetworkUtil.isConnected(context)) {
-//            new GetStateAgendaContentTask(context, sourceId) {
-//                @Override
-//                protected void onSuccess(List<Content> response) throws Exception {
-//                    super.onSuccess(response);
-//                    if (response != null && response.size() > 0) {
-//                        callback.onSuccess(response);
-//                    } else {
-//                        callback.onFailure(new TaException("No data found."));
-//                    }
-//
-//                }
-//
-//                @Override
-//                protected void onException(Exception ex) {
-//                    callback.onFailure(ex);
-//                }
-//            }.execute();
-//        } else {
-//            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
-//        }
+        //Actual code   **Do not delete**
+        if (NetworkUtil.isConnected(context)) {
+            new GetStateAgendaContentTask(context, sourceId) {
+                @Override
+                protected void onSuccess(List<Content> response) throws Exception {
+                    super.onSuccess(response);
+                    if (response != null && response.size() > 0) {
+                        callback.onSuccess(response);
+                    } else {
+                        callback.onFailure(new TaException("No data found."));
+                    }
+
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
     }
 
     public void getPostById(long postId, OnResponseCallback<Post> callback){

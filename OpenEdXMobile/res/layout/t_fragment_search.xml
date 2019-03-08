@@ -32,7 +32,7 @@
                 android:layout_marginTop="@dimen/_30px"
                 android:layout_marginEnd="@dimen/_20dp"
                 app:iconifiedByDefault="false"
-                on_query_text_listener="@{viewModel.queryTextListener}" />
+                on_query_text_listener="@{viewModel.queryTextListener}"/>
 
             <!--<EditText
                 android:layout_width="match_parent"
@@ -128,7 +128,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/contents_list"
-            app:mx_itemLayout="@layout/t_row_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:mx_itemLayout="@layout/t_row_agenda_content"
             app:layout_constraintTop_toBottomOf="@id/divider_line"
             app:layout_constraintBottom_toBottomOf="parent"
             infinite_recycler_adapter="@{viewModel.contentsAdapter}"

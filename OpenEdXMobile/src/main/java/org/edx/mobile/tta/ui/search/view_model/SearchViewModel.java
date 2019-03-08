@@ -22,6 +22,7 @@ import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.TRowAgendaContentBinding;
 import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowFilterSectionBinding;
 import org.edx.mobile.databinding.TRowFilterTagBinding;
@@ -56,6 +57,7 @@ public class SearchViewModel extends BaseViewModel {
     private boolean isPriority;
     private boolean filtersReceived, contentListsReceived;
     private boolean changesMade;
+    private boolean switchedPriority;
 
     private Content selectedContent;
     private List<FilterTag> tags;
@@ -67,6 +69,7 @@ public class SearchViewModel extends BaseViewModel {
     private List<ContentList> currentContentLists;
     private ContentList selectedContentList;
     private List<FilterSection> filterSections;
+    private List<Content> tempContents;
 
     public ObservableField<String> searchText = new ObservableField<>("");
     public ObservableField<String> contentListText = new ObservableField<>();
@@ -81,6 +84,7 @@ public class SearchViewModel extends BaseViewModel {
     public SearchFilterAdapter filterAdapter;
     public RecyclerView.LayoutManager filterLayoutManager;
     public ContentListsAdapter contentListsAdapter;
+    private boolean isAllLoaded=false;
 
     public AdapterView.OnItemClickListener contentListClickListener = (parent, view, position, id) -> {
         selectedContentListPosition.set(position);
@@ -90,6 +94,10 @@ public class SearchViewModel extends BaseViewModel {
     };
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
+        if (isAllLoaded)
+            return false;
+        skip++;
+        search();
         return true;
     };
 
@@ -108,6 +116,9 @@ public class SearchViewModel extends BaseViewModel {
         public boolean onQueryTextChange(String newText) {
             searchText.set(newText);
             changesMade = true;
+            if (newText == null || newText.equals("")){
+                hideFilters();
+            }
             return false;
         }
     };
@@ -116,6 +127,7 @@ public class SearchViewModel extends BaseViewModel {
         super(context, fragment);
         tags = new ArrayList<>();
         contents = new ArrayList<>();
+        tempContents = new ArrayList<>();
         selectedCategory = category;
         currentContentLists = contentLists;
         this.selectedContentList = selectedContentList;
@@ -130,7 +142,6 @@ public class SearchViewModel extends BaseViewModel {
         filterAdapter = new SearchFilterAdapter(mActivity);
         contentListsAdapter = new ContentListsAdapter(mActivity, android.R.layout.simple_list_item_single_choice);
 
-        contentsAdapter.setItems(contents);
         contentsAdapter.setItemClickListener((view, item) -> {
             selectedContent = item;
             mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -148,11 +159,12 @@ public class SearchViewModel extends BaseViewModel {
         populateTags();
         tagsAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()){
-                case R.id.tag_delete:
+                case R.id.tag_card:
                     changesMade = true;
                     if (item.getValue().equals(TAG_VALUE_CATEGORY)){
                         selectedCategory = defaultCategory;
                         currentContentLists = defaultContentLists;
+                        contentListsAdapter.setItems(currentContentLists);
                         int i;
                         for (i = 0; i < currentContentLists.size(); i++){
                             if (this.selectedContentList.getName().equalsIgnoreCase(currentContentLists.get(i).getName())){
@@ -165,6 +177,7 @@ public class SearchViewModel extends BaseViewModel {
                             this.selectedContentList = currentContentLists.get(0);
                             selectedContentListPosition.set(0);
                         }
+                        contentListText.set(this.selectedContentList.getName());
                     }
                     tags.remove(item);
                     populateTags();
@@ -172,6 +185,8 @@ public class SearchViewModel extends BaseViewModel {
                     take = DEFAULT_TAKE;
                     skip = DEFAULT_SKIP;
                     isPriority = true;
+                    isAllLoaded = false;
+                    mActivity.showLoading();
                     search();
                     break;
             }
@@ -239,7 +254,6 @@ public class SearchViewModel extends BaseViewModel {
         mDataManager.getSearchFilter(new OnResponseCallback<SearchFilter>() {
             @Override
             public void onSuccess(SearchFilter data) {
-                mActivity.hideLoading();
                 searchFilter = data;
                 populateFilters();
             }
@@ -296,6 +310,7 @@ public class SearchViewModel extends BaseViewModel {
 
         filtersReceived = true;
         if (contentListsReceived){
+            isAllLoaded = false;
             search();
         }
     }
@@ -309,6 +324,7 @@ public class SearchViewModel extends BaseViewModel {
 
         contentListsReceived = true;
         if (filtersReceived){
+            isAllLoaded = false;
             search();
         }
     }
@@ -357,27 +373,77 @@ public class SearchViewModel extends BaseViewModel {
     public void hideFilters(){
         filterSelected.set(false);
         contentListSelected.set(false);
-        search();
+        if (changesMade) {
+            isAllLoaded = false;
+            mActivity.showLoading();
+            search();
+        }
     }
 
     private void search(){
         if (selectedContentList == null){
             return;
         }
-        mActivity.showLoading();
+
+        if (changesMade){
+            skip = 0;
+            isPriority = true;
+        }
 
         setFilterSections();
+        getSearchedContents();
+
+    }
+
+    private void getSearchedContents() {
+
         mDataManager.search(take, skip, isPriority, selectedContentList.getId(), searchText.get(), filterSections,
                 new OnResponseCallback<List<Content>>() {
                     @Override
                     public void onSuccess(List<Content> data) {
-                        mActivity.hideLoading();
-                        populateContents(data);
+                        if (selectedContentList.getMode().equalsIgnoreCase(ContentListMode.auto.name())) {
+                            mActivity.hideLoading();
+                            if (data.size() < take){
+                                isAllLoaded = true;
+                            }
+                            populateContents(data);
+                            contentsAdapter.setLoadingDone();
+                        } else {
+                            if (isPriority){
+                                if (data.size() >= take){
+                                    mActivity.hideLoading();
+                                    populateContents(data);
+                                    contentsAdapter.setLoadingDone();
+                                } else {
+                                    switchedPriority = true;
+                                    tempContents.clear();
+                                    tempContents.addAll(data);
+                                    isPriority = false;
+                                    skip = 0;
+                                    getSearchedContents();
+                                }
+                            } else {
+                                mActivity.hideLoading();
+                                if (data.size() < take){
+                                    isAllLoaded=true;
+                                }
+                                if (switchedPriority){
+                                    switchedPriority = false;
+                                    tempContents.addAll(data);
+                                    populateContents(tempContents);
+                                } else {
+                                    populateContents(data);
+                                }
+                                contentsAdapter.setLoadingDone();
+                            }
+                        }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
+                        isAllLoaded = true;
+                        contentsAdapter.setLoadingDone();
                         mActivity.showLongSnack(e.getLocalizedMessage());
                     }
                 });
@@ -386,12 +452,13 @@ public class SearchViewModel extends BaseViewModel {
 
     private void populateContents(List<Content> contents) {
 
-        if (skip == 0){
+        if (changesMade){
             this.contents = contents;
+            changesMade = false;
         } else {
             this.contents.addAll(contents);
         }
-        contentsAdapter.notifyDataSetChanged();
+        contentsAdapter.setItems(this.contents);
 
     }
 
@@ -402,8 +469,8 @@ public class SearchViewModel extends BaseViewModel {
 
         @Override
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Content model, @Nullable OnRecyclerItemClickListener<Content> listener) {
-            if (binding instanceof TRowContentBinding){
-                TRowContentBinding contentBinding = (TRowContentBinding) binding;
+            if (binding instanceof TRowAgendaContentBinding){
+                TRowAgendaContentBinding contentBinding = (TRowAgendaContentBinding) binding;
                 contentBinding.contentCategory.setText(model.getSource().getTitle());
                 contentBinding.contentCategory.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         ContentSourceUtil.getSourceDrawable_10x10(model.getSource().getName()),
@@ -437,7 +504,7 @@ public class SearchViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull FilterTag model, @Nullable OnRecyclerItemClickListener<FilterTag> listener) {
             if (binding instanceof TRowFilterTagBinding){
                 TRowFilterTagBinding tagBinding = (TRowFilterTagBinding) binding;
-                tagBinding.tagDelete.setOnClickListener(v -> {
+                tagBinding.tagCard.setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
@@ -469,6 +536,7 @@ public class SearchViewModel extends BaseViewModel {
                 }
 
                 sectionBinding.tagsMultiChoiceList.setOnItemClickListener((parent, view, position, id) -> {
+                    changesMade = true;
                     FilterTag tag = (FilterTag) parent.getItemAtPosition(position);
                     if (tags.contains(tag)){
                         tags.remove(tag);

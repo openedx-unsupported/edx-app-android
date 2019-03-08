@@ -105,7 +105,10 @@ public class CourseDashboardViewModel extends BaseViewModel {
         fragments.add(handoutFragment);
         titles.add(mActivity.getString(R.string.handouts));
 
-        if (rootComponent != null) {
+        fragments.add(AuthenticatedWebViewFragment.newInstance(course.getCourse().getCourse_about()));
+        titles.add(mActivity.getString(R.string.about));
+
+        /*if (rootComponent != null) {
             for (IBlock block: rootComponent.getChildren()){
                 CourseComponent comp = (CourseComponent) block;
 
@@ -122,7 +125,7 @@ public class CourseDashboardViewModel extends BaseViewModel {
                     }
                 }
             }
-        }
+        }*/
 
         try {
             adapter.setFragments(fragments, titles);

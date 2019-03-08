@@ -38,6 +38,9 @@ public class CourseEntry implements Serializable {
     private CoursewareAccess courseware_access;
     @Nullable private Map<String, String> course_sharing_utm_parameters;
 
+    //Mx Chirag: Short description of course
+    private String short_description;
+
     public LatestUpdateModel getLatest_updates() {
         return latest_updates;
     }
@@ -221,5 +224,13 @@ public class CourseEntry implements Serializable {
     @Nullable
     public String getCourseSharingUtmParams(@NonNull String sharingPlatformKey) {
         return course_sharing_utm_parameters == null ? null : course_sharing_utm_parameters.get(sharingPlatformKey);
+    }
+
+    public String getShort_description() {
+        return short_description;
+    }
+
+    public void setShort_description(String short_description) {
+        this.short_description = short_description;
     }
 }

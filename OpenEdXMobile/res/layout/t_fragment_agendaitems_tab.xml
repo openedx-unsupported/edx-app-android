@@ -23,8 +23,8 @@
             app:mx_itemLayout="@layout/t_row_agenda_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:paddingStart="@dimen/_16px"
-            android:paddingEnd="@dimen/_16px"/>
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"/>
 
     </LinearLayout>
 

@@ -69,7 +69,7 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
     private void getData() {
         mActivity.showLoading();
         if (toolBarData.equalsIgnoreCase(mActivity.getString(R.string.my_agenda))){
-            mDataManager.getrMyAgendaContent(agendaItem.getSource_id(), new OnResponseCallback<List<Content>>() {
+            mDataManager.getMyAgendaContent(agendaItem.getSource_id(), new OnResponseCallback<List<Content>>() {
                 @Override
                 public void onSuccess(List<Content> data) {
                     mActivity.hideLoading();
