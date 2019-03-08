@@ -7,4 +7,5 @@ package org.edx.mobile.deeplink;
 public class Screen {
     public static final String COURSE_DASHBOARD = "course_dashboard";
     public static final String COURSE_VIDEOS = "course_videos";
+    public static final String PROGRAM = "program";
 }

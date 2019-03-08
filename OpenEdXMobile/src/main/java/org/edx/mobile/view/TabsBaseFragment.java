@@ -1,8 +1,10 @@
 package org.edx.mobile.view;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -48,9 +50,24 @@ public abstract class TabsBaseFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Handle tab-selection through deep link (if available)
-        if (getArguments() != null && binding != null) {
-            @ScreenDef final String screenName = getArguments().getString(Router.EXTRA_SCREEN_NAME);
+        handleTabSelection(getArguments());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleTabSelection(intent.getExtras());
+    }
+
+    /**
+     * Method to handle the tab-selection of the ViewPager based on screen name {@link Screen}
+     * which may be sent through a deep link.
+     *
+     * @param bundle arguments
+     */
+    private void handleTabSelection(@Nullable Bundle bundle) {
+        if (bundle != null && binding != null) {
+            @ScreenDef String screenName = bundle.getString(Router.EXTRA_SCREEN_NAME);
             if (screenName != null) {
                 final List<FragmentItemModel> fragmentItems = getFragmentItems();
                 for (int i = 0; i < fragmentItems.size(); i++) {
@@ -58,11 +75,14 @@ public abstract class TabsBaseFragment extends BaseFragment {
                     if (screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) {
                         binding.viewPager.setCurrentItem(i);
                         break;
+                    } else if (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) {
+                        binding.viewPager.setCurrentItem(i);
+                        break;
                     }
                 }
                 // Setting this to null, so that upon recreation of the fragment the tab defined in
                 // the deep link is not auto-selected again.
-                getArguments().putString(Router.EXTRA_SCREEN_NAME, null);
+                bundle.putString(Router.EXTRA_SCREEN_NAME, null);
             }
         }
     }

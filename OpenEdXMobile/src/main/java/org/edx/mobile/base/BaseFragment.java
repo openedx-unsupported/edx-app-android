@@ -1,6 +1,7 @@
 package org.edx.mobile.base;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -43,6 +44,14 @@ public class BaseFragment extends RoboFragment {
      * Defined to mock the behavior of {@link Activity#onRestart() Activity.onRestart} function.
      */
     protected void onRevisit() {
+    }
+
+    /**
+     * Called when a parent activity receives a new intent in its {@link Activity#onNewIntent(Intent)
+     * Activity.onNewIntent} function.
+     * Defined to mock the behavior of {@link Activity#onNewIntent(Intent) Activity.onNewIntent} function.
+     */
+    protected void onNewIntent(Intent intent) {
     }
 
     /**

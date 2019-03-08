@@ -33,6 +33,10 @@ public class DeepLinkManager {
                     router.showCourseDashboardTabs(activity, null, courseId, false, screenName);
                     break;
                 }
+                case Screen.PROGRAM: {
+                    router.showMainDashboard(activity, screenName);
+                    break;
+                }
             }
         }
     }
