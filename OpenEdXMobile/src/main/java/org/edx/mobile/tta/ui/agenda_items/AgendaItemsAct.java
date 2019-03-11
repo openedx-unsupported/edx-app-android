@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
+import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.ui.agenda_items.view_model.AgendaItemModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 
@@ -26,20 +27,23 @@ public class AgendaItemsAct extends TaBaseFragment {
     private AgendaItem tabSelected;
     private Toolbar toolbar;
     private  List<AgendaItem> items;
+    private AgendaList agendaList;
+
     ViewPager viewPager;
     TabLayout tabLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel =  new AgendaItemModel(getActivity(),this, toolabarData,items,tabSelected);
+        viewModel =  new AgendaItemModel(getActivity(),this, toolabarData,items,tabSelected, agendaList);
     }
 
-    public static AgendaItemsAct newInstance(String toolabarData, List<AgendaItem>items, AgendaItem tabSelected){
+    public static AgendaItemsAct newInstance(String toolabarData, List<AgendaItem> items, AgendaItem tabSelected, AgendaList agendaList){
         AgendaItemsAct fragment = new AgendaItemsAct();
         fragment.toolabarData = toolabarData;
         fragment.items = items;
         fragment.tabSelected = tabSelected;
+        fragment.agendaList = agendaList;
         return fragment;
     }
 

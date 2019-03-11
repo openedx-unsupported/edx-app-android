@@ -14,16 +14,19 @@ public class GetStateAgendaContentTask extends Task<List<Content>> {
 
     private long sourceId;
 
+    private long list_id;
+
     @Inject
     private TaAPI taAPI;
 
-    public GetStateAgendaContentTask(Context context, long sourceId) {
+    public GetStateAgendaContentTask(Context context, long sourceId, long list_id) {
         super(context);
         this.sourceId = sourceId;
+        this.list_id = list_id;
     }
 
     @Override
     public List<Content> call() throws Exception {
-        return taAPI.getStateAgendaContent(sourceId).execute().body();
+        return taAPI.getStateAgendaContent(sourceId, list_id).execute().body();
     }
 }

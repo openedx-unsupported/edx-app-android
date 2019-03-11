@@ -3,39 +3,37 @@ package org.edx.mobile.tta.ui.agenda_items;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 
-import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
+import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.ui.agenda_items.view_model.AgendaItemsTabViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.util.PermissionsUtil;
-
-import java.util.List;
 
 
 public class AgendaItemsTab extends TaBaseFragment {
     private AgendaItemsTabViewModel viewModel;
     public AgendaItem item;
-    private String toolbar;
+    private String toolbarData;
+    private AgendaList agendaList;
 
-    public static AgendaItemsTab newInstance(AgendaItem item,String toolbarData) {
+    public static AgendaItemsTab newInstance(AgendaItem item, String toolbarData, AgendaList agendaList) {
         AgendaItemsTab fragment = new AgendaItemsTab();
         fragment.item = item;
-        fragment.toolbar = toolbarData;
+        fragment.toolbarData = toolbarData;
+        fragment.agendaList = agendaList;
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new AgendaItemsTabViewModel(getActivity(), this, item,toolbar);
+        viewModel = new AgendaItemsTabViewModel(getActivity(), this, item, toolbarData, agendaList);
     }
 
     @Nullable

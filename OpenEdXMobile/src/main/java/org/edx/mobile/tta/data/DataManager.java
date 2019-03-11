@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -15,8 +14,6 @@ import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -29,7 +26,6 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.data.enums.CategoryType;
 import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
@@ -37,7 +33,6 @@ import org.edx.mobile.tta.data.local.db.TADatabase;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
-import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
@@ -50,7 +45,6 @@ import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
-import org.edx.mobile.tta.data.model.search.FilterTag;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.tta.data.remote.IRemoteDataSource;
@@ -58,7 +52,6 @@ import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.tta.exception.TaException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
-import org.edx.mobile.tta.task.GetHtmlFromUrlTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
@@ -76,8 +69,6 @@ import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
 import org.edx.mobile.tta.task.profile.GetUserAddressTask;
-import org.edx.mobile.tta.data.model.authentication.LoginRequest;
-import org.edx.mobile.tta.data.model.authentication.LoginResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
@@ -100,18 +91,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import okhttp3.ConnectionPool;
-import okhttp3.Dispatcher;
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Retrofit;
 
 import static org.edx.mobile.tta.Constants.TA_DATABASE;
 
@@ -756,6 +741,9 @@ public class DataManager extends BaseRoboInjector {
         callback.onSuccess(agendaList);
         //Mocking end
 
+        //Actual code **Do not delete**
+
+
     }
 
     public void getBlocks(OnResponseCallback<List<RegistrationOption>> callback, Bundle parameters,
@@ -1145,7 +1133,7 @@ public class DataManager extends BaseRoboInjector {
         }
     }
 
-    public void getStateAgendaContent(long sourceId, OnResponseCallback<List<Content>> callback) {
+    public void getStateAgendaContent(long sourceId, long list_id, OnResponseCallback<List<Content>> callback) {
 
         //Mocking start
         /*List<Content> contents = new ArrayList<>();
@@ -1165,7 +1153,7 @@ public class DataManager extends BaseRoboInjector {
 
         //Actual code   **Do not delete**
         if (NetworkUtil.isConnected(context)) {
-            new GetStateAgendaContentTask(context, sourceId) {
+            new GetStateAgendaContentTask(context, sourceId, list_id) {
                 @Override
                 protected void onSuccess(List<Content> response) throws Exception {
                     super.onSuccess(response);

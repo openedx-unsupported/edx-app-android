@@ -69,7 +69,8 @@ public interface TaService {
     Call<List<Content>> getMyAgendaContent(@Query(Constants.KEY_SOURCE_ID) long sourceId);
 
     @GET(ApiConstants.URL_MX_GET_STATE_AGENDA_CONTENT)
-    Call<List<Content>> getStateAgendaContent(@Query(Constants.KEY_SOURCE_ID) long sourceId);
+    Call<List<Content>> getStateAgendaContent(@Query(Constants.KEY_SOURCE_ID) long sourceId,
+                                              @Query(Constants.KEY_LIST_ID) long list_id);
 
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_SET_BOOKMARK)

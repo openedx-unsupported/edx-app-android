@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.ui.course.view_model;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.IBlock;
+import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
@@ -105,7 +107,11 @@ public class CourseDashboardViewModel extends BaseViewModel {
         fragments.add(handoutFragment);
         titles.add(mActivity.getString(R.string.handouts));
 
-        fragments.add(AuthenticatedWebViewFragment.newInstance(course.getCourse().getCourse_about()));
+        Uri uri = Uri.parse(course.getCourse().getCourse_about())
+                .buildUpon()
+                .appendQueryParameter(Constants.KEY_HIDE_ACTION, "true")
+                .build();
+        fragments.add(AuthenticatedWebViewFragment.newInstance(uri.toString()));
         titles.add(mActivity.getString(R.string.about));
 
         /*if (rootComponent != null) {

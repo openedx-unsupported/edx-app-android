@@ -78,8 +78,8 @@ public class TaAPI {
     public Call<List<Content>> getMyAgendaContent(long sourceId){
         return taService.getMyAgendaContent(sourceId);
     }
-    public Call<List<Content>> getStateAgendaContent(long sourceId){
-        return taService.getStateAgendaContent(sourceId);
+    public Call<List<Content>> getStateAgendaContent(long sourceId, long list_id){
+        return taService.getStateAgendaContent(sourceId, list_id);
     }
 
 

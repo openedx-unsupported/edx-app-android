@@ -35,6 +35,7 @@ public class Constants {
     public static final String KEY_SEARCH_TEXT = "search_text";
     public static final String KEY_FILTER_DATA = "filter_data";
     public static final String KEY_SOURCE_ID = "source_id";
+    public static final String KEY_HIDE_ACTION = "hide_action";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";
