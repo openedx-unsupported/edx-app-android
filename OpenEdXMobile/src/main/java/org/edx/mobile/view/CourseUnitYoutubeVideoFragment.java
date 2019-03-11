@@ -41,10 +41,12 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private static final int SUBTITLES_DISPLAY_DELAY_MS = 100;
 
-    private YouTubePlayer youTubePlayer;
+    private YouTubePlayer youTubePlayer, previousYouTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
+    private Handler transcriptsHandler = new Handler();
     private TimedTextObject subtitlesObj;
     private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
+    private YouTubePlayerSupportFragment youTubePlayerFragment;
 
     /**
      * Create a new instance of fragment
@@ -69,8 +71,20 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         removeFragment();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            removeFragment();
+        }
+
+    }
+
     public void initializeYoutubePlayer() {
-        YouTubePlayerSupportFragment youTubePlayerFragment = new YouTubePlayerSupportFragment();
+        if(youTubePlayer!=null){
+            removeFragment();
+        }
+        youTubePlayerFragment = new YouTubePlayerSupportFragment();
         String apiKey =environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
         if (apiKey == null || apiKey.isEmpty()) {
             return;
@@ -112,7 +126,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
              The subtitles are not been loaded the first time that the user watch the video component.
              So this allows to reload the subtitles and reload the menu items after a second.
              */
-            new Handler().postDelayed(new Runnable() {
+            transcriptsHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     initTranscripts();
@@ -132,6 +146,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onPageDisappear() {
         super.onPageDisappear();
         removeFragment();
+        transcriptsHandler.removeCallbacksAndMessages(null);
         subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
     }
 
@@ -140,21 +155,60 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                                         YouTubePlayer player,
                                         boolean wasRestored) {
         if(!NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())){
-            player.pause();
+            player.release();
             return;
         }
         final int orientation = getResources().getConfiguration().orientation;
-        if (!wasRestored) {
+        if (!wasRestored ) {
             Uri uri = Uri.parse(unit.getData().encodedVideos.getYoutubeVideoInfo().url);
             String v = uri.getQueryParameter("v");
             player.loadVideo(v);
+            previousYouTubePlayer = youTubePlayer;
             youTubePlayer = player;
+            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+                @Override
+                public void onLoading() {
+
+                }
+
+                @Override
+                public void onLoaded(String s) {
+
+                }
+
+                @Override
+                public void onAdStarted() {
+
+                }
+
+                @Override
+                public void onVideoStarted() {
+
+                }
+
+                @Override
+                public void onVideoEnded() {
+
+                }
+
+                @Override
+                public void onError(YouTubePlayer.ErrorReason errorReason) {
+                    /*
+                     * The most common errorReason is because there is a previous player running so this sets free it
+                     * and reloads the fragment
+                     */
+                    previousYouTubePlayer.release();
+                    youTubePlayer.release();
+                    youTubePlayer = null;
+                    initializeYoutubePlayer();
+                }
+            });
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 youTubePlayer.setFullscreen(true);
             }
         }
         subtitleDisplayHandler = new Handler();
-        subtitleDisplayHandler.post(subtitlesProcessorRunnable);
+        subtitleDisplayHandler.postDelayed(subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
 
     }
 
@@ -193,7 +247,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         @Override
         public void run() {
             if (youTubePlayer != null) {
-                int currentPos = youTubePlayer.getCurrentTimeMillis();
+                int currentPos = 0;
+                try {
+                    currentPos = youTubePlayer.getCurrentTimeMillis();
+                }
+                catch (Exception e ){
+                    return;
+                }
                 if (subtitlesObj != null) {
                     Collection<Caption> subtitles = subtitlesObj.captions.values();
                     int currentSubtitleIndex = 0;
@@ -267,8 +327,16 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private void removeFragment(){
         try {
-            getChildFragmentManager().beginTransaction().replace(R.id.player_container, new Fragment()).commit();
-            youTubePlayer = null;
+            if (youTubePlayer != null){
+                youTubePlayer.release();
+            }
+
+            if (youTubePlayerFragment != null){
+                getChildFragmentManager().beginTransaction().remove(youTubePlayerFragment).commit();
+            } else {
+                getChildFragmentManager().beginTransaction().replace(R.id.player_container, new Fragment()).commit();
+            }
+
         } catch (IllegalStateException ex) {
             logger.error(ex);
         }
