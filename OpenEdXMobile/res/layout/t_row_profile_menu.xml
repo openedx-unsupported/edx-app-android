@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.profile.view_model.ProfileViewModel" />
+    </data>
+
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/bgLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+ >
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="24dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/_72px"
+                android:layout_marginRight="@dimen/_16px"
+                android:src="@drawable/t_icon_profile_edit"/>
+
+            <TextView
+                android:id="@+id/button_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="profile edit"
+                android:padding="16dp"
+                android:fontFamily="@font/hind_regular"
+                android:textSize="14sp"
+                android:textColor="@color/primary_cyan"
+                android:layout_marginBottom="@dimen/_30px"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
+        <view
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/_72px"
+                android:layout_marginRight="@dimen/_16px"
+                android:src="@drawable/t_icon_profile_signout"/>
+
+            <TextView
+                android:id="@+id/tv_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/logout"
+                android:padding="16dp"
+                android:fontFamily="@font/hind_regular"
+                android:textSize="14sp"
+                android:textColor="@color/primary_cyan"
+                android:layout_marginBottom="@dimen/_30px"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
+        <view
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"/>
+
+        <LinearLayout
+            android:id="@+id/change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/_72px"
+                android:layout_marginRight="@dimen/_16px"
+                android:src="@drawable/t_icon_profile_edit"/>
+
+            <TextView
+                android:id="@+id/tvchangePassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_password"
+                android:padding="16dp"
+                android:fontFamily="@font/hind_regular"
+                android:textSize="14sp"
+                android:textColor="@color/primary_cyan"
+                android:layout_marginBottom="@dimen/_30px"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
+        <view
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/_72px"
+                android:layout_marginRight="@dimen/_16px"
+                android:src="@drawable/t_icon_profile_edit"/>
+
+            <TextView
+                android:id="@+id/button_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_us"
+                android:padding="16dp"
+                android:fontFamily="@font/hind_regular"
+                android:textSize="14sp"
+                android:textColor="@color/primary_cyan"
+                android:layout_marginBottom="@dimen/_30px"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
+
+        </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+</layout>

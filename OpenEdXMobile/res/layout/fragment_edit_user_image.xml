@@ -1,17 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-  >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.image.view_model.ImageEditModule" />
     </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:id="@+id/rellayout"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="@dimen/_60px">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginStart="@dimen/_20px"
+                app:cardBackgroundColor="@color/gray_1"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="4dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
+                        android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/imageProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/t_icon_add" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="134dp"
+                        android:layout_height="25dp"
+                        android:layout_marginStart="@dimen/_4px"
+                        android:layout_marginTop="@dimen/_4px"
+                        android:layout_marginEnd="@dimen/_2px"
+                        android:layout_marginBottom="@dimen/_4px"
+                        android:layout_weight="1"
+                        android:background="@color/white">
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            app:cardCornerRadius="4dp"
+                            app:cardElevation="0dp"
+                            >
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_24px"
+                                android:layout_marginTop="@dimen/_6px"
+                                android:layout_marginRight="@dimen/_24px"
+                                android:layout_marginBottom="@dimen/_6px"
+                                android:src="@drawable/t_icon_camera" />
+                        </android.support.v7.widget.CardView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="134dp"
+                        android:layout_height="25dp"
+                        android:layout_marginStart="@dimen/_2px"
+                        android:layout_marginTop="@dimen/_4px"
+                        android:layout_marginEnd="@dimen/_4px"
+                        android:layout_marginBottom="@dimen/_4px"
+                        android:layout_weight="1"
+                        android:background="@color/white">
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            app:cardCornerRadius="4dp"
+                            app:cardElevation="0dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_24px"
+                                android:layout_marginTop="@dimen/_6px"
+                                android:layout_marginRight="@dimen/_24px"
+                                android:layout_marginBottom="@dimen/_6px"
+                                android:src="@drawable/t_icon_photos" />
+                        </android.support.v7.widget.CardView>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="@dimen/_18px"
+                android:layout_marginEnd="@dimen/_20px"
+                android:layout_toRightOf="@+id/cardView"
+                android:backgroundTint="@color/gray_1"
+                android:fontFamily="@font/hind_regular"
+                android:hint="name"
+                android:textColor="@color/gray_1"
+                android:textColorHint="@color/gray_1"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/flClasses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rellayout"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginTop="@dimen/_18px"
+            android:layout_marginEnd="@dimen/_20px">
+
+            <Spinner
+                android:id="@+id/spinner_classes"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50px"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:background="@color/transparent"
+                android:textSize="14sp"
+                style="@style/AppTheme.spinner"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_16px"
+                android:background="@color/gray_1"
+                android:src="@drawable/t_icon_drop_down" />
+
+        </RelativeLayout>
+
+        <view
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
+            android:layout_marginLeft="@dimen/_20px"
+            android:layout_marginRight="@dimen/_20px"
+            android:layout_below="@+id/flClasses"/>
+
+        <RelativeLayout
+            android:id="@+id/rlCourses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/flClasses"
+            android:layout_marginTop="@dimen/_18px"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginEnd="@dimen/_20px">
+
+            <Spinner
+                android:id="@+id/spinner_courses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_16px"
+                android:background="@color/gray_1"
+                android:src="@drawable/t_icon_drop_down" />
+
+        </RelativeLayout>
+        <view
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
+            android:layout_marginLeft="@dimen/_20px"
+            android:layout_marginRight="@dimen/_20px"
+            android:layout_below="@+id/rlCourses"/>
+        <Button
+            android:layout_width="240dp"
+            android:layout_height="34dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_selector_filled"
+            android:enabled="true"
+            android:layout_marginTop="@dimen/_50px"
+            android:layout_marginBottom="178px"
+            android:fontFamily="@font/hind_medium"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="Save" />
 
     </RelativeLayout>
-
-
 </layout>

@@ -9,278 +9,441 @@
             type="org.edx.mobile.tta.ui.profile.view_model.ProfileViewModel" />
     </data>
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/bgLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/ln1"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginTop="@dimen/_60px"
-                android:layout_marginEnd="@dimen/_16px"
-                android:layout_marginBottom="@dimen/_30px"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="top"
                 android:background="@color/white"
-                android:shadowColor="@color/gray_1"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="@dimen/_16px">
+                android:gravity="start|center_vertical"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:navigationIcon="@drawable/back"
+                app:titleMarginStart="0dp" />
 
-                <ImageView
-                    android:id="@+id/imageProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/primary_cyan" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/ln1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginEnd="@dimen/_16px"
-                android:layout_marginBottom="@dimen/_30px"
-                android:fontFamily="@font/hind_medium"
-                android:text="dssdsd"
-                android:textColor="@color/gray_5"
-                android:textSize="16sp" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ln1"
-            android:orientation="vertical"
-            android:weightSum="2">
+                android:layout_below="@+id/toolbar"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="@dimen/_20px"
+                    android:layout_marginTop="@dimen/_60px"
+                    android:layout_marginEnd="@dimen/_16px"
+                    android:layout_marginBottom="@dimen/_30px"
+                    android:background="@color/white"
+                    android:shadowColor="@color/gray_1"
+                    app:cardCornerRadius="4dp">
+
+                    <ImageView
+                        android:id="@+id/imageProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/primary_cyan" />
+
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="@dimen/_16px"
+                    android:layout_marginBottom="@dimen/_30px"
+                    android:fontFamily="@font/hind_medium"
+                    android:text="dssdsd"
+                    android:textColor="@color/gray_5"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
+                android:layout_below="@+id/ln1"
+                android:orientation="vertical"
                 android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            android:src="@drawable/t_icon_class" />
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                android:src="@drawable/t_icon_class" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="classes"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_48px"
+                            android:layout_marginStart="@dimen/_36px"
                             android:layout_marginEnd="@dimen/_16px"
-                            android:fontFamily="@font/hind_medium"
-                            android:text="classes"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="6th,7th and 8th"
                             android:textColor="@color/gray_6"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
+
                     </LinearLayout>
 
-                    <TextView
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="fill_parent"
+                        android:background="@color/edx_brand_gray_back" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:fontFamily="@font/hind_regular"
-                        android:text="6th,7th and 8th"
-                        android:textColor="@color/gray_6"
-                        android:textSize="14sp" />
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                android:src="@drawable/t_icon_course" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="courses"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_36px"
+                            android:layout_marginEnd="@dimen/_16px"
+                            android:layout_marginBottom="@dimen/_40px"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="English,Hindi and Math"
+                            android:textColor="@color/gray_6"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
+
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="fill_parent"
-                    android:background="@color/edx_brand_gray_back" />
+                    android:id="@+id/row_half_separator"
+                    style="@style/gray_separator"
+                    android:layout_marginStart="@dimen/course_item_half_separator_left_margin"
+                    android:layout_marginEnd="@dimen/course_item_half_separator_left_margin" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/_2px"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_40px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                android:src="@drawable/t_icon_follower" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_40px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="followings"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_36px"
+                            android:layout_marginEnd="@dimen/_16px"
+                            android:layout_marginBottom="@dimen/_40px"
+                            android:fontFamily="@font/hind_medium"
+                            android:text="90"
+                            android:textColor="@color/gray_5"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="fill_parent"
+                        android:background="@color/edx_brand_gray_back" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            android:src="@drawable/t_icon_course" />
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                android:src="@drawable/t_icon_following" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="followers"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_48px"
+                            android:layout_marginStart="@dimen/_36px"
                             android:layout_marginEnd="@dimen/_16px"
+                            android:layout_marginBottom="@dimen/_40px"
                             android:fontFamily="@font/hind_medium"
-                            android:text="courses"
-                            android:textColor="@color/gray_6"
+                            android:text="130"
+                            android:textColor="@color/gray_5"
                             android:textSize="16sp" />
+
                     </LinearLayout>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:layout_marginBottom="@dimen/_40px"
-                        android:fontFamily="@font/hind_regular"
-                        android:text="English,Hindi and Math"
-                        android:textColor="@color/gray_6"
-                        android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:id="@+id/row_half_separator"
-                style="@style/gray_separator"
-                android:layout_marginStart="@dimen/course_item_half_separator_left_margin"
-                android:layout_marginEnd="@dimen/course_item_half_separator_left_margin" />
+            <Button
+                android:layout_width="240dp"
+                android:layout_height="34dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/btn_selector_filled"
+                android:enabled="true"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.logout()}"
+                android:text="@string/logout"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/bottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingTop="24dp"
+            app:layout_behavior="@string/bottom_sheet_behavior"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="0dp">
+
+            <ImageView
+                android:id="@+id/ivClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/_10px"
+                android:src="@drawable/t_icon_close" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/_2px"
-                    android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/_72px"
+                    android:layout_marginRight="@dimen/_16px"
+                    android:src="@drawable/t_icon_profile_edit" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_40px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            android:src="@drawable/t_icon_follower" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_40px"
-                            android:layout_marginEnd="@dimen/_16px"
-                            android:fontFamily="@font/hind_medium"
-                            android:text="followings"
-                            android:textColor="@color/gray_6"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:layout_marginBottom="@dimen/_40px"
-                        android:fontFamily="@font/hind_medium"
-                        android:text="90"
-                        android:textColor="@color/gray_5"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="fill_parent"
-                    android:background="@color/edx_brand_gray_back" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/button_1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                    android:layout_margin="8dp"
+                    android:layout_marginBottom="@dimen/_30px"
+                    android:fontFamily="@font/hind_regular"
+                    android:padding="16dp"
+                    android:text="profile edit"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_1" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            android:src="@drawable/t_icon_following" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginEnd="@dimen/_16px"
-                            android:fontFamily="@font/hind_medium"
-                            android:text="followers"
-                            android:textColor="@color/gray_6"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:layout_marginBottom="@dimen/_40px"
-                        android:fontFamily="@font/hind_medium"
-                        android:text="130"
-                        android:textColor="@color/gray_5"
-                        android:textSize="16sp"  />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/_72px"
+                    android:layout_marginRight="@dimen/_16px"
+                    android:src="@drawable/t_icon_profile_signout" />
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginBottom="@dimen/_30px"
+                    android:fontFamily="@font/hind_regular"
+                    android:padding="16dp"
+                    android:text="@string/logout"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_1" />
+
+            <LinearLayout
+                android:id="@+id/change_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/_72px"
+                    android:layout_marginRight="@dimen/_16px"
+                    android:src="@drawable/t_icon_profile_edit" />
+
+                <TextView
+                    android:id="@+id/tvchangePassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginBottom="@dimen/_30px"
+                    android:fontFamily="@font/hind_regular"
+                    android:padding="16dp"
+                    android:text="@string/change_password"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/_72px"
+                    android:layout_marginRight="@dimen/_16px"
+                    android:src="@drawable/t_icon_profile_edit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginBottom="@dimen/_30px"
+                    android:fontFamily="@font/hind_regular"
+                    android:padding="16dp"
+                    android:text="@string/contact_us"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
-
-        <Button
-            android:layout_width="240dp"
-            android:layout_height="34dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/btn_selector_filled"
-            android:enabled="true"
-            android:fontFamily="@font/hind_medium"
-            android:gravity="center"
-            android:onClick="@{()->viewModel.logout()}"
-            android:text="@string/logout"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
