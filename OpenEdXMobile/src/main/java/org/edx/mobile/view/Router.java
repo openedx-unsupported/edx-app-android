@@ -68,6 +68,13 @@ public class Router {
     @Inject
     private IStorage storage;
 
+    public Router() {
+    }
+
+    public Router(Config config) {
+        this.config = config;
+    }
+
     public void showDownloads(Activity sourceActivity) {
         Intent downloadIntent = new Intent(sourceActivity, DownloadListActivity.class);
         sourceActivity.startActivity(downloadIntent);
@@ -128,7 +135,12 @@ public class Router {
     }
 
     public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName) {
-        sourceActivity.startActivity(MainDashboardActivity.newIntent(screenName));
+        showMainDashboard(sourceActivity, screenName, null);
+    }
+
+    public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName,
+                                  @Nullable String pathId) {
+        sourceActivity.startActivity(MainDashboardActivity.newIntent(screenName, pathId));
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
@@ -346,6 +358,15 @@ public class Router {
     }
 
     public void showFindCourses(@NonNull Context context, @Nullable String searchQuery) {
+        showFindCourses(context, searchQuery, null, null);
+    }
+
+    public void showFindCourses(@NonNull Context context, @ScreenDef @Nullable String screenName, @Nullable String pathId) {
+        showFindCourses(context, null, screenName, pathId);
+    }
+
+    public void showFindCourses(@NonNull Context context, @Nullable String searchQuery,
+                                @ScreenDef @Nullable String screenName, @Nullable String pathId) {
         if (!config.getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
             throw new RuntimeException("Course discovery is not enabled");
         }
@@ -353,6 +374,8 @@ public class Router {
         if (searchQuery != null) {
             discoveryIntent.putExtra(Router.EXTRA_SEARCH_QUERY, searchQuery);
         }
+        discoveryIntent.putExtra(EXTRA_SCREEN_NAME, screenName);
+        discoveryIntent.putExtra(Router.EXTRA_PATH_ID, pathId);
         //Add this flag as multiple activities need to be created
         discoveryIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(discoveryIntent);
