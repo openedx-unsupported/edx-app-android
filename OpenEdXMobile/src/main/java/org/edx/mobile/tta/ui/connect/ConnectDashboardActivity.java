@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -29,6 +31,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -42,6 +45,7 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.connect.view_model.ConnectDashboardViewModel;
+import org.edx.mobile.tta.ui.custom.OnSwipeListener;
 import org.edx.mobile.tta.ui.custom.VideoEnabledWebChromeClient;
 import org.edx.mobile.tta.ui.custom.VideoEnabledWebView;
 import org.edx.mobile.tta.utils.AppUtil;
@@ -57,12 +61,20 @@ import static org.edx.mobile.util.BrowserUtil.loginPrefs;
 
 public class ConnectDashboardActivity extends BaseVMActivity {
 
+    private static final int SCROLL_POSITION_TOP = 0;
+    private static final int SCROLL_POSITION_MID = 1;
+    private static final int SCROLL_POSITION_BOT = 2;
+
     private ConnectDashboardViewModel viewModel;
 
     private Toolbar toolbar;
     private VideoEnabledWebView webView;
     private View nonVideoLayout;
     private ViewGroup videoLayout;
+    private LinearLayout pullDownLayout;
+    private TabLayout tabLayout;
+    private ViewPager pager;
+    private GestureDetectorCompat detector;
 
     private VideoEnabledWebChromeClient webChromeClient;
     private ValueCallback<Uri> mUploadMessage;
@@ -70,6 +82,47 @@ public class ConnectDashboardActivity extends BaseVMActivity {
     public static final int REQUEST_SELECT_FILE = 100;
     private final static int FILECHOOSER_RESULTCODE = 1;
     private Post currentPost;
+    private int scrollPosition = SCROLL_POSITION_MID;
+
+    private OnSwipeListener onSwipeListener = new OnSwipeListener() {
+
+        @Override
+        public boolean onSwipe(Direction direction) {
+            if(direction == Direction.up) {
+
+                if (scrollPosition == SCROLL_POSITION_MID) {
+                    webView.setVisibility(View.GONE);
+                    tabLayout.setVisibility(View.VISIBLE);
+                    pager.setVisibility(View.VISIBLE);
+                    scrollPosition = SCROLL_POSITION_TOP;
+                } else if (scrollPosition == SCROLL_POSITION_BOT) {
+                    webView.setVisibility(View.VISIBLE);
+                    tabLayout.setVisibility(View.VISIBLE);
+                    pager.setVisibility(View.VISIBLE);
+                    scrollPosition = SCROLL_POSITION_MID;
+                }
+
+                return true;
+            } else if (direction == Direction.down){
+
+                if (scrollPosition == SCROLL_POSITION_TOP) {
+                    webView.setVisibility(View.VISIBLE);
+                    tabLayout.setVisibility(View.VISIBLE);
+                    pager.setVisibility(View.VISIBLE);
+                    scrollPosition = SCROLL_POSITION_MID;
+                } else if (scrollPosition == SCROLL_POSITION_MID) {
+                    webView.setVisibility(View.VISIBLE);
+                    tabLayout.setVisibility(View.GONE);
+                    pager.setVisibility(View.GONE);
+                    scrollPosition = SCROLL_POSITION_BOT;
+                }
+
+                return true;
+            }
+
+            return super.onSwipe(direction);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,8 +130,8 @@ public class ConnectDashboardActivity extends BaseVMActivity {
         viewModel = new ConnectDashboardViewModel(this, getIntent().getExtras().getParcelable(Constants.KEY_CONTENT));
         binding(R.layout.t_activity_connect_dashboard, viewModel);
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        ViewPager pager = findViewById(R.id.view_pager);
+        tabLayout = findViewById(R.id.tab_layout);
+        pager = findViewById(R.id.view_pager);
         tabLayout.setupWithViewPager(pager);
 
         toolbar = findViewById(R.id.toolbar);
@@ -106,6 +159,35 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                 showLongSnack(e.getLocalizedMessage());
             }
         });
+
+        detector = new GestureDetectorCompat(this, onSwipeListener);
+
+        pullDownLayout = findViewById(R.id.pull_down_layout);
+        pullDownLayout.setOnTouchListener((v, event) -> {
+            if (detector.onTouchEvent(event)){
+                return true;
+            }
+            return super.onTouchEvent(event);
+        });
+
+        /*pullDownLayout.setOnClickListener(v -> {
+            if (scrollPosition == SCROLL_POSITION_TOP) {
+                webView.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
+                pager.setVisibility(View.VISIBLE);
+                scrollPosition = SCROLL_POSITION_MID;
+            } else if (scrollPosition == SCROLL_POSITION_MID) {
+                webView.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.GONE);
+                pager.setVisibility(View.GONE);
+                scrollPosition = SCROLL_POSITION_BOT;
+            } else {
+                webView.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
+                pager.setVisibility(View.VISIBLE);
+                scrollPosition = SCROLL_POSITION_MID;
+            }
+        });*/
     }
 
     @Override

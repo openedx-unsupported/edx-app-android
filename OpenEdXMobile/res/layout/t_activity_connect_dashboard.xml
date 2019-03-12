@@ -22,101 +22,57 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.design.widget.CoordinatorLayout
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/app_background">
+                android:layout_height="50dp"
+                android:layout_gravity="top"
+                android:background="@color/white"
+                android:gravity="start|center_vertical"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:navigationIcon="@drawable/back"
+                app:title="@{viewModel.content.name}"
+                app:titleMarginStart="0dp"
+                app:titleTextAppearance="@style/ta_toolbar_title_style" />
 
-                <android.support.design.widget.AppBarLayout
-                    android:id="@+id/appbar"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    app:elevation="0dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:animateLayoutChanges="true">
 
-                    <android.support.v7.widget.Toolbar
-                        android:id="@+id/toolbar"
+                    <org.edx.mobile.tta.ui.custom.VideoEnabledWebView
+                        android:id="@+id/connect_webview"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_gravity="top"
-                        android:background="@color/white"
-                        android:gravity="start|center_vertical"
-                        app:contentInsetLeft="0dp"
-                        app:contentInsetStart="0dp"
-                        app:contentInsetStartWithNavigation="0dp"
-                        app:layout_scrollFlags="scroll|enterAlways"
-                        app:navigationIcon="@drawable/back"
-                        app:title="@{viewModel.content.name}"
-                        app:titleMarginStart="0dp"
-                        app:titleTextAppearance="@style/ta_toolbar_title_style" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
 
-                    <!--<android.support.design.widget.CollapsingToolbarLayout
-                        android:id="@+id/collapsing_toolbar"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fitsSystemWindows="true"
-                        android:paddingBottom="@dimen/_40px">-->
+                        android:id="@+id/pull_down_layout"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="10dp"
+                        android:orientation="vertical"
+                        android:background="@color/white">
+
+                        <View
+                            android:layout_width="180dp"
+                            android:layout_height="4dp"
+                            android:background="@drawable/t_scrollbar_background"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/_40px"
-                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
-
-                        <org.edx.mobile.tta.ui.custom.VideoEnabledWebView
-                            android:id="@+id/connect_webview"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp" />
-
-                        <!--<FrameLayout
-                            android:id="@+id/header_image_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="170dp">
-
-                            <ImageView
-                                android:id="@+id/item_image"
-                                placeholder="@{viewModel.headerImagePlaceholder}"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="centerCrop"
-                                android:src="@{viewModel.content.icon}" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:visibility="visible"
-                                app:srcCompat="@drawable/t_icon_play" />
-
-                        </FrameLayout>
-
-                        <TextView
-                            android:id="@+id/header_duration"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_20px"
-                            android:layout_marginTop="@dimen/_6px"
-                            android:layout_marginEnd="@dimen/_20px"
-                            android:fontFamily="@font/hind_regular"
-                            android:text="@{viewModel.duration}"
-                            android:gravity="end"
-                            android:textColor="@color/gray_4"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/header_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_20px"
-                            android:layout_marginTop="@dimen/_20px"
-                            android:layout_marginEnd="@dimen/_20px"
-                            android:fontFamily="@font/hind_regular"
-                            android:text="@{viewModel.description}"
-                            android:textColor="@color/gray_5"
-                            android:textSize="12sp" />-->
+                        android:paddingBottom="@dimen/_30px">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -271,14 +227,11 @@
 
                     </LinearLayout>
 
-                    <!--</android.support.design.widget.CollapsingToolbarLayout>-->
-
                     <android.support.design.widget.TabLayout
                         android:id="@+id/tab_layout"
                         style="@style/ta_tab_style"
                         android:layout_marginTop="1dp"
                         android:layout_marginBottom="4dp"
-                        app:layout_scrollFlags="scroll|exitUntilCollapsed"
                         app:tabGravity="fill"
                         app:tabIndicatorColor="@color/primary_cyan"
                         app:tabIndicatorHeight="2dp"
@@ -286,24 +239,14 @@
                         app:tabTextAppearance="@style/ta_tab_text_appearance"
                         app:tabTextColor="@color/gray_5" />
 
-                </android.support.design.widget.AppBarLayout>
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/view_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        mx:pager_adapter="@{viewModel.adapter}" />
 
-                <!--<android.support.v4.widget.NestedScrollView
-                    android:id="@+id/nested_scroll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    mx:pager_adapter="@{viewModel.adapter}" />
-
-                <!--</android.support.v4.widget.NestedScrollView>-->
-
-            </android.support.design.widget.CoordinatorLayout>
+                </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/enter_comment_layout"
@@ -319,36 +262,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
+                    android:visibility="@{viewModel.replyingToVisible?View.VISIBLE:View.GONE}"
                     app:cardBackgroundColor="@color/primary_navy"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp"
-                    android:visibility="@{viewModel.replyingToVisible?View.VISIBLE:View.GONE}">
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"
                         android:paddingStart="10dp"
-                        android:paddingEnd="10dp">
+                        android:paddingTop="6dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="6dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
+                            android:layout_gravity="center_vertical"
                             android:fontFamily="@font/hind_regular"
                             android:text="@{viewModel.replyingToText}"
-                            android:layout_gravity="center_vertical"/>
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="8dp"
-                            app:srcCompat="@drawable/t_icon_close"
-                            android:onClick="@{()->viewModel.resetReplyToComment()}"/>
+                            android:onClick="@{()->viewModel.resetReplyToComment()}"
+                            app:srcCompat="@drawable/t_icon_close" />
 
                     </LinearLayout>
 
