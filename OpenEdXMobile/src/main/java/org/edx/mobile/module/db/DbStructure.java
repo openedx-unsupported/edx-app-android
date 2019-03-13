@@ -48,6 +48,8 @@ public final class DbStructure {
         //for differnciating content (wordpress,scrom,pdf)
         public static final String TYPE = "type";
 
+        public static final String CONTENT_ID = "content_id";
+
 
         //table for assessment learning history
         public static final String ASSESSMENT_TB_ID = "_id";

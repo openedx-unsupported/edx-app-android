@@ -365,7 +365,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private void downloadSingle(ScormBlockModel scorm){
         mActivity.showLoading();
         downloadModeIsAll = false;
-        mDataManager.downloadSingle(scorm, mActivity, new VideoDownloadHelper.DownloadManagerCallback() {
+        mDataManager.downloadSingle(scorm, content.getId(), mActivity, new VideoDownloadHelper.DownloadManagerCallback() {
             @Override
             public void onDownloadStarted(Long result) {
                 mActivity.hideLoading();
@@ -408,7 +408,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
         numberOfDownloadingVideos = remainingScorms.size();
         numberOfDownloadedVideos = 0;
 
-        mDataManager.downloadMultiple(remainingScorms, mActivity,
+        mDataManager.downloadMultiple(remainingScorms, content.getId(), mActivity,
                 new VideoDownloadHelper.DownloadManagerCallback() {
                     @Override
                     public void onDownloadStarted(Long result) {

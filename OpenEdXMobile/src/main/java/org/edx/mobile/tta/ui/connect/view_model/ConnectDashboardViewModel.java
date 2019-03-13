@@ -271,7 +271,9 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public void download(){
         if (allDownloadStatusIcon.get() == R.drawable.t_icon_download && allDownloadIconVisible.get()) {
             mActivity.showLoading();
-            mDataManager.downloadPost(post, String.valueOf(content.getSource().getId()), content.getSource().getName(), mActivity,
+            mDataManager.downloadPost(post, content.getId(),
+                    String.valueOf(content.getSource().getId()), content.getSource().getName(),
+                    mActivity,
                     new VideoDownloadHelper.DownloadManagerCallback() {
                         @Override
                         public void onDownloadStarted(Long result) {

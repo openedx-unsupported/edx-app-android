@@ -107,7 +107,6 @@ public class AgendaViewModel extends BaseViewModel {
                 regionListRecieved = true;
                 hideLoader();
                 showEmptyAgendaList(stateListAdapter);
-                mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
 
@@ -196,7 +195,6 @@ public class AgendaViewModel extends BaseViewModel {
                 myListRecieved = true;
                 hideLoader();
                 showEmptyAgendaList(myListAdapter);
-                mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
     }
@@ -255,7 +253,6 @@ public class AgendaViewModel extends BaseViewModel {
                 downloadListRecieved = true;
                 hideLoader();
                 showEmptyAgendaList(downloadListAdapter);
-                mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
     }

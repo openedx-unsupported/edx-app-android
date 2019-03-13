@@ -100,4 +100,14 @@ public class LocalDataSource implements ILocalDataSource {
     public List<ContentList> getContentListsByCategoryIdAndMode(long categoryId, String mode) {
         return mAppDatabase.contentListDao().getAllByCategoryIdAndMode(categoryId, mode);
     }
+
+    @Override
+    public Content getContentById(long id) {
+        return mAppDatabase.contentDao().getById(id);
+    }
+
+    @Override
+    public void insertContent(Content content) {
+        mAppDatabase.contentDao().insert(content);
+    }
 }

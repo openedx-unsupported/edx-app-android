@@ -24,7 +24,7 @@ import java.util.Arrays;
  * @author rohan
  *
  */
-class DbHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase sqliteDb;
     private Context context;
     protected final Logger logger = new Logger(getClass().getName());
@@ -61,6 +61,7 @@ class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.IS_COURSE_ACTIVE       + " BOOLEAN, "
                 + DbStructure.Column.UNIT_URL               + " TEXT, "
                 + DbStructure.Column.TYPE               + " TEXT, "
+                + DbStructure.Column.CONTENT_ID               + " LONG, "
                 + DbStructure.Column.VIDEO_FOR_WEB_ONLY     + " BOOLEAN "
                 + ")";
         db.execSQL(sql);

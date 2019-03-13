@@ -20,6 +20,7 @@ import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.impl.DbHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.services.CourseManager;
@@ -27,9 +28,12 @@ import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ScormStatus;
+import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
 import org.edx.mobile.tta.data.local.db.TADatabase;
+import org.edx.mobile.tta.data.local.db.operation.GetCourseContentsOperation;
+import org.edx.mobile.tta.data.local.db.operation.GetWPContentsOperation;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
@@ -132,6 +136,8 @@ public class DataManager extends BaseRoboInjector {
     private AppPref mAppPref;
     private LoginPrefs loginPrefs;
 
+    private DbHelper dbHelper;
+
     private DataManager(Context context, IRemoteDataSource remoteDataSource, ILocalDataSource localDataSource) {
         super(context);
         this.context = context;
@@ -140,6 +146,8 @@ public class DataManager extends BaseRoboInjector {
 
         mAppPref = new AppPref(context);
         loginPrefs = new LoginPrefs(context);
+
+        dbHelper = new DbHelper(context);
     }
 
     public static DataManager getInstance(Context context) {
@@ -473,26 +481,28 @@ public class DataManager extends BaseRoboInjector {
                     super.onSuccess(collectionItemsList);
                     if (collectionItemsList != null && !collectionItemsList.isEmpty()) {
 
-                        for (CollectionItemsResponse itemsResponse: collectionItemsList){
-                            if (itemsResponse.getContent() != null){
-                                for (Content content: itemsResponse.getContent()){
-                                    if (content.getLists() == null){
-                                        List<Long> listIds = new ArrayList<>();
-                                        listIds.add(itemsResponse.getId());
-                                        content.setLists(listIds);
-                                    } else if (!content.getLists().contains(itemsResponse.getId())){
-                                        content.getLists().add(itemsResponse.getId());
-                                    }
-                                }
-                            }
-                        }
-
                         new Thread() {
                             @Override
                             public void run() {
-                                for (CollectionItemsResponse collectionItemsResponse : collectionItemsList) {
-                                    if (collectionItemsResponse.getContent() != null) {
-                                        mLocalDataSource.insertContents(collectionItemsResponse.getContent());
+
+                                for (CollectionItemsResponse itemsResponse: collectionItemsList){
+                                    if (itemsResponse.getContent() != null){
+                                        for (Content content: itemsResponse.getContent()){
+                                            if (content.getLists() == null){
+                                                content.setLists(new ArrayList<>());
+                                            }
+
+                                            Content localContent = mLocalDataSource.getContentById(content.getId());
+                                            if (localContent != null && localContent.getLists() != null){
+                                                content.getLists().addAll(localContent.getLists());
+                                            }
+
+                                            if (!content.getLists().contains(itemsResponse.getId())){
+                                                content.getLists().add(itemsResponse.getId());
+                                            }
+
+                                            mLocalDataSource.insertContent(content);
+                                        }
                                     }
                                 }
                             }
@@ -710,7 +720,7 @@ public class DataManager extends BaseRoboInjector {
     public void getDownloadAgendaCount(OnResponseCallback<AgendaList> callback) {
 
         //Mocking start
-        AgendaList agendaList = new AgendaList();
+        /*AgendaList agendaList = new AgendaList();
         agendaList.setLevel("Download");
         List<AgendaItem> items = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -738,11 +748,175 @@ public class DataManager extends BaseRoboInjector {
             items.add(item);
         }
         agendaList.setResult(items);
-        callback.onSuccess(agendaList);
+        callback.onSuccess(agendaList);*/
         //Mocking end
 
         //Actual code **Do not delete**
+        final boolean[] coursesReceived = new boolean[1];
+        final boolean[] chatshalaReceived = new boolean[1];
+        final boolean[] toolkitReceived = new boolean[1];
+        final boolean[] hoisReceived = new boolean[1];
 
+        AgendaList agendaList = new AgendaList();
+        agendaList.setLevel("Download");
+        List<AgendaItem> items = new ArrayList<>();
+
+        getdownloadedCourseContents(new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.course);
+                coursesReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.course);
+                coursesReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+        getdownloadedWPContents(SourceType.chatshala.name(), new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.chatshala);
+                chatshalaReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.chatshala);
+                chatshalaReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+        getdownloadedWPContents(SourceType.toolkit.name(), new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.toolkit);
+                toolkitReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.toolkit);
+                toolkitReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+        getdownloadedWPContents(SourceType.hois.name(), new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.hois);
+                hoisReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.hois);
+                hoisReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+    }
+
+    private void addContentsToAgendaList(List<Content> contents, AgendaList agendaList, SourceType sourceType){
+
+        AgendaItem item = new AgendaItem();
+        item.setContent_count(contents == null ? 0 : contents.size());
+        item.setSource_name(sourceType.name());
+
+        String sourceTitle = null;
+        switch (sourceType){
+            case course:
+                sourceTitle = context.getString(R.string.course);
+                break;
+            case chatshala:
+                sourceTitle = context.getString(R.string.chatshala);
+                break;
+            case toolkit:
+                sourceTitle = context.getString(R.string.toolkit);
+                break;
+            case hois:
+                sourceTitle = context.getString(R.string.hois);
+                break;
+        }
+        item.setSource_title(sourceTitle);
+        agendaList.getResult().add(item);
+
+    }
+
+    private void sendDownloadAgenda(boolean b1, boolean b2, boolean b3, boolean b4, AgendaList agendaList,
+                                    OnResponseCallback<AgendaList> callback){
+
+        if (b1 && b2 && b3 && b4){
+            callback.onSuccess(agendaList);
+        }
+
+    }
+
+    public void getdownloadedCourseContents(OnResponseCallback<List<Content>> callback){
+
+        new Thread(){
+            @Override
+            public void run() {
+                List<Long> contentIds = new GetCourseContentsOperation().execute(dbHelper.getDatabase());
+                List<Content> contents = new ArrayList<>();
+                if (contentIds != null){
+                    for (long id: contentIds){
+                        Content content = mLocalDataSource.getContentById(id);
+                        if (content != null){
+                            contents.add(content);
+                        }
+                    }
+                }
+                if (!contents.isEmpty()) {
+                    callback.onSuccess(contents);
+                } else {
+                    callback.onFailure(new TaException("No content downloaded"));
+                }
+            }
+        }.start();
+
+    }
+
+    public void getdownloadedWPContents(String sourceName, OnResponseCallback<List<Content>> callback){
+
+        new Thread(){
+            @Override
+            public void run() {
+                List<Long> contentIds = new GetWPContentsOperation(sourceName).execute(dbHelper.getDatabase());
+                List<Content> contents = new ArrayList<>();
+                if (contentIds != null){
+                    for (long id: contentIds){
+                        Content content = mLocalDataSource.getContentById(id);
+                        if (content != null){
+                            contents.add(content);
+                        }
+                    }
+                }
+                if (!contents.isEmpty()) {
+                    callback.onSuccess(contents);
+                } else {
+                    callback.onFailure(new TaException("No content downloaded"));
+                }
+            }
+        }.start();
 
     }
 
@@ -1002,18 +1176,21 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void downloadSingle(ScormBlockModel scorm,
+                               long contentId,
                                FragmentActivity activity,
                                VideoDownloadHelper.DownloadManagerCallback callback) {
         DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
         de.url = scorm.getDownloadUrl();
         de.title = scorm.getParent().getDisplayName();
+        de.content_id = contentId;
         downloadManager.downloadVideo(de, activity, callback);
     }
 
     public void downloadMultiple(List<? extends HasDownloadEntry> downloadEntries,
+                                 long contentid,
                                  FragmentActivity activity,
                                  VideoDownloadHelper.DownloadManagerCallback callback) {
-        downloadManager.downloadVideos(downloadEntries, activity, callback);
+        downloadManager.downloadVideos(downloadEntries, contentid, activity, callback);
     }
 
     public void getDownloadedStateForVideoId(String videoId, DataCallback<DownloadEntry.DownloadedState> callback) {
@@ -1175,6 +1352,32 @@ public class DataManager extends BaseRoboInjector {
         }
     }
 
+    public void getDownloadedContent(String sourceName, OnResponseCallback<List<Content>> callback) {
+
+        //Mocking start
+        /*List<Content> contents = new ArrayList<>();
+        for (int i=0;i<20;i++){
+            Content content =  new Content();
+            content.setName("course");
+            content.setIcon("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+            Source source =  new Source();
+            source.setType("edx");
+            source.setTitle("course");
+            source.setName("course");
+            content.setSource(source);
+            contents.add(content);
+        }
+        callback.onSuccess(contents);*/
+        //Mocking end
+
+        //Actual code   **Do not delete**
+        if (sourceName.equalsIgnoreCase(SourceType.course.name())){
+            getdownloadedCourseContents(callback);
+        } else {
+            getdownloadedWPContents(sourceName, callback);
+        }
+    }
+
     public void getPostById(long postId, OnResponseCallback<Post> callback){
 
         if (NetworkUtil.isConnected(context)){
@@ -1226,12 +1429,13 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void downloadPost(Post post, String category_id,String category_name,
+    public void downloadPost(Post post, long contentId, String category_id,String category_name,
                              FragmentActivity activity,
                              VideoDownloadHelper.DownloadManagerCallback callback){
 
         DownloadEntry videoData=new DownloadEntry();
         videoData.setDownloadEntryForPost(category_id,category_name,post);
+        videoData.content_id = contentId;
         downloadManager.downloadVideo(videoData, activity, callback);
 
     }
@@ -1430,6 +1634,27 @@ public class DataManager extends BaseRoboInjector {
                     if (contents == null){
                         contents = new ArrayList<>();
                     }
+
+                    if (!contents.isEmpty()){
+                        List<Content> finalContents = contents;
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                for (Content content: finalContents){
+                                    if (content.getLists() == null){
+                                        content.setLists(new ArrayList<>());
+                                    }
+
+                                    Content localContent = mLocalDataSource.getContentById(content.getId());
+                                    if (localContent != null && localContent.getLists() != null){
+                                        content.getLists().addAll(localContent.getLists());
+                                    }
+                                    mLocalDataSource.insertContent(content);
+                                }
+                            }
+                        }.start();
+                    }
+
                     callback.onSuccess(contents);
                 }
 

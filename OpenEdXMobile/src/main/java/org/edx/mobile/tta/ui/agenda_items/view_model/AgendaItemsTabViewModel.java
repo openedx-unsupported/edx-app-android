@@ -97,7 +97,7 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
                 }
             });
         } else {
-            mDataManager.getStateAgendaContent(agendaItem.getSource_id(), agendaList.getList_id(), new OnResponseCallback<List<Content>>() {
+            mDataManager.getDownloadedContent(agendaItem.getSource_name(), new OnResponseCallback<List<Content>>() {
                 @Override
                 public void onSuccess(List<Content>data) {
                     mActivity.hideLoading();

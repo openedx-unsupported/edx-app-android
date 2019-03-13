@@ -44,6 +44,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public long dmId = -1;
 
     public String type;
+    public long content_id;
 
     // enrollment id
     public String eid;
@@ -142,6 +143,14 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         return type != null && (type.equalsIgnoreCase(DownloadType.SCORM.name()) ||
                 type.equalsIgnoreCase(DownloadType.PDF.name()) ||
                 type.equalsIgnoreCase(DownloadType.WP_VIDEO.name()));
+    }
+
+    public long getContent_id() {
+        return content_id;
+    }
+
+    public void setContent_id(long content_id) {
+        this.content_id = content_id;
     }
 
     @Override

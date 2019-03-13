@@ -35,4 +35,8 @@ public interface ILocalDataSource {
     List<ContentList> getContentListsByCategoryId(long categoryId);
 
     List<ContentList> getContentListsByCategoryIdAndMode(long categoryId, String mode);
+
+    Content getContentById(long id);
+
+    void insertContent(Content content);
 }
