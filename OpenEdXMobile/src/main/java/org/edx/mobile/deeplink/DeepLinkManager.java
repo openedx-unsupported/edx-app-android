@@ -21,8 +21,9 @@ public class DeepLinkManager {
     public static void parseAndReact(@NonNull Activity activity, @NonNull JSONObject paramsJson) throws JSONException {
         logger.debug("DeepLink received. JSON Details:\n" + paramsJson);
         final Router router = new Router();
-        final boolean isLoggedIn = new LoginPrefs(activity).getUsername() != null;
-        if (!isLoggedIn) {
+        final String username = new LoginPrefs(activity).getUsername();
+        if (username == null) {
+            // Means the user isn't logged in
             activity.startActivity(router.getLogInIntent());
         } else {
             @ScreenDef final String screenName = paramsJson.getString(KEY_SCREEN_NAME);
@@ -35,6 +36,10 @@ public class DeepLinkManager {
                 }
                 case Screen.PROGRAM: {
                     router.showMainDashboard(activity, screenName);
+                    break;
+                }
+                case Screen.PROFILE: {
+                    router.showUserProfile(activity, username);
                     break;
                 }
             }
