@@ -95,6 +95,15 @@
         <item name="colorAccent">@color/dialog_button_selector</item>
     </style>
 
+    <style name="AppTheme.spinner" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:spinnerStyle">@style/holoSpinner</item>
+    </style>
+
+    <style name="holoSpinner" parent="Widget.AppCompat.Spinner.Underlined">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/gray_1</item>
+    </style>
+
     <!-- ActionBar buttons -->
     <style name="MyActionBarButton" parent="Widget.AppCompat.ActionButton">
         <item name="android:textAllCaps">false</item>

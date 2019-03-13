@@ -171,6 +171,12 @@
     <!-- Title of terms of service & honor code users must accept to use the app -->
     <string name="terms_of_service_title">Terms of Service</string>
 
+    <string-array name="spinner_classes">
+        <item>1st</item>
+        <item>2nd</item>
+        <item>3rd</item>
+    </string-array>
+
     <!-- My Courses -->
     <!-- Row of content on dashboard screen -->
     <string name="courseware_title">Course</string>
@@ -676,6 +682,7 @@
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
     <string name="change_password"><u>Change password</u></string>
+    <string name="contact_us"><u>Contact us</u></string>
     <string name="create_new_account">Create new account</string>
     <string name="create_account_and_connect_with_us">Create account and connect with us</string>
     <string name="already_have_account">Already have an account ?</string>
