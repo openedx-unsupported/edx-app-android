@@ -227,6 +227,12 @@ public class MainDiscoveryFragment extends BaseFragment {
             toolbarCallbacks.getSearchView().post(new Runnable() {
                 @Override
                 public void run() {
+                    // This check is added to fix a crash i-e- LEARNER-7137, it happens when the
+                    // fragment is no longer attached to its parent activity/fragment, so a simple
+                    // isAdded() check should resolve the issue. Ref: https://stackoverflow.com/a/44845661
+                    if (!isAdded()) {
+                        return;
+                    }
                     final Fragment nativeCoursesFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_native");
                     if ((nativeCoursesFragment != null && nativeCoursesFragment.isVisible()) || !isVisibleToUser) {
                         toolbarCallbacks.getSearchView().setVisibility(View.GONE);
