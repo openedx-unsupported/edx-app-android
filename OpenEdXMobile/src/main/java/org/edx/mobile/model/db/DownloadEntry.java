@@ -351,7 +351,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         this.downloadedOn=System.currentTimeMillis();
     }
 
-    public void setDownloadEntryForPost(String  category_id, String  category_name, Post post)
+    public void setDownloadEntryForPost(long contentId, String category_id, String category_name, Post post)
     {
         String download_url="";
         //find the downloaded obj
@@ -396,6 +396,8 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
         //it will be content type
         this.type= DownloadType.WP_VIDEO.name();
+
+        this.content_id = contentId;
 
         //it will be section name
         this.section=post.getTitle().getRendered();

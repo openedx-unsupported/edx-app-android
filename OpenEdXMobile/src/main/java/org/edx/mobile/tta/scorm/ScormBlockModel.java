@@ -39,10 +39,11 @@ public class ScormBlockModel extends CourseComponent implements HasDownloadEntry
     @Nullable
     @Override
     public String getDownloadUrl() {
-        if (data == null){
-            return null;
-        }
-        return data.scormData;
+        return "https://s3.amazonaws.com/scorm-file/Language/01/scorm/1c978694b04d4132b7e2fcec919ba014/d71840fe59904bb280c567cac608374cabdc67d0.zip";
+//        if (data == null){
+//            return null;
+//        }
+//        return data.scormData;
     }
 
 }

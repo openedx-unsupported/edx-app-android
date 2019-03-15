@@ -1,5 +1,7 @@
 package org.edx.mobile.tta.data.model.profile;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.edx.mobile.tta.data.model.authentication.RegistrationError;
 
 public class UpdateMyProfileResponse {
@@ -16,6 +18,10 @@ public class UpdateMyProfileResponse {
     String pmis_code;
     String diet_code;
     RegistrationError error;
+
+    //TTA Chirag: Tags associated with user
+    @SerializedName("tag_label")
+    private String tagLabel;
 
     public boolean getSuccess() {
         return success;
@@ -54,4 +60,7 @@ public class UpdateMyProfileResponse {
         return error;
     }
 
+    public String getTagLabel() {
+        return tagLabel;
+    }
 }

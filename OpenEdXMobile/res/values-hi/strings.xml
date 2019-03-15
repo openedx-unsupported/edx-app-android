@@ -11,7 +11,7 @@
     <string name="welcome">स्वागत</string>
     <string name="keep_up_the_spirit">जारी रखें अपना उत्साह</string>
     <string name="forgot_password">पासवर्ड भूल गए?</string>
-    <string name="change_password"><u>पासवर्ड बदलें</u></string>
+    <string name="change_password">पासवर्ड बदलें</string>
     <string name="create_new_account">नया अकाउंट बनाएं</string>
     <string name="launch_text_1">शिक्षकों के व्यवसायिक विकास के लिए रचनात्मक, निर्णात्मक, ऑडियो-विज़ुअल सामग्री</string>
     <string name="launch_text_2">अपने राज्य और साथी शिक्षकों द्वारा मान्यता पाने के अवसर</string>
@@ -61,4 +61,17 @@
     <string name="duration">अवधि</string>
     <string name="most_relevant_list">सबसे ज़रूरी</string>
     <string name="share_wp_post_message">आप भी देखिए! {course_name} :</string>
+    <string name="contact_us">सम्पर्क करें</string>
+    <string name="sign_out">साइन आउट करें</string>
+    <string name="edit_profile">प्रोफाइल सम्पादित करें</string>
+    <string name="change_password_underlined"><u>पासवर्ड बदलें</u></string>
+    <string name="classes_taught">कक्षाएं</string>
+    <string name="skills">कौशल</string>
+    <string name="following">फालोइंग</string>
+    <string name="followers">फालोअर्ज़</string>
+    <string name="write_here">यहाँ लिखिए</string>
+    <string name="connect_with_us">हमारे साथ जुड़िये</string>
+    <string name="old_password">पुराना पासवर्ड</string>
+    <string name="new_password">नया पासवर्ड</string>
+    <string name="write_name">नाम लिखें</string>
 </resources>

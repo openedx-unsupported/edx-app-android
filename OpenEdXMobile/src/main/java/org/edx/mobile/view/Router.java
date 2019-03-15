@@ -382,4 +382,19 @@ public class Router {
                 .append(activity.getString(R.string.insert_feedback));
         EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
     }
+
+    //TTA
+
+    //Mx:Arjun change password
+    public void resetAuthForChangePassword(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
+        loginAPI.logOut();
+        loginPrefs.clear();
+
+        EventBus.getDefault().post(new LogoutEvent());
+
+        analyticsRegistry.trackUserLogout();
+        analyticsRegistry.resetIdentifyUser();
+
+        delegate.unsubscribeAll();
+    }
 }

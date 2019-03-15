@@ -9,6 +9,7 @@ public class Constants {
     public static final String KEY_OTP = "otp";
     public static final String KEY_OTP_TRANSACTION_ID = "transaction_id";
     public static final String KEY_NEW_PASSWORD = "new_password";
+    public static final String KEY_OLD_PASSWORD = "old_password";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_REPASSWORD = "repassword";
     public static final String KEY_ACCESS_TOKEN = "access_token";
@@ -36,6 +37,9 @@ public class Constants {
     public static final String KEY_FILTER_DATA = "filter_data";
     public static final String KEY_SOURCE_ID = "source_id";
     public static final String KEY_HIDE_ACTION = "hide_action";
+    public static final String KEY_FEEDBACK = "feedback";
+    public static final String KEY_DEVICE_INFO = "device_info";
+    public static final String KEY_TAG_LABEL = "tag_label";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -138,9 +139,6 @@ public class BindingAdapters {
 
     @BindingAdapter({"android:src", "placeholder"})
     public static void setImageSrcFromUrl(ImageView imageView, String url, int placeholder) {
-        if (url == null) {
-            return;
-        }
 
         Glide.with(imageView.getContext())
             .load(url)
@@ -365,6 +363,11 @@ public class BindingAdapters {
 
     @BindingAdapter({"array_adapter"})
     public static void setArrayAdapter(NonScrollListView view, BaseArrayAdapter adapter){
+        view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"array_adapter"})
+    public static void setArrayAdapter(ListView view, BaseArrayAdapter adapter){
         view.setAdapter(adapter);
     }
 

@@ -2,7 +2,10 @@ package org.edx.mobile.tta.data;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +18,7 @@ import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
@@ -48,6 +52,9 @@ import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
+import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
+import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
+import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.pref.AppPref;
@@ -72,8 +79,13 @@ import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
+import org.edx.mobile.tta.task.profile.ChangePasswordTask;
+import org.edx.mobile.tta.task.profile.GetAccountTask;
+import org.edx.mobile.tta.task.profile.GetProfileTask;
 import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
+import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
+import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
 import org.edx.mobile.tta.utils.RxUtil;
@@ -86,6 +98,9 @@ import org.edx.mobile.tta.wordpress_client.model.WpAuthResponse;
 import org.edx.mobile.tta.wordpress_client.rest.HttpServerErrorResponse;
 import org.edx.mobile.tta.wordpress_client.rest.WordPressRestResponse;
 import org.edx.mobile.tta.wordpress_client.rest.WpClientRetrofit;
+import org.edx.mobile.user.Account;
+import org.edx.mobile.user.ProfileImage;
+import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -759,7 +774,7 @@ public class DataManager extends BaseRoboInjector {
 
         AgendaList agendaList = new AgendaList();
         agendaList.setLevel("Download");
-        List<AgendaItem> items = new ArrayList<>();
+        agendaList.setResult(new ArrayList<>());
 
         getdownloadedCourseContents(new OnResponseCallback<List<Content>>() {
             @Override
@@ -872,9 +887,9 @@ public class DataManager extends BaseRoboInjector {
 
     public void getdownloadedCourseContents(OnResponseCallback<List<Content>> callback){
 
-        new Thread(){
+        new AsyncTask<Void, Void, List<Content>>() {
             @Override
-            public void run() {
+            protected List<Content> doInBackground(Void... voids) {
                 List<Long> contentIds = new GetCourseContentsOperation().execute(dbHelper.getDatabase());
                 List<Content> contents = new ArrayList<>();
                 if (contentIds != null){
@@ -885,21 +900,27 @@ public class DataManager extends BaseRoboInjector {
                         }
                     }
                 }
+                return contents;
+            }
+
+            @Override
+            protected void onPostExecute(List<Content> contents) {
+                super.onPostExecute(contents);
                 if (!contents.isEmpty()) {
                     callback.onSuccess(contents);
                 } else {
                     callback.onFailure(new TaException("No content downloaded"));
                 }
             }
-        }.start();
+        }.execute();
 
     }
 
     public void getdownloadedWPContents(String sourceName, OnResponseCallback<List<Content>> callback){
 
-        new Thread(){
+        new AsyncTask<Void, Void, List<Content>>() {
             @Override
-            public void run() {
+            protected List<Content> doInBackground(Void... voids) {
                 List<Long> contentIds = new GetWPContentsOperation(sourceName).execute(dbHelper.getDatabase());
                 List<Content> contents = new ArrayList<>();
                 if (contentIds != null){
@@ -910,13 +931,19 @@ public class DataManager extends BaseRoboInjector {
                         }
                     }
                 }
+                return contents;
+            }
+
+            @Override
+            protected void onPostExecute(List<Content> contents) {
+                super.onPostExecute(contents);
                 if (!contents.isEmpty()) {
                     callback.onSuccess(contents);
                 } else {
                     callback.onFailure(new TaException("No content downloaded"));
                 }
             }
-        }.start();
+        }.execute();
 
     }
 
@@ -1434,8 +1461,7 @@ public class DataManager extends BaseRoboInjector {
                              VideoDownloadHelper.DownloadManagerCallback callback){
 
         DownloadEntry videoData=new DownloadEntry();
-        videoData.setDownloadEntryForPost(category_id,category_name,post);
-        videoData.content_id = contentId;
+        videoData.setDownloadEntryForPost(contentId, category_id,category_name,post);
         downloadManager.downloadVideo(videoData, activity, callback);
 
     }
@@ -1515,10 +1541,10 @@ public class DataManager extends BaseRoboInjector {
         });
     }
 
-    public DownloadEntry getDownloadedVideo(Post post, String categoryId, String categoryName)
+    public DownloadEntry getDownloadedVideo(Post post, long contentId, String categoryId, String categoryName)
     {
         DownloadEntry videoData=new DownloadEntry();
-        videoData.setDownloadEntryForPost(categoryId,categoryName,post);
+        videoData.setDownloadEntryForPost(contentId, categoryId,categoryName,post);
 
         return edxEnvironment.getStorage().getPostVideo(videoData.videoId,videoData.url);
 
@@ -1668,6 +1694,232 @@ public class DataManager extends BaseRoboInjector {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
 
+    }
+
+    public void submitFeedback(String msg, OnResponseCallback<FeedbackResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            Bundle parameters = new Bundle();
+            parameters.putString(Constants.KEY_USERNAME, loginPrefs.getUsername());
+            parameters.putString(Constants.KEY_FEEDBACK, msg);
+            parameters.putString(Constants.KEY_DEVICE_INFO,
+                    "API Level:"+ Build.VERSION.RELEASE+"  Device:"+Build.DEVICE+"  Model no:"+Build.MODEL+"  Product:"+Build.PRODUCT);
+
+            new SubmitFeedbackTask(context, parameters){
+                @Override
+                protected void onSuccess(FeedbackResponse feedbackResponse) throws Exception {
+                    super.onSuccess(feedbackResponse);
+                    callback.onSuccess(feedbackResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void changePassword(String oldPass, String newPass, OnResponseCallback<ChangePasswordResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            Bundle parameters = new Bundle();
+            parameters.putString(Constants.KEY_OLD_PASSWORD, oldPass);
+            parameters.putString(Constants.KEY_NEW_PASSWORD, newPass);
+            parameters.putString(Constants.KEY_USERNAME, loginPrefs.getUsername());
+
+            new ChangePasswordTask(context, parameters){
+                @Override
+                protected void onSuccess(ChangePasswordResponse changePasswordResponse) throws Exception {
+                    super.onSuccess(changePasswordResponse);
+
+                    edxEnvironment.getRouter().resetAuthForChangePassword(context,
+                            edxEnvironment.getAnalyticsRegistry(), edxEnvironment.getNotificationDelegate());
+                    login(loginPrefs.getUsername(), newPass, new OnResponseCallback<AuthResponse>() {
+                        @Override
+                        public void onSuccess(AuthResponse data) {
+                            callback.onSuccess(changePasswordResponse);
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            callback.onFailure(e);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getAccount(OnResponseCallback<Account> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetAccountTask(context, loginPrefs.getUsername()){
+                @Override
+                protected void onSuccess(Account account) throws Exception {
+                    super.onSuccess(account);
+                    if (account != null) {
+                        loginPrefs.setProfileImage(loginPrefs.getUsername(), account.getProfileImage());
+
+                        getProfile(new OnResponseCallback<ProfileModel>() {
+                            @Override
+                            public void onSuccess(ProfileModel data) {
+                                loginPrefs.setCurrentUserProfileInCache(data);
+                                callback.onSuccess(account);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                callback.onSuccess(account);
+                            }
+                        });
+
+                    } else {
+                        callback.onFailure(new TaException("Invalid account"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void updateProfile(Bundle parameters, OnResponseCallback<UpdateMyProfileResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new UpdateMyProfileTask(context, parameters, loginPrefs.getUsername()){
+                @Override
+                protected void onSuccess(UpdateMyProfileResponse updateMyProfileResponse) throws Exception {
+                    super.onSuccess(updateMyProfileResponse);
+
+                    if (updateMyProfileResponse == null){
+                        callback.onFailure(new TaException("Your action could not be completed"));
+                        return;
+                    }
+
+                    //for cache consistency
+                    ProfileModel profileModel = new ProfileModel();
+                    profileModel.name = updateMyProfileResponse.getName();
+                    profileModel.email = updateMyProfileResponse.getEmail();
+                    profileModel.gender=updateMyProfileResponse.getGender();
+
+                    profileModel.title=updateMyProfileResponse.getTitle();
+                    profileModel.classes_taught=updateMyProfileResponse.getClasses_taught();
+                    profileModel.state=updateMyProfileResponse.getState();
+                    profileModel.district=updateMyProfileResponse.getDistrict();
+                    profileModel.block=updateMyProfileResponse.getBlock();
+                    profileModel.pmis_code=updateMyProfileResponse.getPMIS_code();
+                    profileModel.diet_code=updateMyProfileResponse.getDIETCode();
+                    profileModel.setTagLabel(updateMyProfileResponse.getTagLabel());
+
+                    loginPrefs.setCurrentUserProfileInCache(profileModel);
+                    loginPrefs.removeMxProfilePageCache();
+
+                    callback.onSuccess(updateMyProfileResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void updateProfileImage(@NonNull Uri uri, @NonNull Rect cropRect,
+                                   OnResponseCallback<ProfileImage> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new SetAccountImageTask(context, loginPrefs.getUsername(), uri, cropRect){
+                @Override
+                protected void onSuccess(Void response) throws Exception {
+                    super.onSuccess(response);
+
+                    getAccount(new OnResponseCallback<Account>() {
+                        @Override
+                        public void onSuccess(Account data) {
+                            loginPrefs.setProfileImage(loginPrefs.getUsername(), data.getProfileImage());
+                            callback.onSuccess(data.getProfileImage());
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            callback.onFailure(e);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getProfile(OnResponseCallback<ProfileModel> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetProfileTask(context){
+                @Override
+                protected void onSuccess(ProfileModel profileModel) throws Exception {
+                    super.onSuccess(profileModel);
+                    callback.onSuccess(profileModel);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            getProfileFromLocal(new TaException(context.getString(R.string.no_connection_exception)),callback);
+        }
+
+    }
+
+    public void getProfileFromLocal(Exception e, OnResponseCallback<ProfileModel> callback){
+        ProfileModel model = loginPrefs.getCurrentUserProfile();
+        if (model != null){
+            callback.onSuccess(model);
+        } else {
+            callback.onFailure(e);
+        }
     }
 }
 

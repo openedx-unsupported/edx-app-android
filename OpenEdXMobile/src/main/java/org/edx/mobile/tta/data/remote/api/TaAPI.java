@@ -18,6 +18,8 @@ import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
+import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.remote.service.TaService;
@@ -133,5 +135,21 @@ public class TaAPI {
         parameters.put(Constants.KEY_FILTER_DATA, filterSections);
 
         return taService.search(parameters);
+    }
+
+    public Call<FeedbackResponse> submitFeedback(Bundle parameters){
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+        return taService.submitFeedback(parameterMap);
+    }
+
+    public Call<ChangePasswordResponse> changePassword(Bundle parameters){
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+        return taService.changePassword(parameterMap);
     }
 }

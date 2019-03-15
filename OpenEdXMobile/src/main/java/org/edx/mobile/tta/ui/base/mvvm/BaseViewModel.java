@@ -35,4 +35,8 @@ public class BaseViewModel {
     public DataManager getDataManager(){
         return mDataManager;
     }
+
+    public TaBaseActivity getActivity() {
+        return mActivity;
+    }
 }

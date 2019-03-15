@@ -351,7 +351,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     private void playVideo()
     {
-        DownloadEntry de=  mDataManager.getDownloadedVideo(post,
+        DownloadEntry de=  mDataManager.getDownloadedVideo(post, content.getId(),
                 String.valueOf(content.getSource().getId()), content.getSource().getName());
         if(de!=null && de.filepath!=null && !de.filepath.equals(""))
         {

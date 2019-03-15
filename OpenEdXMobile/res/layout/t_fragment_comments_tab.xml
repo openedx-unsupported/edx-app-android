@@ -10,7 +10,8 @@
 
     <com.maurya.mx.mxlib.view.MxRecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="true"
         app:mx_itemLayout="@layout/t_row_comments"
         layout_manager="@{viewModel.layoutManager}"
         infinite_recycler_adapter="@{viewModel.adapter}"/>

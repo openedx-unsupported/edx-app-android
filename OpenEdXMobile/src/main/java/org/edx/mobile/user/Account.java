@@ -77,6 +77,10 @@ public class Account {
     @Nullable
     private Privacy accountPrivacy;
 
+    //TTA Chirag: Tags associated with user
+    @SerializedName("tag_label")
+    private String tagLabel;
+
     @NonNull
     public String getUsername() {
         return username;
@@ -226,5 +230,13 @@ public class Account {
 
         @SerializedName("all_users")
         ALL_USERS
+    }
+
+    public String getTagLabel() {
+        return tagLabel;
+    }
+
+    public void setTagLabel(String tagLabel) {
+        this.tagLabel = tagLabel;
     }
 }

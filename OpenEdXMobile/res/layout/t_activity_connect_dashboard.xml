@@ -37,53 +37,59 @@
                 app:titleMarginStart="0dp"
                 app:titleTextAppearance="@style/ta_toolbar_title_style" />
 
-                <LinearLayout
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <android.support.design.widget.AppBarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:animateLayoutChanges="true">
+                    android:layout_height="wrap_content"
+                    android:background="@color/app_background"
+                    android:elevation="0dp"
+                    app:elevation="0dp">
 
                     <org.edx.mobile.tta.ui.custom.VideoEnabledWebView
                         android:id="@+id/connect_webview"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
+                        android:layout_height="400dp"
+                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed" />
 
                     <LinearLayout
+                        android:id="@+id/pull_down_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/pull_down_layout"
+                        android:background="@color/white"
+                        android:orientation="vertical"
                         android:paddingTop="20dp"
                         android:paddingBottom="10dp"
-                        android:orientation="vertical"
-                        android:background="@color/white">
+                        android:visibility="gone"
+                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                         <View
                             android:layout_width="180dp"
                             android:layout_height="4dp"
-                            android:background="@drawable/t_scrollbar_background"
-                            android:layout_gravity="center"/>
+                            android:layout_gravity="center"
+                            android:background="@drawable/t_scrollbar_background" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="60dp"
                         android:background="@color/white"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/_30px">
+                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_20px"
+                            android:layout_height="match_parent"
                             android:baselineAligned="false"
                             android:orientation="horizontal">
 
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="horizontal">
@@ -91,12 +97,13 @@
                                 <LinearLayout
                                     android:id="@+id/like_layout"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:background="?attr/selectableItemBackground"
                                     android:clickable="true"
                                     android:focusable="true"
                                     android:onClick="@{()->viewModel.like()}"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:padding="8dp">
 
                                     <TextView
                                         android:id="@+id/course_likes"
@@ -134,7 +141,7 @@
 
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="horizontal">
@@ -142,12 +149,13 @@
                                 <LinearLayout
                                     android:id="@+id/bookmark_layout"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:background="?attr/selectableItemBackground"
                                     android:clickable="true"
                                     android:focusable="true"
                                     android:onClick="@{()->viewModel.bookmark()}"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:padding="8dp">
 
                                     <ImageView
                                         android:id="@+id/course_bookmark_image"
@@ -176,7 +184,7 @@
 
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="horizontal">
@@ -184,17 +192,19 @@
                                 <LinearLayout
                                     android:id="@+id/all_download_layout"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:background="?attr/selectableItemBackground"
                                     android:clickable="true"
                                     android:focusable="true"
                                     android:onClick="@{()->viewModel.download()}"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:padding="8dp">
 
                                     <org.edx.mobile.view.custom.IconProgressBar
                                         android:id="@+id/loading_indicator"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
                                         android:visibility="@{viewModel.allDownloadProgressVisible ? View.VISIBLE : View.GONE}" />
 
                                     <ImageView
@@ -231,7 +241,8 @@
                         android:id="@+id/tab_layout"
                         style="@style/ta_tab_style"
                         android:layout_marginTop="1dp"
-                        android:layout_marginBottom="4dp"
+                        android:elevation="0dp"
+                        app:layout_scrollFlags="scroll|exitUntilCollapsed"
                         app:tabGravity="fill"
                         app:tabIndicatorColor="@color/primary_cyan"
                         app:tabIndicatorHeight="2dp"
@@ -239,14 +250,16 @@
                         app:tabTextAppearance="@style/ta_tab_text_appearance"
                         app:tabTextColor="@color/gray_5" />
 
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/view_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        mx:pager_adapter="@{viewModel.adapter}" />
+                </android.support.design.widget.AppBarLayout>
 
-                </LinearLayout>
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    mx:pager_adapter="@{viewModel.adapter}" />
+
+            </android.support.design.widget.CoordinatorLayout>
 
             <LinearLayout
                 android:id="@+id/enter_comment_layout"
@@ -270,28 +283,35 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingStart="10dp"
-                        android:paddingTop="6dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="6dp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
                             android:fontFamily="@font/hind_regular"
                             android:text="@{viewModel.replyingToText}"
                             android:textColor="@color/white"
                             android:textSize="14sp" />
 
-                        <ImageView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="8dp"
+                            android:gravity="center"
                             android:onClick="@{()->viewModel.resetReplyToComment()}"
-                            app:srcCompat="@drawable/t_icon_close" />
+                            android:paddingStart="8dp"
+                            android:paddingTop="6dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="6dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:srcCompat="@drawable/t_icon_close" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

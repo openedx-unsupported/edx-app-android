@@ -99,6 +99,12 @@ public class ApiConstants {
 
     public static final String URL_MX_SEARCH = "api/mx_catalog/v3/search/";
 
+    //submit feedback url
+    public static final String URL_MX_SUBMIT_FEEDBACK = "/api/otp/feedback/create";
+
+    //Reset pass url
+    public static final String URL_MX_RESETPSWD = "/api/otp/user_account/password/update";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

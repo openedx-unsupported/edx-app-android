@@ -15,6 +15,8 @@ import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
+import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 
 import java.util.List;
@@ -104,5 +106,13 @@ public interface TaService {
 
     @POST(ApiConstants.URL_MX_SEARCH)
     Call<List<Content>> search(@Body Map<String, Object> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_SUBMIT_FEEDBACK)
+    Call<FeedbackResponse> submitFeedback(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_RESETPSWD)
+    Call<ChangePasswordResponse> changePassword(@FieldMap Map<String, String> parameters);
 
 }

@@ -40,6 +40,9 @@ public class CourseComponent implements IBlock, IPathNode {
     private String format;
     private String dueDate;
 
+    //TTA Chirag: Estimated duration
+    private String duration;
+
     public CourseComponent(){}
 
     /**
@@ -510,4 +513,12 @@ public class CourseComponent implements IBlock, IPathNode {
                 "   children: " + children + "\n" +
                 "   courseId: " + courseId;
     }*/
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
 }

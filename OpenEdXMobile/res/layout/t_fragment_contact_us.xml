@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.profile.view_model.ContactUsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_background"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/toolbar"
+            android:background="@color/app_background"
+            app:title="@string/contact_us"
+            app:navigationIcon="@drawable/back"
+            app:titleTextAppearance="@style/ta_toolbar_title_style"
+            android:gravity="start|center_vertical"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleMarginStart="0dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_48px"
+            android:layout_marginStart="@dimen/_40px"
+            android:text="@string/connect_with_us"
+            android:textColor="@color/primary_navy"
+            android:textSize="15sp"
+            android:fontFamily="@font/hind_medium"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_40px"
+            android:layout_marginTop="@dimen/_48px"
+            android:layout_marginEnd="@dimen/_40px"
+            app:hintTextAppearance="@color/primary_navy">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/write_here"
+                android:text="@{viewModel.message}"
+                android:textColorHint="@color/gray_1"
+                android:textColor="@color/gray_4"
+                android:textSize="14sp"
+                android:fontFamily="@font/hind_medium"
+                text_changed_listener="@{viewModel.watcher}"
+                android:paddingBottom="@dimen/_14px" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="25dp"
+                android:background="@drawable/btn_selector_filled"
+                android:enabled="@{viewModel.msgValid}"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:text="Send"
+                android:onClick="@{()->viewModel.send()}" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>

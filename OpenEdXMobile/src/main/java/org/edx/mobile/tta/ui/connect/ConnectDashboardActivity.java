@@ -135,9 +135,6 @@ public class ConnectDashboardActivity extends BaseVMActivity {
         tabLayout.setupWithViewPager(pager);
 
         toolbar = findViewById(R.id.toolbar);
-//        toolbar.setNavigationOnClickListener(v -> {
-//            onBackPressed();
-//        });
         setSupportActionBar(toolbar);
 
         nonVideoLayout = findViewById(R.id.nonVideoLayout);
@@ -162,13 +159,13 @@ public class ConnectDashboardActivity extends BaseVMActivity {
 
         detector = new GestureDetectorCompat(this, onSwipeListener);
 
-        pullDownLayout = findViewById(R.id.pull_down_layout);
+        /*pullDownLayout = findViewById(R.id.pull_down_layout);
         pullDownLayout.setOnTouchListener((v, event) -> {
             if (detector.onTouchEvent(event)){
                 return true;
             }
             return super.onTouchEvent(event);
-        });
+        });*/
 
         /*pullDownLayout.setOnClickListener(v -> {
             if (scrollPosition == SCROLL_POSITION_TOP) {
@@ -494,6 +491,14 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                     // or inform the user
                     showLongSnack(getString(R.string.reset_no_network_message));
                 }
+
+                ViewGroup.LayoutParams params = webView.getLayoutParams();
+                params.height = webView.getContentHeight();
+                webView.setLayoutParams(params);
+
+                ViewGroup.LayoutParams pagerParams = pager.getLayoutParams();
+                pagerParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                pager.setLayoutParams(pagerParams);
 
             } catch (Exception exception) {
                 exception.printStackTrace();
