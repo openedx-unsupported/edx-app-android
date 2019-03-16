@@ -119,6 +119,8 @@ public class ProfileViewModel extends BaseViewModel {
     }
 
     private void setDetails() {
+        classes.set("");
+        skills.set("");
         if ((account == null && profileModel == null) ||
                 searchFilter == null || searchFilter.getResult() == null){
             return;
@@ -127,8 +129,6 @@ public class ProfileViewModel extends BaseViewModel {
         String[] section_tag_list;
 
         if (tagLabel == null || tagLabel.length() == 0){
-            classes.set("");
-            skills.set("");
             return;
         }
 
