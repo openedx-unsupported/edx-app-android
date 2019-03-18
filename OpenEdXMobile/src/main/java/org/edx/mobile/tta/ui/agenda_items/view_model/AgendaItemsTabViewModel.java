@@ -51,8 +51,7 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
       adapter = new ListingRecyclerAdapter(mActivity);
         adapter.setItemClickListener((view, item) -> {
             selectedContent = item;
-            mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+            showContentDashboard();
         });
 
       getData();

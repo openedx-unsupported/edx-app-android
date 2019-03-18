@@ -23,6 +23,7 @@ import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.course.view_model.CourseMaterialViewModel;
+import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import de.greenrobot.event.EventBus;
@@ -61,5 +62,23 @@ public class CourseMaterialTab extends TaBaseFragment {
     public void onDestroy() {
         super.onDestroy();
         viewModel.unregisterEvnetBus();
+    }
+
+    @Override
+    public void onPermissionGranted(String[] permissions, int requestCode) {
+        switch (requestCode){
+            case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
+                viewModel.performAction();
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionDenied(String[] permissions, int requestCode) {
+        switch (requestCode){
+            case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
+                viewModel.getActivity().showLongSnack("Permission Denied");
+                break;
+        }
     }
 }

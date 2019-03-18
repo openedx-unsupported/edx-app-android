@@ -51,6 +51,7 @@ import org.edx.mobile.tta.ui.custom.VideoEnabledWebView;
 import org.edx.mobile.tta.utils.AppUtil;
 import org.edx.mobile.tta.wordpress_client.model.Post;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.PermissionsUtil;
 
 
 import java.io.File;
@@ -379,6 +380,24 @@ public class ConnectDashboardActivity extends BaseVMActivity {
 
     public void addReplyToComment(final int parent_id) {
 
+    }
+
+    @Override
+    protected void onPermissionGranted(String[] permissions, int requestCode) {
+        switch (requestCode){
+            case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
+                viewModel.downloadPost();
+                break;
+        }
+    }
+
+    @Override
+    protected void onPermissionDenied(String[] permissions, int requestCode) {
+        switch (requestCode){
+            case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
+                showLongSnack("Permission Denied");
+                break;
+        }
     }
 
     @Override

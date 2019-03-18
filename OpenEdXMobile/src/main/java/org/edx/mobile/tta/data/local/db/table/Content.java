@@ -13,6 +13,8 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+
 @SuppressWarnings(RoomWarnings.PRIMARY_KEY_FROM_EMBEDDED_IS_DROPPED)
 @Entity(tableName = "content")
 public class Content implements Parcelable {
@@ -192,5 +194,10 @@ public class Content implements Parcelable {
         dest.writeString(created_at);
         dest.writeString(modified_at);
         dest.writeList(lists);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (obj instanceof Content) && (id == ((Content) obj).id);
     }
 }

@@ -107,7 +107,7 @@ public class CourseDashboardViewModel extends BaseViewModel {
         fragments.add(handoutFragment);
         titles.add(mActivity.getString(R.string.handouts));
 
-        Uri uri = Uri.parse(course.getCourse().getCourse_about())
+        Uri uri = Uri.parse(course == null ? null : course.getCourse().getCourse_about())
                 .buildUpon()
                 .appendQueryParameter(Constants.KEY_HIDE_ACTION, "true")
                 .build();

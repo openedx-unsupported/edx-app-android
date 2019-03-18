@@ -37,12 +37,11 @@ public class ProfileViewModel extends BaseViewModel {
     public ObservableField<String> skills = new ObservableField<>();
     public ObservableField<String> following = new ObservableField<>("99");
     public ObservableField<String> followers = new ObservableField<>("130");
+    public ObservableField<String> userImageUrl = new ObservableField<>();
 
     public ProfileViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
-        profileModel = loginPrefs.getCurrentUserProfile();
-        profileImage = loginPrefs.getProfileImage();
         fetchAccount();
         fetchFilters();
     }
@@ -59,6 +58,9 @@ public class ProfileViewModel extends BaseViewModel {
         profileImage = loginPrefs.getProfileImage();
         if (profileModel != null) {
             tagLabel = profileModel.getTagLabel();
+        }
+        if (profileImage != null){
+            userImageUrl.set(profileImage.getImageUrlLarge());
         }
     }
 

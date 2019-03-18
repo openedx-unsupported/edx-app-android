@@ -71,9 +71,11 @@ public class LibraryTabViewModel extends BaseViewModel {
         this.searchPageOpenedListener = searchPageOpenedListener;
 
         contentLists = new ArrayList<>();
-        for (ContentList list: cr.getContent_list()){
-            if (list.getCategory_id() == category.getId()){
-                contentLists.add(list);
+        if (cr != null) {
+            for (ContentList list: cr.getContent_list()){
+                if (list.getCategory_id() == category.getId()){
+                    contentLists.add(list);
+                }
             }
         }
 
@@ -213,8 +215,7 @@ public class LibraryTabViewModel extends BaseViewModel {
                         view.setOnClickListener(v -> {
 //                            Toast.makeText(mActivity, contentListMap.get(model.getId()).get(position).getName(), Toast.LENGTH_SHORT).show();
                             selectedContent = contentListMap.get(model.getId()).get(position);
-                            mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                            showContentDashboard();
                         });
                         return view;
                     }
@@ -230,8 +231,7 @@ public class LibraryTabViewModel extends BaseViewModel {
                 listAdapter.addAll(contentListMap.get(model.getId()));
                 listAdapter.setItemClickListener((view, item) -> {
                     selectedContent = item;
-                    mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                    showContentDashboard();
                 });
 
                 listBinding.contentFiniteList.setmMoreButtonVisible(true);

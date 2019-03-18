@@ -44,13 +44,13 @@ public class AgendaItemsTab extends TaBaseFragment {
         return view;
     }
 
-    @Override
+    /*@Override
     public void onPermissionGranted(String[] permissions, int requestCode) {
         switch (requestCode){
             case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
                 viewModel.showContentDashboard();
                 break;
         }
-    }
+    }*/
 
 }

@@ -144,8 +144,7 @@ public class SearchViewModel extends BaseViewModel {
 
         contentsAdapter.setItemClickListener((view, item) -> {
             selectedContent = item;
-            mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+            showContentDashboard();
         });
 
         if (selectedCategory != null && selectedCategory.getSource_id() != 0){
@@ -388,6 +387,7 @@ public class SearchViewModel extends BaseViewModel {
         if (changesMade){
             skip = 0;
             isPriority = true;
+            contentsAdapter.reset(true);
         }
 
         setFilterSections();
@@ -456,7 +456,11 @@ public class SearchViewModel extends BaseViewModel {
             this.contents = contents;
             changesMade = false;
         } else {
-            this.contents.addAll(contents);
+            for (Content content: contents){
+                if (!this.contents.contains(content)) {
+                    this.contents.add(content);
+                }
+            }
         }
         contentsAdapter.setItems(this.contents);
 
