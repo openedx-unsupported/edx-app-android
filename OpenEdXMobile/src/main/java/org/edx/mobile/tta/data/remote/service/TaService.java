@@ -11,6 +11,7 @@ import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
@@ -114,5 +115,18 @@ public interface TaService {
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_RESETPSWD)
     Call<ChangePasswordResponse> changePassword(@FieldMap Map<String, String> parameters);
+
+    @GET(ApiConstants.URL_MX_GET_MY_CERTIFICATES)
+    Call<MyCertificatesResponse> getMyCertificates();
+
+    @GET(ApiConstants.URL_MX_GET_CERTIFICATE_STATUS)
+    Call<StatusResponse> getCertificateStatus(@Query("course_id") String courseId);
+
+    @GET(ApiConstants.URL_MX_GET_CERTIFICATE)
+    Call<MyCertificatesResponse> getCertificate(@Query("course_id") String courseId);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_GENERATE_CERTIFICATE)
+    Call<StatusResponse> generateCertificate(@FieldMap Map<String, String> parameters);
 
 }

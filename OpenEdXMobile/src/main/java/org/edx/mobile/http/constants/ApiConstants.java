@@ -105,6 +105,18 @@ public class ApiConstants {
     //Reset pass url
     public static final String URL_MX_RESETPSWD = "/api/otp/user_account/password/update";
 
+    //Get all certificates of user
+    public static final String URL_MX_GET_MY_CERTIFICATES = "/api/mxcertification_api/get_my_certificates/";
+
+    //Get status of course certificate
+    public static final String URL_MX_GET_CERTIFICATE_STATUS = "/api/mxcertification_api/get_certificate_status/";
+
+    //Get course certificate
+    public static final String URL_MX_GET_CERTIFICATE = "/api/mxcertification_api/get_certificate/";
+
+    //Post generate certificate request
+    public static final String URL_MX_GENERATE_CERTIFICATE = "/api/mxcertification_api/generate_certificate/";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

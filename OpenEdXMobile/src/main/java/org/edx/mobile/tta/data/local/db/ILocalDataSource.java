@@ -1,7 +1,7 @@
 package org.edx.mobile.tta.data.local.db;
 
-import org.edx.mobile.tta.data.enums.CategoryType;
 import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.User;
@@ -39,4 +39,12 @@ public interface ILocalDataSource {
     Content getContentById(long id);
 
     void insertContent(Content content);
+
+    List<Certificate> getAllCertificates(String username);
+
+    Certificate getCertificate(String courseId, String username);
+
+    void insertCertificates(List<Certificate> certificates);
+
+    void insertCertificate(Certificate certificate);
 }

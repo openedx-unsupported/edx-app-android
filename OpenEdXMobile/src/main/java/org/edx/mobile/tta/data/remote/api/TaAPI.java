@@ -14,6 +14,7 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
@@ -151,5 +152,23 @@ public class TaAPI {
             parameterMap.put(key, parameters.getString(key));
         }
         return taService.changePassword(parameterMap);
+    }
+
+    public Call<MyCertificatesResponse> getMyCertificates(){
+        return taService.getMyCertificates();
+    }
+
+    public Call<StatusResponse> getCertificateStatus(String courseId){
+        return taService.getCertificateStatus(courseId);
+    }
+
+    public Call<MyCertificatesResponse> getCertificate(String courseId){
+        return taService.getCertificate(courseId);
+    }
+
+    public Call<StatusResponse> generateCertificate(String courseId){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_COURSE_ID,courseId);
+        return taService.generateCertificate(parameters);
     }
 }
