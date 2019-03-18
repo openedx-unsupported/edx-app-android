@@ -36,8 +36,7 @@ emulator :
 	# within a virtual machine. This may be solved eventually and would
 	# significantly speed some things up.
 
-	@android create avd --force --name screenshotDevice --target android-21 \
-       --abi x86_64 --device "Nexus 4" --skin 768x1280 --sdcard 250M
+	@android create avd --force --name screenshotDevice --target android-21 --device "Nexus 4" --skin 768x1280 --sdcard 250M
 
 	#@android create avd --force --name screenshotDevice --target android-21 \
     #--abi armeabi-v7a --device "Nexus 4" --skin 768x1280 --sdcard 250M
