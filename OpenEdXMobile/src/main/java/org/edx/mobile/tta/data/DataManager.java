@@ -31,6 +31,7 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
@@ -39,6 +40,7 @@ import org.edx.mobile.tta.data.local.db.TADatabase;
 import org.edx.mobile.tta.data.local.db.operation.GetCourseContentsOperation;
 import org.edx.mobile.tta.data.local.db.operation.GetWPContentsOperation;
 import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.model.HtmlResponse;
@@ -47,6 +49,8 @@ import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
+import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
@@ -76,6 +80,10 @@ import org.edx.mobile.tta.task.content.TotalLikeTask;
 import org.edx.mobile.tta.task.content.course.GetCourseDataFromPersistableCacheTask;
 import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseFromCacheTask;
 import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseTask;
+import org.edx.mobile.tta.task.content.course.certificate.GenerateCertificateTask;
+import org.edx.mobile.tta.task.content.course.certificate.GetCertificateStatusTask;
+import org.edx.mobile.tta.task.content.course.certificate.GetCertificateTask;
+import org.edx.mobile.tta.task.content.course.certificate.GetMyCertificatesTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
@@ -1921,5 +1929,183 @@ public class DataManager extends BaseRoboInjector {
             callback.onFailure(e);
         }
     }
+
+    public void getCertificateStatus(String courseId, OnResponseCallback<CertificateStatusResponse> callback){
+
+        getCertificateFromLocal(courseId, new OnResponseCallback<Certificate>() {
+            @Override
+            public void onSuccess(Certificate data) {
+                CertificateStatusResponse response = new CertificateStatusResponse();
+                response.setStatus(CertificateStatus.GENERATED.name());
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+                if (NetworkUtil.isConnected(context)){
+
+                    new GetCertificateStatusTask(context, courseId){
+                        @Override
+                        protected void onSuccess(CertificateStatusResponse certificateStatusResponse) throws Exception {
+                            super.onSuccess(certificateStatusResponse);
+                            if (certificateStatusResponse != null){
+                                callback.onSuccess(certificateStatusResponse);
+                            } else {
+                                callback.onFailure(new TaException("Status of certificate could not be fetched"));
+                            }
+                        }
+
+                        @Override
+                        protected void onException(Exception ex) {
+                            callback.onFailure(ex);
+                        }
+                    }.execute();
+
+                } else {
+                    callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+                }
+
+            }
+        }, null);
+
+    }
+
+    public void getCertificate(String courseId, OnResponseCallback<Certificate> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetCertificateTask(context, courseId){
+                @Override
+                protected void onSuccess(MyCertificatesResponse myCertificatesResponse) throws Exception {
+                    super.onSuccess(myCertificatesResponse);
+                    if (myCertificatesResponse == null || myCertificatesResponse.getCertificates() == null ||
+                            myCertificatesResponse.getCertificates().isEmpty()){
+                        getCertificateFromLocal(courseId, callback, new TaException("Certificate not available"));
+                    } else {
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertCertificate(myCertificatesResponse.getCertificates().get(0));
+                            }
+                        }.start();
+
+                        callback.onSuccess(myCertificatesResponse.getCertificates().get(0));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getCertificateFromLocal(courseId, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getCertificateFromLocal(courseId, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getCertificateFromLocal(String courseId, OnResponseCallback<Certificate> callback, Exception e){
+
+        new AsyncTask<Void, Void, Certificate>() {
+            @Override
+            protected Certificate doInBackground(Void... voids) {
+                return mLocalDataSource.getCertificate(courseId, loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onPostExecute(Certificate certificate) {
+                if (certificate != null){
+                    callback.onSuccess(certificate);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getMyCertificates(OnResponseCallback<List<Certificate>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetMyCertificatesTask(context){
+                @Override
+                protected void onSuccess(MyCertificatesResponse myCertificatesResponse) throws Exception {
+                    super.onSuccess(myCertificatesResponse);
+                    if (myCertificatesResponse == null || myCertificatesResponse.getCertificates() == null){
+                        getMyCertificatesFromLocal(callback, new TaException("Certificates not available"));
+                    } else {
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertCertificates(myCertificatesResponse.getCertificates());
+                            }
+                        }.start();
+
+                        callback.onSuccess(myCertificatesResponse.getCertificates());
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getMyCertificatesFromLocal(callback, new TaException("Certificates not available"));
+                }
+            }.execute();
+
+        } else {
+            getMyCertificatesFromLocal(callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getMyCertificatesFromLocal(OnResponseCallback<List<Certificate>> callback, Exception e){
+
+        new AsyncTask<Void, Void, List<Certificate>>() {
+            @Override
+            protected List<Certificate> doInBackground(Void... voids) {
+                return mLocalDataSource.getAllCertificates(loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onPostExecute(List<Certificate> certificates) {
+                if (certificates != null){
+                    callback.onSuccess(certificates);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void generateCertificate(String courseId, OnResponseCallback<CertificateStatusResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GenerateCertificateTask(context, courseId){
+                @Override
+                protected void onSuccess(CertificateStatusResponse certificateStatusResponse) throws Exception {
+                    super.onSuccess(certificateStatusResponse);
+                    if (certificateStatusResponse != null){
+                        callback.onSuccess(certificateStatusResponse);
+                    } else {
+                        callback.onFailure(new TaException("Certificate could not be generated"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
 }
 

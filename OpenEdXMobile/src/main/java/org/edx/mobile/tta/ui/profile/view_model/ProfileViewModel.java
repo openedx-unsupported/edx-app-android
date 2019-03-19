@@ -6,6 +6,7 @@ import android.databinding.ObservableInt;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -38,12 +39,14 @@ public class ProfileViewModel extends BaseViewModel {
     public ObservableField<String> following = new ObservableField<>("99");
     public ObservableField<String> followers = new ObservableField<>("130");
     public ObservableField<String> userImageUrl = new ObservableField<>();
+    public ObservableField<String> nCertificates = new ObservableField<String>("0");
 
     public ProfileViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
         fetchAccount();
         fetchFilters();
+        fetchCertificates();
     }
 
     @Override
@@ -118,6 +121,26 @@ public class ProfileViewModel extends BaseViewModel {
             }
         });
 
+    }
+
+    private void fetchCertificates(){
+
+        mDataManager.getMyCertificates(new OnResponseCallback<List<Certificate>>() {
+            @Override
+            public void onSuccess(List<Certificate> data) {
+                nCertificates.set(String.valueOf(data.size()));
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                //Do nothing
+            }
+        });
+
+    }
+
+    public void showCertificates(){
+        mActivity.showShortSnack("Show certificates");
     }
 
     private void setDetails() {

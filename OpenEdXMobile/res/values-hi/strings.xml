@@ -74,4 +74,6 @@
     <string name="old_password">पुराना पासवर्ड</string>
     <string name="new_password">नया पासवर्ड</string>
     <string name="write_name">नाम लिखें</string>
+    <string name="my_certificates">मेरे सर्टिफ़िकेट</string>
+    <string name="all_certificates">सभी सर्टिफ़िकेट</string>
 </resources>

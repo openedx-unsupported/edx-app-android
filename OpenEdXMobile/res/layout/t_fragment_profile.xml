@@ -9,71 +9,10 @@
             type="org.edx.mobile.tta.ui.profile.view_model.ProfileViewModel" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_background"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="50dp"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/profile_options_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="10dp"
-                android:padding="8dp"
-                android:background="@color/app_background"
-                app:srcCompat="@drawable/t_icon_ellipsis_v" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ln1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.CardView
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginTop="@dimen/_60px"
-                android:layout_marginEnd="@dimen/_16px"
-                android:layout_marginBottom="@dimen/_30px"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="0dp">
-
-                <ImageView
-                    android:id="@+id/imageProfile"
-                    placeholder="@{viewModel.userImagePlaceholder}"
-                    android:scaleType="fitXY"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@{viewModel.userImageUrl}" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginEnd="@dimen/_16px"
-                android:layout_marginBottom="@dimen/_30px"
-                android:fontFamily="@font/hind_medium"
-                android:text="@{viewModel.profileModel.name}"
-                android:textColor="@color/gray_5"
-                android:textSize="16sp" />
-        </LinearLayout>
+        android:background="@color/app_background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,205 +22,359 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="50dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            app:srcCompat="@drawable/t_icon_class" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginEnd="@dimen/_16px"
-                            android:fontFamily="@font/hind_medium"
-                            android:text="@string/classes_taught"
-                            android:textColor="@color/gray_6"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:layout_marginBottom="@dimen/_40px"
-                        android:fontFamily="@font/hind_regular"
-                        android:text="@{viewModel.classes}"
-                        android:textColor="@color/gray_6"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/edx_brand_gray_back" />
-
-                <LinearLayout
                     android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/profile_options_btn"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:background="@color/app_background"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/t_icon_ellipsis_v" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            app:srcCompat="@drawable/t_icon_course" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginEnd="@dimen/_16px"
-                            android:fontFamily="@font/hind_medium"
-                            android:text="@string/skills"
-                            android:textColor="@color/gray_6"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:layout_marginBottom="@dimen/_40px"
-                        android:fontFamily="@font/hind_regular"
-                        android:text="@{viewModel.skills}"
-                        android:textColor="@color/gray_6"
-                        android:textSize="14sp" />
-                </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:id="@+id/row_half_separator"
-                style="@style/gray_separator"
-                android:layout_marginStart="@dimen/course_item_half_separator_left_margin"
-                android:layout_marginEnd="@dimen/course_item_half_separator_left_margin" />
+            <LinearLayout
+                android:id="@+id/ln1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10px"
+                android:layout_marginStart="@dimen/_20px"
+                android:layout_marginEnd="@dimen/_20px"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/imageProfile"
+                        placeholder="@{viewModel.userImagePlaceholder}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@{viewModel.userImageUrl}" />
+
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/_16px"
+                    android:layout_marginBottom="@dimen/_18px"
+                    android:fontFamily="@font/hind_medium"
+                    android:text="@{viewModel.profileModel.name}"
+                    android:textColor="@color/gray_5"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/_30px"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_40px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            app:srcCompat="@drawable/t_icon_follower" />
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                app:srcCompat="@drawable/t_icon_class" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="@string/classes_taught"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_40px"
+                            android:layout_marginStart="@dimen/_36px"
                             android:layout_marginEnd="@dimen/_16px"
-                            android:fontFamily="@font/hind_medium"
-                            android:text="@string/following"
+                            android:layout_marginBottom="@dimen/_40px"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="@{viewModel.classes}"
                             android:textColor="@color/gray_6"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
+
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/edx_brand_gray_back" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:layout_marginBottom="@dimen/_40px"
-                        android:fontFamily="@font/hind_medium"
-                        android:text="@{viewModel.following}"
-                        android:textColor="@color/gray_5"
-                        android:textSize="16sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                app:srcCompat="@drawable/t_icon_course" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="@string/skills"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_36px"
+                            android:layout_marginEnd="@dimen/_16px"
+                            android:layout_marginBottom="@dimen/_40px"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="@{viewModel.skills}"
+                            android:textColor="@color/gray_6"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/edx_brand_gray_back" />
+                    android:id="@+id/row_half_separator"
+                    style="@style/gray_separator"
+                    android:layout_marginStart="@dimen/course_item_half_separator_left_margin"
+                    android:layout_marginEnd="@dimen/course_item_half_separator_left_margin" />
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_36px"
-                            android:layout_marginTop="@dimen/_48px"
-                            android:layout_marginBottom="@dimen/_26px"
-                            app:srcCompat="@drawable/t_icon_following" />
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_40px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                app:srcCompat="@drawable/t_icon_follower" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_40px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="@string/following"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10px"
-                            android:layout_marginTop="@dimen/_48px"
+                            android:layout_marginStart="@dimen/_36px"
                             android:layout_marginEnd="@dimen/_16px"
+                            android:layout_marginBottom="@dimen/_40px"
                             android:fontFamily="@font/hind_medium"
-                            android:text="@string/followers"
-                            android:textColor="@color/gray_6"
+                            android:text="@{viewModel.following}"
+                            android:textColor="@color/gray_5"
                             android:textSize="16sp" />
+
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/edx_brand_gray_back" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_36px"
-                        android:layout_marginEnd="@dimen/_16px"
-                        android:layout_marginBottom="@dimen/_40px"
-                        android:fontFamily="@font/hind_medium"
-                        android:text="@{viewModel.followers}"
-                        android:textColor="@color/gray_5"
-                        android:textSize="16sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_36px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginBottom="@dimen/_26px"
+                                app:srcCompat="@drawable/t_icon_following" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_10px"
+                                android:layout_marginTop="@dimen/_48px"
+                                android:layout_marginEnd="@dimen/_16px"
+                                android:fontFamily="@font/hind_medium"
+                                android:text="@string/followers"
+                                android:textColor="@color/gray_6"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_36px"
+                            android:layout_marginEnd="@dimen/_16px"
+                            android:layout_marginBottom="@dimen/_40px"
+                            android:fontFamily="@font/hind_medium"
+                            android:text="@{viewModel.followers}"
+                            android:textColor="@color/gray_5"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_48px">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_certificates"
+                    android:textColor="@color/gray_5"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/hind_medium"
+                    android:layout_marginStart="@dimen/_20px"/>
+                
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="@dimen/_10px"
+                    android:layout_marginTop="@dimen/_20px"
+                    android:layout_marginBottom="@dimen/_20px"
+                    android:layout_marginStart="@dimen/_20px"
+                    android:layout_marginEnd="@dimen/_20px"
+                    app:cardBackgroundColor="@color/white"
+                    android:onClick="@{()->viewModel.showCertificates()}">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/_26px">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.nCertificates}"
+                                android:textColor="@color/gray_5"
+                                android:textSize="20sp"
+                                android:fontFamily="@font/hind_medium"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/all_certificates"
+                                android:textSize="12sp"
+                                android:textColor="@color/primary_cyan"
+                                android:fontFamily="@font/hind_medium"
+                                android:layout_marginTop="@dimen/_30px"
+                                android:gravity="center_vertical"
+                                android:drawableEnd="@drawable/ic_arrow_right_cyan_24dp"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="@dimen/_36px"
+                            android:src="@drawable/two_certificates_compressed"
+                            android:scaleType="fitXY"/>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
+
+    </ScrollView>
 
 </layout>

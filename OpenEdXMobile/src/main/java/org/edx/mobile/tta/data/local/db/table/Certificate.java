@@ -1,29 +1,30 @@
 package org.edx.mobile.tta.data.local.db.table;
 
 import android.arch.persistence.room.Entity;
-
-import java.util.Date;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "certificate", primaryKeys = {"course_id", "username"})
 public class Certificate {
 
+    @NonNull
     private String username;
 
     private String status;
 
     private boolean regenerate;
 
-    private Date created;
+    private String created;
 
     private String grade;
 
+    @NonNull
     private String course_id;
 
     private String course_name;
 
     private String download_url;
 
-    private Date modified;
+    private String modified;
 
     private String image;
 
@@ -51,11 +52,11 @@ public class Certificate {
         this.regenerate = regenerate;
     }
 
-    public Date getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
@@ -91,11 +92,11 @@ public class Certificate {
         this.download_url = download_url;
     }
 
-    public Date getModified() {
+    public String getModified() {
         return modified;
     }
 
-    public void setModified(Date modified) {
+    public void setModified(String modified) {
         this.modified = modified;
     }
 

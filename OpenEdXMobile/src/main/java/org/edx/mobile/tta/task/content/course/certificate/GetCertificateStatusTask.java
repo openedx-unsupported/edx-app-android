@@ -5,10 +5,10 @@ import android.content.Context;
 import com.google.inject.Inject;
 
 import org.edx.mobile.task.Task;
-import org.edx.mobile.tta.data.model.StatusResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
-public class GetCertificateStatusTask extends Task<StatusResponse> {
+public class GetCertificateStatusTask extends Task<CertificateStatusResponse> {
 
     private String courseId;
 
@@ -21,7 +21,7 @@ public class GetCertificateStatusTask extends Task<StatusResponse> {
     }
 
     @Override
-    public StatusResponse call() throws Exception {
+    public CertificateStatusResponse call() throws Exception {
         return taAPI.getCertificateStatus(courseId).execute().body();
     }
 }

@@ -14,6 +14,7 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
@@ -158,7 +159,7 @@ public class TaAPI {
         return taService.getMyCertificates();
     }
 
-    public Call<StatusResponse> getCertificateStatus(String courseId){
+    public Call<CertificateStatusResponse> getCertificateStatus(String courseId){
         return taService.getCertificateStatus(courseId);
     }
 
@@ -166,7 +167,7 @@ public class TaAPI {
         return taService.getCertificate(courseId);
     }
 
-    public Call<StatusResponse> generateCertificate(String courseId){
+    public Call<CertificateStatusResponse> generateCertificate(String courseId){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_COURSE_ID,courseId);
         return taService.generateCertificate(parameters);
