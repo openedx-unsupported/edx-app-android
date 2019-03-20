@@ -40,6 +40,8 @@ public class Content implements Parcelable {
 
     private List<Long> lists;
 
+    private String detail;
+
     public Content() {
     }
 
@@ -169,6 +171,14 @@ public class Content implements Parcelable {
     public void setLists (List<Long> lists)
     {
         this.lists = lists;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     @Override

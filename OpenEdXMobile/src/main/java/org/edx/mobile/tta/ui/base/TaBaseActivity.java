@@ -104,6 +104,12 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
     }
 
+    public void showIndefiniteSnack(String msg){
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", null)
+                .show();
+    }
+
     public void showShortToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }

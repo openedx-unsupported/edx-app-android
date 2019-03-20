@@ -52,6 +52,7 @@ import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
@@ -72,6 +73,7 @@ import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
+import org.edx.mobile.tta.task.content.GetContentTask;
 import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
 import org.edx.mobile.tta.task.content.IsLikeTask;
 import org.edx.mobile.tta.task.content.SetBookmarkTask;
@@ -84,6 +86,8 @@ import org.edx.mobile.tta.task.content.course.certificate.GenerateCertificateTas
 import org.edx.mobile.tta.task.content.course.certificate.GetCertificateStatusTask;
 import org.edx.mobile.tta.task.content.course.certificate.GetCertificateTask;
 import org.edx.mobile.tta.task.content.course.certificate.GetMyCertificatesTask;
+import org.edx.mobile.tta.task.feed.FollowUserTask;
+import org.edx.mobile.tta.task.feed.GetSuggestedUsersTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
@@ -1843,6 +1847,8 @@ public class DataManager extends BaseRoboInjector {
                     profileModel.pmis_code=updateMyProfileResponse.getPMIS_code();
                     profileModel.diet_code=updateMyProfileResponse.getDIETCode();
                     profileModel.setTagLabel(updateMyProfileResponse.getTagLabel());
+                    profileModel.setFollowers(updateMyProfileResponse.getFollowers());
+                    profileModel.setFollowing(updateMyProfileResponse.getFollowing());
 
                     loginPrefs.setCurrentUserProfileInCache(profileModel);
                     loginPrefs.removeMxProfilePageCache();
@@ -2092,6 +2098,128 @@ public class DataManager extends BaseRoboInjector {
                         callback.onSuccess(certificateStatusResponse);
                     } else {
                         callback.onFailure(new TaException("Certificate could not be generated"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getContent(long contentId, OnResponseCallback<Content> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetContentTask(context, contentId){
+                @Override
+                protected void onSuccess(Content content) throws Exception {
+                    super.onSuccess(content);
+                    if (content != null && content.getDetail() == null){
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertContent(content);
+                            }
+                        }.start();
+
+                        callback.onSuccess(content);
+                    } else {
+                        getContentFromLocal(contentId, callback, new TaException("Content not found"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getContentFromLocal(contentId, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getContentFromLocal(contentId, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getContentFromLocal(long contentId, OnResponseCallback<Content> callback, Exception e){
+
+        new AsyncTask<Void, Void, Content>() {
+            @Override
+            protected Content doInBackground(Void... voids) {
+                return mLocalDataSource.getContentById(contentId);
+            }
+
+            @Override
+            protected void onPostExecute(Content content) {
+                super.onPostExecute(content);
+                if (content != null){
+                    callback.onSuccess(content);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getSuggestedUsers(int take, int skip, OnResponseCallback<List<SuggestedUser>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetSuggestedUsersTask(context, take, skip){
+                @Override
+                protected void onSuccess(List<SuggestedUser> suggestedUsers) throws Exception {
+                    super.onSuccess(suggestedUsers);
+                    if (suggestedUsers == null || suggestedUsers.isEmpty()){
+                        callback.onFailure(new TaException("No suggested users"));
+                    } else {
+                        List<SuggestedUser> emptyUsers = new ArrayList<>();
+                        for (SuggestedUser user: suggestedUsers){
+                            if (user.getUsername() == null){
+                                emptyUsers.add(user);
+                            }
+                        }
+                        for (SuggestedUser user: emptyUsers){
+                            suggestedUsers.remove(user);
+                        }
+                        if (!suggestedUsers.isEmpty()) {
+                            callback.onSuccess(suggestedUsers);
+                        } else {
+                            callback.onFailure(new TaException("No suggested users"));
+                        }
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void followUnfollowUser(String username, OnResponseCallback<StatusResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new FollowUserTask(context, username){
+                @Override
+                protected void onSuccess(StatusResponse statusResponse) throws Exception {
+                    super.onSuccess(statusResponse);
+                    if (statusResponse == null){
+                        callback.onFailure(new TaException("Error occured while following"));
+                    } else {
+                        callback.onSuccess(statusResponse);
                     }
                 }
 

@@ -27,10 +27,13 @@ import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.PDFBlockModel;
@@ -83,7 +86,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     public ObservableInt footerDownloadIcon = new ObservableInt(R.drawable.t_icon_download);
     public ObservableBoolean footerDownloadIconVisible = new ObservableBoolean(false);
     public ObservableBoolean footerDownloadProgressVisible = new ObservableBoolean(false);
-    public ObservableField<String> footerBtnText = new ObservableField<>();
+    public ObservableField<String> footerBtnText = new ObservableField<>("");
 
     private int numberOfDownloadingVideos;
     private int numberOfDownloadedVideos;
@@ -259,7 +262,19 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     private void enableFooter(){
 
-        footerImageUrl.set("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+        mDataManager.getCertificateStatus(course.getCourse().getId(), new OnResponseCallback<CertificateStatusResponse>() {
+            @Override
+            public void onSuccess(CertificateStatusResponse data) {
+                setButtonText(data);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                footerBtnText.set(mActivity.getString(R.string.assessment));
+            }
+        });
+
+        footerImageUrl.set(content.getIcon());
         footerTitleVisible.set(true);
         footerTitle.set(assessmentComponent.getDisplayName());
         footerDownloadIcon.set(R.drawable.t_icon_download);
@@ -290,26 +305,51 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     }
                     break;
                 case R.id.item_btn:
-                    if (assessmentComponent.isContainer()){
-                        CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
-                            ScormBlockModel scorm = (ScormBlockModel) component;
-                            switch (mDataManager.getScormStatus(scorm)){
-                                case not_downloaded:
-                                    downloadSingle(scorm);
-                                    break;
-                                case downloaded:
-                                case watching:
-                                case watched:
-                                    showScorm(scorm);
-                                    break;
-                                case downloading:
-                                    //Do nothing
-                                    break;
+                    if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.generate_certificate))){
+                        mActivity.showLoading();
+
+                        mDataManager.generateCertificate(course.getCourse().getId(), new OnResponseCallback<CertificateStatusResponse>() {
+                            @Override
+                            public void onSuccess(CertificateStatusResponse data) {
+                                mActivity.hideLoading();
+                                setButtonText(data);
                             }
-                        }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+
+                        break;
+                    } else if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.certificate))){
+                        mActivity.showIndefiniteSnack(
+                                "आपके सर्टिफिकेट की मांग दर्ज हो गयी है| " +
+                                        "सर्टिफिकेट तैयार होने पर हम आपको ऐप्प द्वारा सूचित करेंगे|"
+                        );
+                        break;
+                    } else if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.view_certificate))){
+                        mActivity.showLoading();
+
+                        mDataManager.getCertificate(course.getCourse().getId(), new OnResponseCallback<Certificate>() {
+                            @Override
+                            public void onSuccess(Certificate data) {
+                                mActivity.hideLoading();
+                                mDataManager.getEdxEnvironment().getRouter().showAuthenticatedWebviewActivity(
+                                        mActivity, data.getDownload_url(), data.getCourse_name()
+                                );
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+
+                        break;
                     }
-                    break;
                 default:
                     if (assessmentComponent.isContainer()){
                         CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
@@ -334,6 +374,26 @@ public class CourseMaterialViewModel extends BaseViewModel {
             }
         });
 
+    }
+
+    private void setButtonText(CertificateStatusResponse data) {
+        switch (CertificateStatus.getEnumFromString(data.getStatus())){
+            case FAIL:
+            case NONE:
+                footerBtnText.set(mActivity.getString(R.string.assessment));
+                break;
+
+            case APPLICABLE:
+                footerBtnText.set(mActivity.getString(R.string.generate_certificate));
+                break;
+
+            case PROGRESS:
+                footerBtnText.set(mActivity.getString(R.string.certificate));
+                break;
+
+            case GENERATED:
+                footerBtnText.set(mActivity.getString(R.string.view_certificate));
+        }
     }
 
     private void bookmark() {

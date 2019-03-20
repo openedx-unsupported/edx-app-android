@@ -17,6 +17,7 @@ import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
@@ -171,5 +172,19 @@ public class TaAPI {
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_COURSE_ID,courseId);
         return taService.generateCertificate(parameters);
+    }
+
+    public Call<Content> getContent(long contentId){
+        return taService.getContent(contentId);
+    }
+
+    public Call<List<SuggestedUser>> getSuggestedUsers(int take, int skip){
+        return taService.getSuggestedUsers(take, skip);
+    }
+
+    public Call<StatusResponse> followUser(String username){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_FOLLOW_USERNAME,username);
+        return taService.followUser(parameters);
     }
 }

@@ -48,7 +48,9 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<MxView
             }
         } else if (!isFooterEnabled()){
             if (isHeaderEnabled()) {
-                item = items.get(position-1);
+                if (position > 0) {
+                    item = items.get(position-1);
+                }
             } else {
                 item = items.get(position);
             }

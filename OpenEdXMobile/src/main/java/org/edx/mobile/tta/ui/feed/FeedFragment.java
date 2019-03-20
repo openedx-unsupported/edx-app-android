@@ -12,6 +12,7 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.feed.view_model.FeedViewModel;
 
 public class FeedFragment extends TaBaseFragment {
+    public static final String TAG = FeedFragment.class.getCanonicalName();
 
     private FeedViewModel viewModel;
 

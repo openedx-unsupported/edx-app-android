@@ -12,6 +12,8 @@ import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.profile.MyCertificatesFragment;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.ProfileImage;
 
@@ -36,8 +38,8 @@ public class ProfileViewModel extends BaseViewModel {
     public ObservableInt userImagePlaceholder = new ObservableInt(R.drawable.profile_photo_placeholder);
     public ObservableField<String> classes = new ObservableField<>();
     public ObservableField<String> skills = new ObservableField<>();
-    public ObservableField<String> following = new ObservableField<>("99");
-    public ObservableField<String> followers = new ObservableField<>("130");
+    public ObservableField<String> following = new ObservableField<>();
+    public ObservableField<String> followers = new ObservableField<>();
     public ObservableField<String> userImageUrl = new ObservableField<>();
     public ObservableField<String> nCertificates = new ObservableField<String>("0");
 
@@ -61,6 +63,8 @@ public class ProfileViewModel extends BaseViewModel {
         profileImage = loginPrefs.getProfileImage();
         if (profileModel != null) {
             tagLabel = profileModel.getTagLabel();
+            followers.set(String.valueOf(profileModel.getFollowers()));
+            following.set(String.valueOf(profileModel.getFollowing()));
         }
         if (profileImage != null){
             userImageUrl.set(profileImage.getImageUrlLarge());
@@ -140,7 +144,12 @@ public class ProfileViewModel extends BaseViewModel {
     }
 
     public void showCertificates(){
-        mActivity.showShortSnack("Show certificates");
+        ActivityUtil.replaceFragmentInActivity(mActivity.getSupportFragmentManager(),
+                new MyCertificatesFragment(),
+                R.id.dashboard_fragment,
+                MyCertificatesFragment.TAG,
+                true,
+                null);
     }
 
     private void setDetails() {

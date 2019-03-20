@@ -104,8 +104,8 @@ public class ChangePasswordViewModel extends BaseViewModel {
             public void onFailure(Exception e) {
                 mActivity.hideLoading();
                 if (e instanceof AuthException){
-                    mActivity.showLongToast(e.getLocalizedMessage());
-                    mDataManager.logout();
+                    mActivity.showLongSnack(e.getLocalizedMessage());
+//                    mDataManager.logout();
                 } else {
                     mActivity.showLongSnack(e.getLocalizedMessage());
                 }

@@ -21,12 +21,14 @@
             <ImageView
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                android:id="@+id/user_image"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/user_name"
                 android:textSize="12sp"
                 android:textColor="@color/gray_5"
                 android:layout_marginTop="15dp"
@@ -38,6 +40,7 @@
             <Button
                 android:layout_width="100dp"
                 android:layout_height="25dp"
+                android:id="@+id/follow_btn"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginTop="15dp"

@@ -6,6 +6,16 @@ public enum CertificateStatus {
     PROGRESS,
     GENERATED,
     NONE,
-    FAIL
+    FAIL;
+
+    public static CertificateStatus getEnumFromString(String s){
+        switch (s.toLowerCase()){
+            case "applicable": return APPLICABLE;
+            case "progress": return PROGRESS;
+            case "generated": return GENERATED;
+            case "none": return NONE;
+            default: return FAIL;
+        }
+    }
 
 }

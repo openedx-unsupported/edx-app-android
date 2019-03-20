@@ -116,12 +116,15 @@
                             android:visibility="@{viewModel.footerDownloadIconVisible ? View.VISIBLE : View.GONE}" />
 
                         <Button
-                            android:layout_width="100dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="25dp"
+                            android:minWidth="100dp"
                             android:id="@+id/item_btn"
                             android:background="@drawable/btn_selector_hollow"
                             android:gravity="center"
                             android:layout_marginStart="@dimen/_40px"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
                             android:text="@{viewModel.footerBtnText}"
                             android:textSize="12sp"
                             android:textColor="@color/primary_cyan"

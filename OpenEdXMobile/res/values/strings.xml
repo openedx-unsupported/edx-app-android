@@ -754,6 +754,9 @@
     <string name="write_name">Write Name</string>
     <string name="my_certificates">My Certificates</string>
     <string name="all_certificates">All Certificates</string>
+    <string name="generate_certificate">Generate Certificate</string>
+    <string name="certificate">Certificate</string>
+    <string name="unfollow">Unfollow</string>
 
     <string name="sign_out_message">Are you sure you want to Sign Out?</string>
 

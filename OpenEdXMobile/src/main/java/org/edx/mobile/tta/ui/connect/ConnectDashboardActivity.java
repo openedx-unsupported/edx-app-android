@@ -48,6 +48,8 @@ import org.edx.mobile.tta.ui.connect.view_model.ConnectDashboardViewModel;
 import org.edx.mobile.tta.ui.custom.OnSwipeListener;
 import org.edx.mobile.tta.ui.custom.VideoEnabledWebChromeClient;
 import org.edx.mobile.tta.ui.custom.VideoEnabledWebView;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.AppUtil;
 import org.edx.mobile.tta.wordpress_client.model.Post;
 import org.edx.mobile.util.NetworkUtil;
@@ -84,6 +86,7 @@ public class ConnectDashboardActivity extends BaseVMActivity {
     private final static int FILECHOOSER_RESULTCODE = 1;
     private Post currentPost;
     private int scrollPosition = SCROLL_POSITION_MID;
+    private boolean isPush = false;
 
     private OnSwipeListener onSwipeListener = new OnSwipeListener() {
 
@@ -128,6 +131,10 @@ public class ConnectDashboardActivity extends BaseVMActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle parameters = getIntent().getExtras();
+        if (parameters.containsKey(Constants.KEY_IS_PUSH)){
+            isPush = parameters.getBoolean(Constants.KEY_IS_PUSH);
+        }
         viewModel = new ConnectDashboardViewModel(this, getIntent().getExtras().getParcelable(Constants.KEY_CONTENT));
         binding(R.layout.t_activity_connect_dashboard, viewModel);
 
@@ -406,8 +413,11 @@ public class ConnectDashboardActivity extends BaseVMActivity {
         if (!webChromeClient.onBackPressed()) {
             if (webView.canGoBack()) {
                 webView.goBack();
-            } else {
+            } else if (!isPush){
                 super.onBackPressed();
+            } else {
+                ActivityUtil.gotoPage(this, LandingActivity.class);
+                finish();
             }
         }
     }

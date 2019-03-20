@@ -21,9 +21,11 @@ public class ProfileModel implements Serializable {
     public String block;
     public String pmis_code;
 
-    //TTA Chirag: Tags associated with user
+    //TTA Chirag
     @SerializedName("tag_label")
     private String tagLabel;
+    private long following;
+    private long followers;
 
     public String getState()
     {
@@ -40,5 +42,21 @@ public class ProfileModel implements Serializable {
 
     public void setTagLabel(String tagLabel) {
         this.tagLabel = tagLabel;
+    }
+
+    public long getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(long following) {
+        this.following = following;
+    }
+
+    public long getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(long followers) {
+        this.followers = followers;
     }
 }

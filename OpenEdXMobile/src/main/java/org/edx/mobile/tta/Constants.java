@@ -40,6 +40,10 @@ public class Constants {
     public static final String KEY_FEEDBACK = "feedback";
     public static final String KEY_DEVICE_INFO = "device_info";
     public static final String KEY_TAG_LABEL = "tag_label";
+    public static final String KEY_TYPE = "type";
+    public static final String KEY_PATH = "path";
+    public static final String KEY_IS_PUSH = "is_push";
+    public static final String KEY_FOLLOW_USERNAME = "follow_username";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

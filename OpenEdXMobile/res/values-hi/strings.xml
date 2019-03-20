@@ -54,7 +54,6 @@
     <string name="reply">जवाब दें</string>
     <string name="all_list">सभी</string>
     <string name="recently_added_list">अभी शामिल</string>
-    <string name="no_connection_exception">सबसे ज़रूरी</string>
     <string name="Connect_video_pre_download_msg">ऑफ़लाइन देखने के लिए कृपया यहां क्लिक करें</string>
     <string name="connect_video_post_download_msg">ऑफ़लाइन देखने के लिए कृपया प्ले बटन पर क्लिक करें</string>
     <string name="connect_video_post_downloading_msg">वीडियो डाउनलोड हो रहा है। प्रतीक्षा करें।</string>
@@ -76,4 +75,7 @@
     <string name="write_name">नाम लिखें</string>
     <string name="my_certificates">मेरे सर्टिफ़िकेट</string>
     <string name="all_certificates">सभी सर्टिफ़िकेट</string>
+    <string name="generate_certificate">सर्टिफिकेट उत्पन्न करें</string>
+    <string name="certificate">सर्टिफिकेट</string>
+    <string name="unfollow">अनफॉलो करें</string>
 </resources>

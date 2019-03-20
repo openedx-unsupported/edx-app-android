@@ -22,6 +22,8 @@ public class UpdateMyProfileResponse {
     //TTA Chirag: Tags associated with user
     @SerializedName("tag_label")
     private String tagLabel;
+    private long following;
+    private long followers;
 
     public boolean getSuccess() {
         return success;
@@ -62,5 +64,11 @@ public class UpdateMyProfileResponse {
 
     public String getTagLabel() {
         return tagLabel;
+    }
+    public long getFollowing() {
+        return following;
+    }
+    public long getFollowers() {
+        return followers;
     }
 }
