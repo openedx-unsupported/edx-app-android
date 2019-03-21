@@ -336,8 +336,9 @@ public class CourseMaterialViewModel extends BaseViewModel {
                             @Override
                             public void onSuccess(Certificate data) {
                                 mActivity.hideLoading();
+                                String url = mDataManager.getConfig().getApiHostURL() + data.getDownload_url();
                                 mDataManager.getEdxEnvironment().getRouter().showAuthenticatedWebviewActivity(
-                                        mActivity, data.getDownload_url(), data.getCourse_name()
+                                        mActivity, url, data.getCourse_name()
                                 );
                             }
 

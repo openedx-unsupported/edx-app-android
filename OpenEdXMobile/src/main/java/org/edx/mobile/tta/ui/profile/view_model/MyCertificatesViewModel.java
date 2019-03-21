@@ -34,8 +34,9 @@ public class MyCertificatesViewModel extends BaseViewModel {
         layoutManager = new GridLayoutManager(mActivity, 2);
 
         adapter.setItemClickListener((view, item) -> {
+            String url = mDataManager.getConfig().getApiHostURL() + item.getDownload_url();
             mDataManager.getEdxEnvironment().getRouter().showAuthenticatedWebviewActivity(
-                    mActivity, item.getDownload_url(), item.getCourse_name()
+                    mActivity, url, item.getCourse_name()
             );
         });
 

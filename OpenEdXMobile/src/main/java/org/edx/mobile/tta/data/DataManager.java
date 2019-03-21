@@ -1992,7 +1992,11 @@ public class DataManager extends BaseRoboInjector {
                         new Thread(){
                             @Override
                             public void run() {
-                                mLocalDataSource.insertCertificate(myCertificatesResponse.getCertificates().get(0));
+                                Certificate certificate = myCertificatesResponse.getCertificates().get(0);
+                                if (certificate.getUsername() == null){
+                                    certificate.setUsername(loginPrefs.getUsername());
+                                }
+                                mLocalDataSource.insertCertificate(certificate);
                             }
                         }.start();
 
@@ -2046,7 +2050,13 @@ public class DataManager extends BaseRoboInjector {
                         new Thread(){
                             @Override
                             public void run() {
-                                mLocalDataSource.insertCertificates(myCertificatesResponse.getCertificates());
+                                List<Certificate> certificates = myCertificatesResponse.getCertificates();
+                                for (Certificate certificate: certificates){
+                                    if (certificate.getUsername() == null){
+                                        certificate.setUsername(loginPrefs.getUsername());
+                                    }
+                                }
+                                mLocalDataSource.insertCertificates(certificates);
                             }
                         }.start();
 
