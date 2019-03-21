@@ -1,7 +1,10 @@
 language: android
 jdk: oraclejdk8
 sudo: required
-dist: precise # For 7.5GB of memory since the emulator requires a big chunk.
+# Use trusty distribution to resolve the adb(requires at least GLIBC_2.16 version) execution failure
+# Reference: https://github.com/atom/atom/issues/14440#issuecomment-302158430
+# Reference: https://docs.travis-ci.com/user/reference/trusty/
+dist: trusty # For 7.5GB of memory since the emulator requires a big chunk.
 env:
   matrix:
     - ANDROID_TARGET=android-27
@@ -15,6 +18,12 @@ android:
     - build-tools-27.0.3
     # The SDK version used to compile the project
     - android-27
+    # Required to define the system image for an Android-21 emulator to use
+    # Reference: https://github.com/travis-ci/travis-ci/issues/6606#issuecomment-257090318
+    - android-21
+    # Defined for adding emulator system image type and android version
+    # (required by trusty distribution) before creating an emulator.
+    - sys-img-armeabi-v7a-android-21
     # Additional components
     - extra-google-m2repository
     - extra-android-m2repository
