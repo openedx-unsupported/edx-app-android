@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -24,10 +23,13 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentTabsBaseBinding;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
+import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public abstract class TabsBaseFragment extends BaseFragment {
     @Inject
@@ -57,6 +59,10 @@ public abstract class TabsBaseFragment extends BaseFragment {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleTabSelection(intent.getExtras());
+        if (intent.getExtras() == null) {
+            return;
+        }
+        EventBus.getDefault().post(new ScreenArgumentsEvent(intent.getExtras()));
     }
 
     /**
@@ -72,10 +78,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 final List<FragmentItemModel> fragmentItems = getFragmentItems();
                 for (int i = 0; i < fragmentItems.size(); i++) {
                     final FragmentItemModel item = fragmentItems.get(i);
-                    if (screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) {
-                        binding.viewPager.setCurrentItem(i);
-                        break;
-                    } else if (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) {
+                    if ((screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) ||
+                            (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) ||
+                            (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search)) {
                         binding.viewPager.setCurrentItem(i);
                         break;
                     }

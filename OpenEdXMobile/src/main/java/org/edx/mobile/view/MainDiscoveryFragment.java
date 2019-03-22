@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,17 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMainDiscoveryBinding;
+import org.edx.mobile.deeplink.Screen;
+import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.DiscoveryTabSelectedEvent;
+import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
 import de.greenrobot.event.EventBus;
+
+import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
+import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
 public class MainDiscoveryFragment extends BaseFragment {
     @Inject
@@ -58,6 +65,9 @@ public class MainDiscoveryFragment extends BaseFragment {
             }
         });
         EventBus.getDefault().register(this);
+        if (getArguments() != null) {
+            handleTabSelection(getArguments());
+        }
     }
 
     @Override
@@ -77,7 +87,6 @@ public class MainDiscoveryFragment extends BaseFragment {
                 courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_webview");
                 if (courseDiscoveryFragment == null) {
                     courseDiscoveryFragment = new WebViewDiscoverCoursesFragment();
-                    courseDiscoveryFragment.setArguments(getArguments());
                     commitFragmentTransaction(courseDiscoveryFragment, "fragment_courses_webview");
                 }
             } else {
@@ -87,7 +96,7 @@ public class MainDiscoveryFragment extends BaseFragment {
                     commitFragmentTransaction(courseDiscoveryFragment, "fragment_courses_native");
                 }
             }
-
+            courseDiscoveryFragment.setArguments(getArguments());
             fragmentsArray.put(R.id.option_courses, courseDiscoveryFragment);
             addTabItem(R.id.option_courses, R.string.label_my_courses);
         }
@@ -211,6 +220,37 @@ public class MainDiscoveryFragment extends BaseFragment {
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull DiscoveryTabSelectedEvent event) {
         onFragmentSelected(binding.options.getCheckedRadioButtonId(), true);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull ScreenArgumentsEvent event) {
+        handleTabSelection(event.getBundle());
+    }
+
+    private void handleTabSelection(@NonNull Bundle bundle) {
+        @ScreenDef final String screenName = bundle.getString(EXTRA_SCREEN_NAME);
+        if (screenName == null) {
+            return;
+        }
+        final int btnId = getBtnIdAgainstScreeName(screenName);
+        if (btnId != -1) {
+            onFragmentSelected(btnId, true);
+            binding.options.check(btnId);
+        }
+
+        final String pathId = bundle.getString(EXTRA_PATH_ID);
+        if (!TextUtils.isEmpty(pathId)) {
+            environment.getRouter().showCourseInfo(getActivity(), pathId);
+        }
+    }
+
+    private int getBtnIdAgainstScreeName(@NonNull @ScreenDef String screeName) {
+        switch (screeName) {
+            case Screen.COURSE_DISCOVERY:
+                return R.id.option_courses;
+            default:
+                return -1;
+        }
     }
 
     @Override

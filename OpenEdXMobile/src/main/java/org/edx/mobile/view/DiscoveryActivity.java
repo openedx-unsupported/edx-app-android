@@ -15,9 +15,20 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.module.analytics.Analytics;
 
+import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
+import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
+
 public class DiscoveryActivity extends BaseSingleFragmentActivity implements ToolbarCallbacks {
     public static Intent newIntent(@NonNull Context context) {
         return new Intent(context, DiscoveryActivity.class);
+    }
+
+    public static Intent newIntent(@NonNull Context context, @Nullable String screenName,
+                                   @Nullable String pathId) {
+        final Intent intent = new Intent(context, DiscoveryActivity.class);
+        intent.putExtra(EXTRA_SCREEN_NAME, screenName);
+        intent.putExtra(EXTRA_PATH_ID, pathId);
+        return intent;
     }
 
     @Override
