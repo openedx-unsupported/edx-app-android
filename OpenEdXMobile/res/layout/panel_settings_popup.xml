@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/setting_popup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,11 +10,25 @@
         android:id="@+id/tv_closedcaption"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="left|start|center_vertical"
-        android:padding="10dp"
-        android:text="@string/lbl_closed_caption"
+        android:layout_height="@dimen/row_height_cc_option"
         android:background="@drawable/white_rounded_selector"
-        tools:targetApi="17" />
+        android:gravity="start|center_vertical"
+        android:padding="@dimen/widget_margin"
+        android:text="@string/lbl_closed_caption" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/video_player_settings_divider_width"
+        android:background="@color/grey_act_background" />
+
+    <TextView
+        android:id="@+id/tv_video_speed"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_cc_option"
+        android:background="@drawable/white_rounded_selector"
+        android:gravity="start|center_vertical"
+        android:padding="@dimen/widget_margin"
+        android:text="@string/lbl_video_speed" />
 
 </LinearLayout>

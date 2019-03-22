@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
@@ -181,9 +182,6 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
 
                 if (playWhenReady) {
                     state = PlayerState.PLAYING;
-                    if (seekToWhenPrepared > 0) {
-                        seekTo(seekToWhenPrepared);
-                    }
                 }
                 break;
             case Player.STATE_ENDED:
@@ -542,6 +540,9 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
                 || state == PlayerState.STOPPED
                 || state == PlayerState.LAGGING
                 || state == PlayerState.PLAYBACK_COMPLETE) {
+            if (seekToWhenPrepared > 0) {
+                seekTo(seekToWhenPrepared);
+            }
             exoPlayer.setPlayWhenReady(true);
             if (callback != null) {
                 // mark playing
@@ -717,6 +718,13 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
     public void callPlayerSeeked(long previousPos, long nextPos, boolean isRewindClicked) {
         if (callback != null) {
             callback.callPlayerSeeked(previousPos, nextPos, isRewindClicked);
+        }
+    }
+
+    @Override
+    public void setPlaybackSpeed(float speed) {
+        if (exoPlayer != null) {
+            exoPlayer.setPlaybackParameters(new PlaybackParameters(speed));
         }
     }
 }

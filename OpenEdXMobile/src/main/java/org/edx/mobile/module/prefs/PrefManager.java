@@ -282,6 +282,7 @@ public class PrefManager {
         public static final String DOWNLOAD_ONLY_ON_WIFI = "download_only_on_wifi";
         public static final String DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG = "download_off_wifi_dialog_flag";
         public static final String TRANSCRIPT_LANGUAGE = "transcript_language";
+        public static final String PLAYBACK_SPEED = "playback_speed";
         public static final String ANALYTICS_KEY_BACKEND = "segment_backend";
         public static final String SPEED_TEST_KBPS = "speed_test_kbps";
         public static final String APP_VERSION_NAME = "app_version_name";

@@ -1,7 +1,6 @@
 package org.edx.mobile.player;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -9,10 +8,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -61,6 +58,7 @@ import org.edx.mobile.util.Version;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.RatingDialogFragment;
+import org.edx.mobile.view.dialog.SpeedDialogFragment;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -115,8 +113,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private Handler subtitleDisplayHandler = new Handler();
     private Handler subtitleFetchHandler = new Handler();
     private CCLanguageDialogFragment ccFragment;
+    private SpeedDialogFragment speedDialogFragment;
     private PopupWindow settingPopup;
-    private PopupWindow cc_popup;
     private LinkedHashMap<String, TimedTextObject> srtList;
     private LinkedHashMap<String, String> langList;
     private TimedTextObject subtitlesObj;
@@ -395,7 +393,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (player!=null) {
+        if (player != null) {
             // reset player when user goes back, and there is no state saving happened
             player.reset();
 
@@ -607,7 +605,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }catch(Exception e){
             logger.error(e);
         }
-
+        hideVideoSpeedPopup();
         hideCCPopUp();
         hideSettingsPopUp();
     }
@@ -635,6 +633,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         //This has been commented after Lou's suggestion
                         unlockOrientation();
                         //lockOrientation();
+                        hideVideoSpeedPopup();
                         hideCCPopUp();
                         hideSettingsPopUp();
                         player.hideController();
@@ -670,6 +669,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private void showVideoNotAvailable( VideoNotPlayMessageType reason ){
         try {
             if(player!=null){
+                hideVideoSpeedPopup();
                 hideCCPopUp();
                 hideSettingsPopUp();
                 player.hideController();
@@ -761,6 +761,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
 
         clearAllErrors();
+        player.setPlaybackSpeed(loginPrefs.getDefaultPlaybackSpeed());
         if(langList!=null){
             displaySrtData();
         }else{
@@ -810,6 +811,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             callback.saveCurrentPlaybackPosition(0);
             callback.onPlaybackComplete();
         }
+        hideVideoSpeedPopup();
         hideCCPopUp();
         hideSettingsPopUp();
         try{
@@ -1388,12 +1390,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if(player!=null){
                 player.getController().setAutoHide(!getTouchExploreEnabled());
                 Activity context = getActivity();
-                Resources r = getResources();
-                float popupHeight = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 40 , r.getDisplayMetrics());
 
-                float popupWidth = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 150 , r.getDisplayMetrics());
+                float popupHeight =  getResources().getDimension(R.dimen.settings_popup_height);
+                float popupWidth =  getResources().getDimension(R.dimen.settings_popup_width);
 
                 // Inflate the popup_layout.xml
                 LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.setting_popup);
@@ -1437,10 +1436,36 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     tv_closedCaption.setBackgroundResource(R.drawable.grey_roundedbg);
                     tv_closedCaption.setOnClickListener(null);
                 }
+
+                layout.findViewById(R.id.tv_video_speed).setOnClickListener(v -> showVideoSpeedFragmentPopup());
             }
         }catch(Exception e){
             logger.error(e);
         }
+    }
+
+    /**
+     * This function is used to show Dialog fragment of
+     * Video playback speed list
+     */
+    private void showVideoSpeedFragmentPopup() {
+        hideSettingsPopUp();
+        speedDialogFragment = SpeedDialogFragment.getInstance(new SpeedDialogFragment.IListDialogCallback() {
+            @Override
+            public void onItemClicked(Float speed) {
+                loginPrefs.saveDefaultPlaybackSpeed(speed);
+                if (player != null) {
+                    player.setPlaybackSpeed(speed);
+                }
+            }
+
+            @Override
+            public void onCancelClicked() {
+                speedDialogFragment.dismiss();
+            }
+        }, loginPrefs.getDefaultPlaybackSpeed());
+        speedDialogFragment.show(getFragmentManager(), "video_speed_dialog");
+        speedDialogFragment.setCancelable(true);
     }
 
     //Default Language List
@@ -1487,7 +1512,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 public void onCancelClicked() {
                     closedCaptionsEnabled = false;
                     hideClosedCaptioning();
-                    setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
+                    setSubtitleLanguage(getString(R.string.lbl_cc_none));
                     if (player != null) {
                         environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.videoId,
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
@@ -1524,19 +1549,20 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     /**
+     * This function hides the Video Speed popup and overlay
+     */
+    private void hideVideoSpeedPopup() {
+        if (speedDialogFragment != null && speedDialogFragment.isVisible()) {
+            speedDialogFragment.dismiss();
+        }
+    }
+
+    /**
      * This function hides the CC popup and overlay
      */
-    private void hideCCPopUp(){
-        try{
-            if(cc_popup!=null){
-                cc_popup.dismiss();
-            }
-            if(ccFragment!=null && ccFragment.isVisible()){
-                ccFragment.dismiss();
-            }
-
-        }catch(Exception e){
-            logger.error(e);
+    private void hideCCPopUp() {
+        if (ccFragment != null && ccFragment.isVisible()) {
+            ccFragment.dismiss();
         }
     }
 
@@ -1701,6 +1727,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 } else {
                     if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED) && !player.isInError()){
                         unlockOrientation();
+                        hideVideoSpeedPopup();
                         hideCCPopUp();
                         hideSettingsPopUp();
                         if ( !player.isReset()) {
