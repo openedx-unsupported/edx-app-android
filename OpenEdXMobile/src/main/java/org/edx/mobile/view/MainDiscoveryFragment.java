@@ -240,7 +240,14 @@ public class MainDiscoveryFragment extends BaseFragment {
 
         final String pathId = bundle.getString(EXTRA_PATH_ID);
         if (!TextUtils.isEmpty(pathId)) {
-            environment.getRouter().showCourseInfo(getActivity(), pathId);
+            switch (screenName) {
+                case Screen.COURSE_DISCOVERY:
+                    environment.getRouter().showCourseInfo(getActivity(), pathId);
+                    break;
+                case Screen.PROGRAM_DISCOVERY:
+                    environment.getRouter().showProgramInfo(getActivity(), pathId);
+                    break;
+            }
         }
     }
 
@@ -248,6 +255,8 @@ public class MainDiscoveryFragment extends BaseFragment {
         switch (screeName) {
             case Screen.COURSE_DISCOVERY:
                 return R.id.option_courses;
+            case Screen.PROGRAM_DISCOVERY:
+                return R.id.option_programs;
             default:
                 return -1;
         }
