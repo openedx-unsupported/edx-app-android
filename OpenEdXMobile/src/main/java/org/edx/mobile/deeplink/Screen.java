@@ -7,9 +7,10 @@ package org.edx.mobile.deeplink;
 public class Screen {
     public static final String COURSE_DASHBOARD = "course_dashboard";
     public static final String COURSE_VIDEOS = "course_videos";
+    public static final String COURSE_DISCUSSION = "course_discussion";
     public static final String PROGRAM = "program";
     public static final String PROFILE = "profile";
-    public static final String COURSE_DISCOVERY = "course_discovery";
     public static final String ACCOUNT = "account";
+    public static final String COURSE_DISCOVERY = "course_discovery";
     public static final String PROGRAM_DISCOVERY = "program_discovery";
 }
