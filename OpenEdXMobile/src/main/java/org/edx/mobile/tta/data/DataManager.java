@@ -17,6 +17,12 @@ import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.discussion.CourseTopics;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.CourseComponent;
@@ -86,6 +92,10 @@ import org.edx.mobile.tta.task.content.course.certificate.GenerateCertificateTas
 import org.edx.mobile.tta.task.content.course.certificate.GetCertificateStatusTask;
 import org.edx.mobile.tta.task.content.course.certificate.GetCertificateTask;
 import org.edx.mobile.tta.task.content.course.certificate.GetMyCertificatesTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetCommentRepliesTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetDiscussionThreadsTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetDiscussionTopicsTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetThreadCommentsTask;
 import org.edx.mobile.tta.task.feed.FollowUserTask;
 import org.edx.mobile.tta.task.feed.GetSuggestedUsersTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
@@ -2230,6 +2240,132 @@ public class DataManager extends BaseRoboInjector {
                         callback.onFailure(new TaException("Error occured while following"));
                     } else {
                         callback.onSuccess(statusResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getDiscussionTopics(String courseId, OnResponseCallback<List<DiscussionTopicDepth>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetDiscussionTopicsTask(context, courseId){
+                @Override
+                protected void onSuccess(CourseTopics courseTopics) throws Exception {
+                    super.onSuccess(courseTopics);
+                    if (courseTopics == null ||
+                            (courseTopics.getCoursewareTopics() == null && courseTopics.getNonCoursewareTopics() == null)){
+                        callback.onFailure(new TaException("No discussion topics available"));
+                    } else {
+                        List<DiscussionTopic> allTopics = new ArrayList<>();
+                        if (courseTopics.getNonCoursewareTopics() != null) {
+                            allTopics.addAll(courseTopics.getNonCoursewareTopics());
+                        }
+                        if (courseTopics.getCoursewareTopics() != null) {
+                            allTopics.addAll(courseTopics.getCoursewareTopics());
+                        }
+                        if (!allTopics.isEmpty()) {
+                            List<DiscussionTopicDepth> allTopicsWithDepth =
+                                    DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
+                            callback.onSuccess(allTopicsWithDepth);
+                        } else {
+                            callback.onFailure(new TaException("No discussion topics available"));
+                        }
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getDiscussionThreads(String courseId, List<String> topicIds, String view,
+                                     String orderBy, int take, int page, List<String> requestedFields,
+                                     OnResponseCallback<List<DiscussionThread>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetDiscussionThreadsTask(context, courseId, topicIds, view, orderBy, take, page, requestedFields){
+                @Override
+                protected void onSuccess(Page<DiscussionThread> discussionThreadPage) throws Exception {
+                    super.onSuccess(discussionThreadPage);
+                    if (discussionThreadPage == null || discussionThreadPage.getResults().isEmpty()){
+                        callback.onFailure(new TaException("No discussion threads available"));
+                    } else {
+                        callback.onSuccess(discussionThreadPage.getResults());
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getThreadComments(String threadId, int take, int page, List<String> requestedFields,
+                                  OnResponseCallback<List<DiscussionComment>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetThreadCommentsTask(context, threadId, take, page, requestedFields){
+                @Override
+                protected void onSuccess(Page<DiscussionComment> discussionCommentPage) throws Exception {
+                    super.onSuccess(discussionCommentPage);
+                    if (discussionCommentPage == null || discussionCommentPage.getResults().isEmpty()){
+                        callback.onFailure(new TaException("No comments available"));
+                    } else {
+                        callback.onSuccess(discussionCommentPage.getResults());
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getCommentReplies(String commentId, int take, int page, List<String> requestedFields,
+                                  OnResponseCallback<List<DiscussionComment>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetCommentRepliesTask(context, commentId, take, page, requestedFields){
+                @Override
+                protected void onSuccess(Page<DiscussionComment> discussionCommentPage) throws Exception {
+                    super.onSuccess(discussionCommentPage);
+                    if (discussionCommentPage == null || discussionCommentPage.getResults().isEmpty()){
+                        callback.onFailure(new TaException("No replies available"));
+                    } else {
+                        callback.onSuccess(discussionCommentPage.getResults());
                     }
                 }
 

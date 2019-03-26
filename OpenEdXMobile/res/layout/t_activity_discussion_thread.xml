@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mx="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionThreadViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/app_background">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="top"
+            android:background="@color/white"
+            android:gravity="start|center_vertical"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/back"
+            app:title="@{viewModel.course.course.name}"
+            app:titleMarginStart="0dp"
+            app:titleTextAppearance="@style/ta_toolbar_title_style" />
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="0dp"
+                android:background="@color/app_background">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/_24px"
+                    android:background="@color/white"
+                    android:paddingStart="@dimen/_20px"
+                    android:paddingEnd="@dimen/_20px">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/thread_title"
+                        android:text="@{viewModel.thread.title}"
+                        android:textColor="@color/primary_navy"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/hind_medium"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/share_btn"
+                        android:layout_marginEnd="@dimen/_20px"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/share_btn"
+                        app:srcCompat="@drawable/t_icon_share"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="@dimen/_6px"
+                        android:onClick="@{()->viewModel.shareThread()}"/>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/user_image"
+                        app:cardElevation="0dp"
+                        app:cardCornerRadius="4dp"
+                        android:layout_marginTop="@dimen/_16px"
+                        app:layout_constraintTop_toBottomOf="@id/thread_title"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/rounded_user_image"
+                            android:scaleType="fitXY"/>
+
+                    </android.support.v7.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.thread.authorDisplayName}"
+                        android:layout_marginStart="@dimen/_8px"
+                        android:fontFamily="@font/hind_medium"
+                        android:textColor="@color/primary_cyan"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toEndOf="@id/user_image"
+                        app:layout_constraintTop_toTopOf="@id/user_image" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/date"
+                        android:text="@{viewModel.threadDate}"
+                        android:layout_marginStart="@dimen/_8px"
+                        android:layout_marginTop="@dimen/_6px"
+                        app:layout_constraintTop_toBottomOf="@id/user_name"
+                        app:layout_constraintBottom_toBottomOf="@id/user_image"
+                        app:layout_constraintStart_toEndOf="@id/user_image"
+                        android:textColor="@color/gray_4"
+                        android:textSize="8sp"
+                        android:fontFamily="@font/hind_regular"/>
+
+                </android.support.constraint.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/like_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="@{()->viewModel.likeThread()}"
+                                android:orientation="horizontal"
+                                android:padding="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:fontFamily="@font/hind_medium"
+                                    android:text="@{String.valueOf(viewModel.thread.voteCount)}"
+                                    android:textColor="@color/gray_3"
+                                    android:textSize="12sp" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="3dp"
+                                    android:contentDescription="@string/like"
+                                    android:paddingBottom="4dp"
+                                    android:src="@{viewModel.likeIcon}" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="2dp"
+                                    android:fontFamily="@font/hind_medium"
+                                    android:text="@string/like"
+                                    android:textColor="@color/gray_3"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="@{()->viewModel.addComment()}"
+                                android:orientation="horizontal"
+                                android:padding="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:fontFamily="@font/hind_medium"
+                                    android:text="@{String.valueOf(viewModel.thread.commentCount)}"
+                                    android:textColor="@color/gray_3"
+                                    android:textSize="12sp" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="3dp"
+                                    android:contentDescription="@string/add_to_my_agenda"
+                                    android:paddingBottom="4dp"
+                                    app:srcCompat="@drawable/t_icon_reply" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="2dp"
+                                    android:fontFamily="@font/hind_medium"
+                                    android:gravity="bottom"
+                                    android:text="@string/comment"
+                                    android:textColor="@color/gray_4"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tab_layout"
+                    style="@style/ta_tab_style"
+                    android:layout_marginTop="1dp"
+                    android:elevation="0dp"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/primary_cyan"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabSelectedTextColor="@color/gray_4"
+                    app:tabTextAppearance="@style/ta_tab_text_appearance"
+                    app:tabTextColor="@color/gray_5" />
+
+            </android.support.design.widget.AppBarLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                mx:pager_adapter="@{viewModel.adapter}" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+        <LinearLayout
+            android:id="@+id/enter_comment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:minHeight="50dp"
+            android:orientation="vertical"
+            android:padding="@dimen/_10px"
+            android:animateLayoutChanges="true">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:visibility="@{viewModel.replyingToVisible?View.VISIBLE:View.GONE}"
+                app:cardBackgroundColor="@color/primary_navy"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/hind_regular"
+                        android:text="@{viewModel.replyingToText}"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:onClick="@{()->viewModel.resetReplyToComment()}"
+                        android:paddingStart="8dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="6dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/t_icon_close" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    request_focus="@{viewModel.commentFocus}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_selector_hollow"
+                    android:fontFamily="@font/hind_light"
+                    android:hint="@string/add_a_comment"
+                    android:padding="@dimen/_10px"
+                    android:text="@={viewModel.comment}"
+                    android:textColor="@color/gray_4"
+                    android:textColorHint="@color/gray_4"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_8px"
+                    android:background="@drawable/btn_selector_hollow"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="center"
+                    android:minWidth="78dp"
+                    android:onClick="@{()->viewModel.addReplyToComment()}"
+                    android:padding="@dimen/_10px"
+                    android:text="@string/comment_en"
+                    android:textAllCaps="false"
+                    android:textColor="@color/secondary_grey_light"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

@@ -72,6 +72,17 @@ public interface DiscussionService {
                                                @Query("page") int page,
                                                @Query("requested_fields") List<String> requestedFields);
 
+    //TTA Chirag: Get threads on topic with custom take
+    @Headers("Cache-Control: no-cache")
+    @GET("/api/discussion/v1/threads")
+    Call<Page<DiscussionThread>> getThreadList(@Query("course_id") String courseId,
+                                               @Query("topic_id") List<String> topicIds,
+                                               @Query("view") String view,
+                                               @Query("order_by") String orderBy,
+                                               @Query("page_size") int take,
+                                               @Query("page") int page,
+                                               @Query("requested_fields") List<String> requestedFields);
+
     @Headers("Cache-Control: no-cache")
     @GET("/api/discussion/v1/threads?following=true&" + PARAM_PAGE_SIZE)
     Call<Page<DiscussionThread>> getFollowingThreadList(@Query("course_id") String courseId,
@@ -98,6 +109,14 @@ public interface DiscussionService {
                                                    @Query("page") int page,
                                                    @Query("requested_fields") List<String> requestedFields);
 
+    //TTA Chirag: Get comments on thread with custom take
+    @Headers("Cache-Control: no-cache")
+    @GET("/api/discussion/v1/comments")
+    Call<Page<DiscussionComment>> getResponsesList(@Query("thread_id") String threadId,
+                                                   @Query("page_size") int take,
+                                                   @Query("page") int page,
+                                                   @Query("requested_fields") List<String> requestedFields);
+
     @Headers("Cache-Control: no-cache")
     @GET("/api/discussion/v1/comments?" + PARAM_PAGE_SIZE)
     Call<Page<DiscussionComment>> getResponsesListForQuestion(@Query("thread_id") String threadId,
@@ -109,6 +128,14 @@ public interface DiscussionService {
     @Headers("Cache-Control: no-cache")
     @GET("/api/discussion/v1/comments/{comment_id}?" + PARAM_PAGE_SIZE)
     Call<Page<DiscussionComment>> getCommentsList(@Path("comment_id") String responseId,
+                                                  @Query("page") int page,
+                                                  @Query("requested_fields") List<String> requestedFields);
+
+    //TTA Chirag: Get replies on comment with custom take
+    @Headers("Cache-Control: no-cache")
+    @GET("/api/discussion/v1/comments/{comment_id}")
+    Call<Page<DiscussionComment>> getCommentsList(@Path("comment_id") String responseId,
+                                                  @Query("page_size") int take,
                                                   @Query("page") int page,
                                                   @Query("requested_fields") List<String> requestedFields);
 

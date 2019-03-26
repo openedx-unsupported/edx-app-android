@@ -78,4 +78,7 @@
     <string name="generate_certificate">सर्टिफिकेट उत्पन्न करें</string>
     <string name="certificate">सर्टिफिकेट</string>
     <string name="unfollow">अनफॉलो करें</string>
+    <string name="total">"कुल : "</string>
+    <string name="see_more">और देखें</string>
+    <string name="start_discussion">चर्चा शुरू करें</string>
 </resources>

@@ -831,7 +831,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
                 itemBinding.itemDuration.setText(mActivity.getString(R.string.estimated_duration) + " : " + (item.getDuration() == null ? "N/A" : item.getDuration()));
                 Glide.with(mActivity)
-                        .load("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png")
+                        .load(content.getIcon())
                         .placeholder(R.drawable.placeholder_course_card_image)
                         .into(itemBinding.itemImage);
                 itemBinding.itemTitle.setText(item.getDisplayName());

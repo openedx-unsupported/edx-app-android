@@ -81,20 +81,24 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
                 }
             });
         }else if (toolBarData.equalsIgnoreCase(mActivity.getString(R.string.state_wise_list))){
-            mDataManager.getStateAgendaContent(agendaItem.getSource_id(), agendaList.getList_id(), new OnResponseCallback<List<Content>>() {
-                @Override
-                public void onSuccess(List<Content>data) {
-                    mActivity.hideLoading();
-                    contents = data;
-                    adapter.setItems(contents);
-                }
+            if (agendaList != null) {
+                mDataManager.getStateAgendaContent(agendaItem.getSource_id(), agendaList.getList_id(), new OnResponseCallback<List<Content>>() {
+                    @Override
+                    public void onSuccess(List<Content>data) {
+                        mActivity.hideLoading();
+                        contents = data;
+                        adapter.setItems(contents);
+                    }
 
-                @Override
-                public void onFailure(Exception e) {
-                    mActivity.hideLoading();
-//                    mActivity.showLongSnack(e.getLocalizedMessage());
-                }
-            });
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+    //                    mActivity.showLongSnack(e.getLocalizedMessage());
+                    }
+                });
+            } else {
+                mActivity.hideLoading();
+            }
         } else {
             mDataManager.getDownloadedContent(agendaItem.getSource_name(), new OnResponseCallback<List<Content>>() {
                 @Override

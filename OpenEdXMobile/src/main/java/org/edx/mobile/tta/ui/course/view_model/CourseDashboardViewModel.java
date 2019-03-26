@@ -9,18 +9,14 @@ import android.support.v4.app.FragmentManager;
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.HtmlBlockModel;
-import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.course.CourseAboutTab;
-import org.edx.mobile.tta.ui.course.CourseDiscussionTab;
-import org.edx.mobile.tta.ui.course.CourseHandoutsTab;
 import org.edx.mobile.tta.ui.course.CourseMaterialTab;
+import org.edx.mobile.tta.ui.course.discussion.CourseDiscussionTab;
 import org.edx.mobile.view.AuthenticatedWebViewFragment;
 import org.edx.mobile.view.CourseDiscussionTopicsFragment;
 import org.edx.mobile.view.CourseHandoutFragment;
@@ -95,6 +91,7 @@ public class CourseDashboardViewModel extends BaseViewModel {
         }
         discussionFragment.setRetainInstance(true);
         fragments.add(discussionFragment);
+//        fragments.add(CourseDiscussionTab.newInstance(content, course));
         titles.add(mActivity.getString(R.string.discussion));
 
         CourseHandoutFragment handoutFragment = new CourseHandoutFragment();
