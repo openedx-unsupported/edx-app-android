@@ -35,6 +35,7 @@ import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.FilterTag;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.ui.assistant.AssistantFragment;
 import org.edx.mobile.tta.ui.base.BaseArrayAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -557,5 +558,15 @@ public class SearchViewModel extends BaseViewModel {
         public ContentListsAdapter(@androidx.annotation.NonNull Context context, int resource) {
             super(context, resource);
         }
+    }
+    public void openAssistant(){
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                new AssistantFragment(),
+                R.id.dashboard_fragment,
+                AssistantFragment.TAG,
+                true, null
+
+        );
     }
 }

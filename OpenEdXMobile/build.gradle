@@ -276,6 +276,12 @@ dependencies {
     androidTestImplementation ('org.mockito:mockito-core:1.10.19'){
         exclude group: 'org.hamcrest'
     }
+    //added for assistant integration vai dialogflow
+    implementation 'ai.api:sdk:2.0.7@aar'
+    annotationProcessor 'ai.api:libai:1.6.12'
+    implementation('ai.api:libai:1.6.12'){
+        exclude module: 'log4j-core'
+    }
 }
 
 configurations {

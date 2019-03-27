@@ -4,6 +4,7 @@ import android.os.Environment;
 
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.tta.data.remote.api.TaAPI;
 import org.edx.mobile.user.UserAPI;
 
 import javax.inject.Inject;
@@ -23,6 +24,8 @@ public class EdxDataManager  implements  IEdxDataManager {
     @Inject
     UserAPI userAPI;
 
+    @Inject
+    TaAPI taAPI;
     @Override
     public Environment getEnvironment() {
         return environment;
@@ -41,5 +44,10 @@ public class EdxDataManager  implements  IEdxDataManager {
     @Override
     public UserAPI getUserAPI() {
         return userAPI;
+    }
+
+    @Override
+    public TaAPI getTaAPI() {
+        return taAPI;
     }
 }

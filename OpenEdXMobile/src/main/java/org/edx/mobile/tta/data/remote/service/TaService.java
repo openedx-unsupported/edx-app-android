@@ -141,4 +141,6 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_FOLLOW_USER)
     Call<StatusResponse> followUser(@FieldMap Map<String, String> parameters);
 
+    @POST(ApiConstants.URL_MX_ASSISTANT_SEARCH)
+    Call<List<Content>> assistantSearch(@Body Map<String, Object> parameters);
 }

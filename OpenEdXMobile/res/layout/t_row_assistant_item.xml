@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+      android:layout_margin="@dimen/_10px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/responseText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="256dp"
+            android:background="@drawable/btn_selector_hollow"
+            android:elevation="2dp"
+            android:padding="@dimen/_8px"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Hello this is response!!"
+            android:textColor="#212121" />
+
+        <TextView
+            android:id="@+id/requestText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:maxWidth="256dp"
+            android:background="@drawable/btn_selector_filled"
+            android:elevation="2dp"
+            android:padding="@dimen/_8px"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Hi!! How are you!!"
+            android:textColor="#fff" />
+        <com.maurya.mx.mxlib.view.MxRecyclerView
+            android:id="@+id/contentCardList"
+            app:mx_itemLayout="@layout/t_row_content"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>
