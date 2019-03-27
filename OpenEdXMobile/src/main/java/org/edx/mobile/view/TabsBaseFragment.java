@@ -80,7 +80,8 @@ public abstract class TabsBaseFragment extends BaseFragment {
                     final FragmentItemModel item = fragmentItems.get(i);
                     if ((screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) ||
                             (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) ||
-                            (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search)) {
+                            ((screenName.equals(Screen.COURSE_DISCOVERY) || screenName.equals(Screen.PROGRAM_DISCOVERY))
+                                    && item.getIcon() == FontAwesomeIcons.fa_search)) {
                         binding.viewPager.setCurrentItem(i);
                         break;
                     }

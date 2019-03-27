@@ -178,18 +178,24 @@ public class MainDiscoveryFragment extends BaseFragment {
         if (fragment == null || !fragment.isHidden()) {
             return;
         }
+        // Use commitNow() method to perform the FragmentManager transaction synchronously
+        // instated of commit(), otherwise program discovery screen is not visible to the guest user
+        // in case of deep linking.
         getChildFragmentManager().beginTransaction()
                 .show(fragment)
-                .commit();
+                .commitNow();
     }
 
     private void hideFragment(@Nullable Fragment fragment) {
         if (fragment == null || fragment.isHidden()) {
             return;
         }
+        // Use commitNow() method to perform the FragmentManager transaction synchronously
+        // instated of commit(), otherwise program discovery screen is not visible to the guest user
+        // in case of deep linking.
         getChildFragmentManager().beginTransaction()
                 .hide(fragment)
-                .commit();
+                .commitNow();
     }
 
     private void addTabItem(@IdRes int id, @StringRes int label) {
@@ -240,7 +246,14 @@ public class MainDiscoveryFragment extends BaseFragment {
 
         final String pathId = bundle.getString(EXTRA_PATH_ID);
         if (!TextUtils.isEmpty(pathId)) {
-            environment.getRouter().showCourseInfo(getActivity(), pathId);
+            switch (screenName) {
+                case Screen.COURSE_DISCOVERY:
+                    environment.getRouter().showCourseInfo(getActivity(), pathId);
+                    break;
+                case Screen.PROGRAM_DISCOVERY:
+                    environment.getRouter().showProgramInfo(getActivity(), pathId);
+                    break;
+            }
         }
     }
 
@@ -248,6 +261,8 @@ public class MainDiscoveryFragment extends BaseFragment {
         switch (screeName) {
             case Screen.COURSE_DISCOVERY:
                 return R.id.option_courses;
+            case Screen.PROGRAM_DISCOVERY:
+                return R.id.option_programs;
             default:
                 return -1;
         }
