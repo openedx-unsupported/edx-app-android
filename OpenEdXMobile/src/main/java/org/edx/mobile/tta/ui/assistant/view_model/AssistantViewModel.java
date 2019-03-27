@@ -49,7 +49,6 @@ import ai.api.model.Result;
 
 public class AssistantViewModel extends BaseViewModel implements AIListener {
 
-    private static final String CLIENT_ACCESS_TOKEN = "";
     public ObservableField<String> hintText = new ObservableField<>();
     public AssistantAdapter assistantAdapter;
     public LinearLayoutManager linearLayoutManager;
@@ -62,9 +61,14 @@ public class AssistantViewModel extends BaseViewModel implements AIListener {
     public AssistantViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
         //assistant  recycler adapter
-//        assistantAdapter = new AssistantAdapter(context);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        assistantAdapter = new AssistantAdapter(getActivity());
+        //welcome message
+        addToAdapter(new AssistantModel("Welcome "+mDataManager.getLoginPrefs().getCurrentUserProfile().name,false));
+        addToAdapter(new AssistantModel("Tap on mic to start conversation or Type into edit box.",false));
+        addToAdapter(new AssistantModel("What would you like to read today?",false));
         //init API.AI
-        final AIConfiguration config = new AIConfiguration(CLIENT_ACCESS_TOKEN,
+        final AIConfiguration config = new AIConfiguration(mDataManager.getConfig().getDialogFlowClientToken(),
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
         aiService = AIService.getService(context, config);
@@ -74,13 +78,8 @@ public class AssistantViewModel extends BaseViewModel implements AIListener {
 
     @Override
     public void onResume() {
-        super.onResume();
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        assistantAdapter = new AssistantAdapter(getActivity());
-        //welcome message
-        addToAdapter(new AssistantModel("Welcome "+mDataManager.getLoginPrefs().getCurrentUserProfile().name,false));
-        addToAdapter(new AssistantModel("Tap on mic to start conversation or Type into edit box.",false));
-        addToAdapter(new AssistantModel("What would you like to read today?",false));
+        linearLayoutManager = new LinearLayoutManager(mActivity);
+
     }
 
     private void addToAdapter(AssistantModel model) {
@@ -242,6 +241,7 @@ public class AssistantViewModel extends BaseViewModel implements AIListener {
                 if (model.getContentList() != null) {  //make card item
                     itemBinding.requestText.setVisibility(View.GONE);
                     itemBinding.responseText.setVisibility(View.GONE);
+                    itemBinding.contentCardList.setVisibility(View.VISIBLE);
                     itemBinding.contentCardList.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
                     ContentListAdapter contentListAdapter=new ContentListAdapter(getContext());
                     itemBinding.contentCardList.setAdapter(contentListAdapter);

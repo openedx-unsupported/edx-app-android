@@ -90,6 +90,9 @@ public class Config {
     private static final String WP_OAUTH_CLIENT_SECRET = "WP_OAUTH_CLIENT_SECRET";
     private static final String WORDPRESS_AUTHENTICATION = "WORDPRESS_AUTHENTICATION";
 
+    //Dialog flow client token
+    private static final String DIALOGFLOW_CLIENT_TOKEN = "DIALOGFLOW_CLIENT_TOKEN";
+
     //TTA end
 
     public static class ZeroRatingConfig {
@@ -792,5 +795,9 @@ public class Config {
         }
 
         return  url;
+    }
+    //Dailog flow client token
+    public String getDialogFlowClientToken() {
+        return getString(DIALOGFLOW_CLIENT_TOKEN);
     }
 }

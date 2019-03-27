@@ -44,8 +44,11 @@ public class Constants {
     public static final String KEY_PATH = "path";
     public static final String KEY_IS_PUSH = "is_push";
     public static final String KEY_FOLLOW_USERNAME = "follow_username";
+    public static final String KEY_ENROLLED_COURSE = "enrolled_course";
+    public static final String KEY_DISCUSSION_TOPIC = "discussion_topic";
+    public static final String KEY_DISCUSSION_THREAD = "discussion_thread";
+    public static final String KEY_DISCUSSION_COMMENT = "discussion_comment";
     public static final String KEY_TAGS = "tags";
-
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";
 
