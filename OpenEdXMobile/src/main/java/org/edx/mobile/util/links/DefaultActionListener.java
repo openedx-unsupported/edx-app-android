@@ -76,12 +76,8 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
     public void onLinkRecognized(@NonNull WebViewLink helper) {
         switch (helper.authority) {
             case ENROLLED_PROGRAM_INFO: {
-                final CharSequence url = ResourceUtil.getFormattedString(
-                        environment.getConfig().getProgramConfig().getDetailUrlTemplate(),
-                        WebViewLink.Param.PATH_ID,
-                        helper.params.get(WebViewLink.Param.PATH_ID));
-                environment.getRouter().showAuthenticatedWebviewActivity(activity, url.toString(),
-                        activity.getString(R.string.label_my_programs));
+                environment.getRouter().showAuthenticatedWebviewActivity(activity, environment,
+                        helper.params.get(WebViewLink.Param.PATH_ID), activity.getString(R.string.label_my_programs));
                 break;
             }
             case ENROLLED_COURSE_INFO: {
