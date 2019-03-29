@@ -84,4 +84,6 @@ public interface VideoModel {
     boolean getattachType();
 
     String getDownloadType();
+
+    long getContent_id();
 }

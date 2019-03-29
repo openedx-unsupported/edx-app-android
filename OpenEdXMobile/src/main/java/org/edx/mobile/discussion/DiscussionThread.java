@@ -82,6 +82,9 @@ public class DiscussionThread implements Serializable, IAuthorData, ProfileImage
     @Nullable
     private Map<String, DiscussionUser> users;
 
+    @SerializedName("author_display_name")
+    private String authorDisplayName;
+
     public String getIdentifier() {
         return identifier;
     }
@@ -227,6 +230,10 @@ public class DiscussionThread implements Serializable, IAuthorData, ProfileImage
     @Nullable
     public Map<String, DiscussionUser> getUsers() {
         return users;
+    }
+
+    public String getAuthorDisplayName() {
+        return authorDisplayName;
     }
 
     @Nullable

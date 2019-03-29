@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionTopicViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginTop="@dimen/_30px"
+            android:layout_marginEnd="@dimen/_20px"
+            android:fontFamily="@font/hind_medium"
+            android:text="@{viewModel.topicDepth.discussionTopic.name}"
+            android:textColor="@color/gray_3"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginTop="@dimen/_10px"
+            android:layout_marginEnd="@dimen/_20px"
+            android:background="@color/gray_1" />
+
+        <com.maurya.mx.mxlib.view.MxRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:mx_itemLayout="@layout/t_row_discussion_thread"
+            infinite_recycler_adapter="@{viewModel.adapter}"
+            layout_manager="@{viewModel.layoutManager}"
+            infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:id="@+id/add_thread_layout"
+            android:orientation="horizontal"
+            android:padding="@dimen/_10px">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="27dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector_hollow"
+                android:fontFamily="@font/hind_light"
+                android:padding="@dimen/_10px"
+                android:text="@={viewModel.threadText}"
+                android:textColor="@color/gray_5"
+                android:textSize="14sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="23dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_8px"
+                android:background="@drawable/btn_selector_hollow"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:minWidth="98dp"
+                android:onClick="@{()->viewModel.startDiscussion()}"
+                android:padding="@dimen/_10px"
+                android:text="@string/start_discussion"
+                android:textAllCaps="false"
+                android:textColor="@color/primary_cyan"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

@@ -6,10 +6,8 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.GridLayout;
 
 import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -18,10 +16,10 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 
 import org.edx.mobile.databinding.TRowAgendaContentBinding;
-import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
+import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -34,8 +32,6 @@ import org.edx.mobile.util.PermissionsUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 public class AgendaItemsTabViewModel extends BaseViewModel {
     public AgendaItem agendaItem;
     public ListingRecyclerAdapter adapter;
@@ -43,18 +39,19 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
     public List<Content> contents;
     private Content selectedContent;
     private String toolBarData;
+    private AgendaList agendaList;
 
-    public AgendaItemsTabViewModel(Context context, TaBaseFragment fragment, AgendaItem agendaItem,String toolbarData) {
+    public AgendaItemsTabViewModel(Context context, TaBaseFragment fragment, AgendaItem agendaItem, String toolbarData, AgendaList agendaList) {
         super(context, fragment);
         this.agendaItem = agendaItem;
         this.toolBarData = toolbarData;
+        this.agendaList = agendaList;
         contents = new ArrayList<>();
 
       adapter = new ListingRecyclerAdapter(mActivity);
         adapter.setItemClickListener((view, item) -> {
             selectedContent = item;
-            mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+            showContentDashboard();
         });
 
       getData();
@@ -80,11 +77,30 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
                 @Override
                 public void onFailure(Exception e) {
                     mActivity.hideLoading();
-                    mActivity.showLongSnack(e.getLocalizedMessage());
+//                    mActivity.showLongSnack(e.getLocalizedMessage());
                 }
             });
-        }else{
-            mDataManager.getStateAgendaContent(agendaItem.getSource_id(), new OnResponseCallback<List<Content>>() {
+        }else if (toolBarData.equalsIgnoreCase(mActivity.getString(R.string.state_wise_list))){
+            if (agendaList != null) {
+                mDataManager.getStateAgendaContent(agendaItem.getSource_id(), agendaList.getList_id(), new OnResponseCallback<List<Content>>() {
+                    @Override
+                    public void onSuccess(List<Content>data) {
+                        mActivity.hideLoading();
+                        contents = data;
+                        adapter.setItems(contents);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+    //                    mActivity.showLongSnack(e.getLocalizedMessage());
+                    }
+                });
+            } else {
+                mActivity.hideLoading();
+            }
+        } else {
+            mDataManager.getDownloadedContent(agendaItem.getSource_name(), new OnResponseCallback<List<Content>>() {
                 @Override
                 public void onSuccess(List<Content>data) {
                     mActivity.hideLoading();
@@ -95,7 +111,7 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
                 @Override
                 public void onFailure(Exception e) {
                     mActivity.hideLoading();
-                    mActivity.showLongSnack(e.getLocalizedMessage());
+//                    mActivity.showLongSnack(e.getLocalizedMessage());
                 }
             });
         }

@@ -14,6 +14,8 @@ public class FilterSection implements Comparable<FilterSection> {
 
     private List<FilterTag> tags;
 
+    private boolean in_profile;
+
     public long getId() {
         return id;
     }
@@ -44,6 +46,14 @@ public class FilterSection implements Comparable<FilterSection> {
 
     public void setTags(List<FilterTag> tags) {
         this.tags = tags;
+    }
+
+    public boolean isIn_profile() {
+        return in_profile;
+    }
+
+    public void setIn_profile(boolean in_profile) {
+        this.in_profile = in_profile;
     }
 
     @Override

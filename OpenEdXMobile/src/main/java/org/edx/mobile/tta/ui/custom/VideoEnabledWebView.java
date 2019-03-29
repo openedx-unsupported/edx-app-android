@@ -67,7 +67,12 @@ public class VideoEnabledWebView extends WebView {
     {
         return videoEnabledWebChromeClient != null && videoEnabledWebChromeClient.isVideoFullscreen();
     }
-
+    int ContentHeight = 0;
+    public int getContentHeight(){
+        if(ContentHeight==0)
+            ContentHeight = computeVerticalScrollRange();
+        return ContentHeight;
+    }
     /**
      * Pass only a VideoEnabledWebChromeClient instance.
      */

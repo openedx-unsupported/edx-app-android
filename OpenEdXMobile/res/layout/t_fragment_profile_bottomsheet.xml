@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginBottom="15dp"
+        android:padding="15dp"
+        app:srcCompat="@drawable/t_icon_close" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/sign_out_options_layout"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_out_message"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="@color/primary_cyan"
+                android:fontFamily="@font/hind_regular"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                android:layout_width="220dp"
+                android:layout_height="34dp"
+                android:id="@+id/btn_yes"
+                android:background="@drawable/btn_selector_filled"
+                android:enabled="true"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:text="@string/label_yes" />
+
+            <Button
+                android:layout_width="220dp"
+                android:layout_height="34dp"
+                android:id="@+id/btn_no"
+                android:background="@drawable/btn_selector_hollow"
+                android:enabled="true"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:textAllCaps="false"
+                android:textColor="@color/primary_cyan"
+                android:text="@string/label_no" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/profile_options_layout"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/edit_profile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="60dp"
+                    app:srcCompat="@drawable/t_icon_profile_edit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="30dp"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@string/edit_profile"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:background="@color/gray_1" />
+
+            <LinearLayout
+                android:id="@+id/sign_out_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="60dp"
+                    app:srcCompat="@drawable/t_icon_profile_signout" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="30dp"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@string/sign_out"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:background="@color/gray_1" />
+
+            <LinearLayout
+                android:id="@+id/change_password_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="60dp"
+                    app:srcCompat="@drawable/t_icon_passwordchange" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="30dp"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@string/change_password"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:background="@color/gray_1" />
+
+            <LinearLayout
+                android:id="@+id/contact_us_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="60dp"
+                    app:srcCompat="@drawable/t_icon_contactus" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="30dp"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@string/contact_us"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

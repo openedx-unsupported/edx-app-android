@@ -46,6 +46,7 @@
         
         <!-- TTA -->
         <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="AppTheme.NoDisplayTheme" parent="android:style/Theme.NoDisplay">
@@ -624,6 +625,16 @@
     <style name="SearchAutoCompleteTextView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
         <item name="android:textColor">@color/gray_4</item>
         <item name="android:fontFamily">@font/hind_regular</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/t_background_bottom_sheet</item>
     </style>
 
     <!-- TTA styles end -->

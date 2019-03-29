@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -26,6 +27,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.tta.utils.LocaleHelper;
 import org.edx.mobile.tta.widget.loading.ILoading;
 import org.edx.mobile.tta.widget.loading.ProgressDialogLoading;
+import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.HashMap;
@@ -102,6 +104,12 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
     }
 
+    public void showIndefiniteSnack(String msg){
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", null)
+                .show();
+    }
+
     public void showShortToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
@@ -156,7 +164,41 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
     }
 
     public void askForPermissions(String[] permissions, int requestCode){
-        ActivityCompat.requestPermissions(this, permissions, requestCode);
+        if (getGrantedPermissionsCount(permissions) == permissions.length) {
+            onPermissionGranted(permissions, requestCode);
+        } else {
+            ActivityCompat.requestPermissions(this, permissions, requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            onPermissionGranted(permissions, requestCode);
+        } else {
+            onPermissionDenied(permissions, requestCode);
+        }
+    }
+
+    protected void onPermissionGranted(String[] permissions, int requestCode){
+
+    }
+
+    protected void onPermissionDenied(String[] permissions, int requestCode){
+
+    }
+
+    public int getGrantedPermissionsCount(String[] permissions) {
+        int grantedPermissionsCount = 0;
+        for (String permission : permissions) {
+            if (PermissionsUtil.checkPermissions(permission, this)) {
+                grantedPermissionsCount++;
+            }
+        }
+
+        return grantedPermissionsCount;
     }
 
     @Override

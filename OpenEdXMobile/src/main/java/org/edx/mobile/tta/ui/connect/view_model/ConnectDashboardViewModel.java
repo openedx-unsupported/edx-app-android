@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.ui.connect.view_model;
 
+import android.Manifest;
 import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -28,6 +29,7 @@ import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.Post;
+import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 
@@ -269,9 +271,17 @@ public class ConnectDashboardViewModel extends BaseViewModel
     }
 
     public void download(){
+        mActivity.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+    }
+
+    public void downloadPost() {
+
         if (allDownloadStatusIcon.get() == R.drawable.t_icon_download && allDownloadIconVisible.get()) {
             mActivity.showLoading();
-            mDataManager.downloadPost(post, String.valueOf(content.getSource().getId()), content.getSource().getName(), mActivity,
+            mDataManager.downloadPost(post, content.getId(),
+                    String.valueOf(content.getSource().getId()), content.getSource().getName(),
+                    mActivity,
                     new VideoDownloadHelper.DownloadManagerCallback() {
                         @Override
                         public void onDownloadStarted(Long result) {
@@ -304,6 +314,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
                         }
                     });
         }
+
     }
 
     public void addReplyToComment(){
@@ -349,7 +360,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     private void playVideo()
     {
-        DownloadEntry de=  mDataManager.getDownloadedVideo(post,
+        DownloadEntry de=  mDataManager.getDownloadedVideo(post, content.getId(),
                 String.valueOf(content.getSource().getId()), content.getSource().getName());
         if(de!=null && de.filepath!=null && !de.filepath.equals(""))
         {

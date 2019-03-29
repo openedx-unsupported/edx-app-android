@@ -75,4 +75,10 @@ public class UserAPI {
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
                 RequestBody.create(MediaType.parse(mimeType), file));
     }
+
+    //TTA
+
+    public Call<Account> getAccount(String username){
+        return userService.getAccount(username);
+    }
 }

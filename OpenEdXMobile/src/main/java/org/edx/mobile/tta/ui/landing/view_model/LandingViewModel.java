@@ -9,6 +9,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.agenda.AgendaFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.feed.FeedFragment;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
 import org.edx.mobile.tta.ui.profile.ProfileFragment;
@@ -78,7 +79,15 @@ public class LandingViewModel extends BaseViewModel {
     }
 
     public void showFeed() {
-        mActivity.showShortSnack("Feed coming soon");
+        mActivity.showShortSnack("Coming soon");
+        /*ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                new FeedFragment(),
+                R.id.dashboard_fragment,
+                FeedFragment.TAG,
+                false,
+                null
+        );*/
     }
 
     public void showSearch(){

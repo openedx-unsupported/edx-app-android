@@ -14,10 +14,15 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
+import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
+import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.remote.service.TaService;
@@ -78,8 +83,8 @@ public class TaAPI {
     public Call<List<Content>> getMyAgendaContent(long sourceId){
         return taService.getMyAgendaContent(sourceId);
     }
-    public Call<List<Content>> getStateAgendaContent(long sourceId){
-        return taService.getStateAgendaContent(sourceId);
+    public Call<List<Content>> getStateAgendaContent(long sourceId, long list_id){
+        return taService.getStateAgendaContent(sourceId, list_id);
     }
 
 
@@ -133,5 +138,61 @@ public class TaAPI {
         parameters.put(Constants.KEY_FILTER_DATA, filterSections);
 
         return taService.search(parameters);
+    }
+
+    public Call<FeedbackResponse> submitFeedback(Bundle parameters){
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+        return taService.submitFeedback(parameterMap);
+    }
+
+    public Call<ChangePasswordResponse> changePassword(Bundle parameters){
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+        return taService.changePassword(parameterMap);
+    }
+
+    public Call<MyCertificatesResponse> getMyCertificates(){
+        return taService.getMyCertificates();
+    }
+
+    public Call<CertificateStatusResponse> getCertificateStatus(String courseId){
+        return taService.getCertificateStatus(courseId);
+    }
+
+    public Call<MyCertificatesResponse> getCertificate(String courseId){
+        return taService.getCertificate(courseId);
+    }
+
+    public Call<CertificateStatusResponse> generateCertificate(String courseId){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_COURSE_ID,courseId);
+        return taService.generateCertificate(parameters);
+    }
+
+    public Call<Content> getContent(long contentId){
+        return taService.getContent(contentId);
+    }
+
+    public Call<List<SuggestedUser>> getSuggestedUsers(int take, int skip){
+        return taService.getSuggestedUsers(take, skip);
+    }
+
+    public Call<StatusResponse> followUser(String username){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_FOLLOW_USERNAME,username);
+        return taService.followUser(parameters);
+    }
+    public Call<List<Content>> assistantSearch(String searchText,List<String> tags) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_TAKE, 5);  //fixing this for now
+        parameters.put(Constants.KEY_SKIP, 0);
+        parameters.put(Constants.KEY_SEARCH_TEXT, searchText);
+        parameters.put(Constants.KEY_TAGS, tags);
+        return taService.assistantSearch(parameters);
     }
 }

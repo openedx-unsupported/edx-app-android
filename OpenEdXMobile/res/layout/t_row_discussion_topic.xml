@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.discussion.DiscussionTopic" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/_30px">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.name}"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginEnd="@dimen/_20px"
+            android:textSize="14sp"
+            android:fontFamily="@font/hind_medium"
+            android:textColor="@color/gray_3"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
+            android:layout_marginStart="@dimen/_20px"
+            android:layout_marginEnd="@dimen/_20px"
+            android:layout_marginTop="@dimen/_10px"/>
+
+        <org.edx.mobile.tta.ui.custom.NonScrollRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/limited_threads_list"
+            android:scrollbars="none"
+            android:divider="@color/transparent"
+            android:layout_marginTop="@dimen/_20px"/>
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:id="@+id/see_more_btn"
+            android:text="@string/see_more"
+            android:textColor="@color/primary_cyan"
+            android:textSize="12sp"
+            android:fontFamily="@font/hind_medium"
+            android:textAllCaps="false"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:background="@drawable/btn_selector_hollow"
+            android:enabled="true"
+            android:layout_marginTop="@dimen/_6px" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
+            android:layout_marginTop="@dimen/_30px"/>
+
+    </LinearLayout>
+
+</layout>

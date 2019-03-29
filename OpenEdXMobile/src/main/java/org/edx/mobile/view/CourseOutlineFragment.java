@@ -355,7 +355,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 if (isSingleVideoDownload) {
                     downloadManager.downloadVideo(downloadEntry, getActivity(), CourseOutlineFragment.this);
                 } else {
-                    downloadManager.downloadVideos(downloadEntries, getActivity(), CourseOutlineFragment.this);
+                    downloadManager.downloadVideos(downloadEntries, -1, getActivity(), CourseOutlineFragment.this);
                 }
                 break;
 

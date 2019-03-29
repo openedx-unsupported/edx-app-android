@@ -58,6 +58,7 @@ public class AgendaViewModel extends BaseViewModel {
                 if (data != null && !data.isEmpty()){
 
                     AgendaList list = data.get(0);
+                    stateListAdapter.setAgendaList(list);
                     if (list == null || list.getResult() == null || list.getResult().isEmpty()){
                         showEmptyAgendaList(stateListAdapter);
                     } else {
@@ -106,7 +107,6 @@ public class AgendaViewModel extends BaseViewModel {
                 regionListRecieved = true;
                 hideLoader();
                 showEmptyAgendaList(stateListAdapter);
-                mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
 
@@ -195,7 +195,6 @@ public class AgendaViewModel extends BaseViewModel {
                 myListRecieved = true;
                 hideLoader();
                 showEmptyAgendaList(myListAdapter);
-                mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
     }
@@ -254,7 +253,6 @@ public class AgendaViewModel extends BaseViewModel {
                 downloadListRecieved = true;
                 hideLoader();
                 showEmptyAgendaList(downloadListAdapter);
-                mActivity.showShortSnack(e.getLocalizedMessage());
             }
         });
     }
@@ -268,6 +266,7 @@ public class AgendaViewModel extends BaseViewModel {
 
     public class AgendaListAdapter extends MxFiniteAdapter<AgendaItem> {
         private String agendaListName;
+        private AgendaList agendaList;
 
         public AgendaListAdapter(Context context, String string) {
             super(context);
@@ -293,7 +292,7 @@ public class AgendaViewModel extends BaseViewModel {
                 itemBinding.agendaCard.setOnClickListener(v -> {
                     ActivityUtil.replaceFragmentInActivity(
                             mActivity.getSupportFragmentManager(),
-                            AgendaItemsAct.newInstance(agendaListName, getItems(),model),
+                            AgendaItemsAct.newInstance(agendaListName, getItems(),model, agendaList),
                             R.id.dashboard_fragment,
                             AgendaItemsAct.TAG,
                             true,
@@ -301,6 +300,10 @@ public class AgendaViewModel extends BaseViewModel {
                     );
                 });
             }
+        }
+
+        public void setAgendaList(AgendaList agendaList) {
+            this.agendaList = agendaList;
         }
     }
 }

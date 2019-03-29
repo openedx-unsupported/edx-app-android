@@ -431,6 +431,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             values.put(DbStructure.Column.IS_COURSE_ACTIVE, de.isCourseActive());
             values.put(DbStructure.Column.VIDEO_FOR_WEB_ONLY, de.isVideoForWebOnly());
             values.put(DbStructure.Column.TYPE, de.getDownloadType());
+            values.put(DbStructure.Column.CONTENT_ID, de.getContent_id());
 
             DbOperationInsert op = new DbOperationInsert(DbStructure.Table.DOWNLOADS, values);
             op.setCallback(callback);

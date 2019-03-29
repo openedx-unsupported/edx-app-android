@@ -2,11 +2,13 @@ package org.edx.mobile.tta.data;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -15,42 +17,58 @@ import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.discussion.CourseTopics;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.model.Page;
+import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.impl.DbHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.data.enums.CategoryType;
+import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.ScormStatus;
+import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
 import org.edx.mobile.tta.data.local.db.TADatabase;
+import org.edx.mobile.tta.data.local.db.operation.GetCourseContentsOperation;
+import org.edx.mobile.tta.data.local.db.operation.GetWPContentsOperation;
 import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
-import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.model.BaseResponse;
+import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
-import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
+import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
-import org.edx.mobile.tta.data.model.EmptyResponse;
+import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
+import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
+import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
+import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
-import org.edx.mobile.tta.data.model.search.FilterTag;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.tta.data.remote.IRemoteDataSource;
@@ -58,12 +76,12 @@ import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.tta.exception.TaException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
-import org.edx.mobile.tta.task.GetHtmlFromUrlTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
+import org.edx.mobile.tta.task.content.GetContentTask;
 import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
 import org.edx.mobile.tta.task.content.IsLikeTask;
 import org.edx.mobile.tta.task.content.SetBookmarkTask;
@@ -72,13 +90,25 @@ import org.edx.mobile.tta.task.content.TotalLikeTask;
 import org.edx.mobile.tta.task.content.course.GetCourseDataFromPersistableCacheTask;
 import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseFromCacheTask;
 import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseTask;
+import org.edx.mobile.tta.task.content.course.certificate.GenerateCertificateTask;
+import org.edx.mobile.tta.task.content.course.certificate.GetCertificateStatusTask;
+import org.edx.mobile.tta.task.content.course.certificate.GetCertificateTask;
+import org.edx.mobile.tta.task.content.course.certificate.GetMyCertificatesTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetCommentRepliesTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetDiscussionThreadsTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetDiscussionTopicsTask;
+import org.edx.mobile.tta.task.content.course.discussion.GetThreadCommentsTask;
+import org.edx.mobile.tta.task.feed.FollowUserTask;
+import org.edx.mobile.tta.task.feed.GetSuggestedUsersTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
+import org.edx.mobile.tta.task.profile.ChangePasswordTask;
+import org.edx.mobile.tta.task.profile.GetAccountTask;
+import org.edx.mobile.tta.task.profile.GetProfileTask;
 import org.edx.mobile.tta.task.profile.GetUserAddressTask;
-import org.edx.mobile.tta.data.model.authentication.LoginRequest;
-import org.edx.mobile.tta.data.model.authentication.LoginResponse;
-import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
+import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
+import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
 import org.edx.mobile.tta.utils.RxUtil;
@@ -91,27 +121,23 @@ import org.edx.mobile.tta.wordpress_client.model.WpAuthResponse;
 import org.edx.mobile.tta.wordpress_client.rest.HttpServerErrorResponse;
 import org.edx.mobile.tta.wordpress_client.rest.WordPressRestResponse;
 import org.edx.mobile.tta.wordpress_client.rest.WpClientRetrofit;
+import org.edx.mobile.user.Account;
+import org.edx.mobile.user.ProfileImage;
+import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import okhttp3.ConnectionPool;
-import okhttp3.Dispatcher;
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Retrofit;
 
 import static org.edx.mobile.tta.Constants.TA_DATABASE;
 
@@ -120,13 +146,12 @@ import static org.edx.mobile.tta.Constants.TA_DATABASE;
  */
 
 public class DataManager extends BaseRoboInjector {
-    private Context context;
     private static DataManager mDataManager;
-    private IRemoteDataSource mRemoteDataSource;
-    private ILocalDataSource mLocalDataSource;
     @Inject
     public IEdxDataManager edxDataManager;
-
+    private Context context;
+    private IRemoteDataSource mRemoteDataSource;
+    private ILocalDataSource mLocalDataSource;
     @com.google.inject.Inject
     private IEdxEnvironment edxEnvironment;
 
@@ -147,6 +172,8 @@ public class DataManager extends BaseRoboInjector {
     private AppPref mAppPref;
     private LoginPrefs loginPrefs;
 
+    private DbHelper dbHelper;
+
     private DataManager(Context context, IRemoteDataSource remoteDataSource, ILocalDataSource localDataSource) {
         super(context);
         this.context = context;
@@ -155,6 +182,8 @@ public class DataManager extends BaseRoboInjector {
 
         mAppPref = new AppPref(context);
         loginPrefs = new LoginPrefs(context);
+
+        dbHelper = new DbHelper(context);
     }
 
     public static DataManager getInstance(Context context) {
@@ -167,7 +196,7 @@ public class DataManager extends BaseRoboInjector {
                 }
             }
         }
-        mDataManager.wpClientRetrofit = new WpClientRetrofit(true,false);
+        mDataManager.wpClientRetrofit = new WpClientRetrofit(true, false);
         return mDataManager;
     }
 
@@ -212,7 +241,7 @@ public class DataManager extends BaseRoboInjector {
 
             @Override
             public void onFailure(HttpServerErrorResponse errorResponse) {
-                if (config.isWordpressAuthentication()){
+                if (config.isWordpressAuthentication()) {
                     callback.onFailure(new TaException(errorResponse.getMessage()));
                 } else {
                     doEdxLogin(username, password, callback);
@@ -222,9 +251,9 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    private void doEdxLogin(String username, String password, OnResponseCallback<AuthResponse> callback){
+    private void doEdxLogin(String username, String password, OnResponseCallback<AuthResponse> callback) {
 
-        new LoginTask(context, username, password){
+        new LoginTask(context, username, password) {
             @Override
             protected void onSuccess(AuthResponse authResponse) throws Exception {
                 super.onSuccess(authResponse);
@@ -488,26 +517,28 @@ public class DataManager extends BaseRoboInjector {
                     super.onSuccess(collectionItemsList);
                     if (collectionItemsList != null && !collectionItemsList.isEmpty()) {
 
-                        for (CollectionItemsResponse itemsResponse: collectionItemsList){
-                            if (itemsResponse.getContent() != null){
-                                for (Content content: itemsResponse.getContent()){
-                                    if (content.getLists() == null){
-                                        List<Long> listIds = new ArrayList<>();
-                                        listIds.add(itemsResponse.getId());
-                                        content.setLists(listIds);
-                                    } else if (!content.getLists().contains(itemsResponse.getId())){
-                                        content.getLists().add(itemsResponse.getId());
-                                    }
-                                }
-                            }
-                        }
-
                         new Thread() {
                             @Override
                             public void run() {
-                                for (CollectionItemsResponse collectionItemsResponse : collectionItemsList) {
-                                    if (collectionItemsResponse.getContent() != null) {
-                                        mLocalDataSource.insertContents(collectionItemsResponse.getContent());
+
+                                for (CollectionItemsResponse itemsResponse: collectionItemsList){
+                                    if (itemsResponse.getContent() != null){
+                                        for (Content content: itemsResponse.getContent()){
+                                            if (content.getLists() == null){
+                                                content.setLists(new ArrayList<>());
+                                            }
+
+                                            Content localContent = mLocalDataSource.getContentById(content.getId());
+                                            if (localContent != null && localContent.getLists() != null){
+                                                content.getLists().addAll(localContent.getLists());
+                                            }
+
+                                            if (!content.getLists().contains(itemsResponse.getId())){
+                                                content.getLists().add(itemsResponse.getId());
+                                            }
+
+                                            mLocalDataSource.insertContent(content);
+                                        }
                                     }
                                 }
                             }
@@ -725,7 +756,7 @@ public class DataManager extends BaseRoboInjector {
     public void getDownloadAgendaCount(OnResponseCallback<AgendaList> callback) {
 
         //Mocking start
-        AgendaList agendaList = new AgendaList();
+        /*AgendaList agendaList = new AgendaList();
         agendaList.setLevel("Download");
         List<AgendaItem> items = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -753,8 +784,187 @@ public class DataManager extends BaseRoboInjector {
             items.add(item);
         }
         agendaList.setResult(items);
-        callback.onSuccess(agendaList);
+        callback.onSuccess(agendaList);*/
         //Mocking end
+
+        //Actual code **Do not delete**
+        final boolean[] coursesReceived = new boolean[1];
+        final boolean[] chatshalaReceived = new boolean[1];
+        final boolean[] toolkitReceived = new boolean[1];
+        final boolean[] hoisReceived = new boolean[1];
+
+        AgendaList agendaList = new AgendaList();
+        agendaList.setLevel("Download");
+        agendaList.setResult(new ArrayList<>());
+
+        getdownloadedCourseContents(new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.course);
+                coursesReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.course);
+                coursesReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+        getdownloadedWPContents(SourceType.chatshala.name(), new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.chatshala);
+                chatshalaReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.chatshala);
+                chatshalaReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+        getdownloadedWPContents(SourceType.toolkit.name(), new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.toolkit);
+                toolkitReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.toolkit);
+                toolkitReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+        getdownloadedWPContents(SourceType.hois.name(), new OnResponseCallback<List<Content>>() {
+            @Override
+            public void onSuccess(List<Content> data) {
+                addContentsToAgendaList(data, agendaList, SourceType.hois);
+                hoisReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                addContentsToAgendaList(null, agendaList, SourceType.hois);
+                hoisReceived[0] = true;
+                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
+                        agendaList, callback);
+            }
+        });
+
+    }
+
+    private void addContentsToAgendaList(List<Content> contents, AgendaList agendaList, SourceType sourceType){
+
+        AgendaItem item = new AgendaItem();
+        item.setContent_count(contents == null ? 0 : contents.size());
+        item.setSource_name(sourceType.name());
+
+        String sourceTitle = null;
+        switch (sourceType){
+            case course:
+                sourceTitle = context.getString(R.string.course);
+                break;
+            case chatshala:
+                sourceTitle = context.getString(R.string.chatshala);
+                break;
+            case toolkit:
+                sourceTitle = context.getString(R.string.toolkit);
+                break;
+            case hois:
+                sourceTitle = context.getString(R.string.hois);
+                break;
+        }
+        item.setSource_title(sourceTitle);
+        agendaList.getResult().add(item);
+
+    }
+
+    private void sendDownloadAgenda(boolean b1, boolean b2, boolean b3, boolean b4, AgendaList agendaList,
+                                    OnResponseCallback<AgendaList> callback){
+
+        if (b1 && b2 && b3 && b4){
+            callback.onSuccess(agendaList);
+        }
+
+    }
+
+    public void getdownloadedCourseContents(OnResponseCallback<List<Content>> callback){
+
+        new AsyncTask<Void, Void, List<Content>>() {
+            @Override
+            protected List<Content> doInBackground(Void... voids) {
+                List<Long> contentIds = new GetCourseContentsOperation().execute(dbHelper.getDatabase());
+                List<Content> contents = new ArrayList<>();
+                if (contentIds != null){
+                    for (long id: contentIds){
+                        Content content = mLocalDataSource.getContentById(id);
+                        if (content != null){
+                            contents.add(content);
+                        }
+                    }
+                }
+                return contents;
+            }
+
+            @Override
+            protected void onPostExecute(List<Content> contents) {
+                super.onPostExecute(contents);
+                if (!contents.isEmpty()) {
+                    callback.onSuccess(contents);
+                } else {
+                    callback.onFailure(new TaException("No content downloaded"));
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getdownloadedWPContents(String sourceName, OnResponseCallback<List<Content>> callback){
+
+        new AsyncTask<Void, Void, List<Content>>() {
+            @Override
+            protected List<Content> doInBackground(Void... voids) {
+                List<Long> contentIds = new GetWPContentsOperation(sourceName).execute(dbHelper.getDatabase());
+                List<Content> contents = new ArrayList<>();
+                if (contentIds != null){
+                    for (long id: contentIds){
+                        Content content = mLocalDataSource.getContentById(id);
+                        if (content != null){
+                            contents.add(content);
+                        }
+                    }
+                }
+                return contents;
+            }
+
+            @Override
+            protected void onPostExecute(List<Content> contents) {
+                super.onPostExecute(contents);
+                if (!contents.isEmpty()) {
+                    callback.onSuccess(contents);
+                } else {
+                    callback.onFailure(new TaException("No content downloaded"));
+                }
+            }
+        }.execute();
 
     }
 
@@ -1014,18 +1224,21 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void downloadSingle(ScormBlockModel scorm,
+                               long contentId,
                                FragmentActivity activity,
                                VideoDownloadHelper.DownloadManagerCallback callback) {
         DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
         de.url = scorm.getDownloadUrl();
         de.title = scorm.getParent().getDisplayName();
+        de.content_id = contentId;
         downloadManager.downloadVideo(de, activity, callback);
     }
 
     public void downloadMultiple(List<? extends HasDownloadEntry> downloadEntries,
+                                 long contentid,
                                  FragmentActivity activity,
                                  VideoDownloadHelper.DownloadManagerCallback callback) {
-        downloadManager.downloadVideos(downloadEntries, activity, callback);
+        downloadManager.downloadVideos(downloadEntries, contentid, activity, callback);
     }
 
     public void getDownloadedStateForVideoId(String videoId, DataCallback<DownloadEntry.DownloadedState> callback) {
@@ -1145,7 +1358,7 @@ public class DataManager extends BaseRoboInjector {
         }
     }
 
-    public void getStateAgendaContent(long sourceId, OnResponseCallback<List<Content>> callback) {
+    public void getStateAgendaContent(long sourceId, long list_id, OnResponseCallback<List<Content>> callback) {
 
         //Mocking start
         /*List<Content> contents = new ArrayList<>();
@@ -1165,7 +1378,7 @@ public class DataManager extends BaseRoboInjector {
 
         //Actual code   **Do not delete**
         if (NetworkUtil.isConnected(context)) {
-            new GetStateAgendaContentTask(context, sourceId) {
+            new GetStateAgendaContentTask(context, sourceId, list_id) {
                 @Override
                 protected void onSuccess(List<Content> response) throws Exception {
                     super.onSuccess(response);
@@ -1184,6 +1397,32 @@ public class DataManager extends BaseRoboInjector {
             }.execute();
         } else {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+    }
+
+    public void getDownloadedContent(String sourceName, OnResponseCallback<List<Content>> callback) {
+
+        //Mocking start
+        /*List<Content> contents = new ArrayList<>();
+        for (int i=0;i<20;i++){
+            Content content =  new Content();
+            content.setName("course");
+            content.setIcon("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+            Source source =  new Source();
+            source.setType("edx");
+            source.setTitle("course");
+            source.setName("course");
+            content.setSource(source);
+            contents.add(content);
+        }
+        callback.onSuccess(contents);*/
+        //Mocking end
+
+        //Actual code   **Do not delete**
+        if (sourceName.equalsIgnoreCase(SourceType.course.name())){
+            getdownloadedCourseContents(callback);
+        } else {
+            getdownloadedWPContents(sourceName, callback);
         }
     }
 
@@ -1238,12 +1477,12 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void downloadPost(Post post, String category_id,String category_name,
+    public void downloadPost(Post post, long contentId, String category_id,String category_name,
                              FragmentActivity activity,
                              VideoDownloadHelper.DownloadManagerCallback callback){
 
         DownloadEntry videoData=new DownloadEntry();
-        videoData.setDownloadEntryForPost(category_id,category_name,post);
+        videoData.setDownloadEntryForPost(contentId, category_id,category_name,post);
         downloadManager.downloadVideo(videoData, activity, callback);
 
     }
@@ -1323,10 +1562,10 @@ public class DataManager extends BaseRoboInjector {
         });
     }
 
-    public DownloadEntry getDownloadedVideo(Post post, String categoryId, String categoryName)
+    public DownloadEntry getDownloadedVideo(Post post, long contentId, String categoryId, String categoryName)
     {
         DownloadEntry videoData=new DownloadEntry();
-        videoData.setDownloadEntryForPost(categoryId,categoryName,post);
+        videoData.setDownloadEntryForPost(contentId, categoryId,categoryName,post);
 
         return edxEnvironment.getStorage().getPostVideo(videoData.videoId,videoData.url);
 
@@ -1442,6 +1681,31 @@ public class DataManager extends BaseRoboInjector {
                     if (contents == null){
                         contents = new ArrayList<>();
                     }
+
+                    if (!contents.isEmpty()){
+                        List<Content> finalContents = contents;
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                try {
+                                    for (Content content : finalContents) {
+                                        if (content.getLists() == null) {
+                                            content.setLists(new ArrayList<>());
+                                        }
+
+                                        Content localContent = mLocalDataSource.getContentById(content.getId());
+                                        if (localContent != null && localContent.getLists() != null) {
+                                            content.getLists().addAll(localContent.getLists());
+                                        }
+                                        mLocalDataSource.insertContent(content);
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.start();
+                    }
+
                     callback.onSuccess(contents);
                 }
 
@@ -1455,6 +1719,692 @@ public class DataManager extends BaseRoboInjector {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
 
+    }
+
+    public void submitFeedback(String msg, OnResponseCallback<FeedbackResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            Bundle parameters = new Bundle();
+            parameters.putString(Constants.KEY_USERNAME, loginPrefs.getUsername());
+            parameters.putString(Constants.KEY_FEEDBACK, msg);
+            parameters.putString(Constants.KEY_DEVICE_INFO,
+                    "API Level:"+ Build.VERSION.RELEASE+"  Device:"+Build.DEVICE+"  Model no:"+Build.MODEL+"  Product:"+Build.PRODUCT);
+
+            new SubmitFeedbackTask(context, parameters){
+                @Override
+                protected void onSuccess(FeedbackResponse feedbackResponse) throws Exception {
+                    super.onSuccess(feedbackResponse);
+                    callback.onSuccess(feedbackResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void changePassword(String oldPass, String newPass, OnResponseCallback<ChangePasswordResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            Bundle parameters = new Bundle();
+            parameters.putString(Constants.KEY_OLD_PASSWORD, oldPass);
+            parameters.putString(Constants.KEY_NEW_PASSWORD, newPass);
+            parameters.putString(Constants.KEY_USERNAME, loginPrefs.getUsername());
+
+            new ChangePasswordTask(context, parameters){
+                @Override
+                protected void onSuccess(ChangePasswordResponse changePasswordResponse) throws Exception {
+                    super.onSuccess(changePasswordResponse);
+
+                    edxEnvironment.getRouter().resetAuthForChangePassword(context,
+                            edxEnvironment.getAnalyticsRegistry(), edxEnvironment.getNotificationDelegate());
+                    login(loginPrefs.getUsername(), newPass, new OnResponseCallback<AuthResponse>() {
+                        @Override
+                        public void onSuccess(AuthResponse data) {
+                            callback.onSuccess(changePasswordResponse);
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            callback.onFailure(e);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getAccount(OnResponseCallback<Account> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetAccountTask(context, loginPrefs.getUsername()){
+                @Override
+                protected void onSuccess(Account account) throws Exception {
+                    super.onSuccess(account);
+                    if (account != null) {
+                        loginPrefs.setProfileImage(loginPrefs.getUsername(), account.getProfileImage());
+
+                        getProfile(new OnResponseCallback<ProfileModel>() {
+                            @Override
+                            public void onSuccess(ProfileModel data) {
+                                loginPrefs.setCurrentUserProfileInCache(data);
+                                callback.onSuccess(account);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                callback.onSuccess(account);
+                            }
+                        });
+
+                    } else {
+                        callback.onFailure(new TaException("Invalid account"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void updateProfile(Bundle parameters, OnResponseCallback<UpdateMyProfileResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new UpdateMyProfileTask(context, parameters, loginPrefs.getUsername()){
+                @Override
+                protected void onSuccess(UpdateMyProfileResponse updateMyProfileResponse) throws Exception {
+                    super.onSuccess(updateMyProfileResponse);
+
+                    if (updateMyProfileResponse == null){
+                        callback.onFailure(new TaException("Your action could not be completed"));
+                        return;
+                    }
+
+                    //for cache consistency
+                    ProfileModel profileModel = new ProfileModel();
+                    profileModel.name = updateMyProfileResponse.getName();
+                    profileModel.email = updateMyProfileResponse.getEmail();
+                    profileModel.gender=updateMyProfileResponse.getGender();
+
+                    profileModel.title=updateMyProfileResponse.getTitle();
+                    profileModel.classes_taught=updateMyProfileResponse.getClasses_taught();
+                    profileModel.state=updateMyProfileResponse.getState();
+                    profileModel.district=updateMyProfileResponse.getDistrict();
+                    profileModel.block=updateMyProfileResponse.getBlock();
+                    profileModel.pmis_code=updateMyProfileResponse.getPMIS_code();
+                    profileModel.diet_code=updateMyProfileResponse.getDIETCode();
+                    profileModel.setTagLabel(updateMyProfileResponse.getTagLabel());
+                    profileModel.setFollowers(updateMyProfileResponse.getFollowers());
+                    profileModel.setFollowing(updateMyProfileResponse.getFollowing());
+
+                    loginPrefs.setCurrentUserProfileInCache(profileModel);
+                    loginPrefs.removeMxProfilePageCache();
+
+                    callback.onSuccess(updateMyProfileResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void updateProfileImage(@NonNull Uri uri, @NonNull Rect cropRect,
+                                   OnResponseCallback<ProfileImage> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new SetAccountImageTask(context, loginPrefs.getUsername(), uri, cropRect){
+                @Override
+                protected void onSuccess(Void response) throws Exception {
+                    super.onSuccess(response);
+
+                    getAccount(new OnResponseCallback<Account>() {
+                        @Override
+                        public void onSuccess(Account data) {
+                            loginPrefs.setProfileImage(loginPrefs.getUsername(), data.getProfileImage());
+                            callback.onSuccess(data.getProfileImage());
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            callback.onFailure(e);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getProfile(OnResponseCallback<ProfileModel> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetProfileTask(context){
+                @Override
+                protected void onSuccess(ProfileModel profileModel) throws Exception {
+                    super.onSuccess(profileModel);
+                    callback.onSuccess(profileModel);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            getProfileFromLocal(new TaException(context.getString(R.string.no_connection_exception)),callback);
+        }
+
+    }
+
+    public void getProfileFromLocal(Exception e, OnResponseCallback<ProfileModel> callback){
+        ProfileModel model = loginPrefs.getCurrentUserProfile();
+        if (model != null){
+            callback.onSuccess(model);
+        } else {
+            callback.onFailure(e);
+        }
+    }
+
+    public void getCertificateStatus(String courseId, OnResponseCallback<CertificateStatusResponse> callback){
+
+        getCertificateFromLocal(courseId, new OnResponseCallback<Certificate>() {
+            @Override
+            public void onSuccess(Certificate data) {
+                CertificateStatusResponse response = new CertificateStatusResponse();
+                response.setStatus(CertificateStatus.GENERATED.name());
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+                if (NetworkUtil.isConnected(context)){
+
+                    new GetCertificateStatusTask(context, courseId){
+                        @Override
+                        protected void onSuccess(CertificateStatusResponse certificateStatusResponse) throws Exception {
+                            super.onSuccess(certificateStatusResponse);
+                            if (certificateStatusResponse != null){
+                                callback.onSuccess(certificateStatusResponse);
+                            } else {
+                                callback.onFailure(new TaException("Status of certificate could not be fetched"));
+                            }
+                        }
+
+                        @Override
+                        protected void onException(Exception ex) {
+                            callback.onFailure(ex);
+                        }
+                    }.execute();
+
+                } else {
+                    callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+                }
+
+            }
+        }, null);
+
+    }
+
+    public void getCertificate(String courseId, OnResponseCallback<Certificate> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetCertificateTask(context, courseId) {
+                @Override
+                protected void onSuccess(MyCertificatesResponse myCertificatesResponse) throws Exception {
+                    super.onSuccess(myCertificatesResponse);
+                    if (myCertificatesResponse == null || myCertificatesResponse.getCertificates() == null ||
+                            myCertificatesResponse.getCertificates().isEmpty()) {
+                        getCertificateFromLocal(courseId, callback, new TaException("Certificate not available"));
+                    } else {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                Certificate certificate = myCertificatesResponse.getCertificates().get(0);
+                                if (certificate.getUsername() == null) {
+                                    certificate.setUsername(loginPrefs.getUsername());
+                                }
+                                mLocalDataSource.insertCertificate(certificate);
+                            }
+                        }.start();
+
+                        callback.onSuccess(myCertificatesResponse.getCertificates().get(0));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getCertificateFromLocal(courseId, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getCertificateFromLocal(courseId, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getCertificateFromLocal(String courseId, OnResponseCallback<Certificate> callback, Exception e) {
+
+        new AsyncTask<Void, Void, Certificate>() {
+            @Override
+            protected Certificate doInBackground(Void... voids) {
+                return mLocalDataSource.getCertificate(courseId, loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onPostExecute(Certificate certificate) {
+                if (certificate != null) {
+                    callback.onSuccess(certificate);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getMyCertificates(OnResponseCallback<List<Certificate>> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetMyCertificatesTask(context) {
+                @Override
+                protected void onSuccess(MyCertificatesResponse myCertificatesResponse) throws Exception {
+                    super.onSuccess(myCertificatesResponse);
+                    if (myCertificatesResponse == null || myCertificatesResponse.getCertificates() == null) {
+                        getMyCertificatesFromLocal(callback, new TaException("Certificates not available"));
+                    } else {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                List<Certificate> certificates = myCertificatesResponse.getCertificates();
+                                for (Certificate certificate : certificates) {
+                                    if (certificate.getUsername() == null) {
+                                        certificate.setUsername(loginPrefs.getUsername());
+                                    }
+                                }
+                                mLocalDataSource.insertCertificates(certificates);
+                            }
+                        }.start();
+
+                        callback.onSuccess(myCertificatesResponse.getCertificates());
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getMyCertificatesFromLocal(callback, new TaException("Certificates not available"));
+                }
+            }.execute();
+
+        } else {
+            getMyCertificatesFromLocal(callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getMyCertificatesFromLocal(OnResponseCallback<List<Certificate>> callback, Exception e) {
+
+        new AsyncTask<Void, Void, List<Certificate>>() {
+            @Override
+            protected List<Certificate> doInBackground(Void... voids) {
+                return mLocalDataSource.getAllCertificates(loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onPostExecute(List<Certificate> certificates) {
+                if (certificates != null) {
+                    callback.onSuccess(certificates);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void generateCertificate(String courseId, OnResponseCallback<CertificateStatusResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GenerateCertificateTask(context, courseId) {
+                @Override
+                protected void onSuccess(CertificateStatusResponse certificateStatusResponse) throws Exception {
+                    super.onSuccess(certificateStatusResponse);
+                    if (certificateStatusResponse != null) {
+                        callback.onSuccess(certificateStatusResponse);
+                    } else {
+                        callback.onFailure(new TaException("Certificate could not be generated"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getContent(long contentId, OnResponseCallback<Content> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetContentTask(context, contentId) {
+                @Override
+                protected void onSuccess(Content content) throws Exception {
+                    super.onSuccess(content);
+                    if (content != null && content.getDetail() == null) {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertContent(content);
+                            }
+                        }.start();
+
+                        callback.onSuccess(content);
+                    } else {
+                        getContentFromLocal(contentId, callback, new TaException("Content not found"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getContentFromLocal(contentId, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getContentFromLocal(contentId, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getContentFromLocal(long contentId, OnResponseCallback<Content> callback, Exception e) {
+
+        new AsyncTask<Void, Void, Content>() {
+            @Override
+            protected Content doInBackground(Void... voids) {
+                return mLocalDataSource.getContentById(contentId);
+            }
+
+            @Override
+            protected void onPostExecute(Content content) {
+                super.onPostExecute(content);
+                if (content != null) {
+                    callback.onSuccess(content);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getSuggestedUsers(int take, int skip, OnResponseCallback<List<SuggestedUser>> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetSuggestedUsersTask(context, take, skip) {
+                @Override
+                protected void onSuccess(List<SuggestedUser> suggestedUsers) throws Exception {
+                    super.onSuccess(suggestedUsers);
+                    if (suggestedUsers == null || suggestedUsers.isEmpty()) {
+                        callback.onFailure(new TaException("No suggested users"));
+                    } else {
+                        List<SuggestedUser> emptyUsers = new ArrayList<>();
+                        for (SuggestedUser user : suggestedUsers) {
+                            if (user.getUsername() == null) {
+                                emptyUsers.add(user);
+                            }
+                        }
+                        for (SuggestedUser user : emptyUsers) {
+                            suggestedUsers.remove(user);
+                        }
+                        if (!suggestedUsers.isEmpty()) {
+                            callback.onSuccess(suggestedUsers);
+                        } else {
+                            callback.onFailure(new TaException("No suggested users"));
+                        }
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void followUnfollowUser(String username, OnResponseCallback<StatusResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new FollowUserTask(context, username) {
+                @Override
+                protected void onSuccess(StatusResponse statusResponse) throws Exception {
+                    super.onSuccess(statusResponse);
+                    if (statusResponse == null){
+                        callback.onFailure(new TaException("Error occured while following"));
+                    } else {
+                        callback.onSuccess(statusResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getDiscussionTopics(String courseId, OnResponseCallback<List<DiscussionTopicDepth>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetDiscussionTopicsTask(context, courseId){
+                @Override
+                protected void onSuccess(CourseTopics courseTopics) throws Exception {
+                    super.onSuccess(courseTopics);
+                    if (courseTopics == null ||
+                            (courseTopics.getCoursewareTopics() == null && courseTopics.getNonCoursewareTopics() == null)){
+                        callback.onFailure(new TaException("No discussion topics available"));
+                    } else {
+                        List<DiscussionTopic> allTopics = new ArrayList<>();
+                        if (courseTopics.getNonCoursewareTopics() != null) {
+                            allTopics.addAll(courseTopics.getNonCoursewareTopics());
+                        }
+                        if (courseTopics.getCoursewareTopics() != null) {
+                            allTopics.addAll(courseTopics.getCoursewareTopics());
+                        }
+                        if (!allTopics.isEmpty()) {
+                            List<DiscussionTopicDepth> allTopicsWithDepth =
+                                    DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
+                            callback.onSuccess(allTopicsWithDepth);
+                        } else {
+                            callback.onFailure(new TaException("No discussion topics available"));
+                        }
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getDiscussionThreads(String courseId, List<String> topicIds, String view,
+                                     String orderBy, int take, int page, List<String> requestedFields,
+                                     OnResponseCallback<List<DiscussionThread>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetDiscussionThreadsTask(context, courseId, topicIds, view, orderBy, take, page, requestedFields){
+                @Override
+                protected void onSuccess(Page<DiscussionThread> discussionThreadPage) throws Exception {
+                    super.onSuccess(discussionThreadPage);
+                    if (discussionThreadPage == null || discussionThreadPage.getResults().isEmpty()){
+                        callback.onFailure(new TaException("No discussion threads available"));
+                    } else {
+                        callback.onSuccess(discussionThreadPage.getResults());
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getThreadComments(String threadId, int take, int page, List<String> requestedFields,
+                                  OnResponseCallback<List<DiscussionComment>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetThreadCommentsTask(context, threadId, take, page, requestedFields){
+                @Override
+                protected void onSuccess(Page<DiscussionComment> discussionCommentPage) throws Exception {
+                    super.onSuccess(discussionCommentPage);
+                    if (discussionCommentPage == null || discussionCommentPage.getResults().isEmpty()){
+                        callback.onFailure(new TaException("No comments available"));
+                    } else {
+                        callback.onSuccess(discussionCommentPage.getResults());
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getCommentReplies(String commentId, int take, int page, List<String> requestedFields,
+                                  OnResponseCallback<List<DiscussionComment>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetCommentRepliesTask(context, commentId, take, page, requestedFields){
+                @Override
+                protected void onSuccess(Page<DiscussionComment> discussionCommentPage) throws Exception {
+                    super.onSuccess(discussionCommentPage);
+                    if (discussionCommentPage == null || discussionCommentPage.getResults().isEmpty()){
+                        callback.onFailure(new TaException("No replies available"));
+                    } else {
+                        callback.onSuccess(discussionCommentPage.getResults());
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+    public void findContentForAssistant(String searchText, List<String> tags, OnResponseCallback<List<Content>> callback) {
+        if (NetworkUtil.isConnected(context)) {
+
+            edxDataManager.getTaAPI().assistantSearch(searchText, tags).enqueue(new Callback<List<Content>>() {
+                @Override
+                protected void onResponse(@NonNull List<Content> responseBody) {
+                    if (callback != null)
+                        callback.onSuccess(responseBody);
+                }
+
+                @Override
+                protected void onFailure(@NonNull Throwable error) {
+                    super.onFailure(error);
+                    if (callback != null)
+                        callback.onFailure(new TaException(error.getMessage()));
+
+                }
+            });
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
     }
 }
 

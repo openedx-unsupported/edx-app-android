@@ -7,14 +7,18 @@ import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
-import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
+import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
+import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
+import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 
 import java.util.List;
@@ -69,7 +73,8 @@ public interface TaService {
     Call<List<Content>> getMyAgendaContent(@Query(Constants.KEY_SOURCE_ID) long sourceId);
 
     @GET(ApiConstants.URL_MX_GET_STATE_AGENDA_CONTENT)
-    Call<List<Content>> getStateAgendaContent(@Query(Constants.KEY_SOURCE_ID) long sourceId);
+    Call<List<Content>> getStateAgendaContent(@Query(Constants.KEY_SOURCE_ID) long sourceId,
+                                              @Query(Constants.KEY_LIST_ID) long list_id);
 
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_SET_BOOKMARK)
@@ -104,4 +109,38 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_SEARCH)
     Call<List<Content>> search(@Body Map<String, Object> parameters);
 
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_SUBMIT_FEEDBACK)
+    Call<FeedbackResponse> submitFeedback(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_RESETPSWD)
+    Call<ChangePasswordResponse> changePassword(@FieldMap Map<String, String> parameters);
+
+    @GET(ApiConstants.URL_MX_GET_MY_CERTIFICATES)
+    Call<MyCertificatesResponse> getMyCertificates();
+
+    @GET(ApiConstants.URL_MX_GET_CERTIFICATE_STATUS)
+    Call<CertificateStatusResponse> getCertificateStatus(@Query(Constants.KEY_COURSE_ID) String courseId);
+
+    @GET(ApiConstants.URL_MX_GET_CERTIFICATE)
+    Call<MyCertificatesResponse> getCertificate(@Query(Constants.KEY_COURSE_ID) String courseId);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_GENERATE_CERTIFICATE)
+    Call<CertificateStatusResponse> generateCertificate(@FieldMap Map<String, String> parameters);
+
+    @GET(ApiConstants.URL_MX_GET_CONTENT)
+    Call<Content> getContent(@Query(Constants.KEY_CONTENT_ID) long contentId);
+
+    @GET(ApiConstants.URL_MX_GET_SUGGESTED_USERS)
+    Call<List<SuggestedUser>> getSuggestedUsers(@Query(Constants.KEY_TAKE) int take,
+                                                       @Query(Constants.KEY_SKIP) int skip);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_FOLLOW_USER)
+    Call<StatusResponse> followUser(@FieldMap Map<String, String> parameters);
+
+    @POST(ApiConstants.URL_MX_ASSISTANT_SEARCH)
+    Call<List<Content>> assistantSearch(@Body Map<String, Object> parameters);
 }

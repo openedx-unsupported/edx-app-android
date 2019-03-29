@@ -44,6 +44,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public long dmId = -1;
 
     public String type;
+    public long content_id;
 
     // enrollment id
     public String eid;
@@ -142,6 +143,14 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         return type != null && (type.equalsIgnoreCase(DownloadType.SCORM.name()) ||
                 type.equalsIgnoreCase(DownloadType.PDF.name()) ||
                 type.equalsIgnoreCase(DownloadType.WP_VIDEO.name()));
+    }
+
+    public long getContent_id() {
+        return content_id;
+    }
+
+    public void setContent_id(long content_id) {
+        this.content_id = content_id;
     }
 
     @Override
@@ -342,7 +351,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         this.downloadedOn=System.currentTimeMillis();
     }
 
-    public void setDownloadEntryForPost(String  category_id, String  category_name, Post post)
+    public void setDownloadEntryForPost(long contentId, String category_id, String category_name, Post post)
     {
         String download_url="";
         //find the downloaded obj
@@ -387,6 +396,8 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
         //it will be content type
         this.type= DownloadType.WP_VIDEO.name();
+
+        this.content_id = contentId;
 
         //it will be section name
         this.section=post.getTitle().getRendered();

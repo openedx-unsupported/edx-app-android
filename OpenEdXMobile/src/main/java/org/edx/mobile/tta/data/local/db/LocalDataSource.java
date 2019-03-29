@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.data.local.db;
 
 import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.User;
@@ -99,5 +100,35 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public List<ContentList> getContentListsByCategoryIdAndMode(long categoryId, String mode) {
         return mAppDatabase.contentListDao().getAllByCategoryIdAndMode(categoryId, mode);
+    }
+
+    @Override
+    public Content getContentById(long id) {
+        return mAppDatabase.contentDao().getById(id);
+    }
+
+    @Override
+    public void insertContent(Content content) {
+        mAppDatabase.contentDao().insert(content);
+    }
+
+    @Override
+    public List<Certificate> getAllCertificates(String username) {
+        return mAppDatabase.certificateDao().getAll(username);
+    }
+
+    @Override
+    public Certificate getCertificate(String courseId, String username) {
+        return mAppDatabase.certificateDao().getByCourseId(courseId, username);
+    }
+
+    @Override
+    public void insertCertificates(List<Certificate> certificates) {
+        mAppDatabase.certificateDao().insert(certificates);
+    }
+
+    @Override
+    public void insertCertificate(Certificate certificate) {
+        mAppDatabase.certificateDao().insert(certificate);
     }
 }

@@ -1,5 +1,7 @@
 package org.edx.mobile.model.api;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class ProfileModel implements Serializable {
@@ -19,6 +21,12 @@ public class ProfileModel implements Serializable {
     public String block;
     public String pmis_code;
 
+    //TTA Chirag
+    @SerializedName("tag_label")
+    private String tagLabel;
+    private long following;
+    private long followers;
+
     public String getState()
     {
         if(pmis_code==null)
@@ -27,4 +35,28 @@ public class ProfileModel implements Serializable {
             return pmis_code;
     }
     // public String url;
+
+    public String getTagLabel() {
+        return tagLabel;
+    }
+
+    public void setTagLabel(String tagLabel) {
+        this.tagLabel = tagLabel;
+    }
+
+    public long getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(long following) {
+        this.following = following;
+    }
+
+    public long getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(long followers) {
+        this.followers = followers;
+    }
 }

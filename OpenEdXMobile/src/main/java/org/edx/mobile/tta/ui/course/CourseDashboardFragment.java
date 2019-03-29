@@ -51,6 +51,7 @@ public class CourseDashboardFragment extends TaBaseFragment {
 
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         ViewPager viewPager = view.findViewById(R.id.view_pager);
+        viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;

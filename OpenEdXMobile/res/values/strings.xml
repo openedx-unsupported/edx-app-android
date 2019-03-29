@@ -681,8 +681,9 @@
     <string name="confirm_password">Confirm password</string>
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
-    <string name="change_password"><u>Change password</u></string>
-    <string name="contact_us"><u>Contact us</u></string>
+    <string name="change_password">Change password</string>
+    <string name="change_password_underlined"><u>Change password</u></string>
+    <string name="contact_us">Contact Us</string>
     <string name="create_new_account">Create new account</string>
     <string name="create_account_and_connect_with_us">Create account and connect with us</string>
     <string name="already_have_account">Already have an account ?</string>
@@ -740,6 +741,28 @@
     <string name="recently_added_list">Recently added</string>
     <string name="most_relevant_list">Most relevant</string>
     <string name="duration">Duration</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="classes_taught">Classes Taught</string>
+    <string name="skills">Skills</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="write_here">Write here</string>
+    <string name="connect_with_us">Connect With Us</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="write_name">Write Name</string>
+    <string name="my_certificates">My Certificates</string>
+    <string name="all_certificates">All Certificates</string>
+    <string name="generate_certificate">Generate Certificate</string>
+    <string name="certificate">Certificate</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="total">Total :</string>
+    <string name="see_more">See More</string>
+    <string name="start_discussion">Start Discussion</string>
+
+    <string name="sign_out_message">Are you sure you want to Sign Out?</string>
+
     <!-- WP Post Share menu title -->
     <string name="share_wp_post_popup_header">Share this post via&#8230;</string>
     <!-- WP Share Post -->

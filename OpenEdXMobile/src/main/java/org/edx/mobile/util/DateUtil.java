@@ -135,6 +135,14 @@ public class DateUtil {
         return day + getMonthInShort(month) + year;*/
     }
 
+    public static String getDisplayTime(Date date) {
+
+        Locale locale = new Locale("en");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy", locale);
+        return outputFormat.format(date);
+
+    }
+
     private static String getMonthInShort(int month) {
         switch (month){
             case 0:

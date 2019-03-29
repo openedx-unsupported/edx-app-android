@@ -30,7 +30,8 @@
 
     <!-- TTA To download without notification -->
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-
+    <!--required into assistant search-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Setup for Code Coverage -->
     <instrumentation
         android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
@@ -38,7 +39,7 @@
 
     <application
         android:name=".base.RuntimeApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/tta_launcher"
         android:label="@string/app_name"
         tools:replace="android:supportsRtl"
@@ -374,6 +375,65 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
+
+        <activity
+            android:name=".tta.ui.deep_link.DeepLinkActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen.TaLaunch"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://connect.theteacherapp.org" -->
+                <data
+                    android:host="connect.theteacherapp.org"
+                    android:scheme="http" />
+
+                <!-- Accepts URIs that begin with "http://theteacherapp.org" -->
+                <data
+                    android:host="theteacherapp.org"
+                    android:scheme="http" />
+
+                <!-- Accepts URIs that begin with "http://www.theteacherapp.org" -->
+                <data
+                    android:host="www.theteacherapp.org"
+                    android:scheme="http" />
+
+                <!-- Accepts URIs that begin with "http://www.connect.theteacherapp.org" -->
+                <data
+                    android:host="www.connect.theteacherapp.org"
+                    android:scheme="http" />
+
+                <!-- for https -->
+
+
+                <!-- Accepts URIs that begin with "http://connect.theteacherapp.org" -->
+                <data
+                    android:host="connect.theteacherapp.org"
+                    android:scheme="https" />
+
+                <!-- Accepts URIs that begin with "http://theteacherapp.org" -->
+                <data
+                    android:host="theteacherapp.org"
+                    android:scheme="https" />
+
+                <!-- Accepts URIs that begin with "http://www.theteacherapp.org/" -->
+                <data
+                    android:host="www.theteacherapp.org"
+                    android:scheme="https" />
+
+                <!-- Accepts URIs that begin with "https://www.connect.theteacherapp.org/" -->
+                <data
+                    android:host="www.connect.theteacherapp.org"
+                    android:scheme="https" />
+            </intent-filter>
+
+        </activity>
 
         <!-- TTA activities end -->
 

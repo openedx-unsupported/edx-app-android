@@ -69,7 +69,9 @@ def getVersionName = { ->
 
         def hasSemanticVersion = { s ->
             // This branch/tag contains a semantic version (e.g. "rc/2.6.0" or "release/2.5")
-            return s.indexOf("rc/") >= 0 || s.indexOf("release/") >= 0
+            //for tta we are keeping it as "tta_rc" or "tta_release".
+            return s.indexOf("rc/") >= 0 || s.indexOf("release/") >= 0 ||
+                    s.indexOf("tta_rc/") >= 0 || s.indexOf("tta_release/") >= 0
         }
         if (hasSemanticVersion(branch)) {
             description = branch
@@ -273,6 +275,12 @@ dependencies {
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
     androidTestImplementation ('org.mockito:mockito-core:1.10.19'){
         exclude group: 'org.hamcrest'
+    }
+    //added for assistant integration vai dialogflow
+    implementation 'ai.api:sdk:2.0.7@aar'
+    annotationProcessor 'ai.api:libai:1.6.12'
+    implementation('ai.api:libai:1.6.12'){
+        exclude module: 'log4j-core'
     }
 }
 

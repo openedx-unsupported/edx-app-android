@@ -1,19 +1,15 @@
 package org.edx.mobile.tta.binding;
 
-import android.app.Activity;
 import android.content.Context;
 import android.databinding.BindingAdapter;
-import android.databinding.adapters.SearchViewBindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,7 +33,6 @@ import org.edx.mobile.tta.ui.custom.FormEditText;
 import org.edx.mobile.tta.ui.custom.NonScrollListView;
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
 import org.edx.mobile.util.SoftKeyboardUtil;
-import org.edx.mobile.view.custom.AuthenticatedWebView;
 
 import java.lang.reflect.Constructor;
 
@@ -88,36 +84,36 @@ public class BindingAdapters {
 
     @BindingAdapter("android:layout_marginTop")
     public static void setLayoutMarginTop(View view, float margin) {
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         if (lp != null) {
-            lp.setMargins(lp.leftMargin, (int)margin, lp.rightMargin, lp.bottomMargin);
+            lp.setMargins(lp.leftMargin, (int) margin, lp.rightMargin, lp.bottomMargin);
             view.setLayoutParams(lp);
         }
     }
 
     @BindingAdapter("android:layout_marginLeft")
     public static void setLayoutMarginLeft(View view, float margin) {
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         if (lp != null) {
-            lp.setMargins((int)margin, lp.topMargin, lp.rightMargin, lp.bottomMargin);
+            lp.setMargins((int) margin, lp.topMargin, lp.rightMargin, lp.bottomMargin);
             view.setLayoutParams(lp);
         }
     }
 
     @BindingAdapter("android:layout_marginBottom")
     public static void setLayoutMarginBottom(View view, float margin) {
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         if (lp != null) {
-            lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, (int)margin);
+            lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, (int) margin);
             view.setLayoutParams(lp);
         }
     }
 
     @BindingAdapter("android:layout_marginRight")
     public static void setLayoutMarginRight(View view, float margin) {
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         if (lp != null) {
-            lp.setMargins(lp.leftMargin, lp.topMargin, (int)margin, lp.bottomMargin);
+            lp.setMargins(lp.leftMargin, lp.topMargin, (int) margin, lp.bottomMargin);
             view.setLayoutParams(lp);
         }
     }
@@ -138,14 +134,11 @@ public class BindingAdapters {
 
     @BindingAdapter({"android:src", "placeholder"})
     public static void setImageSrcFromUrl(ImageView imageView, String url, int placeholder) {
-        if (url == null) {
-            return;
-        }
 
         Glide.with(imageView.getContext())
-            .load(url)
-            .placeholder(placeholder)
-            .into(imageView);
+                .load(url)
+                .placeholder(placeholder)
+                .into(imageView);
     }
 
     @BindingAdapter({"android:src"})
@@ -155,12 +148,12 @@ public class BindingAdapters {
         }
 
         Glide.with(imageView.getContext())
-            .load(url)
-            .into(imageView);
+                .load(url)
+                .into(imageView);
     }
 
     @BindingAdapter("android:src")
-    public static void setImageResource(ImageView imageView, int resource){
+    public static void setImageResource(ImageView imageView, int resource) {
         imageView.setImageResource(resource);
     }
 
@@ -172,7 +165,7 @@ public class BindingAdapters {
             Constructor<?> constructor = null;
             try {
                 constructor = cls.getConstructor(int.class, int.class);
-                view.setLayoutParams((ViewGroup.LayoutParams) constructor.newInstance(width,  width * heightScale / widthScale));
+                view.setLayoutParams((ViewGroup.LayoutParams) constructor.newInstance(width, width * heightScale / widthScale));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -205,22 +198,22 @@ public class BindingAdapters {
     }
 
     @BindingAdapter({"pager_adapter"})
-    public static void bindViewPagerAdapter(ViewPager view, PagerAdapter adapter){
+    public static void bindViewPagerAdapter(ViewPager view, PagerAdapter adapter) {
         view.setAdapter(adapter);
     }
 
     @BindingAdapter({"recycler_adapter"})
-    public static void bindRecyclerAdapter(RecyclerView view, RecyclerView.Adapter adapter){
+    public static void bindRecyclerAdapter(RecyclerView view, RecyclerView.Adapter adapter) {
         view.setAdapter(adapter);
     }
 
     @BindingAdapter({"layout_manager"})
-    public static void bindLayoutManager(RecyclerView view, RecyclerView.LayoutManager layoutManager){
+    public static void bindLayoutManager(RecyclerView view, RecyclerView.LayoutManager layoutManager) {
         view.setLayoutManager(layoutManager);
     }
 
     @BindingAdapter({"layout_manager"})
-    public static void bindLayoutManager(MxRecyclerView view, RecyclerView.LayoutManager layoutManager){
+    public static void bindLayoutManager(MxRecyclerView view, RecyclerView.LayoutManager layoutManager) {
         view.setLayoutManager(layoutManager);
     }
 
@@ -230,82 +223,82 @@ public class BindingAdapters {
     }
 
     @BindingAdapter({"page_change_listener"})
-    public static void addOnPageChangeListener(ViewPager view, ViewPager.OnPageChangeListener listener){
+    public static void addOnPageChangeListener(ViewPager view, ViewPager.OnPageChangeListener listener) {
         view.addOnPageChangeListener(listener);
     }
 
     @BindingAdapter({"selected_tab_position"})
-    public static void setSelectedItemPosition(ViewPager view, int position){
+    public static void setSelectedItemPosition(ViewPager view, int position) {
         view.setCurrentItem(position);
     }
 
     @BindingAdapter({"text_changed_listener"})
-    public static void addTextChangedListener(EditText view, TextWatcher watcher){
+    public static void addTextChangedListener(EditText view, TextWatcher watcher) {
         view.addTextChangedListener(watcher);
     }
 
     @BindingAdapter({"view_enabled"})
-    public static void enableView(View view, boolean b){
+    public static void enableView(View view, boolean b) {
         view.setEnabled(b);
     }
 
     @BindingAdapter({"drawable_right"})
-    public static void setDrawableRight(EditText view, int drawableId){
+    public static void setDrawableRight(EditText view, int drawableId) {
         view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, drawableId, 0);
     }
 
     @BindingAdapter({"on_touch_listener"})
-    public static void setOnTouchListener(View view, View.OnTouchListener listener){
+    public static void setOnTouchListener(View view, View.OnTouchListener listener) {
         view.setOnTouchListener(listener);
     }
 
     @BindingAdapter({"input_type"})
-    public static void setInputType(EditText view, int inputType){
+    public static void setInputType(EditText view, int inputType) {
         view.setInputType(inputType);
     }
 
     @BindingAdapter({"password_toggle_enabled"})
-    public static void setPasswordToggleEnabled(TextInputLayout view, boolean enabled){
+    public static void setPasswordToggleEnabled(TextInputLayout view, boolean enabled) {
         view.setPasswordVisibilityToggleEnabled(enabled);
     }
 
     @BindingAdapter({"password_toggle_drawable"})
-    public static void setPasswordToggleDrawable(TextInputLayout view, int id){
+    public static void setPasswordToggleDrawable(TextInputLayout view, int id) {
         view.setPasswordVisibilityToggleDrawable(id);
     }
 
     @BindingAdapter({"bottom_nav_item_selected_listener"})
-    public static void setBottomNavItemSelectedListener(BottomNavigationView view, BottomNavigationView.OnNavigationItemSelectedListener listener){
+    public static void setBottomNavItemSelectedListener(BottomNavigationView view, BottomNavigationView.OnNavigationItemSelectedListener listener) {
         view.setOnNavigationItemSelectedListener(listener);
     }
 
     @BindingAdapter({"bottom_nav_item_selected_id"})
-    public static void setBottomNavItemSelectedId(BottomNavigationView view, int id){
+    public static void setBottomNavItemSelectedId(BottomNavigationView view, int id) {
         view.setSelectedItemId(id);
     }
 
     @BindingAdapter({"bottom_nav_enable_shift_mode"})
-    public static void enableBottomNavShiftMode(BottomNavigationView view, boolean b){
-        if (!b){
+    public static void enableBottomNavShiftMode(BottomNavigationView view, boolean b) {
+        if (!b) {
             BottomNavigationViewHelper.disableShiftMode(view);
         }
     }
 
     @BindingAdapter({"finite_recycler_adapter"})
-    public static void setFiniteAdapter(MxFiniteRecyclerView view, MxFiniteAdapter adapter){
+    public static void setFiniteAdapter(MxFiniteRecyclerView view, MxFiniteAdapter adapter) {
         view.setAdapter(adapter);
     }
 
     @BindingAdapter({"infinite_recycler_adapter"})
-    public static void setInfiniteAdapter(MxRecyclerView view, MxInfiniteAdapter adapter){
+    public static void setInfiniteAdapter(MxRecyclerView view, MxInfiniteAdapter adapter) {
         view.setAdapter(adapter);
     }
 
     @BindingAdapter({"request_focus"})
-    public static void requestFocus(View view, boolean b){
+    public static void requestFocus(View view, boolean b) {
         if (b) {
             view.requestFocus();
-            if (view instanceof EditText){
+            if (view instanceof EditText) {
                 ((EditText) view).setSelection(((EditText) view).getText().length());
                 SoftKeyboardUtil.show((EditText) view);
             }
@@ -313,63 +306,74 @@ public class BindingAdapters {
     }
 
     @BindingAdapter({"form_edittext_input_type"})
-    public static void setInputType(FormEditText view, int type){
+    public static void setInputType(FormEditText view, int type) {
         view.setInputType(type);
     }
 
     @BindingAdapter({"form_password_toggle_enabled"})
-    public static void setFormPasswordToggleEnabled(FormEditText view, boolean enabled){
+    public static void setFormPasswordToggleEnabled(FormEditText view, boolean enabled) {
         view.setPasswordVisibilityToggleEnabled(enabled);
     }
 
     @BindingAdapter({"form_password_toggle_drawable"})
-    public static void setFormPasswordToggleDrawable(FormEditText view, int id){
+    public static void setFormPasswordToggleDrawable(FormEditText view, int id) {
         view.setPasswordVisibilityToggleDrawable(id);
     }
 
     @BindingAdapter({"on_key_listener"})
-    public static void onSetKeyListener(View view, View.OnKeyListener listener){
+    public static void onSetKeyListener(View view, View.OnKeyListener listener) {
         view.setOnKeyListener(listener);
     }
 
     @BindingAdapter({"divider_item_decoration"})
-    public static void addDividerItemDecoration(RecyclerView view, DividerItemDecoration decoration){
+    public static void addDividerItemDecoration(RecyclerView view, DividerItemDecoration decoration) {
         view.addItemDecoration(decoration);
     }
 
     @BindingAdapter({"infinite_recycler_adapter", "infinite_load_more_listener"})
-    public static void setOnLoadMoreListener(MxRecyclerView view, MxInfiniteAdapter adapter, MxInfiniteAdapter.OnLoadMoreListener listener){
+    public static void setOnLoadMoreListener(MxRecyclerView view, MxInfiniteAdapter adapter, MxInfiniteAdapter.OnLoadMoreListener listener) {
         adapter.setOnLoadMoreListener(view.getRecyclerView(), listener);
         view.setAdapter(adapter);
     }
 
     @BindingAdapter({"on_query_text_listener"})
-    public static void setOnQueryTextListener(SearchView view, SearchView.OnQueryTextListener listener){
+    public static void setOnQueryTextListener(SearchView view, SearchView.OnQueryTextListener listener) {
         view.setOnQueryTextListener(listener);
     }
 
     @BindingAdapter({"selected"})
-    public static void setChecked(View view, boolean b){
+    public static void setChecked(View view, boolean b) {
         view.setSelected(b);
     }
 
     @BindingAdapter({"selected_position"})
-    public static void setSelectedPosition(NonScrollListView view, int position){
+    public static void setSelectedPosition(NonScrollListView view, int position) {
         view.setItemChecked(position, true);
     }
 
     @BindingAdapter({"item_click_listener"})
-    public static void setItemClickListener(NonScrollListView view, AdapterView.OnItemClickListener listener){
+    public static void setItemClickListener(NonScrollListView view, AdapterView.OnItemClickListener listener) {
         view.setOnItemClickListener(listener);
     }
 
     @BindingAdapter({"array_adapter"})
-    public static void setArrayAdapter(NonScrollListView view, BaseArrayAdapter adapter){
+    public static void setArrayAdapter(NonScrollListView view, BaseArrayAdapter adapter) {
+        view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"array_adapter"})
+    public static void setArrayAdapter(ListView view, BaseArrayAdapter adapter) {
         view.setAdapter(adapter);
     }
 
     @BindingAdapter({"on_close_listener"})
-    public static void setOnCloseListener(SearchView view, SearchView.OnCloseListener listener){
+    public static void setOnCloseListener(SearchView view, SearchView.OnCloseListener listener) {
         view.setOnCloseListener(listener);
+    }
+    @BindingAdapter({"scroll_to_position"})
+    public static void setScrollToPosition(MxRecyclerView view, final int pos) {
+        view.getRecyclerView().post(() -> {
+            view.getRecyclerView().smoothScrollToPosition(pos);
+        });
     }
 }

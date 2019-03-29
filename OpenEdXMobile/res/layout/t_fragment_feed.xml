@@ -4,7 +4,7 @@
     xmlns:mx="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.feed.view_model.FeedViewModel" />
@@ -14,27 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_26px" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_26px"
+                android:layout_marginBottom="@dimen/_8px"
                 app:srcCompat="@drawable/tta_launcher_icon"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/_20px"
+                android:layout_marginTop="@dimen/_30px"
                 app:srcCompat="@drawable/t_icon_notification"
                 android:onClick="@{()->viewModel.showNotifications()}"/>
 
@@ -50,13 +49,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/t_row_content_slider" />
+                <include
+                    layout="@layout/t_row_content_slider"
+                    android:visibility="gone"/>
 
                 <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20px"
                     app:mx_itemLayout="@layout/t_row_suggested_teacher"
-                    app:mx_itemLimit="5"
+                    app:mx_itemLimit="10"
                     app:mx_moreButtonDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
                     app:mx_moreButtonMarginEnd="@dimen/_20px"
                     app:mx_moreButtonText="@string/view_more"
@@ -67,7 +69,9 @@
                     app:mx_titleText="@string/suggested_teachers"
                     app:mx_titleTextColor="@color/gray_5"
                     app:mx_titleTextFont="@font/hind_medium"
-                    app:mx_titleTextSize="@dimen/list_title_size" />
+                    app:mx_titleTextSize="@dimen/list_title_size"
+                    finite_recycler_adapter="@{viewModel.suggestedUsersAdapter}"
+                    android:visibility="@{viewModel.suggestedUsersVisible?View.VISIBLE:View.GONE}"/>
 
                 <com.maurya.mx.mxlib.view.MxRecyclerView
                     android:layout_width="match_parent"

@@ -1,7 +1,7 @@
 package org.edx.mobile.tta.ui.course.view_model;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -10,11 +10,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -30,10 +27,13 @@ import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
+import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.PDFBlockModel;
@@ -44,17 +44,19 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.course.CourseScormViewActivity;
 import org.edx.mobile.tta.ui.interfaces.OnTaItemClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
-import org.edx.mobile.view.custom.AuthenticatedWebView;
+import org.edx.mobile.util.PermissionsUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import de.greenrobot.event.ThreadMode;
-import okhttp3.HttpUrl;
 
 public class CourseMaterialViewModel extends BaseViewModel {
+
+    private static final int ACTION_DOWNLOAD = 1;
+    private static final int ACTION_DELETE = 2;
+    private static final int ACTION_PLAY = 3;
 
     private static final String javascript = "javascript:document.getElementsByid('xblock.xblock-student_view.xblock-student_view-html.xmodule_display.xmodule_HtmlModule.xblock-initialized').html();";
 
@@ -63,6 +65,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private CourseComponent rootComponent;
     private CourseComponent assessmentComponent;
     private List<ScormBlockModel> remainingScorms;
+    private ScormBlockModel selectedScormForDownload, selectedScormForDelete, selectedScormForPlay;
 
     public CourseMaterialAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -83,11 +86,12 @@ public class CourseMaterialViewModel extends BaseViewModel {
     public ObservableInt footerDownloadIcon = new ObservableInt(R.drawable.t_icon_download);
     public ObservableBoolean footerDownloadIconVisible = new ObservableBoolean(false);
     public ObservableBoolean footerDownloadProgressVisible = new ObservableBoolean(false);
-    public ObservableField<String> footerBtnText = new ObservableField<>();
+    public ObservableField<String> footerBtnText = new ObservableField<>("");
 
     private int numberOfDownloadingVideos;
     private int numberOfDownloadedVideos;
     private boolean downloadModeIsAll;
+    private int actionMode;
 
     public CourseMaterialViewModel(Context context, TaBaseFragment fragment, Content content, EnrolledCoursesResponse course, CourseComponent rootComponent) {
         super(context, fragment);
@@ -189,35 +193,53 @@ public class CourseMaterialViewModel extends BaseViewModel {
     }
 
     private void deleteScorm(ScormBlockModel scorm) {
+        selectedScormForDelete = scorm;
+        actionMode = ACTION_DELETE;
+        mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+    }
+
+    private void deleteScorm() {
+
         mActivity.showAlertDailog("Delete",
-                "Are you sure you want to delete \"" + scorm.getParent().getDisplayName() + "\"?",
+                "Are you sure you want to delete \"" + selectedScormForDelete.getParent().getDisplayName() + "\"?",
                 (dialog, which) -> {
-                    mDataManager.deleteScorm(scorm);
+                    mDataManager.deleteScorm(selectedScormForDelete);
                 },
                 null);
+
     }
 
     private void showScorm(ScormBlockModel scorm) {
+        selectedScormForPlay = scorm;
+        actionMode = ACTION_PLAY;
+        mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+    }
+
+    private void showScorm() {
+
         Bundle parameters = new Bundle();
-        String filePath = scorm.getDownloadEntry(mDataManager.getEdxEnvironment().getStorage()).getFilePath();
-        if (scorm.getType().equals(BlockType.SCORM)) {
+        String filePath = selectedScormForPlay.getDownloadEntry(mDataManager.getEdxEnvironment().getStorage()).getFilePath();
+        if (selectedScormForPlay.getType().equals(BlockType.SCORM)) {
             if (filePath.contains(".zip")){
                 filePath = filePath.substring(0, filePath.length()-4);
             }
             parameters.putString(Constants.KEY_FILE_PATH, filePath);
-            parameters.putString(Constants.KEY_COURSE_NAME, scorm.getRoot().getDisplayName());
-            parameters.putString(Constants.KEY_COURSE_ID, scorm.getRoot().getId());
-            parameters.putString(Constants.KEY_UNIT_ID, scorm.getId());
+            parameters.putString(Constants.KEY_COURSE_NAME, selectedScormForPlay.getRoot().getDisplayName());
+            parameters.putString(Constants.KEY_COURSE_ID, selectedScormForPlay.getRoot().getId());
+            parameters.putString(Constants.KEY_UNIT_ID, selectedScormForPlay.getId());
             ActivityUtil.gotoPage(mActivity, CourseScormViewActivity.class, parameters);
-        } else if (scorm.getType().equals(BlockType.PDF)) {
+        } else if (selectedScormForPlay.getType().equals(BlockType.PDF)) {
             ActivityUtil.viewPDF(mActivity, new File(filePath));
         }
+
     }
 
     private void enableHeader(){
 
         allDownloadStatusIcon.set(R.drawable.t_icon_done);
-        description.set(course.getCourse().getShort_description());
+        description.set(course == null ? null : course.getCourse().getShort_description());
 
         adapter.setHeaderLayout(R.layout.t_row_course_material_header);
         adapter.setHeaderClickListener(v -> {
@@ -240,7 +262,19 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     private void enableFooter(){
 
-        footerImageUrl.set("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+        mDataManager.getCertificateStatus(course.getCourse().getId(), new OnResponseCallback<CertificateStatusResponse>() {
+            @Override
+            public void onSuccess(CertificateStatusResponse data) {
+                setButtonText(data);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                footerBtnText.set(mActivity.getString(R.string.assessment));
+            }
+        });
+
+        footerImageUrl.set(content.getIcon());
         footerTitleVisible.set(true);
         footerTitle.set(assessmentComponent.getDisplayName());
         footerDownloadIcon.set(R.drawable.t_icon_download);
@@ -271,26 +305,52 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     }
                     break;
                 case R.id.item_btn:
-                    if (assessmentComponent.isContainer()){
-                        CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
-                            ScormBlockModel scorm = (ScormBlockModel) component;
-                            switch (mDataManager.getScormStatus(scorm)){
-                                case not_downloaded:
-                                    downloadSingle(scorm);
-                                    break;
-                                case downloaded:
-                                case watching:
-                                case watched:
-                                    showScorm(scorm);
-                                    break;
-                                case downloading:
-                                    //Do nothing
-                                    break;
+                    if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.generate_certificate))){
+                        mActivity.showLoading();
+
+                        mDataManager.generateCertificate(course.getCourse().getId(), new OnResponseCallback<CertificateStatusResponse>() {
+                            @Override
+                            public void onSuccess(CertificateStatusResponse data) {
+                                mActivity.hideLoading();
+                                setButtonText(data);
                             }
-                        }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+
+                        break;
+                    } else if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.certificate))){
+                        mActivity.showIndefiniteSnack(
+                                "आपके सर्टिफिकेट की मांग दर्ज हो गयी है| " +
+                                        "सर्टिफिकेट तैयार होने पर हम आपको ऐप्प द्वारा सूचित करेंगे|"
+                        );
+                        break;
+                    } else if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.view_certificate))){
+                        mActivity.showLoading();
+
+                        mDataManager.getCertificate(course.getCourse().getId(), new OnResponseCallback<Certificate>() {
+                            @Override
+                            public void onSuccess(Certificate data) {
+                                mActivity.hideLoading();
+                                String url = mDataManager.getConfig().getApiHostURL() + data.getDownload_url();
+                                mDataManager.getEdxEnvironment().getRouter().showAuthenticatedWebviewActivity(
+                                        mActivity, url, data.getCourse_name()
+                                );
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+
+                        break;
                     }
-                    break;
                 default:
                     if (assessmentComponent.isContainer()){
                         CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
@@ -315,6 +375,26 @@ public class CourseMaterialViewModel extends BaseViewModel {
             }
         });
 
+    }
+
+    private void setButtonText(CertificateStatusResponse data) {
+        switch (CertificateStatus.getEnumFromString(data.getStatus())){
+            case FAIL:
+            case NONE:
+                footerBtnText.set(mActivity.getString(R.string.assessment));
+                break;
+
+            case APPLICABLE:
+                footerBtnText.set(mActivity.getString(R.string.generate_certificate));
+                break;
+
+            case PROGRESS:
+                footerBtnText.set(mActivity.getString(R.string.certificate));
+                break;
+
+            case GENERATED:
+                footerBtnText.set(mActivity.getString(R.string.view_certificate));
+        }
     }
 
     private void bookmark() {
@@ -362,14 +442,49 @@ public class CourseMaterialViewModel extends BaseViewModel {
         });
     }
 
+    public void performAction(){
+
+        switch (actionMode){
+            case ACTION_DOWNLOAD:
+                download();
+                break;
+            case ACTION_DELETE:
+                deleteScorm();
+                break;
+            case ACTION_PLAY:
+                showScorm();
+                break;
+        }
+
+    }
+
+    public void download(){
+
+        if (downloadModeIsAll){
+            downloadMany();
+        } else {
+            downloadSingle();
+        }
+
+    }
+
     private void downloadSingle(ScormBlockModel scorm){
+        downloadModeIsAll = false;
+        selectedScormForDownload = scorm;
+        actionMode = ACTION_DOWNLOAD;
+        mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+    }
+
+    private void downloadSingle() {
+
         mActivity.showLoading();
         downloadModeIsAll = false;
-        mDataManager.downloadSingle(scorm, mActivity, new VideoDownloadHelper.DownloadManagerCallback() {
+        mDataManager.downloadSingle(selectedScormForDownload, content.getId(), mActivity, new VideoDownloadHelper.DownloadManagerCallback() {
             @Override
             public void onDownloadStarted(Long result) {
                 mActivity.hideLoading();
-                remainingScorms.remove(scorm);
+                remainingScorms.remove(selectedScormForDownload);
                 if (adapter != null){
                     adapter.notifyDataSetChanged();
                 }
@@ -400,15 +515,23 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 return false;
             }
         });
+
     }
 
     private void downloadAllRemaining(){
-        mActivity.showLoading();
         downloadModeIsAll = true;
+        actionMode = ACTION_DOWNLOAD;
+        mFragment.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+    }
+
+    private void downloadMany(){
+
+        mActivity.showLoading();
         numberOfDownloadingVideos = remainingScorms.size();
         numberOfDownloadedVideos = 0;
 
-        mDataManager.downloadMultiple(remainingScorms, mActivity,
+        mDataManager.downloadMultiple(remainingScorms, content.getId(), mActivity,
                 new VideoDownloadHelper.DownloadManagerCallback() {
                     @Override
                     public void onDownloadStarted(Long result) {
@@ -706,9 +829,9 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     }
                 }
 
-                itemBinding.itemDuration.setText(mActivity.getString(R.string.estimated_duration) + ": 01:00");
+                itemBinding.itemDuration.setText(mActivity.getString(R.string.estimated_duration) + " : " + (item.getDuration() == null ? "N/A" : item.getDuration()));
                 Glide.with(mActivity)
-                        .load("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png")
+                        .load(content.getIcon())
                         .placeholder(R.drawable.placeholder_course_card_image)
                         .into(itemBinding.itemImage);
                 itemBinding.itemTitle.setText(item.getDisplayName());
