@@ -42,7 +42,8 @@ public class DeepLinkManager {
 
         switch (screenName) {
             case Screen.COURSE_DASHBOARD:
-            case Screen.COURSE_VIDEOS: {
+            case Screen.COURSE_VIDEOS:
+            case Screen.COURSE_DISCUSSION: {
                 final String courseId = paramsJson.getString(KEY_COURSE_ID);
                 router.showCourseDashboardTabs(activity, null, courseId, false, screenName);
                 break;

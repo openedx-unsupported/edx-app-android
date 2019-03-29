@@ -79,6 +79,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 for (int i = 0; i < fragmentItems.size(); i++) {
                     final FragmentItemModel item = fragmentItems.get(i);
                     if ((screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) ||
+                            (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
                             (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) ||
                             ((screenName.equals(Screen.COURSE_DISCOVERY) || screenName.equals(Screen.PROGRAM_DISCOVERY))
                                     && item.getIcon() == FontAwesomeIcons.fa_search)) {
