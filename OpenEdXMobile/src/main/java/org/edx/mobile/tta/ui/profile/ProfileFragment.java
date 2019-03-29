@@ -43,13 +43,15 @@ public class ProfileFragment extends TaBaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_fragment_profile, new ProfileViewModel(getActivity(), this))
                 .getRoot();
-        setHasOptionsMenu(true);
 
+        setHasOptionsMenu(true);
         toolbar = view.findViewById(R.id.toolbar);
+        ivClose = view.findViewById(R.id.ivClose);
 
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
+
         imageprofile = view.findViewById(R.id.imageProfile);
         imageprofile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +66,7 @@ public class ProfileFragment extends TaBaseFragment {
                 );
             }
         });
+
         layoutBottomSheet = view.findViewById(R.id.bottomSheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -73,12 +76,11 @@ public class ProfileFragment extends TaBaseFragment {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED: {
-
                     }
                     break;
                     case BottomSheetBehavior.STATE_COLLAPSED: {
-
                     }
+
                     break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
@@ -93,8 +95,6 @@ public class ProfileFragment extends TaBaseFragment {
 
             }
         });
-        ivClose = view.findViewById(R.id.ivClose);
-
 
         return view;
     }
@@ -119,10 +119,8 @@ public class ProfileFragment extends TaBaseFragment {
     public void toggleBottomSheet() {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
         } else {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
         }
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +128,5 @@ public class ProfileFragment extends TaBaseFragment {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
-
     }
 }
