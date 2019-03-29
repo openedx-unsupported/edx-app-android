@@ -26,7 +26,7 @@ This project is meant to be built using Android Studio. It can also be built fro
 
         git clone https://github.com/edx/edx-app-android
 
-2. Setup the Android Studio. The latest tested Android Studio version is v3.1.3, you can download it from [the previous versions archive](https://developer.android.com/studio/archive).
+2. Setup the Android Studio. The latest tested Android Studio version is v3.3.2, you can download it from [the previous versions archive](https://developer.android.com/studio/archive). (You can find further details to run the project on the said version of Android Studio on this [PR](https://github.com/edx/edx-app-android/pull/1264).
 
 3. Open Android Studio and choose **Open an Existing Android Studio Project**
 

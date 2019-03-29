@@ -74,7 +74,7 @@ import java.util.concurrent.Executor;
  * s prefixes - coordinates, translations and distances measured in source image pixels (scaled)
  */
 
-// TODO - Update the class/Library to resolve the warning of WrongThread (currently suppress) as part of https://openedx.atlassian.net/browse/LEARNER-7207
+// TODO - Update this legacy library code as part of https://openedx.atlassian.net/browse/LEARNER-7207, currently we are just suppressing the WrongThread warnings
 @SuppressWarnings("unused")
 public class SubsamplingScaleImageView extends View {
 
