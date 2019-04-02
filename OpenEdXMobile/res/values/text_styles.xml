@@ -39,7 +39,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:paddingLeft">13dp</item>
         <item name="android:paddingRight">13dp</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">13sp</item>adb
         <item name="android:paddingBottom">14dp</item>
     </style>
 
@@ -251,6 +251,20 @@
 
     <style name="discussion_responses_small_text" parent="discussion_regular_text">
         <item name="android:textColor">@color/edx_brand_gray_base</item>
+    </style>
+
+
+    <!-- TTA -->
+
+    <style name="TextAppearence.App.TextInputLayout" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@color/gray_1</item>
+        <item name="colorControlActivated">@color/gray_1</item>
+    </style>
+
+    <style name="TextColorHint" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/primary_navy</item>
+        <item name="android:fontFamily">@font/hind_regular</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

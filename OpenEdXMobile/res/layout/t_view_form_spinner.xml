@@ -4,30 +4,81 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="@dimen/_34px"
+        android:orientation="vertical"
         android:layout_marginStart="@dimen/_40px"
         android:layout_marginEnd="@dimen/_40px">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/spinner_label"
-            android:textSize="10sp"/>
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:textColor="@color/primary_navy"
+            android:fontFamily="@font/hind_regular"/>
 
-        <Spinner
+        <RelativeLayout
+            android:id="@+id/rel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:gravity="center_vertical"/>
+            android:layout_marginRight="3dp"
+            android:layout_weight=".28"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/etRegion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                android:backgroundTint="@color/gray_1"
+                android:gravity="left"
+                android:text="State /City"
+                android:textColor="@color/gray_1"
+                android:layout_marginLeft="5dp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="@color/transparent"
+                android:src="@drawable/t_icon_dropdown_selected" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
+            android:layout_marginTop="@dimen/_10px"/>
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/spinner_error"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textColor="@color/material_red_500"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_marginTop="8dp"/>
 
     </LinearLayout>
 
