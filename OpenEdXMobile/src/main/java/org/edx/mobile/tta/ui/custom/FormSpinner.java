@@ -2,7 +2,9 @@ package org.edx.mobile.tta.ui.custom;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TViewFormSpinnerBinding;
@@ -33,7 +37,7 @@ public class FormSpinner extends LinearLayout {
     private RegistrationOption selectedOption;
 
     private OnTaItemClickListener<RegistrationOption> listener;
-    private String label;
+    private String label, value;
 
     public FormSpinner(Context context) {
         super(context);
@@ -45,37 +49,58 @@ public class FormSpinner extends LinearLayout {
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.t_view_form_spinner, this, true);
+        mBinding.getRoot().setOnClickListener(v -> {
+            mBinding.spinner.performClick();
+
+        });
+
         setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedOption = options.get(position);
-                setError(null);
-                if (listener != null){
-                    listener.onItemClick(view, selectedOption);
+                Object item = parent.getItemAtPosition(position);
+                if (label != null && position == 0) {
+
+                    mBinding.spinnerLabel.setVisibility(GONE);
+                    selectedOption = null;
+                    mBinding.etRegion.setTextColor(ContextCompat.getColor(context, R.color.gray_1));
+                } else {
+                    selectedOption = options.get(position);
+                    setError(null);
+                    if (listener != null) {
+                        listener.onItemClick(view, selectedOption);
+                    }
+                    mBinding.spinnerLabel.setVisibility(VISIBLE);
+                    mBinding.etRegion.setTextColor(ContextCompat.getColor(context, R.color.gray_4));
                 }
+                mBinding.etRegion.setText(item.toString());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                if (options != null && !options.isEmpty()){
+                /*if (options != null && !options.isEmpty()) {
                     selectedOption = options.get(0);
+                    Object item = parent.getItemAtPosition(0);
                     setError(null);
-                    if (listener != null){
+                    if (listener != null) {
                         listener.onItemClick(parent.getSelectedView(), selectedOption);
                     }
-                }
+                }*/
             }
         });
     }
 
-    public void setLabel(String label){
+
+    public void setLabel(String label) {
         this.label = label;
         mBinding.spinnerLabel.setText(label);
     }
 
-    public void setItems(@NonNull List<RegistrationOption> options, RegistrationOption defaultOption){
+    public void setItems(@NonNull List<RegistrationOption> options, RegistrationOption defaultOption) {
+        if (label != null) {
+            options.add(0, new RegistrationOption(label, label));
+        }
         this.options = options;
         this.selectedOption = defaultOption;
         adapter = new ArrayAdapter<>(getContext(), R.layout.t_view_spinner_item, options);
@@ -86,7 +111,7 @@ public class FormSpinner extends LinearLayout {
         }
     }
 
-    public void setAdapter(SpinnerAdapter adapter){
+    public void setAdapter(SpinnerAdapter adapter) {
         mBinding.spinner.setAdapter(adapter);
     }
 
@@ -98,29 +123,29 @@ public class FormSpinner extends LinearLayout {
         this.listener = listener;
     }
 
-    public void setMandatory(boolean isMandatory){
+    public void setMandatory(boolean isMandatory) {
         this.isMandatory = isMandatory;
-        if (isMandatory && label != null){
+        if (isMandatory && label != null) {
             mBinding.spinnerLabel.append(getResources().getString(R.string.asterisk_red));
         }
     }
 
-    public boolean isMandatory(){
+    public boolean isMandatory() {
         return isMandatory;
     }
 
-    public boolean validate(){
+    public boolean validate() {
         return !isMandatory || (selectedOption != null);
     }
 
     public RegistrationOption getSelectedOption() {
-        if (selectedOption == null){
+        if (selectedOption == null) {
             return new RegistrationOption("", "");
         }
         return selectedOption;
     }
 
-    public void setError(String msg){
+    public void setError(String msg) {
         if (msg != null) {
             mBinding.spinnerError.setText(msg);
             mBinding.spinnerError.setVisibility(VISIBLE);
@@ -129,7 +154,7 @@ public class FormSpinner extends LinearLayout {
         }
     }
 
-    private void select(@android.support.annotation.Nullable String value){
+    private void select(@android.support.annotation.Nullable String value) {
         if (adapter != null && value != null) {
             int pos = getAdapterPosition(value);
             if (pos >= 0) {
@@ -141,7 +166,7 @@ public class FormSpinner extends LinearLayout {
     private int getAdapterPosition(@android.support.annotation.Nullable String input) {
         int posiiton = -1;
         if (input != null && adapter != null) {
-            for(int i=0 ; i<adapter.getCount() ; i++){
+            for (int i = 0; i < adapter.getCount(); i++) {
                 RegistrationOption item = adapter.getItem(i);
                 if (item != null && input.equals(item.toString())) {
                     posiiton = i;

@@ -23,6 +23,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.CourseComponent;
@@ -49,11 +50,12 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.model.BaseResponse;
+import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
-import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
@@ -62,10 +64,10 @@ import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
-import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
+import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.pref.AppPref;
@@ -109,7 +111,6 @@ import org.edx.mobile.tta.task.profile.ChangePasswordTask;
 import org.edx.mobile.tta.task.profile.GetAccountTask;
 import org.edx.mobile.tta.task.profile.GetProfileTask;
 import org.edx.mobile.tta.task.profile.GetUserAddressTask;
-import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
@@ -131,7 +132,6 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -150,13 +150,12 @@ import static org.edx.mobile.tta.Constants.TA_DATABASE;
  */
 
 public class DataManager extends BaseRoboInjector {
-    private Context context;
     private static DataManager mDataManager;
-    private IRemoteDataSource mRemoteDataSource;
-    private ILocalDataSource mLocalDataSource;
     @Inject
     public IEdxDataManager edxDataManager;
-
+    private Context context;
+    private IRemoteDataSource mRemoteDataSource;
+    private ILocalDataSource mLocalDataSource;
     @com.google.inject.Inject
     private IEdxEnvironment edxEnvironment;
 
@@ -201,7 +200,7 @@ public class DataManager extends BaseRoboInjector {
                 }
             }
         }
-        mDataManager.wpClientRetrofit = new WpClientRetrofit(true,false);
+        mDataManager.wpClientRetrofit = new WpClientRetrofit(true, false);
         return mDataManager;
     }
 
@@ -246,7 +245,7 @@ public class DataManager extends BaseRoboInjector {
 
             @Override
             public void onFailure(HttpServerErrorResponse errorResponse) {
-                if (config.isWordpressAuthentication()){
+                if (config.isWordpressAuthentication()) {
                     callback.onFailure(new TaException(errorResponse.getMessage()));
                 } else {
                     doEdxLogin(username, password, callback);
@@ -256,9 +255,9 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    private void doEdxLogin(String username, String password, OnResponseCallback<AuthResponse> callback){
+    private void doEdxLogin(String username, String password, OnResponseCallback<AuthResponse> callback) {
 
-        new LoginTask(context, username, password){
+        new LoginTask(context, username, password) {
             @Override
             protected void onSuccess(AuthResponse authResponse) throws Exception {
                 super.onSuccess(authResponse);
@@ -1692,16 +1691,20 @@ public class DataManager extends BaseRoboInjector {
                         new Thread(){
                             @Override
                             public void run() {
-                                for (Content content: finalContents){
-                                    if (content.getLists() == null){
-                                        content.setLists(new ArrayList<>());
-                                    }
+                                try {
+                                    for (Content content : finalContents) {
+                                        if (content.getLists() == null) {
+                                            content.setLists(new ArrayList<>());
+                                        }
 
-                                    Content localContent = mLocalDataSource.getContentById(content.getId());
-                                    if (localContent != null && localContent.getLists() != null){
-                                        content.getLists().addAll(localContent.getLists());
+                                        Content localContent = mLocalDataSource.getContentById(content.getId());
+                                        if (localContent != null && localContent.getLists() != null) {
+                                            content.getLists().addAll(localContent.getLists());
+                                        }
+                                        mLocalDataSource.insertContent(content);
                                     }
-                                    mLocalDataSource.insertContent(content);
+                                }catch (Exception e){
+                                    e.printStackTrace();
                                 }
                             }
                         }.start();
@@ -1991,23 +1994,23 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getCertificate(String courseId, OnResponseCallback<Certificate> callback){
+    public void getCertificate(String courseId, OnResponseCallback<Certificate> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new GetCertificateTask(context, courseId){
+            new GetCertificateTask(context, courseId) {
                 @Override
                 protected void onSuccess(MyCertificatesResponse myCertificatesResponse) throws Exception {
                     super.onSuccess(myCertificatesResponse);
                     if (myCertificatesResponse == null || myCertificatesResponse.getCertificates() == null ||
-                            myCertificatesResponse.getCertificates().isEmpty()){
+                            myCertificatesResponse.getCertificates().isEmpty()) {
                         getCertificateFromLocal(courseId, callback, new TaException("Certificate not available"));
                     } else {
-                        new Thread(){
+                        new Thread() {
                             @Override
                             public void run() {
                                 Certificate certificate = myCertificatesResponse.getCertificates().get(0);
-                                if (certificate.getUsername() == null){
+                                if (certificate.getUsername() == null) {
                                     certificate.setUsername(loginPrefs.getUsername());
                                 }
                                 mLocalDataSource.insertCertificate(certificate);
@@ -2030,7 +2033,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getCertificateFromLocal(String courseId, OnResponseCallback<Certificate> callback, Exception e){
+    public void getCertificateFromLocal(String courseId, OnResponseCallback<Certificate> callback, Exception e) {
 
         new AsyncTask<Void, Void, Certificate>() {
             @Override
@@ -2040,7 +2043,7 @@ public class DataManager extends BaseRoboInjector {
 
             @Override
             protected void onPostExecute(Certificate certificate) {
-                if (certificate != null){
+                if (certificate != null) {
                     callback.onSuccess(certificate);
                 } else {
                     callback.onFailure(e);
@@ -2050,23 +2053,23 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getMyCertificates(OnResponseCallback<List<Certificate>> callback){
+    public void getMyCertificates(OnResponseCallback<List<Certificate>> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new GetMyCertificatesTask(context){
+            new GetMyCertificatesTask(context) {
                 @Override
                 protected void onSuccess(MyCertificatesResponse myCertificatesResponse) throws Exception {
                     super.onSuccess(myCertificatesResponse);
-                    if (myCertificatesResponse == null || myCertificatesResponse.getCertificates() == null){
+                    if (myCertificatesResponse == null || myCertificatesResponse.getCertificates() == null) {
                         getMyCertificatesFromLocal(callback, new TaException("Certificates not available"));
                     } else {
-                        new Thread(){
+                        new Thread() {
                             @Override
                             public void run() {
                                 List<Certificate> certificates = myCertificatesResponse.getCertificates();
-                                for (Certificate certificate: certificates){
-                                    if (certificate.getUsername() == null){
+                                for (Certificate certificate : certificates) {
+                                    if (certificate.getUsername() == null) {
                                         certificate.setUsername(loginPrefs.getUsername());
                                     }
                                 }
@@ -2090,7 +2093,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getMyCertificatesFromLocal(OnResponseCallback<List<Certificate>> callback, Exception e){
+    public void getMyCertificatesFromLocal(OnResponseCallback<List<Certificate>> callback, Exception e) {
 
         new AsyncTask<Void, Void, List<Certificate>>() {
             @Override
@@ -2100,7 +2103,7 @@ public class DataManager extends BaseRoboInjector {
 
             @Override
             protected void onPostExecute(List<Certificate> certificates) {
-                if (certificates != null){
+                if (certificates != null) {
                     callback.onSuccess(certificates);
                 } else {
                     callback.onFailure(e);
@@ -2110,15 +2113,15 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void generateCertificate(String courseId, OnResponseCallback<CertificateStatusResponse> callback){
+    public void generateCertificate(String courseId, OnResponseCallback<CertificateStatusResponse> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new GenerateCertificateTask(context, courseId){
+            new GenerateCertificateTask(context, courseId) {
                 @Override
                 protected void onSuccess(CertificateStatusResponse certificateStatusResponse) throws Exception {
                     super.onSuccess(certificateStatusResponse);
-                    if (certificateStatusResponse != null){
+                    if (certificateStatusResponse != null) {
                         callback.onSuccess(certificateStatusResponse);
                     } else {
                         callback.onFailure(new TaException("Certificate could not be generated"));
@@ -2137,16 +2140,16 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getContent(long contentId, OnResponseCallback<Content> callback){
+    public void getContent(long contentId, OnResponseCallback<Content> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new GetContentTask(context, contentId){
+            new GetContentTask(context, contentId) {
                 @Override
                 protected void onSuccess(Content content) throws Exception {
                     super.onSuccess(content);
-                    if (content != null && content.getDetail() == null){
-                        new Thread(){
+                    if (content != null && content.getDetail() == null) {
+                        new Thread() {
                             @Override
                             public void run() {
                                 mLocalDataSource.insertContent(content);
@@ -2171,7 +2174,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getContentFromLocal(long contentId, OnResponseCallback<Content> callback, Exception e){
+    public void getContentFromLocal(long contentId, OnResponseCallback<Content> callback, Exception e) {
 
         new AsyncTask<Void, Void, Content>() {
             @Override
@@ -2182,7 +2185,7 @@ public class DataManager extends BaseRoboInjector {
             @Override
             protected void onPostExecute(Content content) {
                 super.onPostExecute(content);
-                if (content != null){
+                if (content != null) {
                     callback.onSuccess(content);
                 } else {
                     callback.onFailure(e);
@@ -2192,24 +2195,24 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getSuggestedUsers(int take, int skip, OnResponseCallback<List<SuggestedUser>> callback){
+    public void getSuggestedUsers(int take, int skip, OnResponseCallback<List<SuggestedUser>> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new GetSuggestedUsersTask(context, take, skip){
+            new GetSuggestedUsersTask(context, take, skip) {
                 @Override
                 protected void onSuccess(List<SuggestedUser> suggestedUsers) throws Exception {
                     super.onSuccess(suggestedUsers);
-                    if (suggestedUsers == null || suggestedUsers.isEmpty()){
+                    if (suggestedUsers == null || suggestedUsers.isEmpty()) {
                         callback.onFailure(new TaException("No suggested users"));
                     } else {
                         List<SuggestedUser> emptyUsers = new ArrayList<>();
-                        for (SuggestedUser user: suggestedUsers){
-                            if (user.getUsername() == null){
+                        for (SuggestedUser user : suggestedUsers) {
+                            if (user.getUsername() == null) {
                                 emptyUsers.add(user);
                             }
                         }
-                        for (SuggestedUser user: emptyUsers){
+                        for (SuggestedUser user : emptyUsers) {
                             suggestedUsers.remove(user);
                         }
                         if (!suggestedUsers.isEmpty()) {
@@ -2232,11 +2235,11 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void followUnfollowUser(String username, OnResponseCallback<StatusResponse> callback){
+    public void followUnfollowUser(String username, OnResponseCallback<StatusResponse> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new FollowUserTask(context, username){
+            new FollowUserTask(context, username) {
                 @Override
                 protected void onSuccess(StatusResponse statusResponse) throws Exception {
                     super.onSuccess(statusResponse);
@@ -2494,6 +2497,29 @@ public class DataManager extends BaseRoboInjector {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
 
+    }
+    public void findContentForAssistant(String searchText, List<String> tags, OnResponseCallback<List<Content>> callback) {
+        if (NetworkUtil.isConnected(context)) {
+
+            edxDataManager.getTaAPI().assistantSearch(searchText, tags).enqueue(new Callback<List<Content>>() {
+                @Override
+                protected void onResponse(@NonNull List<Content> responseBody) {
+                    if (callback != null)
+                        callback.onSuccess(responseBody);
+                }
+
+                @Override
+                protected void onFailure(@NonNull Throwable error) {
+                    super.onFailure(error);
+                    if (callback != null)
+                        callback.onFailure(new TaException(error.getMessage()));
+
+                }
+            });
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
     }
 
 }

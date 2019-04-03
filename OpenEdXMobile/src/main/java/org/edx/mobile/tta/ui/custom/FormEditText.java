@@ -46,6 +46,7 @@ public class FormEditText extends LinearLayout {
     private void init(Context context){
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.t_view_form_edittext, this, true);
         mBinding.setViewModel(this);
+
         setValues();
     }
 
@@ -104,6 +105,17 @@ public class FormEditText extends LinearLayout {
         if (isMandatory && hint != null){
             mBinding.textInputLayout.setHint(hint + getResources().getString(R.string.asterisk_red));
         }
+    }
+
+    public void setShowTv(String data){
+        if (data!=null){
+            mBinding.etText.setText(data);
+            mBinding.etText.setVisibility(VISIBLE);
+        }else{
+            mBinding.etText.setText("");
+            mBinding.etText.setVisibility(GONE);
+        }
+
     }
 
     public boolean isMandatory(){

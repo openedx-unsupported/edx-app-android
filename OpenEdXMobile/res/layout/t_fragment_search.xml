@@ -19,17 +19,17 @@
             android:layout_height="wrap_content"
             android:id="@+id/searchview_layout"
             android:background="@color/white"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:paddingBottom="@dimen/_14px"
             app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.SearchView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 app:searchIcon="@drawable/t_icon_search_blue"
                 app:closeIcon="@drawable/t_icon_close"
                 android:textSize="14sp"
-                android:layout_marginTop="@dimen/_30px"
                 android:layout_marginEnd="@dimen/_20dp"
                 app:iconifiedByDefault="false"
                 on_query_text_listener="@{viewModel.queryTextListener}"/>
@@ -42,6 +42,15 @@
                 android:layout_marginEnd="@dimen/_24px"
                 android:drawableStart="@drawable/t_icon_search_blue"
                 android:text="@={viewModel.searchText}" />-->
+            <ImageView
+                android:id="@+id/assistant_button"
+                android:layout_marginEnd="@dimen/_20dp"
+                android:src="@drawable/ic_mic_cyan_600_24dp"
+                android:onClick="@{()->viewModel.openAssistant()}"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="assistant button" />
 
         </LinearLayout>
 

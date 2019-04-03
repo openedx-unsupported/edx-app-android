@@ -1,9 +1,13 @@
 package org.edx.mobile.tta.ui.logistration;
 
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.module.registration.model.RegistrationOption;
@@ -19,7 +23,6 @@ import java.util.List;
 
 public class UserInfoActivity extends BaseVMActivity {
     private LinearLayout userInfoLayout;
-
     private FormEditText etFirstName;
     private FormSpinner stateSpinner;
     private FormSpinner districtSpinner;
@@ -30,7 +33,7 @@ public class UserInfoActivity extends BaseVMActivity {
     private FormSpinner dietSpinner;
     private FormEditText etPmis;
     private Button btn;
-
+    private Toolbar toolbar;
     private UserInfoViewModel mViewModel;
 
     @Override
@@ -39,24 +42,26 @@ public class UserInfoActivity extends BaseVMActivity {
         mViewModel = new UserInfoViewModel(this);
         binding(R.layout.t_activity_user_info, mViewModel);
         userInfoLayout = findViewById(R.id.user_info_fields_layout);
-
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
+        });
         mViewModel.getData();
         getBlocks();
         setupForm();
     }
 
-    private void getBlocks(){
-        if (mViewModel.currentState == null || mViewModel.currentDistrict == null){
+    private void getBlocks() {
+        if (mViewModel.currentState == null || mViewModel.currentDistrict == null) {
             return;
         }
-
         showLoading();
         mViewModel.getBlocks(
                 new OnResponseCallback<List<RegistrationOption>>() {
                     @Override
                     public void onSuccess(List<RegistrationOption> data) {
                         hideLoading();
-                        blockSpinner.setItems(mViewModel.blocks, mViewModel.blocks.get(0));
+                        blockSpinner.setItems(mViewModel.blocks, null);
                     }
 
                     @Override
@@ -66,39 +71,41 @@ public class UserInfoActivity extends BaseVMActivity {
                 });
     }
 
-    private void setupForm(){
-        ViewUtil.addHeading(userInfoLayout, "Additional Information");
-        ViewUtil.addSubHeading(userInfoLayout, "Please enter the following details");
+    private void setupForm() {
+//        ViewUtil.addHeading(userInfoLayout, "Additional Information");
+//        ViewUtil.addSubHeading(userInfoLayout, "Please enter the following details");
         ViewUtil.addEmptySpace(userInfoLayout, (int) getResources().getDimension(R.dimen._14dp));
 
-        etFirstName = ViewUtil.addFormEditText(userInfoLayout, "Full Name");
+        etFirstName = ViewUtil.addFormEditText(userInfoLayout, "Name/नाम");
         etFirstName.setMandatory(true);
 
-        stateSpinner = ViewUtil.addOptionSpinner(userInfoLayout,"Select State", mViewModel.states, null);
+        stateSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "State/राज्य", mViewModel.states, null);
         stateSpinner.setMandatory(true);
 
-        districtSpinner = ViewUtil.addOptionSpinner(userInfoLayout,"Select District", mViewModel.districts, null);
+        districtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "District/" +
+                "जिला", mViewModel.districts, null);
         districtSpinner.setMandatory(true);
 
-        blockSpinner = ViewUtil.addOptionSpinner(userInfoLayout,"Select Block", mViewModel.blocks, null);
-        professionSpinner = ViewUtil.addOptionSpinner(userInfoLayout,"Select Profession", mViewModel.professions, null);
-        genderSpinner = ViewUtil.addOptionSpinner(userInfoLayout,"Select Gender", mViewModel.genders, null);
-        classTaughtSpinner = ViewUtil.addOptionSpinner(userInfoLayout,"Select Class Taught", mViewModel.classesTaught, null);
-        etPmis = ViewUtil.addFormEditText(userInfoLayout, "PMIS Code");
-        dietSpinner = ViewUtil.addOptionSpinner(userInfoLayout,"Select DIET Code", mViewModel.dietCodes, null);
-        btn = ViewUtil.addButton(userInfoLayout, "Done");
+        blockSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Block/तहसील", mViewModel.blocks, null);
+        professionSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Profession/व्यवसाय", mViewModel.professions, null);
+        genderSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Gender/लिंग", mViewModel.genders, null);
+        classTaughtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा", mViewModel.classesTaught, null);
+        etPmis = ViewUtil.addFormEditText(userInfoLayout, "PMIS Code/पी इम आइ इस कोड");
+        etPmis.setShowTv(getApplicationContext().getString(R.string.please_insert_valide_pmis_code));
+        dietSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "DIET Code/डी आइ इ टी कोड", mViewModel.dietCodes, null);
+        btn = ViewUtil.addButton(userInfoLayout, "Sumbit");
         ViewUtil.addEmptySpace(userInfoLayout, (int) getResources().getDimension(R.dimen._50px));
 
         setListeners();
     }
 
-    private void setListeners(){
+    private void setListeners() {
         btn.setOnClickListener(v -> {
-            if (!validate()){
+            if (!validate()) {
                 return;
             }
             Bundle parameters = new Bundle();
-            parameters.putString("name", etFirstName.getText());
+            parameters.putString("name", etFirstName.getText().trim());
             parameters.putString("state", mViewModel.currentState);
             parameters.putString("district", mViewModel.currentDistrict);
             parameters.putString("block", blockSpinner.getSelectedOption().getName());
@@ -114,7 +121,7 @@ public class UserInfoActivity extends BaseVMActivity {
             mViewModel.currentState = item.getName();
             mViewModel.districts.clear();
             mViewModel.districts = DataUtil.getDistrictsByStateName(mViewModel.currentState);
-            districtSpinner.setItems(mViewModel.districts, mViewModel.districts.get(0));
+            districtSpinner.setItems(mViewModel.districts, null);
         });
 
         districtSpinner.setOnItemSelectedListener((view, item) -> {
@@ -167,6 +174,6 @@ public class UserInfoActivity extends BaseVMActivity {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
+        super.onBackPressed();
     }
 }

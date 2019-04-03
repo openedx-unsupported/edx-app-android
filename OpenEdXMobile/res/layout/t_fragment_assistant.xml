@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.assistant.view_model.AssistantViewModel" />
+    </data>
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.maurya.mx.mxlib.view.MxRecyclerView
+        infinite_recycler_adapter="@{viewModel.assistantAdapter}"
+        layout_manager="@{viewModel.linearLayoutManager}"
+        scroll_to_position="@{viewModel.scrollPosition.get()}"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/_8px"
+        android:layout_marginEnd="@dimen/_8px"
+        android:layout_marginBottom="@dimen/_8px"
+        android:layout_marginTop="@dimen/_8px"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mx_itemLayout="@layout/t_row_assistant_item" />
+    <TextView
+        android:id="@+id/hintText"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:text="@{viewModel.hintText}"
+        android:visibility="@{TextUtils.isEmpty(viewModel.hintText)?View.GONE:View.VISIBLE}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/assistant_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_8px"
+        android:background="@drawable/btn_selector_hollow"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/_8px"
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintTop_toTopOf="@+id/editText"
+        android:contentDescription="assistant button"
+        android:onClick="@{()->viewModel.startListening()}"
+        android:src="@drawable/ic_mic_cyan_600_24dp"/>
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@={viewModel.requestText}"
+        android:padding="@dimen/_10px"
+        android:paddingEnd="@dimen/_48px"
+        android:layout_marginStart="@dimen/_8px"
+        android:layout_marginEnd="@dimen/_8px"
+        android:layout_marginBottom="@dimen/_8px"
+        android:background="@drawable/btn_selector_hollow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/assistant_button"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_8px"
+        android:contentDescription="send button"
+        android:onClick="@{()->viewModel.send()}"
+        android:src="@drawable/ic_send_24dp"
+        app:layout_constraintEnd_toEndOf="@id/editText"
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintTop_toTopOf="@+id/editText" />
+    <TextView
+        android:id="@+id/listeningText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="@{viewModel.isListening?View.VISIBLE:View.GONE}"
+        android:layout_marginStart="@dimen/_8px"
+        android:layout_marginEnd="@dimen/_8px"
+        android:layout_marginBottom="@dimen/_8px"
+        android:text="@={viewModel.requestText}"
+        android:padding="@dimen/_16px"
+        android:background="@drawable/btn_selector_hollow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</android.support.constraint.ConstraintLayout>
+</layout>

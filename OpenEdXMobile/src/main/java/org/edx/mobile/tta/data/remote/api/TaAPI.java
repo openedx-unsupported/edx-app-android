@@ -187,4 +187,12 @@ public class TaAPI {
         parameters.put(Constants.KEY_FOLLOW_USERNAME,username);
         return taService.followUser(parameters);
     }
+    public Call<List<Content>> assistantSearch(String searchText,List<String> tags) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_TAKE, 5);  //fixing this for now
+        parameters.put(Constants.KEY_SKIP, 0);
+        parameters.put(Constants.KEY_SEARCH_TEXT, searchText);
+        parameters.put(Constants.KEY_TAGS, tags);
+        return taService.assistantSearch(parameters);
+    }
 }
