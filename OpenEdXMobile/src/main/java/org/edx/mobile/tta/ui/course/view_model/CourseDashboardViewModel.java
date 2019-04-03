@@ -17,8 +17,8 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.course.CourseMaterialTab;
 import org.edx.mobile.tta.ui.course.discussion.CourseDiscussionTab;
+import org.edx.mobile.tta.ui.course.discussion.DiscussionLandingFragment;
 import org.edx.mobile.view.AuthenticatedWebViewFragment;
-import org.edx.mobile.view.CourseDiscussionTopicsFragment;
 import org.edx.mobile.view.CourseHandoutFragment;
 import org.edx.mobile.view.Router;
 
@@ -83,15 +83,15 @@ public class CourseDashboardViewModel extends BaseViewModel {
         fragments.add(CourseMaterialTab.newInstance(content, course, rootComponent));
         titles.add(mActivity.getString(R.string.course_material));
 
-        CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();
+        /*CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();
         if (course != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
             discussionFragment.setArguments(bundle);
         }
         discussionFragment.setRetainInstance(true);
-        fragments.add(discussionFragment);
-//        fragments.add(CourseDiscussionTab.newInstance(content, course));
+        fragments.add(discussionFragment);*/
+        fragments.add(CourseDiscussionTab.newInstance(course));
         titles.add(mActivity.getString(R.string.discussion));
 
         CourseHandoutFragment handoutFragment = new CourseHandoutFragment();

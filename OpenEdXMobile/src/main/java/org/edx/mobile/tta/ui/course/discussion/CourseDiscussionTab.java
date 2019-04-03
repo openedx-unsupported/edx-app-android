@@ -9,28 +9,26 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.course.discussion.view_model.CourseDiscussionViewModel;
+import org.edx.mobile.tta.utils.ActivityUtil;
 
 public class CourseDiscussionTab extends TaBaseFragment {
 
     private CourseDiscussionViewModel viewModel;
 
-    private Content content;
     private EnrolledCoursesResponse course;
 
-    public static CourseDiscussionTab newInstance(Content content, EnrolledCoursesResponse course) {
-        CourseDiscussionTab courseDiscussionTab = new CourseDiscussionTab();
-        courseDiscussionTab.content = content;
-        courseDiscussionTab.course = course;
-        return courseDiscussionTab;
+    public static CourseDiscussionTab newInstance(EnrolledCoursesResponse course){
+        CourseDiscussionTab fragment = new CourseDiscussionTab();
+        fragment.course = course;
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new CourseDiscussionViewModel(getActivity(), this, content, course);
+        viewModel = new CourseDiscussionViewModel(getActivity(), this);
     }
 
     @Nullable
@@ -38,7 +36,16 @@ public class CourseDiscussionTab extends TaBaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_fragment_course_discussion, viewModel).getRoot();
 
+        if (isAdded()) {
+            ActivityUtil.replaceFragmentInActivity(
+                    getActivity().getSupportFragmentManager(),
+                    DiscussionLandingFragment.newInstance(course),
+                    R.id.discussion_tab,
+                    DiscussionLandingFragment.TAG,
+                    false, null
+            );
+        }
+
         return view;
     }
-
 }

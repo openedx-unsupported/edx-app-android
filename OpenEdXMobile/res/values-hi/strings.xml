@@ -81,4 +81,5 @@
     <string name="total">"कुल : "</string>
     <string name="see_more">और देखें</string>
     <string name="start_discussion">चर्चा शुरू करें</string>
+    <string name="view_previous_replies"><u>पिछले जवाब देखें</u></string>
 </resources>

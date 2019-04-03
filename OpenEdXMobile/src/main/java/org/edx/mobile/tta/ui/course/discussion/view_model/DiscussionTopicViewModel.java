@@ -3,6 +3,7 @@ package org.edx.mobile.tta.ui.course.discussion.view_model;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,27 +19,33 @@ import org.edx.mobile.databinding.TRowDiscussionThreadBinding;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.course.discussion.DiscussionThreadActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.view.DiscussionAddPostActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 public class DiscussionTopicViewModel extends BaseViewModel {
 
-    private static final int DEFAULT_TAKE = 20;
+    private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_PAGE = 1;
 
     public DiscussionTopicDepth topicDepth;
     private EnrolledCoursesResponse course;
     private List<DiscussionThread> threads;
-
-    public ObservableField<String> threadText = new ObservableField<>("");
 
     public DiscussionThreadsAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -65,10 +72,15 @@ public class DiscussionTopicViewModel extends BaseViewModel {
 
         adapter = new DiscussionThreadsAdapter(mActivity);
         adapter.setItemClickListener((view, item) -> {
-            mActivity.showShortSnack(item.getRawBody());
+            Bundle parameters = new Bundle();
+            parameters.putSerializable(Constants.KEY_ENROLLED_COURSE, course);
+            parameters.putSerializable(Constants.KEY_DISCUSSION_TOPIC, topicDepth.getDiscussionTopic());
+            parameters.putSerializable(Constants.KEY_DISCUSSION_THREAD, item);
+            ActivityUtil.gotoPage(mActivity, DiscussionThreadActivity.class, parameters);
         });
         adapter.setItems(threads);
 
+        mActivity.showLoading();
         fetchThreads();
     }
 
@@ -92,19 +104,26 @@ public class DiscussionTopicViewModel extends BaseViewModel {
                     @Override
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
-                        mActivity.showLongSnack(e.getLocalizedMessage());
+                        allLoaded = true;
+                        adapter.setLoadingDone();
                     }
                 });
 
     }
 
     private void populateThreads(List<DiscussionThread> data) {
+        boolean newItemsAdded = false;
+        int n = 0;
         for (DiscussionThread thread: data){
             if (!threads.contains(thread)){
                 threads.add(thread);
+                newItemsAdded = true;
+                n++;
             }
         }
-        adapter.notifyDataSetChanged();
+        if (newItemsAdded) {
+            adapter.notifyItemRangeInserted(threads.size() - n, n);
+        }
     }
 
     @Override
@@ -114,7 +133,21 @@ public class DiscussionTopicViewModel extends BaseViewModel {
     }
 
     public void startDiscussion(){
-        mActivity.showShortSnack("Start discussion");
+        mDataManager.getEdxEnvironment().getRouter().showCourseDiscussionAddPost(mActivity, topicDepth.getDiscussionTopic(), course);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(DiscussionThreadPostedEvent event) {
+        DiscussionThread newThread = event.getDiscussionThread();
+        adapter.add(0, newThread);
+    }
+
+    public void regiterEventBus(){
+        EventBus.getDefault().register(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 
     public class DiscussionThreadsAdapter extends MxInfiniteAdapter<DiscussionThread> {
@@ -129,10 +162,19 @@ public class DiscussionTopicViewModel extends BaseViewModel {
                 threadBinding.setViewModel(model);
 
                 threadBinding.date.setText(DateUtil.getDisplayTime(model.getUpdatedAt()));
-                Glide.with(getContext())
-                        .load(model.getUsers().get(model.getAuthor()).getProfile().getImage().getImageUrlMedium())
-                        .placeholder(R.drawable.profile_photo_placeholder)
-                        .into(threadBinding.roundedUserImage);
+
+                ProfileImage profileImage = model.getProfileImage();
+                if (profileImage == null){
+                    profileImage = mDataManager.getLoginPrefs().getProfileImage();
+                }
+                if (profileImage != null) {
+                    Glide.with(getContext())
+                            .load(profileImage.getImageUrlMedium())
+                            .placeholder(R.drawable.profile_photo_placeholder)
+                            .into(threadBinding.roundedUserImage);
+                } else {
+                    threadBinding.roundedUserImage.setImageResource(R.drawable.profile_photo_placeholder);
+                }
 
                 threadBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){

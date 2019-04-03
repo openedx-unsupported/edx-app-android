@@ -46,9 +46,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/_24px"
+                    android:paddingBottom="@dimen/_20px"
                     android:background="@color/white"
                     android:paddingStart="@dimen/_20px"
-                    android:paddingEnd="@dimen/_20px">
+                    android:paddingEnd="@dimen/_20px"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                     <TextView
                         android:layout_width="0dp"
@@ -87,7 +89,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:id="@+id/rounded_user_image"
-                            android:scaleType="fitXY"/>
+                            android:scaleType="fitXY"
+                            android:src="@{viewModel.userImage}"
+                            placeholder="@{viewModel.userPlaceholder}"/>
 
                     </android.support.v7.widget.CardView>
 
@@ -115,6 +119,16 @@
                         app:layout_constraintStart_toEndOf="@id/user_image"
                         android:textColor="@color/gray_4"
                         android:textSize="8sp"
+                        android:fontFamily="@font/hind_regular"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.thread.rawBody}"
+                        app:layout_constraintTop_toBottomOf="@id/user_image"
+                        android:layout_marginTop="@dimen/_16px"
+                        android:textColor="@color/gray_5"
+                        android:textSize="12sp"
                         android:fontFamily="@font/hind_regular"/>
 
                 </android.support.constraint.ConstraintLayout>
@@ -155,7 +169,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:fontFamily="@font/hind_medium"
-                                    android:text="@{String.valueOf(viewModel.thread.voteCount)}"
+                                    android:text="@{viewModel.likeCount}"
                                     android:textColor="@color/gray_3"
                                     android:textSize="12sp" />
 
@@ -204,7 +218,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:fontFamily="@font/hind_medium"
-                                    android:text="@{String.valueOf(viewModel.thread.commentCount)}"
+                                    android:text="@{viewModel.commentsCount}"
                                     android:textColor="@color/gray_3"
                                     android:textSize="12sp" />
 

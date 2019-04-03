@@ -183,8 +183,16 @@ public class DiscussionThread implements Serializable, IAuthorData, ProfileImage
         return voted;
     }
 
+    public void setVoted(boolean voted) {
+        this.voted = voted;
+    }
+
     public int getVoteCount() {
         return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
     }
 
     public Date getCreatedAt() {

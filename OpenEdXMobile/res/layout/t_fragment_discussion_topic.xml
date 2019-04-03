@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionTopicViewModel" />
@@ -49,27 +49,14 @@
             android:minHeight="50dp"
             android:id="@+id/add_thread_layout"
             android:orientation="horizontal"
-            android:padding="@dimen/_10px">
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="27dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@drawable/btn_selector_hollow"
-                android:fontFamily="@font/hind_light"
-                android:padding="@dimen/_10px"
-                android:text="@={viewModel.threadText}"
-                android:textColor="@color/gray_5"
-                android:textSize="14sp" />
+            android:padding="@dimen/_10px"
+            android:gravity="center"
+            android:visibility="@{viewModel.topicDepth.postable?View.VISIBLE:View.GONE}">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="23dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/_8px"
                 android:background="@drawable/btn_selector_hollow"
                 android:fontFamily="@font/hind_medium"
                 android:gravity="center"

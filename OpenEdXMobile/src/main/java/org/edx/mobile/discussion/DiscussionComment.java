@@ -52,6 +52,9 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
     @Nullable
     private Map<String, DiscussionUser> users;
 
+    @SerializedName("author_display_name")
+    private String authorDisplayName;
+
     public String getIdentifier() {
         return identifier;
     }
@@ -84,8 +87,16 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
         return voted;
     }
 
+    public void setVoted(boolean voted) {
+        this.voted = voted;
+    }
+
     public int getVoteCount() {
         return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
     }
 
     public Date getCreatedAt() {
@@ -168,6 +179,10 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
         return users;
     }
 
+    public String getAuthorDisplayName() {
+        return authorDisplayName;
+    }
+
     @Nullable
     @Override
     public ProfileImage getProfileImage() {
@@ -190,5 +205,10 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
     public DiscussionComment patchObject(@NonNull DiscussionComment newObj) {
         newObj.users = users;
         return newObj;
+    }
+
+    @Override
+    public boolean equals(@androidx.annotation.Nullable Object obj) {
+        return (obj instanceof DiscussionComment) && (identifier.equals(((DiscussionComment) obj).identifier));
     }
 }
