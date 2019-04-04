@@ -67,6 +67,7 @@
     <string name="classes_taught">कक्षाएं</string>
     <string name="skills">कौशल</string>
     <string name="following">फालोइंग</string>
+    <string name="all_parts">एक कोर्स के सभी  भाग देखने पर</string>
     <string name="followers">फालोअर्ज़</string>
     <string name="write_here">यहाँ लिखिए</string>
     <string name="connect_with_us">हमारे साथ जुड़िये</string>
@@ -75,6 +76,7 @@
     <string name="write_name">नाम लिखें</string>
     <string name="my_certificates">मेरे सर्टिफ़िकेट</string>
     <string name="all_certificates">सभी सर्टिफ़िकेट</string>
+    <string name="position_obtained">प्राप्त करे पदक</string>
     <string name="generate_certificate">सर्टिफिकेट उत्पन्न करें</string>
     <string name="certificate">सर्टिफिकेट</string>
     <string name="unfollow">अनफॉलो करें</string>
@@ -83,4 +85,7 @@
     <string name="start_discussion">चर्चा शुरू करें</string>
     <string name="your_information">आप की जानकारी</string>
     <string name="please_insert_valide_pmis_code">"कृपया वैद्य पी एम आई एम कोड भरे या फिर खली छोड़ दे (वैकलिपक) "</string>
+    <string name="all_medal">सभी पदक</string>
+    <string name="padaav" translatable="false">पड़ाव</string>
+    <string name="number" >अंक</string>
 </resources>

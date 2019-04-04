@@ -7,10 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+
+import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.profile.view_model.ProfileViewModel;
+import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
 public class ProfileFragment extends TaBaseFragment {
@@ -19,6 +24,10 @@ public class ProfileFragment extends TaBaseFragment {
     private ProfileViewModel viewModel;
     private ProfileOptionsBottomSheet bottomSheet;
     private ImageButton optionsBtn;
+    private MxFiniteRecyclerView recyclerView;
+    private LinearLayout llPoints;
+    private ProgressBar progressBar;
+    private LinearLayout llPadaav;
 
     private boolean bottomSheetOpened;
 
@@ -41,6 +50,27 @@ public class ProfileFragment extends TaBaseFragment {
                 bottomSheetOpened = true;
             }
         });
+
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setOnClickListener( v -> {
+            viewModel.onCliCkLl();
+        });
+
+        llPadaav = view.findViewById(R.id.llPadaav);
+        llPadaav.setOnClickListener(v -> {
+            viewModel.onCliCkLl();
+        });
+
+        llPoints =  view.findViewById(R.id.llPoints);
+        llPoints.setOnClickListener(v -> {
+            viewModel.onCliCkLl();
+        });
+
+        recyclerView = view.findViewById(R.id.badge_finite_list);
+        recyclerView.setOnMoreButtonClickListener(v ->  {
+            viewModel.onCliCkMoreButton();
+        });
+
         bottomSheet = ProfileOptionsBottomSheet.newInstance(v -> {
             if (v == null){
                 bottomSheetOpened = false;
@@ -98,8 +128,6 @@ public class ProfileFragment extends TaBaseFragment {
                     break;
             }
         });
-
         return view;
     }
-
 }

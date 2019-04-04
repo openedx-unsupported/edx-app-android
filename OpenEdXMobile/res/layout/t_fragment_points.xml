@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.profile.view_model.PointsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/app_background">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="start|center_vertical"
+            app:title="@string/point_table"
+            app:navigationIcon="@drawable/back"
+            app:titleTextAppearance="@style/ta_toolbar_title_style"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleMarginStart="0dp" />
+
+        <com.maurya.mx.mxlib.view.MxRecyclerView
+            infinite_recycler_adapter="@{viewModel.adapter}"
+            layout_manager="@{viewModel.layoutManager}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mx_itemLayout="@layout/t_row_points"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+
+            />
+
+    </LinearLayout>
+
+</layout>

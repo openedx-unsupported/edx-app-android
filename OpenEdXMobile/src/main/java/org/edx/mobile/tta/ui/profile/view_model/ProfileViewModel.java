@@ -3,16 +3,30 @@ package org.edx.mobile.tta.ui.profile.view_model;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.widget.LinearLayout;
+
+import com.bumptech.glide.Glide;
+import com.maurya.mx.mxlib.core.MxFiniteAdapter;
+import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
+import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.TRowBadgeBinding;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.tta.data.local.db.table.Badge;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.profile.AllBadgesFragment;
 import org.edx.mobile.tta.ui.profile.MyCertificatesFragment;
+import org.edx.mobile.tta.ui.profile.PointsFragment;
+import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.ProfileImage;
@@ -31,6 +45,7 @@ public class ProfileViewModel extends BaseViewModel {
     public ProfileImage profileImage;
     public Account account;
     public SearchFilter searchFilter;
+    public BadgeListAdapter adapter;
 
     private boolean accountReceived, filtersReceived;
     private String tagLabel;
@@ -43,12 +58,15 @@ public class ProfileViewModel extends BaseViewModel {
     public ObservableField<String> userImageUrl = new ObservableField<>();
     public ObservableField<String> nCertificates = new ObservableField<String>("0");
 
+
     public ProfileViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
-
+        adapter = new BadgeListAdapter(context);
         fetchAccount();
         fetchFilters();
         fetchCertificates();
+        adapter.setItems(setbadge());
+
     }
 
     @Override
@@ -58,6 +76,18 @@ public class ProfileViewModel extends BaseViewModel {
         setDetails();
     }
 
+    private List<Badge> setbadge(){
+        List<Badge> list= new ArrayList<>();
+        for (int i=0;i<=5;i++){
+            Badge badge = new Badge();
+            badge.setBadgeName("Badge");
+            badge.setBadgeImage("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
+            list.add(badge);
+        }
+        return list;
+    }
+
+
     private void refreshFromLocal() {
         profileModel = loginPrefs.getCurrentUserProfile();
         profileImage = loginPrefs.getProfileImage();
@@ -66,7 +96,7 @@ public class ProfileViewModel extends BaseViewModel {
             followers.set(String.valueOf(profileModel.getFollowers()));
             following.set(String.valueOf(profileModel.getFollowing()));
         }
-        if (profileImage != null){
+        if (profileImage != null) {
             userImageUrl.set(profileImage.getImageUrlLarge());
         }
     }
@@ -79,7 +109,7 @@ public class ProfileViewModel extends BaseViewModel {
                 filtersReceived = true;
                 hideLoading();
                 searchFilter = data;
-                if (accountReceived){
+                if (accountReceived) {
                     setDetails();
                 }
             }
@@ -88,7 +118,7 @@ public class ProfileViewModel extends BaseViewModel {
             public void onFailure(Exception e) {
                 filtersReceived = true;
                 hideLoading();
-                if (accountReceived){
+                if (accountReceived) {
                     setDetails();
                 }
                 mActivity.showLongSnack(e.getLocalizedMessage());
@@ -106,7 +136,7 @@ public class ProfileViewModel extends BaseViewModel {
                 hideLoading();
                 account = data;
                 refreshFromLocal();
-                if (account != null){
+                if (account != null) {
                     tagLabel = account.getTagLabel();
                 }
                 if (filtersReceived) {
@@ -126,8 +156,26 @@ public class ProfileViewModel extends BaseViewModel {
         });
 
     }
+    public void onCliCkMoreButton(){
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                AllBadgesFragment.newInstance(),
+                R.id.dashboard_fragment,
+                AllBadgesFragment.TAG,
+                true,
+                null);
+    }
+    public void onCliCkLl(){
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                PointsFragment.newInstance(),
+                R.id.dashboard_fragment,
+                PointsFragment.TAG,
+                true,
+                null);
+    }
 
-    private void fetchCertificates(){
+    private void fetchCertificates() {
 
         mDataManager.getMyCertificates(new OnResponseCallback<List<Certificate>>() {
             @Override
@@ -143,7 +191,7 @@ public class ProfileViewModel extends BaseViewModel {
 
     }
 
-    public void showCertificates(){
+    public void showCertificates() {
         ActivityUtil.replaceFragmentInActivity(mActivity.getSupportFragmentManager(),
                 new MyCertificatesFragment(),
                 R.id.dashboard_fragment,
@@ -156,42 +204,42 @@ public class ProfileViewModel extends BaseViewModel {
         classes.set("");
         skills.set("");
         if ((account == null && profileModel == null) ||
-                searchFilter == null || searchFilter.getResult() == null){
+                searchFilter == null || searchFilter.getResult() == null) {
             return;
         }
 
         String[] section_tag_list;
 
-        if (tagLabel == null || tagLabel.length() == 0){
+        if (tagLabel == null || tagLabel.length() == 0) {
             return;
         }
 
         section_tag_list = tagLabel.split(" ");
 
         Map<String, List<String>> sectionTagsMap = new HashMap<>();
-        for (String section_tag: section_tag_list){
+        for (String section_tag : section_tag_list) {
             String[] duet = section_tag.split("_");
-            if (!sectionTagsMap.containsKey(duet[0])){
+            if (!sectionTagsMap.containsKey(duet[0])) {
                 sectionTagsMap.put(duet[0], new ArrayList<>());
             }
             sectionTagsMap.get(duet[0]).add(duet[1]);
         }
 
-        for (FilterSection section: searchFilter.getResult()){
-            if (section.isIn_profile()){
-                if (sectionTagsMap.containsKey(section.getName())){
+        for (FilterSection section : searchFilter.getResult()) {
+            if (section.isIn_profile()) {
+                if (sectionTagsMap.containsKey(section.getName())) {
                     StringBuilder builder = new StringBuilder();
-                    for (String tag: sectionTagsMap.get(section.getName())){
+                    for (String tag : sectionTagsMap.get(section.getName())) {
                         builder.append(tag + ", ");
                     }
-                    if (builder.length() > 0){
+                    if (builder.length() > 0) {
                         builder.deleteCharAt(builder.length() - 1);
                         builder.deleteCharAt(builder.length() - 1);
                     }
 
-                    if (section.getName().contains("कक्षा")){
+                    if (section.getName().contains("कक्षा")) {
                         classes.set(builder.toString());
-                    } else if (section.getName().contains("कौशल")){
+                    } else if (section.getName().contains("कौशल")) {
                         skills.set(builder.toString());
                     }
                 }
@@ -200,13 +248,37 @@ public class ProfileViewModel extends BaseViewModel {
 
     }
 
-    public void logout(){
+    public void logout() {
         mDataManager.logout();
     }
 
-    private void hideLoading(){
-        if (accountReceived && filtersReceived){
+    private void hideLoading() {
+        if (accountReceived && filtersReceived) {
             mActivity.hideLoading();
+        }
+    }
+
+    public class BadgeListAdapter extends MxFiniteAdapter<Badge> {
+
+        public BadgeListAdapter(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull Badge model, @Nullable OnRecyclerItemClickListener<Badge> listener) {
+            if (binding instanceof TRowBadgeBinding) {
+                TRowBadgeBinding tRowBadgeBinding = (TRowBadgeBinding) binding;
+                tRowBadgeBinding.tvbadgename.setText(model.getBadgeName());
+                Glide.with(getActivity()).
+                        load(model.getBadgeImage()).
+                        placeholder(R.drawable.placeholder_course_card_image).
+                        into(tRowBadgeBinding.ivBadgeimage);
+                tRowBadgeBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+            }
         }
     }
 

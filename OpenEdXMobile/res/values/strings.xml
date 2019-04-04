@@ -744,8 +744,10 @@
     <string name="sign_out">Sign Out</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="classes_taught">Classes Taught</string>
+    <string name="padaav" translatable="false">Paddav</string>
     <string name="skills">Skills</string>
     <string name="following">Following</string>
+    <string name="number">Number</string>
     <string name="followers">Followers</string>
     <string name="write_here">Write here</string>
     <string name="connect_with_us">Connect With Us</string>
@@ -756,11 +758,15 @@
     <string name="all_certificates">All Certificates</string>
     <string name="generate_certificate">Generate Certificate</string>
     <string name="certificate">Certificate</string>
+    <string name="position_obtained">Position Obtained</string>
     <string name="unfollow">Unfollow</string>
     <string name="total">Total :</string>
     <string name="see_more">See More</string>
     <string name="start_discussion">Start Discussion</string>
     <string name="your_information">Your Information</string>
+    <string name="all_parts">All Parts</string>
+    <string name="all_medal">All medal</string>
+    <string name="point_table">Point table</string>
     <string name="please_insert_valide_pmis_code">please Insert Valid Pmis Code</string>
 
     <string name="sign_out_message">Are you sure you want to Sign Out?</string>
