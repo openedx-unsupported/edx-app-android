@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -46,8 +47,8 @@
                 android:id="@+id/ln1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10px"
                 android:layout_marginStart="@dimen/_20px"
+                android:layout_marginTop="@dimen/_10px"
                 android:layout_marginEnd="@dimen/_20px"
                 android:orientation="horizontal">
 
@@ -67,17 +68,100 @@
 
                 </android.support.v7.widget.CardView>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginStart="@dimen/_16px"
                     android:layout_marginBottom="@dimen/_18px"
-                    android:fontFamily="@font/hind_medium"
-                    android:text="@{viewModel.profileModel.name}"
-                    android:textColor="@color/gray_5"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16px"
+                        android:layout_marginEnd="@dimen/_16px"
+                        android:fontFamily="@font/hind_medium"
+                        android:text="@{viewModel.profileModel.name}"
+                        android:textColor="@color/gray_5"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:id="@+id/llPadaav"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16px"
+                        android:layout_marginEnd="@dimen/_16px"
+                        android:layout_marginTop="@dimen/_18px"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/t_icon_padaav" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/hind_medium"
+                            android:paddingStart="@dimen/_10px"
+                            android:paddingEnd="@dimen/_10px"
+                            android:text="@string/padaav"
+                            android:textColor="@color/primary_cyan"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right_cyan_24dp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="320dp"
+                android:layout_height="8dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_30px"
+                android:progress="35"
+                android:progressDrawable="@drawable/t_progress" />
+
+            <LinearLayout
+                android:id="@+id/llPoints"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16px"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/hind_semibold"
+                    android:text="125"
+                    android:textColor="@color/secondary_pink"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="/300"
+                    android:textColor="@color/primary_navy"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/hind_regular"
+                    android:text="@string/number"
+                    android:layout_margin="@dimen/_2px"
+                    android:textColor="@color/primary_navy"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -301,29 +385,56 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/_48px">
+                android:layout_marginTop="@dimen/_48px"
+                android:layout_marginBottom="@dimen/_48px"
+                android:orientation="vertical">
+
+                <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                    android:id="@+id/badge_finite_list"
+                    finite_recycler_adapter="@{viewModel.adapter}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:mx_itemLayout="@layout/t_row_badge"
+                    app:mx_itemLimit="5"
+                    app:mx_moreButtonDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
+                    app:mx_moreButtonMarginEnd="@dimen/_20px"
+                    app:mx_moreButtonText="@string/view_more"
+                    app:mx_moreButtonTextColor="@color/primary_cyan"
+                    app:mx_moreButtonTextFont="@font/hind_medium"
+                    app:mx_moreButtonTextSize="@dimen/list_view_more_size"
+                    app:mx_titleMarginStart="@dimen/_20px"
+                    app:mx_titleText="@string/position_obtained"
+                    app:mx_titleTextColor="@color/gray_5"
+                    app:mx_titleTextFont="@font/hind_medium"
+                    app:mx_titleTextSize="5sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20px"
+                    android:fontFamily="@font/hind_medium"
                     android:text="@string/my_certificates"
                     android:textColor="@color/gray_5"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/hind_medium"
-                    android:layout_marginStart="@dimen/_20px"/>
-                
+                    android:textSize="14sp" />
+
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
-                    app:cardCornerRadius="4dp"
-                    app:cardElevation="@dimen/_10px"
-                    android:layout_marginTop="@dimen/_20px"
-                    android:layout_marginBottom="@dimen/_20px"
                     android:layout_marginStart="@dimen/_20px"
+                    android:layout_marginTop="@dimen/_20px"
                     android:layout_marginEnd="@dimen/_20px"
+                    android:layout_marginBottom="@dimen/_20px"
+                    android:onClick="@{()->viewModel.showCertificates()}"
                     app:cardBackgroundColor="@color/white"
-                    android:onClick="@{()->viewModel.showCertificates()}">
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="@dimen/_10px">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -333,29 +444,29 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_gravity="center_vertical"
-                            android:orientation="vertical"
-                            android:layout_marginStart="@dimen/_26px">
+                            android:layout_marginStart="@dimen/_26px"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/hind_medium"
                                 android:text="@{viewModel.nCertificates}"
                                 android:textColor="@color/gray_5"
-                                android:textSize="20sp"
-                                android:fontFamily="@font/hind_medium"/>
+                                android:textSize="20sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/all_certificates"
-                                android:textSize="12sp"
-                                android:textColor="@color/primary_cyan"
-                                android:fontFamily="@font/hind_medium"
                                 android:layout_marginTop="@dimen/_30px"
+                                android:drawableEnd="@drawable/ic_arrow_right_cyan_24dp"
+                                android:fontFamily="@font/hind_medium"
                                 android:gravity="center_vertical"
-                                android:drawableEnd="@drawable/ic_arrow_right_cyan_24dp"/>
+                                android:text="@string/all_certificates"
+                                android:textColor="@color/primary_cyan"
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -364,8 +475,8 @@
                             android:layout_height="115dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="@dimen/_36px"
-                            android:src="@drawable/two_certificates_compressed"
-                            android:scaleType="fitXY"/>
+                            android:scaleType="fitXY"
+                            android:src="@drawable/two_certificates_compressed" />
 
                     </LinearLayout>
 
