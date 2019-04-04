@@ -347,7 +347,7 @@
                         android:fontFamily="@font/hind_medium"
                         android:gravity="center"
                         android:minWidth="78dp"
-                        android:onClick="@{()->viewModel.addReplyToComment()}"
+                        android:onClick="@{()->viewModel.comment()}"
                         android:padding="@dimen/_10px"
                         android:text="@string/comment_en"
                         android:textAllCaps="false"

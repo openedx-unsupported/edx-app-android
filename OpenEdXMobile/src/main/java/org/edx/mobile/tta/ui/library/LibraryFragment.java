@@ -40,6 +40,7 @@ public class LibraryFragment extends TaBaseFragment {
 
         TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);
         ViewPager viewPager = view.findViewById(R.id.listing_view_pager);
+        viewPager.setOffscreenPageLimit(5);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;

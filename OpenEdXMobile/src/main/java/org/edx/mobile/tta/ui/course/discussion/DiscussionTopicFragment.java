@@ -32,6 +32,7 @@ public class DiscussionTopicFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new DiscussionTopicViewModel(getActivity(), this, course, topicDepth);
+        viewModel.regiterEventBus();
     }
 
     @Nullable
@@ -40,5 +41,11 @@ public class DiscussionTopicFragment extends TaBaseFragment {
         View view = binding(inflater, container, R.layout.t_fragment_discussion_topic, viewModel).getRoot();
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

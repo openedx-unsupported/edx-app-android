@@ -317,7 +317,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     }
 
-    public void addReplyToComment(){
+    public void comment(){
 
         String comment = this.comment.get();
         if (comment == null || comment.trim().equals("")){
@@ -474,6 +474,11 @@ public class ConnectDashboardViewModel extends BaseViewModel
             commentFocus.set(false);
         }
         commentFocus.set(true);
+    }
+
+    @Override
+    public void onClickDefault(Comment comment) {
+
     }
 
     public void resetReplyToComment(){

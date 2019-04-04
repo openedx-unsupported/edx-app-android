@@ -94,10 +94,14 @@ import org.edx.mobile.tta.task.content.course.certificate.GenerateCertificateTas
 import org.edx.mobile.tta.task.content.course.certificate.GetCertificateStatusTask;
 import org.edx.mobile.tta.task.content.course.certificate.GetCertificateTask;
 import org.edx.mobile.tta.task.content.course.certificate.GetMyCertificatesTask;
+import org.edx.mobile.tta.task.content.course.discussion.CreateDiscussionCommentTask;
+import org.edx.mobile.tta.task.content.course.discussion.CreateDiscussionThreadTask;
 import org.edx.mobile.tta.task.content.course.discussion.GetCommentRepliesTask;
 import org.edx.mobile.tta.task.content.course.discussion.GetDiscussionThreadsTask;
 import org.edx.mobile.tta.task.content.course.discussion.GetDiscussionTopicsTask;
 import org.edx.mobile.tta.task.content.course.discussion.GetThreadCommentsTask;
+import org.edx.mobile.tta.task.content.course.discussion.LikeDiscussionCommentTask;
+import org.edx.mobile.tta.task.content.course.discussion.LikeDiscussionThreadTask;
 import org.edx.mobile.tta.task.feed.FollowUserTask;
 import org.edx.mobile.tta.task.feed.GetSuggestedUsersTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
@@ -2383,6 +2387,117 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+
+    public void createDiscussionThread(String courseId, String title, String body,
+                                       String topicId, DiscussionThread.ThreadType type,
+                                       OnResponseCallback<DiscussionThread> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new CreateDiscussionThreadTask(context, courseId, title, body, topicId, type){
+                @Override
+                protected void onSuccess(DiscussionThread thread) throws Exception {
+                    super.onSuccess(thread);
+                    if (thread != null){
+                        callback.onSuccess(thread);
+                    } else {
+                        callback.onFailure(new TaException("Unable to create discussion thread"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void createDiscussionComment(String threadId, String comment, String parentCommentId,
+                                        OnResponseCallback<DiscussionComment> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new CreateDiscussionCommentTask(context, threadId, comment, parentCommentId){
+                @Override
+                protected void onSuccess(DiscussionComment comment) throws Exception {
+                    super.onSuccess(comment);
+                    if (comment != null){
+                        callback.onSuccess(comment);
+                    } else {
+                        callback.onFailure(new TaException("Unable to comment"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void likeDiscussionThread(String threadId, boolean liked, OnResponseCallback<DiscussionThread> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new LikeDiscussionThreadTask(context, threadId, liked){
+                @Override
+                protected void onSuccess(DiscussionThread thread) throws Exception {
+                    super.onSuccess(thread);
+                    if (thread != null){
+                        callback.onSuccess(thread);
+                    } else {
+                        callback.onFailure(new TaException("Unable to like discussion thread"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void likeDiscussionComment(String commentId, boolean liked, OnResponseCallback<DiscussionComment> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new LikeDiscussionCommentTask(context, commentId, liked){
+                @Override
+                protected void onSuccess(DiscussionComment comment) throws Exception {
+                    super.onSuccess(comment);
+                    if (comment != null){
+                        callback.onSuccess(comment);
+                    } else {
+                        callback.onFailure(new TaException("Unable to like comment"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
     public void findContentForAssistant(String searchText, List<String> tags, OnResponseCallback<List<Content>> callback) {
         if (NetworkUtil.isConnected(context)) {
 
@@ -2406,5 +2521,6 @@ public class DataManager extends BaseRoboInjector {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
     }
+
 }
 

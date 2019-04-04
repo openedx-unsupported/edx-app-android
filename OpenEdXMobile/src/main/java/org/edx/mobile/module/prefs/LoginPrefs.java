@@ -140,6 +140,12 @@ public class LoginPrefs {
     }
 
     @Nullable
+    public String getDisplayName() {
+        final ProfileModel profileModel = getCurrentUserProfile();
+        return null == profileModel ? null : profileModel.name;
+    }
+
+    @Nullable
     public String getAuthBackendKeyForSegment() {
         return pref.getString(PrefManager.Key.ANALYTICS_KEY_BACKEND);
     }

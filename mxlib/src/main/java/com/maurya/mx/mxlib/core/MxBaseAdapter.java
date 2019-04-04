@@ -129,4 +129,16 @@ public abstract class MxBaseAdapter<T> extends RecyclerView.Adapter<MxViewHolder
     public boolean isEmpty() {
         return mList==null||mList.isEmpty();
     }
+
+    public int getItemPosition(T item){
+        return mList.indexOf(item);
+    }
+
+    public void add(int index, T item) {
+        if (item == null){
+            return;
+        }
+        mList.add(index, item);
+        notifyItemInserted(index);
+    }
 }

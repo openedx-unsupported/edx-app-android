@@ -74,6 +74,12 @@ public class ConnectCommentsTabViewModel extends BaseViewModel {
                         commentClickListener.onClickUser(item);
                     }
                     break;
+
+                default:
+                    if (commentClickListener != null){
+                        commentClickListener.onClickDefault(item);
+                    }
+                    break;
             }
         });
 
@@ -123,6 +129,12 @@ public class ConnectCommentsTabViewModel extends BaseViewModel {
                 });
 
                 commentsBinding.userName.setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                commentsBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
