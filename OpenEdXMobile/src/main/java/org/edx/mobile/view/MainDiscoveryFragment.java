@@ -247,6 +247,10 @@ public class MainDiscoveryFragment extends BaseFragment {
         final String pathId = bundle.getString(EXTRA_PATH_ID);
         if (!TextUtils.isEmpty(pathId)) {
             switch (screenName) {
+                case Screen.PROGRAM:
+                    environment.getRouter().showAuthenticatedWebviewActivity(getActivity(),
+                            environment, pathId, getActivity().getString(R.string.label_my_programs));
+                    break;
                 case Screen.COURSE_DISCOVERY:
                     environment.getRouter().showCourseInfo(getActivity(), pathId);
                     break;

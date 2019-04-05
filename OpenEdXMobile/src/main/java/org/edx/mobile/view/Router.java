@@ -17,6 +17,7 @@ import com.google.inject.Singleton;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.LoginAPI;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.discussion.DiscussionComment;
@@ -31,7 +32,9 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
+import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.dialog.AuthenticatedWebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
@@ -393,8 +396,12 @@ public class Router {
         fragment.startActivityForResult(ViewSubjectsActivity.newIntent(fragment.getActivity()), requestCode);
     }
 
-    public void showAuthenticatedWebviewActivity(@NonNull Activity activity, @NonNull String url, @NonNull String title) {
-        activity.startActivity(AuthenticatedWebViewActivity.newIntent(activity, url, title));
+    public void showAuthenticatedWebviewActivity(@NonNull Activity activity, final IEdxEnvironment environment,
+                                                 final String pathId, @NonNull String title) {
+        final CharSequence url = ResourceUtil.getFormattedString(
+                environment.getConfig().getProgramConfig().getDetailUrlTemplate(),
+                WebViewLink.Param.PATH_ID, pathId);
+        activity.startActivity(AuthenticatedWebViewActivity.newIntent(activity, url.toString(), title));
     }
 
     /**
