@@ -16,6 +16,7 @@ limitations under the License.
 
 package org.edx.mobile.third_party.subscaleview;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -72,6 +73,8 @@ import java.util.concurrent.Executor;
  * v prefixes - coordinates, translations and distances measured in screen (view) pixels
  * s prefixes - coordinates, translations and distances measured in source image pixels (scaled)
  */
+
+// TODO - Update this legacy library code as part of https://openedx.atlassian.net/browse/LEARNER-7207, currently we are just suppressing the WrongThread warnings
 @SuppressWarnings("unused")
 public class SubsamplingScaleImageView extends View {
 
@@ -1436,6 +1439,7 @@ public class SubsamplingScaleImageView extends View {
                     Point dimensions = decoder.init(context, source);
                     int sWidth = dimensions.x;
                     int sHeight = dimensions.y;
+                    @SuppressLint("WrongThread")
                     int exifOrientation = view.getExifOrientation(sourceUri);
                     if (view.sRegion != null) {
                         sWidth = view.sRegion.width();
@@ -1505,6 +1509,7 @@ public class SubsamplingScaleImageView extends View {
             tile.loading = true;
         }
 
+        @SuppressLint("WrongThread")
         @Override
         protected Bitmap doInBackground(Void... params) {
             try {
@@ -1583,6 +1588,7 @@ public class SubsamplingScaleImageView extends View {
             this.preview = preview;
         }
 
+        @SuppressLint("WrongThread")
         @Override
         protected Integer doInBackground(Void... params) {
             try {
