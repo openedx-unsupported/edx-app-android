@@ -237,6 +237,11 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
 
     @Override
     public List<FragmentItemModel> getFragmentItems() {
+        final Bundle arguments = getArguments();
+        @ScreenDef String screenName = null;
+        if (arguments != null) {
+            screenName = arguments.getString(Router.EXTRA_SCREEN_NAME);
+        }
         ArrayList<FragmentItemModel> items = new ArrayList<>();
         // Add course outline tab
         items.add(new FragmentItemModel(CourseOutlineFragment.class, courseData.getCourse().getName(),
@@ -297,7 +302,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         items.add(new FragmentItemModel(ResourcesFragment.class,
                 getResources().getString(R.string.resources_title),
                 FontAwesomeIcons.fa_ellipsis_h,
-                ResourcesFragment.makeArguments(courseData),
+                ResourcesFragment.makeArguments(courseData, screenName),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {
