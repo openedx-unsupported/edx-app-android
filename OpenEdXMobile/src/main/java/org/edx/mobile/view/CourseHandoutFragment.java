@@ -130,7 +130,6 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
         buff.append("</div>");
         buff.append("</body>");
 
-        webview.clearCache(true);
         webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(),
                 "text/html", Encoding.UTF_8.toString(), null);
 
