@@ -1,9 +1,11 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 
 import com.google.inject.Inject;
@@ -42,14 +44,14 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String screenName;
-        String actionItem;
+        String screenName = null;
+        String actionItem = null;
         Map<String, String> values = new HashMap<>();
         if (searchQuery != null) {
             screenName = Analytics.Screens.FORUM_SEARCH_THREADS;
             values.put(Analytics.Keys.SEARCH_STRING, searchQuery);
             actionItem = searchQuery;
-        } else {
+        } else if (discussionTopic != null) {
             screenName = Analytics.Screens.FORUM_VIEW_TOPIC_THREADS;
             String topicId = discussionTopic.getIdentifier();
             if (DiscussionTopic.ALL_TOPICS_ID.equals(topicId)) {
@@ -61,8 +63,10 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
             }
             values.put(Analytics.Keys.TOPIC_ID, topicId);
         }
-        environment.getAnalyticsRegistry().trackScreenView(screenName, courseData.getCourse().getId(),
-                actionItem, values);
+        if (!TextUtils.isEmpty(actionItem) && !TextUtils.isEmpty(screenName)) {
+            environment.getAnalyticsRegistry().trackScreenView(screenName, courseData.getCourse().getId(),
+                    actionItem, values);
+        }
     }
 
     @Override

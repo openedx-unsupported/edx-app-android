@@ -13,16 +13,22 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import static org.edx.mobile.view.Router.EXTRA_ANNOUNCEMENTS;
 import static org.edx.mobile.view.Router.EXTRA_COURSE_DATA;
 import static org.edx.mobile.view.Router.EXTRA_COURSE_ID;
+import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_THREAD_ID;
+import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_TOPIC_ID;
 import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
 public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
     public static Intent newIntent(@NonNull Activity activity,
                                    @Nullable EnrolledCoursesResponse courseData,
-                                   @Nullable String courseId, boolean announcements,
+                                   @Nullable String courseId,
+                                   @Nullable String topicId,
+                                   @Nullable String threadId, boolean announcements,
                                    @Nullable @ScreenDef String screenName) {
-        Intent intent = new Intent(activity, CourseTabsDashboardActivity.class);
+        final Intent intent = new Intent(activity, CourseTabsDashboardActivity.class);
         intent.putExtra(EXTRA_COURSE_DATA, courseData);
         intent.putExtra(EXTRA_COURSE_ID, courseId);
+        intent.putExtra(EXTRA_DISCUSSION_TOPIC_ID, topicId);
+        intent.putExtra(EXTRA_DISCUSSION_THREAD_ID, threadId);
         intent.putExtra(EXTRA_ANNOUNCEMENTS, announcements);
         intent.putExtra(EXTRA_SCREEN_NAME, screenName);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -31,10 +37,7 @@ public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        return CourseTabsDashboardFragment.newInstance(
-                (EnrolledCoursesResponse) getIntent().getSerializableExtra(EXTRA_COURSE_DATA),
-                getIntent().getStringExtra(EXTRA_COURSE_ID),
-                getIntent().getStringExtra(EXTRA_SCREEN_NAME));
+        return CourseTabsDashboardFragment.newInstance(getIntent().getExtras());
     }
 
     @Override

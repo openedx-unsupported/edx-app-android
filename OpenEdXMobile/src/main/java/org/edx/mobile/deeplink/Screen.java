@@ -16,4 +16,6 @@ public class Screen {
     public static final String ACCOUNT = "account";
     public static final String COURSE_DISCOVERY = "course_discovery";
     public static final String PROGRAM_DISCOVERY = "program_discovery";
+    public static final String DISCUSSION_POST = "discussion_post";
+    public static final String DISCUSSION_TOPIC = "discussion_topic";
 }
