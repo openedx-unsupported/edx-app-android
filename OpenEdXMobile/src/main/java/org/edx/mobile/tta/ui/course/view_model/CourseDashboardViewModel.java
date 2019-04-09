@@ -14,6 +14,7 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.course.CourseMaterialTab;
 import org.edx.mobile.tta.ui.course.discussion.CourseDiscussionTab;
@@ -35,8 +36,8 @@ public class CourseDashboardViewModel extends BaseViewModel {
     private EnrolledCoursesResponse course;
     private CourseComponent rootComponent;
 
-    public CourseDashboardViewModel(Context context, TaBaseFragment fragment, Content content) {
-        super(context, fragment);
+    public CourseDashboardViewModel(BaseVMActivity activity, Content content) {
+        super(activity);
         this.content = content;
         adapter = new CourseDashboardPagerAdapter(mActivity.getSupportFragmentManager());
         fragments = new ArrayList<>();

@@ -11,6 +11,8 @@ import com.google.inject.Singleton;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
@@ -187,6 +189,7 @@ public class TaAPI {
         parameters.put(Constants.KEY_FOLLOW_USERNAME,username);
         return taService.followUser(parameters);
     }
+
     public Call<List<Content>> assistantSearch(String searchText,List<String> tags) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, 5);  //fixing this for now
@@ -194,5 +197,19 @@ public class TaAPI {
         parameters.put(Constants.KEY_SEARCH_TEXT, searchText);
         parameters.put(Constants.KEY_TAGS, tags);
         return taService.assistantSearch(parameters);
+    }
+
+    public Call<List<Notification>> createNotifications(List<Notification> notifications){
+        return taService.createNotifications(notifications);
+    }
+
+    public Call<CountResponse> updateNotifications(List<String> notificationIds){
+        Map<String, Object> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_IDS, notificationIds);
+        return taService.updateNotifications(parameters);
+    }
+
+    public Call<List<Notification>> getNotifications(int take, int skip){
+        return taService.getNotifications(take, skip);
     }
 }

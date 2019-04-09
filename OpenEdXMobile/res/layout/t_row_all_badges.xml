@@ -9,30 +9,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_marginTop="@dimen/_36px"
-        android:gravity="center"
-        android:layout_marginBottom="@dimen/_36px"
+        android:layout_marginBottom="@dimen/_10px"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/ivBadgeimage"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_marginLeft="@dimen/_30px"
-            android:layout_marginRight="@dimen/_30px"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="fitXY" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/tvbadgename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:fontFamily="@font/hind_regular"
             android:layout_marginTop="@dimen/_16px"
             android:textColor="@color/secondary_pink"
-            android:text=""
             android:textSize="14sp" />
     </LinearLayout>
 </layout>

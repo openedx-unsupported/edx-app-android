@@ -40,6 +40,7 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.ScormStatus;
+import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
@@ -50,7 +51,10 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.BaseResponse;
+import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
@@ -107,6 +111,9 @@ import org.edx.mobile.tta.task.feed.GetSuggestedUsersTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
 import org.edx.mobile.tta.task.library.GetConfigModifiedDateTask;
+import org.edx.mobile.tta.task.notification.CreateNotificationsTask;
+import org.edx.mobile.tta.task.notification.GetNotificationsTask;
+import org.edx.mobile.tta.task.notification.UpdateNotificationsTask;
 import org.edx.mobile.tta.task.profile.ChangePasswordTask;
 import org.edx.mobile.tta.task.profile.GetAccountTask;
 import org.edx.mobile.tta.task.profile.GetProfileTask;
@@ -135,7 +142,9 @@ import org.edx.mobile.util.NetworkUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -757,7 +766,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getDownloadAgendaCount(OnResponseCallback<AgendaList> callback) {
+    public void getDownloadAgendaCount(List<Source> sources, OnResponseCallback<AgendaList> callback) {
 
         //Mocking start
         /*AgendaList agendaList = new AgendaList();
@@ -792,122 +801,76 @@ public class DataManager extends BaseRoboInjector {
         //Mocking end
 
         //Actual code **Do not delete**
-        final boolean[] coursesReceived = new boolean[1];
-        final boolean[] chatshalaReceived = new boolean[1];
-        final boolean[] toolkitReceived = new boolean[1];
-        final boolean[] hoisReceived = new boolean[1];
+        Map<String, Boolean> receivedSources = new HashMap<>();
+        for (Source source: sources){
+            receivedSources.put(source.getName(), false);
+        }
 
         AgendaList agendaList = new AgendaList();
         agendaList.setLevel("Download");
         agendaList.setResult(new ArrayList<>());
 
-        getdownloadedCourseContents(new OnResponseCallback<List<Content>>() {
-            @Override
-            public void onSuccess(List<Content> data) {
-                addContentsToAgendaList(data, agendaList, SourceType.course);
-                coursesReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
-            }
+        for (Source source: sources) {
+            if (source.getType().equalsIgnoreCase(SourceType.edx.name()) ||
+                    source.getType().equalsIgnoreCase(SourceType.course.name())) {
 
-            @Override
-            public void onFailure(Exception e) {
-                addContentsToAgendaList(null, agendaList, SourceType.course);
-                coursesReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
-            }
-        });
+                getdownloadedCourseContents(new OnResponseCallback<List<Content>>() {
+                    @Override
+                    public void onSuccess(List<Content> data) {
+                        addContentsToAgendaList(data, agendaList, source.getName(), source.getTitle());
+                        receivedSources.put(source.getName(), true);
+                        sendDownloadAgenda(receivedSources, agendaList, callback);
+                    }
 
-        getdownloadedWPContents(SourceType.chatshala.name(), new OnResponseCallback<List<Content>>() {
-            @Override
-            public void onSuccess(List<Content> data) {
-                addContentsToAgendaList(data, agendaList, SourceType.chatshala);
-                chatshalaReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
-            }
+                    @Override
+                    public void onFailure(Exception e) {
+                        addContentsToAgendaList(null, agendaList, source.getName(), source.getTitle());
+                        receivedSources.put(source.getName(), true);
+                        sendDownloadAgenda(receivedSources, agendaList, callback);
+                    }
+                });
 
-            @Override
-            public void onFailure(Exception e) {
-                addContentsToAgendaList(null, agendaList, SourceType.chatshala);
-                chatshalaReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
-            }
-        });
+            } else {
 
-        getdownloadedWPContents(SourceType.toolkit.name(), new OnResponseCallback<List<Content>>() {
-            @Override
-            public void onSuccess(List<Content> data) {
-                addContentsToAgendaList(data, agendaList, SourceType.toolkit);
-                toolkitReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
-            }
+                getdownloadedWPContents(source.getName(), new OnResponseCallback<List<Content>>() {
+                    @Override
+                    public void onSuccess(List<Content> data) {
+                        addContentsToAgendaList(data, agendaList, source.getName(), source.getTitle());
+                        receivedSources.put(source.getName(), true);
+                        sendDownloadAgenda(receivedSources, agendaList, callback);
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                addContentsToAgendaList(null, agendaList, SourceType.toolkit);
-                toolkitReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        addContentsToAgendaList(null, agendaList, source.getName(), source.getTitle());
+                        receivedSources.put(source.getName(), true);
+                        sendDownloadAgenda(receivedSources, agendaList, callback);
+                    }
+                });
 
-        getdownloadedWPContents(SourceType.hois.name(), new OnResponseCallback<List<Content>>() {
-            @Override
-            public void onSuccess(List<Content> data) {
-                addContentsToAgendaList(data, agendaList, SourceType.hois);
-                hoisReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
             }
-
-            @Override
-            public void onFailure(Exception e) {
-                addContentsToAgendaList(null, agendaList, SourceType.hois);
-                hoisReceived[0] = true;
-                sendDownloadAgenda(coursesReceived[0], chatshalaReceived[0], toolkitReceived[0], hoisReceived[0],
-                        agendaList, callback);
-            }
-        });
+        }
 
     }
 
-    private void addContentsToAgendaList(List<Content> contents, AgendaList agendaList, SourceType sourceType){
+    private void addContentsToAgendaList(List<Content> contents, AgendaList agendaList,
+                                         String sourceName, String sourceTitle){
 
         AgendaItem item = new AgendaItem();
         item.setContent_count(contents == null ? 0 : contents.size());
-        item.setSource_name(sourceType.name());
-
-        String sourceTitle = null;
-        switch (sourceType){
-            case course:
-                sourceTitle = context.getString(R.string.course);
-                break;
-            case chatshala:
-                sourceTitle = context.getString(R.string.chatshala);
-                break;
-            case toolkit:
-                sourceTitle = context.getString(R.string.toolkit);
-                break;
-            case hois:
-                sourceTitle = context.getString(R.string.hois);
-                break;
-        }
+        item.setSource_name(sourceName);
         item.setSource_title(sourceTitle);
         agendaList.getResult().add(item);
 
     }
 
-    private void sendDownloadAgenda(boolean b1, boolean b2, boolean b3, boolean b4, AgendaList agendaList,
+    private void sendDownloadAgenda(Map<String, Boolean> receivedSources, AgendaList agendaList,
                                     OnResponseCallback<AgendaList> callback){
 
-        if (b1 && b2 && b3 && b4){
-            callback.onSuccess(agendaList);
+        if (receivedSources.values().contains(false)){
+            return;
         }
-
+        callback.onSuccess(agendaList);
     }
 
     public void getdownloadedCourseContents(OnResponseCallback<List<Content>> callback){
@@ -1423,7 +1386,7 @@ public class DataManager extends BaseRoboInjector {
         //Mocking end
 
         //Actual code   **Do not delete**
-        if (sourceName.equalsIgnoreCase(SourceType.course.name())){
+        if (sourceName.equalsIgnoreCase(SourceName.course.name())){
             getdownloadedCourseContents(callback);
         } else {
             getdownloadedWPContents(sourceName, callback);
@@ -2520,6 +2483,172 @@ public class DataManager extends BaseRoboInjector {
         } else {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
+    }
+
+    public void getSources(OnResponseCallback<List<Source>> callback){
+
+        new AsyncTask<Void, Void, List<Source>>() {
+            @Override
+            protected List<Source> doInBackground(Void... voids) {
+                return mLocalDataSource.getSources();
+            }
+
+            @Override
+            protected void onPostExecute(List<Source> sources) {
+                if (sources == null || sources.isEmpty()){
+                    callback.onFailure(new TaException("No sources available"));
+                } else {
+                    callback.onSuccess(sources);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void updateNotifications(OnResponseCallback<CountResponse> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new Thread(){
+                @Override
+                public void run() {
+                    List<Notification> notifications = mLocalDataSource.getAllUnupdatedNotifications(loginPrefs.getUsername());
+                    if (notifications != null && !notifications.isEmpty()){
+                        List<String> notificationIds = new ArrayList<>();
+                        for (Notification notification: notifications){
+                            notificationIds.add(notification.getId());
+                        }
+
+                        new UpdateNotificationsTask(context, notificationIds){
+                            @Override
+                            protected void onSuccess(CountResponse countResponse) throws Exception {
+                                super.onSuccess(countResponse);
+
+                                for (Notification notification: notifications){
+                                    notification.setUpdated(true);
+                                }
+                                updateNotificationsInLocal(notifications);
+
+                                if (callback != null){
+                                    callback.onSuccess(countResponse);
+                                }
+                            }
+
+                            @Override
+                            protected void onException(Exception ex) {
+                                if (callback != null){
+                                    callback.onFailure(ex);
+                                }
+                            }
+                        }.execute();
+                    }
+                }
+            }.start();
+
+        } else {
+            if (callback != null) {
+                callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+            }
+        }
+
+    }
+
+    public void updateNotificationsInLocal(List<Notification> notifications){
+
+        new Thread(){
+            @Override
+            public void run() {
+                mLocalDataSource.updateNotifications(notifications);
+            }
+        }.start();
+
+    }
+
+    public void getNotifications(int take, int skip, OnResponseCallback<List<Notification>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetNotificationsTask(context, take, skip){
+                @Override
+                protected void onSuccess(List<Notification> notifications) throws Exception {
+                    super.onSuccess(notifications);
+
+                    if (notifications != null) {
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertNotifications(notifications);
+                            }
+                        }.start();
+
+                        callback.onSuccess(notifications);
+                    } else {
+                        getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getNotificationsFromLocal(take, skip, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getNotificationsFromLocal(take, skip, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getNotificationsFromLocal(int take, int skip, OnResponseCallback<List<Notification>> callback, Exception e){
+
+        new AsyncTask<Void, Void, List<Notification>>() {
+            @Override
+            protected List<Notification> doInBackground(Void... voids) {
+                return mLocalDataSource.getAllNotificationsInPage(loginPrefs.getUsername(), take, skip);
+            }
+
+            @Override
+            protected void onPostExecute(List<Notification> notifications) {
+                super.onPostExecute(notifications);
+                if (notifications == null || notifications.isEmpty()){
+                    callback.onFailure(e);
+                } else {
+                    callback.onSuccess(notifications);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void createNotification(Notification notification){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new CreateNotificationsTask(context, Collections.singletonList(notification)){
+                @Override
+                protected void onSuccess(List<Notification> notifications) throws Exception {
+                    super.onSuccess(notifications);
+                    if (notifications != null && !notifications.isEmpty()){
+                        Notification n = notifications.get(0);
+                        if (n.getId() != null){
+                            new Thread(){
+                                @Override
+                                public void run() {
+                                    mLocalDataSource.insertNotification(n);
+                                }
+                            }.start();
+                        }
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+
+                }
+            }.execute();
+
+        }
+
     }
 
 }

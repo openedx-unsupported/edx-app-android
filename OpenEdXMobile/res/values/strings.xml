@@ -7,169 +7,169 @@
     <!-- Certificates -->
 
     <!-- Label congratulation user on finishing content -->
-    <string name="course_details_congratulations">Congratulations!</string>
+    <string name="course_details_congratulations" translatable="false">Congratulations!</string>
     <!-- Message for user who has successfully completed a certificate content -->
-    <string name="course_details_earned_cert">You’ve passed the content.</string>
+    <string name="course_details_earned_cert" translatable="false">You’ve passed the content.</string>
     <!-- Button that opens a full view of an earned certificate -->
-    <string name="course_details_view_cert_button">View Certificate</string>
+    <string name="course_details_view_cert_button" translatable="false">View Certificate</string>
 
     <!-- Course Discovery -->
 
     <!-- Enroll Now button text-->
-    <string name="enroll_now_button_text">Enroll now</string>
+    <string name="enroll_now_button_text" translatable="false">Enroll now</string>
     <!-- Invitation Only button text-->
-    <string name="invitation_only_button_text">Invitation only</string>
+    <string name="invitation_only_button_text" translatable="false">Invitation only</string>
     <!-- Effort field name -->
-    <string name="effort_field_name">Effort:</string>
+    <string name="effort_field_name" translatable="false">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
     In that case, a play icon is shown on top of the content image. This is the content description. -->
-    <string name="go_to_video">Go to video</string>
+    <string name="go_to_video" translatable="false">Go to video</string>
     <!-- View Course button text text-->
-    <string name="view_course_button_text">View content</string>
+    <string name="view_course_button_text" translatable="false">View content</string>
     <!-- Floating overlay text shown to user when they succeed at enrolling in a content -->
-    <string name="you_are_now_enrolled">You are now enrolled in this content.</string>
+    <string name="you_are_now_enrolled" translatable="false">You are now enrolled in this content.</string>
     <!-- Error message shown when dashboard cannot be shown from content detail view -->
-    <string name="cannot_show_dashboard">Unable to show dashboard.</string>
+    <string name="cannot_show_dashboard" translatable="false">Unable to show dashboard.</string>
 
     <!-- Subjects Discovery -->
 
     <!-- Label for browsing courses by a subject -->
-    <string name="browse_by_subject">Browse by Subject</string>
+    <string name="browse_by_subject" translatable="false">Browse by Subject</string>
     <!-- Button's Label for viewing all subjects -->
-    <string name="view_all_subjects">View All Subjects</string>
+    <string name="view_all_subjects" translatable="false">View All Subjects</string>
     <!-- Label for searching subjects -->
-    <string name="search_subjects">Search Subject</string>
+    <string name="search_subjects" translatable="false">Search Subject</string>
 
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share content menu -->
-    <string name="share_course_button">Share your content</string>
+    <string name="share_course_button" translatable="false">Share your content</string>
     <!-- Share content -->
-    <string name="share_course_message">I’m taking a content on {platform_name}! Check it out:</string>
+    <string name="share_course_message" translatable="false">I’m taking a content on {platform_name}! Check it out:</string>
 
     <!-- Settings Page -->
     <!-- Label for wifi only switch -->
-    <string name="settings_wifi_top">Wi-Fi only download</string>
+    <string name="settings_wifi_top" translatable="false">Wi-Fi only download</string>
     <!-- Label explaining what wifi only means in detail -->
-    <string name="settings_wifi_bottom">Only download content when Wi-Fi is turned on</string>
+    <string name="settings_wifi_bottom" translatable="false">Only download content when Wi-Fi is turned on</string>
 
     <!-- Certificate Page -->
     <!-- Description of button that will open the certificate sharing menu -->
-    <string name="share_certificate_button">Share your certificate</string>
+    <string name="share_certificate_button" translatable="false">Share your certificate</string>
     <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
-    <string name="share_certificate_message">I just earned a Certificate on {platform_name}! Check it out: {certificate_url}</string>
+    <string name="share_certificate_message" translatable="false">I just earned a Certificate on {platform_name}! Check it out: {certificate_url}</string>
     <!-- Tab of tab for certicate for finished content -->
-    <string name="tab_label_certificate">Certificate</string>
+    <string name="tab_label_certificate" translatable="false">Certificate</string>
 
     <!-- Data Usage Dialog -->
     <!-- Alert dialog error message shown when using a feature with a required Internet connection -->
-    <string name="need_data">This feature requires an active Internet connection.</string>
+    <string name="need_data" translatable="false">This feature requires an active Internet connection.</string>
 
     <!-- Login Activity Place Holders -->
     <!-- Hint text for login field -->
-    <string name="email_username">User name or e-mail address</string>
+    <string name="email_username" translatable="false">User name or e-mail address</string>
     <!-- Hint text for email address field in reset password dialog -->
-    <string name="email">E-mail address</string>
+    <string name="email" translatable="false">E-mail address</string>
     <!-- Hint text for password field -->
     <string name="password">Password</string>
     <!-- Button text allowing user to reset their password -->
     <string name="forgot_password">Forgot your password ?</string>
     <!-- Button initiating login process after user enters credentials like username and password -->
-    <string name="login">Sign In</string>
+    <string name="login" translatable="false">Sign In</string>
     <!-- Accessible content description of sign in button on Log in screen -->
-    <string name="login_btn">Sign in button</string>
+    <string name="login_btn" translatable="false">Sign in button</string>
     <!-- Message shown while waiting for action -->
-    <string name="progress_text">Please wait</string>
+    <string name="progress_text" translatable="false">Please wait</string>
     <!-- Message shown while user waits for response to a sign in request-->
-    <string name="signing_in">Signing In</string>
+    <string name="signing_in" translatable="false">Signing In</string>
     <!-- Message for shown after tapping Sign In -->
-    <string name="error_message">Error Message</string>
+    <string name="error_message" translatable="false">Error Message</string>
     <!-- Generic error during log in -->
-    <string name="error_heading">The following error occurred while logging you in</string>
+    <string name="error_heading" translatable="false">The following error occurred while logging you in</string>
     <!-- Error during log in. -->
-    <string name="login_failed">Please make sure that your user name or e-mail address and password are correct and try again.</string>
+    <string name="login_failed" translatable="false">Please make sure that your user name or e-mail address and password are correct and try again.</string>
 
     <!-- License Agreement related string on Login and Regiser screens -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_creating_account">By creating an account, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
+    <string name="by_creating_account" translatable="false">By creating an account, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
     <!-- Sign In agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_signing_in">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
+    <string name="by_signing_in" translatable="false">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and acknowledge the {privacy_policy}</string>
     <!-- Label for End User License Agreement -->
-    <string name="licensing_agreement">{platform_name} End User License Agreement</string>
+    <string name="licensing_agreement" translatable="false">{platform_name} End User License Agreement</string>
     <!-- Label for Terms of Service and Honor Code -->
-    <string name="tos_and_honor_code">{platform_name} Terms of Service and Honor Code</string>
+    <string name="tos_and_honor_code" translatable="false">{platform_name} Terms of Service and Honor Code</string>
     <!-- Label for Privacy Policy -->
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy" translatable="false">Privacy Policy</string>
 
-    <string name="login_title">Sign In</string>
+    <string name="login_title" translatable="false">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
-    <string name="close">Close</string>
+    <string name="close" translatable="false">Close</string>
     <!-- Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns -->
-    <string name="dropdown_list_prefix">Dropdown list.</string>
+    <string name="dropdown_list_prefix" translatable="false">Dropdown list.</string>
 
     <!-- Navigation Drawer Labels -->
     <!-- Button text to showLoading user current downloads screen -->
-    <string name="label_current_downloads">View current downloads</string>
+    <string name="label_current_downloads" translatable="false">View current downloads</string>
     <!-- Content description for edit profile button -->
-    <string name="open_profile_button">Open your profile</string>
+    <string name="open_profile_button" translatable="false">Open your profile</string>
     <!-- Title of user's content list screen -->
-    <string name="label_my_courses">Courses</string>
+    <string name="label_my_courses" translatable="false">Courses</string>
     <!-- Title of user's program list screen -->
-    <string name="label_my_programs" tools:ignore="MissingTranslation">Programs</string>
+    <string name="label_my_programs" tools:ignore="MissingTranslation" translatable="false">Programs</string>
     <!-- Title of native Find Courses Screen -->
-    <string name="label_find_courses">Find Courses</string>
+    <string name="label_find_courses" translatable="false">Find Courses</string>
     <!-- Title of webview based Find Courses Screen -->
-    <string name="label_discover">Discover</string>
+    <string name="label_discover" translatable="false">Discover</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
-    <string name="label_discovery">Discovery</string>
+    <string name="label_discovery" translatable="false">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
-    <string name="label_submit_feedback">Submit Feedback</string>
+    <string name="label_submit_feedback" translatable="false">Submit Feedback</string>
     <!-- Toggle switch on state label -->
-    <string name="toggle_turn_on">On</string>
+    <string name="toggle_turn_on" translatable="false">On</string>
     <!-- Toggle switch off state label -->
-    <string name="toggle_turn_off">Off</string>
+    <string name="toggle_turn_off" translatable="false">Off</string>
     <!-- Logout button label -->
-    <string name="logout">Logout</string>
+    <string name="logout" translatable="false">Logout</string>
     <!-- Settings screen title -->
-    <string name="settings_txt">Settings</string>
+    <string name="settings_txt" translatable="false">Settings</string>
     <!-- Settings screen version -->
-    <string name="label_version">App Version</string>
+    <string name="label_version" translatable="false">App Version</string>
     <!-- Button text to showLoading user Settings screen -->
-    <string name="label_settings">Settings</string>
+    <string name="label_settings" translatable="false">Settings</string>
     <!-- Title of Account screen -->
-    <string name="title_account">Account</string>
+    <string name="title_account" translatable="false">Account</string>
 
     <!-- Help Dialog Place Holder messages -->
     <!-- Reset password alert dialog title -->
-    <string name="confirm_dialog_title_help">Reset Password</string>
+    <string name="confirm_dialog_title_help" translatable="false">Reset Password</string>
     <!-- Reset password alert dialog message -->
-    <string name="success_dialog_title_help">Password reset e-mail sent</string>
+    <string name="success_dialog_title_help" translatable="false">Password reset e-mail sent</string>
     <!-- Reset password alert dialog title -->
-    <string name="title_reset_password_failed">Reset Password Error</string>
+    <string name="title_reset_password_failed" translatable="false">Reset Password Error</string>
     <!-- Label for switch controlling whether users permit downloading using cellular data or only wifi -->
-    <string name="wifi_dialog_title_help">Allow cellular download</string>
+    <string name="wifi_dialog_title_help" translatable="false">Allow cellular download</string>
     <!-- Password reset sent succesfully alert -->
-    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address. 
+    <string name="success_dialog_message_help" translatable="false">We’ve sent a message with password reset instructions to your e-mail address.
         If you don’t see it in the next few minutes, make sure to check your spam folder.</string>
     <!-- Password reset dialog prompt -->
-    <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>
+    <string name="confirm_dialog_message_help" translatable="false">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>
     <!-- Label explaining toggle for cellular data access -->
-    <string name="wifi_dialog_message_help">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
+    <string name="wifi_dialog_message_help" translatable="false">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
     <!-- Info message text for to let use know how many videos were deleted -->
     <plurals name="delete_video_snackbar_msg">
         <item quantity="one">%s video deleted</item>
         <item quantity="other">%s videos deleted</item>
     </plurals>
     <!-- Alert dialog title for users with zero rated data -->
-    <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
+    <string name="leaving_app_data_title" translatable="false">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
-    <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
+    <string name="leaving_app_data_message" translatable="false">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
     <!-- Title of agreement users must accept to use the app -->
-    <string name="end_user_title">End User License Agreement</string>
+    <string name="end_user_title" translatable="false">End User License Agreement</string>
     <!-- Title of privacy policy users must accept to use the app -->
     <string name="privacy_policy_title" translatable="false">@string/privacy_policy</string>
     <!-- Title of terms of service & honor code users must accept to use the app -->
-    <string name="terms_of_service_title">Terms of Service</string>
+    <string name="terms_of_service_title" translatable="false">Terms of Service</string>
 
     <string-array name="spinner_classes">
         <item>1st</item>
@@ -179,123 +179,123 @@
 
     <!-- My Courses -->
     <!-- Row of content on dashboard screen -->
-    <string name="courseware_title">Course</string>
+    <string name="courseware_title" translatable="false">Course</string>
     <!-- Row of content on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="courseware_subtitle">Access videos and assignments</string>
+    <string name="courseware_subtitle" translatable="false">Access videos and assignments</string>
     <!-- Row title of videos on dashboard screen -->
-    <string name="videos_title">Videos</string>
+    <string name="videos_title" translatable="false">Videos</string>
     <!-- Row subtitle of videos on dashboard screen -->
-    <string name="videos_subtitle">Watch content videos</string>
+    <string name="videos_subtitle" translatable="false">Watch content videos</string>
     <!-- Row of Discussion on dashboard screen -->
-    <string name="discussion_title">Discussion</string>
+    <string name="discussion_title" translatable="false">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="discussion_subtitle">Join the conversation</string>
+    <string name="discussion_subtitle" translatable="false">Join the conversation</string>
     <!-- Row of Handouts on dashboard screen -->
-    <string name="handouts_title">Handouts</string>
+    <string name="handouts_title" translatable="false">Handouts</string>
     <!-- Row of Handouts on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="handouts_subtitle">Find important content information</string>
+    <string name="handouts_subtitle" translatable="false">Find important content information</string>
     <!-- Row of announcement on dashboard screen -->
-    <string name="announcement_title">Announcements</string>
+    <string name="announcement_title" translatable="false">Announcements</string>
     <!-- Title text for the important dates section on the content dashboard  -->
-    <string name="course_dates_title">Important Dates</string>
+    <string name="course_dates_title" translatable="false">Important Dates</string>
     <!-- Title text for the additional resources section on the tabular content dashboard  -->
-    <string name="resources_title">Resources</string>
+    <string name="resources_title" translatable="false">Resources</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="announcement_subtitle">Keep up with the latest news</string>
+    <string name="announcement_subtitle" translatable="false">Keep up with the latest news</string>
     <!-- Subtitle text describing the important dates section on the content dashboard -->
-    <string name="course_dates_subtitle">Keep track of deadlines and stay on track</string>
+    <string name="course_dates_subtitle" translatable="false">Keep track of deadlines and stay on track</string>
     <!-- Accessible content description of content name label field -->
-    <string name="course_name">Course Name</string>
+    <string name="course_name" translatable="false">Course Name</string>
     <!-- Label indicating new content content has been downloaded -->
-    <string name="new_course_content">New Course Content</string>
+    <string name="new_course_content" translatable="false">New Course Content</string>
     <!-- Label for date when content starts -->
-    <string name="label_starting">Starting {date}</string>
+    <string name="label_starting" translatable="false">Starting {date}</string>
     <!-- Label for content that has ended -->
-    <string name="label_ended">Ended {date}</string>
+    <string name="label_ended" translatable="false">Ended {date}</string>
     <!-- Label for date when content is ending -->
-    <string name="label_ending">Ending {date}</string>
+    <string name="label_ending" translatable="false">Ending {date}</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for content content -->
-    <string name="course_content">Course Content</string>
+    <string name="course_content" translatable="false">Course Content</string>
     <!-- Tab title for content handouts section -->
-    <string name="tab_label_handouts">Handouts</string>
+    <string name="tab_label_handouts" translatable="false">Handouts</string>
     <!-- Button for last accessed content section. Will be followed by content name -->
-    <string name="last_accessed">Last Accessed</string>
+    <string name="last_accessed" translatable="false">Last Accessed</string>
     <!-- Label shown when no courseware content is available -->
-    <string name="no_chapter_text">No content content is currently available.</string>
+    <string name="no_chapter_text" translatable="false">No content content is currently available.</string>
     <!-- Label shown when no mobile-friendly videos are available in a content -->
-    <string name="no_videos_text">This content does not include any videos.</string>
+    <string name="no_videos_text" translatable="false">This content does not include any videos.</string>
     <!-- Label shown when user is enrolled in no courses -->
-    <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
+    <string name="no_courses_to_display" translatable="false">It looks like you are not enrolled in any courses yet.</string>
     <!-- Label shown when no announcements are available for a content -->
-    <string name="no_announcements_to_display">There are currently no announcements for this content.</string>
+    <string name="no_announcements_to_display" translatable="false">There are currently no announcements for this content.</string>
     <!-- Label shown when no handouts are available for a content -->
-    <string name="no_handouts_to_display">There are currently no handouts for this content.</string>
+    <string name="no_handouts_to_display" translatable="false">There are currently no handouts for this content.</string>
     <!-- Label shown when no important dates are available for a content -->
-    <string name="no_course_dates_to_display">Course dates are not currently available.</string>
+    <string name="no_course_dates_to_display" translatable="false">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
-    <string name="delete_videos_title">Delete Videos</string>
+    <string name="delete_videos_title" translatable="false">Delete Videos</string>
     <!-- Label for a content item's due date for same day -->
-    <string name="due_date_today">due today at {due_date}</string>
+    <string name="due_date_today" translatable="false">due today at {due_date}</string>
     <!-- Label for a content item's due date -->
-    <string name="due_date_past_future">due {due_date}</string>
+    <string name="due_date_past_future" translatable="false">due {due_date}</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->
-    <string name="discussion_topics_title">Discussion topics</string>
+    <string name="discussion_topics_title" translatable="false">Discussion topics</string>
     <!--Hint displayed in search view for discussion posts-->
-    <string name="topics_search">Search all posts</string>
+    <string name="topics_search" translatable="false">Search all posts</string>
 
     <!--Discussion Posts Fragment-->
     <!--Title for discussion post search content-->
-    <string name="discussion_posts_search_title">Search content</string>
+    <string name="discussion_posts_search_title" translatable="false">Search content</string>
     <!--Label for the the filter and sort options for refining the thread list -->
-    <string name="discussion_posts_refine">Refine:</string>
+    <string name="discussion_posts_refine" translatable="false">Refine:</string>
     <!--Label for creating a new post-->
-    <string name="discussion_post_create_new_post">Create a new post</string>
+    <string name="discussion_post_create_new_post" translatable="false">Create a new post</string>
     <!--Label for creating a new comment-->
     <string name="discussion_post_create_new_comment" translatable="false">@string/discussion_add_comment_title</string>
     <!--Discussion posts filter options-->
     <!--Discussion posts filter for all posts-->
-    <string name="discussion_posts_filter_all_posts">All Posts</string>
+    <string name="discussion_posts_filter_all_posts" translatable="false">All Posts</string>
     <!--Discussion posts filter for unread posts-->
-    <string name="discussion_posts_filter_unread_posts">Unread</string>
+    <string name="discussion_posts_filter_unread_posts" translatable="false">Unread</string>
     <!--Discussion posts filter for unanswered posts-->
-    <string name="discussion_posts_filter_unanswered_posts">Unanswered</string>
+    <string name="discussion_posts_filter_unanswered_posts" translatable="false">Unanswered</string>
     <!--Discussion posts sort options-->
     <!--Discussion posts sort by recent activity-->
-    <string name="discussion_posts_sort_recent_activity">Recent Activity</string>
+    <string name="discussion_posts_sort_recent_activity" translatable="false">Recent Activity</string>
     <!--Discussion posts sort by most activity-->
-    <string name="discussion_posts_sort_most_activity">Most Activity</string>
+    <string name="discussion_posts_sort_most_activity" translatable="false">Most Activity</string>
     <!--Discussion posts sort by most votes-->
-    <string name="discussion_posts_sort_most_votes">Most Votes</string>
+    <string name="discussion_posts_sort_most_votes" translatable="false">Most Votes</string>
     <!-- Label for the visibility of a discussion post that is only visible to cohort -->
-    <string name="discussion_post_visibility_cohort">This post is visible only to {cohort}.</string>
+    <string name="discussion_post_visibility_cohort" translatable="false">This post is visible only to {cohort}.</string>
     <!-- Label for the visibility of a discussion post that is visible to everyone -->
-    <string name="discussion_post_visibility_everyone">This post is visible to everyone.</string>
+    <string name="discussion_post_visibility_everyone" translatable="false">This post is visible to everyone.</string>
     <!-- Used while constructing the author attribution text for a discussion post e.g. "3 days ago by Brian (Staff)" -->
-    <string name="discussion_post_author_attribution">by {author}</string>
+    <string name="discussion_post_author_attribution" translatable="false">by {author}</string>
     <!-- Used while constructing the author attribution text for an answer response e.g. "Marked as answer 2 days ago by Khalid (Community TA)" -->
-    <string name="discussion_post_marked_as_answer">Marked as answer</string>
+    <string name="discussion_post_marked_as_answer" translatable="false">Marked as answer</string>
     <!-- Used while constructing the author attribution text for an endorsed response e.g. "Endorsed 2 days ago by Khalid" -->
-    <string name="discussion_post_endorsed">Endorsed</string>
+    <string name="discussion_post_endorsed" translatable="false">Endorsed</string>
     <!-- Used for putting authorLabel into parenthesis e.g. (Community TA) or (Staff) -->
-    <string name="discussion_post_author_label_attribution">({text})</string>
+    <string name="discussion_post_author_label_attribution" translatable="false">({text})</string>
     <!-- Label indicating the number of replies on a post e.g. 47 total -->
-    <string name="discussion_post_total_replies">{total_replies} total</string>
+    <string name="discussion_post_total_replies" translatable="false">{total_replies} total</string>
     <!-- Label indicating the last time a post was updated e.g. Last post: Jun 22, 2016 -->
-    <string name="discussion_post_last_interaction_date">Last post: {date}</string>
+    <string name="discussion_post_last_interaction_date" translatable="false">Last post: {date}</string>
 
     <!--Discussion Responses-->
     <!--Label for question type discussions that are answered-->
-    <string name="course_discussion_answered_title">Answered Question</string>
+    <string name="course_discussion_answered_title" translatable="false">Answered Question</string>
     <!--Label for question type discussions that are unanswered-->
-    <string name="course_discussion_unanswered_title">Unanswered Question</string>
+    <string name="course_discussion_unanswered_title" translatable="false">Unanswered Question</string>
     <!--Label for adding a discussion response-->
     <string name="discussion_responses_add_response_button" translatable="false">@string/discussion_add_response_title</string>
     <!--Label for number of discussion responses-->
@@ -311,15 +311,15 @@
     <!--Label for adding a new comment-->
     <string name="number_responses_or_comments_add_comment_label" translatable="false">@string/discussion_add_comment_title</string>
     <!--Label for indicating that a response is an answer-->
-    <string name="discussion_responses_answer">Answer</string>
+    <string name="discussion_responses_answer" translatable="false">Answer</string>
     <!--Label for indicating that a response is endorsed-->
-    <string name="discussion_responses_endorsed">Endorsed</string>
+    <string name="discussion_responses_endorsed" translatable="false">Endorsed</string>
     <!-- Label for time span when its less than a second after posting a response/comment -->
-    <string name="just_now">Just now</string>
+    <string name="just_now" translatable="false">Just now</string>
     <!-- Label for letting the user know his/her response was successfully added -->
-    <string name="discussion_response_posted">Your response has been added.</string>-->
+    <string name="discussion_response_posted" translatable="false">Your response has been added.</string>-->
     <!-- Label for letting the user know his/her comment was successfully added -->
-    <string name="discussion_comment_posted">Your comment has been added.</string>
+    <string name="discussion_comment_posted" translatable="false">Your comment has been added.</string>
 
     <!--Discussion Responses Action Bar-->
     <!--Label to indicate number of votes-->
@@ -328,350 +328,350 @@
         <item quantity="other">{quantity} votes</item>
     </plurals>
     <!--Label to indicate discussion response is not marked as inappropriate -->
-    <string name="discussion_responses_report_label">Report</string>
+    <string name="discussion_responses_report_label" translatable="false">Report</string>
     <!--Label for discussion response that has been marked as inappropriate-->
-    <string name="discussion_responses_reported_label">Unreport</string>
+    <string name="discussion_responses_reported_label" translatable="false">Unreport</string>
 
     <!-- Title in adding a new comment -->
-    <string name="discussion_add_comment_title">Add a comment</string>
+    <string name="discussion_add_comment_title" translatable="false">Add a comment</string>
     <!-- Title when adding a new comment is disabled -->
-    <string name="discussion_add_comment_disabled_title">Comments are closed for this response</string>
+    <string name="discussion_add_comment_disabled_title" translatable="false">Comments are closed for this response</string>
     <!-- Title in showing list of comments -->
-    <string name="discussion_comments">Comments</string>
+    <string name="discussion_comments" translatable="false">Comments</string>
     <!-- Add comment button title in adding a new comment -->
-    <string name="discussion_add_comment_button_label">Add comment</string>
+    <string name="discussion_add_comment_button_label" translatable="false">Add comment</string>
     <!-- Add comment button description for accessibility in adding a new comment -->
-    <string name="discussion_add_comment_button_description">Add comment button</string>
+    <string name="discussion_add_comment_button_description" translatable="false">Add comment button</string>
     <!-- Add your comment placeholder in adding a new comment -->
     <string name="discussion_add_comment_hint" translatable="false">@string/discussion_add_comment_title</string>
 
     <!-- Title in adding a new response -->
-    <string name="discussion_add_response_title">Add a response</string>
+    <string name="discussion_add_response_title" translatable="false">Add a response</string>
     <!-- Title when adding a new response is disabled -->
-    <string name="discussion_add_response_disabled_title">Responses are closed for this post</string>
+    <string name="discussion_add_response_disabled_title" translatable="false">Responses are closed for this post</string>
     <!-- Add response button title in adding a new response -->
-    <string name="discussion_add_response_button_label">Add response</string>
+    <string name="discussion_add_response_button_label" translatable="false">Add response</string>
     <!-- Add response button description for accessibility in adding a new response -->
-    <string name="discussion_add_response_button_description">Add response button</string>
+    <string name="discussion_add_response_button_description" translatable="false">Add response button</string>
     <!-- Add your response placeholder in adding a new response -->
     <string name="discussion_add_response_hint" translatable="false">@string/discussion_add_response_title</string>
 
     <!-- Title placeholder in adding a new post -->
-    <string name="discussion_post_title">Title</string>
+    <string name="discussion_post_title" translatable="false">Title</string>
     <!-- Label for selected topic when creating a post -->
-    <string name="discussion_add_post_topic_selection">Topic: {topic}</string>
+    <string name="discussion_add_post_topic_selection" translatable="false">Topic: {topic}</string>
     <!-- Add post button title in adding a new discussion -->
-    <string name="discussion_add_post_button_label">Post discussion</string>
+    <string name="discussion_add_post_button_label" translatable="false">Post discussion</string>
     <!-- Add post button description for accessibility in adding a new discussion -->
-    <string name="discussion_add_post_button_description">Post discussion button</string>
+    <string name="discussion_add_post_button_description" translatable="false">Post discussion button</string>
     <!-- Add post button title in adding a new post -->
-    <string name="discussion_add_question_button_label">Post question</string>
+    <string name="discussion_add_question_button_label" translatable="false">Post question</string>
     <!-- Add post button content description for accessibility in adding a new post -->
-    <string name="discussion_add_question_button_description">Post question button</string>
+    <string name="discussion_add_question_button_description" translatable="false">Post question button</string>
     <!-- Add your post placeholder in adding a new post -->
     <string name="discussion_body_hint_discussion" translatable="false">@string/discussion_title</string>
     <!-- Add your post placeholder in adding a new post -->
     <string name="discussion_body_hint_question" translatable="false">@string/discussion_question</string>
     <!-- Question text in adding a new post -->
-    <string name="discussion_question">Question</string>
+    <string name="discussion_question" translatable="false">Question</string>
 
     <!-- Assessment -->
     <!-- Label showing next unit in a sub-section on assessment navigation bar-->
-    <string name="assessment_next">Next</string>
+    <string name="assessment_next" translatable="false">Next</string>
     <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
-    <string name="assessment_previous">Previous</string>
+    <string name="assessment_previous" translatable="false">Previous</string>
     <!-- Label showing assessment only available on website-->
-    <string name="assessment_not_available">This interactive component isn’t yet available on mobile.</string>
+    <string name="assessment_not_available" translatable="false">This interactive component isn’t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
-    <string name="assessment_explore_on_web">Explore other parts of this content or view this on web.</string>
+    <string name="assessment_explore_on_web" translatable="false">Explore other parts of this content or view this on web.</string>
     <!-- Button to showLoading wiew on web for assessment-->
-    <string name="assessment_view_on_web">View on Web</string>
+    <string name="assessment_view_on_web" translatable="false">View on Web</string>
     <!-- Label to showLoading empty assessment -->
-    <string name="assessment_empty">There are no learning material in this section.</string>
+    <string name="assessment_empty" translatable="false">There are no learning material in this section.</string>
     <!-- Label to showLoading a content will be starting soon -->
-    <string name="assessment_soon">Soon</string>
+    <string name="assessment_soon" translatable="false">Soon</string>
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
-    <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
+    <string name="assessment_rotate_for_fullscreen" translatable="false">Rotate your device to view this video in full screen.</string>
     <!-- Label showing only youtube is available -->
-    <string name="assessment_only_on_youtube">This video can only be played on YouTube.</string>
+    <string name="assessment_only_on_youtube" translatable="false">This video can only be played on YouTube.</string>
     <!-- Label for button to open on youtube -->
-    <string name="assessment_open_on_youtube">View video on YouTube</string>
+    <string name="assessment_open_on_youtube" translatable="false">View video on YouTube</string>
 
     <!-- Video List -->
     <!-- Title of video download screen -->
-    <string name="title_download">Downloads</string>
+    <string name="title_download" translatable="false">Downloads</string>
 
     <!-- Label indicating user has no Internet connection -->
-    <string name="offline_text">Offline</string>
+    <string name="offline_text" translatable="false">Offline</string>
     <!-- Cancel video download -->
-    <string name="cancel_download">Cancel download</string>
+    <string name="cancel_download" translatable="false">Cancel download</string>
 
     <!-- My Downloads -->
     <!-- Button action label to view an item -->
-    <string name="view_button_text">View</string>
+    <string name="view_button_text" translatable="false">View</string>
     <!-- Error text when downloading an item fails -->
-    <string name="download_failed_text">Download Failed</string>
+    <string name="download_failed_text" translatable="false">Download Failed</string>
     <!-- Alert dialog title to confirm download of a large quantity of data -->
-    <string name="download_exceed_title">Large Download</string>
+    <string name="download_exceed_title" translatable="false">Large Download</string>
     <!-- Message shown a single video download begins -->
-    <string name="msg_started_one_video_download">"Downloading 1 Video"</string>
+    <string name="msg_started_one_video_download" translatable="false">"Downloading 1 Video"</string>
     <!-- When a video download is about to start and we don't know it's file size yet -->
-    <string name="download_pending">Download pending…</string>
+    <string name="download_pending" translatable="false">Download pending…</string>
     <!-- Error shown when video download fails -->
-    <string name="msg_video_not_downloaded">"Unable to download video"</string>
+    <string name="msg_video_not_downloaded" translatable="false">"Unable to download video"</string>
     <!-- Error shown when video download fails -->
-    <string name="msg_video_not_available">This video is currently unavailable.\nCheck back again later.</string>
+    <string name="msg_video_not_available" translatable="false">This video is currently unavailable.\nCheck back again later.</string>
     <!-- Error shown when video has flag to indicate it is not available for mobile app -->
-    <string name="video_only_on_web_label">This video is currently only on web. Click to view on web.</string>
+    <string name="video_only_on_web_label" translatable="false">This video is currently only on web. Click to view on web.</string>
     <!-- Message to indicate the it is not available for mobile app  -->
-    <string name="video_only_on_web_short">This video isn’t yet available on mobile.</string>
+    <string name="video_only_on_web_short" translatable="false">This video isn’t yet available on mobile.</string>
     <!-- Alert dialog title when login fails -->
-    <string name="login_error">Sign-in Error</string>
+    <string name="login_error" translatable="false">Sign-in Error</string>
     <!-- Alert dialog title when login fails due to lack of Internet -->
-    <string name="no_connectivity">Connection Error</string>
+    <string name="no_connectivity" translatable="false">Connection Error</string>
 
     <!-- Bulk Videos Download -->
     <!-- Accessibility label of bulk download switch -->
-    <string name="bulk_download_switch">Bulk videos download switch.</string>
+    <string name="bulk_download_switch" translatable="false">Bulk videos download switch.</string>
     <!-- Title for bulk videos download view when in new or partial videos' download state -->
-    <string name="download_to_device">Download to Device</string>
+    <string name="download_to_device" translatable="false">Download to Device</string>
     <!-- Subtitle for bulk videos download view when in new or partial videos' download state -->
     <plurals name="download_total">
         <item quantity="one">{total_videos_count} Video, {total_videos_size} total</item>
         <item quantity="other">{total_videos_count} Videos, {total_videos_size} total</item>
     </plurals>
     <!-- Title for bulk videos download view when download is starting -->
-    <string name="download_starting">Starting Download…</string>
+    <string name="download_starting" translatable="false">Starting Download…</string>
     <!-- Title for bulk videos download view when in downloading state -->
-    <string name="downloading_videos">Downloading Videos…</string>
+    <string name="downloading_videos" translatable="false">Downloading Videos…</string>
     <!-- Subtitle for bulk videos download view when in downloading state -->
-    <string name="download_remaining">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
+    <string name="download_remaining" translatable="false">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
     <!-- Title for bulk videos download view when in downloaded state -->
-    <string name="download_complete">All Videos Downloaded</string>
+    <string name="download_complete" translatable="false">All Videos Downloaded</string>
     <!-- Accessibility label of bulk download switch, when its state is OFF and no download is happening -->
-    <string name="switch_off_no_downloading">Toggling the switch on, will download all videos of this content.</string>
+    <string name="switch_off_no_downloading" translatable="false">Toggling the switch on, will download all videos of this content.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos are downloading -->
-    <string name="switch_on_all_downloading">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this content.</string>
+    <string name="switch_on_all_downloading" translatable="false">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this content.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded -->
-    <string name="switch_on_all_downloaded">Toggling the switch off, will delete all downloaded videos of this content.</string>
+    <string name="switch_on_all_downloaded" translatable="false">Toggling the switch off, will delete all downloaded videos of this content.</string>
     <!-- Accessibility label of full bulk download view when videos are being downloaded -->
-    <string name="view_downloads">Double tap to view current downloads.</string>
+    <string name="view_downloads" translatable="false">Double tap to view current downloads.</string>
 
     <!-- Wifi New Message -->
     <!-- Toggle to allow downloads using cellular data -->
-    <string name="allow">Allow</string>
+    <string name="allow" translatable="false">Allow</string>
     <!-- Toggle to disallow downloads using cellular data -->
-    <string name="do_not_allow">Don’t allow</string>
+    <string name="do_not_allow" translatable="false">Don’t allow</string>
 
     <!-- Player Settings -->
     <!-- Label for closed captions in video player -->
-    <string name="lbl_closed_caption">Closed Captions</string>
+    <string name="lbl_closed_caption" translatable="false">Closed Captions</string>
     <!-- Label for no closed captions selected -->
-    <string name="lbl_cc_cancel">None</string>
+    <string name="lbl_cc_cancel" translatable="false">None</string>
     <!-- Accessibility Label for Video Player -->
-    <string name="video_player">Video Player</string>
+    <string name="video_player" translatable="false">Video Player</string>
     <!-- Accessibility Label for View on Web button on Video Player top bar -->
-    <string name="video_player_view_on_web">View on web</string>
+    <string name="video_player_view_on_web" translatable="false">View on web</string>
     <!-- Accessibility Label for Play button of Video Player -->
-    <string name="video_player_play">Play</string>
+    <string name="video_player_play" translatable="false">Play</string>
     <!-- Accessibility Label for Pause button of Video Player -->
-    <string name="video_player_next">Next</string>
+    <string name="video_player_next" translatable="false">Next</string>
     <!-- Accessibility Label for Previous button of Video Player -->
-    <string name="video_player_previous">Previous</string>
+    <string name="video_player_previous" translatable="false">Previous</string>
     <!-- Accessibility Label for Pause button of Video Player -->
-    <string name="video_player_pause">Pause</string>
+    <string name="video_player_pause" translatable="false">Pause</string>
     <!-- Accessibility Label for Rewind button on Video Player bottom bar -->
-    <string name="video_player_rewind">Rewind 30 seconds</string>
+    <string name="video_player_rewind" translatable="false">Rewind 30 seconds</string>
     <!-- Accessibility Label for Settings button on Video Player bottom bar -->
-    <string name="video_player_settings">Settings</string>
+    <string name="video_player_settings" translatable="false">Settings</string>
     <!-- Accessibility Label for Entering Fullscreen button on Video Player bottom bar -->
-    <string name="video_player_enter_fullscreen">Enter fullscreen mode</string>
+    <string name="video_player_enter_fullscreen" translatable="false">Enter fullscreen mode</string>
     <!-- Accessibility Label for Exiting Fullscreen button on Video Player bottom bar -->
-    <string name="video_player_exit_fullscreen">Exit fullscreen mode</string>
+    <string name="video_player_exit_fullscreen" translatable="false">Exit fullscreen mode</string>
 
     <!-- Button label to bring up content finder -->
-    <string name="find_course_text">Looking for a new challenge?</string>
+    <string name="find_course_text" translatable="false">Looking for a new challenge?</string>
     <!-- Button label to bring up content finder -->
-    <string name="find_course_btn_text">Find a Course</string>
+    <string name="find_course_btn_text" translatable="false">Find a Course</string>
     <!-- Message between sign in button and social login buttons -->
-    <string name="or_sign_in_with">Or sign in with</string>
+    <string name="or_sign_in_with" translatable="false">Or sign in with</string>
     <!-- Facebook login method -->
-    <string name="facebook_text">Facebook</string>
+    <string name="facebook_text" translatable="false">Facebook</string>
     <!-- Google login method -->
-    <string name="google_text">Google</string>
+    <string name="google_text" translatable="false">Google</string>
     <!-- Prompt allowing user to choose email program -->
-    <string name="email_chooser_header">Send email using...</string>
+    <string name="email_chooser_header" translatable="false">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
-    <string name="email_client_not_present">No e-mail clients installed</string>
+    <string name="email_client_not_present" translatable="false">No e-mail clients installed</string>
     <!-- Search for a content prompt -->
-    <string name="search_for_courses">Search for courses</string>
+    <string name="search_for_courses" translatable="false">Search for courses</string>
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->
-    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="already_have_an_account" translatable="false">Already have an account? Sign in</string>
     <!-- Prompt leading user to create account screen -->
-    <string name="sign_up_and_learn">Sign up and start learning</string>
+    <string name="sign_up_and_learn" translatable="false">Sign up and start learning</string>
     <!-- In Register screen -->
-    <string name="register_with">Register with</string>
-    <string name="or_register_with_email">or register with email</string>
+    <string name="register_with" translatable="false">Register with</string>
+    <string name="or_register_with_email" translatable="false">or register with email</string>
 
     <!-- New Logistration Launch screen text -->
     <!-- Button leading user to create account screen -->
-    <string name="launch_register">Create your Account</string>
+    <string name="launch_register" translatable="false">Create your Account</string>
     <!-- Button leading user to log in screen -->
-    <string name="launch_login">Log In</string>
+    <string name="launch_login" translatable="false">Log In</string>
     <!-- Introduction text on the launch screen -->
-    <string name="launch_text">Free courses from the world’s best universities in your pocket.</string>
+    <string name="launch_text" translatable="false">Free courses from the world’s best universities in your pocket.</string>
     <!-- Search view leading user to Find Courses screen from the launch screen upon searching some text -->
-    <string name="launch_search_courses">Search Courses</string>
+    <string name="launch_search_courses" translatable="false">Search Courses</string>
 
     <!-- Registration Screen -->
     <!-- Button text allowing user to showLoading hidden optional registration fields -->
-    <string name="show_optional_text">Show optional fields</string>
+    <string name="show_optional_text" translatable="false">Show optional fields</string>
     <!-- Button text allowing user to hideLoading visible optional registration fields -->
-    <string name="hide_optional_text">Hide optional fields</string>
+    <string name="hide_optional_text" translatable="false">Hide optional fields</string>
     <!-- Button text allowing user create an account -->
-    <string name="create_account_text">Create my account</string>
+    <string name="create_account_text" translatable="false">Create my account</string>
     <!-- Accessible content description of create account button on Registration screen -->
-    <string name="create_account_btn">Create my account button</string>
+    <string name="create_account_btn" translatable="false">Create my account button</string>
     <!-- Text shown while waiting for registration request -->
-    <string name="creating_account_text">Creating account...</string>
+    <string name="creating_account_text" translatable="false">Creating account...</string>
     <!-- Registration screen title -->
-    <string name="register_title">Register</string>
+    <string name="register_title" translatable="false">Register</string>
     <!-- Text for successful registration with social token  -->
-    <string name="sign_up_with_facebook_ok">You’ve successfully signed in with Facebook.</string>
-    <string name="sign_up_with_google_ok">You’ve successfully signed in with Google.</string>
-    <string name="sign_up_with_social_ok">We just need a little more information before you start learning with {platform_name}.</string>
+    <string name="sign_up_with_facebook_ok" translatable="false">You’ve successfully signed in with Facebook.</string>
+    <string name="sign_up_with_google_ok" translatable="false">You’ve successfully signed in with Google.</string>
+    <string name="sign_up_with_social_ok" translatable="false">We just need a little more information before you start learning with {platform_name}.</string>
     <!-- Continue registration after social login -->
-    <string name="complete_registration">Complete your registration</string>
+    <string name="complete_registration" translatable="false">Complete your registration</string>
     <!-- Message shown when enrolling in a content fails-->
-    <string name="enrollment_failure">We could not enroll you in this content at this time.</string>
+    <string name="enrollment_failure" translatable="false">We could not enroll you in this content at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->
-    <string name="try_again">Try again</string>
+    <string name="try_again" translatable="false">Try again</string>
     <!-- Registration error -->
-    <string name="registration_error_title">Registration Error</string>
-    <string name="registration_error_message">Update the highlighted fields and try again.</string>
+    <string name="registration_error_title" translatable="false">Registration Error</string>
+    <string name="registration_error_message" translatable="false">Update the highlighted fields and try again.</string>
 
     <!-- data charges may apply dialog text -->
     <!-- Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app -->
-    <string name="open_external_url_title">Data charges may apply</string>
+    <string name="open_external_url_title" translatable="false">Data charges may apply</string>
     <!-- Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app -->
-    <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
+    <string name="open_external_url_desc" translatable="false">This link will open in your mobile browser, and you may incur additional data charges.</string>
 
-    <string name="android">Android</string>
+    <string name="android" translatable="false">Android</string>
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
-    <string name="email_subject">Customer Feedback</string>
+    <string name="email_subject" translatable="false">Customer Feedback</string>
     <!--  Email subject line when a user attempts to submit a review using the app review workflow -->
-    <string name="review_email_subject">Customer Review</string>
+    <string name="review_email_subject" translatable="false">Customer Review</string>
     <!--  Submit Feedback app version text -->
-    <string name="app_version">App Version: </string>
+    <string name="app_version" translatable="false">App Version: </string>
     <!--  Submit Feedback android version text -->
-    <string name="android_os_version">Android OS: </string>
+    <string name="android_os_version" translatable="false">Android OS: </string>
     <!--  Submit Feedback android model text -->
-    <string name="android_device_model">Device Model: </string>
+    <string name="android_device_model" translatable="false">Device Model: </string>
     <!--  Submit Feedback feedback text -->
-    <string name="insert_feedback">Feedback: </string>
+    <string name="insert_feedback" translatable="false">Feedback: </string>
 
     <!-- Notification related -->
     <!-- toggle between subscribe and unsubscribe to content announcement -->
-    <string name="notification_toggle">Allow Notifications</string>
+    <string name="notification_toggle" translatable="false">Allow Notifications</string>
     <!-- Placeholder title for content content with no title -->
-    <string name="untitled_block">Untitled</string>
+    <string name="untitled_block" translatable="false">Untitled</string>
     <!-- Title for default channel notifications -->
-    <string name="default_notification_channel_title">General Notification</string>
+    <string name="default_notification_channel_title" translatable="false">General Notification</string>
 
 
     <!-- Discussion/Forum -->
-    <string name="forum_no_results_for_search_query">No content found for “{search_query}”. Try another search term or select a discussion category_id to browse.</string>
-    <string name="forum_no_results_for_all_posts">There are no posts in this content discussion.</string>
-    <string name="forum_no_results_for_following">You are not following any posts.</string>
-    <string name="forum_no_results_for_filtered_following">Filter content do not include any followed posts.</string>
-    <string name="forum_no_results_in_category">There are no posts in this discussion category_id.</string>
-    <string name="forum_no_results_with_filter">Try removing your post filter.</string>
-    <string name="forum_post_i_am_following">Posts I’m Following</string>
-    <string name="forum_follow">Follow</string>
-    <string name="forum_unfollow">Unfollow</string>
+    <string name="forum_no_results_for_search_query" translatable="false">No content found for “{search_query}”. Try another search term or select a discussion category_id to browse.</string>
+    <string name="forum_no_results_for_all_posts" translatable="false">There are no posts in this content discussion.</string>
+    <string name="forum_no_results_for_following" translatable="false">You are not following any posts.</string>
+    <string name="forum_no_results_for_filtered_following" translatable="false">Filter content do not include any followed posts.</string>
+    <string name="forum_no_results_in_category" translatable="false">There are no posts in this discussion category_id.</string>
+    <string name="forum_no_results_with_filter" translatable="false">Try removing your post filter.</string>
+    <string name="forum_post_i_am_following" translatable="false">Posts I’m Following</string>
+    <string name="forum_follow" translatable="false">Follow</string>
+    <string name="forum_unfollow" translatable="false">Unfollow</string>
 
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
-    <string name="profile_title">Profile</string>
+    <string name="profile_title" translatable="false">Profile</string>
     <!-- The accessibility description for the username section -->
-    <string name="profile_username_description">Username: {username}</string>
+    <string name="profile_username_description" translatable="false">Username: {username}</string>
     <!-- The accessibility description for the language section -->
-    <string name="profile_language_description">Language: {language}</string>
+    <string name="profile_language_description" translatable="false">Language: {language}</string>
     <!-- The accessibility description for the location section -->
-    <string name="profile_location_description">Location: {location}</string>
+    <string name="profile_location_description" translatable="false">Location: {location}</string>
     <!-- The accessibility description for the "About Me" section -->
-    <string name="profile_about_me_description">About me: {about_me}</string>
+    <string name="profile_about_me_description" translatable="false">About me: {about_me}</string>
     <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
-    <string name="profile_toolbar_edit_button">Edit</string>
+    <string name="profile_toolbar_edit_button" translatable="false">Edit</string>
     <!-- Shown when viewing your own profile and you are not sharing a full profile -->
-    <string name="profile_sharing_limited_by_you">You are currently sharing a limited profile</string>
+    <string name="profile_sharing_limited_by_you" translatable="false">You are currently sharing a limited profile</string>
     <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
-    <string name="profile_sharing_limited_by_other_user">This person is currently sharing a limited profile</string>
+    <string name="profile_sharing_limited_by_other_user" translatable="false">This person is currently sharing a limited profile</string>
     <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
-    <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile.</string>
+    <string name="profile_consent_needed_explanation" translatable="false">You must be over 13 to share a full profile.</string>
     <!-- Shown as button below the explanation for age of consent; it launches the edit profile screen -->
-    <string name="profile_consent_needed_edit_button">Account Settings</string>
+    <string name="profile_consent_needed_edit_button" translatable="false">Account Settings</string>
     <!-- Shown when viewing your own incomplete profile -->
-    <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet. Let’s get you started.</string>
+    <string name="profile_incomplete_explanation" translatable="false">It looks like your profile isn’t complete yet. Let’s get you started.</string>
     <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
-    <string name="profile_incomplete_edit_button">Get Started</string>
+    <string name="profile_incomplete_edit_button" translatable="false">Get Started</string>
     <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
-    <string name="profile_incomplete_about_me">No “About me” info provided.</string>
+    <string name="profile_incomplete_about_me" translatable="false">No “About me” info provided.</string>
     <!-- Window title for edit profile screen -->
-    <string name="edit_user_profile_title">Edit profile</string>
+    <string name="edit_user_profile_title" translatable="false">Edit profile</string>
     <!-- How most profile fields are formatted when viewing the edit screen -->
-    <string name="edit_user_profile_field">{label}: {value}</string>
+    <string name="edit_user_profile_field" translatable="false">{label}: {value}</string>
     <!-- Default placeholder if a profile field is blank -->
-    <string name="edit_user_profile_field_placeholder">Select</string>
+    <string name="edit_user_profile_field_placeholder" translatable="false">Select</string>
     <!-- Button that saves changes to a profile text field -->
-    <string name="edit_user_profile_textarea_submit_button">Submit</string>
+    <string name="edit_user_profile_textarea_submit_button" translatable="false">Submit</string>
     <!-- An option that will set the user profile's primary language to the language of their device's configured locale -->
-    <string name="edit_user_profile_current_language">Current language: {current_language}</string>
+    <string name="edit_user_profile_current_language" translatable="false">Current language: {current_language}</string>
     <!-- An option that will set the user profile's location to the country of their device's configured locale -->
-    <string name="edit_user_profile_current_location">Current location: {current_location}</string>
+    <string name="edit_user_profile_current_location" translatable="false">Current location: {current_location}</string>
     <!-- Button label that will open gallery or camera for choosing new profile photo -->
-    <string name="edit_user_profile_change_photo">Change</string>
+    <string name="edit_user_profile_change_photo" translatable="false">Change</string>
     <!-- Content Description for change photo button -->
-    <string name="edit_user_profile_change_photo_description">Change profile picture</string>
+    <string name="edit_user_profile_change_photo_description" translatable="false">Change profile picture</string>
     <!-- Button that will open a camera for taking a new profile photo -->
-    <string name="edit_user_profile_take_photo">Take photo</string>
+    <string name="edit_user_profile_take_photo" translatable="false">Take photo</string>
     <!-- Button that will open photo gallery for choosing a new profile photo -->
-    <string name="edit_user_profile_choose_photo">Choose a photo</string>
+    <string name="edit_user_profile_choose_photo" translatable="false">Choose a photo</string>
     <!-- Button that will open a camera for taking a new profile photo -->
-    <string name="edit_user_profile_remove_photo">Remove photo</string>
+    <string name="edit_user_profile_remove_photo" translatable="false">Remove photo</string>
     <!-- Title when cropping newly selected profile photo -->
-    <string name="edit_user_profile_photo_crop_title">Crop and resize</string>
+    <string name="edit_user_profile_photo_crop_title" translatable="false">Crop and resize</string>
     <!-- Button that will exit the crop tool without saving the image -->
-    <string name="edit_user_profile_photo_crop_cancel">Cancel</string>
+    <string name="edit_user_profile_photo_crop_cancel" translatable="false">Cancel</string>
     <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
-    <string name="edit_user_profile_photo_crop_save">Choose</string>
+    <string name="edit_user_profile_photo_crop_save" translatable="false">Choose</string>
     <!-- Tab title for section of profile that displays a user's bio -->
-    <string name="profile_tab_bio">About</string>
+    <string name="profile_tab_bio" translatable="false">About</string>
     <!-- Tab title for section of profile that lists a user's accomplishments -->
-    <string name="profile_tab_accomplishment">Accomplishments</string>
+    <string name="profile_tab_accomplishment" translatable="false">Accomplishments</string>
     <!-- Button that will initiate sharing one of a user's accomplishments -->
-    <string name="share_accomplishment_button">Share your accomplishment</string>
+    <string name="share_accomplishment_button" translatable="false">Share your accomplishment</string>
     <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
-    <string name="share_accomplishment_message">I just earned a badge on {platform_name}! Check it out: {badge_url}</string>
+    <string name="share_accomplishment_message" translatable="false">I just earned a badge on {platform_name}! Check it out: {badge_url}</string>
     <!-- Question on the app rating dialog -->
-    <string name="rating_dialog_message">How would you rate the app?</string>
+    <string name="rating_dialog_message" translatable="false">How would you rate the app?</string>
     <!-- Dialog title for positive app review -->
-    <string name="rate_app_dialog_title">Rate the app</string>
+    <string name="rate_app_dialog_title" translatable="false">Rate the app</string>
     <!-- Dialog message for positive app review -->
-    <string name="rate_app_dialog_message">Tell others what you think of the {platform_name} app by writing a quick review</string>
+    <string name="rate_app_dialog_message" translatable="false">Tell others what you think of the {platform_name} app by writing a quick review</string>
     <!-- Dialog title for negative app review -->
-    <string name="feedback_dialog_title">Send Feedback?</string>
+    <string name="feedback_dialog_title" translatable="false">Send Feedback?</string>
     <!-- Dialog message for negative app review -->
-    <string name="feedback_dialog_message">Help us improve!</string>
+    <string name="feedback_dialog_message" translatable="false">Help us improve!</string>
     <!-- accessibility label for rating bar -->
-    <string name="rating_bar">Rating control</string>
+    <string name="rating_bar" translatable="false">Rating control</string>
     <!-- accessibility label for rating selection on rating bar -->
-    <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
+    <string name="rating_bar_selection" translatable="false">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
-    <string name="whats_new_title">Version {version_number} New Features</string>
+    <string name="whats_new_title" translatable="false">Version {version_number} New Features</string>
 
     <!-- TTA strings start -->
     <string name="welcome">Welcome</string>
@@ -687,20 +687,20 @@
     <string name="create_new_account">Create new account</string>
     <string name="create_account_and_connect_with_us">Create account and connect with us</string>
     <string name="already_have_account">Already have an account ?</string>
-    <string name="launch_content">Launch content</string>
+    <string name="launch_content" translatable="false">Launch content</string>
     <string name="launch_text_1">Creative, constructive, audio-visual content for development of teachers</string>
     <string name="launch_text_2">Opportunities to get accredited by state and fellow teachers</string>
     <string name="launch_text_3">Opportunities to connect with various teachers across the nation and express personal views</string>
-    <string name="reset_password">Reset Password</string>
+    <string name="reset_password" translatable="false">Reset Password</string>
     <string name="reset_password_msg">Enter phone number below to reset your password. You will receive a verification OTP via SMS.</string>
-    <string name="verify">Verify</string>
-    <string name="otp_verification">OTP Verification</string>
+    <string name="verify" translatable="false">Verify</string>
+    <string name="otp_verification" translatable="false">OTP Verification</string>
     <string name="otp_verification_msg">Your phone will receive an SMS. Verification code provided in the SMS will be automatically filled below.</string>
-    <string name="verify_otp">Verify OTP</string>
+    <string name="verify_otp" translatable="false">Verify OTP</string>
     <string name="resend_otp">Resend OTP ?</string>
     <string name="set_password">Please set your account password.</string>
     <string name="confirm_new_password">Confirm new password</string>
-    <string name="submit">Submit</string>
+    <string name="submit" translatable="false">Submit</string>
     <string name="library">Library</string>
     <string name="feed">Feed</string>
     <string name="search">Search</string>
@@ -712,12 +712,12 @@
     <string name="hois">HOIS</string>
     <string name="toolkit">Toolkit</string>
     <string name="view_more">View More</string>
-    <string name="region_agenda">Region wise Agenda</string>
+    <string name="region_agenda" translatable="false">Region wise Agenda</string>
     <string name="my_agenda">My Agenda</string>
     <string name="download">Download</string>
-    <string name="registered_successfully">Registered successfully.</string>
-    <string name="block_wise_list">Block wise list</string>
-    <string name="district_wise_list">District wise list</string>
+    <string name="registered_successfully" translatable="false">Registered successfully.</string>
+    <string name="block_wise_list" translatable="false">Block wise list</string>
+    <string name="district_wise_list" translatable="false">District wise list</string>
     <string name="state_wise_list">State wise list</string>
     <string name="suggested_teachers">Suggested Teachers</string>
     <string name="follow">Follow</string>
@@ -735,7 +735,7 @@
     <string name="assessment">Assessment</string>
     <string name="view_certificate">View Certificate</string>
     <string name="estimated_duration">Estimated duration</string>
-    <string name="add_a_comment">Add a comment...</string>
+    <string name="add_a_comment" translatable="false">Add a comment...</string>
     <string name="reply">Reply</string>
     <string name="all_list">All</string>
     <string name="recently_added_list">Recently added</string>
@@ -767,17 +767,18 @@
     <string name="your_information">Your Information</string>
     <string name="all_parts">All Parts</string>
     <string name="all_medal">All medal</string>
-    <string name="point_table">Point table</string>
+    <string name="point_table" translatable="false">Point table</string>
     <string name="please_insert_valide_pmis_code">please Insert Valid Pmis Code</string>
+    <string name="notifications">Notifications</string>
 
-    <string name="sign_out_message">Are you sure you want to Sign Out?</string>
+    <string name="sign_out_message" translatable="false">Are you sure you want to Sign Out?</string>
 
     <!-- WP Post Share menu title -->
-    <string name="share_wp_post_popup_header">Share this post via&#8230;</string>
+    <string name="share_wp_post_popup_header" translatable="false">Share this post via&#8230;</string>
     <!-- WP Share Post -->
     <string name="share_wp_post_message">Please watch! {course_name} :</string>
 
-    <string name="no_connection_exception">No Internet Connection</string>
+    <string name="no_connection_exception" translatable="false">No Internet Connection</string>
     <string name="asterisk_red" translatable="false"><font color='#f44336'>*</font></string>
     <string name="comment_en" translatable="false">Comment</string>
 

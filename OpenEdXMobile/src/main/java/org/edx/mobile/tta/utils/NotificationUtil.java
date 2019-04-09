@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -17,7 +19,7 @@ public class NotificationUtil {
     private static final String DEFAULT_CHANNEL_ID = "tta_default_notification_channel_id";
     private static final String DEFAULT_CHANNEL_NAME = "TTA default channel";
 
-    private Activity activity;
+    private Context context;
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
 
@@ -25,8 +27,8 @@ public class NotificationUtil {
     private String channelId, channelName, channelDescription;
     private int channelImportance;
 
-    public NotificationUtil(Activity activity, int notificationId) {
-        this.activity = activity;
+    public NotificationUtil(Context context, int notificationId) {
+        this.context = context;
         this.notificationId = notificationId;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channelId = DEFAULT_CHANNEL_ID;
@@ -37,9 +39,9 @@ public class NotificationUtil {
         init();
     }
 
-    public NotificationUtil(Activity activity, int notificationId, String channelId, String channelName,
+    public NotificationUtil(Context context, int notificationId, String channelId, String channelName,
                             String channelDescription, int channelImportance) {
-        this.activity = activity;
+        this.context = context;
         this.notificationId = notificationId;
         this.channelId = channelId;
         this.channelName = channelName;
@@ -49,10 +51,10 @@ public class NotificationUtil {
     }
 
     private void init(){
-        notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationBuilder = new Notification.Builder(activity);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationBuilder = new Notification.Builder(context);
         setOngoing(false).setTitle(DEFAULT_NOTIFICATION_TITLE).setMessage(DEFAULT_NOTIFICATION_MESSAGE)
-                .setNotificationIcon(activity.getApplication().getApplicationInfo().icon);
+                .setNotificationIcon(context.getApplicationInfo().icon);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel();
         }
@@ -91,6 +93,11 @@ public class NotificationUtil {
 
     public NotificationUtil setProgress(int progressOutOf100, boolean indeterminate){
         notificationBuilder.setProgress(MAX_PROGRESS, progressOutOf100, indeterminate);
+        return this;
+    }
+
+    public NotificationUtil setContentIntent(PendingIntent intent){
+        notificationBuilder.setContentIntent(intent);
         return this;
     }
 

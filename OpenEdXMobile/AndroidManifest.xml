@@ -447,6 +447,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
+        <activity
+            android:name=".tta.ui.course.CourseDashboardActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
+
         <!-- TTA activities end -->
 
         <!-- Setup Google -->

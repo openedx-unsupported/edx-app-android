@@ -143,6 +143,22 @@ public class DateUtil {
 
     }
 
+    public static String getDayMonth(long timestamp){
+
+        Locale locale = new Locale("en");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM", locale);
+        return outputFormat.format(new Date(timestamp));
+
+    }
+
+    public static String getHourMonth12(long timestamp){
+
+        Locale locale = new Locale("en");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm a", locale);
+        return outputFormat.format(new Date(timestamp));
+
+    }
+
     private static String getMonthInShort(int month) {
         switch (month){
             case 0:

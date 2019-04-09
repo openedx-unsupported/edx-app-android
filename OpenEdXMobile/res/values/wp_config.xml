@@ -11,18 +11,18 @@
     <integer name="wp_parent_category">12</integer>
 
     <string name="wp_create_post_header1" translatable="false">USER GENERATED CONTENT</string>
-    <string name="wp_create_post_header2">Capture your world by uploading a mini article that can include photos and your current location.</string>
-    <string name="wp_text_headline">Headline</string>
-    <string name="wp_text_summary">Summary</string>
-    <string name="wp_text_categories">Categories</string>
-    <string name="wp_text_location">Location</string>
-    <string name="wp_text_photos">Photos</string>
+    <string name="wp_create_post_header2" translatable="false">Capture your world by uploading a mini article that can include photos and your current location.</string>
+    <string name="wp_text_headline" translatable="false">Headline</string>
+    <string name="wp_text_summary" translatable="false">Summary</string>
+    <string name="wp_text_categories" translatable="false">Categories</string>
+    <string name="wp_text_location" translatable="false">Location</string>
+    <string name="wp_text_photos" translatable="false">Photos</string>
 
-    <string name="wp_text_address">Address</string>
+    <string name="wp_text_address" translatable="false">Address</string>
 
-    <string name="wp_post_publish">Publish</string>
-    <string name="wp_media_delete">Delete</string>
-    <string name="wp_media_edit">Edit</string>
+    <string name="wp_post_publish" translatable="false">Publish</string>
+    <string name="wp_media_delete" translatable="false">Delete</string>
+    <string name="wp_media_edit" translatable="false">Edit</string>
 
     <dimen name="media_thumb_size">100dp</dimen>
 

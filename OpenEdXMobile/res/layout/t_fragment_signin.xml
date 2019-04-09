@@ -123,7 +123,7 @@
                     android:text="@string/change_password_underlined"
                     android:textColor="@color/primary_cyan"
                     android:textSize="12sp"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="6dp"
                     android:fontFamily="@font/hind_medium"
                     android:onClick="@{()->viewModel.changePassword()}"/>
 

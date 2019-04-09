@@ -17,6 +17,7 @@ import org.edx.mobile.R;
 
 import org.edx.mobile.databinding.TRowAgendaContentBinding;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
@@ -24,7 +25,7 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
-import org.edx.mobile.tta.ui.course.CourseDashboardFragment;
+import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
 import org.edx.mobile.util.PermissionsUtil;
@@ -116,20 +117,15 @@ public class AgendaItemsTabViewModel extends BaseViewModel {
             });
         }
     }
+
     public void showContentDashboard(){
-        if (selectedContent.getSource().getType().equalsIgnoreCase("edx") ||
-                selectedContent.getSource().getType().equalsIgnoreCase("course")) {
-            ActivityUtil.replaceFragmentInActivity(
-                    mActivity.getSupportFragmentManager(),
-                    CourseDashboardFragment.newInstance(selectedContent),
-                    R.id.dashboard_fragment,
-                    CourseDashboardFragment.TAG,
-                    true,
-                    null
-            );
+
+        Bundle parameters = new Bundle();
+        parameters.putParcelable(Constants.KEY_CONTENT, selectedContent);
+        if (selectedContent.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
+                selectedContent.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
+            ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
         } else {
-            Bundle parameters = new Bundle();
-            parameters.putParcelable(Constants.KEY_CONTENT, selectedContent);
             ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
         }
 

@@ -7,6 +7,8 @@ import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
@@ -143,4 +145,14 @@ public interface TaService {
 
     @POST(ApiConstants.URL_MX_ASSISTANT_SEARCH)
     Call<List<Content>> assistantSearch(@Body Map<String, Object> parameters);
+
+    @POST(ApiConstants.URL_MX_CREATE_GET_NOTIFICATIONS)
+    Call<List<Notification>> createNotifications(@Body List<Notification> notifications);
+
+    @POST(ApiConstants.URL_MX_UPDATE_NOTIFICATIONS)
+    Call<CountResponse> updateNotifications(@Body Map<String, Object> parameters);
+
+    @GET(ApiConstants.URL_MX_CREATE_GET_NOTIFICATIONS)
+    Call<List<Notification>> getNotifications(@Query(Constants.KEY_TAKE) int take,
+                                              @Query(Constants.KEY_SKIP) int skip);
 }

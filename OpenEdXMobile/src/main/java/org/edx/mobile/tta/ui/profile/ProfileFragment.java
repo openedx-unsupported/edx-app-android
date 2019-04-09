@@ -15,7 +15,6 @@ import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.profile.view_model.ProfileViewModel;
-import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
 public class ProfileFragment extends TaBaseFragment {

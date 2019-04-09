@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Divider between current time and total time. For example  "2:33/5:10" -->
-	<string name="lbl_slash">/</string>
+	<string name="lbl_slash" translatable="false">/</string>
     <!-- Button allowing user to open a web page corresponding to the current screen in a web browser -->
-    <string name="lbl_view_on_web">VIEW ON WEB</string>
+    <string name="lbl_view_on_web" translatable="false">VIEW ON WEB</string>
     <!-- Label indicating that the only course content visible in the app is videos -->
-    <string name="lbl_showing_only_videos">Showing only videos</string>
+    <string name="lbl_showing_only_videos" translatable="false">Showing only videos</string>
     <!-- A button's label that reloads the content on screen -->
-    <string name="lbl_reload">Reload</string>
+    <string name="lbl_reload" translatable="false">Reload</string>
 
     <!-- Dialog Fragment Labels -->
     <!-- Alert dialog cancel button -->
-    <string name="label_cancel">Cancel</string>
+    <string name="label_cancel" translatable="false">Cancel</string>
     <!-- Alert dialog No button -->
-    <string name="label_no">No</string>
+    <string name="label_no" translatable="false">No</string>
     <!-- Alert dialog download button -->
-    <string name="label_download">Download</string>
+    <string name="label_download" translatable="false">Download</string>
     <!-- Alert dialog yes confirmation button -->
-    <string name="label_yes">Yes</string>
+    <string name="label_yes" translatable="false">Yes</string>
     <!-- Alert dialog delete confirmation button -->
-    <string name="label_delete">Delete</string>
+    <string name="label_delete" translatable="false">Delete</string>
     <!-- Alert dialog okay button -->
-    <string name="label_ok">OK</string>
+    <string name="label_ok" translatable="false">OK</string>
     <!-- Alert dialog close button -->
-    <string name="label_close">Close</string>
+    <string name="label_close" translatable="false">Close</string>
     <!-- Alert dialog continue confirmation button -->
-    <string name="label_continue">Continue</string>
+    <string name="label_continue" translatable="false">Continue</string>
     <!-- Alert dialog submit button -->
-    <string name="label_submit">Submit</string>
+    <string name="label_submit" translatable="false">Submit</string>
     <!-- Alert dialog send feedback button -->
-    <string name="label_send_feedback">Send Feedback</string>
+    <string name="label_send_feedback" translatable="false">Send Feedback</string>
     <!-- Alert dialog maybe later button -->
-    <string name="label_maybe_later">Maybe Later</string>
+    <string name="label_maybe_later" translatable="false">Maybe Later</string>
     <!-- Alert dialog rate the app button -->
-    <string name="label_rate_the_app">Rate The App</string>
+    <string name="label_rate_the_app" translatable="false">Rate The App</string>
     <!-- Alert dialog and snackbar button for opening an app store to update the app to the latest version -->
-    <string name="label_update">Update</string>
+    <string name="label_update" translatable="false">Update</string>
     <!-- Done button label -->
-    <string name="label_done">Done</string>
+    <string name="label_done" translatable="false">Done</string>
     <!-- Undo button label -->
-    <string name="label_undo">Undo</string>
+    <string name="label_undo" translatable="false">Undo</string>
     <!-- Label denoting an error -->
-    <string name="label_error" tools:ignore="MissingTranslation">Error</string>
+    <string name="label_error" tools:ignore="MissingTranslation" translatable="false">Error</string>
 </resources>

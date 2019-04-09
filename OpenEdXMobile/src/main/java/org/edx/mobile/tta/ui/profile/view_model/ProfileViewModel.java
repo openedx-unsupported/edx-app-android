@@ -16,6 +16,7 @@ import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowBadgeBinding;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.tta.data.enums.BadgeType;
 import org.edx.mobile.tta.data.local.db.table.Badge;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.model.search.FilterSection;
@@ -28,6 +29,7 @@ import org.edx.mobile.tta.ui.profile.MyCertificatesFragment;
 import org.edx.mobile.tta.ui.profile.PointsFragment;
 import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BadgeHelper;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.ProfileImage;
 
@@ -78,12 +80,47 @@ public class ProfileViewModel extends BaseViewModel {
 
     private List<Badge> setbadge(){
         List<Badge> list= new ArrayList<>();
-        for (int i=0;i<=5;i++){
-            Badge badge = new Badge();
-            badge.setBadgeName("Badge");
-            badge.setBadgeImage("http://theteacherapp.org/asset-v1:Mathematics+M01+201706_Mat_01+type@asset+block@Math_sample2.png");
-            list.add(badge);
-        }
+
+        Badge badge1 = new Badge();
+        badge1.setBadgeName("शिक्षक सितारा");
+        badge1.setType(BadgeType.star_teacher.name());
+        list.add(badge1);
+
+        Badge badge2 = new Badge();
+        badge2.setBadgeName("जिज्ञासु");
+        badge2.setType(BadgeType.inquisitive.name());
+        list.add(badge2);
+
+        Badge badge3 = new Badge();
+        badge3.setBadgeName("जागरूक श्रोता");
+        badge3.setType(BadgeType.aware_listener.name());
+        list.add(badge3);
+
+        Badge badge4 = new Badge();
+        badge4.setBadgeName("प्रमाणपत्र");
+        badge4.setType(BadgeType.certificate.name());
+        list.add(badge4);
+
+        Badge badge5 = new Badge();
+        badge5.setBadgeName("मूल्यांकन");
+        badge5.setType(BadgeType.evaluator.name());
+        list.add(badge5);
+
+        Badge badge6 = new Badge();
+        badge6.setBadgeName("प्रशंसक");
+        badge6.setType(BadgeType.fan.name());
+        list.add(badge6);
+
+        Badge badge7 = new Badge();
+        badge7.setBadgeName("रायशुमार");
+        badge7.setType(BadgeType.opinion.name());
+        list.add(badge7);
+
+        Badge badge8 = new Badge();
+        badge8.setBadgeName("उस्ताद");
+        badge8.setType(BadgeType.master.name());
+        list.add(badge8);
+
         return list;
     }
 
@@ -269,10 +306,7 @@ public class ProfileViewModel extends BaseViewModel {
             if (binding instanceof TRowBadgeBinding) {
                 TRowBadgeBinding tRowBadgeBinding = (TRowBadgeBinding) binding;
                 tRowBadgeBinding.tvbadgename.setText(model.getBadgeName());
-                Glide.with(getActivity()).
-                        load(model.getBadgeImage()).
-                        placeholder(R.drawable.placeholder_course_card_image).
-                        into(tRowBadgeBinding.ivBadgeimage);
+                tRowBadgeBinding.ivBadgeimage.setImageResource(BadgeHelper.getBadgeIcon(BadgeType.valueOf(model.getType())));
                 tRowBadgeBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);

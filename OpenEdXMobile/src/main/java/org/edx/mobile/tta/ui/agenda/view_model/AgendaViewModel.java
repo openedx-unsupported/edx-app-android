@@ -13,6 +13,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAgendaItemBinding;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AgendaViewModel extends BaseViewModel {
+
+    public List<Source> sources;
 
     public ObservableField<String> regionListTitle = new ObservableField<>("Region");
 
@@ -42,13 +45,27 @@ public class AgendaViewModel extends BaseViewModel {
     }
 
     public void getAgenda(){
-        getRegionAgenda();
-        getMyAgenda();
-        getDownloadAgenda();
+        mActivity.showLoading();
+
+        mDataManager.getSources(new OnResponseCallback<List<Source>>() {
+            @Override
+            public void onSuccess(List<Source> data) {
+                sources = data;
+                getRegionAgenda();
+                getMyAgenda();
+                getDownloadAgenda();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                mActivity.hideLoading();
+                mActivity.showLongSnack(e.getLocalizedMessage());
+            }
+        });
+
     }
 
     private void getRegionAgenda() {
-        mActivity.showLoading();
         regionListRecieved = false;
         mDataManager.getStateAgendaCount(new OnResponseCallback<List<AgendaList>>() {
             @Override
@@ -62,8 +79,20 @@ public class AgendaViewModel extends BaseViewModel {
                     if (list == null || list.getResult() == null || list.getResult().isEmpty()){
                         showEmptyAgendaList(stateListAdapter);
                     } else {
-                        if (list.getResult().size() != 4){
-                            AgendaItem item = new AgendaItem();
+                        List<AgendaItem> items = list.getResult();
+                        if (items.size() != sources.size()){
+
+                            for (Source source: sources){
+                                AgendaItem item = new AgendaItem();
+                                item.setSource_name(source.getName());
+                                if (!items.contains(item)) {
+                                    item.setSource_title(source.getTitle());
+                                    item.setContent_count(0);
+                                    items.add(item);
+                                }
+                            }
+
+                            /*AgendaItem item = new AgendaItem();
                             item.setSource_name("course");
                             if (!list.getResult().contains(item)){
                                 item.setSource_title("कोर्स");
@@ -93,7 +122,7 @@ public class AgendaViewModel extends BaseViewModel {
                                 item.setSource_title("प्रेरणा स्त्रोत");
                                 item.setContent_count(0);
                                 list.getResult().add(3, item);
-                            }
+                            }*/
                         }
                         stateListAdapter.setItems(list.getResult());
                     }
@@ -115,35 +144,18 @@ public class AgendaViewModel extends BaseViewModel {
     private void showEmptyAgendaList(AgendaListAdapter adapter){
         List<AgendaItem> items = new ArrayList<>();
 
-        AgendaItem item = new AgendaItem();
-        item.setSource_title("कोर्स");
-        item.setSource_name("course");
-        item.setContent_count(0);
-        items.add(item);
-
-        item = new AgendaItem();
-        item.setSource_title("Chatशाला");
-        item.setSource_name("chatshala");
-        item.setContent_count(0);
-        items.add(item);
-
-        item = new AgendaItem();
-        item.setSource_title("शिक्षण सामग्री");
-        item.setSource_name("toolkit");
-        item.setContent_count(0);
-        items.add(item);
-
-        item = new AgendaItem();
-        item.setSource_title("प्रेरणा स्त्रोत");
-        item.setSource_name("hois");
-        item.setContent_count(0);
-        items.add(item);
+        for (Source source: sources){
+            AgendaItem item = new AgendaItem();
+            item.setSource_title(source.getTitle());
+            item.setSource_name(source.getName());
+            item.setContent_count(0);
+            items.add(item);
+        }
 
         adapter.setItems(items);
     }
 
     private void getMyAgenda() {
-        mActivity.showLoading();
         myListRecieved = false;
         mDataManager.getMyAgendaCount(new OnResponseCallback<AgendaList>() {
             @Override
@@ -151,8 +163,20 @@ public class AgendaViewModel extends BaseViewModel {
                 myListRecieved = true;
                 hideLoader();
                 if (data != null && data.getResult() != null && !data.getResult().isEmpty()){
-                    if (data.getResult().size() != 4){
-                        AgendaItem item = new AgendaItem();
+                    List<AgendaItem> items = data.getResult();
+                    if (items.size() != sources.size()){
+
+                        for (Source source: sources){
+                            AgendaItem item = new AgendaItem();
+                            item.setSource_name(source.getName());
+                            if (!items.contains(item)) {
+                                item.setSource_title(source.getTitle());
+                                item.setContent_count(0);
+                                items.add(item);
+                            }
+                        }
+
+                        /*AgendaItem item = new AgendaItem();
                         item.setSource_name("course");
                         if (!data.getResult().contains(item)){
                             item.setSource_title("कोर्स");
@@ -182,7 +206,7 @@ public class AgendaViewModel extends BaseViewModel {
                             item.setSource_title("प्रेरणा स्त्रोत");
                             item.setContent_count(0);
                             data.getResult().add(3, item);
-                        }
+                        }*/
                     }
                     myListAdapter.setItems(data.getResult());
                 } else {
@@ -203,14 +227,26 @@ public class AgendaViewModel extends BaseViewModel {
         mActivity.showLoading();
         downloadListRecieved = false;
 
-        mDataManager.getDownloadAgendaCount(new OnResponseCallback<AgendaList>() {
+        mDataManager.getDownloadAgendaCount(sources, new OnResponseCallback<AgendaList>() {
             @Override
             public void onSuccess(AgendaList data) {
                 downloadListRecieved = true;
                 hideLoader();
                 if (data != null && data.getResult() != null && !data.getResult().isEmpty()){
-                    if (data.getResult().size() != 4){
-                        AgendaItem item = new AgendaItem();
+                    List<AgendaItem> items = data.getResult();
+                    if (items.size() != sources.size()){
+
+                        for (Source source: sources){
+                            AgendaItem item = new AgendaItem();
+                            item.setSource_name(source.getName());
+                            if (!items.contains(item)) {
+                                item.setSource_title(source.getTitle());
+                                item.setContent_count(0);
+                                items.add(item);
+                            }
+                        }
+
+                        /*AgendaItem item = new AgendaItem();
                         item.setSource_name("course");
                         if (!data.getResult().contains(item)){
                             item.setSource_title("कोर्स");
@@ -240,7 +276,7 @@ public class AgendaViewModel extends BaseViewModel {
                             item.setSource_title("प्रेरणा स्त्रोत");
                             item.setContent_count(0);
                             data.getResult().add(3, item);
-                        }
+                        }*/
                     }
                     downloadListAdapter.setItems(data.getResult());
                 } else {

@@ -63,6 +63,25 @@ public class DeepLinkActivity extends BaseVMActivity {
                 if (push_notification_extras.containsKey(EXTRA_TYPE)) {
                     type = push_notification_extras.getString(EXTRA_TYPE);
                 }
+
+                if (type != null && path != null){
+                    if (type.equalsIgnoreCase("course")){
+
+                    } else if (type.equalsIgnoreCase("connect")){
+
+                        String slug = getSlug(path);
+
+
+                    } else {
+                        ActivityUtil.gotoPage(this, LandingActivity.class);
+                        this.finish();
+                        return;
+                    }
+                } else {
+                    ActivityUtil.gotoPage(this, LandingActivity.class);
+                    this.finish();
+                    return;
+                }
             } else {
 
                 if (intent.getData() == null || intent.getData().getEncodedPath() == null) {
@@ -145,6 +164,17 @@ public class DeepLinkActivity extends BaseVMActivity {
             Log.d("deeplink ",e.toString());
         }
         return null;
+    }
+
+    private String getSlug(String path)
+    {
+        String mslug=new String();
+        //http://connect.theteacherapp.org/contests/resourcecontest2/
+
+        String[] slugArr=path.split("/");
+        mslug=slugArr[slugArr.length-1];
+
+        return mslug;
     }
 
     @Override

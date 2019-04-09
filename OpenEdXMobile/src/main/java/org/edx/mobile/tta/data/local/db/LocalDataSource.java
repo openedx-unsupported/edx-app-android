@@ -2,10 +2,12 @@ package org.edx.mobile.tta.data.local.db;
 
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
+import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.Feed;
+import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.local.db.table.User;
-import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 
 import java.util.List;
@@ -103,6 +105,11 @@ public class LocalDataSource implements ILocalDataSource {
     }
 
     @Override
+    public List<Source> getSources() {
+        return mAppDatabase.sourceDao().getAll();
+    }
+
+    @Override
     public Content getContentById(long id) {
         return mAppDatabase.contentDao().getById(id);
     }
@@ -130,5 +137,35 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void insertCertificate(Certificate certificate) {
         mAppDatabase.certificateDao().insert(certificate);
+    }
+
+    @Override
+    public List<Notification> getAllNotifications(String username) {
+        return mAppDatabase.notificationDao().getAll(username);
+    }
+
+    @Override
+    public List<Notification> getAllNotificationsInPage(String username, int take, int skip) {
+        return mAppDatabase.notificationDao().getAllInPage(username, take, skip);
+    }
+
+    @Override
+    public List<Notification> getAllUnupdatedNotifications(String username) {
+        return mAppDatabase.notificationDao().getAllUnupdated(username);
+    }
+
+    @Override
+    public void insertNotification(Notification notification) {
+        mAppDatabase.notificationDao().insert(notification);
+    }
+
+    @Override
+    public void insertNotifications(List<Notification> notifications) {
+        mAppDatabase.notificationDao().insert(notifications);
+    }
+
+    @Override
+    public void updateNotifications(List<Notification> notifications) {
+        mAppDatabase.notificationDao().update(notifications);
     }
 }

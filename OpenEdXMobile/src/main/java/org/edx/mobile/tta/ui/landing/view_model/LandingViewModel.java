@@ -60,6 +60,7 @@ public class LandingViewModel extends BaseViewModel {
         navShiftMode.set(false);
         selectedId = R.id.action_library;
         showLibrary();
+        onAppStart();
     }
 
     public void showLibrary() {
@@ -121,6 +122,10 @@ public class LandingViewModel extends BaseViewModel {
                 false,
                 null
         );
+    }
+
+    private void onAppStart(){
+        mDataManager.updateNotifications(null);
     }
 
     public void selectLibrary(){

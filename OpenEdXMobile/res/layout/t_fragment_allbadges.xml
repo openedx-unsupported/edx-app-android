@@ -36,7 +36,8 @@
             app:mx_itemLayout="@layout/t_row_all_badges"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            />
+            android:paddingStart="@dimen/_30px"
+            android:paddingEnd="@dimen/_30px"/>
 
     </LinearLayout>
 

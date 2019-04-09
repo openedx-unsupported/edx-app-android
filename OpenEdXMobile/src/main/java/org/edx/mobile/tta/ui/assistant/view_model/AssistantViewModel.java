@@ -24,13 +24,14 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAssistantItemBinding;
 import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.assistant.AssistantModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
-import org.edx.mobile.tta.ui.course.CourseDashboardFragment;
+import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
 
@@ -207,21 +208,14 @@ public class AssistantViewModel extends BaseViewModel implements AIListener {
         });
     }
 
-    public void showContentDashboard(Content content) {
+    public void showContentDashboard(Content selectedContent){
 
-        if (content.getSource().getType().equalsIgnoreCase("edx") ||
-                content.getSource().getType().equalsIgnoreCase("course")) {
-            ActivityUtil.replaceFragmentInActivity(
-                    mActivity.getSupportFragmentManager(),
-                    CourseDashboardFragment.newInstance(content),
-                    R.id.dashboard_fragment,
-                    CourseDashboardFragment.TAG,
-                    true,
-                    null
-            );
+        Bundle parameters = new Bundle();
+        parameters.putParcelable(Constants.KEY_CONTENT, selectedContent);
+        if (selectedContent.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
+                selectedContent.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
+            ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
         } else {
-            Bundle parameters = new Bundle();
-            parameters.putParcelable(Constants.KEY_CONTENT, content);
             ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
         }
 

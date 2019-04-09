@@ -126,6 +126,10 @@ public class ApiConstants {
 
     public static final String URL_MX_FOLLOW_USER = "/api/mx_feed/v1/follow/";
 
+    public static final String URL_MX_CREATE_GET_NOTIFICATIONS = "/notification/v1/showcreate/";
+
+    public static final String URL_MX_UPDATE_NOTIFICATIONS = "/notification/v1/update/";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

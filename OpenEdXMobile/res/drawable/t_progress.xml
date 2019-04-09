@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@android:id/background">
-    <shape>
-        <corners android:radius="7dp"/>
-        <solid android:color="@color/edx_brand_primary_x_back"/>
-    </shape>
-</item>
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="7dp" />
+            <solid android:color="@color/edx_brand_primary_x_back" />
+        </shape>
+    </item>
 
-<item android:id="@android:id/progress"
-android:top="1dp"
-android:bottom="1dp"
-android:left="1dp"
-android:right="1dp">
+    <item
+        android:id="@android:id/progress"
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp">
 
-<scale android:scaleWidth="100%">
-    <shape>
-        <gradient
-            android:startColor="@color/edx_brand_primary_accent"
-            android:endColor="@color/secondary_blue_light"
-            android:angle="0"/>
-        <corners android:bottomLeftRadius="7dp" android:topLeftRadius="7dp"/>
-    </shape>
-</scale>
-</item>
-    </layer-list>
+        <scale android:scaleWidth="100%">
+            <shape>
+                <gradient
+                    android:angle="0"
+                    android:endColor="@color/secondary_blue_light"
+                    android:startColor="@color/secondary_blue" />
+                <corners
+                    android:bottomLeftRadius="7dp"
+                    android:topLeftRadius="7dp" />
+            </shape>
+        </scale>
+    </item>
+</layer-list>

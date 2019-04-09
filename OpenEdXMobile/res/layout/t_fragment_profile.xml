@@ -98,7 +98,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/t_icon_padaav" />
+                            app:srcCompat="@drawable/t_icon_padaav" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_arrow_right_cyan_24dp" />
+                            app:srcCompat="@drawable/ic_arrow_right_cyan_24dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -386,7 +386,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_48px"
-                android:layout_marginBottom="@dimen/_48px"
                 android:orientation="vertical">
 
                 <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
@@ -413,7 +412,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_48px">
 
                 <TextView
                     android:layout_width="match_parent"

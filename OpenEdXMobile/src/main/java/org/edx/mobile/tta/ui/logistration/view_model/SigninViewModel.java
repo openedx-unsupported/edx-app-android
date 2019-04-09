@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.logistration.view_model;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -17,6 +18,7 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.ui.logistration.UserInfoActivity;
 import org.edx.mobile.tta.ui.reset_password.EnterNumberActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
@@ -90,7 +92,12 @@ public class SigninViewModel extends BaseViewModel {
             @Override
             public void onSuccess(AuthResponse data) {
                 mActivity.hideLoading();
-                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                if (data.profile.name == null || data.profile.name.equals("") ||
+                        data.profile.name.equals(data.profile.username)) {
+                    ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                } else {
+                    ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                }
                 mActivity.finish();
             }
 

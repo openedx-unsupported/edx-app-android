@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="welcome_back">वापसी पर आपका स्वागत है</string>
+    <string name="welcome_back">वापसी पर आपका स्वागत</string>
     <string name="create_account_and_connect_with_us">अकाउंट बनाइये और हमारे साथ जुड़िये</string>
-    <string name="mobile_number">मोबाइल नंबर</string>
+    <string name="mobile_number">मोबाइल नम्बर</string>
     <string name="password">पासवर्ड</string>
     <string name="confirm_password">पासवर्ड पक्का करें</string>
     <string name="register">रजिस्टर</string>
@@ -12,8 +12,8 @@
     <string name="keep_up_the_spirit">जारी रखें अपना उत्साह</string>
     <string name="forgot_password">पासवर्ड भूल गए?</string>
     <string name="change_password">पासवर्ड बदलें</string>
-    <string name="create_new_account">नया अकाउंट बनाएं</string>
-    <string name="launch_text_1">शिक्षकों के व्यवसायिक विकास के लिए रचनात्मक, निर्णात्मक, ऑडियो-विज़ुअल सामग्री</string>
+    <string name="create_new_account">नया अकाउंट बनाएँ</string>
+    <string name="launch_text_1">शिक्षकों के व्यवसायिक विकास के लिए रचनात्मक, निर्माणात्मक, ऑडियो-विज़ुअल सामग्री</string>
     <string name="launch_text_2">अपने राज्य और साथी शिक्षकों द्वारा मान्यता पाने के अवसर</string>
     <string name="launch_text_3">देश भर के विभिन्न शिक्षकों के साथ जुड़ने और अपने विचार साझा करने के अवसर</string>
     <string name="reset_password_msg">आपके password reset करने के लिए फ़ोन पर नंबर नीचे भरिये। आपके फ़ोन पर फिर verification OTP SMS नंबर द्वारा आएगा।</string>
@@ -89,4 +89,5 @@
     <string name="all_medal">सभी पदक</string>
     <string name="padaav" translatable="false">पड़ाव</string>
     <string name="number" >अंक</string>
+    <string name="notifications">सूचना</string>
 </resources>
