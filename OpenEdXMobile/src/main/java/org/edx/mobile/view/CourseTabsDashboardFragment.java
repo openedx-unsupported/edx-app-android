@@ -70,7 +70,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         return newInstance(bundle);
     }
 
-    public static CourseTabsDashboardFragment newInstance(Bundle bundle) {
+    public static CourseTabsDashboardFragment newInstance(@NonNull Bundle bundle) {
         final CourseTabsDashboardFragment fragment = new CourseTabsDashboardFragment();
         fragment.setArguments(bundle);
         return fragment;

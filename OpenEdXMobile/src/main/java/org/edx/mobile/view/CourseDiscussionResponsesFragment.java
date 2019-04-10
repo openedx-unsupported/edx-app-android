@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -24,8 +25,8 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
-import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
@@ -33,6 +34,7 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,12 +78,18 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Inject
     AnalyticsRegistry analyticsRegistry;
 
+    @InjectView(R.id.loading_indicator)
+    private ProgressBar loadingIndicator;
+
+    private FullScreenErrorNotification errorNotification;
+
     @Nullable
     private Call<DiscussionThread> getAndReadThreadCall;
 
     private InfiniteScrollUtils.InfiniteListController controller;
 
     private ResponsesLoader responsesLoader;
+    private Call<DiscussionThread> getThreadCall;
 
     @Nullable
     @Override
@@ -92,16 +100,23 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        errorNotification = new FullScreenErrorNotification(view.findViewById(R.id.ll_content));
         if (discussionThread == null) {
-            final Call<DiscussionThread> getThreadCall = discussionService.getThread(threadId);
-            getThreadCall.enqueue(new Callback<DiscussionThread>() {
+            if (getThreadCall != null) {
+                getThreadCall.cancel();
+            }
+            getThreadCall = discussionService.getThread(threadId);
+            getThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(getActivity(),
+                    new TaskProgressCallback.ProgressViewController(loadingIndicator), errorNotification) {
                 @Override
                 protected void onResponse(@NonNull DiscussionThread responseBody) {
                     discussionThread = responseBody;
+                    setScreenTitle();
                     loadThreadResponses();
                 }
             });
         } else {
+            setScreenTitle();
             loadThreadResponses();
         }
     }
@@ -147,6 +162,17 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 });
 
         addResponseLayout.setEnabled(!courseData.isDiscussionBlackedOut());
+        final Map<String, String> values = new HashMap<>();
+        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
+        if (!discussionThread.isAuthorAnonymous()) {
+            values.put(Analytics.Keys.AUTHOR, discussionThread.getAuthor());
+        }
+        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_THREAD,
+                courseData.getCourse().getId(), discussionThread.getTitle(), values);
+    }
+
+    private void setScreenTitle() {
         switch (discussionThread.getType()) {
             case DISCUSSION:
                 getActivity().setTitle(R.string.discussion_title);
@@ -157,15 +183,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                         R.string.course_discussion_unanswered_title);
                 break;
         }
-
-        final Map<String, String> values = new HashMap<>();
-        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
-        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
-        if (!discussionThread.isAuthorAnonymous()) {
-            values.put(Analytics.Keys.AUTHOR, discussionThread.getAuthor());
-        }
-        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_THREAD,
-                courseData.getCourse().getId(), discussionThread.getTitle(), values);
     }
 
     @Override
@@ -177,7 +194,12 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        responsesLoader.reset();
+        if (getThreadCall != null) {
+            getThreadCall.cancel();
+        }
+        if (responsesLoader != null) {
+            responsesLoader.reset();
+        }
         EventBus.getDefault().unregister(this);
     }
 

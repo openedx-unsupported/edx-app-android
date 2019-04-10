@@ -230,8 +230,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         });
 
         final String threadId = getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID);
-        if(!TextUtils.isEmpty(threadId)){
+        if (!TextUtils.isEmpty(threadId)) {
             router.showCourseDiscussionResponses(context, threadId, courseData);
+
+            // Setting this to null, so that upon recreation of the fragment, relevant activity
+            // shouldn't be auto-created again (e.g. due to a deep link).
+            getArguments().putString(Router.EXTRA_DISCUSSION_THREAD_ID, null);
         }
     }
 
@@ -265,9 +269,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     }
 
     private void trackScreenView() {
-        final String screenName = Analytics.Screens.FORUM_VIEW_TOPIC_THREADS;
         final String actionItem;
-        Map<String, String> values = new HashMap<>();
+        final Map<String, String> values = new HashMap<>();
         String topicId = discussionTopic.getIdentifier();
         if (DiscussionTopic.ALL_TOPICS_ID.equals(topicId)) {
             topicId = actionItem = Analytics.Values.POSTS_ALL;
@@ -277,8 +280,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             actionItem = discussionTopic.getName();
         }
         values.put(Analytics.Keys.TOPIC_ID, topicId);
-        environment.getAnalyticsRegistry().trackScreenView(screenName, courseData.getCourse().getId(),
-                actionItem, values);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPIC_THREADS,
+                courseData.getCourse().getId(), actionItem, values);
     }
 
     @Override
