@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ImageSpan;
 
 import com.google.inject.Inject;
@@ -16,10 +15,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.Analytics;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import roboguice.inject.InjectExtra;
 
@@ -39,35 +34,6 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        String screenName = null;
-        String actionItem = null;
-        Map<String, String> values = new HashMap<>();
-        if (searchQuery != null) {
-            screenName = Analytics.Screens.FORUM_SEARCH_THREADS;
-            values.put(Analytics.Keys.SEARCH_STRING, searchQuery);
-            actionItem = searchQuery;
-        } else if (discussionTopic != null) {
-            screenName = Analytics.Screens.FORUM_VIEW_TOPIC_THREADS;
-            String topicId = discussionTopic.getIdentifier();
-            if (DiscussionTopic.ALL_TOPICS_ID.equals(topicId)) {
-                topicId = actionItem = Analytics.Values.POSTS_ALL;
-            } else if (DiscussionTopic.FOLLOWING_TOPICS_ID.equals(topicId)) {
-                topicId = actionItem = Analytics.Values.POSTS_FOLLOWING;
-            } else {
-                actionItem = discussionTopic.getName();
-            }
-            values.put(Analytics.Keys.TOPIC_ID, topicId);
-        }
-        if (!TextUtils.isEmpty(actionItem) && !TextUtils.isEmpty(screenName)) {
-            environment.getAnalyticsRegistry().trackScreenView(screenName, courseData.getCourse().getId(),
-                    actionItem, values);
-        }
-    }
 
     @Override
     public Fragment getFirstFragment() {

@@ -19,6 +19,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -28,7 +29,9 @@ import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import roboguice.inject.InjectExtra;
@@ -76,6 +79,11 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                 return false;
             }
         });
+
+        final Map<String, String> values = new HashMap<>();
+        values.put(Analytics.Keys.SEARCH_STRING, searchQuery);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_SEARCH_THREADS,
+                courseData.getCourse().getId(), searchQuery, values);
     }
 
     @Override
