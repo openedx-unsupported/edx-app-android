@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -37,7 +36,7 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        Fragment fragment;
+        final Fragment fragment;
         if (searchQuery != null) {
             fragment = courseDiscussionPostsSearchFragment;
         } else {
@@ -47,7 +46,8 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
         // TODO: Move argument setting logic to base class
         // Currently RoboGuice doesn't allowing injecting arguments of a Fragment
         if (fragment.getArguments() == null) {
-            Bundle args = new Bundle();
+            final Bundle args = new Bundle();
+            args.putAll(getIntent().getExtras());
             args.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
             args.putBoolean(CourseDiscussionPostsThreadFragment.ARG_DISCUSSION_HAS_TOPIC_NAME,
                     discussionTopic != null);

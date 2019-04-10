@@ -228,6 +228,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             public void onNothingSelected(@NonNull AdapterView<?> parent) {
             }
         });
+
+        final String threadId = getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID);
+        if(!TextUtils.isEmpty(threadId)){
+            router.showCourseDiscussionResponses(context, threadId, courseData);
+        }
     }
 
     private void fetchDiscussionTopic() {

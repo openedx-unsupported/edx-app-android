@@ -294,9 +294,27 @@ public class Router {
         activity.startActivity(showDiscussionPostsIntent);
     }
 
-    public void showCourseDiscussionResponses(Context context, DiscussionThread discussionThread, EnrolledCoursesResponse courseData) {
+    public void showCourseDiscussionResponses(@NonNull Context context, @Nullable String threadId,
+                                              @NonNull EnrolledCoursesResponse courseData) {
+        showCourseDiscussionResponses(context, null, threadId, courseData);
+    }
+
+    public void showCourseDiscussionResponses(@NonNull Context context,
+                                              @Nullable DiscussionThread discussionThread,
+                                              @NonNull EnrolledCoursesResponse courseData) {
+        showCourseDiscussionResponses(context, discussionThread, null, courseData);
+    }
+
+    public void showCourseDiscussionResponses(@NonNull Context context,
+                                              @Nullable DiscussionThread discussionThread,
+                                              @Nullable String threadId,
+                                              @NonNull EnrolledCoursesResponse courseData) {
         Intent discussionResponsesIntent = new Intent(context, CourseDiscussionResponsesActivity.class);
-        discussionResponsesIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
+        if (discussionThread != null) {
+            discussionResponsesIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
+        } else if (threadId != null) {
+            discussionResponsesIntent.putExtra(EXTRA_DISCUSSION_THREAD_ID, threadId);
+        }
         discussionResponsesIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         discussionResponsesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(discussionResponsesIntent);
