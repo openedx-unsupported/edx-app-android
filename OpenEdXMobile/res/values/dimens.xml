@@ -234,4 +234,9 @@
     <dimen name="transcript_row_height">50dp</dimen>
     <dimen name="whats_new_image_horizontal_margin">25dp</dimen>
     <dimen name="shadow_view_height">4dp</dimen>
+
+    <!-- Social platforms -->
+    <dimen name="social_btn_radius">3dp</dimen>
+    <dimen name="social_btn_min_height">40dp</dimen>
+    <dimen name="social_btn_divider_width">1dp</dimen>
 </resources>
