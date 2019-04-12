@@ -5,6 +5,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/facebook_text"
+        android:minHeight="@dimen/social_btn_min_height"
         android:focusable="true"
         android:foreground="@drawable/light_selectable_rounded_box_overlay"
         android:gravity="center_vertical">
@@ -12,7 +13,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bt_facebook"
+            android:background="@drawable/fb_btn_bg"
             android:contentDescription="@null" />
 
         <LinearLayout

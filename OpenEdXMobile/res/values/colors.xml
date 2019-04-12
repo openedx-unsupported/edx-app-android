@@ -74,4 +74,7 @@
     <color name="edx_error_back">#FEECED</color>
     <color name="edx_warning_accent">#FFC01F</color>
     <color name="edx_warning_back">#FFF9EB</color>
+
+    <!-- Social platform colors -->
+    <color name="fb_blue">#4267B2</color>
 </resources>
