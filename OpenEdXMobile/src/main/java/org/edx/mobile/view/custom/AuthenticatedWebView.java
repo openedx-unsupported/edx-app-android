@@ -112,7 +112,6 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal,
                             boolean isManuallyReloadable) {
         this.isManuallyReloadable = isManuallyReloadable;
-        webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webViewClient = new URLInterceptorWebViewClient(fragmentActivity, webView) {
             @Override

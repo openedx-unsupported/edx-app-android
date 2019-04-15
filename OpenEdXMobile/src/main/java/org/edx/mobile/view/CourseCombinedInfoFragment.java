@@ -185,7 +185,6 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
         }
         buff.append("</body>");
 
-        announcementWebView.clearCache(true);
         announcementWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", StandardCharsets.UTF_8.name(), null);
     }
 
