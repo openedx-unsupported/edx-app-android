@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.ui.connect.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,6 +39,8 @@ public class ConnectCommentsTabViewModel extends BaseViewModel {
     public CommentsAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
     private CommentClickListener commentClickListener;
+
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
 
     public ConnectCommentsTabViewModel(Context context, TaBaseFragment fragment, Content content, Post post, List<Comment> comments, List<Comment> replies, CommentClickListener commentClickListener) {
         super(context, fragment);
@@ -86,6 +89,11 @@ public class ConnectCommentsTabViewModel extends BaseViewModel {
     }
 
     public void refreshList(){
+        if (comments == null || comments.isEmpty()){
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
+        }
         adapter.notifyDataSetChanged();
     }
 

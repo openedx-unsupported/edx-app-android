@@ -283,6 +283,12 @@
 
         </android.support.design.widget.CoordinatorLayout>
 
+        <include
+            layout="@layout/t_view_offline_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            mx:isVisible="@{viewModel.offlineVisible}"/>
+
         <LinearLayout
             android:id="@+id/enter_comment_layout"
             android:layout_width="match_parent"

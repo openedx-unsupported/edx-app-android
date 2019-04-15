@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.search.view_model.SearchViewModel" />
@@ -15,25 +17,25 @@
         android:animateLayoutChanges="true">
 
         <LinearLayout
+            android:id="@+id/searchview_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/searchview_layout"
             android:background="@color/white"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/_14px"
             app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.SearchView
+                on_query_text_listener="@{viewModel.queryTextListener}"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                app:searchIcon="@drawable/t_icon_search_blue"
-                app:closeIcon="@drawable/t_icon_close"
-                android:textSize="14sp"
                 android:layout_marginEnd="@dimen/_20dp"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                app:closeIcon="@drawable/t_icon_close_16"
                 app:defaultQueryHint="@string/search"
                 app:iconifiedByDefault="false"
-                on_query_text_listener="@{viewModel.queryTextListener}"/>
+                app:searchIcon="@drawable/t_icon_search_blue" />
 
             <!--<EditText
                 android:layout_width="match_parent"
@@ -45,47 +47,47 @@
                 android:text="@={viewModel.searchText}" />-->
             <ImageView
                 android:id="@+id/assistant_button"
-                android:layout_marginEnd="@dimen/_20dp"
-                android:src="@drawable/ic_mic_cyan_600_24dp"
-                android:onClick="@{()->viewModel.openAssistant()}"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="assistant button" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_20dp"
+                android:contentDescription="assistant button"
+                android:onClick="@{()->viewModel.openAssistant()}"
+                android:src="@drawable/ic_mic_cyan_600_24dp" />
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/dual_filter_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dual_filter_layout"
             android:layout_marginTop="1dp"
+            android:layout_marginBottom="4dp"
             android:background="@color/white"
+            android:baselineAligned="false"
             android:elevation="2dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="4dp"
-            app:layout_constraintTop_toBottomOf="@id/searchview_layout"
-            android:baselineAligned="false">
+            app:layout_constraintTop_toBottomOf="@id/searchview_layout">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
+                    selected="@{viewModel.filterSelected.get()}"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawableEnd="@drawable/t_icon_dropdown_selector"
                     android:drawablePadding="4dp"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
+                    android:onClick="@{()->viewModel.showFilters()}"
                     android:text="Filter"
                     android:textColor="@color/t_selector_tab_text_color"
-                    android:textSize="14sp"
-                    selected="@{viewModel.filterSelected.get()}"
-                    android:onClick="@{()->viewModel.showFilters()}"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -93,176 +95,211 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
+                    selected="@{viewModel.contentListSelected.get()}"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawableEnd="@drawable/t_icon_dropdown_selector"
                     android:drawablePadding="4dp"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
+                    android:onClick="@{()->viewModel.showContentLists()}"
                     android:text="@{viewModel.contentListText}"
                     android:textColor="@color/t_selector_tab_text_color"
-                    android:textSize="14sp"
-                    selected="@{viewModel.contentListSelected.get()}"
-                    android:onClick="@{()->viewModel.showContentLists()}"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+            android:id="@+id/tags_list"
+            finite_recycler_adapter="@{viewModel.tagsAdapter}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tags_list"
-            app:mx_titleVisible="false"
-            app:mx_moreButtonVisible="false"
-            app:mx_itemLayout="@layout/t_row_filter_tag"
-            app:mx_itemLimit="1000"
             android:paddingTop="@dimen/_12px"
             android:paddingBottom="@dimen/_12px"
+            android:visibility="@{viewModel.tagsLayoutVisible?View.VISIBLE:View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/dual_filter_layout"
-            finite_recycler_adapter="@{viewModel.tagsAdapter}"
-            android:visibility="@{viewModel.tagsLayoutVisible?View.VISIBLE:View.GONE}"/>
+            app:mx_itemLayout="@layout/t_row_filter_tag"
+            app:mx_itemLimit="1000"
+            app:mx_moreButtonVisible="false"
+            app:mx_titleVisible="false" />
+
         <View
+            android:id="@+id/divider_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:id="@+id/divider_line"
             android:background="@color/gray_1"
-            app:layout_constraintTop_toBottomOf="@id/tags_list"
-            android:visibility="@{viewModel.tagsLayoutVisible?View.VISIBLE:View.GONE}"/>
+            android:visibility="@{viewModel.tagsLayoutVisible?View.VISIBLE:View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/tags_list" />
 
-        <com.maurya.mx.mxlib.view.MxRecyclerView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/contents_list"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            app:mx_itemLayout="@layout/t_row_agenda_content"
-            app:layout_constraintTop_toBottomOf="@id/divider_line"
             app:layout_constraintBottom_toBottomOf="parent"
-            infinite_recycler_adapter="@{viewModel.contentsAdapter}"
-            layout_manager="@{viewModel.contentsLayoutManager}"
-            infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+            app:layout_constraintTop_toBottomOf="@id/divider_line">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_60px"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    app:srcCompat="@drawable/t_icon_first_comment" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_46px"
+                    android:layout_marginStart="@dimen/_70px"
+                    android:layout_marginEnd="@dimen/_70px"
+                    android:fontFamily="@font/hind_regular"
+                    android:gravity="center"
+                    android:text="@string/be_the_first_to_comment"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <com.maurya.mx.mxlib.view.MxRecyclerView
+                android:id="@+id/contents_list"
+                infinite_load_more_listener="@{viewModel.loadMoreListener}"
+                infinite_recycler_adapter="@{viewModel.contentsAdapter}"
+                layout_manager="@{viewModel.contentsLayoutManager}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                app:mx_itemLayout="@layout/t_row_agenda_content" />
+
+        </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/filter_expanded"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:orientation="vertical"
-            android:id="@+id/filter_expanded"
             android:background="@color/transparent_black_50"
-            app:layout_constraintTop_toBottomOf="@id/dual_filter_layout"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.filterSelected?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{viewModel.filterSelected?View.VISIBLE:View.GONE}">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dual_filter_layout">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
-                android:orientation="vertical"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical">
 
                 <com.maurya.mx.mxlib.view.MxRecyclerView
+                    infinite_recycler_adapter="@{viewModel.filterAdapter}"
+                    layout_manager="@{viewModel.filterLayoutManager}"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:mx_itemLayout="@layout/t_row_filter_section"
                     android:layout_marginStart="@dimen/_26px"
                     android:layout_marginEnd="@dimen/_26px"
-                    android:scrollbars="vertical"
+                    android:layout_weight="1"
                     android:fadeScrollbars="false"
                     android:scrollbarAlwaysDrawVerticalTrack="true"
-                    infinite_recycler_adapter="@{viewModel.filterAdapter}"
-                    layout_manager="@{viewModel.filterLayoutManager}"/>
+                    android:scrollbars="vertical"
+                    app:mx_itemLayout="@layout/t_row_filter_section" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray_1"/>
+                    android:background="@color/gray_1" />
 
                 <Button
                     android:layout_width="100dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_20px"
+                    android:layout_marginBottom="@dimen/_20px"
                     android:background="@drawable/btn_selector_hollow"
+                    android:fontFamily="@font/hind_regular"
+                    android:gravity="center"
+                    android:onClick="@{()->viewModel.hideFilters()}"
                     android:text="Apply"
                     android:textAllCaps="false"
                     android:textColor="@color/primary_cyan"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/hind_regular"
-                    android:layout_marginTop="@dimen/_20px"
-                    android:layout_marginBottom="@dimen/_20px"
-                    android:onClick="@{()->viewModel.hideFilters()}"/>
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="@{()->viewModel.hideFilters()}"/>
+                android:onClick="@{()->viewModel.hideFilters()}" />
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/content_list_expanded"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:orientation="vertical"
-            android:id="@+id/content_list_expanded"
             android:background="@color/transparent_black_50"
-            app:layout_constraintTop_toBottomOf="@id/dual_filter_layout"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.contentListSelected?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{viewModel.contentListSelected?View.VISIBLE:View.GONE}">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dual_filter_layout">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical">
 
                 <org.edx.mobile.tta.ui.custom.NonScrollListView
+                    array_adapter="@{viewModel.contentListsAdapter}"
+                    item_click_listener="@{viewModel.contentListClickListener}"
+                    selected_position="@{viewModel.selectedContentListPosition}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="none"
                     android:choiceMode="singleChoice"
                     android:paddingStart="@dimen/_26px"
                     android:paddingEnd="@dimen/_26px"
-                    selected_position="@{viewModel.selectedContentListPosition}"
-                    item_click_listener="@{viewModel.contentListClickListener}"
-                    array_adapter="@{viewModel.contentListsAdapter}"/>
+                    android:scrollbars="none" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray_1"/>
+                    android:background="@color/gray_1" />
 
                 <Button
                     android:layout_width="100dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_20px"
+                    android:layout_marginBottom="@dimen/_20px"
                     android:background="@drawable/btn_selector_hollow"
+                    android:fontFamily="@font/hind_regular"
+                    android:gravity="center"
+                    android:onClick="@{()->viewModel.hideFilters()}"
                     android:text="Apply"
                     android:textAllCaps="false"
                     android:textColor="@color/primary_cyan"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/hind_regular"
-                    android:layout_marginTop="@dimen/_20px"
-                    android:layout_marginBottom="@dimen/_20px"
-                    android:onClick="@{()->viewModel.hideFilters()}"/>
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="@{()->viewModel.hideFilters()}"/>
+                android:onClick="@{()->viewModel.hideFilters()}" />
 
         </LinearLayout>
 

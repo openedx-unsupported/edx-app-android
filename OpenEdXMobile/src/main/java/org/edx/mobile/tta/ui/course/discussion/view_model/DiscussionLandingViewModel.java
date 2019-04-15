@@ -121,7 +121,7 @@ public class DiscussionLandingViewModel extends BaseViewModel {
 
                                     @Override
                                     public void onFailure(Exception e) {
-
+                                        mActivity.hideLoading();
                                     }
                                 });
 
@@ -157,7 +157,7 @@ public class DiscussionLandingViewModel extends BaseViewModel {
         topicsAdapter.notifyDataSetChanged();
     }
 
-    public void regiterEventBus(){
+    public void registerEventBus(){
         EventBus.getDefault().register(this);
     }
 

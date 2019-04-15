@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
@@ -28,7 +29,10 @@ import org.edx.mobile.tta.ui.connect.ConnectCommentsTab;
 import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
+import org.edx.mobile.tta.wordpress_client.model.CustomFilter;
 import org.edx.mobile.tta.wordpress_client.model.Post;
+import org.edx.mobile.tta.wordpress_client.util.MxFilterType;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
@@ -57,12 +61,14 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ObservableBoolean commentFocus = new ObservableBoolean();
     public ObservableField<String> replyingToText = new ObservableField<>();
     public ObservableBoolean replyingToVisible = new ObservableBoolean();
+    public ObservableBoolean offlineVisible = new ObservableBoolean();
     private long commentParentId = 0;
 
     //Header details
     public ObservableInt headerImagePlaceholder = new ObservableInt(R.drawable.placeholder_course_card_image);
     public ObservableInt likeIcon = new ObservableInt(R.drawable.t_icon_like);
     public ObservableInt bookmarkIcon = new ObservableInt(R.drawable.t_icon_bookmark);
+    public ObservableBoolean allDownloadOptionVisible = new ObservableBoolean(false);
     public ObservableInt allDownloadStatusIcon = new ObservableInt(R.drawable.t_icon_download);
     public ObservableBoolean allDownloadIconVisible = new ObservableBoolean(true);
     public ObservableBoolean allDownloadProgressVisible = new ObservableBoolean(false);
@@ -78,12 +84,24 @@ public class ConnectDashboardViewModel extends BaseViewModel
         titles = new ArrayList<>();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        onEventMainThread(new NetworkConnectivityChangeEvent());
+    }
+
     public void fetchPost(OnResponseCallback<Post> callback) {
         mActivity.showLoading();
         mDataManager.getPostById(Long.parseLong(content.getSource_identity()), new OnResponseCallback<Post>() {
             @Override
             public void onSuccess(Post data) {
                 post = data;
+                String downloadUrl = getDownloadUrl();
+                if (downloadUrl == null || downloadUrl.equals("")){
+                    allDownloadOptionVisible.set(false);
+                } else {
+                    allDownloadOptionVisible.set(true);
+                }
                 callback.onSuccess(data);
                 loadData();
             }
@@ -95,6 +113,27 @@ public class ConnectDashboardViewModel extends BaseViewModel
             }
         });
 
+    }
+
+    private String getDownloadUrl(){
+        String download_url=null;
+        //find the downloaded obj
+        if(post.getFilter()!=null && post.getFilter().size()>0)
+        {
+            for (CustomFilter item:post.getFilter())
+            {
+                if(item==null || TextUtils.isEmpty(item.getName()))
+                    continue;
+
+                if(item.getName().toLowerCase().equals(String.valueOf(MxFilterType.MX_VIDEODOWNLOAD).toLowerCase())
+                        && item.getChoices()!=null && item.getChoices().length > 0)
+                {
+                    download_url=item.getChoices()[0];
+                    break;
+                }
+            }
+        }
+        return download_url;
     }
 
     private void loadData() {
@@ -443,6 +482,15 @@ public class ConnectDashboardViewModel extends BaseViewModel
             allDownloadProgressVisible.set(false);
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
             allDownloadIconVisible.set(true);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NetworkConnectivityChangeEvent event){
+        if (NetworkUtil.isConnected(mActivity)){
+            offlineVisible.set(false);
+        } else {
+            offlineVisible.set(true);
         }
     }
 

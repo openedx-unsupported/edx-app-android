@@ -37,7 +37,8 @@ public class FormSpinner extends LinearLayout {
     private RegistrationOption selectedOption;
 
     private OnTaItemClickListener<RegistrationOption> listener;
-    private String label, value;
+
+    private String label;
 
     public FormSpinner(Context context) {
         super(context);

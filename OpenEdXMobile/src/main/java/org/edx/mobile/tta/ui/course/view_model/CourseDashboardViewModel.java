@@ -1,12 +1,14 @@
 package org.edx.mobile.tta.ui.course.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
@@ -19,12 +21,15 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.course.CourseMaterialTab;
 import org.edx.mobile.tta.ui.course.discussion.CourseDiscussionTab;
 import org.edx.mobile.tta.ui.course.discussion.DiscussionLandingFragment;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.AuthenticatedWebViewFragment;
 import org.edx.mobile.view.CourseHandoutFragment;
 import org.edx.mobile.view.Router;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class CourseDashboardViewModel extends BaseViewModel {
 
@@ -36,6 +41,8 @@ public class CourseDashboardViewModel extends BaseViewModel {
     private EnrolledCoursesResponse course;
     private CourseComponent rootComponent;
 
+    public ObservableBoolean offlineVisible = new ObservableBoolean();
+
     public CourseDashboardViewModel(BaseVMActivity activity, Content content) {
         super(activity);
         this.content = content;
@@ -43,6 +50,12 @@ public class CourseDashboardViewModel extends BaseViewModel {
         fragments = new ArrayList<>();
         titles = new ArrayList<>();
         loadCourseData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
     private void loadCourseData(){
@@ -136,6 +149,23 @@ public class CourseDashboardViewModel extends BaseViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NetworkConnectivityChangeEvent event){
+        if (NetworkUtil.isConnected(mActivity)){
+            offlineVisible.set(false);
+        } else {
+            offlineVisible.set(true);
+        }
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().register(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 
     public class CourseDashboardPagerAdapter extends BasePagerAdapter {

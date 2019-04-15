@@ -17,6 +17,7 @@ import org.edx.mobile.tta.data.model.authentication.VerifyOTPForgotedPasswordRes
 import org.edx.mobile.tta.data.model.authentication.VerifyOTPResponse;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
+import org.edx.mobile.tta.firebase.FirebaseUpdateTokenResponse;
 
 import java.util.Map;
 
@@ -160,4 +161,8 @@ public interface LoginService {
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_UPDATE_PROFILE)
     Call<UpdateMyProfileResponse> mxUpdateProfile(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_FIREBASE_TOKEN_UPDATE)
+    Call<FirebaseUpdateTokenResponse> updateFirebaseToken(@FieldMap Map<String, String> parameters);
 }

@@ -16,6 +16,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.module.registration.view.RegistrationOptionSpinner;
 import org.edx.mobile.tta.ui.custom.FormEditText;
+import org.edx.mobile.tta.ui.custom.FormMultiSpinner;
 import org.edx.mobile.tta.ui.custom.FormSpinner;
 
 import java.util.List;
@@ -93,6 +94,14 @@ public class ViewUtil {
         FormSpinner spinner = new FormSpinner(parent.getContext());
         spinner.setLabel(label);
         spinner.setItems(options, defaultOption);
+        parent.addView(spinner);
+        return spinner;
+    }
+
+    public static FormMultiSpinner addMultiOptionSpinner(ViewGroup parent, String label, @NonNull List<RegistrationOption> options, @Nullable List<RegistrationOption> defaultOptions){
+        FormMultiSpinner spinner = new FormMultiSpinner(parent.getContext());
+        spinner.setLabel(label);
+        spinner.setItems(options, defaultOptions);
         parent.addView(spinner);
         return spinner;
     }

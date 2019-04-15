@@ -21,6 +21,8 @@ public class LandingActivity extends BaseVMActivity {
 
         BottomNavigationView view = findViewById(R.id.dashboard_bottom_nav);
         view.setItemIconTintList(null);
+
+        viewModel.registerEventBus();
     }
 
     @Override
@@ -31,5 +33,11 @@ public class LandingActivity extends BaseVMActivity {
             viewModel.selectLibrary();
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

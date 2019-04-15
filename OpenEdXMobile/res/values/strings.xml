@@ -770,8 +770,14 @@
     <string name="point_table" translatable="false">Point table</string>
     <string name="please_insert_valide_pmis_code">please Insert Valid Pmis Code</string>
     <string name="notifications">Notifications</string>
+    <string name="empty_region_wise_list">\“%s\” does not have any %s</string>
+    <string name="empty_my_agenda_list">\“%s\” does not have any selected %s. To select a %s, please click on @</string>
+    <string name="empty_download_list">\“%s\” does not have any %s</string>
+    <string name="you_are_offline">You are offline</string>
 
     <string name="sign_out_message" translatable="false">Are you sure you want to Sign Out?</string>
+    <string name="be_the_first_to_comment" translatable="false">Be the first to comment</string>
+    <string name="be_the_first_to_reply" translatable="false">Be the first to reply</string>
 
     <!-- WP Post Share menu title -->
     <string name="share_wp_post_popup_header" translatable="false">Share this post via&#8230;</string>

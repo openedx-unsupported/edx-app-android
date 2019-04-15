@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.landing.view_model.LandingViewModel" />
@@ -11,13 +13,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/dashboard_fragment"/>
+
+        <include
+            layout="@layout/t_view_offline_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            bind:isVisible="@{viewModel.offlineVisible}"/>
 
         <android.support.design.widget.BottomNavigationView
             android:layout_width="match_parent"

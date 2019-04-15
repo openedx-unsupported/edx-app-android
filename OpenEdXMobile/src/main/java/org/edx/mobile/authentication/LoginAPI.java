@@ -27,6 +27,7 @@ import org.edx.mobile.tta.data.model.authentication.VerifyOTPForgotedPasswordRes
 import org.edx.mobile.tta.data.model.authentication.VerifyOTPResponse;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
+import org.edx.mobile.tta.firebase.FirebaseUpdateTokenResponse;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.observer.BasicObservable;
 import org.edx.mobile.util.observer.Observable;
@@ -345,6 +346,11 @@ public class LoginAPI {
     }
 
     @NonNull
+    public FirebaseUpdateTokenResponse updateFireBaseTokenToServer(Bundle parameters) throws Exception {
+        return  Mx_updateTA_FirebaseToken(parameters);
+    }
+
+    @NonNull
     private MobileNumberVerificationResponse mxMobileNumberVerification(Bundle parameters) throws Exception
     {
         final Map<String, String> parameterMap = new HashMap<>();
@@ -564,5 +570,34 @@ public class LoginAPI {
     }
     public String getConnectCookiesTimeStamp() {
         return loginPrefs.getMxConnectCookieTimeStamp();
+    }
+
+    //Firebase token update & restore
+    @NonNull
+    private FirebaseUpdateTokenResponse Mx_updateTA_FirebaseToken(Bundle parameters) throws Exception {
+
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+
+        Response<FirebaseUpdateTokenResponse> response = loginService.updateFirebaseToken(parameterMap).execute();
+
+        if (!response.isSuccessful()) {
+            final int errorCode = response.code();
+            final String errorBody = response.errorBody().string();
+            if ((errorCode == HttpStatus.BAD_REQUEST || errorCode == HttpStatus.CONFLICT) && !android.text.TextUtils.isEmpty(errorBody)) {
+                try {
+                    final FormFieldMessageBody body = gson.fromJson(errorBody, FormFieldMessageBody.class);
+                    if (body != null && body.size() > 0) {
+                        throw new LoginAPI.RegistrationException(body);
+                    }
+                } catch (JsonSyntaxException ex) {
+                    // Looks like the response does not contain form validation errors.
+                }
+            }
+            throw new HttpResponseStatusException(errorCode);
+        }
+        return response.body();
     }
 }

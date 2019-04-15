@@ -198,7 +198,8 @@
                                     android:focusable="true"
                                     android:onClick="@{()->viewModel.download()}"
                                     android:orientation="horizontal"
-                                    android:padding="8dp">
+                                    android:padding="8dp"
+                                    android:visibility="@{viewModel.allDownloadOptionVisible ? View.VISIBLE : View.GONE}">
 
                                     <org.edx.mobile.view.custom.IconProgressBar
                                         android:id="@+id/loading_indicator"
@@ -260,6 +261,12 @@
                     mx:pager_adapter="@{viewModel.adapter}" />
 
             </android.support.design.widget.CoordinatorLayout>
+
+            <include
+                layout="@layout/t_view_offline_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                mx:isVisible="@{viewModel.offlineVisible}"/>
 
             <LinearLayout
                 android:id="@+id/enter_comment_layout"

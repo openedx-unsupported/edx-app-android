@@ -79,6 +79,7 @@ public class SearchViewModel extends BaseViewModel {
     public ObservableBoolean contentListSelected = new ObservableBoolean();
     public ObservableBoolean tagsLayoutVisible = new ObservableBoolean();
     public ObservableInt selectedContentListPosition = new ObservableInt(0);
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
 
     public SearchedContentsAdapter contentsAdapter;
     public RecyclerView.LayoutManager contentsLayoutManager;
@@ -440,6 +441,7 @@ public class SearchViewModel extends BaseViewModel {
                         isAllLoaded = true;
                         contentsAdapter.setLoadingDone();
                         mActivity.showLongSnack(e.getLocalizedMessage());
+                        toggleEmptyVisibility();
                     }
                 });
 
@@ -458,7 +460,15 @@ public class SearchViewModel extends BaseViewModel {
             }
         }
         contentsAdapter.setItems(this.contents);
+        toggleEmptyVisibility();
+    }
 
+    private void toggleEmptyVisibility(){
+        if (contents == null || contents.isEmpty()){
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
+        }
     }
 
     public class SearchedContentsAdapter extends MxInfiniteAdapter<Content> {

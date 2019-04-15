@@ -21,16 +21,20 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class DiscussionCommentViewModel extends BaseViewModel {
 
@@ -51,6 +55,8 @@ public class DiscussionCommentViewModel extends BaseViewModel {
     public ObservableField<String> commentsCount = new ObservableField<>("0");
     public ObservableInt likeIcon = new ObservableInt(R.drawable.t_icon_like);
     public ObservableBoolean commentFocus = new ObservableBoolean();
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableBoolean offlineVisible = new ObservableBoolean();
 
     public DiscussionRepliesAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -106,6 +112,7 @@ public class DiscussionCommentViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
+        onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
     private void fetchReplies() {
@@ -130,6 +137,7 @@ public class DiscussionCommentViewModel extends BaseViewModel {
                         mActivity.hideLoading();
                         allLoaded = true;
                         adapter.setLoadingDone();
+                        toggleEmptyVisibility();
                     }
                 });
 
@@ -147,6 +155,16 @@ public class DiscussionCommentViewModel extends BaseViewModel {
 
         if (newItemsAdded) {
             adapter.notifyDataSetChanged();
+        }
+
+        toggleEmptyVisibility();
+    }
+
+    private void toggleEmptyVisibility(){
+        if (replies == null || replies.isEmpty()){
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
         }
     }
 
@@ -223,6 +241,23 @@ public class DiscussionCommentViewModel extends BaseViewModel {
                     }
                 });
 
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NetworkConnectivityChangeEvent event){
+        if (NetworkUtil.isConnected(mActivity)){
+            offlineVisible.set(false);
+        } else {
+            offlineVisible.set(true);
+        }
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().register(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 
     public class DiscussionRepliesAdapter extends MxInfiniteAdapter<DiscussionComment> {

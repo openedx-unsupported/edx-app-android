@@ -90,4 +90,8 @@
     <string name="padaav" translatable="false">पड़ाव</string>
     <string name="number" >अंक</string>
     <string name="notifications">सूचना</string>
+    <string name="empty_region_wise_list">\“%s\” में %s उपलब्ध नहीं है</string>
+    <string name="empty_download_list">\“%s\” में %s उपलब्ध नहीं है</string>
+    <string name="empty_my_agenda_list">\“%s\” में आपने %s नहीं चुना है। अपने लिए %s का चुनाव करने के लिए @ पर क्लिक करें</string>
+    <string name="you_are_offline">आप ऑफलाइन हैं</string>
 </resources>

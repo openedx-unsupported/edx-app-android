@@ -41,7 +41,7 @@
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
                         android:id="@+id/user_image"
-                        android:src="@{viewModel.profileImage == null ? null : viewModel.profileImage.imageUrlLarge}" />
+                        android:src="@{viewModel.profileImage == null ? null : viewModel.profileImage.imageUrlFull}" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

@@ -6,14 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
-import org.edx.mobile.tta.ui.agenda_items.AgendaItemsTab;
+import org.edx.mobile.tta.ui.agenda_items.AgendaItemTab;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgendaItemModel extends BaseViewModel {
+public class AgendaListViewModel extends BaseViewModel {
     public AgendaItem agendaItem;
     public String toolabarData;
     private AgendaItem tabSelected;
@@ -24,7 +24,7 @@ public class AgendaItemModel extends BaseViewModel {
     List<AgendaItem> items;
     private AgendaList agendaList;
 
-    public AgendaItemModel(Context context, TaBaseFragment fragment, String toolabarData, List<AgendaItem> items, AgendaItem tabSelected, AgendaList agendaList) {
+    public AgendaListViewModel(Context context, TaBaseFragment fragment, String toolabarData, List<AgendaItem> items, AgendaItem tabSelected, AgendaList agendaList) {
         super(context, fragment);
         this.toolabarData = toolabarData;
         this.tabSelected = tabSelected;
@@ -40,7 +40,7 @@ public class AgendaItemModel extends BaseViewModel {
         fragments.clear();
         titles.clear();
         for (AgendaItem item :items) {
-            fragments.add(AgendaItemsTab.newInstance(item,toolabarData, agendaList));
+            fragments.add(AgendaItemTab.newInstance(item,toolabarData, agendaList));
             titles.add(item.getSource_title());
         }
         try {

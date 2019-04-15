@@ -130,6 +130,8 @@ public class ApiConstants {
 
     public static final String URL_MX_UPDATE_NOTIFICATIONS = "/notification/v1/update/";
 
+    public static final String URL_MX_FIREBASE_TOKEN_UPDATE = "/api/teacherappAnalytics/android_token/";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

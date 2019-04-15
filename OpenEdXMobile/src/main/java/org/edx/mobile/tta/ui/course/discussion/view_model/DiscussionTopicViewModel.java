@@ -142,7 +142,7 @@ public class DiscussionTopicViewModel extends BaseViewModel {
         adapter.add(0, newThread);
     }
 
-    public void regiterEventBus(){
+    public void registerEventBus(){
         EventBus.getDefault().register(this);
     }
 

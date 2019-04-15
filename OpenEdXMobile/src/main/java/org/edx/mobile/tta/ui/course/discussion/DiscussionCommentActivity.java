@@ -34,6 +34,8 @@ public class DiscussionCommentActivity extends BaseVMActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        viewModel.registerEventBus();
     }
 
     @Override
@@ -54,5 +56,11 @@ public class DiscussionCommentActivity extends BaseVMActivity {
             thread = (DiscussionThread) parameters.getSerializable(Constants.KEY_DISCUSSION_THREAD);
             comment = (DiscussionComment) parameters.getSerializable(Constants.KEY_DISCUSSION_COMMENT);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

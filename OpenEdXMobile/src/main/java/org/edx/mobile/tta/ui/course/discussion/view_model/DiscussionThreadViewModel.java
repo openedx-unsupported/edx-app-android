@@ -12,6 +12,7 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.SortType;
@@ -25,6 +26,7 @@ import org.edx.mobile.tta.ui.course.discussion.DiscussionCommentsTab;
 import org.edx.mobile.tta.ui.interfaces.DiscussionCommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,6 +59,7 @@ public class DiscussionThreadViewModel extends BaseViewModel
     public ObservableBoolean commentFocus = new ObservableBoolean();
     public ObservableField<String> replyingToText = new ObservableField<>();
     public ObservableField<String> comment = new ObservableField<>();
+    public ObservableBoolean offlineVisible = new ObservableBoolean();
 
     private DiscussionCommentsTab tab1;
     private DiscussionCommentsTab tab2;
@@ -89,6 +92,12 @@ public class DiscussionThreadViewModel extends BaseViewModel
         mActivity.showLoading();
         setTabs();
         fetchComments();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
     private void fetchComments() {
@@ -291,6 +300,15 @@ public class DiscussionThreadViewModel extends BaseViewModel
     public void onEventMainThread(LoadMoreDiscussionCommentsEvent event){
         page++;
         fetchComments();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NetworkConnectivityChangeEvent event){
+        if (NetworkUtil.isConnected(mActivity)){
+            offlineVisible.set(false);
+        } else {
+            offlineVisible.set(true);
+        }
     }
 
     public void registerEventBus(){

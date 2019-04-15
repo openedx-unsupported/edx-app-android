@@ -3,17 +3,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.connect.view_model.ConnectCommentsTabViewModel" />
     </data>
 
-    <com.maurya.mx.mxlib.view.MxRecyclerView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="true"
-        app:mx_itemLayout="@layout/t_row_comments"
-        layout_manager="@{viewModel.layoutManager}"
-        infinite_recycler_adapter="@{viewModel.adapter}"/>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_60px"
+            android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/t_icon_first_comment"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/be_the_first_to_comment"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_46px"
+                android:layout_marginStart="@dimen/_70px"
+                android:layout_marginEnd="@dimen/_70px"
+                android:textColor="@color/primary_cyan"
+                android:textSize="12sp"
+                android:fontFamily="@font/hind_regular"/>
+
+        </LinearLayout>
+
+        <com.maurya.mx.mxlib.view.MxRecyclerView
+            infinite_recycler_adapter="@{viewModel.adapter}"
+            layout_manager="@{viewModel.layoutManager}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="true"
+            app:mx_itemLayout="@layout/t_row_comments" />
+
+    </FrameLayout>
 
 </layout>

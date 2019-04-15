@@ -134,7 +134,7 @@ public class ProfileViewModel extends BaseViewModel {
             following.set(String.valueOf(profileModel.getFollowing()));
         }
         if (profileImage != null) {
-            userImageUrl.set(profileImage.getImageUrlLarge());
+            userImageUrl.set(profileImage.getImageUrlFull());
         }
     }
 

@@ -87,13 +87,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/total_count"
-                android:text="@{String.valueOf(viewModel.voteCount)}"
+                android:text="@{String.valueOf(viewModel.commentCount)}"
                 app:layout_constraintBottom_toBottomOf="@id/total_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/_74px"
                 android:textColor="@color/secondary_green"
                 android:textSize="12sp"
-                android:fontFamily="@font/hind_medium"/>
+                android:fontFamily="@font/hind_medium"
+                android:layout_marginBottom="-4dp"/>
 
             <TextView
                 android:layout_width="match_parent"

@@ -14,6 +14,7 @@ import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.custom.FormEditText;
+import org.edx.mobile.tta.ui.custom.FormMultiSpinner;
 import org.edx.mobile.tta.ui.custom.FormSpinner;
 import org.edx.mobile.tta.ui.logistration.view_model.UserInfoViewModel;
 import org.edx.mobile.tta.utils.DataUtil;
@@ -32,6 +33,7 @@ public class UserInfoActivity extends BaseVMActivity {
     private FormSpinner classTaughtSpinner;
     private FormSpinner dietSpinner;
     private FormEditText etPmis;
+    private FormMultiSpinner testMultiSpinner;
     private Button btn;
     private Toolbar toolbar;
     private UserInfoViewModel mViewModel;
@@ -93,6 +95,8 @@ public class UserInfoActivity extends BaseVMActivity {
         etPmis = ViewUtil.addFormEditText(userInfoLayout, "PMIS Code/पी इम आइ इस कोड");
         etPmis.setShowTv(getApplicationContext().getString(R.string.please_insert_valide_pmis_code));
         dietSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "DIET Code/डी आइ इ टी कोड", mViewModel.dietCodes, null);
+        testMultiSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Test multi spinner", mViewModel.dietCodes, null);
+        testMultiSpinner.setMandatory(true);
         btn = ViewUtil.addButton(userInfoLayout, "Sumbit");
         ViewUtil.addEmptySpace(userInfoLayout, (int) getResources().getDimension(R.dimen._50px));
 
@@ -167,6 +171,10 @@ public class UserInfoActivity extends BaseVMActivity {
         if (!dietSpinner.validate()){
             valid = false;
             dietSpinner.setError("Required");
+        }
+        if (!testMultiSpinner.validate()){
+            valid = false;
+            testMultiSpinner.setError("Required");
         }
 
         return valid;

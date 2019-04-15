@@ -490,9 +490,20 @@
         <!-- Notifications through Firebase Cloud Messaging (FCM) -->
         <service
             android:name="org.edx.mobile.notifications.services.NotificationService"
-            android:enabled="${firebaseEnabled}">
+            android:enabled="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name=".tta.firebase.TaFirebaseMessagingService"
+            android:enabled="${firebaseEnabled}" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".tta.firebase.TaFirebaseInstanceIDService" >
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 

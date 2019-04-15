@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionCommentsTabViewModel" />
+            type="org.edx.mobile.tta.ui.agenda_items.view_model.AgendaItemViewModel" />
     </data>
 
     <FrameLayout
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/_36px"
+            android:layout_marginTop="@dimen/_66px"
             android:orientation="vertical"
             android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}">
 
@@ -25,31 +25,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                app:srcCompat="@drawable/t_icon_first_comment" />
+                android:src="@{viewModel.emptyImage}"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/_30px"
+                android:layout_marginTop="@dimen/_42px"
                 android:layout_marginStart="@dimen/_70px"
                 android:layout_marginEnd="@dimen/_70px"
                 android:fontFamily="@font/hind_regular"
                 android:gravity="center"
-                android:text="@string/be_the_first_to_comment"
+                android:text="@{viewModel.emptyMessage}"
                 android:textColor="@color/primary_cyan"
                 android:textSize="12sp" />
 
         </LinearLayout>
 
         <com.maurya.mx.mxlib.view.MxRecyclerView
-            infinite_load_more_listener="@{viewModel.loadMoreListener}"
             infinite_recycler_adapter="@{viewModel.adapter}"
             layout_manager="@{viewModel.layoutManager}"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="false"
-            app:mx_itemLayout="@layout/t_row_discussion_comment" />
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:mx_itemLayout="@layout/t_row_agenda_content" />
 
     </FrameLayout>
 

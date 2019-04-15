@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
@@ -370,10 +371,16 @@ public class BindingAdapters {
     public static void setOnCloseListener(SearchView view, SearchView.OnCloseListener listener) {
         view.setOnCloseListener(listener);
     }
+
     @BindingAdapter({"scroll_to_position"})
     public static void setScrollToPosition(MxRecyclerView view, final int pos) {
         view.getRecyclerView().post(() -> {
             view.getRecyclerView().smoothScrollToPosition(pos);
         });
+    }
+
+    @BindingAdapter({"android:text"})
+    public static void setText(TextView view, SpannableString string){
+        view.setText(string);
     }
 }

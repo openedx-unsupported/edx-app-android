@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionCommentViewModel" />
@@ -236,25 +237,66 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray_1"
                     android:layout_marginStart="@dimen/_20px"
-                    android:layout_marginEnd="@dimen/_20px"
                     android:layout_marginTop="@dimen/_38px"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
+                    android:layout_marginEnd="@dimen/_20px"
+                    android:background="@color/gray_1"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed" />
 
             </android.support.design.widget.AppBarLayout>
 
-            <com.maurya.mx.mxlib.view.MxRecyclerView
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:nestedScrollingEnabled="false"
-                infinite_recycler_adapter="@{viewModel.adapter}"
-                layout_manager="@{viewModel.layoutManager}"
-                infinite_load_more_listener="@{viewModel.loadMoreListener}"
-                app:mx_itemLayout="@layout/t_row_discussion_reply"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_60px"
+                    android:orientation="vertical"
+                    android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/t_icon_first_reply" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/_46px"
+                        android:layout_marginStart="@dimen/_70px"
+                        android:layout_marginEnd="@dimen/_70px"
+                        android:fontFamily="@font/hind_regular"
+                        android:gravity="center"
+                        android:text="@string/be_the_first_to_reply"
+                        android:textColor="@color/primary_cyan"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <com.maurya.mx.mxlib.view.MxRecyclerView
+                    infinite_load_more_listener="@{viewModel.loadMoreListener}"
+                    infinite_recycler_adapter="@{viewModel.adapter}"
+                    layout_manager="@{viewModel.layoutManager}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    app:mx_itemLayout="@layout/t_row_discussion_reply" />
+
+            </FrameLayout>
 
         </android.support.design.widget.CoordinatorLayout>
+
+        <include
+            layout="@layout/t_view_offline_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            bind:isVisible="@{viewModel.offlineVisible}"/>
 
         <LinearLayout
             android:id="@+id/enter_comment_layout"

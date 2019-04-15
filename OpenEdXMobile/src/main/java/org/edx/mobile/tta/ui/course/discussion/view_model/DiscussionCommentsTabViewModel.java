@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.ui.course.discussion.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,6 +54,8 @@ public class DiscussionCommentsTabViewModel extends BaseViewModel {
     private DiscussionCommentClickListener commentClickListener;
     private List<DiscussionComment> comments;
     private SortType sortType;
+
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
 
     private int take, page;
     private boolean allLoaded;
@@ -141,6 +144,7 @@ public class DiscussionCommentsTabViewModel extends BaseViewModel {
                         mActivity.hideLoading();
                         allLoaded = true;
                         adapter.setLoadingDone();
+                        toggleEmptyVisibility();
                     }
                 });
 
@@ -157,6 +161,7 @@ public class DiscussionCommentsTabViewModel extends BaseViewModel {
         if (newItemsAdded) {
             adapter.notifyDataSetChanged();
         }
+        toggleEmptyVisibility();
     }
 
     public void setLoaded(){
@@ -168,6 +173,15 @@ public class DiscussionCommentsTabViewModel extends BaseViewModel {
         sortComments();
         adapter.notifyDataSetChanged();
         adapter.setLoadingDone();
+        toggleEmptyVisibility();
+    }
+
+    private void toggleEmptyVisibility(){
+        if (comments == null || comments.isEmpty()){
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
+        }
     }
 
     private void sortComments() {

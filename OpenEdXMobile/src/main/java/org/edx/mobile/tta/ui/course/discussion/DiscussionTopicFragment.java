@@ -32,7 +32,7 @@ public class DiscussionTopicFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new DiscussionTopicViewModel(getActivity(), this, course, topicDepth);
-        viewModel.regiterEventBus();
+        viewModel.registerEventBus();
     }
 
     @Nullable

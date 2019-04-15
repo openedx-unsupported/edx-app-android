@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.tta.ui.agenda.AgendaFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -15,12 +16,16 @@ import org.edx.mobile.tta.ui.library.LibraryFragment;
 import org.edx.mobile.tta.ui.profile.ProfileFragment;
 import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.util.NetworkUtil;
+
+import de.greenrobot.event.EventBus;
 
 public class LandingViewModel extends BaseViewModel {
 
     private int selectedId = R.id.action_library;
 
     public ObservableBoolean navShiftMode = new ObservableBoolean();
+    public ObservableBoolean offlineVisible = new ObservableBoolean();
 
     public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = item -> {
         if (item.getItemId() == selectedId){
@@ -61,6 +66,12 @@ public class LandingViewModel extends BaseViewModel {
         selectedId = R.id.action_library;
         showLibrary();
         onAppStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
     public void showLibrary() {
@@ -130,5 +141,22 @@ public class LandingViewModel extends BaseViewModel {
 
     public void selectLibrary(){
         selectedId = R.id.action_library;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NetworkConnectivityChangeEvent event){
+        if (NetworkUtil.isConnected(mActivity)){
+            offlineVisible.set(false);
+        } else {
+            offlineVisible.set(true);
+        }
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().register(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 }

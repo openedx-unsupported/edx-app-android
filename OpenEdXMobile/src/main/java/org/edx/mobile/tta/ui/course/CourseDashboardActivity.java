@@ -37,6 +37,8 @@ public class CourseDashboardActivity extends BaseVMActivity {
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
+
+        viewModel.registerEventBus();
     }
 
     private void getExtras() {
@@ -69,5 +71,11 @@ public class CourseDashboardActivity extends BaseVMActivity {
             ActivityUtil.gotoPage(this, LandingActivity.class);
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

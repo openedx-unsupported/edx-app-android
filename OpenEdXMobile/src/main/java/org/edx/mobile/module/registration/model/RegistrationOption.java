@@ -36,11 +36,8 @@ public class RegistrationOption {
     }
 
     public boolean equals(Object object){
-        if ( object == null || !(object instanceof RegistrationOption) )
-            return false;
-        RegistrationOption otherObject = (RegistrationOption)object;
-        return otherObject.name != null && otherObject.name.equals( name )
-                && otherObject.value != null && otherObject.value.equals( value );
+        return (object instanceof RegistrationOption) &&
+                toString().equals(((RegistrationOption) object).toString());
     }
 
     public int hashCode(){

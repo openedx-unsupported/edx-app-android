@@ -12,12 +12,11 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAgendaItemBinding;
-import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
-import org.edx.mobile.tta.ui.agenda_items.AgendaItemsAct;
+import org.edx.mobile.tta.ui.agenda_items.AgendaListFragment;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.utils.ActivityUtil;
@@ -328,9 +327,9 @@ public class AgendaViewModel extends BaseViewModel {
                 itemBinding.agendaCard.setOnClickListener(v -> {
                     ActivityUtil.replaceFragmentInActivity(
                             mActivity.getSupportFragmentManager(),
-                            AgendaItemsAct.newInstance(agendaListName, getItems(),model, agendaList),
+                            AgendaListFragment.newInstance(agendaListName, getItems(),model, agendaList),
                             R.id.dashboard_fragment,
-                            AgendaItemsAct.TAG,
+                            AgendaListFragment.TAG,
                             true,
                             null
                     );
