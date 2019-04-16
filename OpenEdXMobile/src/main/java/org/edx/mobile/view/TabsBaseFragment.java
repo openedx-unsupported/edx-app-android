@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentTabsBaseBinding;
+import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.ScreenArgumentsEvent;
@@ -78,11 +80,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 final List<FragmentItemModel> fragmentItems = getFragmentItems();
                 for (int i = 0; i < fragmentItems.size(); i++) {
                     final FragmentItemModel item = fragmentItems.get(i);
-                    if ((screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) ||
-                            (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
-                            (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) ||
-                            ((screenName.equals(Screen.COURSE_DISCOVERY) || screenName.equals(Screen.PROGRAM_DISCOVERY))
-                                    && item.getIcon() == FontAwesomeIcons.fa_search)) {
+                    if (shouldSelectFragment(item, screenName)) {
                         binding.viewPager.setCurrentItem(i);
                         break;
                     }
@@ -92,6 +90,24 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 bundle.putString(Router.EXTRA_SCREEN_NAME, null);
             }
         }
+    }
+
+    /**
+     * Determines if a tab fragment needs to be selected based on screen name.
+     *
+     * @param item       {@link FragmentItemModel} assigned to a tab.
+     * @param screenName screen name param coming from {@link DeepLinkManager}
+     * @return <code>true</code> if the specified tab fragment needs to be selected, <code>false</code> otherwise
+     */
+    private boolean shouldSelectFragment(@NonNull FragmentItemModel item, @NonNull @ScreenDef String screenName) {
+        return (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) ||
+                (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
+                (screenName.equals(Screen.PROGRAM_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
+                (screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) ||
+                (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
+                (screenName.equals(Screen.COURSE_DATES) && item.getIcon() == FontAwesomeIcons.fa_calendar) ||
+                (screenName.equals(Screen.COURSE_HANDOUT) && item.getIcon() == FontAwesomeIcons.fa_ellipsis_h) ||
+                (screenName.equals(Screen.COURSE_ANNOUNCEMENT) && item.getIcon() == FontAwesomeIcons.fa_ellipsis_h);
     }
 
     private void initializeTabs() {

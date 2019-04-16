@@ -3,6 +3,8 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,14 @@ import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 import de.greenrobot.event.EventBus;
-import roboguice.inject.InjectExtra;
+
+import static org.edx.mobile.deeplink.Screen.COURSE_ANNOUNCEMENT;
+import static org.edx.mobile.deeplink.Screen.COURSE_HANDOUT;
 
 public class ResourcesFragment extends OfflineSupportBaseFragment {
     @Inject
@@ -27,9 +32,10 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
 
     private EnrolledCoursesResponse courseData;
 
-    public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model) {
+    public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model, @Nullable @ScreenDef String screenName) {
         final Bundle arguments = new Bundle();
         arguments.putSerializable(Router.EXTRA_COURSE_DATA, model);
+        arguments.putSerializable(Router.EXTRA_SCREEN_NAME, screenName);
         return arguments;
     }
 
@@ -77,6 +83,25 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
                 }
             }
         });
+
+        final Bundle arguments = getArguments();
+        @ScreenDef String screenName;
+        if (arguments != null) {
+            screenName = arguments.getString(Router.EXTRA_SCREEN_NAME);
+            if (!TextUtils.isEmpty(screenName)) {
+                switch (screenName) {
+                    case COURSE_HANDOUT:
+                        environment.getRouter().showHandouts(getActivity(), courseData);
+                        break;
+                    case COURSE_ANNOUNCEMENT:
+                        environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
+                        break;
+                }
+                // Setting this to null, so that upon recreation of the fragment, relevant activity
+                // shouldn't be auto created again.
+                arguments.putString(Router.EXTRA_SCREEN_NAME, null);
+            }
+        }
     }
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent) {
