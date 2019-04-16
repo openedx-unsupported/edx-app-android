@@ -142,7 +142,7 @@ dependencies {
 //    Exo Player
     implementation 'com.google.android.exoplayer:exoplayer:2.9.2'
 
-    implementation 'com.facebook.android:facebook-login:4.36.0'
+    implementation 'com.facebook.android:facebook-login:4.41.0'
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'de.greenrobot:eventbus:2.4.1'
     implementation 'com.squareup.phrase:phrase:1.1.0'
