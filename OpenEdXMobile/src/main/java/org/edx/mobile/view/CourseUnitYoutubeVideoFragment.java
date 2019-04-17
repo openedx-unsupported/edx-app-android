@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private TimedTextObject subtitlesObj;
     private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
+    private int currentPos;
 
     /**
      * Create a new instance of fragment
@@ -104,7 +106,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        updateUIForOrientation();
+        try {
+            updateUIForOrientation();
+        }
+        catch (IllegalStateException e) {
+            return;
+        }
+
     }
 
     private void updateUIForOrientation() {
@@ -162,47 +170,12 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         if (!wasRestored ) {
             Uri uri = Uri.parse(unit.getData().encodedVideos.getYoutubeVideoInfo().url);
             String v = uri.getQueryParameter("v");
-            player.loadVideo(v);
+            player.loadVideo(v, currentPos);
             previousYouTubePlayer = youTubePlayer;
             youTubePlayer = player;
-            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
-                @Override
-                public void onLoading() {
-
-                }
-
-                @Override
-                public void onLoaded(String s) {
-
-                }
-
-                @Override
-                public void onAdStarted() {
-
-                }
-
-                @Override
-                public void onVideoStarted() {
-
-                }
-
-                @Override
-                public void onVideoEnded() {
-
-                }
-
-                @Override
-                public void onError(YouTubePlayer.ErrorReason errorReason) {
-                    /*
-                     * The most common errorReason is because there is a previous player running so this sets free it
-                     * and reloads the fragment
-                     */
-                    previousYouTubePlayer.release();
-                    youTubePlayer.release();
-                    youTubePlayer = null;
-                    initializeYoutubePlayer();
-                }
-            });
+            youTubePlayer.setPlayerStateChangeListener( new StateChangeListener());
+            youTubePlayer.setPlaybackEventListener(new PlaybackListener());
+            youTubePlayer.setOnFullscreenListener(new FullscreenListener());
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 youTubePlayer.setFullscreen(true);
             }
@@ -247,7 +220,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         @Override
         public void run() {
             if (youTubePlayer != null) {
-                int currentPos = 0;
                 try {
                     currentPos = youTubePlayer.getCurrentTimeMillis();
                 }
@@ -356,5 +328,89 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 }
             }
         });
+    }
+
+    private  class StateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
+        @Override
+        public void onLoading() {
+
+        }
+
+        @Override
+        public void onLoaded(String s) {
+
+        }
+
+        @Override
+        public void onAdStarted() {
+
+        }
+
+        @Override
+        public void onVideoStarted() {
+
+        }
+
+        @Override
+        public void onVideoEnded() {
+
+        }
+
+        @Override
+        public void onError(YouTubePlayer.ErrorReason errorReason) {
+            /*
+             * The most common errorReason is because there is a previous player running so this sets free it
+             * and reloads the fragment
+             */
+            if (previousYouTubePlayer != null){
+                previousYouTubePlayer.release();
+            }
+            youTubePlayer.release();
+            youTubePlayer = null;
+            initializeYoutubePlayer();
+        }
+    }
+
+    private class PlaybackListener implements YouTubePlayer.PlaybackEventListener {
+
+        @Override
+        public void onPlaying() {
+            if (getActivity() != null) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            }
+        }
+
+        @Override
+        public void onPaused() {
+
+        }
+
+        @Override
+        public void onStopped() {
+
+        }
+
+        @Override
+        public void onBuffering(boolean b) {
+
+        }
+
+        @Override
+        public void onSeekTo(int i) {
+
+        }
+    }
+
+    private class FullscreenListener implements YouTubePlayer.OnFullscreenListener {
+        @Override
+        public void onFullscreen(boolean fullScreen) {
+            final int orientation = getResources().getConfiguration().orientation;
+            if (!fullScreen && getActivity() != null && orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                youTubePlayer.pause();
+            } else {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            }
+        }
     }
 }
