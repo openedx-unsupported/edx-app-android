@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
@@ -27,6 +28,9 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
 
     @Inject
     protected Router router;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     protected EnrolledCoursesResponse courseData;
 

@@ -38,6 +38,7 @@ import org.edx.mobile.discussion.TimePeriod;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -47,7 +48,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -142,6 +145,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             fetchDiscussionTopic();
         } else {
             getActivity().setTitle(discussionTopic.getName());
+            trackScreenView();
         }
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
@@ -224,6 +228,15 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             public void onNothingSelected(@NonNull AdapterView<?> parent) {
             }
         });
+
+        final String threadId = getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID);
+        if (!TextUtils.isEmpty(threadId)) {
+            router.showCourseDiscussionResponses(context, threadId, courseData);
+
+            // Setting this to null, so that upon recreation of the fragment, relevant activity
+            // shouldn't be auto-created again (e.g. due to a deep link).
+            getArguments().putString(Router.EXTRA_DISCUSSION_THREAD_ID, null);
+        }
     }
 
     private void fetchDiscussionTopic() {
@@ -250,8 +263,25 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                             // Now that we have the topic data, we can allow the user to add new posts.
                             setCreateNewPostBtnVisibility(View.VISIBLE);
                         }
+                        trackScreenView();
                     }
                 });
+    }
+
+    private void trackScreenView() {
+        final String actionItem;
+        final Map<String, String> values = new HashMap<>();
+        String topicId = discussionTopic.getIdentifier();
+        if (DiscussionTopic.ALL_TOPICS_ID.equals(topicId)) {
+            topicId = actionItem = Analytics.Values.POSTS_ALL;
+        } else if (DiscussionTopic.FOLLOWING_TOPICS_ID.equals(topicId)) {
+            topicId = actionItem = Analytics.Values.POSTS_FOLLOWING;
+        } else {
+            actionItem = discussionTopic.getName();
+        }
+        values.put(Analytics.Keys.TOPIC_ID, topicId);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPIC_THREADS,
+                courseData.getCourse().getId(), actionItem, values);
     }
 
     @Override

@@ -53,6 +53,7 @@ public class Router {
     public static final String EXTRA_SEARCH_QUERY = "search_query";
     public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
     public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
+    public static final String EXTRA_DISCUSSION_THREAD_ID = "discussion_thread_id";
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
     public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
     public static final String EXTRA_IS_VIDEOS_MODE = "videos_mode";
@@ -149,14 +150,18 @@ public class Router {
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
                                         boolean announcements) {
-        showCourseDashboardTabs(activity, model, null, announcements, null);
+        showCourseDashboardTabs(activity, model, null, null, null, announcements, null);
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
-                                        @Nullable String courseId, boolean announcements,
+                                        @Nullable String courseId,
+                                        @Nullable String topicId,
+                                        @Nullable String threadId,
+                                        boolean announcements,
                                         @Nullable @ScreenDef String screenName) {
-        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId, announcements, screenName));
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId,
+                topicId, threadId, announcements, screenName));
     }
 
     /**
@@ -264,17 +269,52 @@ public class Router {
         activity.startActivity(showDiscussionPostsIntent);
     }
 
-    public void showCourseDiscussionPostsForDiscussionTopic(Activity activity, DiscussionTopic topic, EnrolledCoursesResponse courseData) {
+    public void showCourseDiscussionPostsForDiscussionTopic(Activity activity, String topicId,
+                                                            String threadId, EnrolledCoursesResponse courseData) {
+        showCourseDiscussionPostsForDiscussionTopic(activity, null, topicId, threadId, courseData);
+    }
+
+    public void showCourseDiscussionPostsForDiscussionTopic(Activity activity, DiscussionTopic topic,
+                                                            EnrolledCoursesResponse courseData) {
+        showCourseDiscussionPostsForDiscussionTopic(activity, topic, null, null, courseData);
+    }
+
+    public void showCourseDiscussionPostsForDiscussionTopic(Activity activity, DiscussionTopic topic,
+                                                            String topicId, String threadId,
+                                                            EnrolledCoursesResponse courseData) {
         Intent showDiscussionPostsIntent = new Intent(activity, CourseDiscussionPostsActivity.class);
         showDiscussionPostsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
-        showDiscussionPostsIntent.putExtra(EXTRA_DISCUSSION_TOPIC, topic);
+        if (topic != null) {
+            showDiscussionPostsIntent.putExtra(EXTRA_DISCUSSION_TOPIC, topic);
+        }
+        showDiscussionPostsIntent.putExtra(Router.EXTRA_DISCUSSION_TOPIC_ID, topicId);
+        showDiscussionPostsIntent.putExtra(Router.EXTRA_DISCUSSION_THREAD_ID, threadId);
+        showDiscussionPostsIntent.putExtra(CourseDiscussionPostsThreadFragment.ARG_DISCUSSION_HAS_TOPIC_NAME, topic != null);
         showDiscussionPostsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(showDiscussionPostsIntent);
     }
 
-    public void showCourseDiscussionResponses(Context context, DiscussionThread discussionThread, EnrolledCoursesResponse courseData) {
+    public void showCourseDiscussionResponses(@NonNull Context context, @Nullable String threadId,
+                                              @NonNull EnrolledCoursesResponse courseData) {
+        showCourseDiscussionResponses(context, null, threadId, courseData);
+    }
+
+    public void showCourseDiscussionResponses(@NonNull Context context,
+                                              @Nullable DiscussionThread discussionThread,
+                                              @NonNull EnrolledCoursesResponse courseData) {
+        showCourseDiscussionResponses(context, discussionThread, null, courseData);
+    }
+
+    public void showCourseDiscussionResponses(@NonNull Context context,
+                                              @Nullable DiscussionThread discussionThread,
+                                              @Nullable String threadId,
+                                              @NonNull EnrolledCoursesResponse courseData) {
         Intent discussionResponsesIntent = new Intent(context, CourseDiscussionResponsesActivity.class);
-        discussionResponsesIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
+        if (discussionThread != null) {
+            discussionResponsesIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
+        } else if (threadId != null) {
+            discussionResponsesIntent.putExtra(EXTRA_DISCUSSION_THREAD_ID, threadId);
+        }
         discussionResponsesIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         discussionResponsesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(discussionResponsesIntent);

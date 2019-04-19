@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -20,14 +21,12 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionService;
-import org.edx.mobile.discussion.DiscussionService.ReadBody;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
-import org.edx.mobile.http.notifications.ErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
@@ -59,8 +58,11 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @InjectView(R.id.create_new_item_layout)
     private ViewGroup addResponseLayout;
 
-    @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD, optional = true)
     private DiscussionThread discussionThread;
+
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD_ID, optional = true)
+    private String threadId;
 
     @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
     private EnrolledCoursesResponse courseData;
@@ -76,12 +78,18 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Inject
     AnalyticsRegistry analyticsRegistry;
 
+    @InjectView(R.id.loading_indicator)
+    private ProgressBar loadingIndicator;
+
+    private FullScreenErrorNotification errorNotification;
+
     @Nullable
     private Call<DiscussionThread> getAndReadThreadCall;
 
     private InfiniteScrollUtils.InfiniteListController controller;
 
     private ResponsesLoader responsesLoader;
+    private Call<DiscussionThread> getThreadCall;
 
     @Nullable
     @Override
@@ -92,8 +100,29 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final Activity activity = getActivity();
+        errorNotification = new FullScreenErrorNotification(view.findViewById(R.id.ll_content));
+        if (discussionThread == null) {
+            if (getThreadCall != null) {
+                getThreadCall.cancel();
+            }
+            getThreadCall = discussionService.getThread(threadId);
+            getThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(getActivity(),
+                    new TaskProgressCallback.ProgressViewController(loadingIndicator), errorNotification) {
+                @Override
+                protected void onResponse(@NonNull DiscussionThread responseBody) {
+                    discussionThread = responseBody;
+                    setScreenTitle();
+                    loadThreadResponses();
+                }
+            });
+        } else {
+            setScreenTitle();
+            loadThreadResponses();
+        }
+    }
 
+    private void loadThreadResponses() {
+        final Activity activity = getActivity();
         responsesLoader = new ResponsesLoader(activity,
                 discussionThread.getIdentifier(),
                 discussionThread.getType() == DiscussionThread.ThreadType.QUESTION);
@@ -110,7 +139,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         }
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         getAndReadThreadCall = discussionService.setThreadRead(
-                discussionThread.getIdentifier(), new ReadBody(true));
+                discussionThread.getIdentifier(), new DiscussionService.ReadBody(true));
         // Setting a thread's "read" state gives us back the updated Thread object.
         getAndReadThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(
                 activity, null, mCallback, CallTrigger.LOADING_UNCACHED) {
@@ -133,14 +162,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 });
 
         addResponseLayout.setEnabled(!courseData.isDiscussionBlackedOut());
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-
-        Map<String, String> values = new HashMap<>();
+        final Map<String, String> values = new HashMap<>();
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
         values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
         if (!discussionThread.isAuthorAnonymous()) {
@@ -150,10 +172,34 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 courseData.getCourse().getId(), discussionThread.getTitle(), values);
     }
 
+    private void setScreenTitle() {
+        switch (discussionThread.getType()) {
+            case DISCUSSION:
+                getActivity().setTitle(R.string.discussion_title);
+                break;
+            case QUESTION:
+                getActivity().setTitle(discussionThread.isHasEndorsed() ?
+                        R.string.course_discussion_answered_title :
+                        R.string.course_discussion_unanswered_title);
+                break;
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        responsesLoader.reset();
+        if (getThreadCall != null) {
+            getThreadCall.cancel();
+        }
+        if (responsesLoader != null) {
+            responsesLoader.reset();
+        }
         EventBus.getDefault().unregister(this);
     }
 

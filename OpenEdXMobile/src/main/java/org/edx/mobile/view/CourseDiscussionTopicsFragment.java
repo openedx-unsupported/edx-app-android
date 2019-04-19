@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,12 +69,6 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     private Call<CourseTopics> getTopicListCall;
 
     private FullScreenErrorNotification errorNotification;
-
-    public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model) {
-        final Bundle arguments = new Bundle();
-        arguments.putSerializable(Router.EXTRA_COURSE_DATA, model);
-        return arguments;
-    }
 
     @Nullable
     @Override
@@ -144,6 +139,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         });
 
         getTopicList();
+        showCourseDiscussionTopic();
     }
 
     private void getTopicList() {
@@ -174,6 +170,21 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
                 }
             }
         });
+    }
+
+    private void showCourseDiscussionTopic() {
+        final String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
+        if (!TextUtils.isEmpty(topicId)) {
+            router.showCourseDiscussionPostsForDiscussionTopic(
+                    getActivity(),
+                    getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID),
+                    getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID),
+                    courseData);
+
+            // Setting this to null, so that upon recreation of the fragment, relevant activity
+            // shouldn't be auto-created again (e.g. due to a deep link).
+            getArguments().putString(Router.EXTRA_DISCUSSION_TOPIC_ID, null);
+        }
     }
 
     @Override
