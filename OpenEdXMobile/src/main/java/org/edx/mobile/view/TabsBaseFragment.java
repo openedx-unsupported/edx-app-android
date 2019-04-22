@@ -103,6 +103,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
         return (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) ||
                 (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
                 (screenName.equals(Screen.PROGRAM_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
+                (screenName.equals(Screen.DEGREE_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
                 (screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) ||
                 (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
                 (screenName.equals(Screen.DISCUSSION_POST) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||

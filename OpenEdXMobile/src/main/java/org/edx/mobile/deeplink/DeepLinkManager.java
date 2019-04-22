@@ -33,6 +33,7 @@ public class DeepLinkManager {
             switch (screenName) {
                 case Screen.COURSE_DISCOVERY:
                 case Screen.PROGRAM_DISCOVERY:
+                case Screen.DEGREE_DISCOVERY:
                     router.showFindCourses(activity, screenName, paramsJson.optString(KEY_PATH_ID));
                     break;
                 default:
@@ -59,7 +60,8 @@ public class DeepLinkManager {
             }
             case Screen.PROGRAM:
             case Screen.COURSE_DISCOVERY:
-            case Screen.PROGRAM_DISCOVERY: {
+            case Screen.PROGRAM_DISCOVERY:
+            case Screen.DEGREE_DISCOVERY: {
                 router.showMainDashboard(activity, screenName, paramsJson.optString(KEY_PATH_ID));
                 break;
             }
