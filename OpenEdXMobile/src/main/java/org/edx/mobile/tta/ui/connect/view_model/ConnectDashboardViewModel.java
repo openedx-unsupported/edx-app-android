@@ -7,6 +7,7 @@ import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -16,6 +17,10 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.StatusResponse;
@@ -28,6 +33,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectCommentsTab;
 import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.CustomFilter;
 import org.edx.mobile.tta.wordpress_client.model.Post;
@@ -36,6 +42,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,6 +70,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ObservableBoolean replyingToVisible = new ObservableBoolean();
     public ObservableBoolean offlineVisible = new ObservableBoolean();
     private long commentParentId = 0;
+    private Comment selectedComment;
 
     //Header details
     public ObservableInt headerImagePlaceholder = new ObservableInt(R.drawable.placeholder_course_card_image);
@@ -75,6 +83,29 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ObservableField<String> duration = new ObservableField<>("");
     public ObservableField<String> description = new ObservableField<>("");
     public ObservableField<String> likes = new ObservableField<>("0");
+
+    public ObservableInt initialPosition = new ObservableInt();
+
+    public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
+
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            initialPosition.set(i);
+            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(i);
+            if (callback != null){
+                callback.onPageShow();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
 
     public ConnectDashboardViewModel(BaseVMActivity activity, Content content) {
         super(activity);
@@ -91,8 +122,15 @@ public class ConnectDashboardViewModel extends BaseViewModel
     }
 
     public void fetchPost(OnResponseCallback<Post> callback) {
+        loadData();
+        long postId = 0;
+        try {
+            postId = Long.parseLong(content.getSource_identity());
+        } catch (NumberFormatException e) {
+            return;
+        }
         mActivity.showLoading();
-        mDataManager.getPostById(Long.parseLong(content.getSource_identity()), new OnResponseCallback<Post>() {
+        mDataManager.getPostById(postId, new OnResponseCallback<Post>() {
             @Override
             public void onSuccess(Post data) {
                 post = data;
@@ -103,7 +141,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
                     allDownloadOptionVisible.set(true);
                 }
                 callback.onSuccess(data);
-                loadData();
+                getPostDownloadStatus();
+                fetchComments();
             }
 
             @Override
@@ -153,7 +192,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
         mDataManager.isLike(content.getId(), new OnResponseCallback<StatusResponse>() {
             @Override
             public void onSuccess(StatusResponse data) {
-                //TODO: Need filled like icon
                 likeIcon.set(data.getStatus() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
             }
 
@@ -175,8 +213,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
             }
         });
 
-        getPostDownloadStatus();
-
         duration.set(mActivity.getString(R.string.duration) + "-01:00");
 
         description.set(
@@ -184,8 +220,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
                         "\n" +
                         "इस कोर्स को पर्यावरण-विज्ञान पढ़ानेवाले शिक्षक और वे शिक्षक जो ‘गतिविधियों को कक्षा में कैसे कराया जाये’ जानना चाहते हैं, कर सकते हैं| आशा है इस कोर्स को पढ़ने के बाद आपके लिए कक्षा में गतिविधियाँ कराना आसान हो जाएगा|"
         );
-
-        fetchComments();
 
     }
 
@@ -243,15 +277,15 @@ public class ConnectDashboardViewModel extends BaseViewModel
         fragments.clear();
         titles.clear();
 
-        tab1 = ConnectCommentsTab.newInstance(content, post, comments, replies, this);
+        tab1 = ConnectCommentsTab.newInstance(content, post, comments, replies, Nav.all, this);
         fragments.add(tab1);
         titles.add(mActivity.getString(R.string.all_list));
 
-        tab2 = ConnectCommentsTab.newInstance(content, post, comments, replies, this);
+        tab2 = ConnectCommentsTab.newInstance(content, post, comments, replies, Nav.recently_added, this);
         fragments.add(tab2);
         titles.add(mActivity.getString(R.string.recently_added_list));
 
-        tab3 = ConnectCommentsTab.newInstance(content, post, comments, replies, this);
+        tab3 = ConnectCommentsTab.newInstance(content, post, comments, replies, Nav.most_relevant, this);
         fragments.add(tab3);
         titles.add(mActivity.getString(R.string.most_relevant_list));
 
@@ -260,6 +294,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
         } catch (Exception e) {
             e.printStackTrace();
         }
+        initialPosition.set(0);
+        tab1.onPageShow();
     }
 
     public void bookmark() {
@@ -269,6 +305,27 @@ public class ConnectDashboardViewModel extends BaseViewModel
             public void onSuccess(BookmarkResponse data) {
                 mActivity.hideLoading();
                 bookmarkIcon.set(data.isIs_active() ? R.drawable.t_icon_bookmark_filled : R.drawable.t_icon_bookmark);
+
+                Metadata metadata = new Metadata();
+                metadata.setContent_id(String.valueOf(content.getId()));
+                metadata.setSource_identity(content.getSource_identity());
+                metadata.setContent_title(content.getName());
+                metadata.setContent_icon(content.getIcon());
+                metadata.setSource_title(content.getSource().getTitle());
+                metadata.setLikes(Long.parseLong(likes.get()));
+                if (post != null) {
+                    metadata.setComments(post.getTotal_comments());
+                }
+
+                if (data.isIs_active()) {
+                    mActivity.analytic.addMxAnalytics_db(
+                            content.getName() , Action.BookmarkPost, content.getSource().getName(),
+                            Source.Mobile, content.getSource_identity());
+                } else {
+                    mActivity.analytic.addMxAnalytics_db(
+                            content.getName() , Action.UnbookmarkPost, content.getSource().getName(),
+                            Source.Mobile, content.getSource_identity());
+                }
             }
 
             @Override
@@ -286,7 +343,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
             @Override
             public void onSuccess(StatusResponse data) {
                 mActivity.hideLoading();
-                //TODO: Need filled like icon
                 likeIcon.set(data.getStatus() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
                 int n = 0;
                 if (likes.get() != null) {
@@ -294,6 +350,22 @@ public class ConnectDashboardViewModel extends BaseViewModel
                 }
                 if (data.getStatus()){
                     n++;
+
+                    Metadata metadata = new Metadata();
+                    metadata.setContent_id(String.valueOf(content.getId()));
+                    metadata.setSource_identity(content.getSource_identity());
+                    metadata.setContent_title(content.getName());
+                    metadata.setContent_icon(content.getIcon());
+                    metadata.setSource_title(content.getSource().getTitle());
+                    metadata.setLikes(n);
+                    if (post != null) {
+                        metadata.setComments(post.getTotal_comments());
+                    }
+
+                    mActivity.analytic.addMxAnalytics_db(
+                            content.getName() , Action.LikePost, content.getSource().getName(),
+                            Source.Mobile, content.getSource_identity());
+
                 } else {
                     n--;
                 }
@@ -373,14 +445,45 @@ public class ConnectDashboardViewModel extends BaseViewModel
                         if (commentParentId == 0) {
                             mActivity.showLongSnack("Commented successfully");
                             comments.add(0, data);
+                            post.setTotal_comments(post.getTotal_comments() + 1);
                             tab1.refreshList();
                             tab2.refreshList();
                             tab3.refreshList();
+
+                            Metadata metadata = new Metadata();
+                            metadata.setContent_id(String.valueOf(content.getId()));
+                            metadata.setSource_identity(content.getSource_identity());
+                            metadata.setContent_title(content.getName());
+                            metadata.setContent_icon(content.getIcon());
+                            metadata.setSource_title(content.getSource().getTitle());
+                            metadata.setLikes(Long.parseLong(likes.get()));
+                            metadata.setComments(post.getTotal_comments());
+
+                            mActivity.analytic.addMxAnalytics_db(
+                                    content.getName() , Action.CommentPost, content.getSource().getName(),
+                                    Source.Mobile, content.getSource_identity());
+
                         } else {
                             mActivity.showLongSnack("Replied successfully");
                             replies.add(0, data);
                             replyingToVisible.set(false);
                             commentParentId = 0;
+
+                            Metadata metadata = new Metadata();
+                            metadata.setContent_id(String.valueOf(content.getId()));
+                            metadata.setSource_identity(content.getSource_identity());
+                            metadata.setContent_title(content.getName());
+                            metadata.setContent_icon(content.getIcon());
+                            metadata.setSource_title(content.getSource().getTitle());
+                            metadata.setCommentId(String.valueOf(selectedComment.getId()));
+                            metadata.setCommentTitle(selectedComment.getContent().getRaw());
+                            metadata.setUser_id(String.valueOf(selectedComment.getAuthor()));
+                            metadata.setUser_display_name(selectedComment.getAuthorName());
+
+                            mActivity.analytic.addMxAnalytics_db(
+                                    content.getName() , Action.ReplyComment, content.getSource().getName(),
+                                    Source.Mobile, String.valueOf(selectedComment.getId()));
+
                         }
                         ConnectDashboardViewModel.this.comment.set("");
                         tab1.refreshList();
@@ -467,21 +570,46 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
-        if (e.getType() != null && e.getType().equalsIgnoreCase(DownloadType.WP_VIDEO.name())){
+        if (e.getEntry() != null && e.getEntry().content_id == content.getId() &&
+                e.getEntry().type != null && e.getEntry().type.equalsIgnoreCase(DownloadType.WP_VIDEO.name())){
 
             allDownloadProgressVisible.set(false);
             allDownloadStatusIcon.set(R.drawable.t_icon_done);
             allDownloadIconVisible.set(true);
+
+            Metadata metadata = new Metadata();
+            metadata.setContent_id(String.valueOf(content.getId()));
+            metadata.setSource_identity(content.getSource_identity());
+            metadata.setContent_title(content.getName());
+            metadata.setContent_icon(content.getIcon());
+            metadata.setSource_title(content.getSource().getTitle());
+
+            mActivity.analytic.addMxAnalytics_db(
+                    content.getName() , Action.DownloadPostComplete, content.getSource().getName(),
+                    Source.Mobile, content.getSource_identity());
 
         }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadedVideoDeletedEvent e) {
-        if (e.getType() != null && e.getType().equalsIgnoreCase(DownloadType.WP_VIDEO.name())) {
+        if (e.getModel() != null && e.getModel().getContent_id() == content.getId() &&
+                e.getModel().getDownloadType() != null &&
+                e.getModel().getDownloadType().equalsIgnoreCase(DownloadType.WP_VIDEO.name())) {
             allDownloadProgressVisible.set(false);
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
             allDownloadIconVisible.set(true);
+
+            Metadata metadata = new Metadata();
+            metadata.setContent_id(String.valueOf(content.getId()));
+            metadata.setSource_identity(content.getSource_identity());
+            metadata.setContent_title(content.getName());
+            metadata.setContent_icon(content.getIcon());
+            metadata.setSource_title(content.getSource().getTitle());
+
+            mActivity.analytic.addMxAnalytics_db(
+                    content.getName() , Action.DeletePost, content.getSource().getName(),
+                    Source.Mobile, content.getSource_identity());
         }
     }
 
@@ -514,6 +642,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     @Override
     public void onClickReply(Comment comment) {
+        selectedComment = comment;
         replyingToText.set("Replying to " + comment.getAuthorName());
         replyingToVisible.set(true);
         commentParentId = comment.getId();

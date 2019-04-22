@@ -77,12 +77,7 @@ public class LandingViewModel extends BaseViewModel {
     public void showLibrary() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                LibraryFragment.newInstance(new SearchPageOpenedListener() {
-                    @Override
-                    public void onSearchPageOpened() {
-                        selectedId = R.id.action_search;
-                    }
-                }),
+                LibraryFragment.newInstance(() -> selectedId = R.id.action_search),
                 R.id.dashboard_fragment,
                 LibraryFragment.TAG,
                 false,

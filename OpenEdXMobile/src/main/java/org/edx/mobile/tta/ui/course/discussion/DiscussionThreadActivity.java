@@ -12,10 +12,19 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.DiscussionTopicType;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
+import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionThreadViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 public class DiscussionThreadActivity extends BaseVMActivity {
+    private int RANK;
 
     private DiscussionThreadViewModel viewModel;
 
@@ -24,10 +33,13 @@ public class DiscussionThreadActivity extends BaseVMActivity {
     private DiscussionThread thread;
 
     private Toolbar toolbar;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RANK = BreadcrumbUtil.getCurrentRank() + 1;
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.thread.name()));
         getExtras();
         viewModel = new DiscussionThreadViewModel(this, course, topic, thread);
         viewModel.registerEventBus();
@@ -37,9 +49,29 @@ public class DiscussionThreadActivity extends BaseVMActivity {
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
+
+        Metadata metadata = new Metadata();
+        metadata.setContent_title(course.getCourse().getName());
+        metadata.setUser_id(thread.getAuthor());
+        metadata.setUser_display_name(thread.getAuthorDisplayName());
+        metadata.setUser_icon(thread.getProfileImage().getImageUrlFull());
+        metadata.setThreadId(thread.getIdentifier());
+        metadata.setThreadTitle(thread.getTitle());
+        metadata.setTopicType(topic.getName().contains("लेखक") ?
+                DiscussionTopicType.Postname_AD.name() :
+                DiscussionTopicType.Postname_CD.name());
+        metadata.setLikes(thread.getVoteCount());
+        metadata.setComments(thread.getCommentCount());
+
+        analytic.addMxAnalytics_db(
+                topic.getName().contains("लेखक") ?
+                        DiscussionTopicType.Postname_AD.name() :
+                        DiscussionTopicType.Postname_CD.name(),
+                Action.DBView, course.getCourse().getName(),
+                Source.Mobile, thread.getIdentifier());
     }
 
     @Override
@@ -59,6 +91,23 @@ public class DiscussionThreadActivity extends BaseVMActivity {
             topic = (DiscussionTopic) parameters.getSerializable(Constants.KEY_DISCUSSION_TOPIC);
             thread = (DiscussionThread) parameters.getSerializable(Constants.KEY_DISCUSSION_THREAD);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.thread.name()));
+        viewPager.post(() -> {
+            try {
+                PageViewStateCallback callback = (PageViewStateCallback) ((BasePagerAdapter) viewPager.getAdapter())
+                        .getItem(viewModel.initialPosition.get());
+                if (callback != null){
+                    callback.onPageShow();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

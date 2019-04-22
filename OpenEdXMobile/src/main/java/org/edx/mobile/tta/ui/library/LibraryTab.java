@@ -8,14 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.Analytic;
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.view_model.LibraryTabViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.util.PermissionsUtil;
 
 public class LibraryTab extends TaBaseFragment {
+    private static final int RANK = 3;
 
     private CollectionConfigResponse cr;
 
@@ -47,6 +55,28 @@ public class LibraryTab extends TaBaseFragment {
                 .getRoot();
 
         return view;
+    }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        String nav = Nav.all.name();
+        if (category != null && category.getSource_id() > 0 && cr != null){
+            for (Source source: cr.getSource()){
+                if (category.getSource_id() == source.getId()){
+                    nav = source.getName();
+                    break;
+                }
+            }
+        }
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, nav));
+
+        Metadata metadata = new Metadata();
+        metadata.setSource_title(category.getName());
+
+        analytic.addMxAnalytics_db(
+                category.getName() , Action.Nav, Nav.library.name(),
+                org.edx.mobile.tta.analytics.analytics_enums.Source.Mobile, null);
     }
 
     /*@Override

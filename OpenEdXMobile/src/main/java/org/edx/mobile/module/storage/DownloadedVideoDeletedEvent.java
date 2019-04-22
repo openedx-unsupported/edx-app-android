@@ -1,14 +1,16 @@
 package org.edx.mobile.module.storage;
 
+import org.edx.mobile.model.VideoModel;
+
 public class DownloadedVideoDeletedEvent {
 
-    private String type;
+    private VideoModel model;
 
-    public DownloadedVideoDeletedEvent(String type) {
-        this.type = type;
+    public DownloadedVideoDeletedEvent(VideoModel model) {
+        this.model = model;
     }
 
-    public String getType() {
-        return type;
+    public VideoModel getModel() {
+        return model;
     }
 }

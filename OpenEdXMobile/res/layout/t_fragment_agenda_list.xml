@@ -42,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/listing_view_pager"
-            pager_adapter="@{viewModel.adapter}"/>
+            pager_adapter="@{viewModel.adapter}"
+            page_change_listener="@{viewModel.pageChangeListener}"/>
     </LinearLayout>
 </layout>

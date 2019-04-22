@@ -132,6 +132,18 @@ public class ApiConstants {
 
     public static final String URL_MX_FIREBASE_TOKEN_UPDATE = "/api/teacherappAnalytics/android_token/";
 
+    //Analytic api url
+    public static final String URL_TA_ANALYTIC = "api/teacherappAnalytics/analytics/add/";
+
+    //Analytic batch api url
+    public static final String URL_TA_ANALYTIC_BATCH = "api/teacherappAnalytics/analytics/add-list/";
+
+    //Analytic batch for seperate server
+    public static final String URL_ANALYTIC_BATCH = "analytics/add-list/";
+
+    //TinCan batch update
+    public static final String URL_TINCAN_ANALYTIC_BATCH = "analytics/add-tincan-data/";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

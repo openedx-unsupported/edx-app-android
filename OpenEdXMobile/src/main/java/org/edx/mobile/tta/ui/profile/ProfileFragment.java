@@ -13,12 +13,17 @@ import android.widget.ProgressBar;
 import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.profile.view_model.ProfileViewModel;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class ProfileFragment extends TaBaseFragment {
     public static final String TAG = ProfileFragment.class.getCanonicalName();
+    private static final int RANK = 2;
 
     private ProfileViewModel viewModel;
     private ProfileOptionsBottomSheet bottomSheet;
@@ -34,6 +39,9 @@ public class ProfileFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ProfileViewModel(getActivity(), this);
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.profile.name()));
+
+        analytic.addMxAnalytics_db(null, Action.ViewProfile, Nav.profile.name(), Source.Mobile, null);
     }
 
     @Nullable
@@ -128,5 +136,11 @@ public class ProfileFragment extends TaBaseFragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.profile.name()));
     }
 }

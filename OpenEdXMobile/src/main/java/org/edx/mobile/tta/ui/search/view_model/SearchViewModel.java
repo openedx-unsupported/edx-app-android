@@ -27,6 +27,9 @@ import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowFilterSectionBinding;
 import org.edx.mobile.databinding.TRowFilterTagBinding;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.ContentListMode;
 import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Category;
@@ -380,13 +383,34 @@ public class SearchViewModel extends BaseViewModel {
             return;
         }
 
+        setFilterSections();
+
         if (changesMade){
             skip = 0;
             isPriority = true;
             contentsAdapter.reset(true);
+
+            StringBuilder builder = new StringBuilder();
+            builder.append(selectedContentList.getName()).append(", ")
+                    .append(searchText.get()).append(", ");
+
+            for (FilterSection section: filterSections){
+                if (section.getTags() != null){
+                    for (FilterTag tag: section.getTags()){
+                        builder.append(section.getName()).append("_").append(tag).append(", ");
+                    }
+                }
+            }
+
+            if (builder.length() > 0){
+                builder.delete(builder.length() - 2, builder.length());
+            }
+
+            mActivity.analytic.addMxAnalytics_db(builder.toString(), Action.Search, Nav.search.name(),
+                    Source.Mobile, null);
+
         }
 
-        setFilterSections();
         getSearchedContents();
 
     }

@@ -27,12 +27,14 @@ import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.FilterTag;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.custom.NonScrollListView;
 import org.edx.mobile.tta.ui.profile.view_model.EditProfileViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.ProfileImage;
@@ -50,6 +52,7 @@ import java.util.Map;
 
 public class EditProfileFragment extends TaBaseFragment implements View.OnClickListener {
     public static final String TAG = EditProfileFragment.class.getCanonicalName();
+    private static final int RANK = 3;
 
     private static final int EDIT_FIELD_REQUEST = 1;
     private static final int CAPTURE_PHOTO_REQUEST = 2;
@@ -316,5 +319,11 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
             default:
                 collapseTags();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.edit.name()));
     }
 }

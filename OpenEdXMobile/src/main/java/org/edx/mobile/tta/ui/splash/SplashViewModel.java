@@ -18,11 +18,10 @@ public class SplashViewModel extends BaseViewModel {
 
     public SplashViewModel(BaseVMActivity activity) {
         super(activity);
-        startRouting(activity);
+        mDataManager.onAppStart();
     }
 
-    private void startRouting(Activity activity){
-
+    public void startRouting(Activity activity){
 
         new Handler().postDelayed(() -> {
             activity.finish();

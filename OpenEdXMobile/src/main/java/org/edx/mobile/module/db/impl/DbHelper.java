@@ -68,6 +68,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         createAssessmentTable(db);
 
+        //Mx Chirag: create table for analytics
+        createAnalyticTable(db);
+
         logger.debug("Database created");
     }
 
@@ -237,5 +240,37 @@ public class DbHelper extends SQLiteOpenHelper {
 
         sqliteDb = null;
         logger.debug("Database closed");
+    }
+
+    //TTA
+
+    private void createAnalyticTable(SQLiteDatabase db){
+        String sql = "CREATE TABLE "                        + DbStructure.Table.ANALYTIC
+                + " ("
+                + DbStructure.Column.ANALYTIC_TB_ID       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DbStructure.Column.USER_ID + " TEXT, "
+                + DbStructure.Column.ACTION  + " TEXT, "
+                + DbStructure.Column.METADATA  + " TEXT, "
+                + DbStructure.Column.PAGE  + " TEXT, "
+                + DbStructure.Column.STATUS  + " BOOLEAN, "
+                + DbStructure.Column.EVENT_DATE + " INTEGER, "
+                + DbStructure.Column.NAV + " TEXT, "
+                + DbStructure.Column.ACTION_ID + " TEXT "
+                + ")";
+        db.execSQL(sql);
+
+        createTincanReumePayloadTable(db);
+    }
+
+    private void createTincanReumePayloadTable(SQLiteDatabase db){
+        String sql = "CREATE TABLE "                        + DbStructure.Table.TINCAN
+                + " ("
+                + DbStructure.Column.ID       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DbStructure.Column.UNIT_ID + " TEXT, "
+                + DbStructure.Column.USER_ID + " TEXT, "
+                + DbStructure.Column.RESUME_PAYLOAD  + " TEXT, "
+                + DbStructure.Column.COURSE_ID  + " TEXT "
+                + ")";
+        db.execSQL(sql);
     }
 }

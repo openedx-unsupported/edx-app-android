@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.profile.view_model.ContactUsViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class ContactUsFragment extends TaBaseFragment {
     public static final String TAG = ContactUsFragment.class.getCanonicalName();
+    private static final int RANK = 3;
 
     private ContactUsViewModel viewModel;
 
@@ -34,5 +37,11 @@ public class ContactUsFragment extends TaBaseFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.contact_us.name()));
     }
 }

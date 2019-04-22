@@ -29,6 +29,7 @@ import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.prefs.VideoPrefs;
+import org.edx.mobile.tta.analytics.AnalyticModel;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.util.Config;
@@ -42,6 +43,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -166,7 +168,7 @@ public class Storage implements IStorage {
         int videosDeleted = db.deleteVideoByVideoId(model, null);
         // Reset the state of Videos Bulk Download view whenever a delete happens
         videoPrefs.setBulkDownloadSwitchState(BulkDownloadFragment.SwitchState.DEFAULT, model.getEnrollmentId());
-        EventBus.getDefault().post(new DownloadedVideoDeletedEvent(model.getDownloadType()));
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent(model));
         return videosDeleted;
     }
 
@@ -174,7 +176,7 @@ public class Storage implements IStorage {
     public int removeDownloads(List<VideoModel> modelList) {
         final int deletedVideos = removeDownloadsFromApp(modelList, null);
         logger.debug("Number of downloads removed by Download Manager: " + deletedVideos);
-        EventBus.getDefault().post(new DownloadedVideoDeletedEvent(modelList.isEmpty()?null:modelList.get(0).getDownloadType()));
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent(modelList.isEmpty()?null:modelList.get(0)));
         return deletedVideos;
     }
 
@@ -192,7 +194,7 @@ public class Storage implements IStorage {
             @Override
             public void onResult(List<VideoModel> result) {
                 removeDownloadsFromApp(result, sha1Username);
-                EventBus.getDefault().post(new DownloadedVideoDeletedEvent(result.isEmpty()?null:result.get(0).getDownloadType()));
+                EventBus.getDefault().post(new DownloadedVideoDeletedEvent(result.isEmpty()?null:result.get(0)));
             }
 
             @Override
@@ -479,7 +481,7 @@ public class Storage implements IStorage {
                     if (e.filepath.endsWith(".zip")) {
                         unpackZip(e.filepath);
                     }
-                    EventBus.getDefault().post(new DownloadCompletedEvent(e.type));
+                    EventBus.getDefault().post(new DownloadCompletedEvent(e));
                 }
 
             } else {
@@ -625,6 +627,28 @@ public class Storage implements IStorage {
         }
 
         return null;
+    }
+
+    @NonNull
+    @Override
+    public long addAnalytic(AnalyticModel model) {
+        return db.addAnalyticData(model, null);
+    }
+
+    @NonNull
+    @Override
+    public int removeAnalytics(String[] ids, String INQueryParams) {
+        return  db.deleteAnalyticByAnalyticId(ids, INQueryParams,null);
+    }
+
+    @Override
+    public ArrayList<AnalyticModel> getMxAnalytics(int batch_count, int status) throws Exception {
+        return  db.getAnalytics(batch_count,status, null);
+    }
+
+    @Override
+    public ArrayList<AnalyticModel> getTincanAnalytics(int batch_count, int status) throws Exception {
+        return  db.getTincanAnalytics(batch_count,status, null);
     }
 
     @Override

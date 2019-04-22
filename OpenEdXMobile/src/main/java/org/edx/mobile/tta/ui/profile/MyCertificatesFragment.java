@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.profile.view_model.MyCertificatesViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class MyCertificatesFragment extends TaBaseFragment {
     public static final String TAG = MyCertificatesFragment.class.getCanonicalName();
+    private static final int RANK = 3;
 
     private MyCertificatesViewModel viewModel;
 
@@ -38,5 +41,11 @@ public class MyCertificatesFragment extends TaBaseFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.all_certificates.name()));
     }
 }

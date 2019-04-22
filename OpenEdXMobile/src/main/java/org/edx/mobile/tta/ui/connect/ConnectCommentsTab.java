@@ -8,16 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.connect.view_model.ConnectCommentsTabViewModel;
 import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.Post;
 
 import java.util.List;
 
 public class ConnectCommentsTab extends TaBaseFragment {
+    private int RANK;
 
     private ConnectCommentsTabViewModel viewModel;
 
@@ -26,15 +29,18 @@ public class ConnectCommentsTab extends TaBaseFragment {
     private List<Comment> comments;
     private List<Comment> replies;
     private CommentClickListener commentClickListener;
+    private Nav nav;
 
     public static ConnectCommentsTab newInstance(Content content, Post post, List<Comment> comments,
-                                                 List<Comment> replies, CommentClickListener commentClickListener){
+                                                 List<Comment> replies, Nav nav, CommentClickListener commentClickListener){
         ConnectCommentsTab tab = new ConnectCommentsTab();
         tab.content = content;
         tab.post = post;
         tab.comments = comments;
         tab.replies = replies;
         tab.commentClickListener = commentClickListener;
+        tab.nav = nav;
+        tab.RANK = BreadcrumbUtil.getCurrentRank() + 1;
         return tab;
     }
 
@@ -57,5 +63,11 @@ public class ConnectCommentsTab extends TaBaseFragment {
         if (viewModel != null) {
             viewModel.refreshList();
         }
+    }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, nav.name()));
     }
 }

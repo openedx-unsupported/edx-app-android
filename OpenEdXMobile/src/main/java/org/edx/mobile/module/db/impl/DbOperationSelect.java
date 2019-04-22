@@ -12,7 +12,8 @@ public abstract class DbOperationSelect<T> extends DbOperationBase<T> {
     private String orderBy;
     private boolean distinct;
     private String groupBy;
-    
+    private String limit;
+
     public DbOperationSelect(boolean distinct,String table, String[] columns, String whereClause, String[] whereArgs, String orderBy) {
         this.distinct = distinct;
         this.table = table;
@@ -22,7 +23,7 @@ public abstract class DbOperationSelect<T> extends DbOperationBase<T> {
         this.orderBy = orderBy;
     }
 
-    public DbOperationSelect(boolean distinct,String table, String[] columns, String whereClause, String[] whereArgs, String groupBy, String orderBy) {
+    public DbOperationSelect(boolean distinct, String table, String[] columns, String whereClause, String[] whereArgs, String groupBy, String orderBy, String limit) {
         this.distinct = distinct;
         this.table = table;
         this.columns = columns;
@@ -30,14 +31,17 @@ public abstract class DbOperationSelect<T> extends DbOperationBase<T> {
         this.whereArgs = whereArgs;
         this.groupBy = groupBy;
         this.orderBy = orderBy;
+        this.limit = limit;
     }
+
+
     
     public Cursor getCursor(SQLiteDatabase db) {
         if (table == null) {
             throw new IllegalArgumentException("table must be provided");
         }
         try {
-            Cursor c = db.query(distinct, table, columns, whereClause, whereArgs, groupBy, null, orderBy, null);
+            Cursor c = db.query(distinct, table, columns, whereClause, whereArgs, groupBy, null, orderBy, limit);
             return c;
         }catch (Exception ex){
             logger.error(ex);

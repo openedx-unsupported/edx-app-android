@@ -12,15 +12,18 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.enums.SortType;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionCommentsTabViewModel;
 import org.edx.mobile.tta.ui.interfaces.DiscussionCommentClickListener;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 import java.util.List;
 
 public class DiscussionCommentsTab extends TaBaseFragment {
     public static final String TAG = DiscussionCommentsTab.class.getCanonicalName();
+    private int RANK;
 
     private DiscussionCommentsTabViewModel viewModel;
 
@@ -41,6 +44,7 @@ public class DiscussionCommentsTab extends TaBaseFragment {
         fragment.listener = listener;
         fragment.sortType = sortType;
         fragment.comments = comments;
+        fragment.RANK = BreadcrumbUtil.getCurrentRank() + 1;
         return fragment;
     }
 
@@ -68,5 +72,22 @@ public class DiscussionCommentsTab extends TaBaseFragment {
         if (viewModel != null){
             viewModel.setLoaded();
         }
+    }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        Nav nav;
+        switch (sortType){
+            case all:
+                nav = Nav.all;
+                break;
+            case recent:
+                nav = Nav.recently_added;
+                break;
+            default:
+                nav = Nav.most_relevant;
+        }
+        logger.debug("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, nav.name()));
     }
 }

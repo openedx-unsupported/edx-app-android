@@ -279,7 +279,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                mx:pager_adapter="@{viewModel.adapter}" />
+                mx:pager_adapter="@{viewModel.adapter}"
+                page_change_listener="@{viewModel.pageChangeListener}" />
 
         </android.support.design.widget.CoordinatorLayout>
 

@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 
 import roboguice.inject.InjectView;
@@ -21,7 +24,10 @@ import roboguice.inject.InjectView;
  * Provides a webview which authenticates the user before loading a page,
  * Javascript can also be passed in arguments for evaluation.
  */
-public class AuthenticatedWebViewFragment extends BaseFragment {
+public class AuthenticatedWebViewFragment extends BaseFragment implements PageViewStateCallback {
+    //Mx Chirag: rank used in breadcrumb
+    private int RANK;
+
     protected final Logger logger = new Logger(getClass().getName());
     public static final String ARG_URL = "ARG_URL";
     public static final String ARG_JAVASCRIPT = "ARG_JAVASCRIPT";
@@ -57,6 +63,12 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
         final Fragment fragment = new AuthenticatedWebViewFragment();
         fragment.setArguments(makeArguments(url, javascript, isManuallyReloadable));
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        RANK = BreadcrumbUtil.getCurrentRank() + 1;
     }
 
     @Override
@@ -107,5 +119,15 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         authWebView.onDestroyView();
+    }
+
+    @Override
+    public void onPageShow() {
+        logger.debug("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.about.name()));
+    }
+
+    @Override
+    public void onPageDisappear() {
+
     }
 }

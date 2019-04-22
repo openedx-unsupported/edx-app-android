@@ -10,8 +10,10 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.tta.analytics.AnalyticModel;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IStorage {
@@ -165,4 +167,15 @@ public interface IStorage {
     DownloadEntry getPostVideo(String postId);
 
     DownloadEntry getPostVideo(String p_id, String video_url);
+
+    //Added by Arjun to store batch analytics
+    @NonNull
+    long addAnalytic(AnalyticModel model);
+
+    @NonNull
+    int removeAnalytics(String[] ids,String INQueryParams);
+
+    ArrayList<AnalyticModel> getMxAnalytics(int batch_count, int status) throws Exception;
+
+    ArrayList<AnalyticModel> getTincanAnalytics(int batch_count, int status) throws Exception;
 }

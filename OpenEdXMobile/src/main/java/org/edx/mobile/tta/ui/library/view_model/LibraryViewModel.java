@@ -1,8 +1,10 @@
 package org.edx.mobile.tta.ui.library.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
@@ -12,6 +14,7 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.LibraryTab;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +29,29 @@ public class LibraryViewModel extends BaseViewModel {
     private CollectionConfigResponse cr;
     private List<Category> categories;
     private SearchPageOpenedListener searchPageOpenedListener;
+
+    public ObservableInt initialPosition = new ObservableInt();
+
+    public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
+
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            initialPosition.set(i);
+            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(i);
+            if (callback != null){
+                callback.onPageShow();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
 
     public LibraryViewModel(Context context, TaBaseFragment fragment, SearchPageOpenedListener searchPageOpenedListener) {
         super(context, fragment);
@@ -81,6 +107,14 @@ public class LibraryViewModel extends BaseViewModel {
             adapter.setFragments(fragments, titles);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        initialPosition.set(0);
+
+        if (!categories.isEmpty()){
+            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(0);
+            if (callback != null){
+                callback.onPageShow();
+            }
         }
 
     }

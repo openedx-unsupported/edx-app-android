@@ -17,6 +17,9 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.tta.analytics.AnalyticModel;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.db_operations.DbOperationGetAnalytic;
 import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.util.TextUtils;
 
@@ -898,6 +901,52 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                         +DbStructure.Column.DOWNLOADED + "=? AND "
                         + DbStructure.Column.FILEPATH +" IS NOT NULL AND "+DbStructure.Column.FILEPATH +" !='' ",
                 new String[]{p_id, username(),video_url,String.valueOf(DownloadedState.DOWNLOADED.ordinal())}, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public Long addAnalyticData(AnalyticModel de, DataCallback<Long> callback) {
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.Column.USER_ID, de.getUser_Id());
+        values.put(DbStructure.Column.ACTION, de.getAction());
+        values.put(DbStructure.Column.METADATA, de.getMetadata());
+        values.put(DbStructure.Column.PAGE, de.getPage());
+        values.put(DbStructure.Column.STATUS, de.getStatus());
+        values.put(DbStructure.Column.EVENT_DATE, de.getEvent_timestamp());
+        values.put(DbStructure.Column.NAV, de.getNav());
+        values.put(DbStructure.Column.ACTION_ID, de.getAction_id());
+
+        DbOperationInsert op = new DbOperationInsert(DbStructure.Table.ANALYTIC, values);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public Integer deleteAnalyticByAnalyticId(String[] ids,String INQueryParams, DataCallback<Integer> callback) {
+
+
+        DbOperationDelete op=new DbOperationDelete(DbStructure.Table.ANALYTIC,DbStructure.Column.ANALYTIC_TB_ID+ " IN ("+INQueryParams+")",ids);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+
+    @Override
+    public ArrayList<AnalyticModel> getAnalytics(int batch_count, int status,
+                                                 final DataCallback<ArrayList<AnalyticModel>> callback) {
+        DbOperationGetAnalytic op = new DbOperationGetAnalytic(false, DbStructure.Table.ANALYTIC, null,
+                DbStructure.Column.STATUS + "=? AND " + DbStructure.Column.USER_ID +"=? AND "+ DbStructure.Column.ACTION + "!=?",
+                new String[]{""+status, loginPrefs.getUsername(),String.valueOf(Action.TinCanObject)},null, String.valueOf(batch_count));
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public ArrayList<AnalyticModel> getTincanAnalytics(int batch_count, int status, DataCallback<ArrayList<AnalyticModel>> callback) {
+        DbOperationGetAnalytic op = new DbOperationGetAnalytic(false, DbStructure.Table.ANALYTIC, null,
+                DbStructure.Column.STATUS + "=? AND " + DbStructure.Column.USER_ID + "=? AND "+ DbStructure.Column.ACTION + "=?",
+                new String[]{""+status, loginPrefs.getUsername(), String.valueOf(Action.TinCanObject)},null, String.valueOf(batch_count));
         op.setCallback(callback);
         return enqueue(op);
     }

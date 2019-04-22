@@ -10,15 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.view_model.LibraryViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 public class LibraryFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
+    private static final int RANK = 2;
     private LibraryViewModel viewModel;
 
     private SearchPageOpenedListener searchPageOpenedListener;
+    private ViewPager viewPager;
 
     public static LibraryFragment newInstance(SearchPageOpenedListener searchPageOpenedListener){
         LibraryFragment fragment = new LibraryFragment();
@@ -29,6 +35,7 @@ public class LibraryFragment extends TaBaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.library.name()));
         viewModel = new LibraryViewModel(getActivity(), this, searchPageOpenedListener);
     }
 
@@ -39,10 +46,27 @@ public class LibraryFragment extends TaBaseFragment {
                 .getRoot();
 
         TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);
-        ViewPager viewPager = view.findViewById(R.id.listing_view_pager);
+        viewPager = view.findViewById(R.id.listing_view_pager);
         viewPager.setOffscreenPageLimit(5);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.library.name()));
+        viewPager.post(() -> {
+            try {
+                PageViewStateCallback callback = (PageViewStateCallback) ((BasePagerAdapter) viewPager.getAdapter())
+                        .getItem(viewModel.initialPosition.get());
+                if (callback != null){
+                    callback.onPageShow();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

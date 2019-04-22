@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowCourseMaterialFooterBinding;
@@ -27,6 +28,11 @@ import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.Analytic;
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
@@ -44,6 +50,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.course.CourseScormViewActivity;
 import org.edx.mobile.tta.ui.interfaces.OnTaItemClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.util.PermissionsUtil;
 
 import java.io.File;
@@ -234,6 +241,21 @@ public class CourseMaterialViewModel extends BaseViewModel {
             ActivityUtil.viewPDF(mActivity, new File(filePath));
         }
 
+        Metadata metadata = new Metadata();
+        metadata.setContent_id(String.valueOf(content.getId()));
+        metadata.setSource_identity(content.getSource_identity());
+        metadata.setContent_title(content.getName());
+        metadata.setContent_icon(content.getIcon());
+        metadata.setSource_title(content.getSource().getTitle());
+        metadata.setLikes(Long.parseLong(likes.get()));
+        metadata.setScormId(selectedScormForPlay.getId());
+        metadata.setScormTitle(selectedScormForPlay.getDisplayName());
+        metadata.setScormSystemName(selectedScormForPlay.getInternalName());
+
+        mActivity.analytic.addMxAnalytics_db(
+                selectedScormForPlay.getInternalName(), Action.ViewSection, course.getCourse().getName(),
+                Source.Mobile, selectedScormForDownload.getId());
+
     }
 
     private void enableHeader(){
@@ -282,25 +304,30 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
         adapter.setFooterLayout(R.layout.t_row_course_material_footer);
         adapter.setFooterClickListener(v -> {
+
+            ScormBlockModel scorm = null;
+            if (assessmentComponent.isContainer()) {
+                CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
+                if (component instanceof PDFBlockModel || component instanceof ScormBlockModel) {
+                    scorm = (ScormBlockModel) component;
+                }
+            }
+
             switch (v.getId()) {
                 case R.id.item_delete_download:
-                    if (assessmentComponent.isContainer()){
-                        CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
-                            ScormBlockModel scorm = (ScormBlockModel) component;
-                            switch (mDataManager.getScormStatus(scorm)){
-                                case not_downloaded:
-                                    downloadSingle(scorm);
-                                    break;
-                                case downloaded:
-                                case watching:
-                                case watched:
-                                    deleteScorm(scorm);
-                                    break;
-                                case downloading:
-                                    //Do nothing
-                                    break;
-                            }
+                    if (scorm != null) {
+                        switch (mDataManager.getScormStatus(scorm)){
+                            case not_downloaded:
+                                downloadSingle(scorm);
+                                break;
+                            case downloaded:
+                            case watching:
+                            case watched:
+                                deleteScorm(scorm);
+                                break;
+                            case downloading:
+                                //Do nothing
+                                break;
                         }
                     }
                     break;
@@ -308,11 +335,28 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.generate_certificate))){
                         mActivity.showLoading();
 
+                        ScormBlockModel finalScorm = scorm;
                         mDataManager.generateCertificate(course.getCourse().getId(), new OnResponseCallback<CertificateStatusResponse>() {
                             @Override
                             public void onSuccess(CertificateStatusResponse data) {
                                 mActivity.hideLoading();
                                 setButtonText(data);
+
+                                Metadata metadata = new Metadata();
+                                metadata.setContent_id(String.valueOf(content.getId()));
+                                metadata.setSource_identity(content.getSource_identity());
+                                metadata.setContent_title(content.getName());
+                                metadata.setContent_icon(content.getIcon());
+                                metadata.setSource_title(content.getSource().getTitle());
+                                metadata.setLikes(Long.parseLong(likes.get()));
+                                metadata.setScormId(finalScorm.getId());
+                                metadata.setScormTitle(finalScorm.getDisplayName());
+                                metadata.setScormSystemName(finalScorm.getInternalName());
+
+                                mActivity.analytic.addMxAnalytics_db(
+                                        finalScorm.getInternalName(), Action.GenerateCertificate, course.getCourse().getName(),
+                                        Source.Mobile, finalScorm.getId());
+
                             }
 
                             @Override
@@ -332,6 +376,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     } else if (footerBtnText.get().equalsIgnoreCase(mActivity.getString(R.string.view_certificate))){
                         mActivity.showLoading();
 
+                        ScormBlockModel finalScorm = scorm;
                         mDataManager.getCertificate(course.getCourse().getId(), new OnResponseCallback<Certificate>() {
                             @Override
                             public void onSuccess(Certificate data) {
@@ -340,6 +385,22 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 mDataManager.getEdxEnvironment().getRouter().showAuthenticatedWebviewActivity(
                                         mActivity, url, data.getCourse_name()
                                 );
+
+                                Metadata metadata = new Metadata();
+                                metadata.setContent_id(String.valueOf(content.getId()));
+                                metadata.setSource_identity(content.getSource_identity());
+                                metadata.setContent_title(content.getName());
+                                metadata.setContent_icon(content.getIcon());
+                                metadata.setSource_title(content.getSource().getTitle());
+                                metadata.setLikes(Long.parseLong(likes.get()));
+                                metadata.setScormId(finalScorm.getId());
+                                metadata.setScormTitle(finalScorm.getDisplayName());
+                                metadata.setScormSystemName(finalScorm.getInternalName());
+
+                                mActivity.analytic.addMxAnalytics_db(
+                                        finalScorm.getInternalName(), Action.ViewCert, course.getCourse().getName(),
+                                        Source.Mobile, finalScorm.getId());
+
                             }
 
                             @Override
@@ -352,23 +413,19 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         break;
                     }
                 default:
-                    if (assessmentComponent.isContainer()){
-                        CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
-                        if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
-                            ScormBlockModel scorm = (ScormBlockModel) component;
-                            switch (mDataManager.getScormStatus(scorm)){
-                                case not_downloaded:
-                                    downloadSingle(scorm);
-                                    break;
-                                case downloaded:
-                                case watching:
-                                case watched:
-                                    showScorm(scorm);
-                                    break;
-                                case downloading:
-                                    //Do nothing
-                                    break;
-                            }
+                    if (scorm != null) {
+                        switch (mDataManager.getScormStatus(scorm)){
+                            case not_downloaded:
+                                downloadSingle(scorm);
+                                break;
+                            case downloaded:
+                            case watching:
+                            case watched:
+                                showScorm(scorm);
+                                break;
+                            case downloading:
+                                //Do nothing
+                                break;
                         }
                     }
                     break;
@@ -404,6 +461,25 @@ public class CourseMaterialViewModel extends BaseViewModel {
             public void onSuccess(BookmarkResponse data) {
                 mActivity.hideLoading();
                 bookmarkIcon.set(data.isIs_active() ? R.drawable.t_icon_bookmark_filled : R.drawable.t_icon_bookmark);
+
+                Metadata metadata = new Metadata();
+                metadata.setContent_id(String.valueOf(content.getId()));
+                metadata.setSource_identity(content.getSource_identity());
+                metadata.setContent_title(content.getName());
+                metadata.setContent_icon(content.getIcon());
+                metadata.setSource_title(content.getSource().getTitle());
+                metadata.setLikes(Long.parseLong(likes.get()));
+
+                if (data.isIs_active()){
+                    mActivity.analytic.addMxAnalytics_db(
+                            content.getName() , Action.BookmarkCourse, course.getCourse().getName(),
+                            Source.Mobile, course.getCourse().getId());
+                } else {
+                    mActivity.analytic.addMxAnalytics_db(
+                            content.getName() , Action.UnbookmarkCourse, course.getCourse().getName(),
+                            Source.Mobile, course.getCourse().getId());
+                }
+
             }
 
             @Override
@@ -420,7 +496,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
             @Override
             public void onSuccess(StatusResponse data) {
                 mActivity.hideLoading();
-                //TODO: Need filled like icon
                 likeIcon.set(data.getStatus() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
                 int n = 0;
                 if (likes.get() != null) {
@@ -428,6 +503,19 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 }
                 if (data.getStatus()){
                     n++;
+
+                    Metadata metadata = new Metadata();
+                    metadata.setContent_id(String.valueOf(content.getId()));
+                    metadata.setSource_identity(content.getSource_identity());
+                    metadata.setContent_title(content.getName());
+                    metadata.setContent_icon(content.getIcon());
+                    metadata.setSource_title(content.getSource().getTitle());
+                    metadata.setLikes(n);
+
+                    mActivity.analytic.addMxAnalytics_db(
+                            content.getName() , Action.CourseLike, course.getCourse().getName(),
+                            Source.Mobile, course.getCourse().getId());
+
                 } else {
                     n--;
                 }
@@ -488,6 +576,22 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 if (adapter != null){
                     adapter.notifyDataSetChanged();
                 }
+
+                Metadata metadata = new Metadata();
+                metadata.setContent_id(String.valueOf(content.getId()));
+                metadata.setSource_identity(content.getSource_identity());
+                metadata.setContent_title(content.getName());
+                metadata.setContent_icon(content.getIcon());
+                metadata.setSource_title(content.getSource().getTitle());
+                metadata.setLikes(Long.parseLong(likes.get()));
+                metadata.setScormId(selectedScormForDownload.getId());
+                metadata.setScormTitle(selectedScormForDownload.getDisplayName());
+                metadata.setScormSystemName(selectedScormForDownload.getInternalName());
+
+                mActivity.analytic.addMxAnalytics_db(
+                        selectedScormForDownload.getInternalName(), Action.StartScormDownload, course.getCourse().getName(),
+                        Source.Mobile, selectedScormForDownload.getId());
+
             }
 
             @Override
@@ -543,6 +647,25 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         if (adapter != null){
                             adapter.notifyDataSetChanged();
                         }
+
+                        for (ScormBlockModel model: remainingScorms){
+
+                            Metadata metadata = new Metadata();
+                            metadata.setContent_id(String.valueOf(content.getId()));
+                            metadata.setSource_identity(content.getSource_identity());
+                            metadata.setContent_title(content.getName());
+                            metadata.setContent_icon(content.getIcon());
+                            metadata.setSource_title(content.getSource().getTitle());
+                            metadata.setLikes(Long.parseLong(likes.get()));
+                            metadata.setScormId(model.getId());
+                            metadata.setScormTitle(model.getDisplayName());
+                            metadata.setScormSystemName(model.getInternalName());
+
+                            mActivity.analytic.addMxAnalytics_db(
+                                    model.getInternalName(), Action.StartScormDownload, course.getCourse().getName(),
+                                    Source.Mobile, model.getId());
+
+                        }
                     }
 
                     @Override
@@ -579,8 +702,9 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
-        if (e.getType() != null && (e.getType().equalsIgnoreCase(DownloadType.SCORM.name()) ||
-                e.getType().equalsIgnoreCase(DownloadType.PDF.name()))
+        if (e.getEntry() != null && e.getEntry().content_id == content.getId() && e.getEntry().type != null &&
+                (e.getEntry().type.equalsIgnoreCase(DownloadType.SCORM.name()) ||
+                e.getEntry().type.equalsIgnoreCase(DownloadType.PDF.name()))
         ) {
             if (downloadModeIsAll) {
                 numberOfDownloadedVideos++;
@@ -598,15 +722,60 @@ public class CourseMaterialViewModel extends BaseViewModel {
             if (adapter != null){
                 adapter.notifyDataSetChanged();
             }
+
+            Metadata metadata = new Metadata();
+            metadata.setContent_id(String.valueOf(content.getId()));
+            metadata.setSource_identity(content.getSource_identity());
+            metadata.setContent_title(content.getName());
+            metadata.setContent_icon(content.getIcon());
+            metadata.setSource_title(content.getSource().getTitle());
+            metadata.setScormId(e.getEntry().videoId);
+            metadata.setScormTitle(e.getEntry().title);
+            metadata.setScormSystemName(e.getEntry().videoId);
+
+            mActivity.analytic.addMxAnalytics_db(
+                    e.getEntry().videoId, Action.StartScormDownload, course.getCourse().getName(),
+                    Source.Mobile, e.getEntry().videoId);
+
+            mDataManager.getdownloadedCourseContents(new OnResponseCallback<List<Content>>() {
+                @Override
+                public void onSuccess(List<Content> data) {
+                    mActivity.analytic.addMxAnalytics_db(String.valueOf(data.size()), Action.OfflineSections, Nav.profile.name(),
+                            Source.Mobile, null);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+
         }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadedVideoDeletedEvent e) {
-        if (e.getType() != null && (e.getType().equalsIgnoreCase(DownloadType.SCORM.name()) ||
-                e.getType().equalsIgnoreCase(DownloadType.PDF.name()))) {
+        if (e.getModel() != null && e.getModel().getContent_id() == content.getId() &&
+                e.getModel().getDownloadType() != null &&
+                (e.getModel().getDownloadType().equalsIgnoreCase(DownloadType.SCORM.name()) ||
+                        e.getModel().getDownloadType().equalsIgnoreCase(DownloadType.PDF.name()))) {
             populateData();
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
+
+            Metadata metadata = new Metadata();
+            metadata.setContent_id(String.valueOf(content.getId()));
+            metadata.setSource_identity(content.getSource_identity());
+            metadata.setContent_title(content.getName());
+            metadata.setContent_icon(content.getIcon());
+            metadata.setSource_title(content.getSource().getTitle());
+            metadata.setScormId(e.getModel().getVideoId());
+            metadata.setScormTitle(e.getModel().getTitle());
+            metadata.setScormSystemName(e.getModel().getVideoId());
+
+            mActivity.analytic.addMxAnalytics_db(
+                    e.getModel().getVideoId(), Action.DeleteSection, course.getCourse().getName(),
+                    Source.Mobile, e.getModel().getVideoId());
+
         }
     }
 

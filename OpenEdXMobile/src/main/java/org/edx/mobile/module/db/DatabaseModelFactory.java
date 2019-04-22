@@ -13,6 +13,8 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.tta.analytics.AnalyticModel;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.scorm.PDFBlockModel;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
@@ -156,5 +158,28 @@ public class DatabaseModelFactory {
     @Nullable
     private static String getVideoNetworkUrlOrNull(@Nullable VideoInfo videoInfo) {
         return videoInfo != null && URLUtil.isNetworkUrl(videoInfo.url) ? videoInfo.url : null;
+    }
+
+    /**
+     * Returns new instance of {//@link org.tta.mobile.mx_analytic.org.tta.mobile.mx_analytic.AnalyticModel} initialized with given cursor.
+     *
+     * @param c
+     * @return
+     */
+    public static AnalyticModel getAnalyticModel(Cursor c) {
+        AnalyticModel ae = new AnalyticModel();
+
+        ae.analytic_id =String.valueOf(c.getLong(c.getColumnIndex(DbStructure.Column.ANALYTIC_TB_ID)));
+        ae.user_id=c.getString(c.getColumnIndex(DbStructure.Column.USER_ID));
+        ae.action=c.getString(c.getColumnIndex(DbStructure.Column.ACTION));
+        ae.metadata=c.getString(c.getColumnIndex(DbStructure.Column.METADATA));
+        ae.source= String.valueOf(Source.Mobile);
+        ae.page=c.getString(c.getColumnIndex(DbStructure.Column.PAGE));
+        ae.setStatus(c.getInt(c.getColumnIndex(DbStructure.Column.STATUS)));
+        ae.event_timestamp =c.getLong(c.getColumnIndex(DbStructure.Column.EVENT_DATE));
+        ae.nav=c.getString(c.getColumnIndex(DbStructure.Column.NAV));
+        ae.action_id=c.getString(c.getColumnIndex(DbStructure.Column.ACTION_ID));
+
+        return ae;
     }
 }

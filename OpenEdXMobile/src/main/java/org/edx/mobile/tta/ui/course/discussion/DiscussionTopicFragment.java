@@ -12,9 +12,11 @@ import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionTopicViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class DiscussionTopicFragment extends TaBaseFragment {
     public static final String TAG = DiscussionTopicFragment.class.getCanonicalName();
+    private int RANK;
 
     private DiscussionTopicViewModel viewModel;
 
@@ -25,6 +27,7 @@ public class DiscussionTopicFragment extends TaBaseFragment {
         DiscussionTopicFragment fragment = new DiscussionTopicFragment();
         fragment.course = course;
         fragment.topicDepth = topicDepth;
+        fragment.RANK = BreadcrumbUtil.getCurrentRank() + 1;
         return fragment;
     }
 

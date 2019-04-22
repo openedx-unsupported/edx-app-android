@@ -9,11 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.profile.view_model.PointsViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class PointsFragment extends TaBaseFragment {
     public static final String TAG = PointsFragment.class.getCanonicalName();
+    private static final int RANK = 3;
+
     private PointsViewModel viewModel;
     private Toolbar toolbar;
 
@@ -21,6 +27,9 @@ public class PointsFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new PointsViewModel(getActivity(), this);
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.points_table.name()));
+
+        analytic.addMxAnalytics_db(null, Action.ViewPoints, Nav.points_table.name(), Source.Mobile, null);
     }
 
     public static PointsFragment newInstance() {
@@ -39,5 +48,11 @@ public class PointsFragment extends TaBaseFragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.points_table.name()));
     }
 }

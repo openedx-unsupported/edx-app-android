@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.agenda_items.view_model;
 
 import android.content.Context;
 
+import android.databinding.ObservableInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;import org.edx.mobile.tta.data.model.agenda.AgendaItem;
@@ -10,6 +11,8 @@ import org.edx.mobile.tta.ui.agenda_items.AgendaItemTab;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.view.common.PageViewStateCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,29 @@ public class AgendaListViewModel extends BaseViewModel {
     public ViewPager viewPager;
     List<AgendaItem> items;
     private AgendaList agendaList;
+
+    public ObservableInt initialPosition = new ObservableInt();
+
+    public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
+
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            initialPosition.set(i);
+            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(i);
+            if (callback != null){
+                callback.onPageShow();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
 
     public AgendaListViewModel(Context context, TaBaseFragment fragment, String toolabarData, List<AgendaItem> items, AgendaItem tabSelected, AgendaList agendaList) {
         super(context, fragment);
@@ -48,6 +74,7 @@ public class AgendaListViewModel extends BaseViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        initialPosition.set(0);
     }
 
 

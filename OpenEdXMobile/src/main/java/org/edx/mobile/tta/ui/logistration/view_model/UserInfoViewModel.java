@@ -6,6 +6,9 @@ import android.os.Bundle;
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.registration.model.RegistrationOption;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
@@ -88,6 +91,10 @@ public class UserInfoViewModel extends BaseViewModel {
                     mActivity.showLongSnack(mActivity.getString(R.string.registered_successfully));
                     ActivityUtil.gotoPage(mActivity, LandingActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mActivity.finish();
+
+                    mActivity.analytic.addMxAnalytics_db(null, Action.RegisterComplete, Nav.register.name(),
+                            Source.Mobile, null);
+
                 }
             }
 

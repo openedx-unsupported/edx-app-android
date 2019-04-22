@@ -23,6 +23,9 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAgendaContentBinding;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Content;
@@ -35,6 +38,7 @@ import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
 import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
+import org.edx.mobile.tta.utils.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,6 +191,27 @@ public class AgendaItemViewModel extends BaseViewModel {
         if (selectedContent.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
                 selectedContent.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
             ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
+
+            Metadata metadata = new Metadata();
+            metadata.setContent_id(String.valueOf(selectedContent.getId()));
+            metadata.setContent_title(selectedContent.getName());
+            metadata.setContent_icon(selectedContent.getIcon());
+            metadata.setSource_title(selectedContent.getSource().getTitle());
+            metadata.setSource_identity(selectedContent.getSource_identity());
+
+            Nav nav;
+            if (toolBarData.equalsIgnoreCase(mActivity.getString(R.string.state_wise_list))){
+                nav = Nav.state_agenda;
+            } else if (toolBarData.equalsIgnoreCase(mActivity.getString(R.string.my_agenda))) {
+                nav = Nav.my_agenda;
+            } else {
+                nav = Nav.download_agenda;
+            }
+
+            mActivity.analytic.addMxAnalytics_db(
+                    selectedContent.getName() , Action.CourseOpen, nav.name(),
+                    org.edx.mobile.tta.analytics.analytics_enums.Source.Mobile, null);
+
         } else {
             ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
         }

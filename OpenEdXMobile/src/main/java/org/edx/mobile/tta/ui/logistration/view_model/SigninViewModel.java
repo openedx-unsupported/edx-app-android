@@ -12,6 +12,9 @@ import android.text.TextWatcher;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
@@ -97,6 +100,10 @@ public class SigninViewModel extends BaseViewModel {
                     ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 } else {
                     ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+
+                    mActivity.analytic.addMxAnalytics_db(null, Action.SignIn, Nav.signin.name(),
+                            Source.Mobile, null);
+
                 }
                 mActivity.finish();
             }

@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.course.discussion.view_model.CourseDiscussionViewModel;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class CourseDiscussionTab extends TaBaseFragment {
+    private int RANK;
 
     private CourseDiscussionViewModel viewModel;
 
@@ -22,6 +25,7 @@ public class CourseDiscussionTab extends TaBaseFragment {
     public static CourseDiscussionTab newInstance(EnrolledCoursesResponse course){
         CourseDiscussionTab fragment = new CourseDiscussionTab();
         fragment.course = course;
+        fragment.RANK = BreadcrumbUtil.getCurrentRank() + 1;
         return fragment;
     }
 
@@ -47,5 +51,11 @@ public class CourseDiscussionTab extends TaBaseFragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.discussion.name()));
     }
 }

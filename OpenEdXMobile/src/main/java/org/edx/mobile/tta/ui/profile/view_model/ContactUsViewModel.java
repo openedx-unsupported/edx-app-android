@@ -6,6 +6,9 @@ import android.databinding.ObservableField;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
@@ -54,7 +57,12 @@ public class ContactUsViewModel extends BaseViewModel {
             public void onSuccess(FeedbackResponse data) {
                 mActivity.hideLoading();
                 mActivity.showLongSnack("Message sent successfully");
+
+                mActivity.analytic.addMxAnalytics_db(null, Action.PostFeedback, Nav.profile.name(),
+                        Source.Mobile, null);
+
                 mActivity.onBackPressed();
+
             }
 
             @Override

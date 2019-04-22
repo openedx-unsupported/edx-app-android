@@ -31,6 +31,8 @@ public class ContentList implements Comparable<ContentList>
 
     private String name;
 
+    private String internal_name;
+
     private String format_type;
 
     private String created_at;
@@ -145,6 +147,14 @@ public class ContentList implements Comparable<ContentList>
     public void setName (String name)
     {
         this.name = name;
+    }
+
+    public String getInternal_name() {
+        return internal_name == null ? "content_list" : internal_name;
+    }
+
+    public void setInternal_name(String internal_name) {
+        this.internal_name = internal_name;
     }
 
     public String getFormat_type ()

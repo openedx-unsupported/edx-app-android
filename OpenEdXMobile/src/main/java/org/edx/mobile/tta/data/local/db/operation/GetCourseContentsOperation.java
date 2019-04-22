@@ -22,7 +22,7 @@ public class GetCourseContentsOperation extends DbOperationSelect<List<Long>> {
                 + DbStructure.Column.DOWNLOADED + "=?",
                 new String[]{Sha1Util.SHA1(loginPrefs.getUsername()), DownloadType.SCORM.name(), DownloadType.PDF.name(),
                         String.valueOf(DownloadEntry.DownloadedState.DOWNLOADED.ordinal())},
-                DbStructure.Column.CONTENT_ID, null);
+                DbStructure.Column.CONTENT_ID, null, null);
     }
 
     @Override

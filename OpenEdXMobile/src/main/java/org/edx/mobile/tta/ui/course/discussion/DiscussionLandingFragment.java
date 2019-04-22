@@ -12,9 +12,11 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionLandingViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class DiscussionLandingFragment extends TaBaseFragment {
     public static final String TAG = DiscussionLandingFragment.class.getCanonicalName();
+    private int RANK;
 
     private DiscussionLandingViewModel viewModel;
 
@@ -23,6 +25,7 @@ public class DiscussionLandingFragment extends TaBaseFragment {
     public static DiscussionLandingFragment newInstance(EnrolledCoursesResponse course) {
         DiscussionLandingFragment discussionLandingFragment = new DiscussionLandingFragment();
         discussionLandingFragment.course = course;
+        discussionLandingFragment.RANK = BreadcrumbUtil.getCurrentRank() + 1;
         return discussionLandingFragment;
     }
 

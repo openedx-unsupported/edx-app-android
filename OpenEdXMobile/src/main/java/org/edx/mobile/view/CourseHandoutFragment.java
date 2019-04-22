@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +28,11 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
+import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import de.greenrobot.event.EventBus;
@@ -36,7 +40,11 @@ import okhttp3.Request;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseHandoutFragment extends BaseFragment implements RefreshListener {
+public class CourseHandoutFragment extends BaseFragment
+        implements RefreshListener, PageViewStateCallback {
+    //Mx Chirag: rank used in breadcrumb
+    private int RANK;
+
     protected final Logger logger = new Logger(getClass().getName());
 
 //    @InjectExtra(Router.EXTRA_COURSE_DATA)
@@ -61,6 +69,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RANK = BreadcrumbUtil.getCurrentRank() + 1;
 
         //Mx: Chirag: Get EnrolledCoursesResponse from bundle argument
         if (getArguments() != null) {
@@ -178,5 +187,15 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
         if (NetworkUtil.isConnected(getActivity())) {
             snackbarErrorNotification.hideError();
         }
+    }
+
+    @Override
+    public void onPageShow() {
+        logger.debug("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.handout.name()));
+    }
+
+    @Override
+    public void onPageDisappear() {
+
     }
 }

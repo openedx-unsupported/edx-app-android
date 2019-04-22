@@ -17,6 +17,11 @@ public final class DbStructure {
     public static final class Table {
         public static final String DOWNLOADS = "downloads";
         public static final String ASSESSMENT = "assessment";
+
+        //added by Arjun to store all TTA analytics offline and update them to web in batches
+        public static final String ANALYTIC = "analytic";
+        //added by Arjun to store all scrom resume state data //16-10-18
+        public static final String TINCAN = "tincan";
     }
 
     public static final class Column {
@@ -56,5 +61,21 @@ public final class DbStructure {
         public static final String ASSESSMENT_TB_USERNAME = "username";
         public static final String ASSESSMENT_TB_UNIT_ID = "unit_id";
         public static final String ASSESSMENT_TB_UNIT_WATCHED = "unit_watched";
+
+        //table for TTA Analytics
+        public static final String ANALYTIC_TB_ID="_id";
+        public static final String USER_ID="user_id";
+        public static final String ACTION="action";
+        public static final String METADATA= "metadata";
+        public static final String PAGE="page";
+        public static final String STATUS= "status";
+        public static final String EVENT_DATE= "event_timestamp";
+        public static final String NAV = "nav";
+        public static final String ACTION_ID = "action_id";
+
+        //table for TTA Tincan /scorm resume state
+        public static final String COURSE_ID="course_id";
+        public static final String RESUME_PAYLOAD="resume_payload";
+        public static final String UNIT_ID = "unit_id";
     }
 }

@@ -45,7 +45,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/view_pager"
-            mx:pager_adapter="@{viewModel.adapter}"/>
+            mx:pager_adapter="@{viewModel.adapter}"
+            page_change_listener="@{viewModel.pageChangeListener}"/>
 
         <include
             layout="@layout/t_view_offline_bar"

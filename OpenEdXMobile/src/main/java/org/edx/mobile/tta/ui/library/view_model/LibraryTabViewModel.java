@@ -28,6 +28,9 @@ import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.enums.ContentListMode;
 import org.edx.mobile.tta.data.enums.ContentListType;
 import org.edx.mobile.tta.data.enums.SourceType;
@@ -44,7 +47,9 @@ import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.tta.utils.ContentSourceUtil;
+import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.util.PermissionsUtil;
 
 import java.util.ArrayList;
@@ -160,6 +165,18 @@ public class LibraryTabViewModel extends BaseViewModel {
         if (selectedContent.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
                 selectedContent.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
             ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
+
+            Metadata metadata = new Metadata();
+            metadata.setContent_id(String.valueOf(selectedContent.getId()));
+            metadata.setContent_title(selectedContent.getName());
+            metadata.setContent_icon(selectedContent.getIcon());
+            metadata.setSource_title(selectedContent.getSource().getTitle());
+            metadata.setSource_identity(selectedContent.getSource_identity());
+
+            mActivity.analytic.addMxAnalytics_db(
+                    selectedContent.getName(), Action.CourseOpen, Nav.library.name(),
+                    org.edx.mobile.tta.analytics.analytics_enums.Source.Mobile, null);
+
         } else {
             ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
         }
@@ -230,6 +247,14 @@ public class LibraryTabViewModel extends BaseViewModel {
 
                 listBinding.contentFiniteList.setmMoreButtonVisible(true);
                 listBinding.contentFiniteList.setOnMoreButtonClickListener(v -> {
+
+                    int rank = BreadcrumbUtil.getCurrentRank() + 1;
+                    mActivity.logD("TTA Nav ======> " +
+                            BreadcrumbUtil.setBreadcrumb(rank, model.getInternal_name()));
+
+                    mActivity.logD("TTA Nav ======> " +
+                            BreadcrumbUtil.setBreadcrumb(rank + 1, Nav.see_more.name()));
+
                     ActivityUtil.replaceFragmentInActivity(
                             mActivity.getSupportFragmentManager(),
                             SearchFragment.newInstance(category, getAutoLists(), model),

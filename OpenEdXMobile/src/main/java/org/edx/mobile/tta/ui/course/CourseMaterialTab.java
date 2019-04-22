@@ -20,15 +20,18 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.course.view_model.CourseMaterialViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import de.greenrobot.event.EventBus;
 
 public class CourseMaterialTab extends TaBaseFragment {
+    private int RANK;
 
     private CourseMaterialViewModel viewModel;
 
@@ -41,6 +44,7 @@ public class CourseMaterialTab extends TaBaseFragment {
         courseMaterialTab.content = content;
         courseMaterialTab.courseData = course;
         courseMaterialTab.rootComponent = rootComponent;
+        courseMaterialTab.RANK = BreadcrumbUtil.getCurrentRank() + 1;
         return courseMaterialTab;
     }
 
@@ -56,6 +60,12 @@ public class CourseMaterialTab extends TaBaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_fragment_course_material, viewModel).getRoot();
         return view;
+    }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.course_material.name()));
     }
 
     @Override

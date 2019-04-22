@@ -8,7 +8,9 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.tta.analytics.AnalyticModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -499,4 +501,22 @@ public interface IDatabase {
     VideoModel getPostVideo(String postId);
 
     VideoModel getPostVideo(String p_id, String video_url , final DataCallback<VideoModel> callback);
+
+    /**
+     * add Analytic data
+     */
+    Long addAnalyticData(AnalyticModel de, DataCallback<Long> callback);
+    /**
+     * delete Analytic data
+     */
+    Integer deleteAnalyticByAnalyticId(String[] ids,String INQueryParams, DataCallback<Integer> callback);
+    /**
+     * get Analytic data
+     */
+    ArrayList<AnalyticModel> getAnalytics(int batch_count, int status, DataCallback<ArrayList<AnalyticModel>> callback);
+
+    /**
+     * get Tincan Analytic data
+     */
+    ArrayList<AnalyticModel> getTincanAnalytics(int batch_count, int status, DataCallback<ArrayList<AnalyticModel>> callback);
 }

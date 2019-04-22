@@ -15,11 +15,14 @@ import android.widget.LinearLayout;
 import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.agenda.view_model.AgendaViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class AgendaFragment extends TaBaseFragment {
     public static final String TAG = AgendaFragment.class.getCanonicalName();
+    private static final int RANK = 2;
 
     private AgendaViewModel viewModel;
 
@@ -36,5 +39,11 @@ public class AgendaFragment extends TaBaseFragment {
                 .getRoot();
         viewModel.getAgenda();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.agenda.name()));
     }
 }

@@ -12,6 +12,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
@@ -25,13 +26,16 @@ public class BrowserUtil {
     }
 
     @Inject
-    private static IEdxEnvironment environment;
+    public static IEdxEnvironment environment;
 
     @Inject
     public static Config config;
 
     @Inject
     public static LoginPrefs loginPrefs;
+
+    @Inject
+    public static AppPref appPref;
 
     @Inject
     public static LoginAPI loginAPI;

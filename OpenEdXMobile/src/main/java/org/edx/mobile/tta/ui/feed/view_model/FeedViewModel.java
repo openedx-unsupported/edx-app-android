@@ -17,12 +17,17 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFeedLikeBinding;
 import org.edx.mobile.databinding.TRowSuggestedTeacherBinding;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.feed.NotificationsFragment;
+import org.edx.mobile.tta.utils.ActivityUtil;
 
 import java.util.List;
 
@@ -53,6 +58,10 @@ public class FeedViewModel extends BaseViewModel {
                                     button.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_filled));
                                     button.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
                                     button.setText(mActivity.getString(R.string.unfollow));
+
+                                    mActivity.analytic.addMxAnalytics_db(item.getUsername(), Action.FollowUser,
+                                            Nav.feed.name(), Source.Mobile, item.getUsername());
+
                                 } else {
                                     button.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_hollow));
                                     button.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_cyan));
@@ -94,7 +103,14 @@ public class FeedViewModel extends BaseViewModel {
     }
 
     public void showNotifications(){
-
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                new NotificationsFragment(),
+                R.id.dashboard_fragment,
+                NotificationsFragment.TAG,
+                true,
+                null
+        );
     }
 
     public class SuggestedUsersAdapter extends MxFiniteAdapter<SuggestedUser> {

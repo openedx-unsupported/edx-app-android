@@ -2,10 +2,12 @@ package org.edx.mobile.tta.ui.course.view_model;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableInt;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
@@ -25,6 +27,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.AuthenticatedWebViewFragment;
 import org.edx.mobile.view.CourseHandoutFragment;
 import org.edx.mobile.view.Router;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,28 @@ public class CourseDashboardViewModel extends BaseViewModel {
     private CourseComponent rootComponent;
 
     public ObservableBoolean offlineVisible = new ObservableBoolean();
+    public ObservableInt initialPosition = new ObservableInt();
+
+    public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
+
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            initialPosition.set(i);
+            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(i);
+            if (callback != null){
+                callback.onPageShow();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
 
     public CourseDashboardViewModel(BaseVMActivity activity, Content content) {
         super(activity);
@@ -148,6 +173,12 @@ public class CourseDashboardViewModel extends BaseViewModel {
             adapter.setFragments(fragments, titles);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        initialPosition.set(0);
+
+        PageViewStateCallback callback = (PageViewStateCallback) fragments.get(0);
+        if (callback != null){
+            callback.onPageShow();
         }
     }
 

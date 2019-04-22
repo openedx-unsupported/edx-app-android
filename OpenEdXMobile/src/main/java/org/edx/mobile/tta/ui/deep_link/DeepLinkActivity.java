@@ -9,11 +9,13 @@ import android.util.Log;
 import org.edx.mobile.R;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.deep_link.view_model.DeepLinkViewModel;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -23,6 +25,7 @@ import de.greenrobot.event.EventBus;
 import static org.edx.mobile.util.BrowserUtil.loginPrefs;
 
 public class DeepLinkActivity extends BaseVMActivity {
+    private static final int RANK = 0;
 
     public static final String EXTRA_PATH = "path";
     public static final String EXTRA_TYPE = "type";
@@ -175,6 +178,12 @@ public class DeepLinkActivity extends BaseVMActivity {
         mslug=slugArr[slugArr.length-1];
 
         return mslug;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.appopen.name()));
     }
 
     @Override

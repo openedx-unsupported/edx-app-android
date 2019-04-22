@@ -9,23 +9,31 @@ import android.view.MenuItem;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.course.view_model.CourseDashboardViewModel;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 public class CourseDashboardActivity extends BaseVMActivity {
+    private int RANK;
 
     private Content content;
     private boolean isPush = false;
     private CourseDashboardViewModel viewModel;
 
     private Toolbar toolbar;
+    private ViewPager viewPager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RANK = BreadcrumbUtil.getCurrentRank() + 1;
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.course.name()));
         getExtras();
         viewModel = new CourseDashboardViewModel(this, content);
         binding(R.layout.t_activity_course_dashboard, viewModel);
@@ -34,7 +42,7 @@ public class CourseDashboardActivity extends BaseVMActivity {
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -71,6 +79,23 @@ public class CourseDashboardActivity extends BaseVMActivity {
             ActivityUtil.gotoPage(this, LandingActivity.class);
             finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.course.name()));
+        viewPager.post(() -> {
+            try {
+                PageViewStateCallback callback = (PageViewStateCallback) ((BasePagerAdapter) viewPager.getAdapter())
+                        .getItem(viewModel.initialPosition.get());
+                if (callback != null){
+                    callback.onPageShow();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

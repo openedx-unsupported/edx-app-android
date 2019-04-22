@@ -9,13 +9,20 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.ui.agenda_items.view_model.AgendaItemViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.tta.utils.JsonUtil;
 
 
 public class AgendaItemTab extends TaBaseFragment {
+    private static final int RANK = 4;
+
     private AgendaItemViewModel viewModel;
     public AgendaItem item;
     private String toolbarData;
@@ -41,6 +48,27 @@ public class AgendaItemTab extends TaBaseFragment {
         View view = binding(inflater, container, R.layout.t_fragment_agenda_item_tab, viewModel)
                 .getRoot();
         return view;
+    }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, item.getSource_name()));
+
+        Metadata metadata = new Metadata();
+        metadata.setSource_title(item.getSource_title());
+
+        Nav nav;
+        if (toolbarData.equalsIgnoreCase(getString(R.string.state_wise_list))){
+            nav = Nav.state_agenda;
+        } else if (toolbarData.equalsIgnoreCase(getString(R.string.my_agenda))) {
+            nav = Nav.my_agenda;
+        } else {
+            nav = Nav.download_agenda;
+        }
+
+        analytic.addMxAnalytics_db(item.getSource_title() , Action.Nav, nav.name(),
+                org.edx.mobile.tta.analytics.analytics_enums.Source.Mobile, null);
     }
 
     /*@Override

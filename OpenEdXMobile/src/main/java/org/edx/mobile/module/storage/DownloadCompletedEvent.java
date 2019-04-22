@@ -1,16 +1,16 @@
 package org.edx.mobile.module.storage;
 
-import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.model.db.DownloadEntry;
 
 public class DownloadCompletedEvent {
 
-    private String type;
+    private DownloadEntry entry;
 
-    public DownloadCompletedEvent(String type) {
-        this.type = type;
+    public DownloadCompletedEvent(DownloadEntry entry) {
+        this.entry = entry;
     }
 
-    public String getType() {
-        return type;
+    public DownloadEntry getEntry() {
+        return entry;
     }
 }

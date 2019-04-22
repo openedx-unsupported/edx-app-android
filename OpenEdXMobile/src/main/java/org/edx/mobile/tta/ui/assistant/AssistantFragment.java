@@ -10,18 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.assistant.view_model.AssistantViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.util.PermissionsUtil;
 
 public class AssistantFragment extends TaBaseFragment {
     public static final String TAG = AssistantFragment.class.getCanonicalName();
+    private int RANK;
 
     private AssistantViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RANK = BreadcrumbUtil.getCurrentRank() + 1;
         viewModel = new AssistantViewModel(getActivity(), this);
 
     }
@@ -45,5 +49,11 @@ public class AssistantFragment extends TaBaseFragment {
         }else{
             showShortSnack("Record audio permission is required for conversation.");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.assistant.name()));
     }
 }

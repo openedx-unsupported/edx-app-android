@@ -9,13 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 
 import org.edx.mobile.tta.ui.profile.view_model.AllBadgesViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 
 public class AllBadgesFragment extends TaBaseFragment {
     public static final String TAG = AllBadgesFragment.class.getCanonicalName();
+    private static final int RANK = 3;
+
     private AllBadgesViewModel allBadgesViewModel;
     private Toolbar toolbar;
 
@@ -23,6 +29,9 @@ public class AllBadgesFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         allBadgesViewModel = new AllBadgesViewModel(getActivity(), this);
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.badges.name()));
+
+        analytic.addMxAnalytics_db(null, Action.ViewBadges, Nav.profile.name(), Source.Mobile, null);
     }
 
     public static AllBadgesFragment newInstance() {
@@ -41,6 +50,12 @@ public class AllBadgesFragment extends TaBaseFragment {
                 getActivity().onBackPressed();
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.badges.name()));
     }
 
 }

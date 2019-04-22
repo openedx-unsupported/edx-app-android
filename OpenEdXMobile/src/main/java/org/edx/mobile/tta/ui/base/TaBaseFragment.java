@@ -12,18 +12,30 @@ import android.view.Menu;
 import android.view.ViewGroup;
 
 import org.edx.mobile.BR;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.tta.analytics.Analytic;
 import org.edx.mobile.tta.interfaces.PermissionListener;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.utils.RxV4Fragment;
 import org.edx.mobile.util.PermissionsUtil;
+import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 
-public abstract class TaBaseFragment extends RxV4Fragment implements PermissionListener {
+public abstract class TaBaseFragment extends RxV4Fragment
+        implements PermissionListener, PageViewStateCallback {
     protected ViewDataBinding mBinding;
     protected PermissionListener permissionListener;
     private BaseViewModel viewModel;
+    protected final Logger logger = new Logger(getClass().getName());
+    public Analytic analytic;
 
     private int requestCode;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        analytic = new Analytic(getActivity());
+    }
 
     protected ViewDataBinding binding(LayoutInflater inflater, ViewGroup container, int layoutId, BaseViewModel viewModel) {
         mBinding = DataBindingUtil.inflate(inflater, layoutId, container, false);
@@ -38,6 +50,10 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
 
     public void showShortSnack(String msg){
         Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void logD(String msg){
+        logger.debug(msg);
     }
 
     public void askForPermissions(String[] permissions, int requestCode) {
@@ -78,6 +94,16 @@ public abstract class TaBaseFragment extends RxV4Fragment implements PermissionL
 
     @Override
     public void onPermissionDenied(String[] permissions, int requestCode) {
+
+    }
+
+    @Override
+    public void onPageShow() {
+
+    }
+
+    @Override
+    public void onPageDisappear() {
 
     }
 

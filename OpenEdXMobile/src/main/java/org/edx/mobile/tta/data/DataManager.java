@@ -38,6 +38,7 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.Analytic;
 import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.enums.SourceName;
@@ -282,6 +283,7 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void logout() {
+        syncAnalytics();
         edxEnvironment.getRouter().performManualLogout(
                 context,
                 mDataManager.getEdxEnvironment().getAnalyticsRegistry(),
@@ -1520,7 +1522,8 @@ public class DataManager extends BaseRoboInjector {
 
             @Override
             public void onFailure(HttpServerErrorResponse errorResponse) {
-                if(!NetworkUtil.isLimitedAcess(errorResponse) && NetworkUtil.isUnauthorize(errorResponse))
+                if(config.isWordpressAuthentication() &&
+                        !NetworkUtil.isLimitedAcess(errorResponse) && NetworkUtil.isUnauthorize(errorResponse))
                 {
                     logout();
                     Toast.makeText(context, "Session expire", Toast.LENGTH_LONG).show();
@@ -2647,6 +2650,21 @@ public class DataManager extends BaseRoboInjector {
                 }
             }.execute();
 
+        }
+
+    }
+
+    public void onAppStart(){
+        syncAnalytics();
+    }
+
+    public void syncAnalytics(){
+
+        try {
+            Analytic analytic =new Analytic(context);
+            analytic.syncAnalytics();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

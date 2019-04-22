@@ -6,6 +6,7 @@ import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
@@ -15,6 +16,10 @@ import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.Metadata;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.DiscussionTopicType;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.SortType;
 import org.edx.mobile.tta.event.LoadMoreDiscussionCommentsEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -25,8 +30,10 @@ import org.edx.mobile.tta.ui.course.discussion.DiscussionCommentActivity;
 import org.edx.mobile.tta.ui.course.discussion.DiscussionCommentsTab;
 import org.edx.mobile.tta.ui.interfaces.DiscussionCommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +67,7 @@ public class DiscussionThreadViewModel extends BaseViewModel
     public ObservableField<String> replyingToText = new ObservableField<>();
     public ObservableField<String> comment = new ObservableField<>();
     public ObservableBoolean offlineVisible = new ObservableBoolean();
+    public ObservableInt initialPosition = new ObservableInt();
 
     private DiscussionCommentsTab tab1;
     private DiscussionCommentsTab tab2;
@@ -69,6 +77,27 @@ public class DiscussionThreadViewModel extends BaseViewModel
     private boolean allLoaded;
 
     public CommentsPagerAdapter adapter;
+
+    public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
+
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            initialPosition.set(i);
+            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(i);
+            if (callback != null){
+                callback.onPageShow();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
 
     public DiscussionThreadViewModel(BaseVMActivity activity, EnrolledCoursesResponse course, DiscussionTopic topic, DiscussionThread thread) {
         super(activity);
@@ -158,6 +187,9 @@ public class DiscussionThreadViewModel extends BaseViewModel
             mActivity.showLongSnack(e.getLocalizedMessage());
         }
 
+        initialPosition.set(0);
+        tab1.onPageShow();
+
     }
 
     public void shareThread(){
@@ -175,6 +207,30 @@ public class DiscussionThreadViewModel extends BaseViewModel
                         thread.setVoteCount(data.getVoteCount());
                         likeCount.set(String.valueOf(thread.getVoteCount()));
                         likeIcon.set(data.isVoted() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
+
+                        if (data.isVoted()){
+
+                            Metadata metadata = new Metadata();
+                            metadata.setContent_title(course.getCourse().getName());
+                            metadata.setUser_id(thread.getAuthor());
+                            metadata.setUser_display_name(thread.getAuthorDisplayName());
+                            metadata.setUser_icon(thread.getProfileImage().getImageUrlFull());
+                            metadata.setThreadId(thread.getIdentifier());
+                            metadata.setThreadTitle(thread.getTitle());
+                            metadata.setTopicType(topic.getName().contains("लेखक") ?
+                                    DiscussionTopicType.Postname_AD.name() :
+                                    DiscussionTopicType.Postname_CD.name());
+                            metadata.setLikes(thread.getVoteCount());
+                            metadata.setComments(thread.getCommentCount());
+
+                            mActivity.analytic.addMxAnalytics_db(
+                                    topic.getName().contains("लेखक") ?
+                                            DiscussionTopicType.Postname_AD.name() :
+                                            DiscussionTopicType.Postname_CD.name(),
+                                    Action.DBLike, course.getCourse().getName(),
+                                    Source.Mobile, thread.getIdentifier());
+
+                        }
                     }
 
                     @Override
@@ -219,8 +275,50 @@ public class DiscussionThreadViewModel extends BaseViewModel
                             commentsCount.set(String.valueOf(thread.getCommentCount()));
                             //TODO: add this new comment to list
                             comments.add(0, data);
+
+                            Metadata metadata = new Metadata();
+                            metadata.setContent_title(course.getCourse().getName());
+                            metadata.setUser_id(thread.getAuthor());
+                            metadata.setUser_display_name(thread.getAuthorDisplayName());
+                            metadata.setUser_icon(thread.getProfileImage().getImageUrlFull());
+                            metadata.setThreadId(thread.getIdentifier());
+                            metadata.setThreadTitle(thread.getTitle());
+                            metadata.setTopicType(topic.getName().contains("लेखक") ?
+                                    DiscussionTopicType.Postname_AD.name() :
+                                    DiscussionTopicType.Postname_CD.name());
+                            metadata.setLikes(thread.getVoteCount());
+                            metadata.setComments(thread.getCommentCount());
+
+                            mActivity.analytic.addMxAnalytics_db(
+                                    topic.getName().contains("लेखक") ?
+                                            DiscussionTopicType.Postname_AD.name() :
+                                            DiscussionTopicType.Postname_CD.name(),
+                                    Action.DBComment, course.getCourse().getName(),
+                                    Source.Mobile, thread.getIdentifier());
+
                         } else {
                             selectedComment.incrementChildCount();
+
+                            Metadata metadata = new Metadata();
+                            metadata.setContent_title(course.getCourse().getName());
+                            metadata.setUser_id(selectedComment.getAuthor());
+                            metadata.setUser_display_name(selectedComment.getAuthorDisplayName());
+                            metadata.setUser_icon(selectedComment.getProfileImage().getImageUrlFull());
+                            metadata.setThreadId(thread.getIdentifier());
+                            metadata.setThreadTitle(thread.getTitle());
+                            metadata.setTopicType(topic.getName().contains("लेखक") ?
+                                    DiscussionTopicType.Postname_AD.name() :
+                                    DiscussionTopicType.Postname_CD.name());
+                            metadata.setCommentId(selectedComment.getIdentifier());
+                            metadata.setCommentTitle(selectedComment.getRawBody());
+                            metadata.setCommentType("Postname_" + data.getAuthor());
+                            metadata.setLikes(selectedComment.getVoteCount());
+                            metadata.setComments(selectedComment.getChildCount());
+
+                            mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
+                                    Action.DBCommentReply, course.getCourse().getName(),
+                                    Source.Mobile, selectedComment.getIdentifier());
+
                         }
                         refreshComments();
                         resetReplyToComment();
@@ -245,6 +343,30 @@ public class DiscussionThreadViewModel extends BaseViewModel
                         comment.setVoted(data.isVoted());
                         comment.setVoteCount(data.getVoteCount());
                         refreshComments();
+
+                        if (data.isVoted()){
+
+                            Metadata metadata = new Metadata();
+                            metadata.setContent_title(course.getCourse().getName());
+                            metadata.setUser_id(comment.getAuthor());
+                            metadata.setUser_display_name(comment.getAuthorDisplayName());
+                            metadata.setUser_icon(comment.getProfileImage().getImageUrlFull());
+                            metadata.setThreadId(thread.getIdentifier());
+                            metadata.setThreadTitle(thread.getTitle());
+                            metadata.setTopicType(topic.getName().contains("लेखक") ?
+                                    DiscussionTopicType.Postname_AD.name() :
+                                    DiscussionTopicType.Postname_CD.name());
+                            metadata.setCommentId(comment.getIdentifier());
+                            metadata.setCommentTitle(comment.getRawBody());
+                            metadata.setCommentType("Postname_" + comment.getAuthor());
+                            metadata.setLikes(comment.getVoteCount());
+                            metadata.setComments(comment.getChildCount());
+
+                            mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
+                                    Action.DBCommentlike, course.getCourse().getName(),
+                                    Source.Mobile, comment.getIdentifier());
+
+                        }
                     }
 
                     @Override

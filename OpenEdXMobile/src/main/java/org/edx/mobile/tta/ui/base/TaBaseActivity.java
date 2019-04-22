@@ -24,6 +24,7 @@ import com.google.inject.Key;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.tta.analytics.Analytic;
 import org.edx.mobile.tta.utils.LocaleHelper;
 import org.edx.mobile.tta.widget.loading.ILoading;
 import org.edx.mobile.tta.widget.loading.ProgressDialogLoading;
@@ -57,6 +58,7 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
     protected HashMap<Key<?>, Object> scopedObjects = new HashMap<Key<?>, Object>();
     protected boolean isInForeground = false;
     protected final Logger logger = new Logger(getClass().getName());
+    public Analytic analytic;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         eventManager.fire(new OnCreateEvent<Activity>(this, savedInstanceState));
         mLoading = new ProgressDialogLoading(this);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        analytic = new Analytic(this);
     }
 
     @Override

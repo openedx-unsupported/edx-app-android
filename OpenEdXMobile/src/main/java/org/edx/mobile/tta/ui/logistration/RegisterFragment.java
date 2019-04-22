@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.logistration.view_model.RegisterViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class RegisterFragment extends TaBaseFragment {
+    private static final int RANK = 1;
 
     private RegisterViewModel viewModel;
 
@@ -31,5 +34,11 @@ public class RegisterFragment extends TaBaseFragment {
     @Override
     public void onPermissionGranted(String[] permissions, int requestCode) {
         viewModel.generateOTP();
+    }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.signup.name()));
     }
 }

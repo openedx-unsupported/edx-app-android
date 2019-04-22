@@ -11,10 +11,13 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionCommentViewModel;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 
 public class DiscussionCommentActivity extends BaseVMActivity {
+    private int RANK;
 
     private DiscussionCommentViewModel viewModel;
 
@@ -28,6 +31,7 @@ public class DiscussionCommentActivity extends BaseVMActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RANK = BreadcrumbUtil.getCurrentRank() + 1;
         getExtras();
         viewModel = new DiscussionCommentViewModel(this, course, topic, thread, comment);
         binding(R.layout.t_activity_discussion_comment, viewModel);
@@ -56,6 +60,12 @@ public class DiscussionCommentActivity extends BaseVMActivity {
             thread = (DiscussionThread) parameters.getSerializable(Constants.KEY_DISCUSSION_THREAD);
             comment = (DiscussionComment) parameters.getSerializable(Constants.KEY_DISCUSSION_COMMENT);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.comment.name()));
     }
 
     @Override
