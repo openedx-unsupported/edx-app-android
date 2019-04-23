@@ -17,8 +17,11 @@ import android.widget.AdapterView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.TranscriptAdapter;
@@ -48,7 +51,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private TimedTextObject subtitlesObj;
     private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
-    private int currentPos;
+    private VideoModel videoModel;
+    private boolean fromLandscape, wasHiding;
 
     /**
      * Create a new instance of fragment
@@ -83,6 +87,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     public void initializeYoutubePlayer() {
+
+        setVideoModel();
+
         if(youTubePlayer!=null){
             removeFragment();
         }
@@ -145,6 +152,12 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        wasHiding = true;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
@@ -154,6 +167,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onPageDisappear() {
         super.onPageDisappear();
         removeFragment();
+        fromLandscape = false;
         transcriptsHandler.removeCallbacksAndMessages(null);
         subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
     }
@@ -167,6 +181,10 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             return;
         }
         final int orientation = getResources().getConfiguration().orientation;
+        int currentPos = 0;
+        if (videoModel != null) {
+            currentPos = (int) videoModel.getLastPlayedOffset();
+        }
         if (!wasRestored ) {
             Uri uri = Uri.parse(unit.getData().encodedVideos.getYoutubeVideoInfo().url);
             String v = uri.getQueryParameter("v");
@@ -220,8 +238,11 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         @Override
         public void run() {
             if (youTubePlayer != null) {
+                int currentPos = 0;
                 try {
                     currentPos = youTubePlayer.getCurrentTimeMillis();
+                    DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).updateVideoLastPlayedOffset(unit.getId(), currentPos, null);
+
                 }
                 catch (Exception e ){
                     return;
@@ -330,6 +351,17 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         });
     }
 
+    private void setVideoModel(){
+        videoModel = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).getVideoEntryByVideoId(unit.getId(), null);
+
+        if (videoModel == null) {
+            DownloadEntry e = new DownloadEntry();
+            e.videoId = unit.getId();
+            addVideoDatatoDb(e);
+            videoModel = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).getVideoEntryByVideoId(unit.getId(), null);
+        }
+    }
+
     private  class StateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
         @Override
         public void onLoading() {
@@ -375,7 +407,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onPlaying() {
-            if (getActivity() != null) {
+            if (getActivity() != null && !fromLandscape) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             }
         }
@@ -387,7 +419,10 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onStopped() {
-
+            if (wasHiding) {
+                youTubePlayer.play();
+                wasHiding = false;
+            }
         }
 
         @Override
@@ -407,7 +442,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             final int orientation = getResources().getConfiguration().orientation;
             if (!fullScreen && getActivity() != null && orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                youTubePlayer.pause();
+                fromLandscape = true;
             } else {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             }
