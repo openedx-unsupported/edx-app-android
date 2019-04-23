@@ -1,6 +1,9 @@
 package org.edx.mobile.view.adapters;
 
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -13,6 +16,7 @@ import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.view.CourseBaseActivity;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
 import org.edx.mobile.view.CourseUnitFragment;
@@ -82,7 +86,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
         else if (isCourseUnitVideo(minifiedUnit)) {
             unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
-        } else if (youtubeVideo && config.getEmbeddedYoutubeConfig().isYoutubeEnabled()) {
+        } else if (youtubeVideo && config.getEmbeddedYoutubeConfig().isYoutubeEnabled() && isYoutubeSupported()) {
             unitFragment = CourseUnitYoutubeVideoFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
         } else if (youtubeVideo) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);
@@ -112,5 +116,18 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return unitList.size();
+    }
+
+    private boolean isYoutubeSupported(){
+        Context context = ((CourseBaseActivity) callback).getApplicationContext();
+        try {
+            PackageInfo pinfo = context.getPackageManager().getPackageInfo("com.google.android.youtube", 0);
+            float targetVersion = 12;
+            String [] v = pinfo.versionName.split("\\.");
+            float currentVersion = Float.parseFloat(v[0]);
+            return Float.compare(currentVersion, targetVersion) >= 0;
+        } catch (PackageManager.NameNotFoundException e){
+            return false;
+        }
     }
 }
