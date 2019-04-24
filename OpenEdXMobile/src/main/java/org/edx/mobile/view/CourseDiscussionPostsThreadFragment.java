@@ -231,7 +231,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         final String threadId = getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID);
         if (!TextUtils.isEmpty(threadId)) {
-            router.showCourseDiscussionResponses(context, threadId, courseData);
+            router.showCourseDiscussionResponses(context, threadId,
+                    getArguments().getString(Router.EXTRA_DISCUSSION_COMMENT_ID), courseData);
 
             // Setting this to null, so that upon recreation of the fragment, relevant activity
             // shouldn't be auto-created again (e.g. due to a deep link).

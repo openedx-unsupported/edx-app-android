@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -27,6 +28,7 @@ import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
@@ -34,6 +36,7 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,11 +65,17 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Inject
     private Context context;
 
-    @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD, optional = true)
     private DiscussionThread discussionThread;
 
-    @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT, optional = true)
     private DiscussionComment discussionResponse;
+
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD_ID, optional = true)
+    private String threadId;
+
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT_ID, optional = true)
+    private String commentId;
 
     @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
     private EnrolledCoursesResponse courseData;
@@ -76,6 +85,11 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
+
+    @InjectView(R.id.loading_indicator)
+    private ProgressBar loadingIndicator;
+
+    private FullScreenErrorNotification errorNotification;
 
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
@@ -89,6 +103,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Nullable
     private Call<DiscussionComment> setCommentFlaggedCall;
+    private Call<DiscussionThread> getThreadCall;
+
+    private Call<DiscussionComment> getDiscussionCommentCall;
 
     @Nullable
     @Override
@@ -99,16 +116,54 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        errorNotification = new FullScreenErrorNotification(view.findViewById(R.id.ll_content));
+        if (discussionThread == null) {
+            if (getThreadCall != null) {
+                getThreadCall.cancel();
+            }
+            getThreadCall = discussionService.getThread(threadId);
+            getThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(getActivity(),
+                    new TaskProgressCallback.ProgressViewController(loadingIndicator), errorNotification) {
+                @Override
+                protected void onResponse(@NonNull DiscussionThread responseBody) {
+                    discussionThread = responseBody;
+                    getDiscussionComment();
+                }
+            });
+        } else {
+            loadDiscussionThreadComments();
+        }
+    }
 
+    private void getDiscussionComment() {
+        if (discussionResponse == null) {
+            if (getDiscussionCommentCall != null) {
+                getDiscussionCommentCall.cancel();
+            }
+            getDiscussionCommentCall = discussionService.getDiscussionComment(commentId);
+            getDiscussionCommentCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(getActivity(),
+                    new TaskProgressCallback.ProgressViewController(loadingIndicator), errorNotification) {
+                @Override
+                protected void onResponse(@NonNull DiscussionComment responseBody) {
+                    discussionResponse = responseBody;
+                    loadDiscussionThreadComments();
+                }
+            });
+        } else {
+            loadDiscussionThreadComments();
+        }
+    }
+
+    private void loadDiscussionThreadComments() {
         discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this,
                 discussionThread, discussionResponse);
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(discussionCommentsListView,
                 discussionCommentsAdapter, new InfiniteScrollUtils.PageLoader<DiscussionComment>() {
-            @Override
-            public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
-                getCommentsList(callback);
-            }
-        });
+                    @Override
+                    public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
+                        getCommentsList(callback);
+                    }
+                });
 
         final int overlap = getResources().getDimensionPixelSize(R.dimen.edx_hairline);
         discussionCommentsListView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -130,6 +185,16 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 });
 
         createNewCommentLayout.setEnabled(!courseData.isDiscussionBlackedOut());
+
+        Map<String, String> values = new HashMap<>();
+        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
+        values.put(Analytics.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
+        if (!discussionResponse.isAuthorAnonymous()) {
+            values.put(Analytics.Keys.AUTHOR, discussionResponse.getAuthor());
+        }
+        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_RESPONSE_COMMENTS,
+                discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }
 
     protected void getCommentsList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
@@ -165,21 +230,17 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-
-        Map<String, String> values = new HashMap<>();
-        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
-        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
-        values.put(Analytics.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
-        if (!discussionResponse.isAuthorAnonymous()) {
-            values.put(Analytics.Keys.AUTHOR, discussionResponse.getAuthor());
-        }
-        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_RESPONSE_COMMENTS,
-                discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (getThreadCall != null) {
+            getThreadCall.cancel();
+        }
+        if (getDiscussionCommentCall != null) {
+            getDiscussionCommentCall.cancel();
+        }
         if (getCommentsListCall != null) {
             getCommentsListCall.cancel();
         }

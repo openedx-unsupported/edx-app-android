@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD_ID, optional = true)
     private String threadId;
 
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT_ID, optional = true)
+    private String commentId;
+
     @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
     private EnrolledCoursesResponse courseData;
 
@@ -118,6 +122,13 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         } else {
             setScreenTitle();
             loadThreadResponses();
+        }
+        if (!TextUtils.isEmpty(commentId)) {
+            router.showCourseDiscussionComments(getActivity(), threadId, commentId, courseData);
+
+            // Setting this to null, so that upon recreation of the fragment, relevant activity
+            // shouldn't be auto-created again (e.g. due to a deep link).
+            getArguments().putString(Router.EXTRA_DISCUSSION_COMMENT_ID, null);
         }
     }
 

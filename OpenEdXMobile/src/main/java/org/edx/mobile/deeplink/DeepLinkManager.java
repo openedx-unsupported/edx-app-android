@@ -20,6 +20,7 @@ public class DeepLinkManager {
     private static final String KEY_COURSE_ID = "course_id";
     private static final String KEY_TOPIC_ID = "topic_id";
     private static final String KEY_THREAD_ID = "thread_id";
+    private static final String KEY_COMMENT_ID = "comment_id";
     private static final String KEY_PATH_ID = "path_id";
 
     public static void parseAndReact(@NonNull Activity activity, @NonNull JSONObject paramsJson) throws JSONException {
@@ -50,11 +51,14 @@ public class DeepLinkManager {
             case Screen.COURSE_HANDOUT:
             case Screen.COURSE_ANNOUNCEMENT:
             case Screen.DISCUSSION_POST:
-            case Screen.DISCUSSION_TOPIC: {
+            case Screen.DISCUSSION_TOPIC:
+            case Screen.DISCUSSION_COMMENT: {
                 final String courseId = paramsJson.getString(KEY_COURSE_ID);
                 final String topicId = paramsJson.optString(KEY_TOPIC_ID);
                 final String threadId = paramsJson.optString(KEY_THREAD_ID);
-                router.showCourseDashboardTabs(activity, null, courseId, topicId, threadId, false, screenName);
+                final String commentId = paramsJson.optString(KEY_COMMENT_ID);
+                router.showCourseDashboardTabs(activity, null, courseId, topicId, threadId,
+                        commentId, false, screenName);
                 break;
             }
             case Screen.PROGRAM:

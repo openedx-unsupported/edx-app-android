@@ -112,6 +112,11 @@ public interface DiscussionService {
                                                   @Query("page") int page,
                                                   @Query("requested_fields") List<String> requestedFields);
 
+    @Headers({"Cache-Control: no-cache",
+            "Content-Type: application/json"})
+    @PATCH("/api/discussion/v1/comments/{comment_id}")
+    Call<DiscussionComment> getDiscussionComment(@Path("comment_id") String responseId);
+
     @Headers("Cache-Control: no-cache")
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     Call<DiscussionThread> setThreadFlagged(@Path("thread_id") String threadId,

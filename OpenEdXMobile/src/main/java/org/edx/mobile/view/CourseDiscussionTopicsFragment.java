@@ -179,6 +179,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
                     getActivity(),
                     getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID),
                     getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID),
+                    getArguments().getString(Router.EXTRA_DISCUSSION_COMMENT_ID),
                     courseData);
 
             // Setting this to null, so that upon recreation of the fragment, relevant activity

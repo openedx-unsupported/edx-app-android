@@ -107,6 +107,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
                 (screenName.equals(Screen.DISCUSSION_POST) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
                 (screenName.equals(Screen.DISCUSSION_TOPIC) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
+                (screenName.equals(Screen.DISCUSSION_COMMENT) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
                 (screenName.equals(Screen.COURSE_DATES) && item.getIcon() == FontAwesomeIcons.fa_calendar) ||
                 (screenName.equals(Screen.COURSE_HANDOUT) && item.getIcon() == FontAwesomeIcons.fa_ellipsis_h) ||
                 (screenName.equals(Screen.COURSE_ANNOUNCEMENT) && item.getIcon() == FontAwesomeIcons.fa_ellipsis_h);

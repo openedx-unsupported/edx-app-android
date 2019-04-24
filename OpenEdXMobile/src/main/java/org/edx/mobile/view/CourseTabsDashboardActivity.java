@@ -13,6 +13,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import static org.edx.mobile.view.Router.EXTRA_ANNOUNCEMENTS;
 import static org.edx.mobile.view.Router.EXTRA_COURSE_DATA;
 import static org.edx.mobile.view.Router.EXTRA_COURSE_ID;
+import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_COMMENT_ID;
 import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_THREAD_ID;
 import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_TOPIC_ID;
 import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
@@ -22,13 +23,15 @@ public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
                                    @Nullable EnrolledCoursesResponse courseData,
                                    @Nullable String courseId,
                                    @Nullable String topicId,
-                                   @Nullable String threadId, boolean announcements,
+                                   @Nullable String threadId,
+                                   @Nullable String commentId, boolean announcements,
                                    @Nullable @ScreenDef String screenName) {
         final Intent intent = new Intent(activity, CourseTabsDashboardActivity.class);
         intent.putExtra(EXTRA_COURSE_DATA, courseData);
         intent.putExtra(EXTRA_COURSE_ID, courseId);
         intent.putExtra(EXTRA_DISCUSSION_TOPIC_ID, topicId);
         intent.putExtra(EXTRA_DISCUSSION_THREAD_ID, threadId);
+        intent.putExtra(EXTRA_DISCUSSION_COMMENT_ID, commentId);
         intent.putExtra(EXTRA_ANNOUNCEMENTS, announcements);
         intent.putExtra(EXTRA_SCREEN_NAME, screenName);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
