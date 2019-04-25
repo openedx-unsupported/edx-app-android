@@ -3,7 +3,6 @@ package org.edx.mobile.view.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,7 +43,6 @@ import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -189,14 +186,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 case SectionRow.BULK_DOWNLOAD: {
                     final Activity activity = parentFragment.getActivity();
                     if (activity != null && ((RoboAppCompatActivity) activity).isInForeground()) {
-                        final FrameLayout layout = new FrameLayout(parentFragment.getContext());
-                        final int id = UiUtil.generateViewId();
-                        layout.setId(id);
-
+                        convertView = inflater.inflate(R.layout.row_bulk_download_container, parent, false);
                         final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
                         parentFragment.getChildFragmentManager().
-                                beginTransaction().replace(id, fragment).commit();
-                        convertView = layout;
+                                beginTransaction().replace(convertView.getId(), fragment).commit();
                         convertView.setTag(fragment);
                     }
                     break;
