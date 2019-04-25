@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,8 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
-import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
+import org.edx.mobile.view.custom.PreLoadingListener;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -31,12 +32,8 @@ import javax.inject.Inject;
 
 import roboguice.inject.InjectView;
 
-
-/**
- *
- */
-public class CourseUnitNavigationActivity extends CourseBaseActivity implements CourseUnitVideoFragment.HasComponent {
-    private static final byte UNITS_TO_PRELOAD = 3;
+public class CourseUnitNavigationActivity extends CourseBaseActivity implements
+        CourseUnitVideoFragment.HasComponent, PreLoadingListener {
     protected Logger logger = new Logger(getClass().getSimpleName());
 
     private DisableableViewPager pager;
@@ -54,6 +51,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     @InjectView(R.id.prev_unit_title)
     private TextView mPreviousUnitLbl;
 
+    private PreLoadingListener.State viewPagerState = PreLoadingListener.State.DEFAULT;
+
     @Inject
     LastAccessManager lastAccessManager;
 
@@ -66,11 +65,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         insertPoint.addView(v, 0,
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        pager = (DisableableViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
                 environment.getConfig(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
-        pager.setOffscreenPageLimit(UNITS_TO_PRELOAD);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -82,17 +80,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-                    int curIndex = pager.getCurrentItem();
-                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
-                    if (curView != null)
-                        curView.onPageDisappear();
-                }
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
-                    int curIndex = pager.getCurrentItem();
-                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
-                    if (curView != null)
-                        curView.onPageShow();
                     tryToUpdateForEndOfSequential();
                 }
             }
@@ -100,18 +88,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
-        mPreviousBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigatePreviousComponent();
-            }
-        });
-        mNextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateNextComponent();
-            }
-        });
+        mPreviousBtn.setOnClickListener(view -> navigatePreviousComponent());
+        mNextBtn.setOnClickListener(view -> navigateNextComponent());
     }
 
     @Override
@@ -124,9 +102,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     public void navigatePreviousComponent() {
         int index = pager.getCurrentItem();
         if (index > 0) {
-            PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
-            if (curView != null)
-                curView.onPageDisappear();
             pager.setCurrentItem(index - 1);
         }
     }
@@ -135,9 +110,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     public void navigateNextComponent() {
         int index = pager.getCurrentItem();
         if (index < pagerAdapter.getCount() - 1) {
-            PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
-            if (curView != null)
-                curView.onPageDisappear();
             pager.setCurrentItem(index + 1);
         }
     }
@@ -271,13 +243,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         return selectedUnit;
     }
 
-    protected void hideLastAccessedView(View v) {
-    }
-
-    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
+    @Override
+    public void setLoadingState(@NonNull State newState) {
+        viewPagerState = newState;
     }
 
     @Override
-    protected void onOffline() {
+    public boolean isMainUnitLoaded() {
+        return viewPagerState == State.MAIN_UNIT_LOADED;
     }
 }

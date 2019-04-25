@@ -7,9 +7,8 @@ import com.google.inject.Inject;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.view.common.PageViewStateCallback;
 
-public abstract class CourseUnitFragment extends BaseFragment implements PageViewStateCallback {
+public abstract class CourseUnitFragment extends BaseFragment {
     public interface HasComponent {
         CourseComponent getComponent();
 
@@ -29,16 +28,6 @@ public abstract class CourseUnitFragment extends BaseFragment implements PageVie
         super.onCreate(savedInstanceState);
         unit = getArguments() == null ? null :
                 (CourseComponent) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
-    }
-
-    @Override
-    public void onPageShow() {
-
-    }
-
-    @Override
-    public void onPageDisappear() {
-
     }
 
     public void setHasComponentCallback(HasComponent callback) {
