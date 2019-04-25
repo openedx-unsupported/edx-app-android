@@ -11,7 +11,6 @@ import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.http.interceptor.JsonMergePatchInterceptor;
 import org.edx.mobile.http.interceptor.OnlyIfCachedStrippingInterceptor;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.test.BaseTestCase;
@@ -72,7 +71,6 @@ public class HttpBaseTestCase extends BaseTestCase {
 
         okHttpClient = new OkHttpClient.Builder()
                 .dispatcher(new Dispatcher(new RoboExecutorService()))
-                .addInterceptor(new JsonMergePatchInterceptor())
                 .addInterceptor(new OnlyIfCachedStrippingInterceptor())
                 .build();
 

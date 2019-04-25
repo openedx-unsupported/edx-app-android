@@ -112,32 +112,32 @@ public interface DiscussionService {
                                                   @Query("page") int page,
                                                   @Query("requested_fields") List<String> requestedFields);
 
-    @Headers("Cache-Control: no-cache")
+    @Headers({"Cache-Control: no-cache", "Content-type: application/merge-patch+json"})
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     Call<DiscussionThread> setThreadFlagged(@Path("thread_id") String threadId,
                                             @Body FlagBody flagBody);
 
-    @Headers("Cache-Control: no-cache")
+    @Headers({"Cache-Control: no-cache", "Content-type: application/merge-patch+json"})
     @PATCH("/api/discussion/v1/comments/{comment_id}/")
     Call<DiscussionComment> setCommentFlagged(@Path("comment_id") String commentId,
                                               @Body FlagBody flagBody);
 
-    @Headers("Cache-Control: no-cache")
+    @Headers({"Cache-Control: no-cache", "Content-type: application/merge-patch+json"})
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     Call<DiscussionThread> setThreadVoted(@Path("thread_id") String threadId,
                                           @Body VoteBody voteBody);
 
-    @Headers("Cache-Control: no-cache")
+    @Headers({"Cache-Control: no-cache", "Content-type: application/merge-patch+json"})
     @PATCH("/api/discussion/v1/comments/{comment_id}/")
     Call<DiscussionComment> setCommentVoted(@Path("comment_id") String commentId,
                                             @Body VoteBody voteBody);
 
-    @Headers("Cache-Control: no-cache")
+    @Headers({"Cache-Control: no-cache", "Content-type: application/merge-patch+json"})
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     Call<DiscussionThread> setThreadFollowed(@Path("thread_id") String threadId,
                                              @Body FollowBody followBody);
 
-    @Headers("Cache-Control: no-cache")
+    @Headers({"Cache-Control: no-cache", "Content-type: application/merge-patch+json"})
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     Call<DiscussionThread> setThreadRead(@Path("thread_id") String threadId,
                                          @Body ReadBody readBody);
