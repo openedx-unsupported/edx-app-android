@@ -36,7 +36,6 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptListener;
-import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.NetworkUtil;
@@ -215,9 +214,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if (getUserVisibleHint()) {
             checkVideoStatusAndPlay(unit);
         }
-        if (ViewPagerDownloadManager.instance.inInitialPhase(unit)) {
-            ViewPagerDownloadManager.instance.addTask(this);
-        }
     }
 
     @Override
@@ -239,11 +235,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
 
         playerFragment.setUserVisibleHint(isVisibleToUser);
-    }
-
-    @Override
-    public void run() {
-        ViewPagerDownloadManager.instance.done(this, false);
     }
 
 

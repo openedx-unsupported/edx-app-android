@@ -14,14 +14,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
-import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
@@ -39,7 +36,7 @@ import roboguice.inject.InjectView;
  *
  */
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements CourseUnitVideoFragment.HasComponent {
-
+    private static final byte UNITS_TO_PRELOAD = 3;
     protected Logger logger = new Logger(getClass().getSimpleName());
 
     private DisableableViewPager pager;
@@ -73,9 +70,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
                 environment.getConfig(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
-
-
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.setOffscreenPageLimit(UNITS_TO_PRELOAD);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -236,8 +232,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         }
         unitList.addAll(leaves);
         pagerAdapter.notifyDataSetChanged();
-
-        ViewPagerDownloadManager.instance.setMainComponent(selectedUnit, unitList);
 
         int index = unitList.indexOf(selectedUnit);
         if (index >= 0) {
