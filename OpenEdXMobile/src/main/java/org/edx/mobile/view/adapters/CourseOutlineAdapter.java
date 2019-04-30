@@ -184,9 +184,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     break;
                 }
                 case SectionRow.BULK_DOWNLOAD: {
+                    convertView = inflater.inflate(R.layout.row_bulk_download_container, parent, false);
                     final Activity activity = parentFragment.getActivity();
                     if (activity != null && ((RoboAppCompatActivity) activity).isInForeground()) {
-                        convertView = inflater.inflate(R.layout.row_bulk_download_container, parent, false);
                         final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
                         parentFragment.getChildFragmentManager().
                                 beginTransaction().replace(convertView.getId(), fragment).commit();
@@ -217,11 +217,14 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 return getLastAccessedView(position, convertView);
             }
             case SectionRow.BULK_DOWNLOAD: {
-                if (rootComponent != null && convertView != null) {
-                    final BulkDownloadFragment fragment = (BulkDownloadFragment) convertView.getTag();
-                    fragment.populateViewHolder(
-                            isOnCourseOutline ? rootComponent.getCourseId() : rootComponent.getId(),
-                            rootComponent.getVideos(true));
+                if (rootComponent != null) {
+                    final Object tag = convertView.getTag();
+                    if (tag instanceof BulkDownloadFragment) {
+                        final BulkDownloadFragment fragment = (BulkDownloadFragment) tag;
+                        fragment.populateViewHolder(
+                                isOnCourseOutline ? rootComponent.getCourseId() : rootComponent.getId(),
+                                rootComponent.getVideos(true));
+                    }
                 }
                 return convertView;
             }
