@@ -255,10 +255,14 @@ public class MainDiscoveryFragment extends BaseFragment {
                     environment.getRouter().showCourseInfo(getActivity(), pathId);
                     break;
                 case Screen.PROGRAM_DISCOVERY:
+                case Screen.DEGREE_DISCOVERY:
                     environment.getRouter().showProgramInfo(getActivity(), pathId);
                     break;
             }
         }
+        // Setting this to null, so that upon recreation of the fragment, relevant activity
+        // shouldn't be auto created again.
+        bundle.putString(Router.EXTRA_SCREEN_NAME, null);
     }
 
     private int getBtnIdAgainstScreeName(@NonNull @ScreenDef String screeName) {
@@ -267,6 +271,8 @@ public class MainDiscoveryFragment extends BaseFragment {
                 return R.id.option_courses;
             case Screen.PROGRAM_DISCOVERY:
                 return R.id.option_programs;
+            case Screen.DEGREE_DISCOVERY:
+                return R.id.option_degrees;
             default:
                 return -1;
         }
