@@ -89,6 +89,7 @@ public class UserInfoViewModel extends BaseViewModel {
                 else
                 {
                     mActivity.showLongSnack(mActivity.getString(R.string.registered_successfully));
+                    mDataManager.refreshLocalDatabase();
                     ActivityUtil.gotoPage(mActivity, LandingActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mActivity.finish();
 

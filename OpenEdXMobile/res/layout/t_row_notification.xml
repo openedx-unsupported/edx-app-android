@@ -41,7 +41,7 @@
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
                 android:fontFamily="@font/hind_medium"
-                android:text="Notification Title"/>
+                android:text="@{viewModel.title}"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -56,8 +56,7 @@
                 android:layout_marginTop="6dp"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
-                android:fontFamily="@font/hind_medium"
-                android:text="Notification Description"/>
+                android:fontFamily="@font/hind_medium"/>
 
             <View
                 android:layout_width="match_parent"

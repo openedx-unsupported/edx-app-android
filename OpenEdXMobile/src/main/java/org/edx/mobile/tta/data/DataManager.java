@@ -221,6 +221,12 @@ public class DataManager extends BaseRoboInjector {
         return mDataManager;
     }
 
+    public void refreshLocalDatabase(){
+        mLocalDataSource = new LocalDataSource(
+                Room.databaseBuilder(context, TADatabase.class, TA_DATABASE)
+                        .fallbackToDestructiveMigration().build());
+    }
+
     public IEdxEnvironment getEdxEnvironment() {
         return edxEnvironment;
     }
@@ -2547,10 +2553,16 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new Thread(){
+            new AsyncTask<Void, Void, List<Notification>>() {
                 @Override
-                public void run() {
-                    List<Notification> notifications = mLocalDataSource.getAllUnupdatedNotifications(loginPrefs.getUsername());
+                protected List<Notification> doInBackground(Void... voids) {
+                    return mLocalDataSource.getAllUnupdatedNotifications(loginPrefs.getUsername());
+                }
+
+                @Override
+                protected void onPostExecute(List<Notification> notifications) {
+                    super.onPostExecute(notifications);
+
                     if (notifications != null && !notifications.isEmpty()){
                         List<String> notificationIds = new ArrayList<>();
                         for (Notification notification: notifications){
@@ -2581,7 +2593,7 @@ public class DataManager extends BaseRoboInjector {
                         }.execute();
                     }
                 }
-            }.start();
+            }.execute();
 
         } else {
             if (callback != null) {

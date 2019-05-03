@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.feed.view_model;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -13,10 +14,17 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowNotificationBinding;
+import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.NotificationType;
+import org.edx.mobile.tta.data.enums.SourceType;
+import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
+import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -57,8 +65,40 @@ public class NotificationsViewModel extends BaseViewModel {
             if (!item.isSeen()){
                 item.setSeen(true);
                 mDataManager.updateNotificationsInLocal(Collections.singletonList(item));
+                adapter.notifyItemChanged(adapter.getItemPosition(item));
             }
-            mActivity.showShortSnack(item.getDescription());
+
+            try {
+                switch (NotificationType.valueOf(item.getType())){
+                    case content:
+                        mActivity.showLoading();
+                        mDataManager.getContent(Long.parseLong(item.getRef_id()), new OnResponseCallback<Content>() {
+                            @Override
+                            public void onSuccess(Content data) {
+                                mActivity.hideLoading();
+                                showContentDashboard(data);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+
+                        break;
+                    case system:
+                        mActivity.showLongSnack(item.getDescription());
+                        break;
+                    case profile:
+                        mActivity.showLongSnack(item.getDescription());
+                        break;
+                    default:
+                        mActivity.showLongSnack(item.getDescription());
+                }
+            } catch (IllegalArgumentException e) {
+                mActivity.showLongSnack(item.getDescription());
+            }
 
         });
 
@@ -102,6 +142,19 @@ public class NotificationsViewModel extends BaseViewModel {
         if (newItemsAdded) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    public void showContentDashboard(Content selectedContent){
+
+        Bundle parameters = new Bundle();
+        parameters.putParcelable(Constants.KEY_CONTENT, selectedContent);
+        if (selectedContent.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
+                selectedContent.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
+            ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
+        } else {
+            ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
+        }
+
     }
 
     @Override

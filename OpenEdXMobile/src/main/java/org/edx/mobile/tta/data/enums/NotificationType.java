@@ -4,6 +4,7 @@ public enum NotificationType {
 
     content,
     profile,
-    app
+    app,
+    system
 
 }

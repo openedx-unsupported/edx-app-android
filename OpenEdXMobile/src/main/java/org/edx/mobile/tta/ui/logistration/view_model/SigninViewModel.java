@@ -99,6 +99,7 @@ public class SigninViewModel extends BaseViewModel {
                         data.profile.name.equals(data.profile.username)) {
                     ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 } else {
+                    mDataManager.refreshLocalDatabase();
                     ActivityUtil.gotoPage(mActivity, LandingActivity.class);
 
                     mActivity.analytic.addMxAnalytics_db(null, Action.SignIn, Nav.signin.name(),

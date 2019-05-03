@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import androidx.annotation.Nullable;
+
 @Entity(tableName = "notification")
 public class Notification {
 
@@ -89,5 +91,10 @@ public class Notification {
 
     public void setUpdated(boolean updated) {
         this.updated = updated;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof Notification && (((Notification) obj).id.equals(id));
     }
 }

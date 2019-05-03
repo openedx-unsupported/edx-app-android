@@ -57,7 +57,7 @@
                     layout="@layout/t_row_content_slider"
                     android:layout_marginBottom="@dimen/_20px"
                     android:visibility="@{viewModel.featureListVisible?View.VISIBLE:View.GONE}"
-                    app:layout_scrollFlags="scroll|enterAlways"/>
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
 
                 <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                     android:layout_width="match_parent"
@@ -75,7 +75,7 @@
                     app:mx_titleTextColor="@color/gray_5"
                     app:mx_titleTextFont="@font/hind_medium"
                     app:mx_titleTextSize="@dimen/list_title_size"
-                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                     finite_recycler_adapter="@{viewModel.suggestedUsersAdapter}"
                     android:visibility="@{viewModel.suggestedUsersVisible?View.VISIBLE:View.GONE}"/>
 
