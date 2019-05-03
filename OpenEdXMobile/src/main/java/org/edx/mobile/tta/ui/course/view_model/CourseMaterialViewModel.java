@@ -29,7 +29,6 @@ import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.Analytic;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
@@ -241,20 +240,9 @@ public class CourseMaterialViewModel extends BaseViewModel {
             ActivityUtil.viewPDF(mActivity, new File(filePath));
         }
 
-        Metadata metadata = new Metadata();
-        metadata.setContent_id(String.valueOf(content.getId()));
-        metadata.setSource_identity(content.getSource_identity());
-        metadata.setContent_title(content.getName());
-        metadata.setContent_icon(content.getIcon());
-        metadata.setSource_title(content.getSource().getTitle());
-        metadata.setLikes(Long.parseLong(likes.get()));
-        metadata.setScormId(selectedScormForPlay.getId());
-        metadata.setScormTitle(selectedScormForPlay.getDisplayName());
-        metadata.setScormSystemName(selectedScormForPlay.getInternalName());
-
         mActivity.analytic.addMxAnalytics_db(
                 selectedScormForPlay.getInternalName(), Action.ViewSection, course.getCourse().getName(),
-                Source.Mobile, selectedScormForDownload.getId());
+                Source.Mobile, selectedScormForPlay.getId());
 
     }
 
@@ -342,20 +330,9 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 mActivity.hideLoading();
                                 setButtonText(data);
 
-                                Metadata metadata = new Metadata();
-                                metadata.setContent_id(String.valueOf(content.getId()));
-                                metadata.setSource_identity(content.getSource_identity());
-                                metadata.setContent_title(content.getName());
-                                metadata.setContent_icon(content.getIcon());
-                                metadata.setSource_title(content.getSource().getTitle());
-                                metadata.setLikes(Long.parseLong(likes.get()));
-                                metadata.setScormId(finalScorm.getId());
-                                metadata.setScormTitle(finalScorm.getDisplayName());
-                                metadata.setScormSystemName(finalScorm.getInternalName());
-
                                 mActivity.analytic.addMxAnalytics_db(
                                         finalScorm.getInternalName(), Action.GenerateCertificate, course.getCourse().getName(),
-                                        Source.Mobile, finalScorm.getId());
+                                        Source.Mobile, course.getCourse().getId());
 
                             }
 
@@ -385,17 +362,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 mDataManager.getEdxEnvironment().getRouter().showAuthenticatedWebviewActivity(
                                         mActivity, url, data.getCourse_name()
                                 );
-
-                                Metadata metadata = new Metadata();
-                                metadata.setContent_id(String.valueOf(content.getId()));
-                                metadata.setSource_identity(content.getSource_identity());
-                                metadata.setContent_title(content.getName());
-                                metadata.setContent_icon(content.getIcon());
-                                metadata.setSource_title(content.getSource().getTitle());
-                                metadata.setLikes(Long.parseLong(likes.get()));
-                                metadata.setScormId(finalScorm.getId());
-                                metadata.setScormTitle(finalScorm.getDisplayName());
-                                metadata.setScormSystemName(finalScorm.getInternalName());
 
                                 mActivity.analytic.addMxAnalytics_db(
                                         finalScorm.getInternalName(), Action.ViewCert, course.getCourse().getName(),
@@ -462,14 +428,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 mActivity.hideLoading();
                 bookmarkIcon.set(data.isIs_active() ? R.drawable.t_icon_bookmark_filled : R.drawable.t_icon_bookmark);
 
-                Metadata metadata = new Metadata();
-                metadata.setContent_id(String.valueOf(content.getId()));
-                metadata.setSource_identity(content.getSource_identity());
-                metadata.setContent_title(content.getName());
-                metadata.setContent_icon(content.getIcon());
-                metadata.setSource_title(content.getSource().getTitle());
-                metadata.setLikes(Long.parseLong(likes.get()));
-
                 if (data.isIs_active()){
                     mActivity.analytic.addMxAnalytics_db(
                             content.getName() , Action.BookmarkCourse, course.getCourse().getName(),
@@ -503,23 +461,17 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 }
                 if (data.getStatus()){
                     n++;
-
-                    Metadata metadata = new Metadata();
-                    metadata.setContent_id(String.valueOf(content.getId()));
-                    metadata.setSource_identity(content.getSource_identity());
-                    metadata.setContent_title(content.getName());
-                    metadata.setContent_icon(content.getIcon());
-                    metadata.setSource_title(content.getSource().getTitle());
-                    metadata.setLikes(n);
-
-                    mActivity.analytic.addMxAnalytics_db(
-                            content.getName() , Action.CourseLike, course.getCourse().getName(),
-                            Source.Mobile, course.getCourse().getId());
-
                 } else {
                     n--;
                 }
                 likes.set(String.valueOf(n));
+
+                mActivity.analytic.addMxAnalytics_db(
+                        content.getName() ,
+                        data.getStatus() ? Action.CourseLike : Action.CourseUnlike,
+                        course.getCourse().getName(),
+                        Source.Mobile, course.getCourse().getId());
+
             }
 
             @Override
@@ -576,17 +528,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 if (adapter != null){
                     adapter.notifyDataSetChanged();
                 }
-
-                Metadata metadata = new Metadata();
-                metadata.setContent_id(String.valueOf(content.getId()));
-                metadata.setSource_identity(content.getSource_identity());
-                metadata.setContent_title(content.getName());
-                metadata.setContent_icon(content.getIcon());
-                metadata.setSource_title(content.getSource().getTitle());
-                metadata.setLikes(Long.parseLong(likes.get()));
-                metadata.setScormId(selectedScormForDownload.getId());
-                metadata.setScormTitle(selectedScormForDownload.getDisplayName());
-                metadata.setScormSystemName(selectedScormForDownload.getInternalName());
 
                 mActivity.analytic.addMxAnalytics_db(
                         selectedScormForDownload.getInternalName(), Action.StartScormDownload, course.getCourse().getName(),
@@ -650,17 +591,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
                         for (ScormBlockModel model: remainingScorms){
 
-                            Metadata metadata = new Metadata();
-                            metadata.setContent_id(String.valueOf(content.getId()));
-                            metadata.setSource_identity(content.getSource_identity());
-                            metadata.setContent_title(content.getName());
-                            metadata.setContent_icon(content.getIcon());
-                            metadata.setSource_title(content.getSource().getTitle());
-                            metadata.setLikes(Long.parseLong(likes.get()));
-                            metadata.setScormId(model.getId());
-                            metadata.setScormTitle(model.getDisplayName());
-                            metadata.setScormSystemName(model.getInternalName());
-
                             mActivity.analytic.addMxAnalytics_db(
                                     model.getInternalName(), Action.StartScormDownload, course.getCourse().getName(),
                                     Source.Mobile, model.getId());
@@ -723,16 +653,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 adapter.notifyDataSetChanged();
             }
 
-            Metadata metadata = new Metadata();
-            metadata.setContent_id(String.valueOf(content.getId()));
-            metadata.setSource_identity(content.getSource_identity());
-            metadata.setContent_title(content.getName());
-            metadata.setContent_icon(content.getIcon());
-            metadata.setSource_title(content.getSource().getTitle());
-            metadata.setScormId(e.getEntry().videoId);
-            metadata.setScormTitle(e.getEntry().title);
-            metadata.setScormSystemName(e.getEntry().videoId);
-
             mActivity.analytic.addMxAnalytics_db(
                     e.getEntry().videoId, Action.StartScormDownload, course.getCourse().getName(),
                     Source.Mobile, e.getEntry().videoId);
@@ -761,16 +681,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         e.getModel().getDownloadType().equalsIgnoreCase(DownloadType.PDF.name()))) {
             populateData();
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
-
-            Metadata metadata = new Metadata();
-            metadata.setContent_id(String.valueOf(content.getId()));
-            metadata.setSource_identity(content.getSource_identity());
-            metadata.setContent_title(content.getName());
-            metadata.setContent_icon(content.getIcon());
-            metadata.setSource_title(content.getSource().getTitle());
-            metadata.setScormId(e.getModel().getVideoId());
-            metadata.setScormTitle(e.getModel().getTitle());
-            metadata.setScormSystemName(e.getModel().getVideoId());
 
             mActivity.analytic.addMxAnalytics_db(
                     e.getModel().getVideoId(), Action.DeleteSection, course.getCourse().getName(),

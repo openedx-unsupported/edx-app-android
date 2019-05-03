@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
@@ -54,9 +53,6 @@ public class AgendaItemTab extends TaBaseFragment {
     public void onPageShow() {
         super.onPageShow();
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, item.getSource_name()));
-
-        Metadata metadata = new Metadata();
-        metadata.setSource_title(item.getSource_title());
 
         Nav nav;
         if (toolbarData.equalsIgnoreCase(getString(R.string.state_wise_list))){

@@ -46,7 +46,7 @@
             infinite_recycler_adapter="@{viewModel.adapter}"
             layout_manager="@{viewModel.layoutManager}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:nestedScrollingEnabled="true"
             app:mx_itemLayout="@layout/t_row_comments" />
 

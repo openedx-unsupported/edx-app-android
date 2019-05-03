@@ -23,7 +23,6 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowAgendaContentBinding;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.enums.SourceName;
@@ -93,19 +92,23 @@ public class AgendaItemViewModel extends BaseViewModel {
                     toolBarData, agendaItem.getSource_title()));
         }
 
-        switch (SourceName.valueOf(agendaItem.getSource_name())){
-            case course:
-                emptyImage.set(R.drawable.t_icon_course_130);
-                break;
-            case chatshala:
-                emptyImage.set(R.drawable.t_icon_chatshala_130);
-                break;
-            case toolkit:
-                emptyImage.set(R.drawable.t_icon_toolkit_130);
-                break;
-            default:
-                emptyImage.set(R.drawable.t_icon_course_130);
-                break;
+        try {
+            switch (SourceName.valueOf(agendaItem.getSource_name())){
+                case course:
+                    emptyImage.set(R.drawable.t_icon_course_130);
+                    break;
+                case chatshala:
+                    emptyImage.set(R.drawable.t_icon_chatshala_130);
+                    break;
+                case toolkit:
+                    emptyImage.set(R.drawable.t_icon_toolkit_130);
+                    break;
+                default:
+                    emptyImage.set(R.drawable.t_icon_course_130);
+                    break;
+            }
+        } catch (IllegalArgumentException e) {
+            emptyImage.set(R.drawable.t_icon_course_130);
         }
 
     }
@@ -155,6 +158,7 @@ public class AgendaItemViewModel extends BaseViewModel {
                 });
             } else {
                 mActivity.hideLoading();
+                toggleEmptyVisibility();
             }
         } else {
             mDataManager.getDownloadedContent(agendaItem.getSource_name(), new OnResponseCallback<List<Content>>() {
@@ -191,13 +195,6 @@ public class AgendaItemViewModel extends BaseViewModel {
         if (selectedContent.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
                 selectedContent.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
             ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
-
-            Metadata metadata = new Metadata();
-            metadata.setContent_id(String.valueOf(selectedContent.getId()));
-            metadata.setContent_title(selectedContent.getName());
-            metadata.setContent_icon(selectedContent.getIcon());
-            metadata.setSource_title(selectedContent.getSource().getTitle());
-            metadata.setSource_identity(selectedContent.getSource_identity());
 
             Nav nav;
             if (toolBarData.equalsIgnoreCase(mActivity.getString(R.string.state_wise_list))){

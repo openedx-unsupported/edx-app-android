@@ -85,7 +85,11 @@ public abstract class MxBaseAdapter<T> extends RecyclerView.Adapter<MxViewHolder
 
     @Override
     public T getItem(int position) {
-        return mList.get(position);
+        try {
+            return mList.get(position);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

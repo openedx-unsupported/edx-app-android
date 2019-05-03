@@ -18,6 +18,10 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.tta.analytics.Analytic;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.List;
@@ -67,6 +71,11 @@ public enum ShareUtils {
                         final Intent intent = ShareUtils.newShareIntent(shareText);
                         intent.setComponent(componentName);
                         activity.startActivity(intent);
+
+                        Analytic analytic = new Analytic(activity);
+                        analytic.addMxAnalytics_db(courseData.getCourse().getName(), Action.Share,
+                                courseData.getCourse().getName(), Source.Mobile, courseData.getCourse().getId(),
+                                BreadcrumbUtil.getBreadcrumb() + "/" + shareType.name());
                     }
 
                     @NonNull

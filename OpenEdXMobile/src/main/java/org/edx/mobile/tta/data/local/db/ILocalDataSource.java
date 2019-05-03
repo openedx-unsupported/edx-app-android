@@ -30,14 +30,16 @@ public interface ILocalDataSource {
     void insertContents(List<Content> contents);
     Content getContentById(long id);
     void insertContent(Content content);
+    Content getContentBySourceIdentity(String sourceIdentity);
 
-    List<Feed> getFeeds();
+    List<Feed> getFeeds(String username, int take, int skip);
     void insertFeeds(List<Feed> feeds);
 
     Category getCategoryBySourceId(long sourceId);
 
     List<ContentList> getContentListsByCategoryId(long categoryId);
     List<ContentList> getContentListsByCategoryIdAndMode(long categoryId, String mode);
+    List<ContentList> getContentListsByRootCategory(String rootCategory);
 
     List<Source> getSources();
 

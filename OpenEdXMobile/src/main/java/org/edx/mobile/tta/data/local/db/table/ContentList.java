@@ -39,6 +39,8 @@ public class ContentList implements Comparable<ContentList>
 
     private String modified_at;
 
+    private String root_category;
+
     public String getRegion ()
     {
         return region;
@@ -185,6 +187,14 @@ public class ContentList implements Comparable<ContentList>
     public void setModified_at (String modified_at)
     {
         this.modified_at = modified_at;
+    }
+
+    public String getRoot_category() {
+        return root_category;
+    }
+
+    public void setRoot_category(String root_category) {
+        this.root_category = root_category;
     }
 
     @Override

@@ -151,7 +151,7 @@ public class DateUtil {
 
     }
 
-    public static String getHourMonth12(long timestamp){
+    public static String getHourMinute12(long timestamp){
 
         Locale locale = new Locale("en");
         SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm a", locale);

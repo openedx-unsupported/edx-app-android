@@ -39,7 +39,9 @@ import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.Analytic;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.data.enums.CertificateStatus;
+import org.edx.mobile.tta.data.enums.FeedAction;
 import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.data.enums.SourceType;
@@ -52,6 +54,7 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.model.BaseResponse;
@@ -65,6 +68,7 @@ import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.feed.FeedMetadata;
 import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
@@ -86,11 +90,13 @@ import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
+import org.edx.mobile.tta.task.content.GetContentFromSourceIdentityTask;
 import org.edx.mobile.tta.task.content.GetContentTask;
 import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
 import org.edx.mobile.tta.task.content.IsLikeTask;
 import org.edx.mobile.tta.task.content.SetBookmarkTask;
 import org.edx.mobile.tta.task.content.SetLikeTask;
+import org.edx.mobile.tta.task.content.SetLikeUsingSourceIdentityTask;
 import org.edx.mobile.tta.task.content.TotalLikeTask;
 import org.edx.mobile.tta.task.content.course.GetCourseDataFromPersistableCacheTask;
 import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseFromCacheTask;
@@ -108,6 +114,7 @@ import org.edx.mobile.tta.task.content.course.discussion.GetThreadCommentsTask;
 import org.edx.mobile.tta.task.content.course.discussion.LikeDiscussionCommentTask;
 import org.edx.mobile.tta.task.content.course.discussion.LikeDiscussionThreadTask;
 import org.edx.mobile.tta.task.feed.FollowUserTask;
+import org.edx.mobile.tta.task.feed.GetFeedsTask;
 import org.edx.mobile.tta.task.feed.GetSuggestedUsersTask;
 import org.edx.mobile.tta.task.library.GetCollectionConfigTask;
 import org.edx.mobile.tta.task.library.GetCollectionItemsTask;
@@ -589,12 +596,14 @@ public class DataManager extends BaseRoboInjector {
                     }
                     List<Long> requiredListIds = Arrays.asList(listIds);
                     for (Content content : contents) {
-                        for (long listId : content.getLists()) {
-                            if (requiredListIds.contains(listId)) {
-                                for (CollectionItemsResponse response : responses) {
-                                    if (response.getId() == listId) {
-                                        response.getContent().add(content);
-                                        break;
+                        if (content.getLists() != null) {
+                            for (long listId : content.getLists()) {
+                                if (requiredListIds.contains(listId)) {
+                                    for (CollectionItemsResponse response : responses) {
+                                        if (response.getId() == listId) {
+                                            response.getContent().add(content);
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -1083,6 +1092,29 @@ public class DataManager extends BaseRoboInjector {
     public void setLike(long contentId, OnResponseCallback<StatusResponse> callback) {
         if (NetworkUtil.isConnected(context)) {
             new SetLikeTask(context, contentId) {
+                @Override
+                protected void onSuccess(StatusResponse statusResponse) throws Exception {
+                    super.onSuccess(statusResponse);
+                    if (statusResponse == null) {
+                        callback.onFailure(new TaException("Error occured. Couldn't like."));
+                    } else {
+                        callback.onSuccess(statusResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+    }
+
+    public void setLikeUsingSourceIdentity(String sourceIdentity, OnResponseCallback<StatusResponse> callback) {
+        if (NetworkUtil.isConnected(context)) {
+            new SetLikeUsingSourceIdentityTask(context, sourceIdentity) {
                 @Override
                 protected void onSuccess(StatusResponse statusResponse) throws Exception {
                     super.onSuccess(statusResponse);
@@ -2118,7 +2150,10 @@ public class DataManager extends BaseRoboInjector {
                         new Thread() {
                             @Override
                             public void run() {
-                                mLocalDataSource.insertContent(content);
+                                Content localContent = mLocalDataSource.getContentById(content.getId());
+                                if (localContent == null){
+                                    mLocalDataSource.insertContent(content);
+                                }
                             }
                         }.start();
 
@@ -2577,14 +2612,21 @@ public class DataManager extends BaseRoboInjector {
                     super.onSuccess(notifications);
 
                     if (notifications != null) {
-                        new Thread(){
-                            @Override
-                            public void run() {
-                                mLocalDataSource.insertNotifications(notifications);
-                            }
-                        }.start();
 
-                        callback.onSuccess(notifications);
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                mLocalDataSource.insertNotifications(notifications);
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
+                            }
+                        }.execute();
+
                     } else {
                         getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
                     }
@@ -2669,5 +2711,217 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
+    public void getFeeds(int take, int skip, OnResponseCallback<List<Feed>> callback){
+
+        //Mocking start
+        /*if (skip > 5){
+            callback.onFailure(new TaException("No feeds available"));
+            return;
+        }
+
+        List<Feed> feeds = new ArrayList<>();
+        for (int i = 0; i < take; i++){
+            Feed feed = new Feed();
+            feed.setId(String.valueOf(take*skip + i));
+            feed.setAction_by("Chirag");
+            feed.setAction_on("1556014771");
+            feed.setAction(Action.CourseLike.name());
+
+            FeedMetadata metadata = new FeedMetadata();
+            metadata.setIcon("http://theteacherapp.org/asset-v1:Pedagogy+01+2017_Ped_01+type@asset+block@Question_Logo.png");
+            metadata.setComment_count("5");
+            metadata.setLike_count("80");
+            metadata.setId("course-v1:Pedagogy+01+2017_Ped_01");
+            metadata.setSource("कोर्स");
+            metadata.setText("सवाल पूछने के कौशल");
+
+            feed.setMeta_data(metadata);
+
+            if (i%2 == 0){
+                metadata.setUser_name("Hermione Granger");
+                metadata.setUser_icon("https://cdn.vox-cdn.com/thumbor/aiU71J02TAxm0F0h5HP-ELtk0To=/0x0:1024x768/920x613/filters:focal(408x210:570x372):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/51000509/harry-potter-top-10-hermione-granger-moments-hermione-granger-358045.0.jpg");
+                metadata.setTag_label("कक्षा_1st कक्षा_2nd कौशल_हिंदी कौशल_English भाषा_हिंदी भाषा_English");
+            }
+
+            if (i%3 == 0){
+                metadata.setLiked(true);
+            }
+
+            feeds.add(feed);
+        }
+        callback.onSuccess(feeds);*/
+        //Mocking end
+
+        //Actual code    **DO NOT DELETE**
+        if (NetworkUtil.isConnected(context)){
+
+            new GetFeedsTask(context, take, skip){
+                @Override
+                protected void onSuccess(List<Feed> feeds) throws Exception {
+                    super.onSuccess(feeds);
+
+                    if (feeds != null && !feeds.isEmpty()){
+
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                for (Feed feed: feeds){
+                                    feed.setUsername(loginPrefs.getUsername());
+                                }
+                                mLocalDataSource.insertFeeds(feeds);
+                            }
+                        }.start();
+
+                        callback.onSuccess(feeds);
+                    } else {
+                        callback.onFailure(new TaException("No feeds available"));
+                    }
+
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getFeedsFromLocal(take, skip, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getFeedsFromLocal(take, skip, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getFeedsFromLocal(int take, int skip, OnResponseCallback<List<Feed>> callback, Exception e) {
+
+        new AsyncTask<Void, Void, List<Feed>>() {
+            @Override
+            protected List<Feed> doInBackground(Void... voids) {
+                return mLocalDataSource.getFeeds(loginPrefs.getUsername(), take, skip);
+            }
+
+            @Override
+            protected void onPostExecute(List<Feed> feeds) {
+                super.onPostExecute(feeds);
+                if (feeds != null && !feeds.isEmpty()){
+                    callback.onSuccess(feeds);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getContentFromSourceIdentity(String sourceIdentity, OnResponseCallback<Content> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetContentFromSourceIdentityTask(context, sourceIdentity){
+                @Override
+                protected void onSuccess(Content content) throws Exception {
+                    super.onSuccess(content);
+
+                    if (content == null){
+                        getLocalContentFromSourceIdentity(sourceIdentity, callback,
+                                new TaException("Content not found"));
+                    } else {
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                Content localContent = mLocalDataSource.getContentById(content.getId());
+                                if (localContent == null){
+                                    mLocalDataSource.insertContent(content);
+                                }
+                            }
+                        }.start();
+                        callback.onSuccess(content);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getLocalContentFromSourceIdentity(sourceIdentity, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getLocalContentFromSourceIdentity(sourceIdentity, callback,
+                    new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getLocalContentFromSourceIdentity(String sourceIdentity, OnResponseCallback<Content> callback, Exception e){
+
+        new AsyncTask<Void, Void, Content>() {
+            @Override
+            protected Content doInBackground(Void... voids) {
+                return mLocalDataSource.getContentBySourceIdentity(sourceIdentity);
+            }
+
+            @Override
+            protected void onPostExecute(Content content) {
+                super.onPostExecute(content);
+
+                if (content == null){
+                    callback.onFailure(e);
+                } else {
+                    callback.onSuccess(content);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getFeedFeatureList(OnResponseCallback<List<Content>> callback) {
+
+        if (NetworkUtil.isConnected(context)){
+
+            new AsyncTask<Void, Void, ContentList>() {
+                @Override
+                protected ContentList doInBackground(Void... voids) {
+                    List<ContentList> contentLists = mLocalDataSource.getContentListsByRootCategory("feed");
+                    if (contentLists == null || contentLists.isEmpty()){
+                        return null;
+                    } else {
+                        return contentLists.get(0);
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(ContentList contentList) {
+                    super.onPostExecute(contentList);
+
+                    if (contentList != null) {
+                        getCollectionItems(new Long[]{contentList.getId()}, 0, 5,
+                                new OnResponseCallback<List<CollectionItemsResponse>>() {
+                                    @Override
+                                    public void onSuccess(List<CollectionItemsResponse> data) {
+                                        if (data == null || data.isEmpty() ||
+                                                data.get(0).getContent() == null ||
+                                                data.get(0).getContent().isEmpty()
+                                        ){
+                                            callback.onFailure(new TaException("Featured contents not available"));
+                                        } else {
+                                            callback.onSuccess(data.get(0).getContent());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        callback.onFailure(e);
+                                    }
+                                });
+                    } else {
+                        callback.onFailure(new TaException("Feature list not available"));
+                    }
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
 }
 

@@ -33,7 +33,6 @@ import android.widget.LinearLayout;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
@@ -194,13 +193,6 @@ public class ConnectDashboardActivity extends BaseVMActivity {
                 scrollPosition = SCROLL_POSITION_MID;
             }
         });*/
-
-        Metadata metadata = new Metadata();
-        metadata.setContent_id(String.valueOf(content.getId()));
-        metadata.setSource_identity(content.getSource_identity());
-        metadata.setContent_title(content.getName());
-        metadata.setContent_icon(content.getIcon());
-        metadata.setSource_title(content.getSource().getTitle());
 
         analytic.addMxAnalytics_db(
                 content.getName() , Action.ViewPost, content.getSource().getName(),

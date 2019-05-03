@@ -12,7 +12,6 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.DiscussionTopicType;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
@@ -52,19 +51,6 @@ public class DiscussionThreadActivity extends BaseVMActivity {
         viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
-
-        Metadata metadata = new Metadata();
-        metadata.setContent_title(course.getCourse().getName());
-        metadata.setUser_id(thread.getAuthor());
-        metadata.setUser_display_name(thread.getAuthorDisplayName());
-        metadata.setUser_icon(thread.getProfileImage().getImageUrlFull());
-        metadata.setThreadId(thread.getIdentifier());
-        metadata.setThreadTitle(thread.getTitle());
-        metadata.setTopicType(topic.getName().contains("लेखक") ?
-                DiscussionTopicType.Postname_AD.name() :
-                DiscussionTopicType.Postname_CD.name());
-        metadata.setLikes(thread.getVoteCount());
-        metadata.setComments(thread.getCommentCount());
 
         analytic.addMxAnalytics_db(
                 topic.getName().contains("लेखक") ?

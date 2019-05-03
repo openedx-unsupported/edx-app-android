@@ -3,14 +3,17 @@ package org.edx.mobile.tta.data.local.db.table;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.tta.data.model.feed.FeedMetadata;
 
-@Entity(tableName = "feed")
+@Entity(tableName = "feed", primaryKeys = {"id", "username"})
 public class Feed {
 
-    @PrimaryKey
-    private long id;
+    @NonNull
+    private String id;
 
     private String action;
 
@@ -25,11 +28,19 @@ public class Feed {
     @Embedded(prefix = "meta_data_")
     private FeedMetadata meta_data;
 
-    public long getId() {
+    @NonNull
+    private String username;
+
+    private String state;
+
+    private boolean have_read;
+
+    @NonNull
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -79,5 +90,35 @@ public class Feed {
 
     public void setMeta_data(FeedMetadata meta_data) {
         this.meta_data = meta_data;
+    }
+
+    @NonNull
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(@NonNull String username) {
+        this.username = username;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public boolean isHave_read() {
+        return have_read;
+    }
+
+    public void setHave_read(boolean have_read) {
+        this.have_read = have_read;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof Feed && (((Feed) obj).id.equals(id));
     }
 }

@@ -86,15 +86,15 @@ public class LandingViewModel extends BaseViewModel {
     }
 
     public void showFeed() {
-        mActivity.showShortSnack("Coming soon");
-        /*ActivityUtil.replaceFragmentInActivity(
+//        mActivity.showShortSnack("Coming soon");
+        ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 new FeedFragment(),
                 R.id.dashboard_fragment,
                 FeedFragment.TAG,
                 false,
                 null
-        );*/
+        );
     }
 
     public void showSearch(){

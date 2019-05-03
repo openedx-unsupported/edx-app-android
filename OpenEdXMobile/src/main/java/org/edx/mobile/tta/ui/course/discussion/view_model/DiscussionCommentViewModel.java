@@ -23,6 +23,9 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.DiscussionTopicType;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -179,6 +182,11 @@ public class DiscussionCommentViewModel extends BaseViewModel {
                         comment.setVoteCount(data.getVoteCount());
                         likeCount.set(String.valueOf(comment.getVoteCount()));
                         likeIcon.set(comment.isVoted() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
+
+                        mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
+                                data.isVoted() ? Action.DBCommentlike : Action.DBCommentUnlike,
+                                course.getCourse().getName(),
+                                Source.Mobile, comment.getIdentifier());
                     }
 
                     @Override

@@ -4,7 +4,7 @@
         <selector xmlns:android="http://schemas.android.com/apk/res/android">
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/edx_brand_primary_base" />
+                    <solid android:color="@color/primary_cyan" />
                     <corners android:radius="@dimen/edx_box_radius" />
                 </shape>
             </item>

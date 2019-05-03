@@ -94,4 +94,7 @@
     <string name="empty_download_list">\“%s\” में %s उपलब्ध नहीं है</string>
     <string name="empty_my_agenda_list">\“%s\” में आपने %s नहीं चुना है। अपने लिए %s का चुनाव करने के लिए @ पर क्लिक करें</string>
     <string name="you_are_offline">आप ऑफलाइन हैं</string>
+    <string name="feed_format_badge"><b>%s</b> ने हाल ही में <font fgcolor="#F75791">%s पदक</font> पाया</string>
+    <string name="feed_format_certificate"><b>%s</b> ने %s में <font fgcolor="#F75791">Certificate</font> पाया</string>
+    <string name="view_discussion">चर्चा देखें</string>
 </resources>

@@ -24,6 +24,9 @@ public interface ContentListDao {
     @Query("Select * from content_list where category_id = :categoryId and mode = :mode")
     List<ContentList> getAllByCategoryIdAndMode(long categoryId, String mode);
 
+    @Query("Select * from content_list where root_category = :rootCategory")
+    List<ContentList> getByRootCategory(String rootCategory);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ContentList contentList);
 

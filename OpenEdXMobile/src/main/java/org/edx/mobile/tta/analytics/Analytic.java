@@ -57,6 +57,28 @@ public class Analytic {
         }
     }
 
+    public void addMxAnalytics_db(String metadata, Action action, String page, Source source, String actionId, String nav) {
+        String username = loginPrefs.getUsername();
+
+        //save analytics to  local db first
+        //download entry to db
+        if (username != null) {
+            AnalyticModel model = new AnalyticModel();
+            model.user_id = username;
+            model.action = String.valueOf(action);
+            model.metadata = metadata;
+            model.page = page;
+            model.source = String.valueOf(source);
+            model.nav = nav;
+            model.action_id = actionId;
+
+            model.setEvent_date();
+            model.setStatus(0);
+
+            environment.getStorage().addAnalytic(model);
+        }
+    }
+
     public void addTinCanAnalyticDB(String tincan_obj, String course_id) {
         String username = loginPrefs.getUsername();
 

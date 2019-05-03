@@ -9,6 +9,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class Content implements Parcelable {
 
     private long modified_by;
 
+    @NonNull
     private String source_identity;
 
     private String name;
@@ -123,12 +125,13 @@ public class Content implements Parcelable {
         this.modified_by = modified_by;
     }
 
+    @NonNull
     public String getSource_identity ()
     {
         return source_identity;
     }
 
-    public void setSource_identity (String source_identity)
+    public void setSource_identity (@NonNull String source_identity)
     {
         this.source_identity = source_identity;
     }

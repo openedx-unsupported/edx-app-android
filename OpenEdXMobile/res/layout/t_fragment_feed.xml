@@ -13,7 +13,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/app_background">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -39,24 +40,28 @@
 
         </RelativeLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/app_background">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@color/app_background"
+                app:elevation="0dp">
 
                 <include
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:id="@+id/featured_content_slider"
                     layout="@layout/t_row_content_slider"
-                    android:visibility="gone"/>
+                    android:layout_marginBottom="@dimen/_20px"
+                    android:visibility="@{viewModel.featureListVisible?View.VISIBLE:View.GONE}"
+                    app:layout_scrollFlags="scroll|enterAlways"/>
 
                 <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20px"
                     app:mx_itemLayout="@layout/t_row_suggested_teacher"
                     app:mx_itemLimit="10"
                     app:mx_moreButtonDrawableEnd="@drawable/ic_arrow_right_cyan_24dp"
@@ -70,17 +75,21 @@
                     app:mx_titleTextColor="@color/gray_5"
                     app:mx_titleTextFont="@font/hind_medium"
                     app:mx_titleTextSize="@dimen/list_title_size"
+                    app:layout_scrollFlags="scroll|enterAlways"
                     finite_recycler_adapter="@{viewModel.suggestedUsersAdapter}"
                     android:visibility="@{viewModel.suggestedUsersVisible?View.VISIBLE:View.GONE}"/>
 
-                <com.maurya.mx.mxlib.view.MxRecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    mx:infinite_recycler_adapter="@{viewModel.feedAdapter}"/>
+            </android.support.design.widget.AppBarLayout>
 
-            </LinearLayout>
+            <com.maurya.mx.mxlib.view.MxRecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                mx:infinite_recycler_adapter="@{viewModel.feedAdapter}"
+                layout_manager="@{viewModel.layoutManager}"
+                infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
 
-        </android.support.v4.widget.NestedScrollView>
+        </android.support.design.widget.CoordinatorLayout>
 
     </LinearLayout>
 

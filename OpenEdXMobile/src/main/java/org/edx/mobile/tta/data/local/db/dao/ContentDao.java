@@ -18,6 +18,9 @@ public interface ContentDao {
     @Query("Select * from content where id = :id")
     Content getById(long id);
 
+    @Query("Select * from content where source_identity = :sourceIdentity")
+    Content getBySourceIdentity(String sourceIdentity);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Content content);
 

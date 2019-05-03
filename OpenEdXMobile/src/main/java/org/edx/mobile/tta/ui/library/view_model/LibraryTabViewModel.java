@@ -28,7 +28,6 @@ import org.edx.mobile.databinding.TRowContentBinding;
 import org.edx.mobile.databinding.TRowContentListBinding;
 import org.edx.mobile.databinding.TRowContentSliderBinding;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.enums.ContentListMode;
@@ -165,13 +164,6 @@ public class LibraryTabViewModel extends BaseViewModel {
         if (selectedContent.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
                 selectedContent.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
             ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
-
-            Metadata metadata = new Metadata();
-            metadata.setContent_id(String.valueOf(selectedContent.getId()));
-            metadata.setContent_title(selectedContent.getName());
-            metadata.setContent_icon(selectedContent.getIcon());
-            metadata.setSource_title(selectedContent.getSource().getTitle());
-            metadata.setSource_identity(selectedContent.getSource_identity());
 
             mActivity.analytic.addMxAnalytics_db(
                     selectedContent.getName(), Action.CourseOpen, Nav.library.name(),

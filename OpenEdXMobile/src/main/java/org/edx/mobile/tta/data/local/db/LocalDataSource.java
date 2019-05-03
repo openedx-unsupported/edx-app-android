@@ -80,8 +80,8 @@ public class LocalDataSource implements ILocalDataSource {
     }
 
     @Override
-    public List<Feed> getFeeds() {
-        return mAppDatabase.feedDao().getAll();
+    public List<Feed> getFeeds(String username, int take, int skip) {
+        return mAppDatabase.feedDao().getAll(username, take, skip);
     }
 
     @Override
@@ -105,6 +105,11 @@ public class LocalDataSource implements ILocalDataSource {
     }
 
     @Override
+    public List<ContentList> getContentListsByRootCategory(String rootCategory) {
+        return mAppDatabase.contentListDao().getByRootCategory(rootCategory);
+    }
+
+    @Override
     public List<Source> getSources() {
         return mAppDatabase.sourceDao().getAll();
     }
@@ -117,6 +122,11 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void insertContent(Content content) {
         mAppDatabase.contentDao().insert(content);
+    }
+
+    @Override
+    public Content getContentBySourceIdentity(String sourceIdentity) {
+        return mAppDatabase.contentDao().getBySourceIdentity(sourceIdentity);
     }
 
     @Override

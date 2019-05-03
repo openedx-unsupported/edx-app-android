@@ -17,7 +17,6 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
@@ -33,6 +32,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectCommentsTab;
 import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.CustomFilter;
@@ -306,17 +306,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
                 mActivity.hideLoading();
                 bookmarkIcon.set(data.isIs_active() ? R.drawable.t_icon_bookmark_filled : R.drawable.t_icon_bookmark);
 
-                Metadata metadata = new Metadata();
-                metadata.setContent_id(String.valueOf(content.getId()));
-                metadata.setSource_identity(content.getSource_identity());
-                metadata.setContent_title(content.getName());
-                metadata.setContent_icon(content.getIcon());
-                metadata.setSource_title(content.getSource().getTitle());
-                metadata.setLikes(Long.parseLong(likes.get()));
-                if (post != null) {
-                    metadata.setComments(post.getTotal_comments());
-                }
-
                 if (data.isIs_active()) {
                     mActivity.analytic.addMxAnalytics_db(
                             content.getName() , Action.BookmarkPost, content.getSource().getName(),
@@ -350,26 +339,16 @@ public class ConnectDashboardViewModel extends BaseViewModel
                 }
                 if (data.getStatus()){
                     n++;
-
-                    Metadata metadata = new Metadata();
-                    metadata.setContent_id(String.valueOf(content.getId()));
-                    metadata.setSource_identity(content.getSource_identity());
-                    metadata.setContent_title(content.getName());
-                    metadata.setContent_icon(content.getIcon());
-                    metadata.setSource_title(content.getSource().getTitle());
-                    metadata.setLikes(n);
-                    if (post != null) {
-                        metadata.setComments(post.getTotal_comments());
-                    }
-
-                    mActivity.analytic.addMxAnalytics_db(
-                            content.getName() , Action.LikePost, content.getSource().getName(),
-                            Source.Mobile, content.getSource_identity());
-
                 } else {
                     n--;
                 }
                 likes.set(String.valueOf(n));
+
+                mActivity.analytic.addMxAnalytics_db(
+                        content.getName() ,
+                        data.getStatus() ? Action.LikePost : Action.UnlikePost,
+                        content.getSource().getName(),
+                        Source.Mobile, content.getSource_identity());
             }
 
             @Override
@@ -450,15 +429,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
                             tab2.refreshList();
                             tab3.refreshList();
 
-                            Metadata metadata = new Metadata();
-                            metadata.setContent_id(String.valueOf(content.getId()));
-                            metadata.setSource_identity(content.getSource_identity());
-                            metadata.setContent_title(content.getName());
-                            metadata.setContent_icon(content.getIcon());
-                            metadata.setSource_title(content.getSource().getTitle());
-                            metadata.setLikes(Long.parseLong(likes.get()));
-                            metadata.setComments(post.getTotal_comments());
-
                             mActivity.analytic.addMxAnalytics_db(
                                     content.getName() , Action.CommentPost, content.getSource().getName(),
                                     Source.Mobile, content.getSource_identity());
@@ -468,17 +438,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
                             replies.add(0, data);
                             replyingToVisible.set(false);
                             commentParentId = 0;
-
-                            Metadata metadata = new Metadata();
-                            metadata.setContent_id(String.valueOf(content.getId()));
-                            metadata.setSource_identity(content.getSource_identity());
-                            metadata.setContent_title(content.getName());
-                            metadata.setContent_icon(content.getIcon());
-                            metadata.setSource_title(content.getSource().getTitle());
-                            metadata.setCommentId(String.valueOf(selectedComment.getId()));
-                            metadata.setCommentTitle(selectedComment.getContent().getRaw());
-                            metadata.setUser_id(String.valueOf(selectedComment.getAuthor()));
-                            metadata.setUser_display_name(selectedComment.getAuthorName());
 
                             mActivity.analytic.addMxAnalytics_db(
                                     content.getName() , Action.ReplyComment, content.getSource().getName(),
@@ -564,6 +523,11 @@ public class ConnectDashboardViewModel extends BaseViewModel
                     final Intent intent = ShareUtils.newShareIntent(shareText);
                     intent.setComponent(componentName);
                     mActivity.startActivity(intent);
+
+                    mActivity.analytic.addMxAnalytics_db(post.getTitle().getRaw(), Action.Share,
+                            content.getSource().getName(), Source.Mobile, String.valueOf(post.getId()),
+                            BreadcrumbUtil.getBreadcrumb() + "/" + shareType.name());
+
                 });
 
     }
@@ -576,13 +540,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
             allDownloadProgressVisible.set(false);
             allDownloadStatusIcon.set(R.drawable.t_icon_done);
             allDownloadIconVisible.set(true);
-
-            Metadata metadata = new Metadata();
-            metadata.setContent_id(String.valueOf(content.getId()));
-            metadata.setSource_identity(content.getSource_identity());
-            metadata.setContent_title(content.getName());
-            metadata.setContent_icon(content.getIcon());
-            metadata.setSource_title(content.getSource().getTitle());
 
             mActivity.analytic.addMxAnalytics_db(
                     content.getName() , Action.DownloadPostComplete, content.getSource().getName(),
@@ -599,13 +556,6 @@ public class ConnectDashboardViewModel extends BaseViewModel
             allDownloadProgressVisible.set(false);
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
             allDownloadIconVisible.set(true);
-
-            Metadata metadata = new Metadata();
-            metadata.setContent_id(String.valueOf(content.getId()));
-            metadata.setSource_identity(content.getSource_identity());
-            metadata.setContent_title(content.getName());
-            metadata.setContent_icon(content.getIcon());
-            metadata.setSource_title(content.getSource().getTitle());
 
             mActivity.analytic.addMxAnalytics_db(
                     content.getName() , Action.DeletePost, content.getSource().getName(),

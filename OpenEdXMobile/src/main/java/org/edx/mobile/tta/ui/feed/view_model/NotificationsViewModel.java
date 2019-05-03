@@ -4,13 +4,14 @@ import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
+import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowNotificationBinding;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -120,8 +121,16 @@ public class NotificationsViewModel extends BaseViewModel {
                 TRowNotificationBinding notificationBinding = (TRowNotificationBinding) binding;
                 notificationBinding.setViewModel(model);
                 String time = DateUtil.getDayMonth(model.getCreated_time()) + " at " +
-                        DateUtil.getHourMonth12(model.getCreated_time());
+                        DateUtil.getHourMinute12(model.getCreated_time());
                 notificationBinding.notificationDate.setText(time);
+
+                if (model.isSeen()){
+                    notificationBinding.notificationTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_3));
+                    notificationBinding.notificationDate.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_3));
+                } else {
+                    notificationBinding.notificationTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_5));
+                    notificationBinding.notificationDate.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_5));
+                }
 
                 notificationBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){

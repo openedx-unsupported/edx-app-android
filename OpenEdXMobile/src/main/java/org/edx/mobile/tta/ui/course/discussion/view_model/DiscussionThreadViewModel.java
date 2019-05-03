@@ -16,7 +16,6 @@ import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.DiscussionTopicType;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
@@ -208,29 +207,13 @@ public class DiscussionThreadViewModel extends BaseViewModel
                         likeCount.set(String.valueOf(thread.getVoteCount()));
                         likeIcon.set(data.isVoted() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
 
-                        if (data.isVoted()){
-
-                            Metadata metadata = new Metadata();
-                            metadata.setContent_title(course.getCourse().getName());
-                            metadata.setUser_id(thread.getAuthor());
-                            metadata.setUser_display_name(thread.getAuthorDisplayName());
-                            metadata.setUser_icon(thread.getProfileImage().getImageUrlFull());
-                            metadata.setThreadId(thread.getIdentifier());
-                            metadata.setThreadTitle(thread.getTitle());
-                            metadata.setTopicType(topic.getName().contains("लेखक") ?
-                                    DiscussionTopicType.Postname_AD.name() :
-                                    DiscussionTopicType.Postname_CD.name());
-                            metadata.setLikes(thread.getVoteCount());
-                            metadata.setComments(thread.getCommentCount());
-
-                            mActivity.analytic.addMxAnalytics_db(
-                                    topic.getName().contains("लेखक") ?
-                                            DiscussionTopicType.Postname_AD.name() :
-                                            DiscussionTopicType.Postname_CD.name(),
-                                    Action.DBLike, course.getCourse().getName(),
-                                    Source.Mobile, thread.getIdentifier());
-
-                        }
+                        mActivity.analytic.addMxAnalytics_db(
+                                topic.getName().contains("लेखक") ?
+                                        DiscussionTopicType.Postname_AD.name() :
+                                        DiscussionTopicType.Postname_CD.name(),
+                                data.isVoted() ? Action.DBLike : Action.DBUnlike,
+                                course.getCourse().getName(),
+                                Source.Mobile, thread.getIdentifier());
                     }
 
                     @Override
@@ -276,19 +259,6 @@ public class DiscussionThreadViewModel extends BaseViewModel
                             //TODO: add this new comment to list
                             comments.add(0, data);
 
-                            Metadata metadata = new Metadata();
-                            metadata.setContent_title(course.getCourse().getName());
-                            metadata.setUser_id(thread.getAuthor());
-                            metadata.setUser_display_name(thread.getAuthorDisplayName());
-                            metadata.setUser_icon(thread.getProfileImage().getImageUrlFull());
-                            metadata.setThreadId(thread.getIdentifier());
-                            metadata.setThreadTitle(thread.getTitle());
-                            metadata.setTopicType(topic.getName().contains("लेखक") ?
-                                    DiscussionTopicType.Postname_AD.name() :
-                                    DiscussionTopicType.Postname_CD.name());
-                            metadata.setLikes(thread.getVoteCount());
-                            metadata.setComments(thread.getCommentCount());
-
                             mActivity.analytic.addMxAnalytics_db(
                                     topic.getName().contains("लेखक") ?
                                             DiscussionTopicType.Postname_AD.name() :
@@ -298,22 +268,6 @@ public class DiscussionThreadViewModel extends BaseViewModel
 
                         } else {
                             selectedComment.incrementChildCount();
-
-                            Metadata metadata = new Metadata();
-                            metadata.setContent_title(course.getCourse().getName());
-                            metadata.setUser_id(selectedComment.getAuthor());
-                            metadata.setUser_display_name(selectedComment.getAuthorDisplayName());
-                            metadata.setUser_icon(selectedComment.getProfileImage().getImageUrlFull());
-                            metadata.setThreadId(thread.getIdentifier());
-                            metadata.setThreadTitle(thread.getTitle());
-                            metadata.setTopicType(topic.getName().contains("लेखक") ?
-                                    DiscussionTopicType.Postname_AD.name() :
-                                    DiscussionTopicType.Postname_CD.name());
-                            metadata.setCommentId(selectedComment.getIdentifier());
-                            metadata.setCommentTitle(selectedComment.getRawBody());
-                            metadata.setCommentType("Postname_" + data.getAuthor());
-                            metadata.setLikes(selectedComment.getVoteCount());
-                            metadata.setComments(selectedComment.getChildCount());
 
                             mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
                                     Action.DBCommentReply, course.getCourse().getName(),
@@ -344,29 +298,10 @@ public class DiscussionThreadViewModel extends BaseViewModel
                         comment.setVoteCount(data.getVoteCount());
                         refreshComments();
 
-                        if (data.isVoted()){
-
-                            Metadata metadata = new Metadata();
-                            metadata.setContent_title(course.getCourse().getName());
-                            metadata.setUser_id(comment.getAuthor());
-                            metadata.setUser_display_name(comment.getAuthorDisplayName());
-                            metadata.setUser_icon(comment.getProfileImage().getImageUrlFull());
-                            metadata.setThreadId(thread.getIdentifier());
-                            metadata.setThreadTitle(thread.getTitle());
-                            metadata.setTopicType(topic.getName().contains("लेखक") ?
-                                    DiscussionTopicType.Postname_AD.name() :
-                                    DiscussionTopicType.Postname_CD.name());
-                            metadata.setCommentId(comment.getIdentifier());
-                            metadata.setCommentTitle(comment.getRawBody());
-                            metadata.setCommentType("Postname_" + comment.getAuthor());
-                            metadata.setLikes(comment.getVoteCount());
-                            metadata.setComments(comment.getChildCount());
-
-                            mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
-                                    Action.DBCommentlike, course.getCourse().getName(),
-                                    Source.Mobile, comment.getIdentifier());
-
-                        }
+                        mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
+                                data.isVoted() ? Action.DBCommentlike : Action.DBCommentUnlike,
+                                course.getCourse().getName(),
+                                Source.Mobile, comment.getIdentifier());
                     }
 
                     @Override

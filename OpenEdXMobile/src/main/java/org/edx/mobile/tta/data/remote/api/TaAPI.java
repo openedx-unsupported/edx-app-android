@@ -3,14 +3,12 @@ package org.edx.mobile.tta.data.remote.api;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
@@ -32,7 +30,6 @@ import org.edx.mobile.tta.data.remote.service.TaService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
@@ -104,6 +101,12 @@ public class TaAPI {
         Map<String, Long> parameters = new HashMap<>();
         parameters.put(Constants.KEY_CONTENT_ID, contentId);
         return taService.setLike(parameters);
+    }
+
+    public Call<StatusResponse> setLikeUsingSourceIdentity(String sourceIdentity) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_SOURCE_IDENTITY, sourceIdentity);
+        return taService.setLikeUsingSourceIdentity(parameters);
     }
 
     public Call<TotalLikeResponse> totalLike(long contentId) {
@@ -211,5 +214,13 @@ public class TaAPI {
 
     public Call<List<Notification>> getNotifications(int take, int skip){
         return taService.getNotifications(take, skip);
+    }
+
+    public Call<List<Feed>> getFeeds(int take, int skip){
+        return taService.getFeeds(take, skip);
+    }
+
+    public Call<Content> getContentFromSourceIdentity(String sourceIdentity){
+        return taService.getContentFromSourceIdentity(sourceIdentity);
     }
 }

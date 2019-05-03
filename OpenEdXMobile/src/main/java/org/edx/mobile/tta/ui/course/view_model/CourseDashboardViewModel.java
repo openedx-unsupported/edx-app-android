@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
@@ -24,6 +25,7 @@ import org.edx.mobile.tta.ui.course.CourseMaterialTab;
 import org.edx.mobile.tta.ui.course.discussion.CourseDiscussionTab;
 import org.edx.mobile.tta.ui.course.discussion.DiscussionLandingFragment;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.AuthenticatedWebViewFragment;
 import org.edx.mobile.view.CourseHandoutFragment;
 import org.edx.mobile.view.Router;
@@ -197,6 +199,17 @@ public class CourseDashboardViewModel extends BaseViewModel {
 
     public void unRegisterEventBus(){
         EventBus.getDefault().unregister(this);
+    }
+
+    public void openShareMenu(View anchor) {
+
+        if (course == null){
+            return;
+        }
+
+        ShareUtils.showCourseShareMenu(getActivity(), anchor, course,
+                mDataManager.getEdxEnvironment().getAnalyticsRegistry(), mDataManager.getEdxEnvironment());
+
     }
 
     public class CourseDashboardPagerAdapter extends BasePagerAdapter {

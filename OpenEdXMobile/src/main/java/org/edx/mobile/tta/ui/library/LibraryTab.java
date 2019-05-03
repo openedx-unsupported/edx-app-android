@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.analytics.Analytic;
-import org.edx.mobile.tta.analytics.Metadata;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.local.db.table.Category;
@@ -71,12 +70,11 @@ public class LibraryTab extends TaBaseFragment {
         }
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, nav));
 
-        Metadata metadata = new Metadata();
-        metadata.setSource_title(category.getName());
-
-        analytic.addMxAnalytics_db(
-                category.getName() , Action.Nav, Nav.library.name(),
-                org.edx.mobile.tta.analytics.analytics_enums.Source.Mobile, null);
+        if (analytic != null) {
+            analytic.addMxAnalytics_db(
+                    category.getName() , Action.Nav, Nav.library.name(),
+                    org.edx.mobile.tta.analytics.analytics_enums.Source.Mobile, null);
+        }
     }
 
     /*@Override

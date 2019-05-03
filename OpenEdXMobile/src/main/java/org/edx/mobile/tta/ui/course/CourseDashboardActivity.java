@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import org.edx.mobile.R;
@@ -62,8 +63,17 @@ public class CourseDashboardActivity extends BaseVMActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.connect_dashboard_options_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.action_share:
+                viewModel.openShareMenu(findViewById(R.id.action_share));
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;

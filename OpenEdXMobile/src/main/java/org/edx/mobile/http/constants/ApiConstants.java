@@ -15,53 +15,53 @@ public class ApiConstants {
     public static final String GROUP_ID = "groupId";
     public static final String ORG_CODE = "org";
 
-    public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
+    public static final String URL_MY_USER_INFO ="api/mobile/v0.5/my_user_info";
 
     public static final String URL_COURSE_ENROLLMENTS =
-        "/api/mobile/v0.5/users/{username}/course_enrollments/?format=json";
+        "api/mobile/v0.5/users/{username}/course_enrollments/?format=json";
 
     public static final String URL_VIDEO_OUTLINE =
-        "/api/mobile/v0.5/video_outlines/courses/{courseId}";
+        "api/mobile/v0.5/video_outlines/courses/{courseId}";
 
-    public static final String URL_ACCESS_TOKEN = "/oauth2/access_token/";
+    public static final String URL_ACCESS_TOKEN = "oauth2/access_token/";
 
-    public static final String URL_PASSWORD_RESET = "/password_reset/";
+    public static final String URL_PASSWORD_RESET = "password_reset/";
 
-    public static final String URL_EXCHANGE_ACCESS_TOKEN = "/oauth2/exchange_access_token/{" + GROUP_ID + "}/";
+    public static final String URL_EXCHANGE_ACCESS_TOKEN = "oauth2/exchange_access_token/{" + GROUP_ID + "}/";
 
-    public static final String URL_REVOKE_TOKEN = "/oauth2/revoke_token/";
+    public static final String URL_REVOKE_TOKEN = "oauth2/revoke_token/";
 
-    public static final String URL_LOGIN = "/oauth2/login/";
+    public static final String URL_LOGIN = "oauth2/login/";
 
-    public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
+    public static final String URL_LAST_ACCESS_FOR_COURSE ="api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 
-    public static final String URL_REGISTRATION = "/user_api/v1/account/registration/";
+    public static final String URL_REGISTRATION = "user_api/v1/account/registration/";
 
-    public static final String URL_ENROLLMENT = "/api/enrollment/v1/enrollment";
+    public static final String URL_ENROLLMENT = "api/enrollment/v1/enrollment";
 
-    public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
+    public static final String URL_COURSE_OUTLINE = "api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
 
     //TTA start
 
     //forgot password urls ::start
-    public static final String URL_MX_MOBILE_NUMBER_VERIFICATION = "/api/otp/reset_password/send_otp";
+    public static final String URL_MX_MOBILE_NUMBER_VERIFICATION = "api/otp/reset_password/send_otp";
 
-    public static final String URL_MX_VERIFY_OTP_FOR_FORGOTED_PASSWORD= "/api/otp/reset_password/check_otp";
+    public static final String URL_MX_VERIFY_OTP_FOR_FORGOTED_PASSWORD= "api/otp/reset_password/check_otp";
 
-    public static final String URL_MX_RESET_FORGOTED_PASSWORD = "/api/otp/reset_password/reset_password";
+    public static final String URL_MX_RESET_FORGOTED_PASSWORD = "api/otp/reset_password/reset_password";
     //forgot password urls ::end
 
     //Reset mobile number APIs::start
-    public static final String URL_MX_USER_RESET_SEND_OTP = "/api/otp/update_username/send_otp";
+    public static final String URL_MX_USER_RESET_SEND_OTP = "api/otp/update_username/send_otp";
 
-    public static final String URL_MX_VERIFY_OTP_AND_RESET_USERNAME = "/api/otp/update_username/update_username";
+    public static final String URL_MX_VERIFY_OTP_AND_RESET_USERNAME = "api/otp/update_username/update_username";
     //Reset mobile number APIs::end
 
-    public static final String URL_MX_GENERATE_OTP = "/api/otp/otp_api/";
-    public static final String URL_MX_CUSTOM_FIELD_ATTRIBUTES= "/api/otp/get-teacher-id-field-info/";
+    public static final String URL_MX_GENERATE_OTP = "api/otp/otp_api/";
+    public static final String URL_MX_CUSTOM_FIELD_ATTRIBUTES= "api/otp/get-teacher-id-field-info/";
     public static final String URL_MX_VERIFY_OTP = "api/otp/otp_api/verify/";
-    public static final String URL_MX_REGISTER_ME = "/user_api/v1/account/registration/";
-    public static final String URL_MX_UPDATE_PROFILE = "/api/otp/user_account/update/";
+    public static final String URL_MX_REGISTER_ME = "user_api/v1/account/registration/";
+    public static final String URL_MX_UPDATE_PROFILE = "api/otp/user_account/update/";
 
     public static final String URL_MX_GET_COLLECTION_CONFIG = "api/mx_catalog/v1/config/";
 
@@ -93,7 +93,7 @@ public class ApiConstants {
     public static final String URL_MX_USER_ENROLLMENT_COURSE = "api/mx_enrollment/v1/enrollmentcourse/";
 
     //Post scorm start request
-    public static final String URL_MX_SCORM_START = "/api/mx_scorm/scorm_started/";
+    public static final String URL_MX_SCORM_START = "api/mx_scorm/scorm_started/";
 
     public static final String URL_MX_GET_SEARCH_FILTER = "api/mx_catalog/v1/getfilters/";
 
@@ -102,35 +102,34 @@ public class ApiConstants {
     public static final String URL_MX_ASSISTANT_SEARCH = "api/mx_catalog/v1/gasearch/";
 
     //submit feedback url
-    public static final String URL_MX_SUBMIT_FEEDBACK = "/api/otp/feedback/create";
+    public static final String URL_MX_SUBMIT_FEEDBACK = "api/otp/feedback/create";
 
     //Reset pass url
-    public static final String URL_MX_RESETPSWD = "/api/otp/user_account/password/update";
+    public static final String URL_MX_RESETPSWD = "api/otp/user_account/password/update";
 
     //Get all certificates of user
-    public static final String URL_MX_GET_MY_CERTIFICATES = "/api/mxcertification_api/get_my_certificates/";
+    public static final String URL_MX_GET_MY_CERTIFICATES = "api/mxcertification_api/get_my_certificates/";
 
     //Get status of course certificate
-    public static final String URL_MX_GET_CERTIFICATE_STATUS = "/api/mxcertification_api/get_certificate_status/";
+    public static final String URL_MX_GET_CERTIFICATE_STATUS = "api/mxcertification_api/get_certificate_status/";
 
     //Get course certificate
-    public static final String URL_MX_GET_CERTIFICATE = "/api/mxcertification_api/get_certificate/";
+    public static final String URL_MX_GET_CERTIFICATE = "api/mxcertification_api/get_certificate/";
 
     //Post generate certificate request
-    public static final String URL_MX_GENERATE_CERTIFICATE = "/api/mxcertification_api/generate_certificate/";
+    public static final String URL_MX_GENERATE_CERTIFICATE = "api/mxcertification_api/generate_certificate/";
 
-    //Post generate certificate request
-    public static final String URL_MX_GET_CONTENT = "/api/mx_catalog/v1/content/";
+    public static final String URL_MX_GET_CONTENT = "api/mx_catalog/v1/content/";
 
-    public static final String URL_MX_GET_SUGGESTED_USERS = "/api/mx_feed/v1/getrecommendedusers/";
+    public static final String URL_MX_GET_SUGGESTED_USERS = "api/mx_recommended_users/v1/getrecommendedusers/";
 
-    public static final String URL_MX_FOLLOW_USER = "/api/mx_feed/v1/follow/";
+    public static final String URL_MX_FOLLOW_USER = "api/mx_feed/v1/follow/";
 
-    public static final String URL_MX_CREATE_GET_NOTIFICATIONS = "/notification/v1/showcreate/";
+    public static final String URL_MX_CREATE_GET_NOTIFICATIONS = "notification/v1/showcreate/";
 
-    public static final String URL_MX_UPDATE_NOTIFICATIONS = "/notification/v1/update/";
+    public static final String URL_MX_UPDATE_NOTIFICATIONS = "notification/v1/update/";
 
-    public static final String URL_MX_FIREBASE_TOKEN_UPDATE = "/api/teacherappAnalytics/android_token/";
+    public static final String URL_MX_FIREBASE_TOKEN_UPDATE = "api/teacherappAnalytics/android_token/";
 
     //Analytic api url
     public static final String URL_TA_ANALYTIC = "api/teacherappAnalytics/analytics/add/";
@@ -143,6 +142,10 @@ public class ApiConstants {
 
     //TinCan batch update
     public static final String URL_TINCAN_ANALYTIC_BATCH = "analytics/add-tincan-data/";
+
+    public static final String URL_MX_GET_FEEDS = "api/mx_feed/v1/feeds/";
+
+    public static final String URL_MX_GET_CONTENT_FROM_SOURCE_IDENTITY = "api/mx_catalog/v1/content/";
 
     //TTA end
 

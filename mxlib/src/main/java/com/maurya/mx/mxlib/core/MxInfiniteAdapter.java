@@ -43,7 +43,7 @@ public abstract class MxInfiniteAdapter<T> extends MxBaseAdapter<T> {
         this.mItemLayout = itemLayout;
     }
 
-    private int getLoadingMoreLayout() {
+    protected int getLoadingMoreLayout() {
         mLoadMoreRes= mLoadMoreRes == 0 ? R.layout.mx_item_progress_view_layout : mLoadMoreRes;
         return mLoadMoreRes;
     }
@@ -56,7 +56,7 @@ public abstract class MxInfiniteAdapter<T> extends MxBaseAdapter<T> {
             return super.getItemCount();
     }
 
-    private boolean isLoadMoreDisplayable() {
+    protected boolean isLoadMoreDisplayable() {
         return isLoadMoreEnabled && isLoading;
     }
 

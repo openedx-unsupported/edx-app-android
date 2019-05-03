@@ -7,6 +7,7 @@ import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
@@ -89,6 +90,10 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_SET_LIKE)
     Call<StatusResponse> setLike(@FieldMap Map<String, Long> parameters);
 
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_SET_LIKE)
+    Call<StatusResponse> setLikeUsingSourceIdentity(@FieldMap Map<String, String> parameters);
+
     @GET(ApiConstants.URL_MX_TOTAL_LIKE)
     Call<TotalLikeResponse> totalLike(@Query(Constants.KEY_CONTENT_ID) long contentId);
 
@@ -155,4 +160,11 @@ public interface TaService {
     @GET(ApiConstants.URL_MX_CREATE_GET_NOTIFICATIONS)
     Call<List<Notification>> getNotifications(@Query(Constants.KEY_TAKE) int take,
                                               @Query(Constants.KEY_SKIP) int skip);
+
+    @GET(ApiConstants.URL_MX_GET_FEEDS)
+    Call<List<Feed>> getFeeds(@Query(Constants.KEY_TAKE) int take,
+                                      @Query(Constants.KEY_SKIP) int skip);
+
+    @GET(ApiConstants.URL_MX_GET_CONTENT)
+    Call<Content> getContentFromSourceIdentity(@Query(Constants.KEY_SOURCE_IDENTITY) String sourceIdentity);
 }

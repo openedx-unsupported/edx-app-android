@@ -774,10 +774,20 @@
     <string name="empty_my_agenda_list">\“%s\” does not have any selected %s. To select a %s, please click on @</string>
     <string name="empty_download_list">\“%s\” does not have any %s</string>
     <string name="you_are_offline">You are offline</string>
+    <string name="view_discussion">View discussion</string>
 
     <string name="sign_out_message" translatable="false">Are you sure you want to Sign Out?</string>
     <string name="be_the_first_to_comment" translatable="false">Be the first to comment</string>
     <string name="be_the_first_to_reply" translatable="false">Be the first to reply</string>
+
+    <string name="feed_format_content_like" translatable="false"><b>%s</b> recently liked %s</string>
+    <string name="feed_format_db_comment" translatable="false"><b>%s</b> commented on discussion</string>
+    <string name="feed_format_comment_post" translatable="false"><b>%s</b> commented on %s</string>
+    <string name="feed_format_most_popular" translatable="false"><b>Most popular %s</b></string>
+    <string name="feed_format_share" translatable="false"><b>%s</b> shared %s</string>
+    <string name="feed_format_certificate"><b>%s</b> received <font fgcolor="#F75791">Certificate</font> in %s</string>
+    <string name="feed_format_badge"><b>%s</b> recently received <font fgcolor="#F75791">%s badge</font></string>
+    <string name="feed_format_new_post" translatable="false"><b>%s</b> posted <font fgcolor="#F75791">a new %s</font></string>
 
     <!-- WP Post Share menu title -->
     <string name="share_wp_post_popup_header" translatable="false">Share this post via&#8230;</string>
