@@ -423,9 +423,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Player Settings-->
   <!--Label for closed captions in video player-->
   <string name="lbl_closed_caption">Sutítulos</string>
+  <!--Label for video playback speed in video player-->
   <!--Label for None captions selected-->
   <string name="lbl_cc_none">Ninguno</string>
-
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Reproductor de video</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
