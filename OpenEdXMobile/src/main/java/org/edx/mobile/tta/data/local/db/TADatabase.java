@@ -7,11 +7,13 @@ import org.edx.mobile.tta.data.local.db.dao.CategoryDao;
 import org.edx.mobile.tta.data.local.db.dao.CertificateDao;
 import org.edx.mobile.tta.data.local.db.dao.ContentDao;
 import org.edx.mobile.tta.data.local.db.dao.ContentListDao;
+import org.edx.mobile.tta.data.local.db.dao.ContentStatusDao;
 import org.edx.mobile.tta.data.local.db.dao.FeedDao;
 import org.edx.mobile.tta.data.local.db.dao.NotificationDao;
 import org.edx.mobile.tta.data.local.db.dao.SourceDao;
 import org.edx.mobile.tta.data.local.db.dao.UserDao;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.User;
@@ -29,7 +31,8 @@ import org.edx.mobile.tta.data.local.db.table.Source;
                 Source.class,
                 Feed.class,
                 Certificate.class,
-                Notification.class
+                Notification.class,
+                ContentStatus.class
         },
         version = 4,
         exportSchema = false
@@ -45,4 +48,5 @@ public abstract class TADatabase extends RoomDatabase {
     public abstract FeedDao feedDao();
     public abstract CertificateDao certificateDao();
     public abstract NotificationDao notificationDao();
+    public abstract ContentStatusDao contentStatusDao();
 }

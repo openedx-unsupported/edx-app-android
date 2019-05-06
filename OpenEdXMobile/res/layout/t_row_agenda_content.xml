@@ -74,7 +74,6 @@
                 android:layout_margin="@dimen/_10px"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                app:srcCompat="@drawable/refresh"
                 android:visibility="gone"/>
 
         </RelativeLayout>

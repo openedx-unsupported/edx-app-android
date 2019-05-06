@@ -45,6 +45,7 @@ public class LibraryTab extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new LibraryTabViewModel(getActivity(), this, cr, category, searchPageOpenedListener);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -85,4 +86,10 @@ public class LibraryTab extends TaBaseFragment {
                 break;
         }
     }*/
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
+    }
 }

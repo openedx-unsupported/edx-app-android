@@ -7,6 +7,7 @@ import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.model.CountResponse;
@@ -167,4 +168,13 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_CONTENT)
     Call<Content> getContentFromSourceIdentity(@Query(Constants.KEY_SOURCE_IDENTITY) String sourceIdentity);
+
+    @POST(ApiConstants.URL_MX_SET_USER_CONTENT)
+    Call<List<ContentStatus>> setUserContent(@Body List<ContentStatus> statuses);
+
+    @GET(ApiConstants.URL_MX_GET_MY_CONTENT_STATUS)
+    Call<List<ContentStatus>> getMyContentStatus();
+
+    @GET(ApiConstants.URL_MX_GET_USER_CONTENT_STATUS)
+    Call<List<ContentStatus>> getUserContentStatus(@Query(Constants.KEY_CONTENT_IDS) List<Long> contentIds);
 }

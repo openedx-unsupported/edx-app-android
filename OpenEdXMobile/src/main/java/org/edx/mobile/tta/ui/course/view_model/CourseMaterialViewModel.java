@@ -36,10 +36,12 @@ import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.PDFBlockModel;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
@@ -54,6 +56,7 @@ import org.edx.mobile.util.PermissionsUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -72,6 +75,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private CourseComponent assessmentComponent;
     private List<ScormBlockModel> remainingScorms;
     private ScormBlockModel selectedScormForDownload, selectedScormForDelete, selectedScormForPlay;
+    private ContentStatus contentStatus;
 
     public CourseMaterialAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -98,6 +102,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private int numberOfDownloadedVideos;
     private boolean downloadModeIsAll;
     private int actionMode;
+    private boolean firstDownload;
 
     public CourseMaterialViewModel(Context context, TaBaseFragment fragment, Content content, EnrolledCoursesResponse course, CourseComponent rootComponent) {
         super(context, fragment);
@@ -105,10 +110,28 @@ public class CourseMaterialViewModel extends BaseViewModel {
         this.course = course;
         this.rootComponent = rootComponent;
         adapter = new CourseMaterialAdapter();
+        firstDownload = true;
         loadData();
     }
 
     public void loadData(){
+
+        mDataManager.getUserContentStatus(Collections.singletonList(content.getId()),
+                new OnResponseCallback<List<ContentStatus>>() {
+                    @Override
+                    public void onSuccess(List<ContentStatus> data) {
+                        if (data.size() > 0){
+                            firstDownload = false;
+                            contentStatus = data.get(0);
+                            EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                });
 
         mDataManager.getTotalLikes(content.getId(), new OnResponseCallback<TotalLikeResponse>() {
             @Override
@@ -125,7 +148,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
         mDataManager.isLike(content.getId(), new OnResponseCallback<StatusResponse>() {
             @Override
             public void onSuccess(StatusResponse data) {
-                //TODO: Need filled like icon
                 likeIcon.set(data.getStatus() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
             }
 
@@ -529,6 +551,28 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     adapter.notifyDataSetChanged();
                 }
 
+                if (contentStatus == null && firstDownload){
+                    firstDownload = false;
+                    ContentStatus status = new ContentStatus();
+                    status.setContent_id(content.getId());
+                    status.setStarted(String.valueOf(System.currentTimeMillis()));
+                    mDataManager.setUserContent(Collections.singletonList(status),
+                            new OnResponseCallback<List<ContentStatus>>() {
+                                @Override
+                                public void onSuccess(List<ContentStatus> data) {
+                                    if (data.size() > 0){
+                                        contentStatus = data.get(0);
+                                        EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+
+                                }
+                            });
+                }
+
                 mActivity.analytic.addMxAnalytics_db(
                         selectedScormForDownload.getInternalName(), Action.StartScormDownload, course.getCourse().getName(),
                         Source.Mobile, selectedScormForDownload.getId());
@@ -587,6 +631,28 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         allDownloadProgressVisible.set(true);
                         if (adapter != null){
                             adapter.notifyDataSetChanged();
+                        }
+
+                        if (contentStatus == null && firstDownload){
+                            firstDownload = false;
+                            ContentStatus status = new ContentStatus();
+                            status.setContent_id(content.getId());
+                            status.setStarted(String.valueOf(System.currentTimeMillis()));
+                            mDataManager.setUserContent(Collections.singletonList(status),
+                                    new OnResponseCallback<List<ContentStatus>>() {
+                                        @Override
+                                        public void onSuccess(List<ContentStatus> data) {
+                                            if (data.size() > 0){
+                                                contentStatus = data.get(0);
+                                                EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Exception e) {
+
+                                        }
+                                    });
                         }
 
                         for (ScormBlockModel model: remainingScorms){

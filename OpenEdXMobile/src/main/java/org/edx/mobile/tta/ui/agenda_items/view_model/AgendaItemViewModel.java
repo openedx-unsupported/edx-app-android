@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -28,8 +29,11 @@ import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
+import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
+import org.edx.mobile.tta.event.ContentStatusesReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -40,7 +44,11 @@ import org.edx.mobile.tta.utils.ContentSourceUtil;
 import org.edx.mobile.tta.utils.JsonUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class AgendaItemViewModel extends BaseViewModel {
     public AgendaItem agendaItem;
@@ -53,6 +61,7 @@ public class AgendaItemViewModel extends BaseViewModel {
     private Content selectedContent;
     private String toolBarData;
     private AgendaList agendaList;
+    private Map<Long, ContentStatus> contentStatusMap;
 
     public AgendaItemViewModel(Context context, TaBaseFragment fragment, AgendaItem agendaItem, String toolbarData, AgendaList agendaList) {
         super(context, fragment);
@@ -60,6 +69,7 @@ public class AgendaItemViewModel extends BaseViewModel {
         this.toolBarData = toolbarData;
         this.agendaList = agendaList;
         contents = new ArrayList<>();
+        contentStatusMap = new HashMap<>();
 
         adapter = new ListingRecyclerAdapter(mActivity);
         adapter.setItemClickListener((view, item) -> {
@@ -215,6 +225,30 @@ public class AgendaItemViewModel extends BaseViewModel {
 
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentStatusesReceivedEvent event){
+
+        for (ContentStatus status: event.getStatuses()){
+            contentStatusMap.put(status.getContent_id(), status);
+        }
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentStatusReceivedEvent event){
+        contentStatusMap.put(event.getContentStatus().getContent_id(), event.getContentStatus());
+        adapter.notifyDataSetChanged();
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
+    }
+
     public class ListingRecyclerAdapter extends MxInfiniteAdapter<Content> {
         public ListingRecyclerAdapter(Context context) {
             super(context);
@@ -238,6 +272,21 @@ public class AgendaItemViewModel extends BaseViewModel {
                         .into(contentBinding.contentImage);
 
                 contentBinding.getRoot().setOnClickListener(v -> listener.onItemClick(v, model));
+
+                if (contentStatusMap.containsKey(model.getId())){
+                    ContentStatus status = contentStatusMap.get(model.getId());
+                    if (status.getCompleted() != null){
+                        contentBinding.contentStatusImage.setImageResource(R.drawable.t_icon_done);
+                        contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
+                    } else if (status.getStarted() != null){
+                        contentBinding.contentStatusImage.setImageResource(R.drawable.refresh);
+                        contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
+                    } else {
+                        contentBinding.contentStatusImage.setVisibility(View.GONE);
+                    }
+                } else {
+                    contentBinding.contentStatusImage.setVisibility(View.GONE);
+                }
 
             }
         }

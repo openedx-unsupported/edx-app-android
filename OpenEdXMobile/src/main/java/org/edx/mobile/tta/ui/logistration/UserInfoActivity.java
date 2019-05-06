@@ -30,10 +30,10 @@ public class UserInfoActivity extends BaseVMActivity {
     private FormSpinner blockSpinner;
     private FormSpinner professionSpinner;
     private FormSpinner genderSpinner;
-    private FormSpinner classTaughtSpinner;
+//    private FormSpinner classTaughtSpinner;
+    private FormMultiSpinner classTaughtSpinner;
     private FormSpinner dietSpinner;
     private FormEditText etPmis;
-    private FormMultiSpinner testMultiSpinner;
     private Button btn;
     private Toolbar toolbar;
     private UserInfoViewModel mViewModel;
@@ -50,6 +50,7 @@ public class UserInfoActivity extends BaseVMActivity {
         });
         mViewModel.getData();
         getBlocks();
+        getClasses();
         setupForm();
     }
 
@@ -73,6 +74,22 @@ public class UserInfoActivity extends BaseVMActivity {
                 });
     }
 
+    private void getClasses() {
+
+        mViewModel.getClasses(new OnResponseCallback<List<RegistrationOption>>() {
+            @Override
+            public void onSuccess(List<RegistrationOption> data) {
+                classTaughtSpinner.setItems(data, null);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+
+    }
+
     private void setupForm() {
 //        ViewUtil.addHeading(userInfoLayout, "Additional Information");
 //        ViewUtil.addSubHeading(userInfoLayout, "Please enter the following details");
@@ -91,12 +108,14 @@ public class UserInfoActivity extends BaseVMActivity {
         blockSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Block/तहसील", mViewModel.blocks, null);
         professionSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Profession/व्यवसाय", mViewModel.professions, null);
         genderSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Gender/लिंग", mViewModel.genders, null);
-        classTaughtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा", mViewModel.classesTaught, null);
+//        classTaughtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा", mViewModel.classesTaught, null);
+        classTaughtSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा",
+                mViewModel.classesTaught, null);
+        classTaughtSpinner.setMandatory(true);
+
         etPmis = ViewUtil.addFormEditText(userInfoLayout, "PMIS Code/पी इम आइ इस कोड");
         etPmis.setShowTv(getApplicationContext().getString(R.string.please_insert_valide_pmis_code));
         dietSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "DIET Code/डी आइ इ टी कोड", mViewModel.dietCodes, null);
-        testMultiSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Test multi spinner", mViewModel.dietCodes, null);
-        testMultiSpinner.setMandatory(true);
         btn = ViewUtil.addButton(userInfoLayout, "Sumbit");
         ViewUtil.addEmptySpace(userInfoLayout, (int) getResources().getDimension(R.dimen._50px));
 
@@ -115,7 +134,18 @@ public class UserInfoActivity extends BaseVMActivity {
             parameters.putString("block", blockSpinner.getSelectedOption().getName());
             parameters.putString("title", professionSpinner.getSelectedOption().getName());
             parameters.putString("gender", genderSpinner.getSelectedOption().getName());
-            parameters.putString("classes_taught", classTaughtSpinner.getSelectedOption().getName());
+//            parameters.putString("classes_taught", classTaughtSpinner.getSelectedOption().getName());
+            if (classTaughtSpinner.getSelectedOptions() != null) {
+                StringBuilder builder = new StringBuilder();
+                for (RegistrationOption option: classTaughtSpinner.getSelectedOptions()){
+                    builder.append(mViewModel.classesSectionName).append("_").append(option.getName()).append(" ");
+                }
+                if (builder.length() > 0){
+                    builder.deleteCharAt(builder.length() - 1);
+                }
+                parameters.putString("tag_label", builder.toString());
+            }
+
             parameters.putString("pmis_code", etPmis.getText());
             parameters.putString("diet_code", dietSpinner.getSelectedOption().getName());
             mViewModel.submit(parameters);
@@ -171,10 +201,6 @@ public class UserInfoActivity extends BaseVMActivity {
         if (!dietSpinner.validate()){
             valid = false;
             dietSpinner.setError("Required");
-        }
-        if (!testMultiSpinner.validate()){
-            valid = false;
-            testMultiSpinner.setError("Required");
         }
 
         return valid;

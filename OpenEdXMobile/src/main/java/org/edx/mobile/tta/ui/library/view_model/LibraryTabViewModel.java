@@ -34,8 +34,11 @@ import org.edx.mobile.tta.data.enums.ContentListMode;
 import org.edx.mobile.tta.data.enums.ContentListType;
 import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
+import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
+import org.edx.mobile.tta.event.ContentStatusesReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -57,6 +60,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 public class LibraryTabViewModel extends BaseViewModel {
 
     private Category category;
@@ -65,6 +70,7 @@ public class LibraryTabViewModel extends BaseViewModel {
     private SearchPageOpenedListener searchPageOpenedListener;
 
     private Map<Long, List<Content>> contentListMap;
+    private Map<Long, ContentStatus> contentStatusMap;
 
     public ListingRecyclerAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -75,7 +81,10 @@ public class LibraryTabViewModel extends BaseViewModel {
         this.category = category;
         this.searchPageOpenedListener = searchPageOpenedListener;
 
+        contentStatusMap = new HashMap<>();
         contentLists = new ArrayList<>();
+        adapter = new ListingRecyclerAdapter(mActivity);
+
         if (cr != null) {
             for (ContentList list: cr.getContent_list()){
                 if (list.getCategory_id() == category.getId()){
@@ -86,7 +95,6 @@ public class LibraryTabViewModel extends BaseViewModel {
 
         Collections.sort(contentLists);
         getContents();
-        adapter = new ListingRecyclerAdapter(mActivity);
     }
 
     @Override
@@ -173,6 +181,30 @@ public class LibraryTabViewModel extends BaseViewModel {
             ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
         }
 
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentStatusesReceivedEvent event){
+
+        for (ContentStatus status: event.getStatuses()){
+            contentStatusMap.put(status.getContent_id(), status);
+        }
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentStatusReceivedEvent event){
+        contentStatusMap.put(event.getContentStatus().getContent_id(), event.getContentStatus());
+        adapter.notifyDataSetChanged();
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 
     public class ListingRecyclerAdapter extends MxBaseAdapter<ContentList> {
@@ -306,6 +338,21 @@ public class LibraryTabViewModel extends BaseViewModel {
                         listener.onItemClick(v, model);
                     }
                 });
+
+                if (contentStatusMap.containsKey(model.getId())){
+                    ContentStatus status = contentStatusMap.get(model.getId());
+                    if (status.getCompleted() != null){
+                        contentBinding.contentStatusImage.setImageResource(R.drawable.t_icon_done);
+                        contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
+                    } else if (status.getStarted() != null){
+                        contentBinding.contentStatusImage.setImageResource(R.drawable.refresh);
+                        contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
+                    } else {
+                        contentBinding.contentStatusImage.setVisibility(View.GONE);
+                    }
+                } else {
+                    contentBinding.contentStatusImage.setVisibility(View.GONE);
+                }
             }
         }
     }

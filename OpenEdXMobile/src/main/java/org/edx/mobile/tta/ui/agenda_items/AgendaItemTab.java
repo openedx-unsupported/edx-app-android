@@ -39,6 +39,7 @@ public class AgendaItemTab extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new AgendaItemViewModel(getActivity(), this, item, toolbarData, agendaList);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -76,4 +77,9 @@ public class AgendaItemTab extends TaBaseFragment {
         }
     }*/
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
+    }
 }

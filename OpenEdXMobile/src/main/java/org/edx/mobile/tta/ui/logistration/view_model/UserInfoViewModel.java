@@ -10,6 +10,9 @@ import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
+import org.edx.mobile.tta.data.model.search.FilterSection;
+import org.edx.mobile.tta.data.model.search.FilterTag;
+import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -32,6 +35,7 @@ public class UserInfoViewModel extends BaseViewModel {
     public List<RegistrationOption> dietCodes;
 
     public String currentState, currentDistrict;
+    public String classesSectionName;
 
     public UserInfoViewModel(BaseVMActivity activity) {
         super(activity);
@@ -47,6 +51,32 @@ public class UserInfoViewModel extends BaseViewModel {
         parameters.putString("district",currentDistrict);
 
         mDataManager.getBlocks(callback, parameters, blocks);
+    }
+
+    public void getClasses(OnResponseCallback<List<RegistrationOption>> callback){
+        if (classesTaught == null){
+            classesTaught = new ArrayList<>();
+        }
+
+        mDataManager.getSearchFilter(new OnResponseCallback<SearchFilter>() {
+            @Override
+            public void onSuccess(SearchFilter data) {
+                for (FilterSection section : data.getResult()) {
+                    if (section.isIn_profile() && section.getName().contains("कक्षा") && section.getTags() != null) {
+                        classesSectionName = section.getName();
+                        for (FilterTag tag: section.getTags()){
+                            classesTaught.add(new RegistrationOption(tag.toString(), tag.toString()));
+                        }
+                    }
+                }
+                callback.onSuccess(classesTaught);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                callback.onFailure(e);
+            }
+        });
     }
 
     public void submit(Bundle parameters){
@@ -72,6 +102,7 @@ public class UserInfoViewModel extends BaseViewModel {
                 profileModel.block=response.getBlock();
                 profileModel.pmis_code=response.getPMIS_code();
                 profileModel.diet_code=response.getDIETCode();
+                profileModel.setTagLabel(response.getTagLabel());
 
                 //for analytics update
                 /*Analytic aHelper=new Analytic();

@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.model.CountResponse;
@@ -222,5 +223,17 @@ public class TaAPI {
 
     public Call<Content> getContentFromSourceIdentity(String sourceIdentity){
         return taService.getContentFromSourceIdentity(sourceIdentity);
+    }
+
+    public Call<List<ContentStatus>> setUserContent(List<ContentStatus> statuses){
+        return taService.setUserContent(statuses);
+    }
+
+    public Call<List<ContentStatus>> getMyContentStatus(){
+        return taService.getMyContentStatus();
+    }
+
+    public Call<List<ContentStatus>> getUserContentStatus(List<Long> contentIds){
+        return taService.getUserContentStatus(contentIds);
     }
 }

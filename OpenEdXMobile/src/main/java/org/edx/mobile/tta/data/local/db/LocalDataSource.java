@@ -4,6 +4,7 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Source;
@@ -177,5 +178,30 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void updateNotifications(List<Notification> notifications) {
         mAppDatabase.notificationDao().update(notifications);
+    }
+
+    @Override
+    public List<ContentStatus> getMyContentStatuses(String username) {
+        return mAppDatabase.contentStatusDao().getAll(username);
+    }
+
+    @Override
+    public List<ContentStatus> getContentStatusesByContentIds(List<Long> contentIds, String username) {
+        return mAppDatabase.contentStatusDao().getAllByContentIds(contentIds, username);
+    }
+
+    @Override
+    public ContentStatus getContentStatusByContentId(long contentId, String username) {
+        return mAppDatabase.contentStatusDao().getByContentId(contentId, username);
+    }
+
+    @Override
+    public void insertContentStatus(ContentStatus contentStatus) {
+        mAppDatabase.contentStatusDao().insert(contentStatus);
+    }
+
+    @Override
+    public void insertContentStatuses(List<ContentStatus> statuses) {
+        mAppDatabase.contentStatusDao().insert(statuses);
     }
 }

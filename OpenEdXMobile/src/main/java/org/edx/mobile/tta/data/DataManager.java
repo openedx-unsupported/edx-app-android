@@ -54,6 +54,7 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Source;
@@ -92,11 +93,14 @@ import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.task.content.GetContentFromSourceIdentityTask;
 import org.edx.mobile.tta.task.content.GetContentTask;
+import org.edx.mobile.tta.task.content.GetMyContentStatusTask;
+import org.edx.mobile.tta.task.content.GetUserContentStatusTask;
 import org.edx.mobile.tta.task.content.IsContentMyAgendaTask;
 import org.edx.mobile.tta.task.content.IsLikeTask;
 import org.edx.mobile.tta.task.content.SetBookmarkTask;
 import org.edx.mobile.tta.task.content.SetLikeTask;
 import org.edx.mobile.tta.task.content.SetLikeUsingSourceIdentityTask;
+import org.edx.mobile.tta.task.content.SetUserContentTask;
 import org.edx.mobile.tta.task.content.TotalLikeTask;
 import org.edx.mobile.tta.task.content.course.GetCourseDataFromPersistableCacheTask;
 import org.edx.mobile.tta.task.content.course.UserEnrollmentCourseFromCacheTask;
@@ -2935,5 +2939,181 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+
+    public void setUserContent(List<ContentStatus> statuses, OnResponseCallback<List<ContentStatus>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new SetUserContentTask(context, statuses){
+                @Override
+                protected void onSuccess(List<ContentStatus> contentStatuses) throws Exception {
+                    super.onSuccess(contentStatuses);
+
+                    if (contentStatuses != null && contentStatuses.size() == statuses.size()){
+
+                        List<ContentStatus> finalStatuses = new ArrayList<>();
+                        for (ContentStatus status: contentStatuses){
+                            if (status.getError() != null){
+                                status.setUsername(loginPrefs.getUsername());
+                                finalStatuses.add(status);
+                            }
+                        }
+
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertContentStatuses(finalStatuses);
+                            }
+                        }.start();
+
+                        callback.onSuccess(finalStatuses);
+
+                    } else {
+                        callback.onFailure(new TaException("Could not set status of contents"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getMyContentStatuses(OnResponseCallback<List<ContentStatus>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetMyContentStatusTask(context){
+                @Override
+                protected void onSuccess(List<ContentStatus> statuses) throws Exception {
+                    super.onSuccess(statuses);
+
+                    if (statuses == null){
+                        getMyContentStatusesFromLocal(callback, new TaException("Could not fetch status of contents"));
+                    } else {
+
+                        for (ContentStatus status: statuses){
+                            status.setUsername(loginPrefs.getUsername());
+                        }
+
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertContentStatuses(statuses);
+                            }
+                        }.start();
+
+                        callback.onSuccess(statuses);
+
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getMyContentStatusesFromLocal(callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getMyContentStatusesFromLocal(callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getMyContentStatusesFromLocal(OnResponseCallback<List<ContentStatus>> callback, Exception e){
+
+        new AsyncTask<Void, Void, List<ContentStatus>>() {
+            @Override
+            protected List<ContentStatus> doInBackground(Void... voids) {
+                return mLocalDataSource.getMyContentStatuses(loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onPostExecute(List<ContentStatus> statuses) {
+                super.onPostExecute(statuses);
+
+                if (statuses != null){
+                    callback.onSuccess(statuses);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void getUserContentStatus(List<Long> contentIds, OnResponseCallback<List<ContentStatus>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetUserContentStatusTask(context, contentIds){
+                @Override
+                protected void onSuccess(List<ContentStatus> statuses) throws Exception {
+                    super.onSuccess(statuses);
+
+                    if (statuses == null){
+                        getUserContentStatusFromLocal(contentIds, callback, new TaException("Could not fetch status of contents"));
+                    } else {
+
+                        List<ContentStatus> finalStatuses = new ArrayList<>();
+                        for (ContentStatus status : statuses) {
+                            if (status.getError() == null) {
+                                status.setUsername(loginPrefs.getUsername());
+                                finalStatuses.add(status);
+                            }
+                        }
+
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                mLocalDataSource.insertContentStatuses(finalStatuses);
+                            }
+                        }.start();
+
+                        callback.onSuccess(finalStatuses);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getUserContentStatusFromLocal(contentIds, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getUserContentStatusFromLocal(contentIds, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getUserContentStatusFromLocal(List<Long> contentIds, OnResponseCallback<List<ContentStatus>> callback,
+                                              Exception e){
+
+        new AsyncTask<Void, Void, List<ContentStatus>>() {
+            @Override
+            protected List<ContentStatus> doInBackground(Void... voids) {
+                return mLocalDataSource.getContentStatusesByContentIds(contentIds, loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onPostExecute(List<ContentStatus> statuses) {
+                super.onPostExecute(statuses);
+
+                if (statuses != null){
+                    callback.onSuccess(statuses);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
 }
 

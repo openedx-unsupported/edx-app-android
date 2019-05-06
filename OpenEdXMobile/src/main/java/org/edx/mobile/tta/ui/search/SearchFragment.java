@@ -42,6 +42,7 @@ public class SearchFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new SearchViewModel(getActivity(), this, category, contentLists, selectedContentList);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -66,4 +67,10 @@ public class SearchFragment extends TaBaseFragment {
                 break;
         }
     }*/
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
+    }
 }

@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
@@ -35,9 +36,12 @@ import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.FilterTag;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
+import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
+import org.edx.mobile.tta.event.ContentStatusesReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.assistant.AssistantFragment;
 import org.edx.mobile.tta.ui.base.BaseArrayAdapter;
@@ -50,7 +54,11 @@ import org.edx.mobile.tta.utils.ContentSourceUtil;
 import org.edx.mobile.util.PermissionsUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class SearchViewModel extends BaseViewModel {
 
@@ -75,6 +83,7 @@ public class SearchViewModel extends BaseViewModel {
     private ContentList selectedContentList;
     private List<FilterSection> filterSections;
     private List<Content> tempContents;
+    private Map<Long, ContentStatus> contentStatusMap;
 
     public ObservableField<String> searchText = new ObservableField<>("");
     public ObservableField<String> contentListText = new ObservableField<>();
@@ -137,6 +146,7 @@ public class SearchViewModel extends BaseViewModel {
         selectedCategory = category;
         currentContentLists = contentLists;
         this.selectedContentList = selectedContentList;
+        contentStatusMap = new HashMap<>();
 
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
@@ -495,6 +505,30 @@ public class SearchViewModel extends BaseViewModel {
         }
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentStatusesReceivedEvent event){
+
+        for (ContentStatus status: event.getStatuses()){
+            contentStatusMap.put(status.getContent_id(), status);
+        }
+        contentsAdapter.notifyDataSetChanged();
+
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentStatusReceivedEvent event){
+        contentStatusMap.put(event.getContentStatus().getContent_id(), event.getContentStatus());
+        contentsAdapter.notifyDataSetChanged();
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
+    }
+
     public class SearchedContentsAdapter extends MxInfiniteAdapter<Content> {
         public SearchedContentsAdapter(Context context) {
             super(context);
@@ -518,6 +552,21 @@ public class SearchViewModel extends BaseViewModel {
                         listener.onItemClick(v, model);
                     }
                 });
+
+                if (contentStatusMap.containsKey(model.getId())){
+                    ContentStatus status = contentStatusMap.get(model.getId());
+                    if (status.getCompleted() != null){
+                        contentBinding.contentStatusImage.setImageResource(R.drawable.t_icon_done);
+                        contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
+                    } else if (status.getStarted() != null){
+                        contentBinding.contentStatusImage.setImageResource(R.drawable.refresh);
+                        contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
+                    } else {
+                        contentBinding.contentStatusImage.setVisibility(View.GONE);
+                    }
+                } else {
+                    contentBinding.contentStatusImage.setVisibility(View.GONE);
+                }
             }
         }
     }

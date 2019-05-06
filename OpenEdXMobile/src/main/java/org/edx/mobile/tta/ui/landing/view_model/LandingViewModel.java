@@ -7,6 +7,10 @@ import android.view.MenuItem;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
+import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
+import org.edx.mobile.tta.event.ContentStatusesReceivedEvent;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.agenda.AgendaFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -18,6 +22,9 @@ import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.NetworkUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.greenrobot.event.EventBus;
 
 public class LandingViewModel extends BaseViewModel {
@@ -26,6 +33,8 @@ public class LandingViewModel extends BaseViewModel {
 
     public ObservableBoolean navShiftMode = new ObservableBoolean();
     public ObservableBoolean offlineVisible = new ObservableBoolean();
+
+    private List<ContentStatus> statuses;
 
     public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = item -> {
         if (item.getItemId() == selectedId){
@@ -132,6 +141,18 @@ public class LandingViewModel extends BaseViewModel {
 
     private void onAppStart(){
         mDataManager.updateNotifications(null);
+        mDataManager.getMyContentStatuses(new OnResponseCallback<List<ContentStatus>>() {
+            @Override
+            public void onSuccess(List<ContentStatus> data) {
+                statuses = data;
+                EventBus.getDefault().postSticky(new ContentStatusesReceivedEvent(data));
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 
     public void selectLibrary(){
@@ -145,6 +166,15 @@ public class LandingViewModel extends BaseViewModel {
         } else {
             offlineVisible.set(true);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentStatusReceivedEvent event){
+        if (statuses == null){
+            statuses = new ArrayList<>();
+        }
+        statuses.remove(event.getContentStatus());
+        statuses.add(event.getContentStatus());
     }
 
     public void registerEventBus(){

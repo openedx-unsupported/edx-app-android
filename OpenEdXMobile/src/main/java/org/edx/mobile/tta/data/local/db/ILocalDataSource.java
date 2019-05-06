@@ -3,6 +3,7 @@ package org.edx.mobile.tta.data.local.db;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.ContentList;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Source;
@@ -54,4 +55,10 @@ public interface ILocalDataSource {
     void insertNotification(Notification notification);
     void insertNotifications(List<Notification> notifications);
     void updateNotifications(List<Notification> notifications);
+
+    List<ContentStatus> getMyContentStatuses(String username);
+    List<ContentStatus> getContentStatusesByContentIds(List<Long> contentIds, String username);
+    ContentStatus getContentStatusByContentId(long contentId, String username);
+    void insertContentStatus(ContentStatus contentStatus);
+    void insertContentStatuses(List<ContentStatus> statuses);
 }
