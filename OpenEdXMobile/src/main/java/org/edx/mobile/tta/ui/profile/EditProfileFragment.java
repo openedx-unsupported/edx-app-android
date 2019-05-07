@@ -301,10 +301,10 @@ public class EditProfileFragment extends TaBaseFragment {
             }
             Bundle parameters = new Bundle();
             parameters.putString("name", etFirstName.getText().trim());
-            parameters.putString("state", viewModel.currentState);
+            parameters.putString("state", stateSpinner.getSelectedOption().getValue());
             parameters.putString("district", viewModel.currentDistrict);
             parameters.putString("block", blockSpinner.getSelectedOption().getName());
-            parameters.putString("title", professionSpinner.getSelectedOption().getName());
+            parameters.putString("title", professionSpinner.getSelectedOption().getValue());
             parameters.putString("gender", genderSpinner.getSelectedOption().getName());
 
             StringBuilder builder = new StringBuilder();
@@ -332,7 +332,8 @@ public class EditProfileFragment extends TaBaseFragment {
             viewModel.currentState = item.getName();
             viewModel.districts.clear();
             viewModel.districts = DataUtil.getDistrictsByStateName(viewModel.currentState);
-            districtSpinner.setItems(viewModel.districts, null);
+            districtSpinner.setItems(viewModel.districts,
+                    profileModel.district == null ? null : new RegistrationOption(profileModel.district, profileModel.district));
         });
 
         districtSpinner.setOnItemSelectedListener((view, item) -> {

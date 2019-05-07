@@ -1776,19 +1776,23 @@ public class DataManager extends BaseRoboInjector {
                 protected void onSuccess(ChangePasswordResponse changePasswordResponse) throws Exception {
                     super.onSuccess(changePasswordResponse);
 
-                    edxEnvironment.getRouter().resetAuthForChangePassword(context,
-                            edxEnvironment.getAnalyticsRegistry(), edxEnvironment.getNotificationDelegate());
-                    login(loginPrefs.getUsername(), newPass, new OnResponseCallback<AuthResponse>() {
-                        @Override
-                        public void onSuccess(AuthResponse data) {
-                            callback.onSuccess(changePasswordResponse);
-                        }
+                    if (changePasswordResponse != null && changePasswordResponse.isSuccess()) {
+                        edxEnvironment.getRouter().resetAuthForChangePassword(context,
+                                edxEnvironment.getAnalyticsRegistry(), edxEnvironment.getNotificationDelegate());
+                        login(loginPrefs.getUsername(), newPass, new OnResponseCallback<AuthResponse>() {
+                            @Override
+                            public void onSuccess(AuthResponse data) {
+                                callback.onSuccess(changePasswordResponse);
+                            }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            callback.onFailure(e);
-                        }
-                    });
+                            @Override
+                            public void onFailure(Exception e) {
+                                callback.onFailure(e);
+                            }
+                        });
+                    } else {
+                        callback.onFailure(new TaException("Error in changing password"));
+                    }
                 }
 
                 @Override

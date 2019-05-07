@@ -128,8 +128,6 @@ public class FormSpinner extends LinearLayout {
         this.isMandatory = isMandatory;
         if (isMandatory && label != null) {
             mBinding.spinnerLabel.append(getResources().getString(R.string.asterisk_red));
-            label += "*";
-            setItems(options, selectedOption);
         }
     }
 
@@ -171,7 +169,7 @@ public class FormSpinner extends LinearLayout {
         if (input != null && adapter != null) {
             for (int i = 0; i < adapter.getCount(); i++) {
                 RegistrationOption item = adapter.getItem(i);
-                if (item != null && input.equals(item.toString())) {
+                if (item != null && (input.equals(item.getValue()) || input.equals(item.getName()))) {
                     posiiton = i;
                     break;
                 }
