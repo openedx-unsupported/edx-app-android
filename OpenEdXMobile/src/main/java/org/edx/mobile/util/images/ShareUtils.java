@@ -13,6 +13,7 @@ import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -68,14 +69,19 @@ public enum ShareUtils {
                             shareText = getSharingText(shareType);
                         }
                         analyticsRegistry.courseDetailShared(courseData.getCourse().getId(), COURSE_ABOUT_URL, shareType);
-                        final Intent intent = ShareUtils.newShareIntent(shareText);
-                        intent.setComponent(componentName);
-                        activity.startActivity(intent);
 
                         Analytic analytic = new Analytic(activity);
                         analytic.addMxAnalytics_db(courseData.getCourse().getName(), Action.Share,
                                 courseData.getCourse().getName(), Source.Mobile, courseData.getCourse().getId(),
                                 BreadcrumbUtil.getBreadcrumb() + "/" + shareType.name());
+
+                        if (!shareType.equals(ShareType.TTA)) {
+                            final Intent intent = ShareUtils.newShareIntent(shareText);
+                            intent.setComponent(componentName);
+                            activity.startActivity(intent);
+                        } else {
+                            Toast.makeText(activity, "Course shared on TheTeacherApp", Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     @NonNull
@@ -143,6 +149,8 @@ public enum ShareUtils {
     public enum ShareType {
         TWITTER("twitter"),
         FACEBOOK("facebook"),
+        WHATSAPP("whatsapp"),
+        TTA("tta"),
         UNKNOWN(null)
         ;
 
@@ -166,6 +174,11 @@ public enum ShareUtils {
                 return ShareType.FACEBOOK;
             case "com.twitter.android":
                 return ShareType.TWITTER;
+            case "com.whatsapp":
+                return ShareType.WHATSAPP;
+            case "org.tta.mobile":
+            case "org.edx.mobile":
+                return ShareType.TTA;
             default:
                 return ShareType.UNKNOWN;
         }

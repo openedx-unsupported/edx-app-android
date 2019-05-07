@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
@@ -519,14 +520,19 @@ public class ConnectDashboardViewModel extends BaseViewModel
                         shareText = shareTextWithPlatformName;
                     }
 
-//                    segIO.courseDetailShared(post.getLink(), shareText, shareType);
-                    final Intent intent = ShareUtils.newShareIntent(shareText);
-                    intent.setComponent(componentName);
-                    mActivity.startActivity(intent);
-
                     mActivity.analytic.addMxAnalytics_db(post.getTitle().getRaw(), Action.Share,
                             content.getSource().getName(), Source.Mobile, String.valueOf(post.getId()),
                             BreadcrumbUtil.getBreadcrumb() + "/" + shareType.name());
+
+//                    segIO.courseDetailShared(post.getLink(), shareText, shareType);
+                    if (!shareType.equals(ShareUtils.ShareType.TTA)) {
+                        final Intent intent = ShareUtils.newShareIntent(shareText);
+                        intent.setComponent(componentName);
+                        mActivity.startActivity(intent);
+                    } else {
+                        mActivity.showLongToast("Post shared on TheTeacherApp");
+                    }
+
 
                 });
 
