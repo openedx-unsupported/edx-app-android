@@ -12,18 +12,22 @@ import android.text.TextWatcher;
 
 
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.FilterTag;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
+import org.edx.mobile.tta.exception.TaException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.utils.DataUtil;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.PermissionsUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EditProfileViewModel extends BaseViewModel  {
@@ -32,20 +36,32 @@ public class EditProfileViewModel extends BaseViewModel  {
     public ProfileImage profileImage;
     private Account account;
     private SearchFilter searchFilter;
-    private List<String> selectedClassTags, selectedSkillTags;
+//    private List<String> selectedClassTags, selectedSkillTags;
     private String tagLabel;
     private Uri imageUri;
     private Rect cropRect;
 
-    public ObservableField<String> name = new ObservableField<>("");
-    public ObservableBoolean nameValid = new ObservableBoolean();
+//    public ObservableField<String> name = new ObservableField<>("");
+//    public ObservableBoolean nameValid = new ObservableBoolean();
     public ObservableBoolean imageAddVisible = new ObservableBoolean();
 
     private boolean imageChanged;
     private boolean profileReceived, imageReceived;
     private boolean profileSuccessful, imageSuccessful;
 
-    public TextWatcher nameWatcher = new TextWatcher() {
+    public List<RegistrationOption> states;
+    public List<RegistrationOption> districts;
+    public List<RegistrationOption> blocks;
+    public List<RegistrationOption> professions;
+    public List<RegistrationOption> genders;
+    public List<RegistrationOption> classesTaught;
+    public List<RegistrationOption> skills;
+    public List<RegistrationOption> dietCodes;
+
+    public String currentState, currentDistrict;
+    public String classesSectionName, skillSectionName;
+
+    /*public TextWatcher nameWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -70,9 +86,7 @@ public class EditProfileViewModel extends BaseViewModel  {
         public void afterTextChanged(Editable s) {
 
         }
-    };
-
-
+    };*/
 
     public EditProfileViewModel(Context context, TaBaseFragment fragment,
                                 ProfileModel profileModel, ProfileImage profileImage,
@@ -84,9 +98,13 @@ public class EditProfileViewModel extends BaseViewModel  {
         this.account = account;
         this.searchFilter = searchFilter;
 
-        if (this.profileModel != null){
+        blocks = new ArrayList<>();
+        classesTaught = new ArrayList<>();
+        skills = new ArrayList<>();
+
+        /*if (this.profileModel != null){
             name.set(profileModel.name);
-        }
+        }*/
 
         if (profileImage == null || profileImage.getImageUrlLarge() == null){
             imageAddVisible.set(true);
@@ -106,13 +124,13 @@ public class EditProfileViewModel extends BaseViewModel  {
                 PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST);
     }
 
-    public void setSelectedClassTags(List<String> selectedClassTags) {
+    /*public void setSelectedClassTags(List<String> selectedClassTags) {
         this.selectedClassTags = selectedClassTags;
     }
 
     public void setSelectedSkillTags(List<String> selectedSkillTags) {
         this.selectedSkillTags = selectedSkillTags;
-    }
+    }*/
 
     public void setImageUri(Uri imageUri) {
         this.imageUri = imageUri;
@@ -124,40 +142,12 @@ public class EditProfileViewModel extends BaseViewModel  {
         imageChanged = true;
     }
 
-    public void save(){
+    public void submit(Bundle parameters){
         mActivity.showLoading();
         profileReceived = false;
         profileSuccessful = false;
         imageReceived = false;
         imageSuccessful = false;
-
-        StringBuilder builder = new StringBuilder();
-        if (searchFilter != null && searchFilter.getResult() != null){
-            for (FilterSection section: searchFilter.getResult()){
-                if (section.isIn_profile() && section.getTags() != null){
-                    for (FilterTag tag: section.getTags()){
-                        if (selectedClassTags.contains(tag.getValue()) || selectedSkillTags.contains(tag.getValue())){
-                            builder.append(section.getName())
-                                    .append("_")
-                                    .append(tag.getValue())
-                                    .append(" ");
-                        }
-                    }
-                }
-            }
-        }
-
-        if (builder.length() > 0){
-            builder.deleteCharAt(builder.length() - 1);
-        }
-        tagLabel = builder.toString();
-        if (tagLabel == null){
-            tagLabel = "";
-        }
-
-        Bundle parameters = new Bundle();
-        parameters.putString(Constants.KEY_NAME, name.get());
-        parameters.putString(Constants.KEY_TAG_LABEL, tagLabel);
 
         if (imageUri != null && cropRect != null && imageChanged) {
             mDataManager.updateProfileImage(imageUri, cropRect, new OnResponseCallback<ProfileImage>() {
@@ -212,5 +202,63 @@ public class EditProfileViewModel extends BaseViewModel  {
             mActivity.showLongSnack("Profile updated successfully");
             mActivity.onBackPressed();
         }
+    }
+
+    public void getBlocks(OnResponseCallback<List<RegistrationOption>> callback){
+        /*if (blocks == null){
+            blocks = new ArrayList<>();
+        }*/
+        Bundle parameters = new Bundle();
+
+        parameters.putString("state",currentState);
+        parameters.putString("district",currentDistrict);
+
+        mDataManager.getBlocks(callback, parameters, blocks);
+    }
+
+    public void getClassesAndSkills(OnResponseCallback<List<RegistrationOption>> classesCallback,
+                                    OnResponseCallback<List<RegistrationOption>> skillsCallback){
+        /*if (classesTaught == null){
+            classesTaught = new ArrayList<>();
+        }
+        if (skills == null){
+            skills = new ArrayList<>();
+        }*/
+
+        if (searchFilter != null){
+
+            for (FilterSection section : searchFilter.getResult()) {
+                if (section.isIn_profile() && section.getTags() != null) {
+                    if (section.getName().contains("कक्षा")) {
+                        classesSectionName = section.getName();
+                        for (FilterTag tag: section.getTags()){
+                            classesTaught.add(new RegistrationOption(tag.toString(), tag.toString()));
+                        }
+                    } else if (section.getName().contains("कौशल")){
+                        skillSectionName = section.getName();
+                        for (FilterTag tag: section.getTags()){
+                            skills.add(new RegistrationOption(tag.toString(), tag.toString()));
+                        }
+                    }
+                }
+            }
+            classesCallback.onSuccess(classesTaught);
+            skillsCallback.onSuccess(skills);
+
+        } else {
+            classesCallback.onFailure(new TaException("Classes not found"));
+            skillsCallback.onFailure(new TaException("Skills not found"));
+        }
+    }
+
+    public void getData() {
+        states = DataUtil.getAllStates();
+        currentState = states.get(0).getName();
+        districts = DataUtil.getDistrictsByStateName(states.get(0).getName());
+        currentDistrict = districts.get(0).getName();
+        professions = DataUtil.getAllProfessions();
+        genders = DataUtil.getAllGenders();
+        classesTaught = DataUtil.getAllClassesTaught();
+        dietCodes = DataUtil.getAllDietCodes();
     }
 }

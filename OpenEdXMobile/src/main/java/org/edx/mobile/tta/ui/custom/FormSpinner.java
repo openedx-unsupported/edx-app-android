@@ -128,6 +128,8 @@ public class FormSpinner extends LinearLayout {
         this.isMandatory = isMandatory;
         if (isMandatory && label != null) {
             mBinding.spinnerLabel.append(getResources().getString(R.string.asterisk_red));
+            label += "*";
+            setItems(options, selectedOption);
         }
     }
 

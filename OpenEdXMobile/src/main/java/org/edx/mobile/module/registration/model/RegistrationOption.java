@@ -31,6 +31,10 @@ public class RegistrationOption {
         return value;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public boolean isDefaultValue() {
         return defaultValue;
     }

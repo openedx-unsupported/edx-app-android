@@ -26,15 +26,22 @@ import org.edx.mobile.R;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.FilterTag;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.ui.custom.FormEditText;
+import org.edx.mobile.tta.ui.custom.FormMultiSpinner;
+import org.edx.mobile.tta.ui.custom.FormSpinner;
 import org.edx.mobile.tta.ui.custom.NonScrollListView;
 import org.edx.mobile.tta.ui.profile.view_model.EditProfileViewModel;
 import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.tta.utils.DataUtil;
+import org.edx.mobile.tta.utils.ViewUtil;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.ProfileImage;
@@ -50,7 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class EditProfileFragment extends TaBaseFragment implements View.OnClickListener {
+public class EditProfileFragment extends TaBaseFragment {
     public static final String TAG = EditProfileFragment.class.getCanonicalName();
     private static final int RANK = 3;
 
@@ -68,7 +75,7 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
     private ProfileImage profileImage;
     private Account account;
     private SearchFilter searchFilter;
-    private List<String> classTags, skillTags;
+    /*private List<String> classTags, skillTags;
     private List<String> selectedClassTags, selectedSkillTags;
 
     public ArrayAdapter<String> classesAdapter;
@@ -77,8 +84,23 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
     private NonScrollListView classesList, skillsList;
     private LinearLayout classesExpandedLayout, skillsExpandedLayout;
     private LinearLayout classesLayout, skillsLayout;
-    private Button btnSave;
+    private Button btnSave;*/
     private ImageView userImage;
+
+    private LinearLayout userInfoLayout;
+    private FormEditText etFirstName;
+    private FormSpinner stateSpinner;
+    private FormSpinner districtSpinner;
+    private FormSpinner blockSpinner;
+    private FormSpinner professionSpinner;
+    private FormSpinner genderSpinner;
+    private FormMultiSpinner classTaughtSpinner;
+    private FormMultiSpinner skillsSpinner;
+    private FormSpinner dietSpinner;
+    private FormEditText etPmis;
+    private Button btn;
+
+    private String tagLabel;
 
     private boolean classesOpened, skillsOpened;
 
@@ -106,23 +128,34 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
         View view = binding(inflater, container, R.layout.t_fragment_edit_profile, viewModel)
                 .getRoot();
 
-        classesList = view.findViewById(R.id.classes_multi_choice_list);
+        /*classesList = view.findViewById(R.id.classes_multi_choice_list);
         skillsList = view.findViewById(R.id.skills_multi_choice_list);
         classesExpandedLayout = view.findViewById(R.id.classes_expanded);
         skillsExpandedLayout = view.findViewById(R.id.skills_expanded);
         classesLayout = view.findViewById(R.id.classes_layout);
         skillsLayout = view.findViewById(R.id.skills_layout);
-        btnSave = view.findViewById(R.id.btn_save);
+        btnSave = view.findViewById(R.id.btn_save);*/
         userImage = view.findViewById(R.id.user_image);
 
-        classTags = new ArrayList<>();
+        userInfoLayout = view.findViewById(R.id.user_info_fields_layout);
+
+        if (profileModel != null && profileModel.getTagLabel() != null){
+            tagLabel = profileModel.getTagLabel().trim();
+        }
+
+        viewModel.getData();
+        setupForm();
+        getBlocks();
+        getClassesAndSkills();
+
+        /*classTags = new ArrayList<>();
         skillTags = new ArrayList<>();
         selectedClassTags = new ArrayList<>();
         selectedSkillTags = new ArrayList<>();
 
-        setupLists();
+        setupLists();*/
 
-        classesList.setOnItemClickListener((parent, view1, position, id) -> {
+        /*classesList.setOnItemClickListener((parent, view1, position, id) -> {
             String c = (String) parent.getItemAtPosition(position);
             if (selectedClassTags.contains(c)){
                 selectedClassTags.remove(c);
@@ -143,12 +176,214 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
         classesLayout.setOnClickListener(this);
         skillsLayout.setOnClickListener(this);
         btnSave.setOnClickListener(this);
-        view.setOnClickListener(this);
+        view.setOnClickListener(this);*/
 
         return view;
     }
 
-    private void setupLists() {
+    private void getBlocks() {
+        if (viewModel.currentState == null || viewModel.currentDistrict == null) {
+            return;
+        }
+        viewModel.getActivity().showLoading();
+        viewModel.getBlocks(
+                new OnResponseCallback<List<RegistrationOption>>() {
+                    @Override
+                    public void onSuccess(List<RegistrationOption> data) {
+                        viewModel.getActivity().hideLoading();
+                        blockSpinner.setItems(viewModel.blocks,
+                                profileModel.block == null ? null : new RegistrationOption(profileModel.block, profileModel.block));
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        viewModel.getActivity().hideLoading();
+                    }
+                });
+    }
+
+    private void getClassesAndSkills() {
+
+        viewModel.getClassesAndSkills(new OnResponseCallback<List<RegistrationOption>>() {
+            @Override
+            public void onSuccess(List<RegistrationOption> data) {
+                List<RegistrationOption> selectedOptions = null;
+                if (tagLabel != null && tagLabel.length() > 0){
+                    selectedOptions = new ArrayList<>();
+                    for (String chunk: tagLabel.split(" ")){
+                        String[] duet = chunk.split("_");
+                        if (duet[0].equals(viewModel.classesSectionName)){
+                            selectedOptions.add(new RegistrationOption(duet[1], duet[1]));
+                        }
+                    }
+                }
+                classTaughtSpinner.setItems(data, selectedOptions);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        }, new OnResponseCallback<List<RegistrationOption>>() {
+            @Override
+            public void onSuccess(List<RegistrationOption> data) {
+                List<RegistrationOption> selectedOptions = null;
+                if (tagLabel != null && tagLabel.length() > 0){
+                    selectedOptions = new ArrayList<>();
+                    for (String chunk: tagLabel.split(" ")){
+                        String[] duet = chunk.split("_");
+                        if (duet[0].equals(viewModel.skillSectionName)){
+                            selectedOptions.add(new RegistrationOption(duet[1], duet[1]));
+                        }
+                    }
+                }
+                skillsSpinner.setItems(data, selectedOptions);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+
+    }
+
+    private void setupForm() {
+
+        ViewUtil.addEmptySpace(userInfoLayout, (int) getResources().getDimension(R.dimen._14dp));
+
+        etFirstName = ViewUtil.addFormEditText(userInfoLayout, "Name/नाम");
+        etFirstName.setText(profileModel.name);
+        etFirstName.setMandatory(true);
+
+        stateSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "State/राज्य", viewModel.states,
+                profileModel.state == null ? null : new RegistrationOption(profileModel.state, profileModel.state));
+        stateSpinner.setMandatory(true);
+
+        districtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "District/" + "जिला", viewModel.districts,
+                profileModel.district == null ? null : new RegistrationOption(profileModel.district, profileModel.district));
+        districtSpinner.setMandatory(true);
+
+        blockSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Block/तहसील", viewModel.blocks,
+                profileModel.block == null ? null : new RegistrationOption(profileModel.block, profileModel.block));
+        blockSpinner.setMandatory(true);
+
+        professionSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Profession/व्यवसाय", viewModel.professions,
+                profileModel.title == null ? null : new RegistrationOption(profileModel.title, profileModel.title));
+
+        genderSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Gender/लिंग", viewModel.genders,
+                profileModel.gender == null ? null : new RegistrationOption(profileModel.gender, profileModel.gender));
+
+        classTaughtSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा",
+                viewModel.classesTaught, null);
+        skillsSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Skills/कौशल",
+                viewModel.skills, null);
+
+        etPmis = ViewUtil.addFormEditText(userInfoLayout, "PMIS Code/पी इम आइ इस कोड");
+        if (profileModel.pmis_code != null) {
+            etPmis.setText(profileModel.pmis_code);
+        }
+        etPmis.setShowTv(getActivity().getString(R.string.please_insert_valide_pmis_code));
+
+        dietSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "DIET Code/डी आइ इ टी कोड", viewModel.dietCodes,
+                profileModel.diet_code == null ? null : new RegistrationOption(profileModel.diet_code, profileModel.diet_code));
+
+        btn = ViewUtil.addButton(userInfoLayout, "Submit");
+        ViewUtil.addEmptySpace(userInfoLayout, (int) getResources().getDimension(R.dimen._50px));
+
+        setListeners();
+    }
+
+    private void setListeners() {
+        btn.setOnClickListener(v -> {
+            if (!validate()) {
+                return;
+            }
+            Bundle parameters = new Bundle();
+            parameters.putString("name", etFirstName.getText().trim());
+            parameters.putString("state", viewModel.currentState);
+            parameters.putString("district", viewModel.currentDistrict);
+            parameters.putString("block", blockSpinner.getSelectedOption().getName());
+            parameters.putString("title", professionSpinner.getSelectedOption().getName());
+            parameters.putString("gender", genderSpinner.getSelectedOption().getName());
+
+            StringBuilder builder = new StringBuilder();
+            if (classTaughtSpinner.getSelectedOptions() != null) {
+                for (RegistrationOption option: classTaughtSpinner.getSelectedOptions()){
+                    builder.append(viewModel.classesSectionName).append("_").append(option.getName()).append(" ");
+                }
+            }
+            if (skillsSpinner.getSelectedOptions() != null) {
+                for (RegistrationOption option: skillsSpinner.getSelectedOptions()){
+                    builder.append(viewModel.skillSectionName).append("_").append(option.getName()).append(" ");
+                }
+            }
+            if (builder.length() > 0){
+                builder.deleteCharAt(builder.length() - 1);
+            }
+            parameters.putString("tag_label", builder.toString());
+
+            parameters.putString("pmis_code", etPmis.getText());
+            parameters.putString("diet_code", dietSpinner.getSelectedOption().getName());
+            viewModel.submit(parameters);
+        });
+
+        stateSpinner.setOnItemSelectedListener((view, item) -> {
+            viewModel.currentState = item.getName();
+            viewModel.districts.clear();
+            viewModel.districts = DataUtil.getDistrictsByStateName(viewModel.currentState);
+            districtSpinner.setItems(viewModel.districts, null);
+        });
+
+        districtSpinner.setOnItemSelectedListener((view, item) -> {
+            viewModel.currentDistrict = item.getName();
+            getBlocks();
+        });
+    }
+
+    private boolean validate(){
+        boolean valid = true;
+        if (!etFirstName.validate()){
+            valid = false;
+            etFirstName.setError("Required");
+        }
+        if (!stateSpinner.validate()){
+            valid = false;
+            stateSpinner.setError("Required");
+        }
+        if (!districtSpinner.validate()){
+            valid = false;
+            districtSpinner.setError("Required");
+        }
+        if (!blockSpinner.validate()){
+            valid = false;
+            blockSpinner.setError("Required");
+        }
+        if (!professionSpinner.validate()){
+            valid = false;
+            professionSpinner.setError("Required");
+        }
+        if (!genderSpinner.validate()){
+            valid = false;
+            genderSpinner.setError("Required");
+        }
+        if (!classTaughtSpinner.validate()){
+            valid = false;
+            classTaughtSpinner.setError("Required");
+        }
+        if (!etPmis.validate()){
+            valid = false;
+            etPmis.setError("Required");
+        }
+        if (!dietSpinner.validate()){
+            valid = false;
+            dietSpinner.setError("Required");
+        }
+
+        return valid;
+    }
+
+    /*private void setupLists() {
 
         if (searchFilter == null){
             return;
@@ -216,7 +451,7 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
             skillsList.setItemChecked(skillTags.indexOf(s), true);
         }
 
-    }
+    }*/
 
     @Override
     public void onPermissionGranted(String[] permissions, int requestCode) {
@@ -281,7 +516,7 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
         }
     }
 
-    private void collapseTags(){
+    /*private void collapseTags(){
         classesExpandedLayout.setVisibility(View.GONE);
         skillsExpandedLayout.setVisibility(View.GONE);
         classesOpened = false;
@@ -319,7 +554,7 @@ public class EditProfileFragment extends TaBaseFragment implements View.OnClickL
             default:
                 collapseTags();
         }
-    }
+    }*/
 
     @Override
     public void onResume() {

@@ -30,7 +30,6 @@ public class UserInfoActivity extends BaseVMActivity {
     private FormSpinner blockSpinner;
     private FormSpinner professionSpinner;
     private FormSpinner genderSpinner;
-//    private FormSpinner classTaughtSpinner;
     private FormMultiSpinner classTaughtSpinner;
     private FormSpinner dietSpinner;
     private FormEditText etPmis;
@@ -91,8 +90,7 @@ public class UserInfoActivity extends BaseVMActivity {
     }
 
     private void setupForm() {
-//        ViewUtil.addHeading(userInfoLayout, "Additional Information");
-//        ViewUtil.addSubHeading(userInfoLayout, "Please enter the following details");
+
         ViewUtil.addEmptySpace(userInfoLayout, (int) getResources().getDimension(R.dimen._14dp));
 
         etFirstName = ViewUtil.addFormEditText(userInfoLayout, "Name/नाम");
@@ -106,9 +104,11 @@ public class UserInfoActivity extends BaseVMActivity {
         districtSpinner.setMandatory(true);
 
         blockSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Block/तहसील", mViewModel.blocks, null);
+        blockSpinner.setMandatory(true);
+
         professionSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Profession/व्यवसाय", mViewModel.professions, null);
         genderSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Gender/लिंग", mViewModel.genders, null);
-//        classTaughtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा", mViewModel.classesTaught, null);
+
         classTaughtSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा",
                 mViewModel.classesTaught, null);
         classTaughtSpinner.setMandatory(true);
@@ -134,7 +134,6 @@ public class UserInfoActivity extends BaseVMActivity {
             parameters.putString("block", blockSpinner.getSelectedOption().getName());
             parameters.putString("title", professionSpinner.getSelectedOption().getName());
             parameters.putString("gender", genderSpinner.getSelectedOption().getName());
-//            parameters.putString("classes_taught", classTaughtSpinner.getSelectedOption().getName());
             if (classTaughtSpinner.getSelectedOptions() != null) {
                 StringBuilder builder = new StringBuilder();
                 for (RegistrationOption option: classTaughtSpinner.getSelectedOptions()){
@@ -206,8 +205,4 @@ public class UserInfoActivity extends BaseVMActivity {
         return valid;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

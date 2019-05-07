@@ -11,276 +11,291 @@
             type="org.edx.mobile.tta.ui.profile.view_model.EditProfileViewModel" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_background"
-        android:orientation="vertical">
+        android:background="@color/app_background">
 
-        <RelativeLayout
-            android:id="@+id/rellayout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_marginTop="@dimen/_60px">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="140dp"
+            <RelativeLayout
+                android:id="@+id/rellayout"
+                android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:layout_marginStart="@dimen/_20px"
-                app:cardBackgroundColor="@color/gray_1"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="0dp">
+                android:layout_marginTop="@dimen/_60px">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="@dimen/_20px"
+                    app:cardBackgroundColor="@color/gray_1"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="0dp">
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:id="@+id/user_image"
-                        android:src="@{viewModel.profileImage == null ? null : viewModel.profileImage.imageUrlFull}" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="110dp"
-                        android:gravity="center">
+                        android:layout_height="match_parent">
 
                         <ImageView
-                            android:id="@+id/imageProfile"
+                            android:id="@+id/user_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            android:src="@{viewModel.profileImage == null ? null : viewModel.profileImage.imageUrlFull}" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/imageProfile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="@{viewModel.imageAddVisible ? View.VISIBLE : View.GONE}"
+                                app:srcCompat="@drawable/t_icon_add" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="134dp"
+                            android:layout_height="25dp"
+                            android:layout_marginStart="@dimen/_4px"
+                            android:layout_marginTop="@dimen/_4px"
+                            android:layout_marginEnd="@dimen/_2px"
+                            android:layout_marginBottom="@dimen/_4px"
+                            android:layout_weight="1"
+                            android:background="@color/white">
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/white"
+                                android:onClick="@{()->viewModel.takePhoto()}"
+                                app:cardCornerRadius="4dp"
+                                app:cardElevation="0dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    app:srcCompat="@drawable/t_icon_camera" />
+                            </android.support.v7.widget.CardView>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="134dp"
+                            android:layout_height="25dp"
+                            android:layout_marginStart="@dimen/_2px"
+                            android:layout_marginTop="@dimen/_4px"
+                            android:layout_marginEnd="@dimen/_4px"
+                            android:layout_marginBottom="@dimen/_4px"
+                            android:layout_weight="1"
+                            android:background="@color/white">
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/white"
+                                android:onClick="@{()->viewModel.choosePhoto()}"
+                                app:cardCornerRadius="4dp"
+                                app:cardElevation="0dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    app:srcCompat="@drawable/t_icon_photos" />
+                            </android.support.v7.widget.CardView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <!--<android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="@dimen/_18px"
+                    android:layout_marginEnd="@dimen/_20px"
+                    android:layout_toEndOf="@+id/cardView"
+                    app:hintTextAppearance="@color/primary_navy">
+
+                    <android.support.design.widget.TextInputEditText
+                        text_changed_listener="@{viewModel.nameWatcher}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/hind_regular"
+                        android:hint="@string/write_name"
+                        android:paddingBottom="@dimen/_14px"
+                        android:text="@{viewModel.name}"
+                        android:textColor="@color/gray_4"
+                        android:textColorHint="@color/gray_1"
+                        android:textSize="14sp" />
+
+                </android.support.design.widget.TextInputLayout>-->
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/user_info_fields_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <!--<android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/classes_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20px"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="@dimen/_20px"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/hind_medium"
+                            android:text="@string/classes_taught"
+                            android:textColor="@color/gray_1"
+                            android:textSize="14sp" />
+
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="@{viewModel.imageAddVisible ? View.VISIBLE : View.GONE}"
-                            app:srcCompat="@drawable/t_icon_add" />
+                            app:srcCompat="@drawable/t_icon_dropdown_selected" />
+
                     </LinearLayout>
-                </FrameLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_14px"
+                        android:background="@color/gray_1" />
+
+                </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/skills_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:layout_marginStart="@dimen/_20px"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="@dimen/_20px"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/classes_layout">
 
                     <LinearLayout
-                        android:layout_width="134dp"
-                        android:layout_height="25dp"
-                        android:layout_marginStart="@dimen/_4px"
-                        android:layout_marginTop="@dimen/_4px"
-                        android:layout_marginEnd="@dimen/_2px"
-                        android:layout_marginBottom="@dimen/_4px"
-                        android:layout_weight="1"
-                        android:background="@color/white">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/white"
-                            android:onClick="@{()->viewModel.takePhoto()}"
-                            app:cardCornerRadius="4dp"
-                            app:cardElevation="0dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/hind_medium"
+                            android:text="@string/skills"
+                            android:textColor="@color/gray_1"
+                            android:textSize="14sp" />
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                app:srcCompat="@drawable/t_icon_camera" />
-                        </android.support.v7.widget.CardView>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/t_icon_dropdown_selected" />
+
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="134dp"
-                        android:layout_height="25dp"
-                        android:layout_marginStart="@dimen/_2px"
-                        android:layout_marginTop="@dimen/_4px"
-                        android:layout_marginEnd="@dimen/_4px"
-                        android:layout_marginBottom="@dimen/_4px"
-                        android:layout_weight="1"
-                        android:background="@color/white">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_14px"
+                        android:background="@color/gray_1" />
 
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/white"
-                            android:onClick="@{()->viewModel.choosePhoto()}"
-                            app:cardCornerRadius="4dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                app:srcCompat="@drawable/t_icon_photos" />
-                        </android.support.v7.widget.CardView>
-                    </LinearLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="@dimen/_18px"
-                android:layout_marginEnd="@dimen/_20px"
-                android:layout_toEndOf="@+id/cardView"
-                app:hintTextAppearance="@color/primary_navy">
-
-                <android.support.design.widget.TextInputEditText
-                    text_changed_listener="@{viewModel.nameWatcher}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/hind_regular"
-                    android:hint="@string/write_name"
-                    android:paddingBottom="@dimen/_14px"
-                    android:text="@{viewModel.name}"
-                    android:textColor="@color/gray_4"
-                    android:textColorHint="@color/gray_1"
-                    android:textSize="14sp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-        </RelativeLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:id="@+id/classes_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="@dimen/_20px"
-                android:orientation="vertical"
-                app:layout_constraintTop_toTopOf="parent">
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="220dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="80dp"
+                    android:background="@drawable/btn_selector_filled"
+                    android:enabled="@{viewModel.nameValid}"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="center"
+                    android:text="Save"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/skills_layout" />
 
                 <LinearLayout
+                    android:id="@+id/classes_expanded"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:background="@color/white"
+                    android:elevation="6dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/classes_layout">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/hind_medium"
-                        android:text="@string/classes_taught"
-                        android:textColor="@color/gray_1"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/t_icon_dropdown_selected" />
+                    <org.edx.mobile.tta.ui.custom.NonScrollListView
+                        android:id="@+id/classes_multi_choice_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:choiceMode="multipleChoice"
+                        android:scrollbars="none" />
 
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_14px"
-                    android:background="@color/gray_1" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/skills_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="@dimen/_20px"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/classes_layout">
 
                 <LinearLayout
+                    android:id="@+id/skills_expanded"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:background="@color/white"
+                    android:elevation="6dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/skills_layout">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/hind_medium"
-                        android:text="@string/skills"
-                        android:textColor="@color/gray_1"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/t_icon_dropdown_selected" />
+                    <org.edx.mobile.tta.ui.custom.NonScrollListView
+                        android:id="@+id/skills_multi_choice_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:choiceMode="multipleChoice"
+                        android:scrollbars="none" />
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_14px"
-                    android:background="@color/gray_1" />
+            </android.support.constraint.ConstraintLayout>-->
 
-            </LinearLayout>
+        </LinearLayout>
 
-            <Button
-                android:layout_width="220dp"
-                android:layout_height="25dp"
-                android:id="@+id/btn_save"
-                android:layout_marginTop="80dp"
-                android:background="@drawable/btn_selector_filled"
-                android:enabled="@{viewModel.nameValid}"
-                android:fontFamily="@font/hind_medium"
-                android:gravity="center"
-                android:text="Save"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/skills_layout" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/classes_expanded"
-                android:background="@color/white"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/classes_layout"
-                android:visibility="gone"
-                android:elevation="6dp">
-
-                <org.edx.mobile.tta.ui.custom.NonScrollListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/classes_multi_choice_list"
-                    android:scrollbars="none"
-                    android:choiceMode="multipleChoice"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/skills_expanded"
-                android:background="@color/white"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/skills_layout"
-                android:visibility="gone"
-                android:elevation="6dp">
-
-                <org.edx.mobile.tta.ui.custom.NonScrollListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/skills_multi_choice_list"
-                    android:scrollbars="none"
-                    android:choiceMode="multipleChoice"/>
-
-            </LinearLayout>
-
-        </android.support.constraint.ConstraintLayout>
-
-    </LinearLayout>
+    </ScrollView>
 </layout>
