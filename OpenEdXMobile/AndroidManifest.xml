@@ -25,8 +25,8 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
     <!-- To read OTP -->
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
+    <!--<uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />-->
 
     <!-- TTA To download without notification -->
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
@@ -478,6 +478,15 @@
         <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <!-- otp reading receiver no permission -->
+        <receiver
+            android:name=".tta.ui.otp.SmsModuleReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
 

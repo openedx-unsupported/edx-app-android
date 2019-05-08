@@ -24,6 +24,9 @@ public class Sha1Util {
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             logger.error(e);
             return text;
+        } catch (NullPointerException e){
+            logger.error(e);
+            return "";
         }
     }
 

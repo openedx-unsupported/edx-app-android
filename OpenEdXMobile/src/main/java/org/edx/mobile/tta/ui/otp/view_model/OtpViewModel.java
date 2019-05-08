@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
 
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
@@ -35,9 +38,13 @@ import org.edx.mobile.tta.ui.logistration.UserInfoActivity;
 import org.edx.mobile.tta.ui.otp.IMessageReceiver;
 import org.edx.mobile.tta.ui.otp.IncomingSms;
 import org.edx.mobile.tta.ui.otp.OTP_helper;
+import org.edx.mobile.tta.ui.otp.SmsResponse;
+import org.edx.mobile.tta.ui.otp.SmsUtil;
 import org.edx.mobile.tta.ui.reset_password.ResetPasswordActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.images.ErrorUtils;
+
+import de.greenrobot.event.EventBus;
 
 public class OtpViewModel extends BaseViewModel {
 
@@ -280,7 +287,7 @@ public class OtpViewModel extends BaseViewModel {
         this.password = password;
         this.otpSource = otpSource;
 
-        incomingSms =new IncomingSms(new IMessageReceiver() {
+        /*incomingSms =new IncomingSms(new IMessageReceiver() {
             @Override
             public void onMessage(String from, String text) {
                 OTP_helper helper=new OTP_helper();
@@ -301,7 +308,7 @@ public class OtpViewModel extends BaseViewModel {
                 }
             }
         });
-        registerMessageListner();
+        registerMessageListner();*/
 
     }
 
@@ -336,6 +343,12 @@ public class OtpViewModel extends BaseViewModel {
         Bundle parameters = new Bundle();
         parameters.putString(Constants.KEY_MOBILE_NUMBER, number);
 
+        //adding version for otp handling
+        if(mDataManager.getConfig().getSMSKey()!=null || !mDataManager.getConfig().getSMSKey().isEmpty()) {
+            parameters.putString("version", "1");
+            parameters.putString("sms_key", mDataManager.getConfig().getSMSKey());
+        }
+
         if (otpSource.equals(Constants.OTP_SOURCE_RESET_PASSWORD)) {
             generateOtpForResetPassword(parameters);
         } else if (otpSource.equals(Constants.OTP_SOURCE_REGISTER)) {
@@ -352,7 +365,7 @@ public class OtpViewModel extends BaseViewModel {
                 mActivity.hideLoading();
 
                 if (mobileNumberVerificationResponse.mobile_number() != null && !mobileNumberVerificationResponse.mobile_number().equals("")){
-                    registerMessageListner();
+//                    registerMessageListner();
                     mActivity.showShortSnack("OTP sent successfully");
                 } else {
                     mActivity.showErrorDialog("Reset password failure", "Unable to resend OTP");
@@ -375,7 +388,7 @@ public class OtpViewModel extends BaseViewModel {
                 mActivity.hideLoading();
 
                 if (sendOTPResponse.mobile_number().equals(number)){
-                    registerMessageListner();
+//                    registerMessageListner();
                     mActivity.showShortSnack("OTP sent successfully");
                 } else {
                     mActivity.showErrorDialog("Registration failure", "Unable to resend OTP");
@@ -558,7 +571,7 @@ public class OtpViewModel extends BaseViewModel {
         return regiParameter;
     }
 
-    private void registerMessageListner()
+    /*private void registerMessageListner()
     {
         if (!receiverRegistered) {
             IntentFilter ifilter = new IntentFilter();
@@ -577,5 +590,37 @@ public class OtpViewModel extends BaseViewModel {
             mActivity.unregisterReceiver(incomingSms);
             receiverRegistered = false;
         }
+    }*/
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(SmsResponse e) {
+        Log.d("_______LOG_______", "sms event received");
+        switch(e.getStatus().getStatusCode()) {
+            case CommonStatusCodes.SUCCESS:
+
+                otp = SmsUtil.getOtp(e.getData());
+                Log.d("_______LOG_______", "otp : " + otp);
+                if (otp != null && otp.length() == 6) {
+                    digit1.set(String.valueOf(otp.charAt(0)));
+                    digit2.set(String.valueOf(otp.charAt(1)));
+                    digit3.set(String.valueOf(otp.charAt(2)));
+                    digit4.set(String.valueOf(otp.charAt(3)));
+                    digit5.set(String.valueOf(otp.charAt(4)));
+                    digit6.set(String.valueOf(otp.charAt(5)));
+                }
+
+                break;
+            case CommonStatusCodes.TIMEOUT:
+                mActivity.showLongSnack("Unable to fetch OTP. Please retry.");
+                break;
+        }
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().register(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 }

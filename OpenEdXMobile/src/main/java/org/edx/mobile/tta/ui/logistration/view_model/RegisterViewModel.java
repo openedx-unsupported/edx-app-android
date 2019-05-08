@@ -116,14 +116,15 @@ public class RegisterViewModel extends BaseViewModel {
 
     public void register() {
         //check here for message read and receive for otp feature
-        if (PermissionsUtil.checkPermissions(Manifest.permission.READ_SMS, mActivity) &&
+        /*if (PermissionsUtil.checkPermissions(Manifest.permission.READ_SMS, mActivity) &&
                 PermissionsUtil.checkPermissions(Manifest.permission.RECEIVE_SMS, mActivity)) {
             generateOTP();
         } else {
             mFragment.askForPermissions(new String[]{Manifest.permission.READ_SMS,
                             Manifest.permission.RECEIVE_SMS},
                     PermissionsUtil.READ_SMS_PERMISSION_REQUEST);
-        }
+        }*/
+        generateOTP();
     }
 
     public void signIn() {
@@ -173,6 +174,12 @@ public class RegisterViewModel extends BaseViewModel {
             parameters.putString(Constants.KEY_ACCESS_TOKEN, access_token);
             parameters.putString(Constants.KEY_PROVIDER, backstore);
             parameters.putString(Constants.KEY_CLIENT_ID, mDataManager.getConfig().getOAuthClientId());
+        }
+
+        //adding version for otp handling
+        if(mDataManager.getConfig().getSMSKey()!=null || !mDataManager.getConfig().getSMSKey().isEmpty()) {
+            parameters.putString("version", "1");
+            parameters.putString("sms_key", mDataManager.getConfig().getSMSKey());
         }
 
         new GenerateOtpTask(mActivity, parameters) {

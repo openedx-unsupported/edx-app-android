@@ -136,6 +136,7 @@ public class FeedViewModel extends BaseViewModel {
                         case LikePost:
                         case MostPopular:
                         case CommentPost:
+                        case Share:
                         case SharePostApp:
                         case ShareCourse:
                         case NewPost:
@@ -184,7 +185,9 @@ public class FeedViewModel extends BaseViewModel {
                         @Override
                         public void onSuccess(StatusResponse data) {
                             mActivity.hideLoading();
-                            if (view instanceof Button) {
+                            item.setFollowed(data.getStatus());
+                            suggestedUsersAdapter.notifyItemChanged(suggestedUsersAdapter.getItemPosition(item));
+                            /*if (view instanceof Button) {
                                 Button button = (Button) view;
                                 if (data.getStatus()) {
                                     button.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_filled));
@@ -199,7 +202,7 @@ public class FeedViewModel extends BaseViewModel {
                                     button.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_cyan));
                                     button.setText(mActivity.getString(R.string.follow));
                                 }
-                            }
+                            }*/
                         }
 
                         @Override
@@ -342,6 +345,7 @@ public class FeedViewModel extends BaseViewModel {
                         feed.getAction_by(), feed.getMeta_data().getSource_title()
                 );
 
+            case Share:
             case SharePostApp:
             case ShareCourse:
                 return String.format(
@@ -422,6 +426,20 @@ public class FeedViewModel extends BaseViewModel {
                         .placeholder(R.drawable.profile_photo_placeholder)
                         .into(teacherBinding.userImage);
 
+                if (model.isFollowed()) {
+                    teacherBinding.followBtn.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_filled));
+                    teacherBinding.followBtn.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
+                    teacherBinding.followBtn.setText(mActivity.getString(R.string.unfollow));
+
+                    mActivity.analytic.addMxAnalytics_db(model.getUsername(), Action.FollowUser,
+                            Nav.feed.name(), Source.Mobile, model.getUsername());
+
+                } else {
+                    teacherBinding.followBtn.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_hollow));
+                    teacherBinding.followBtn.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_cyan));
+                    teacherBinding.followBtn.setText(mActivity.getString(R.string.follow));
+                }
+
                 teacherBinding.followBtn.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
@@ -455,6 +473,7 @@ public class FeedViewModel extends BaseViewModel {
                     case CourseLike:
                     case MostPopular:
                     case CommentPost:
+                    case Share:
                     case SharePostApp:
                     case ShareCourse:
 
@@ -631,6 +650,7 @@ public class FeedViewModel extends BaseViewModel {
                     case LikePost:
                     case MostPopular:
                     case CommentPost:
+                    case Share:
                     case SharePostApp:
                     case NewPost:
                     case DBComment:

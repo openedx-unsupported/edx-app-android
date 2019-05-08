@@ -166,7 +166,7 @@ public class FormSpinner extends LinearLayout {
 
     private int getAdapterPosition(@android.support.annotation.Nullable String input) {
         int posiiton = -1;
-        if (input != null && adapter != null) {
+        if (input != null && !input.equals("") && adapter != null) {
             for (int i = 0; i < adapter.getCount(); i++) {
                 RegistrationOption item = adapter.getItem(i);
                 if (item != null && (input.equals(item.getValue()) || input.equals(item.getName()))) {

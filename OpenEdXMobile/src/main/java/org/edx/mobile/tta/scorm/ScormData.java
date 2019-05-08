@@ -12,4 +12,10 @@ public class ScormData extends BlockData {
     @SerializedName("scorm_data")
     public String scormData;
 
+    @SerializedName("scorm_image_url")
+    public String scormImageUrl;
+
+    @SerializedName("scorm_duration")
+    public String scormDuration;
+
 }

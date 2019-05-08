@@ -52,14 +52,15 @@ public class EnterNumberViewModel extends BaseViewModel {
 
     public void verify(){
         //check here for message read and receive for otp feature
-        if (PermissionsUtil.checkPermissions(Manifest.permission.READ_SMS, mActivity) &&
+        /*if (PermissionsUtil.checkPermissions(Manifest.permission.READ_SMS, mActivity) &&
                 PermissionsUtil.checkPermissions(Manifest.permission.RECEIVE_SMS, mActivity)) {
             generateOTP();
         } else {
             mActivity.askForPermissions(new String[]{Manifest.permission.READ_SMS,
                             Manifest.permission.RECEIVE_SMS},
                     PermissionsUtil.READ_SMS_PERMISSION_REQUEST);
-        }
+        }*/
+        generateOTP();
     }
 
     public void generateOTP(){
@@ -67,6 +68,13 @@ public class EnterNumberViewModel extends BaseViewModel {
 
         Bundle parameters = new Bundle();
         parameters.putString(KEY_MOBILE_NUMBER, cellphone.get());
+
+        //adding version for otp handling
+        if(mDataManager.getConfig().getSMSKey()!=null || !mDataManager.getConfig().getSMSKey().isEmpty()) {
+            parameters.putString("version", "1");
+            parameters.putString("sms_key", mDataManager.getConfig().getSMSKey());
+        }
+
         new MobileNumberVerificationTask(mActivity, parameters){
             @Override
             protected void onSuccess(MobileNumberVerificationResponse mobileNumberVerificationResponse) throws Exception {

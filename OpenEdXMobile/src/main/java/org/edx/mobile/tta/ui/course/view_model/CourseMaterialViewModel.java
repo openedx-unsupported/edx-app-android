@@ -306,8 +306,18 @@ public class CourseMaterialViewModel extends BaseViewModel {
             }
         });
 
-        footerImageUrl.set(content.getIcon());
-        footerTitleVisible.set(true);
+        if (assessmentComponent.isContainer()) {
+            CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
+            if (component instanceof PDFBlockModel || component instanceof ScormBlockModel) {
+                ScormBlockModel scorm = (ScormBlockModel) component;
+                footerImageUrl.set(scorm.getData().scormImageUrl == null ? content.getIcon() : scorm.getData().scormImageUrl);
+            } else {
+                footerImageUrl.set(content.getIcon());
+            }
+        } else {
+            footerImageUrl.set(content.getIcon());
+        }
+
         footerTitle.set(assessmentComponent.getDisplayName());
         footerDownloadIcon.set(R.drawable.t_icon_download);
         footerBtnText.set(mActivity.getString(R.string.assessment));
@@ -971,14 +981,33 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 itemBinding.itemStatus.setText(R.string.viewed);
                                 break;
                         }
+
+                        itemBinding.itemDuration.setText(mActivity.getString(
+                                R.string.estimated_duration) + " : " +
+                                (scorm.getData().scormDuration == null ? "N/A" : scorm.getData().scormDuration));
+                        Glide.with(mActivity)
+                                .load(scorm.getData().scormImageUrl == null ? content.getIcon() : scorm.getData().scormImageUrl)
+                                .placeholder(R.drawable.placeholder_course_card_image)
+                                .into(itemBinding.itemImage);
+                    } else {
+                        itemBinding.itemDuration.setText(mActivity.getString(
+                                R.string.estimated_duration) + " : " +
+                                (item.getDuration() == null ? "N/A" : item.getDuration()));
+                        Glide.with(mActivity)
+                                .load(content.getIcon())
+                                .placeholder(R.drawable.placeholder_course_card_image)
+                                .into(itemBinding.itemImage);
                     }
+                } else {
+                    itemBinding.itemDuration.setText(mActivity.getString(
+                            R.string.estimated_duration) + " : " +
+                            (item.getDuration() == null ? "N/A" : item.getDuration()));
+                    Glide.with(mActivity)
+                            .load(content.getIcon())
+                            .placeholder(R.drawable.placeholder_course_card_image)
+                            .into(itemBinding.itemImage);
                 }
 
-                itemBinding.itemDuration.setText(mActivity.getString(R.string.estimated_duration) + " : " + (item.getDuration() == null ? "N/A" : item.getDuration()));
-                Glide.with(mActivity)
-                        .load(content.getIcon())
-                        .placeholder(R.drawable.placeholder_course_card_image)
-                        .into(itemBinding.itemImage);
                 itemBinding.itemTitle.setText(item.getDisplayName());
 
                 itemBinding.itemDeleteDownload.setOnClickListener(v -> {

@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.ui.course.discussion.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -52,6 +53,8 @@ public class DiscussionLandingViewModel extends BaseViewModel {
     public DiscussionTopicsAdapter topicsAdapter;
     public RecyclerView.LayoutManager topicsLayoutManager;
 
+    public ObservableBoolean progressVisible = new ObservableBoolean();
+
     public DiscussionLandingViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
         super(context, fragment);
         this.course = course;
@@ -86,7 +89,7 @@ public class DiscussionLandingViewModel extends BaseViewModel {
     }
 
     private void fetchDiscussionTopics() {
-        mActivity.showLoading();
+        progressVisible.set(true);
 
         if (course != null) {
             mDataManager.getDiscussionTopics(course.getCourse().getId(), new OnResponseCallback<List<DiscussionTopicDepth>>() {
@@ -104,7 +107,7 @@ public class DiscussionLandingViewModel extends BaseViewModel {
                                 new OnResponseCallback<List<DiscussionThread>>() {
                                     @Override
                                     public void onSuccess(List<DiscussionThread> data) {
-                                        mActivity.hideLoading();
+                                        progressVisible.set(false);
 
                                         for (DiscussionThread thread: data){
                                             if (topicThreadsMap.containsKey(thread.getTopicId())){
@@ -121,7 +124,7 @@ public class DiscussionLandingViewModel extends BaseViewModel {
 
                                     @Override
                                     public void onFailure(Exception e) {
-                                        mActivity.hideLoading();
+                                        progressVisible.set(false);
                                     }
                                 });
 
@@ -132,7 +135,7 @@ public class DiscussionLandingViewModel extends BaseViewModel {
 
                 @Override
                 public void onFailure(Exception e) {
-                    mActivity.hideLoading();
+                    progressVisible.set(false);
                     mActivity.showLongSnack(e.getLocalizedMessage());
                 }
             });

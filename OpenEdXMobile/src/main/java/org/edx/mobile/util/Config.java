@@ -93,6 +93,8 @@ public class Config {
     //Dialog flow client token
     private static final String DIALOGFLOW_CLIENT_TOKEN = "DIALOGFLOW_CLIENT_TOKEN";
 
+    private static  String SMS_KEY = "SMS_KEY";
+
     //TTA end
 
     public static class ZeroRatingConfig {
@@ -742,6 +744,10 @@ public class Config {
     //Analyytics store url
     public String getAnalyticsStoreUrl() {
         return getString(ANALYTICS_STORE_URL);
+    }
+
+    public String getSMSKey() {
+        return getString(SMS_KEY);
     }
 
     //wordpress Client ID

@@ -520,8 +520,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
                         shareText = shareTextWithPlatformName;
                     }
 
-                    mActivity.analytic.addMxAnalytics_db(post.getTitle().getRaw(), Action.Share,
-                            content.getSource().getName(), Source.Mobile, String.valueOf(post.getId()),
+                    mActivity.analytic.addMxAnalytics_db(content.getName(), Action.Share,
+                            content.getSource().getName(), Source.Mobile, content.getSource_identity(),
                             BreadcrumbUtil.getBreadcrumb() + "/" + shareType.name());
 
 //                    segIO.courseDetailShared(post.getLink(), shareText, shareType);

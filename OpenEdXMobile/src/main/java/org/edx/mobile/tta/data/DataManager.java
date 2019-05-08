@@ -1787,7 +1787,10 @@ public class DataManager extends BaseRoboInjector {
 
                             @Override
                             public void onFailure(Exception e) {
-                                callback.onFailure(e);
+                                Toast.makeText(context,
+                                        "Password changed successfully. Please login to continue",
+                                        Toast.LENGTH_LONG).show();
+                                logout();
                             }
                         });
                     } else {
@@ -2957,7 +2960,7 @@ public class DataManager extends BaseRoboInjector {
 
                         List<ContentStatus> finalStatuses = new ArrayList<>();
                         for (ContentStatus status: contentStatuses){
-                            if (status.getError() != null){
+                            if (status.getError() == null){
                                 status.setUsername(loginPrefs.getUsername());
                                 finalStatuses.add(status);
                             }

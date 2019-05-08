@@ -24,12 +24,13 @@ public class OtpActivity extends BaseVMActivity {
                 parameters.getString(KEY_PASSWORD, null),
                 parameters.getString(KEY_OTP_SOURCE)
         );
+        viewModel.registerEventBus();
         binding(R.layout.t_activity_otp, viewModel);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.unregisterMessageListener();
+        viewModel.unRegisterEventBus();
     }
 }
