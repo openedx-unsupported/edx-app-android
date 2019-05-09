@@ -30,6 +30,8 @@
     <string name="you_are_now_enrolled">You are now enrolled in this course.</string>
     <!-- Error message shown when dashboard cannot be shown from course detail view -->
     <string name="cannot_show_dashboard">Unable to show dashboard.</string>
+    <!-- Error message shown when browser cannot handle request for given web url -->
+    <string name="cannot_open_url" tools:ignore="MissingTranslation">Unable to open web page.</string>
 
     <!-- Subjects Discovery -->
 

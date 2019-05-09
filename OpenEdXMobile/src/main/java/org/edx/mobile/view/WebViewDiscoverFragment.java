@@ -55,6 +55,7 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setWebViewActionListener();
         // Check for search query in extras
         String searchQueryExtra = null;
         String searchUrl = null;
@@ -74,7 +75,6 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        setWebViewActionListener();
     }
 
     public void setWebViewActionListener() {
