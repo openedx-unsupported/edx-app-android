@@ -1,12 +1,15 @@
 package org.edx.mobile.util;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
@@ -87,10 +90,17 @@ public class BrowserUtil {
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(url));
-        context.startActivity(intent);
+        try {
+            context.startActivity(intent);
+            AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
+            analyticsRegistry.trackBrowserLaunched(url);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, R.string.cannot_open_url, Toast.LENGTH_SHORT).show();
 
-        AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
-        analyticsRegistry.trackBrowserLaunched(url);
+            // Send non-fatal exception
+            logger.error(new Exception(String.format("No activity found (browser cannot handle request) for this url: %s, error:\n", url)
+                    + e.getMessage()), true);
+        }
     }
 
     public static boolean isUrlOfHost(String url, String host) {
