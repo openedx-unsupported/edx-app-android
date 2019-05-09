@@ -36,8 +36,12 @@ public class DiscussionApi {
     }
 
     public Call<Page<DiscussionComment>> getResponsesList(String threadId, int take, int page,
-                                                          List<String> requestedFields){
-        return discussionService.getResponsesList(threadId, take, page, requestedFields);
+                                                          List<String> requestedFields, boolean isQuestionType){
+        if (!isQuestionType) {
+            return discussionService.getResponsesList(threadId, take, page, requestedFields);
+        } else {
+            return discussionService.getResponsesListForQuestion(threadId, take, page, false, requestedFields);
+        }
     }
 
     public Call<Page<DiscussionComment>> getCommentsList(String responseId, int take, int page,

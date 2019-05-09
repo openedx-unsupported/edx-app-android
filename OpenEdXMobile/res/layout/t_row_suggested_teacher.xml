@@ -34,8 +34,10 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:fontFamily="@font/hind_medium"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"/>
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="true"
+                android:ellipsize="marquee"/>
 
             <Button
                 android:layout_width="100dp"

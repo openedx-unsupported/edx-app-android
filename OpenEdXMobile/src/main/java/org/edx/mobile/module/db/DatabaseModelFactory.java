@@ -19,6 +19,7 @@ import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.scorm.PDFBlockModel;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.scorm.ScormData;
+import org.edx.mobile.tta.tincan.model.Resume;
 
 /**
  * Model Factory class for the database models.
@@ -181,5 +182,23 @@ public class DatabaseModelFactory {
         ae.action_id=c.getString(c.getColumnIndex(DbStructure.Column.ACTION_ID));
 
         return ae;
+    }
+
+    /**
+     * Returns new instance of {//@link org.tta.mobile.mx_analytic.org.tta.mobile.tincan.model.Resume} initialized with given cursor.
+     *
+     * @param c
+     * @return resume
+     */
+    public static Resume getResumeModel(Cursor c) {
+        Resume resume = new Resume();
+
+        resume.setId(String.valueOf(c.getLong(c.getColumnIndex(DbStructure.Column.ID))));
+        resume.setUser_Id(c.getString(c.getColumnIndex(DbStructure.Column.USER_ID)));
+        resume.setCourse_Id(c.getString(c.getColumnIndex(DbStructure.Column.COURSE_ID)));
+        resume.setUnit_id(c.getString(c.getColumnIndex(DbStructure.Column.UNIT_ID)));
+        resume.setResume_Payload(c.getString(c.getColumnIndex(DbStructure.Column.RESUME_PAYLOAD)));
+
+        return resume;
     }
 }

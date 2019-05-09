@@ -45,6 +45,7 @@ import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.PDFBlockModel;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
+import org.edx.mobile.tta.tincan.Tincan;
 import org.edx.mobile.tta.ui.base.BaseRecyclerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -730,8 +731,11 @@ public class CourseMaterialViewModel extends BaseViewModel {
             }
 
             mActivity.analytic.addMxAnalytics_db(
-                    e.getEntry().videoId, Action.StartScormDownload, course.getCourse().getName(),
+                    e.getEntry().videoId, Action.ScromDownloadCompleted, course.getCourse().getName(),
                     Source.Mobile, e.getEntry().videoId);
+
+            //first do count update then update local db
+            mActivity.analytic.addScromDownload_db(mActivity, e.getEntry());
 
             mDataManager.getdownloadedCourseContents(new OnResponseCallback<List<Content>>() {
                 @Override
@@ -761,6 +765,13 @@ public class CourseMaterialViewModel extends BaseViewModel {
             mActivity.analytic.addMxAnalytics_db(
                     e.getModel().getVideoId(), Action.DeleteSection, course.getCourse().getName(),
                     Source.Mobile, e.getModel().getVideoId());
+
+            //delete resume cache
+            Tincan tincan=new Tincan();
+            tincan.deleteResumePayload(course.getCourse().getId(), e.getModel().getVideoId());
+
+            //analytic update for count update
+            mActivity.analytic.addScromCountAnalytic_db(mActivity);
 
         }
     }

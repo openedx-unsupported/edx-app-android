@@ -2350,12 +2350,12 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getThreadComments(String threadId, int take, int page, List<String> requestedFields,
+    public void getThreadComments(String threadId, int take, int page, List<String> requestedFields, boolean isQuestionType,
                                   OnResponseCallback<List<DiscussionComment>> callback){
 
         if (NetworkUtil.isConnected(context)){
 
-            new GetThreadCommentsTask(context, threadId, take, page, requestedFields){
+            new GetThreadCommentsTask(context, threadId, take, page, requestedFields, isQuestionType){
                 @Override
                 protected void onSuccess(Page<DiscussionComment> discussionCommentPage) throws Exception {
                     super.onSuccess(discussionCommentPage);

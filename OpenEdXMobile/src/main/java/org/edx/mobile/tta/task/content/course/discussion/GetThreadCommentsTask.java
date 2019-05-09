@@ -17,20 +17,22 @@ public class GetThreadCommentsTask extends Task<Page<DiscussionComment>> {
     private int take;
     private int page;
     private List<String> requestedFields;
+    private boolean isQuestionType;
 
     @Inject
     private DiscussionApi api;
 
-    public GetThreadCommentsTask(Context context, String threadId, int take, int page, List<String> requestedFields) {
+    public GetThreadCommentsTask(Context context, String threadId, int take, int page, List<String> requestedFields, boolean isQuestionType) {
         super(context);
         this.threadId = threadId;
         this.take = take;
         this.page = page;
         this.requestedFields = requestedFields;
+        this.isQuestionType = isQuestionType;
     }
 
     @Override
     public Page<DiscussionComment> call() throws Exception {
-        return api.getResponsesList(threadId, take, page, requestedFields).execute().body();
+        return api.getResponsesList(threadId, take, page, requestedFields, isQuestionType).execute().body();
     }
 }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
@@ -21,8 +22,11 @@ import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.tincan.Tincan;
+import org.edx.mobile.tta.tincan.model.Resume;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.course.view_model.CourseScormViewModel;
+import org.edx.mobile.util.IOUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -45,6 +49,9 @@ public class CourseScormViewActivity extends BaseVMActivity {
     private String courseId;
     private String unitId;
 
+    private Tincan tincan;
+    private Resume resume_info;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +69,8 @@ public class CourseScormViewActivity extends BaseVMActivity {
         binding(R.layout.t_activity_course_scorm_view, viewModel);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        tincan=new Tincan();
+
         if (getIntent().getExtras() != null) {
             getDataFromParameters(getIntent().getExtras());
         }
@@ -74,6 +83,13 @@ public class CourseScormViewActivity extends BaseVMActivity {
             if(launcher==null)
                 launcher=findFile(new File(folderPath), "", "story_html5.html");
         }
+
+        //get payload for resume
+        resume_info=new Resume();
+        resume_info=viewModel.getDataManager().getEdxEnvironment().getDatabase().getResumeInfo(courseId, unitId);
+
+        if(resume_info==null || TextUtils.isEmpty(resume_info.getResume_Payload()))
+            resume_info.setResume_Payload("");
 
         setupWebview();
     }
@@ -213,7 +229,7 @@ public class CourseScormViewActivity extends BaseVMActivity {
             responseHeaders.put("X-AspNet-Version", "4.0.30319");
             responseHeaders.put("X-Powered-By", "ASP.NET");
 
-//            inputStream = IOUtils.toInputStream(resume_info.getResume_Payload());
+            inputStream = IOUtils.toInputStream(resume_info.getResume_Payload());
         } else if (url.startsWith(viewModel.getDataManager().getConfig().getTincanLrsUrl() + "/statements?")) {
             //option
             encoding = "UTF-8";
@@ -251,6 +267,25 @@ public class CourseScormViewActivity extends BaseVMActivity {
         }
     }
 
+    public void ReceiveTinCanStatement(String statement) {
+        analytic.addTinCanAnalyticDB(statement, courseName);
+        // Toast.makeText(CourseScormViewActivity.this, statement, Toast.LENGTH_LONG).show();
+    }
+
+    public void ReceiveTinCanResumePayload(String resume_payload) {
+        Resume resume=new Resume();
+        resume.setCourse_Id(courseId);
+        resume.setUnit_id(unitId);
+        resume.setUser_Id(viewModel.getDataManager().getLoginPrefs().getUsername());
+        resume.setResume_Payload(resume_payload);
+        tincan.addResumePayload(resume);
+        //Toast.makeText(CourseScormViewActivity.this, resume_payload, Toast.LENGTH_LONG).show();
+    }
+
+    public void ReceiveTincanObject(String tincan_obj) {
+        //Toast.makeText(CourseScormViewActivity.this, tincan_obj, Toast.LENGTH_LONG).show();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -282,6 +317,7 @@ public class CourseScormViewActivity extends BaseVMActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         webView.saveState(outState);
     }
 }

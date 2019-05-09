@@ -86,7 +86,10 @@ public class DiscussionCommentViewModel extends BaseViewModel {
         page = DEFAULT_PAGE;
         allLoaded = false;
 
-        userImage.set(comment.getProfileImage().getImageUrlMedium());
+        userImage.set(comment.getProfileImage() == null ?
+                (mDataManager.getLoginPrefs().getProfileImage() == null ? "" :
+                        mDataManager.getLoginPrefs().getProfileImage().getImageUrlMedium()) :
+                comment.getProfileImage().getImageUrlMedium());
         commentDate.set(DateUtil.getDisplayTime(comment.getUpdatedAt()));
         likeIcon.set(comment.isVoted() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
         likeCount.set(String.valueOf(comment.getVoteCount()));

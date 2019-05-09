@@ -223,6 +223,8 @@ public class DiscussionLandingViewModel extends BaseViewModel {
                 TRowDiscussionThreadBinding threadBinding = (TRowDiscussionThreadBinding) binding;
                 threadBinding.setViewModel(model);
 
+                threadBinding.userName.setText(model.getAuthorDisplayName() == null ?
+                        mDataManager.getLoginPrefs().getDisplayName() : model.getAuthorDisplayName());
                 threadBinding.date.setText(DateUtil.getDisplayTime(model.getUpdatedAt()));
 
                 ProfileImage profileImage = model.getProfileImage();

@@ -109,7 +109,7 @@ public interface DiscussionService {
                                                    @Query("page") int page,
                                                    @Query("requested_fields") List<String> requestedFields);
 
-    //TTA Chirag: Get comments on thread with custom take
+    //TTA Chirag: Get comments on discussion thread with custom take
     @Headers("Cache-Control: no-cache")
     @GET("/api/discussion/v1/comments")
     Call<Page<DiscussionComment>> getResponsesList(@Query("thread_id") String threadId,
@@ -124,6 +124,15 @@ public interface DiscussionService {
                                                               @Query("endorsed") boolean endorsed,
                                                               @Query("requested_fields")
                                                               List<String> requestedFields);
+
+    //TTA Chirag: Get comments on question thread with custom take
+    @Headers("Cache-Control: no-cache")
+    @GET("/api/discussion/v1/comments")
+    Call<Page<DiscussionComment>> getResponsesListForQuestion(@Query("thread_id") String threadId,
+                                                              @Query("page_size") int take,
+                                                              @Query("page") int page,
+                                                              @Query("endorsed") boolean endorsed,
+                                                              @Query("requested_fields") List<String> requestedFields);
 
     @Headers("Cache-Control: no-cache")
     @GET("/api/discussion/v1/comments/{comment_id}?" + PARAM_PAGE_SIZE)

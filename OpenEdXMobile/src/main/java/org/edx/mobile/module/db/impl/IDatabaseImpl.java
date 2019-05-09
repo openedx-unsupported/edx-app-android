@@ -20,6 +20,8 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.tta.analytics.AnalyticModel;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.db_operations.DbOperationGetAnalytic;
+import org.edx.mobile.tta.data.local.db.operation.DbOperationGetTinCanPayload;
+import org.edx.mobile.tta.tincan.model.Resume;
 import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.util.TextUtils;
 
@@ -948,6 +950,47 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.STATUS + "=? AND " + DbStructure.Column.USER_ID + "=? AND "+ DbStructure.Column.ACTION + "=?",
                 new String[]{""+status, loginPrefs.getUsername(), String.valueOf(Action.TinCanObject)},null, String.valueOf(batch_count));
         op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public Long addResumePayload(Resume resume) {
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.Column.USER_ID, resume.getUser_Id());
+        values.put(DbStructure.Column.COURSE_ID, resume.getCourse_Id());
+        values.put(DbStructure.Column.UNIT_ID, resume.getUnit_id());
+        values.put(DbStructure.Column.RESUME_PAYLOAD, resume.getResume_Payload());
+
+        DbOperationInsert op = new DbOperationInsert(DbStructure.Table.TINCAN, values);
+        return enqueue(op);
+    }
+
+    @Override
+    public Integer updateResumePayload(Resume resume) {
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.Column.USER_ID, resume.getUser_Id());
+        values.put(DbStructure.Column.COURSE_ID, resume.getCourse_Id());
+        values.put(DbStructure.Column.UNIT_ID, resume.getUnit_id());
+        values.put(DbStructure.Column.RESUME_PAYLOAD, resume.getResume_Payload());
+
+        DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.TINCAN, values,
+                DbStructure.Column.USER_ID + "=? AND "+DbStructure.Column.COURSE_ID + "=? AND "+DbStructure.Column.UNIT_ID + "=?", new String[]{username(),resume.getCourse_Id(),resume.getUnit_id()});
+        return enqueue(op);
+    }
+
+    @Override
+    public Integer deleteResumePayload(String course_id, String unit_id) {
+
+        DbOperationDelete op=new DbOperationDelete(DbStructure.Table.TINCAN,DbStructure.Column.COURSE_ID+ "=? AND "+
+                DbStructure.Column.USER_ID+" =? AND "+DbStructure.Column.UNIT_ID+" =? ",new String[]{course_id,username(),unit_id});
+        return enqueue(op);
+    }
+
+    @Override
+    public Resume getResumeInfo(String course_id, String unit_id) {
+        DbOperationGetTinCanPayload op = new DbOperationGetTinCanPayload(false, DbStructure.Table.TINCAN, null,
+                DbStructure.Column.USER_ID + "=? AND " + DbStructure.Column.COURSE_ID +"=? AND "+ DbStructure.Column.UNIT_ID + " =? ",
+                new String[]{username(),course_id,unit_id},null);
         return enqueue(op);
     }
 }

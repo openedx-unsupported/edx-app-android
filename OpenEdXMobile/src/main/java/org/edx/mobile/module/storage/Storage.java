@@ -32,6 +32,7 @@ import org.edx.mobile.module.prefs.VideoPrefs;
 import org.edx.mobile.tta.analytics.AnalyticModel;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
+import org.edx.mobile.tta.tincan.model.Resume;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.Sha1Util;
@@ -740,5 +741,25 @@ public class Storage implements IStorage {
             }
         }*/
         return allCoursesScromCount;
+    }
+
+    @Override
+    public Long addResumePayload(Resume resume) {
+        return db.addResumePayload(resume);
+    }
+
+    @Override
+    public Integer deleteResumePayload(String course_id, String unit_id) {
+        return db.deleteResumePayload(course_id,unit_id);
+    }
+
+    @Override
+    public Integer updateResumePayload(Resume resume) {
+        return db.updateResumePayload(resume);
+    }
+
+    @Override
+    public Resume getResumeInfo(String course_id, String unit_id) {
+        return  db.getResumeInfo(course_id,unit_id);
     }
 }

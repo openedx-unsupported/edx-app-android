@@ -22,6 +22,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFeedBinding;
 import org.edx.mobile.databinding.TRowFeedWithUserBinding;
 import org.edx.mobile.databinding.TRowSuggestedTeacherBinding;
+import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
@@ -91,6 +92,7 @@ public class FeedViewModel extends BaseViewModel {
                 case R.id.feed_share:
                     mActivity.showShortSnack("Share: " + item.getMeta_data().getText());
                     break;
+                case R.id.feed_comment_layout:
                 case R.id.meta_content:
 
                     switch (Action.valueOf(item.getAction())){
@@ -165,12 +167,28 @@ public class FeedViewModel extends BaseViewModel {
 
                         case DBComment:
                         case DBLike:
+                            mActivity.showLoading();
+                            mDataManager.likeDiscussionThread(item.getMeta_data().getId(), !item.getMeta_data().isLiked(),
+                                    new OnResponseCallback<DiscussionThread>() {
+                                        @Override
+                                        public void onSuccess(DiscussionThread data) {
+                                            mActivity.hideLoading();
+                                            item.getMeta_data().setLiked(data.isVoted());
+                                            item.getMeta_data().setLike_count(data.getVoteCount());
+                                            feedAdapter.notifyItemChanged(feedAdapter.getItemPosition(item));
+                                        }
+
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            mActivity.hideLoading();
+                                            mActivity.showLongSnack(e.getLocalizedMessage());
+                                        }
+                                    });
+
+                            break;
 
                     }
 
-                    break;
-                case R.id.feed_comment_layout:
-                    mActivity.showShortSnack("Comment: " + item.getMeta_data().getText());
                     break;
             }
 

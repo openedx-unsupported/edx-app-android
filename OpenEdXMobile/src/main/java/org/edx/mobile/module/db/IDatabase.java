@@ -9,6 +9,7 @@ import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.tta.analytics.AnalyticModel;
+import org.edx.mobile.tta.tincan.model.Resume;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -519,4 +520,10 @@ public interface IDatabase {
      * get Tincan Analytic data
      */
     ArrayList<AnalyticModel> getTincanAnalytics(int batch_count, int status, DataCallback<ArrayList<AnalyticModel>> callback);
+
+    //for tincan resume handeling.
+    Long addResumePayload(Resume resume);
+    Integer updateResumePayload(Resume resume);
+    Integer deleteResumePayload(String course_id, String unit_id);
+    Resume getResumeInfo(String course_id, String unit_id);
 }

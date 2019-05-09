@@ -128,6 +128,7 @@ public class DiscussionCommentsTabViewModel extends BaseViewModel {
                 DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
 
         mDataManager.getThreadComments(thread.getIdentifier(), take, page, requestedFields,
+                thread.getType() == DiscussionThread.ThreadType.QUESTION,
                 new OnResponseCallback<List<DiscussionComment>>() {
                     @Override
                     public void onSuccess(List<DiscussionComment> data) {

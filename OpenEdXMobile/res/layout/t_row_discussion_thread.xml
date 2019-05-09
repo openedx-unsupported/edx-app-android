@@ -48,7 +48,6 @@
                 android:id="@+id/user_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.authorDisplayName}"
                 android:layout_marginStart="@dimen/_8px"
                 android:layout_marginEnd="@dimen/_8px"
                 android:fontFamily="@font/hind_medium"
