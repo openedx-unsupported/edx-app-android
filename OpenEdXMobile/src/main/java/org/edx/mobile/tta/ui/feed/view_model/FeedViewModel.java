@@ -511,7 +511,8 @@ public class FeedViewModel extends BaseViewModel {
                     case CertificateGenerate:
 
                         Glide.with(getContext())
-                                .load(model.getMeta_data().getUser_icon())
+                                .load(mDataManager.getConfig().getApiHostURL() +
+                                        model.getMeta_data().getUser_icon().getFull())
                                 .placeholder(R.drawable.profile_photo_placeholder)
                                 .into(feedBinding.feedContentImage);
                         feedBinding.feedMetaText.setText(model.getMeta_data().getUser_name());
@@ -527,7 +528,8 @@ public class FeedViewModel extends BaseViewModel {
                     case Badge:
 
                         Glide.with(getContext())
-                                .load(model.getMeta_data().getUser_icon())
+                                .load(mDataManager.getConfig().getApiHostURL() +
+                                        model.getMeta_data().getUser_icon().getFull())
                                 .placeholder(R.drawable.profile_photo_placeholder)
                                 .into(feedBinding.feedContentImage);
                         feedBinding.feedMetaText.setText(model.getMeta_data().getUser_name());
@@ -589,7 +591,8 @@ public class FeedViewModel extends BaseViewModel {
 
                 feedWithUserBinding.feedTitle.setText(Html.fromHtml(getFeedTitle(model)));
                 Glide.with(getContext())
-                        .load(model.getMeta_data().getUser_icon())
+                        .load(mDataManager.getConfig().getApiHostURL() +
+                                model.getMeta_data().getUser_icon().getLarge())
                         .placeholder(R.drawable.profile_photo_placeholder)
                         .into(feedWithUserBinding.feedUserImage);
                 feedWithUserBinding.feedUserName.setText(model.getMeta_data().getUser_name());

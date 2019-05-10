@@ -32,6 +32,9 @@ public final class OauthHeaderRequestInterceptor implements Interceptor {
         final String token = loginPrefs.getAuthorizationHeader();
         if (token != null) {
             builder.addHeader("Authorization", token);
+
+            //Mx Chirag: Added header to resolve “java.net.ProtocolException: Unexpected status line”
+            builder.addHeader("Connection", "close");
         }
         return chain.proceed(builder.build());
     }

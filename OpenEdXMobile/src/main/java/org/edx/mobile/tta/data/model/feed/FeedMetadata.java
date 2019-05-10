@@ -1,10 +1,15 @@
 package org.edx.mobile.tta.data.model.feed;
 
+import android.arch.persistence.room.Embedded;
+
 public class FeedMetadata {
 
     private String id;
     private String user_name;
-    private String user_icon;
+
+    @Embedded(prefix = "user_icon_")
+    private UserIcon user_icon;
+
     private String user_username;
     private String tag_label;
     private String icon;
@@ -31,11 +36,11 @@ public class FeedMetadata {
         this.user_name = user_name;
     }
 
-    public String getUser_icon() {
+    public UserIcon getUser_icon() {
         return user_icon;
     }
 
-    public void setUser_icon(String user_icon) {
+    public void setUser_icon(UserIcon user_icon) {
         this.user_icon = user_icon;
     }
 

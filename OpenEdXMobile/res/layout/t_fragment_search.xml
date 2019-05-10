@@ -155,7 +155,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    app:srcCompat="@drawable/t_icon_first_comment" />
+                    app:srcCompat="@drawable/t_icon_search_empty_screen" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -166,7 +166,7 @@
                     android:layout_marginEnd="@dimen/_70px"
                     android:fontFamily="@font/hind_regular"
                     android:gravity="center"
-                    android:text="@string/be_the_first_to_comment"
+                    android:text="No content found for your search parameters"
                     android:textColor="@color/primary_cyan"
                     android:textSize="12sp" />
 

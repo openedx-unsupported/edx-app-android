@@ -151,7 +151,7 @@ public class DiscussionLandingViewModel extends BaseViewModel {
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
         DiscussionThread newThread = event.getDiscussionThread();
         if (topicThreadsMap.containsKey(newThread.getTopicId())){
-            topicThreadsMap.get(newThread.getTopicId()).add(newThread);
+            topicThreadsMap.get(newThread.getTopicId()).add(0, newThread);
         } else {
             List<DiscussionThread> threads = new ArrayList<>();
             threads.add(newThread);

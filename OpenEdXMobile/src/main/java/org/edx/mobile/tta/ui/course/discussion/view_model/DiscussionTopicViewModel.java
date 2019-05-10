@@ -139,7 +139,9 @@ public class DiscussionTopicViewModel extends BaseViewModel {
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
         DiscussionThread newThread = event.getDiscussionThread();
-        adapter.add(0, newThread);
+        if (topicDepth.getDiscussionTopic().getIdentifier().equals(newThread.getTopicId())) {
+            adapter.add(0, newThread);
+        }
     }
 
     public void registerEventBus(){
