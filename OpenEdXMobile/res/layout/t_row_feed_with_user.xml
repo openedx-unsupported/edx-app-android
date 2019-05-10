@@ -191,9 +191,6 @@
                                 android:id="@+id/feed_like_layout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
                                 android:orientation="horizontal"
                                 android:padding="8dp">
 
@@ -241,9 +238,6 @@
                                 android:id="@+id/feed_comment_layout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
                                 android:orientation="horizontal"
                                 android:padding="8dp">
 

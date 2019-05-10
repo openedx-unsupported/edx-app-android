@@ -92,9 +92,7 @@ public class FeedViewModel extends BaseViewModel {
                 case R.id.feed_share:
                     mActivity.showShortSnack("Share: " + item.getMeta_data().getText());
                     break;
-                case R.id.feed_comment_layout:
-                case R.id.meta_content:
-
+                default:
                     switch (Action.valueOf(item.getAction())){
                         case CertificateGenerate:
                         case GenerateCertificate:
@@ -131,7 +129,7 @@ public class FeedViewModel extends BaseViewModel {
                     }
 
                     break;
-                case R.id.feed_like_layout:
+                /*case R.id.feed_like_layout:
 
                     switch (Action.valueOf(item.getAction())){
                         case CourseLike:
@@ -189,7 +187,7 @@ public class FeedViewModel extends BaseViewModel {
 
                     }
 
-                    break;
+                    break;*/
             }
 
         });
@@ -205,22 +203,6 @@ public class FeedViewModel extends BaseViewModel {
                             mActivity.hideLoading();
                             item.setFollowed(data.getStatus());
                             suggestedUsersAdapter.notifyItemChanged(suggestedUsersAdapter.getItemPosition(item));
-                            /*if (view instanceof Button) {
-                                Button button = (Button) view;
-                                if (data.getStatus()) {
-                                    button.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_filled));
-                                    button.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
-                                    button.setText(mActivity.getString(R.string.unfollow));
-
-                                    mActivity.analytic.addMxAnalytics_db(item.getUsername(), Action.FollowUser,
-                                            Nav.feed.name(), Source.Mobile, item.getUsername());
-
-                                } else {
-                                    button.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_hollow));
-                                    button.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_cyan));
-                                    button.setText(mActivity.getString(R.string.follow));
-                                }
-                            }*/
                         }
 
                         @Override
@@ -567,7 +549,13 @@ public class FeedViewModel extends BaseViewModel {
                     }
                 });
 
-                feedBinding.metaContent.setOnClickListener(v -> {
+                feedBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                /*feedBinding.metaContent.setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
@@ -583,7 +571,7 @@ public class FeedViewModel extends BaseViewModel {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
-                });
+                });*/
 
             } else if (binding instanceof TRowFeedWithUserBinding) {
                 TRowFeedWithUserBinding feedWithUserBinding = (TRowFeedWithUserBinding) binding;
@@ -633,7 +621,13 @@ public class FeedViewModel extends BaseViewModel {
                     }
                 });
 
-                feedWithUserBinding.metaContent.setOnClickListener(v -> {
+                feedWithUserBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                /*feedWithUserBinding.metaContent.setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
@@ -649,7 +643,7 @@ public class FeedViewModel extends BaseViewModel {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
-                });
+                });*/
 
             }
         }
