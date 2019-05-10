@@ -138,10 +138,10 @@ public class ApiConstants {
     public static final String URL_TA_ANALYTIC_BATCH = "api/teacherappAnalytics/analytics/add-list/";
 
     //Analytic batch for seperate server
-    public static final String URL_ANALYTIC_BATCH = "analytics/add-list/";
+    public static final String URL_ANALYTIC_BATCH = "/analytics/add-list/";
 
     //TinCan batch update
-    public static final String URL_TINCAN_ANALYTIC_BATCH = "analytics/add-tincan-data/";
+    public static final String URL_TINCAN_ANALYTIC_BATCH = "/analytics/add-tincan-data/";
 
     public static final String URL_MX_GET_FEEDS = "api/mx_feed/v1/feeds/";
 

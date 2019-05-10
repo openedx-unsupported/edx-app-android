@@ -974,23 +974,32 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.RESUME_PAYLOAD, resume.getResume_Payload());
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.TINCAN, values,
-                DbStructure.Column.USER_ID + "=? AND "+DbStructure.Column.COURSE_ID + "=? AND "+DbStructure.Column.UNIT_ID + "=?", new String[]{username(),resume.getCourse_Id(),resume.getUnit_id()});
+                DbStructure.Column.USER_ID + "=? AND "+
+                        DbStructure.Column.COURSE_ID + "=? AND "+
+                        DbStructure.Column.UNIT_ID + "=?",
+                new String[]{loginPrefs.getUsername(),resume.getCourse_Id(),resume.getUnit_id()});
         return enqueue(op);
     }
 
     @Override
     public Integer deleteResumePayload(String course_id, String unit_id) {
 
-        DbOperationDelete op=new DbOperationDelete(DbStructure.Table.TINCAN,DbStructure.Column.COURSE_ID+ "=? AND "+
-                DbStructure.Column.USER_ID+" =? AND "+DbStructure.Column.UNIT_ID+" =? ",new String[]{course_id,username(),unit_id});
+        DbOperationDelete op=new DbOperationDelete(DbStructure.Table.TINCAN,
+                DbStructure.Column.COURSE_ID+ "=? AND "+
+                        DbStructure.Column.USER_ID+" =? AND "+
+                        DbStructure.Column.UNIT_ID+" =? ",
+                new String[]{course_id,loginPrefs.getUsername(),unit_id});
         return enqueue(op);
     }
 
     @Override
     public Resume getResumeInfo(String course_id, String unit_id) {
-        DbOperationGetTinCanPayload op = new DbOperationGetTinCanPayload(false, DbStructure.Table.TINCAN, null,
-                DbStructure.Column.USER_ID + "=? AND " + DbStructure.Column.COURSE_ID +"=? AND "+ DbStructure.Column.UNIT_ID + " =? ",
-                new String[]{username(),course_id,unit_id},null);
+        DbOperationGetTinCanPayload op = new DbOperationGetTinCanPayload(false,
+                DbStructure.Table.TINCAN, null,
+                DbStructure.Column.USER_ID + "=? AND " +
+                        DbStructure.Column.COURSE_ID +"=? AND "+
+                        DbStructure.Column.UNIT_ID + " =? ",
+                new String[]{loginPrefs.getUsername(),course_id,unit_id},null);
         return enqueue(op);
     }
 }

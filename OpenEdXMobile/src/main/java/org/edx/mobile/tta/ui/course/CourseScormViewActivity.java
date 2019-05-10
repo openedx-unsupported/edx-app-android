@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.scorm.JSInterfaceTincan;
 import org.edx.mobile.tta.tincan.Tincan;
 import org.edx.mobile.tta.tincan.model.Resume;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -126,6 +127,11 @@ public class CourseScormViewActivity extends BaseVMActivity {
 
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setDatabaseEnabled(true);
+        webView.addJavascriptInterface(new JSInterfaceTincan(CourseScormViewActivity.this), "jsInterfaceTincan");
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            webView.getSettings().setDatabasePath("/data/data/" + webView.getContext().getPackageName() + "/databases/");
+        }
 
         webView.setWebChromeClient(new WebChromeClient());
 
