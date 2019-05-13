@@ -152,9 +152,14 @@ public class UserInfoActivity extends BaseVMActivity {
 
         stateSpinner.setOnItemSelectedListener((view, item) -> {
             mViewModel.currentState = item.getName();
+
             mViewModel.districts.clear();
             mViewModel.districts = DataUtil.getDistrictsByStateName(mViewModel.currentState);
             districtSpinner.setItems(mViewModel.districts, null);
+
+            mViewModel.dietCodes.clear();
+            mViewModel.dietCodes = DataUtil.getAllDietCodesOfState(mViewModel.currentState);
+            dietSpinner.setItems(mViewModel.dietCodes, null);
         });
 
         districtSpinner.setOnItemSelectedListener((view, item) -> {

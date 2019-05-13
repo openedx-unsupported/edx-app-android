@@ -1,5 +1,7 @@
 package org.edx.mobile.tta.utils;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -452,11 +454,21 @@ public class DataUtil {
         return classesTaught;
     }
 
-    public static List<RegistrationOption> getAllDietCodes(){
-        List<RegistrationOption> dietCodes;
+    public static List<RegistrationOption> getAllDietCodesOfState(String stateName){
+        List<RegistrationOption> dietCodes = new ArrayList<>();
         Gson gson = new Gson();
         Type collectionType = new TypeToken<List<RegistrationOption>>(){}.getType();
-        dietCodes = gson.fromJson(dietJson, collectionType);
+        List<RegistrationOption> options = gson.fromJson(dietJson, collectionType);
+        for (RegistrationOption option: options){
+            if (option.getName().equalsIgnoreCase(stateName)){
+                if (!TextUtils.isEmpty(option.getValue())) {
+                    for (String dietCode: option.getValue().split(",")){
+                        dietCodes.add(new RegistrationOption(dietCode, dietCode));
+                    }
+                }
+                break;
+            }
+        }
         return dietCodes;
     }
 

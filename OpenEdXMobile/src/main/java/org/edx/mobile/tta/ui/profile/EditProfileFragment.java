@@ -330,10 +330,16 @@ public class EditProfileFragment extends TaBaseFragment {
 
         stateSpinner.setOnItemSelectedListener((view, item) -> {
             viewModel.currentState = item.getName();
+
             viewModel.districts.clear();
             viewModel.districts = DataUtil.getDistrictsByStateName(viewModel.currentState);
             districtSpinner.setItems(viewModel.districts,
                     profileModel.district == null ? null : new RegistrationOption(profileModel.district, profileModel.district));
+
+            viewModel.dietCodes.clear();
+            viewModel.dietCodes = DataUtil.getAllDietCodesOfState(viewModel.currentState);
+            dietSpinner.setItems(viewModel.dietCodes,
+                    profileModel.diet_code == null ? null : new RegistrationOption(profileModel.diet_code, profileModel.diet_code));
         });
 
         districtSpinner.setOnItemSelectedListener((view, item) -> {

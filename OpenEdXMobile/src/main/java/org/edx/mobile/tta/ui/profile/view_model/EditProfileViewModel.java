@@ -3,17 +3,13 @@ package org.edx.mobile.tta.ui.profile.view_model;
 import android.Manifest;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 
 
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.registration.model.RegistrationOption;
-import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.FilterTag;
@@ -36,13 +32,10 @@ public class EditProfileViewModel extends BaseViewModel  {
     public ProfileImage profileImage;
     private Account account;
     private SearchFilter searchFilter;
-//    private List<String> selectedClassTags, selectedSkillTags;
     private String tagLabel;
     private Uri imageUri;
     private Rect cropRect;
 
-//    public ObservableField<String> name = new ObservableField<>("");
-//    public ObservableBoolean nameValid = new ObservableBoolean();
     public ObservableBoolean imageAddVisible = new ObservableBoolean();
 
     private boolean imageChanged;
@@ -61,33 +54,6 @@ public class EditProfileViewModel extends BaseViewModel  {
     public String currentState, currentDistrict;
     public String classesSectionName, skillSectionName;
 
-    /*public TextWatcher nameWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s != null){
-                name.set(s.toString());
-                if (name.get().trim().length() > 0){
-                    nameValid.set(true);
-                } else {
-                    nameValid.set(false);
-                }
-            } else {
-                name.set("");
-                nameValid.set(false);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };*/
-
     public EditProfileViewModel(Context context, TaBaseFragment fragment,
                                 ProfileModel profileModel, ProfileImage profileImage,
                                 Account account, SearchFilter searchFilter) {
@@ -101,10 +67,6 @@ public class EditProfileViewModel extends BaseViewModel  {
         blocks = new ArrayList<>();
         classesTaught = new ArrayList<>();
         skills = new ArrayList<>();
-
-        /*if (this.profileModel != null){
-            name.set(profileModel.name);
-        }*/
 
         if (profileImage == null || profileImage.getImageUrlLarge() == null){
             imageAddVisible.set(true);
@@ -123,14 +85,6 @@ public class EditProfileViewModel extends BaseViewModel  {
         mFragment.askForPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST);
     }
-
-    /*public void setSelectedClassTags(List<String> selectedClassTags) {
-        this.selectedClassTags = selectedClassTags;
-    }
-
-    public void setSelectedSkillTags(List<String> selectedSkillTags) {
-        this.selectedSkillTags = selectedSkillTags;
-    }*/
 
     public void setImageUri(Uri imageUri) {
         this.imageUri = imageUri;
@@ -205,9 +159,6 @@ public class EditProfileViewModel extends BaseViewModel  {
     }
 
     public void getBlocks(OnResponseCallback<List<RegistrationOption>> callback){
-        /*if (blocks == null){
-            blocks = new ArrayList<>();
-        }*/
         Bundle parameters = new Bundle();
 
         parameters.putString("state",currentState);
@@ -218,12 +169,6 @@ public class EditProfileViewModel extends BaseViewModel  {
 
     public void getClassesAndSkills(OnResponseCallback<List<RegistrationOption>> classesCallback,
                                     OnResponseCallback<List<RegistrationOption>> skillsCallback){
-        /*if (classesTaught == null){
-            classesTaught = new ArrayList<>();
-        }
-        if (skills == null){
-            skills = new ArrayList<>();
-        }*/
 
         if (searchFilter != null){
 
@@ -258,7 +203,6 @@ public class EditProfileViewModel extends BaseViewModel  {
         currentDistrict = districts.get(0).getName();
         professions = DataUtil.getAllProfessions();
         genders = DataUtil.getAllGenders();
-        classesTaught = DataUtil.getAllClassesTaught();
-        dietCodes = DataUtil.getAllDietCodes();
+        dietCodes = DataUtil.getAllDietCodesOfState(currentState);
     }
 }

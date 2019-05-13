@@ -146,7 +146,6 @@ public class UserInfoViewModel extends BaseViewModel {
         currentDistrict = districts.get(0).getName();
         professions = DataUtil.getAllProfessions();
         genders = DataUtil.getAllGenders();
-        classesTaught = DataUtil.getAllClassesTaught();
-        dietCodes = DataUtil.getAllDietCodes();
+        dietCodes = DataUtil.getAllDietCodesOfState(currentState);
     }
 }
