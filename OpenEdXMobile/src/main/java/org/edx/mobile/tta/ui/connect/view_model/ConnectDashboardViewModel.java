@@ -23,9 +23,11 @@ import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.data.local.db.table.Content;
+import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -47,6 +49,7 @@ import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -72,6 +75,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ObservableBoolean offlineVisible = new ObservableBoolean();
     private long commentParentId = 0;
     private Comment selectedComment;
+    private ContentStatus contentStatus;
+    private boolean firstDownload;
 
     //Header details
     public ObservableInt headerImagePlaceholder = new ObservableInt(R.drawable.placeholder_course_card_image);
@@ -114,6 +119,24 @@ public class ConnectDashboardViewModel extends BaseViewModel
         adapter = new ConnectPagerAdapter(mActivity.getSupportFragmentManager());
         fragments = new ArrayList<>();
         titles = new ArrayList<>();
+
+        firstDownload = true;
+        mDataManager.getUserContentStatus(Collections.singletonList(content.getId()),
+                new OnResponseCallback<List<ContentStatus>>() {
+                    @Override
+                    public void onSuccess(List<ContentStatus> data) {
+                        if (data.size() > 0){
+                            firstDownload = false;
+                            contentStatus = data.get(0);
+                            EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                });
     }
 
     @Override
@@ -379,6 +402,28 @@ public class ConnectDashboardViewModel extends BaseViewModel
                             mActivity.hideLoading();
                             allDownloadIconVisible.set(false);
                             allDownloadProgressVisible.set(true);
+
+                            if (contentStatus == null && firstDownload){
+                                firstDownload = false;
+                                ContentStatus status = new ContentStatus();
+                                status.setContent_id(content.getId());
+                                status.setStarted(String.valueOf(System.currentTimeMillis()));
+                                mDataManager.setUserContent(Collections.singletonList(status),
+                                        new OnResponseCallback<List<ContentStatus>>() {
+                                            @Override
+                                            public void onSuccess(List<ContentStatus> data) {
+                                                if (data.size() > 0){
+                                                    contentStatus = data.get(0);
+                                                    EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Exception e) {
+
+                                            }
+                                        });
+                            }
                         }
 
                         @Override
