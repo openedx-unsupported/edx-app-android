@@ -10,7 +10,9 @@ import android.view.MenuItem;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -48,6 +50,9 @@ public class CourseDashboardActivity extends BaseVMActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         viewModel.registerEventBus();
+
+        analytic.addMxAnalytics_db(content.getName(), Action.CourseView, content.getName(),
+                Source.Mobile, content.getSource_identity());
     }
 
     private void getExtras() {

@@ -264,7 +264,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
         }
 
         mActivity.analytic.addMxAnalytics_db(
-                selectedScormForPlay.getInternalName(), Action.ViewSection, course.getCourse().getName(),
+                selectedScormForPlay.getInternalName(), Action.ViewSection, content.getName(),
                 Source.Mobile, selectedScormForPlay.getId());
 
     }
@@ -295,7 +295,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     private void enableFooter(){
 
-        mDataManager.getCertificateStatus(course.getCourse().getId(), new OnResponseCallback<CertificateStatusResponse>() {
+        mDataManager.getCertificateStatus(content.getSource_identity(), new OnResponseCallback<CertificateStatusResponse>() {
             @Override
             public void onSuccess(CertificateStatusResponse data) {
                 setButtonText(data);
@@ -357,15 +357,15 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         mActivity.showLoading();
 
                         ScormBlockModel finalScorm = scorm;
-                        mDataManager.generateCertificate(course.getCourse().getId(), new OnResponseCallback<CertificateStatusResponse>() {
+                        mDataManager.generateCertificate(content.getSource_identity(), new OnResponseCallback<CertificateStatusResponse>() {
                             @Override
                             public void onSuccess(CertificateStatusResponse data) {
                                 mActivity.hideLoading();
                                 setButtonText(data);
 
                                 mActivity.analytic.addMxAnalytics_db(
-                                        finalScorm.getInternalName(), Action.GenerateCertificate, course.getCourse().getName(),
-                                        Source.Mobile, course.getCourse().getId());
+                                        finalScorm.getInternalName(), Action.GenerateCertificate, content.getName(),
+                                        Source.Mobile, content.getSource_identity());
 
                             }
 
@@ -387,7 +387,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         mActivity.showLoading();
 
                         ScormBlockModel finalScorm = scorm;
-                        mDataManager.getCertificate(course.getCourse().getId(), new OnResponseCallback<Certificate>() {
+                        mDataManager.getCertificate(content.getSource_identity(), new OnResponseCallback<Certificate>() {
                             @Override
                             public void onSuccess(Certificate data) {
                                 mActivity.hideLoading();
@@ -397,7 +397,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 );
 
                                 mActivity.analytic.addMxAnalytics_db(
-                                        finalScorm.getInternalName(), Action.ViewCert, course.getCourse().getName(),
+                                        finalScorm.getInternalName(), Action.ViewCert, content.getName(),
                                         Source.Mobile, finalScorm.getId());
 
                             }
@@ -463,12 +463,12 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
                 if (data.isIs_active()){
                     mActivity.analytic.addMxAnalytics_db(
-                            content.getName() , Action.BookmarkCourse, course.getCourse().getName(),
-                            Source.Mobile, course.getCourse().getId());
+                            content.getName() , Action.BookmarkCourse, content.getName(),
+                            Source.Mobile, content.getSource_identity());
                 } else {
                     mActivity.analytic.addMxAnalytics_db(
-                            content.getName() , Action.UnbookmarkCourse, course.getCourse().getName(),
-                            Source.Mobile, course.getCourse().getId());
+                            content.getName() , Action.UnbookmarkCourse, content.getName(),
+                            Source.Mobile, content.getSource_identity());
                 }
 
             }
@@ -502,8 +502,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 mActivity.analytic.addMxAnalytics_db(
                         content.getName() ,
                         data.getStatus() ? Action.CourseLike : Action.CourseUnlike,
-                        course.getCourse().getName(),
-                        Source.Mobile, course.getCourse().getId());
+                        content.getName(),
+                        Source.Mobile, content.getSource_identity());
 
             }
 
@@ -585,7 +585,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 }
 
                 mActivity.analytic.addMxAnalytics_db(
-                        selectedScormForDownload.getInternalName(), Action.StartScormDownload, course.getCourse().getName(),
+                        selectedScormForDownload.getInternalName(), Action.StartScormDownload, content.getName(),
                         Source.Mobile, selectedScormForDownload.getId());
 
             }
@@ -669,7 +669,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         for (ScormBlockModel model: remainingScorms){
 
                             mActivity.analytic.addMxAnalytics_db(
-                                    model.getInternalName(), Action.StartScormDownload, course.getCourse().getName(),
+                                    model.getInternalName(), Action.StartScormDownload, content.getName(),
                                     Source.Mobile, model.getId());
 
                         }
@@ -731,7 +731,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
             }
 
             mActivity.analytic.addMxAnalytics_db(
-                    e.getEntry().videoId, Action.ScromDownloadCompleted, course.getCourse().getName(),
+                    e.getEntry().videoId, Action.ScromDownloadCompleted, content.getName(),
                     Source.Mobile, e.getEntry().videoId);
 
             //first do count update then update local db
@@ -763,12 +763,12 @@ public class CourseMaterialViewModel extends BaseViewModel {
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
 
             mActivity.analytic.addMxAnalytics_db(
-                    e.getModel().getVideoId(), Action.DeleteSection, course.getCourse().getName(),
+                    e.getModel().getVideoId(), Action.DeleteSection, content.getName(),
                     Source.Mobile, e.getModel().getVideoId());
 
             //delete resume cache
             Tincan tincan=new Tincan();
-            tincan.deleteResumePayload(course.getCourse().getId(), e.getModel().getVideoId());
+            tincan.deleteResumePayload(content.getSource_identity(), e.getModel().getVideoId());
 
             //analytic update for count update
             mActivity.analytic.addScromCountAnalytic_db(mActivity);

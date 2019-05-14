@@ -60,6 +60,7 @@ public enum Action {
     //TTA Redesign
 
     Nav,
+    CourseView,
     CourseLike,
     CourseUnlike,
     ShareCourse,
