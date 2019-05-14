@@ -747,7 +747,7 @@ public class Config {
     }
 
     public boolean isDownloadToSDCardEnabled() {
-        return getBoolean(DOWNLOAD_TO_SD_CARD_ENABLED, true);
+        return getBoolean(DOWNLOAD_TO_SD_CARD_ENABLED, false);
     }
 
     @NonNull

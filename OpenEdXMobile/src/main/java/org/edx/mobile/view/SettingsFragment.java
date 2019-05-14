@@ -107,7 +107,7 @@ public class SettingsFragment extends BaseFragment {
                 EventBus.getDefault().registerSticky(this);
             }
             sdCardSwitch.setOnCheckedChangeListener(null);
-            sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true));
+            sdCardSwitch.setChecked(prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false));
             sdCardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
