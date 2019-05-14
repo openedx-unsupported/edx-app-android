@@ -140,6 +140,27 @@ public class FirebaseAnalytics implements Analytics {
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
+    /**
+     * This function is used to track the video playback speed changes
+     *
+     * @param videoId
+     * @param currentTime
+     * @param courseId
+     * @param unitUrl
+     * @param oldSpeed
+     * @param newSpeed
+     */
+    @Override
+    public void trackVideoSpeed(String videoId, Double currentTime, String courseId,
+                                String unitUrl, float oldSpeed, float newSpeed) {
+        final FirebaseEvent event = new FirebaseEvent(Events.SPEED_CHANGE_VIDEO,
+                videoId, Values.VIDEO_PLAYBACK_SPEED_CHANGED, currentTime);
+        event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
+        event.putFloat(Keys.NEW_SPEED, newSpeed);
+        event.putFloat(Keys.OLD_SPEED, oldSpeed);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
     @Override
     public void trackHideTranscript(String videoId, Double currentTime, String courseId,
                                     String unitUrl) {

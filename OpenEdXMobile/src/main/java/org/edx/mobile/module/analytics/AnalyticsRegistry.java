@@ -197,6 +197,13 @@ public class AnalyticsRegistry implements Analytics {
         }
     }
 
+    public void trackVideoSpeed(String videoId, Double currentTime,
+                                String courseId, String unitUrl, float oldSpeed, float newSpeed) {
+        for (Analytics service : services) {
+            service.trackVideoSpeed(videoId, currentTime, courseId, unitUrl, oldSpeed, newSpeed);
+        }
+    }
+
     @Override
     public void trackVideoSeek(String videoId, Double oldTime, Double newTime,
                                String courseId, String unitUrl, Boolean skipSeek) {
