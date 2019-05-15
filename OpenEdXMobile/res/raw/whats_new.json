@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.19",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Video Play Speed",
+        "message": "Watch and learn at your own pace by adjusting the video play speed controls."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "SD Card Option",
+        "message": "You can now choose to store downloaded videos in your SD card from the settings area."
+      }
+    ]
+  },
+  {
     "version": "2.18",
     "messages": [
       {
