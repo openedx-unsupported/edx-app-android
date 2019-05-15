@@ -189,48 +189,86 @@
                                 android:gravity="center"
                                 android:orientation="horizontal">
 
-                                <LinearLayout
-                                    android:id="@+id/all_download_layout"
-                                    android:layout_width="wrap_content"
+                                <FrameLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="?attr/selectableItemBackground"
-                                    android:clickable="true"
-                                    android:focusable="true"
-                                    android:onClick="@{()->viewModel.download()}"
-                                    android:orientation="horizontal"
-                                    android:padding="8dp"
-                                    android:visibility="@{viewModel.allDownloadOptionVisible ? View.VISIBLE : View.GONE}">
+                                    android:visibility="@{viewModel.downloadPlayOptionVisible ? View.VISIBLE : View.GONE}">
 
-                                    <org.edx.mobile.view.custom.IconProgressBar
-                                        android:id="@+id/loading_indicator"
+                                    <LinearLayout
+                                        android:id="@+id/all_download_layout"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center_vertical"
-                                        android:visibility="@{viewModel.allDownloadProgressVisible ? View.VISIBLE : View.GONE}" />
+                                        android:layout_height="match_parent"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:clickable="true"
+                                        android:focusable="true"
+                                        android:onClick="@{()->viewModel.download()}"
+                                        android:orientation="horizontal"
+                                        android:layout_gravity="center"
+                                        android:padding="8dp"
+                                        android:visibility="@{viewModel.allDownloadOptionVisible ? View.VISIBLE : View.GONE}">
 
-                                    <ImageView
-                                        android:id="@+id/course_download_image"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center_vertical"
-                                        android:layout_marginStart="3dp"
-                                        android:contentDescription="@string/download"
-                                        android:paddingBottom="3dp"
-                                        android:src="@{viewModel.allDownloadStatusIcon}"
-                                        android:visibility="@{viewModel.allDownloadIconVisible ? View.VISIBLE : View.GONE}" />
+                                        <org.edx.mobile.view.custom.IconProgressBar
+                                            android:id="@+id/loading_indicator"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center_vertical"
+                                            android:visibility="@{viewModel.allDownloadProgressVisible ? View.VISIBLE : View.GONE}" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center_vertical"
-                                        android:layout_marginStart="2dp"
-                                        android:fontFamily="@font/hind_medium"
-                                        android:gravity="bottom"
-                                        android:text="@string/download_all"
-                                        android:textColor="@color/gray_4"
-                                        android:textSize="12sp" />
+                                        <ImageView
+                                            android:id="@+id/course_download_image"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center_vertical"
+                                            android:layout_marginStart="3dp"
+                                            android:contentDescription="@string/download"
+                                            android:paddingBottom="3dp"
+                                            app:srcCompat="@drawable/t_icon_download"
+                                            android:visibility="@{viewModel.allDownloadIconVisible ? View.VISIBLE : View.GONE}" />
 
-                                </LinearLayout>
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center_vertical"
+                                            android:layout_marginStart="2dp"
+                                            android:fontFamily="@font/hind_medium"
+                                            android:gravity="bottom"
+                                            android:text="@string/download_all"
+                                            android:textColor="@color/gray_4"
+                                            android:textSize="12sp" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="horizontal"
+                                        android:paddingStart="6dp"
+                                        android:paddingEnd="6dp"
+                                        android:visibility="@{viewModel.allDownloadOptionVisible ? View.GONE : View.VISIBLE}">
+
+                                        <ImageButton
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1"
+                                            android:background="?attr/selectableItemBackground"
+                                            android:clickable="true"
+                                            android:focusable="true"
+                                            app:srcCompat="@drawable/t_icon_play_green"
+                                            android:onClick="@{()->viewModel.play()}"/>
+
+                                        <ImageButton
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1"
+                                            android:background="?attr/selectableItemBackground"
+                                            android:clickable="true"
+                                            android:focusable="true"
+                                            app:srcCompat="@drawable/t_icon_delete"
+                                            android:onClick="@{()->viewModel.delete()}"/>
+
+                                    </LinearLayout>
+
+                                </FrameLayout>
 
                             </LinearLayout>
 
@@ -255,11 +293,11 @@
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/view_pager"
+                    page_change_listener="@{viewModel.pageChangeListener}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    mx:pager_adapter="@{viewModel.adapter}"
-                    page_change_listener="@{viewModel.pageChangeListener}"/>
+                    mx:pager_adapter="@{viewModel.adapter}" />
 
             </android.support.design.widget.CoordinatorLayout>
 
@@ -267,18 +305,18 @@
                 layout="@layout/t_view_offline_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                mx:isVisible="@{viewModel.offlineVisible}"/>
+                mx:isVisible="@{viewModel.offlineVisible}" />
 
             <LinearLayout
                 android:id="@+id/enter_comment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:animateLayoutChanges="true"
                 android:background="@color/white"
                 android:minHeight="50dp"
                 android:orientation="vertical"
-                android:padding="@dimen/_10px"
-                android:animateLayoutChanges="true">
+                android:padding="@dimen/_10px">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"

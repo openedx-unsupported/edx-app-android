@@ -57,12 +57,17 @@ import de.greenrobot.event.EventBus;
 public class ConnectDashboardViewModel extends BaseViewModel
     implements CommentClickListener {
 
+    private static final int ACTION_DOWNLOAD = 1;
+    private static final int ACTION_DELETE = 2;
+    private static final int ACTION_PLAY = 3;
+
     public ConnectPagerAdapter adapter;
     private List<Fragment> fragments;
     private List<String> titles;
     private ConnectCommentsTab tab1;
     private ConnectCommentsTab tab2;
     private ConnectCommentsTab tab3;
+    private int actionMode;
 
     public Content content;
     private Post post;
@@ -82,8 +87,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ObservableInt headerImagePlaceholder = new ObservableInt(R.drawable.placeholder_course_card_image);
     public ObservableInt likeIcon = new ObservableInt(R.drawable.t_icon_like);
     public ObservableInt bookmarkIcon = new ObservableInt(R.drawable.t_icon_bookmark);
-    public ObservableBoolean allDownloadOptionVisible = new ObservableBoolean(false);
-    public ObservableInt allDownloadStatusIcon = new ObservableInt(R.drawable.t_icon_download);
+    public ObservableBoolean downloadPlayOptionVisible = new ObservableBoolean(false);
+    public ObservableBoolean allDownloadOptionVisible = new ObservableBoolean(true);
     public ObservableBoolean allDownloadIconVisible = new ObservableBoolean(true);
     public ObservableBoolean allDownloadProgressVisible = new ObservableBoolean(false);
     public ObservableField<String> duration = new ObservableField<>("");
@@ -160,9 +165,32 @@ public class ConnectDashboardViewModel extends BaseViewModel
                 post = data;
                 String downloadUrl = getDownloadUrl();
                 if (downloadUrl == null || downloadUrl.equals("")){
-                    allDownloadOptionVisible.set(false);
+                    downloadPlayOptionVisible.set(false);
+
+                    if (contentStatus == null){
+                        contentStatus = new ContentStatus();
+                        contentStatus.setContent_id(content.getId());
+                        contentStatus.setStarted(String.valueOf(System.currentTimeMillis()));
+                        contentStatus.setCompleted(String.valueOf(System.currentTimeMillis()));
+                        mDataManager.setUserContent(Collections.singletonList(contentStatus),
+                                new OnResponseCallback<List<ContentStatus>>() {
+                                    @Override
+                                    public void onSuccess(List<ContentStatus> data) {
+                                        if (data.size() > 0){
+                                            contentStatus = data.get(0);
+                                            EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+
+                                    }
+                                });
+                    }
+
                 } else {
-                    allDownloadOptionVisible.set(true);
+                    downloadPlayOptionVisible.set(true);
                 }
                 callback.onSuccess(data);
                 getPostDownloadStatus();
@@ -252,21 +280,22 @@ public class ConnectDashboardViewModel extends BaseViewModel
         switch (mDataManager.getPostDownloadStatus(post)){
             case not_downloaded:
                 allDownloadProgressVisible.set(false);
-                allDownloadStatusIcon.set(R.drawable.t_icon_download);
                 allDownloadIconVisible.set(true);
+                allDownloadOptionVisible.set(true);
                 break;
 
             case downloading:
                 allDownloadIconVisible.set(false);
                 allDownloadProgressVisible.set(true);
+                allDownloadOptionVisible.set(true);
                 break;
 
             case downloaded:
             case watching:
             case watched:
                 allDownloadProgressVisible.set(false);
-                allDownloadStatusIcon.set(R.drawable.t_icon_done);
                 allDownloadIconVisible.set(true);
+                allDownloadOptionVisible.set(false);
                 break;
         }
 
@@ -384,14 +413,31 @@ public class ConnectDashboardViewModel extends BaseViewModel
         });
     }
 
+    public void performReadWriteOperation(){
+
+        switch (actionMode){
+            case ACTION_DOWNLOAD:
+                downloadPost();
+                break;
+            case ACTION_DELETE:
+                deletePost();
+                break;
+            case ACTION_PLAY:
+                playVideo();
+                break;
+        }
+
+    }
+
     public void download(){
+        actionMode = ACTION_DOWNLOAD;
         mActivity.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
     }
 
-    public void downloadPost() {
+    private void downloadPost() {
 
-        if (allDownloadStatusIcon.get() == R.drawable.t_icon_download && allDownloadIconVisible.get()) {
+        if (allDownloadIconVisible.get()) {
             mActivity.showLoading();
             mDataManager.downloadPost(post, content.getId(),
                     String.valueOf(content.getSource().getId()), content.getSource().getName(),
@@ -430,8 +476,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
                         public void onDownloadFailedToStart() {
                             mActivity.hideLoading();
                             allDownloadProgressVisible.set(false);
-                            allDownloadStatusIcon.set(R.drawable.t_icon_download);
                             allDownloadIconVisible.set(true);
+                            allDownloadOptionVisible.set(true);
                         }
 
                         @Override
@@ -451,6 +497,21 @@ public class ConnectDashboardViewModel extends BaseViewModel
                     });
         }
 
+    }
+
+    public void delete(){
+        actionMode = ACTION_DELETE;
+        mActivity.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+    }
+
+    private void deletePost(){
+        mActivity.showAlertDailog("Delete",
+                "Are you sure you want to delete \"" + content.getName() + "\"?",
+                (dialog, which) -> {
+                    mDataManager.deletePost(post);
+                },
+                null);
     }
 
     public void comment(){
@@ -505,8 +566,13 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     }
 
-    private void playVideo()
-    {
+    public void play(){
+        actionMode = ACTION_PLAY;
+        mActivity.askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+    }
+
+    private void playVideo() {
         DownloadEntry de=  mDataManager.getDownloadedVideo(post, content.getId(),
                 String.valueOf(content.getSource().getId()), content.getSource().getName());
         if(de!=null && de.filepath!=null && !de.filepath.equals(""))
@@ -531,6 +597,29 @@ public class ConnectDashboardViewModel extends BaseViewModel
             if(filepath!=null)
             {
                 ActivityUtil.playVideo(filepath, mActivity);
+            }
+
+            if (contentStatus == null){
+                contentStatus = new ContentStatus();
+            }
+            if (contentStatus.getCompleted() == null){
+                contentStatus.setContent_id(content.getId());
+                contentStatus.setCompleted(String.valueOf(System.currentTimeMillis()));
+                mDataManager.setUserContent(Collections.singletonList(contentStatus),
+                        new OnResponseCallback<List<ContentStatus>>() {
+                            @Override
+                            public void onSuccess(List<ContentStatus> data) {
+                                if (data.size() > 0){
+                                    contentStatus = data.get(0);
+                                    EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+
+                            }
+                        });
             }
         }
     }
@@ -589,8 +678,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
                 e.getEntry().type != null && e.getEntry().type.equalsIgnoreCase(DownloadType.WP_VIDEO.name())){
 
             allDownloadProgressVisible.set(false);
-            allDownloadStatusIcon.set(R.drawable.t_icon_done);
             allDownloadIconVisible.set(true);
+            allDownloadOptionVisible.set(false);
 
             mActivity.analytic.addMxAnalytics_db(
                     content.getName() , Action.DownloadPostComplete, content.getSource().getName(),
@@ -605,8 +694,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
                 e.getModel().getDownloadType() != null &&
                 e.getModel().getDownloadType().equalsIgnoreCase(DownloadType.WP_VIDEO.name())) {
             allDownloadProgressVisible.set(false);
-            allDownloadStatusIcon.set(R.drawable.t_icon_download);
             allDownloadIconVisible.set(true);
+            allDownloadOptionVisible.set(true);
 
             mActivity.analytic.addMxAnalytics_db(
                     content.getName() , Action.DeletePost, content.getSource().getName(),

@@ -397,7 +397,7 @@ public class ConnectDashboardActivity extends BaseVMActivity {
     protected void onPermissionGranted(String[] permissions, int requestCode) {
         switch (requestCode){
             case PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST:
-                viewModel.downloadPost();
+                viewModel.performReadWriteOperation();
                 break;
         }
     }
