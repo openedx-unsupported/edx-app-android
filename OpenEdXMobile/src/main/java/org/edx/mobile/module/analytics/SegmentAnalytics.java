@@ -795,4 +795,18 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.SUBJECT_ID, subjectId);
         trackSegmentEvent(Events.SUBJECT_DISCOVERY, aEvent.properties);
     }
+
+    @Override
+    public void trackDownloadToSdCardSwitchOn() {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.DOWNLOAD_TO_SD_CARD_SWITCH_ON);
+        trackSegmentEvent(Events.DOWNLOAD_TO_SD_CARD_ON, aEvent.properties);
+    }
+
+    @Override
+    public void trackDownloadToSdCardSwitchOff() {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.DOWNLOAD_TO_SD_CARD_SWITCH_OFF);
+        trackSegmentEvent(Events.DOWNLOAD_TO_SD_CARD_OFF, aEvent.properties);
+    }
 }

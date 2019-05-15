@@ -378,6 +378,16 @@ public interface Analytics {
      */
     void trackSubjectClicked(@NonNull String subjectId);
 
+    /**
+     * Track the pressing of 'Download Video to SD Card' switch to ON state.
+     */
+    void trackDownloadToSdCardSwitchOn();
+
+    /**
+     * Track the pressing of 'Download Video to SD Card' switch to OFF state.
+     */
+    void trackDownloadToSdCardSwitchOff();
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -536,6 +546,9 @@ public interface Analytics {
         String SUBJECT_CLICKED = "edx.bi.app.discover.subject.clicked";
         String DISCOVERY = "discovery";
         String VIEW_ALL_SUBJECTS = "View All Subjects";
+        // Settings event values
+        String DOWNLOAD_TO_SD_CARD_SWITCH_ON = "edx.bi.app.settings.sdcard.toggle.on";
+        String DOWNLOAD_TO_SD_CARD_SWITCH_OFF = "edx.bi.app.settings.sdcard.toggle.off";
     }
 
     interface Screens {
@@ -630,6 +643,9 @@ public interface Analytics {
         String BULK_DOWNLOAD_TOGGLE_ON = "Bulk Download Toggle On";
         String BULK_DOWNLOAD_TOGGLE_OFF = "Bulk Download Toggle Off";
         String SUBJECT_DISCOVERY = "Subject Discovery";
+        // Settings events
+        String DOWNLOAD_TO_SD_CARD_ON = "Download to sd-card On";
+        String DOWNLOAD_TO_SD_CARD_OFF = "Download to sd-card Off";
     }
 
     /**
