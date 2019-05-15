@@ -156,7 +156,7 @@ public class SearchViewModel extends BaseViewModel {
         contentsAdapter = new SearchedContentsAdapter(mActivity);
         tagsAdapter = new TagsAdapter(mActivity);
         filterAdapter = new SearchFilterAdapter(mActivity);
-        contentListsAdapter = new ContentListsAdapter(mActivity, android.R.layout.simple_list_item_single_choice);
+        contentListsAdapter = new ContentListsAdapter(mActivity, R.layout.t_row_single_choice_item);
 
         contentsAdapter.setItemClickListener((view, item) -> {
             selectedContent = item;
@@ -607,7 +607,7 @@ public class SearchViewModel extends BaseViewModel {
                 TRowFilterSectionBinding sectionBinding = (TRowFilterSectionBinding) binding;
                 sectionBinding.setViewModel(model);
                 sectionBinding.tagsMultiChoiceList.setAdapter(new ArrayAdapter<>(
-                        mActivity, android.R.layout.simple_list_item_multiple_choice, model.getTags()
+                        mActivity, R.layout.t_row_multi_choice_item, model.getTags()
                 ));
 
                 for (int i = 0; i < model.getTags().size(); i++){
