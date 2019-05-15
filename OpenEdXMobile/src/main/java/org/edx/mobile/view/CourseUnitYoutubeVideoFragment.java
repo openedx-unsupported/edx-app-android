@@ -111,24 +111,20 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+    protected void updateUIForOrientation() {
+        final int orientation = getResources().getConfiguration().orientation;
         try {
-            updateUIForOrientation();
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE && youTubePlayer != null) {
+                youTubePlayer.setFullscreen(true);
+            } else if (youTubePlayer != null) {
+                youTubePlayer.setFullscreen(false);
+            }
+            updateUI(orientation);
         }
         catch (IllegalStateException e) {
             return;
         }
 
-    }
-
-    private void updateUIForOrientation() {
-        final int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE && youTubePlayer != null) {
-            youTubePlayer.setFullscreen(true);
-        } else if (youTubePlayer != null) {
-            youTubePlayer.setFullscreen(false);
-        }
     }
 
     @Override
@@ -176,10 +172,18 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onInitializationSuccess(Provider provider,
                                         YouTubePlayer player,
                                         boolean wasRestored) {
-        if(!NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())){
+
+        try {
+            if(!NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())){
+                player.release();
+                return;
+            }
+        }
+        catch (NullPointerException e) {
             player.release();
             return;
         }
+
         final int orientation = getResources().getConfiguration().orientation;
         int currentPos = 0;
         if (videoModel != null) {
@@ -385,7 +389,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onVideoEnded() {
-
+            youTubePlayer.seekToMillis(0);
+            youTubePlayer.pause();
         }
 
         @Override

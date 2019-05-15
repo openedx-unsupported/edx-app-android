@@ -593,7 +593,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         updateUIForOrientation();
     }
 
-    private void updateUIForOrientation() {
+    protected void updateUIForOrientation() {
         //TODO - should we use load different layout file?
         final int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -620,7 +620,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         updateUI(orientation);
     }
 
-    private void updateUI(int orientation) {
+    protected void updateUI(int orientation) {
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             messageContainer.setVisibility(View.GONE);
             transcriptListView.setVisibility(View.GONE);
