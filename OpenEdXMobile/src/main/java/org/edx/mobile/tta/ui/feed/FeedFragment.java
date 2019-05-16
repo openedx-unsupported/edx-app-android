@@ -84,6 +84,7 @@ public class FeedFragment extends TaBaseFragment {
 
             }
         });
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -105,5 +106,11 @@ public class FeedFragment extends TaBaseFragment {
     public void onResume() {
         super.onResume();
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.feed.name()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

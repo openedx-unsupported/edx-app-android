@@ -383,4 +383,9 @@ public class BindingAdapters {
     public static void setText(TextView view, SpannableString string){
         view.setText(string);
     }
+
+    @BindingAdapter({"on_view_more_click_listener"})
+    public static void setOnViewMoreClickListener(MxFiniteRecyclerView view, View.OnClickListener listener){
+        view.setOnMoreButtonClickListener(listener);
+    }
 }

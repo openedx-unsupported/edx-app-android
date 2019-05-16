@@ -48,7 +48,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/app_background"
-                app:elevation="0dp">
+                app:elevation="0dp"
+                android:animateLayoutChanges="true">
 
                 <include
                     android:layout_width="match_parent"
@@ -76,6 +77,7 @@
                     app:mx_titleTextFont="@font/hind_medium"
                     app:mx_titleTextSize="@dimen/list_title_size"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    on_view_more_click_listener="@{viewModel.viewMoreListener}"
                     finite_recycler_adapter="@{viewModel.suggestedUsersAdapter}"
                     android:visibility="@{viewModel.suggestedUsersVisible?View.VISIBLE:View.GONE}"/>
 

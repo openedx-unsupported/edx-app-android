@@ -33,12 +33,14 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.feed.SuggestedUser;
+import org.edx.mobile.tta.event.UserFollowingChangedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
 import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
 import org.edx.mobile.tta.ui.feed.NotificationsFragment;
+import org.edx.mobile.tta.ui.feed.RecommendedUsersFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.BadgeHelper;
 
@@ -46,6 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class FeedViewModel extends BaseViewModel {
 
@@ -60,6 +64,7 @@ public class FeedViewModel extends BaseViewModel {
     public ObservableBoolean featureListVisible = new ObservableBoolean();
 
     private List<Feed> feeds;
+    List<SuggestedUser> users;
     private int take, skip;
     private boolean allLoaded;
 
@@ -71,10 +76,22 @@ public class FeedViewModel extends BaseViewModel {
         return true;
     };
 
+    public View.OnClickListener viewMoreListener = v -> {
+        ActivityUtil.replaceFragmentInActivity(
+                mActivity.getSupportFragmentManager(),
+                new RecommendedUsersFragment(),
+                R.id.dashboard_fragment,
+                RecommendedUsersFragment.TAG,
+                true,
+                null
+        );
+    };
+
     public FeedViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
         feeds = new ArrayList<>();
+        users = new ArrayList<>();
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
         allLoaded = false;
@@ -192,6 +209,7 @@ public class FeedViewModel extends BaseViewModel {
 
         });
 
+        suggestedUsersAdapter.setItems(users);
         suggestedUsersAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.follow_btn:
@@ -273,7 +291,8 @@ public class FeedViewModel extends BaseViewModel {
             @Override
             public void onSuccess(List<SuggestedUser> data) {
                 suggestedUsersVisible.set(true);
-                suggestedUsersAdapter.setItems(data);
+                users.addAll(data);
+                suggestedUsersAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -403,6 +422,23 @@ public class FeedViewModel extends BaseViewModel {
             return builder.append("N/A").toString();
         }
 
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UserFollowingChangedEvent event){
+        if (users.contains(event.getUser())){
+            int position = users.indexOf(event.getUser());
+            users.get(position).setFollowed(event.getUser().isFollowed());
+            suggestedUsersAdapter.notifyItemChanged(position);
+        }
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 
     public class SuggestedUsersAdapter extends MxFiniteAdapter<SuggestedUser> {

@@ -65,6 +65,7 @@ public enum Nav {
     assistant,
 
     //in feed
-    notifications
+    notifications,
+    recommended_users
 
 }
