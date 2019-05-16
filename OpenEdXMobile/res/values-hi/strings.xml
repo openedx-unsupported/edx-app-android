@@ -87,7 +87,7 @@
     <string name="your_information">आप की जानकारी</string>
     <string name="please_insert_valide_pmis_code">"कृपया वैद्य पी एम आई एम कोड भरे या फिर खली छोड़ दे (वैकलिपक) "</string>
     <string name="all_medal">सभी पदक</string>
-    <string name="padaav" translatable="false">पड़ाव</string>
+    <string name="padaav">पड़ाव</string>
     <string name="number" >अंक</string>
     <string name="notifications">सूचना</string>
     <string name="empty_region_wise_list">\“%s\” में %s उपलब्ध नहीं है</string>
@@ -97,4 +97,10 @@
     <string name="feed_format_badge"><b>%s</b> ने हाल ही में <font fgcolor="#F75791">%s पदक</font> पाया</string>
     <string name="feed_format_certificate"><b>%s</b> ने %s में <font fgcolor="#F75791">Certificate</font> पाया</string>
     <string name="view_discussion">चर्चा देखें</string>
+
+    <string-array name="spinner_classes">
+        <item>1st</item>
+        <item>2nd</item>
+        <item>3rd</item>
+    </string-array>
 </resources>
