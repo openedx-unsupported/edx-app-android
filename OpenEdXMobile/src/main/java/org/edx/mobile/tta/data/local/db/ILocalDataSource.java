@@ -7,6 +7,7 @@ import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
@@ -61,4 +62,7 @@ public interface ILocalDataSource {
     ContentStatus getContentStatusByContentId(long contentId, String username);
     void insertContentStatus(ContentStatus contentStatus);
     void insertContentStatuses(List<ContentStatus> statuses);
+
+    List<UnitStatus> getUnitStatusByCourse(String username, String courseId);
+    void insertUnitStatuses(List<UnitStatus> statuses);
 }

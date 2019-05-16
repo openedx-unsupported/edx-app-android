@@ -11,6 +11,7 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
@@ -235,5 +236,9 @@ public class TaAPI {
 
     public Call<List<ContentStatus>> getUserContentStatus(List<Long> contentIds){
         return taService.getUserContentStatus(contentIds);
+    }
+
+    public Call<List<UnitStatus>> getUnitStatus(String courseId){
+        return taService.getUnitStatus(courseId);
     }
 }

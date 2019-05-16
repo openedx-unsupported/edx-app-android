@@ -10,6 +10,7 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
@@ -177,4 +178,7 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_USER_CONTENT_STATUS)
     Call<List<ContentStatus>> getUserContentStatus(@Query(Constants.KEY_CONTENT_IDS) List<Long> contentIds);
+
+    @GET(ApiConstants.URL_MX_GET_UNIT_STATUS)
+    Call<List<UnitStatus>> getUnitStatus(@Query(Constants.KEY_COURSE_KEY) String courseId);
 }

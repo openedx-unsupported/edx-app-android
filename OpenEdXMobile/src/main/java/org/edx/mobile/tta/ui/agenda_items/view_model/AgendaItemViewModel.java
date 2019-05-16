@@ -279,7 +279,7 @@ public class AgendaItemViewModel extends BaseViewModel {
                         contentBinding.contentStatusImage.setImageResource(R.drawable.t_icon_done);
                         contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
                     } else if (status.getStarted() != null){
-                        contentBinding.contentStatusImage.setImageResource(R.drawable.refresh);
+                        contentBinding.contentStatusImage.setImageResource(R.drawable.t_icon_refresh);
                         contentBinding.contentStatusImage.setVisibility(View.VISIBLE);
                     } else {
                         contentBinding.contentStatusImage.setVisibility(View.GONE);

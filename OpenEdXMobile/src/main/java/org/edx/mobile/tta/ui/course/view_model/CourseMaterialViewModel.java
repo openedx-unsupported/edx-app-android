@@ -34,9 +34,11 @@ import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.CertificateStatus;
 import org.edx.mobile.tta.data.enums.DownloadType;
+import org.edx.mobile.tta.data.enums.UnitStatusType;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
+import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
@@ -58,7 +60,9 @@ import org.edx.mobile.util.PermissionsUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -77,6 +81,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private List<ScormBlockModel> remainingScorms;
     private ScormBlockModel selectedScormForDownload, selectedScormForDelete, selectedScormForPlay;
     private ContentStatus contentStatus;
+    private Map<String, UnitStatus> unitStatusMap;
 
     public CourseMaterialAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -112,6 +117,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
         this.rootComponent = rootComponent;
         adapter = new CourseMaterialAdapter();
         firstDownload = true;
+        unitStatusMap = new HashMap<>();
         loadData();
     }
 
@@ -167,6 +173,21 @@ public class CourseMaterialViewModel extends BaseViewModel {
             @Override
             public void onFailure(Exception e) {
                 bookmarkIcon.set(R.drawable.t_icon_bookmark);
+            }
+        });
+
+        mDataManager.getUnitStatus(content.getSource_identity(), new OnResponseCallback<List<UnitStatus>>() {
+            @Override
+            public void onSuccess(List<UnitStatus> data) {
+                for (UnitStatus status: data){
+                    unitStatusMap.put(status.getUnit_id(), status);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
             }
         });
 
@@ -259,6 +280,9 @@ public class CourseMaterialViewModel extends BaseViewModel {
             parameters.putString(Constants.KEY_COURSE_ID, selectedScormForPlay.getRoot().getId());
             parameters.putString(Constants.KEY_UNIT_ID, selectedScormForPlay.getId());
             ActivityUtil.gotoPage(mActivity, CourseScormViewActivity.class, parameters);
+
+            mDataManager.startScorm(content.getSource_identity(), selectedScormForPlay.getId(), null);
+
         } else if (selectedScormForPlay.getType().equals(BlockType.PDF)) {
             ActivityUtil.viewPDF(mActivity, new File(filePath));
         }
@@ -955,6 +979,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
             } else {
                 TRowCourseMaterialItemBinding itemBinding = (TRowCourseMaterialItemBinding) binding;
                 itemBinding.loadingIndicator.setVisibility(View.GONE);
+                itemBinding.itemStatus.setVisibility(View.GONE);
                 if (item.isContainer()){
                     CourseComponent component = (CourseComponent) item.getChildren().get(0);
                     if (component instanceof PDFBlockModel || component instanceof ScormBlockModel){
@@ -964,32 +989,25 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 itemBinding.itemDeleteDownload.setVisibility(View.VISIBLE);
                                 itemBinding.itemDeleteDownload
                                         .setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.t_icon_download));
-                                itemBinding.itemStatus.setVisibility(View.GONE);
                                 break;
                             case downloading:
                                 itemBinding.itemDeleteDownload.setVisibility(View.GONE);
-                                itemBinding.itemStatus.setVisibility(View.GONE);
                                 itemBinding.loadingIndicator.setVisibility(View.VISIBLE);
                                 break;
                             case downloaded:
                                 itemBinding.itemDeleteDownload.setVisibility(View.VISIBLE);
                                 itemBinding.itemDeleteDownload
                                         .setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.t_icon_delete));
-                                itemBinding.itemStatus.setVisibility(View.GONE);
                                 break;
                             case watching:
                                 itemBinding.itemDeleteDownload.setVisibility(View.VISIBLE);
                                 itemBinding.itemDeleteDownload
                                         .setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.t_icon_delete));
-                                itemBinding.itemStatus.setVisibility(View.VISIBLE);
-                                itemBinding.itemStatus.setText(R.string.viewing);
                                 break;
                             case watched:
                                 itemBinding.itemDeleteDownload.setVisibility(View.VISIBLE);
                                 itemBinding.itemDeleteDownload
                                         .setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.t_icon_delete));
-                                itemBinding.itemStatus.setVisibility(View.VISIBLE);
-                                itemBinding.itemStatus.setText(R.string.viewed);
                                 break;
                         }
 
@@ -1000,6 +1018,26 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 .load(scorm.getData().scormImageUrl == null ? content.getIcon() : scorm.getData().scormImageUrl)
                                 .placeholder(R.drawable.placeholder_course_card_image)
                                 .into(itemBinding.itemImage);
+
+                        if (unitStatusMap.containsKey(scorm.getBlockId())){
+                            switch (UnitStatusType.valueOf(unitStatusMap.get(scorm.getBlockId()).getStatus())){
+                                case InProgress:
+                                    itemBinding.itemStatus.setText(mActivity.getString(R.string.viewing));
+                                    itemBinding.itemStatus.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                            R.drawable.t_icon_refresh, 0, 0, 0
+                                    );
+                                    itemBinding.itemStatus.setVisibility(View.VISIBLE);
+                                    break;
+
+                                case Completed:
+                                    itemBinding.itemStatus.setText(mActivity.getString(R.string.viewed));
+                                    itemBinding.itemStatus.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                            R.drawable.t_icon_done, 0, 0, 0
+                                    );
+                                    itemBinding.itemStatus.setVisibility(View.VISIBLE);
+                                    break;
+                            }
+                        }
                     } else {
                         itemBinding.itemDuration.setText(mActivity.getString(
                                 R.string.estimated_duration) + " : " +

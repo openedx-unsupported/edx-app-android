@@ -151,6 +151,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_USER_CONTENT_STATUS = "api/mx_catalog/v1/getcontentstatus/";
 
+    public static final String URL_MX_GET_UNIT_STATUS = "api/mx_content_analytics/v1/getunitstatus/";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

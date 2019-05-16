@@ -86,6 +86,7 @@ public class EdxDefaultModule extends AbstractModule {
         bind(CourseService.class).toProvider(CourseService.Provider.class).in(Singleton.class);
         bind(DiscussionService.class).toProvider(DiscussionService.Provider.class).in(Singleton.class);
         bind(UserService.class).toProvider(UserService.Provider.class).in(Singleton.class);
+        bind(ScormService.class).toProvider(ScormService.Provider.class).in(Singleton.class);
 
         bind(IStorage.class).to(Storage.class);
         //Room.databaseBuilder(context, AppDatabase.class, dbName).fallbackToDestructiveMigration()
@@ -101,8 +102,6 @@ public class EdxDefaultModule extends AbstractModule {
         //bind(DataManager.class).toProvider(DataManager.Provider.class);
 
         bind(TaService.class).toProvider(TaService.TaProvider.class);
-
-        bind(ScormService.class).toProvider(ScormService.Provider.class);
 
         bind(AnalyticsRetrofitProvider.class).to(AnalyticsRetrofitProvider.Impl.class);
 

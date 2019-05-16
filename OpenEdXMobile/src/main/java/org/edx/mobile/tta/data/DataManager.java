@@ -58,6 +58,7 @@ import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
@@ -86,6 +87,7 @@ import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.tta.exception.TaException;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
+import org.edx.mobile.tta.scorm.ScormStartResponse;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
@@ -117,6 +119,8 @@ import org.edx.mobile.tta.task.content.course.discussion.GetDiscussionTopicsTask
 import org.edx.mobile.tta.task.content.course.discussion.GetThreadCommentsTask;
 import org.edx.mobile.tta.task.content.course.discussion.LikeDiscussionCommentTask;
 import org.edx.mobile.tta.task.content.course.discussion.LikeDiscussionThreadTask;
+import org.edx.mobile.tta.task.content.course.scorm.GetUnitStatusTask;
+import org.edx.mobile.tta.task.content.course.scorm.StartScormTask;
 import org.edx.mobile.tta.task.feed.FollowUserTask;
 import org.edx.mobile.tta.task.feed.GetFeedsTask;
 import org.edx.mobile.tta.task.feed.GetSuggestedUsersTask;
@@ -3119,6 +3123,92 @@ public class DataManager extends BaseRoboInjector {
                 }
             }
         }.execute();
+
+    }
+
+    public void getUnitStatus(String courseId, OnResponseCallback<List<UnitStatus>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetUnitStatusTask(context, courseId){
+                @Override
+                protected void onSuccess(List<UnitStatus> statuses) throws Exception {
+                    super.onSuccess(statuses);
+                    if (statuses != null){
+
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                for (UnitStatus status : statuses){
+                                    status.setCourse_id(courseId);
+                                    status.setUsername(loginPrefs.getUsername());
+                                }
+                                mLocalDataSource.insertUnitStatuses(statuses);
+                            }
+                        }.start();
+
+                        callback.onSuccess(statuses);
+                    } else {
+                        getUnitStatusFromLocal(courseId, callback, new TaException("Unable to fetch unit statuses"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getUnitStatusFromLocal(courseId, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getUnitStatusFromLocal(courseId, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getUnitStatusFromLocal(String courseId, OnResponseCallback<List<UnitStatus>> callback, Exception e){
+
+        new AsyncTask<Void, Void, List<UnitStatus>>() {
+            @Override
+            protected List<UnitStatus> doInBackground(Void... voids) {
+                return mLocalDataSource.getUnitStatusByCourse(loginPrefs.getUsername(), courseId);
+            }
+
+            @Override
+            protected void onPostExecute(List<UnitStatus> statuses) {
+                super.onPostExecute(statuses);
+
+                if (statuses != null){
+                    callback.onSuccess(statuses);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        }.execute();
+
+    }
+
+    public void startScorm(String courseId, String blockId, OnResponseCallback<ScormStartResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new StartScormTask(context, courseId, blockId){
+                @Override
+                protected void onSuccess(ScormStartResponse scormStartResponse) throws Exception {
+                    super.onSuccess(scormStartResponse);
+                    if (callback != null){
+                        callback.onSuccess(scormStartResponse);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    if (callback != null){
+                        callback.onFailure(ex);
+                    }
+                }
+            }.execute();
+
+        }
 
     }
 

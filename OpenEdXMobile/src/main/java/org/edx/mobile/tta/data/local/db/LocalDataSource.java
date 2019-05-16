@@ -8,6 +8,7 @@ import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 
@@ -203,5 +204,15 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void insertContentStatuses(List<ContentStatus> statuses) {
         mAppDatabase.contentStatusDao().insert(statuses);
+    }
+
+    @Override
+    public List<UnitStatus> getUnitStatusByCourse(String username, String courseId) {
+        return mAppDatabase.unitStatusDao().getAllByCourse(username, courseId);
+    }
+
+    @Override
+    public void insertUnitStatuses(List<UnitStatus> statuses) {
+        mAppDatabase.unitStatusDao().insert(statuses);
     }
 }
