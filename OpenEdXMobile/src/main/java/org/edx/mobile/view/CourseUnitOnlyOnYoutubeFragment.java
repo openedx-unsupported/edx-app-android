@@ -32,7 +32,23 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
-        ((TextView) v.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_only_on_youtube);
+        if (environment.getConfig().getEmbeddedYoutubeConfig().isYoutubeEnabled()) {
+            ((TextView) v.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
+            v.findViewById(R.id.update_youtube_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.youtube"));
+                        startActivity(i);
+                    } catch (android.content.ActivityNotFoundException e) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.youtube"));
+                        startActivity(i);
+                    }
+                }
+            });
+        } else {
+            ((TextView) v.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_only_on_youtube);
+        }
         v.findViewById(R.id.view_on_youtube_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
