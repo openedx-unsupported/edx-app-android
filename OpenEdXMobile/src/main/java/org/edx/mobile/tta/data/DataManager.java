@@ -1264,6 +1264,10 @@ public class DataManager extends BaseRoboInjector {
         return getScormStatus(scorm).equals(ScormStatus.not_downloaded);
     }
 
+    public boolean scormDownloading(ScormBlockModel scorm) {
+        return getScormStatus(scorm).equals(ScormStatus.downloading);
+    }
+
     public ScormStatus getScormStatus(ScormBlockModel scorm) {
 
         DownloadEntry entry = scorm.getDownloadEntry(edxEnvironment.getStorage());

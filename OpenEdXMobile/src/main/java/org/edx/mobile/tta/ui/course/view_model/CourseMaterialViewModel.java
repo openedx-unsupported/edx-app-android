@@ -109,6 +109,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     private boolean downloadModeIsAll;
     private int actionMode;
     private boolean firstDownload;
+    private boolean somethingIsDownloading;
 
     public CourseMaterialViewModel(Context context, TaBaseFragment fragment, Content content, EnrolledCoursesResponse course, CourseComponent rootComponent) {
         super(context, fragment);
@@ -581,7 +582,12 @@ public class CourseMaterialViewModel extends BaseViewModel {
             @Override
             public void onDownloadStarted(Long result) {
                 mActivity.hideLoading();
+                somethingIsDownloading = true;
                 remainingScorms.remove(selectedScormForDownload);
+                if (remainingScorms.isEmpty()){
+                    allDownloadIconVisible.set(false);
+                    allDownloadProgressVisible.set(true);
+                }
                 if (adapter != null){
                     adapter.notifyDataSetChanged();
                 }
@@ -660,6 +666,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     @Override
                     public void onDownloadStarted(Long result) {
                         mActivity.hideLoading();
+                        somethingIsDownloading = true;
                         numberOfDownloadingVideos = remainingScorms.size();
                         numberOfDownloadedVideos = 0;
                         allDownloadIconVisible.set(false);
@@ -744,11 +751,13 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     allDownloadProgressVisible.set(false);
                     allDownloadStatusIcon.set(R.drawable.t_icon_done);
                     allDownloadIconVisible.set(true);
+                    somethingIsDownloading = false;
                 }
             } else if (remainingScorms == null || remainingScorms.isEmpty()){
                 allDownloadProgressVisible.set(false);
                 allDownloadStatusIcon.set(R.drawable.t_icon_done);
                 allDownloadIconVisible.set(true);
+                somethingIsDownloading = false;
             }
             if (adapter != null){
                 adapter.notifyDataSetChanged();
@@ -783,7 +792,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
                 e.getModel().getDownloadType() != null &&
                 (e.getModel().getDownloadType().equalsIgnoreCase(DownloadType.SCORM.name()) ||
                         e.getModel().getDownloadType().equalsIgnoreCase(DownloadType.PDF.name()))) {
-            populateData();
+            fetchCourseComponent();
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
 
             mActivity.analytic.addMxAnalytics_db(
@@ -815,13 +824,21 @@ public class CourseMaterialViewModel extends BaseViewModel {
     }
 
     public void fetchCourseComponent() {
+        somethingIsDownloading = false;
         populateData();
         if (remainingScorms.isEmpty()){
-            allDownloadStatusIcon.set(R.drawable.t_icon_done);
-            allDownloadIconVisible.set(true);
+            if (!somethingIsDownloading) {
+                allDownloadStatusIcon.set(R.drawable.t_icon_done);
+                allDownloadIconVisible.set(true);
+                allDownloadProgressVisible.set(false);
+            } else {
+                allDownloadIconVisible.set(false);
+                allDownloadProgressVisible.set(true);
+            }
         } else {
             allDownloadStatusIcon.set(R.drawable.t_icon_download);
             allDownloadIconVisible.set(true);
+            allDownloadProgressVisible.set(false);
         }
     }
 
@@ -871,6 +888,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 if (childComp instanceof PDFBlockModel || childComp instanceof ScormBlockModel){
                                     if (mDataManager.scormNotDownloaded((ScormBlockModel) childComp)){
                                         remainingScorms.add((ScormBlockModel) childComp);
+                                    } else if (mDataManager.scormDownloading((ScormBlockModel) childComp)){
+                                        somethingIsDownloading = true;
                                     }
                                 }
                             }
