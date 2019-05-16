@@ -33,8 +33,8 @@ public class WebViewProgramInfoFragment extends BaseWebViewFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadUrl(getInitialUrl());
         setWebViewActionListener();
+        loadUrl(getInitialUrl());
     }
 
     public void setWebViewActionListener() {
