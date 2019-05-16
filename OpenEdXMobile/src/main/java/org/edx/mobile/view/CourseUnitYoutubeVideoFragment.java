@@ -51,7 +51,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private TimedTextObject subtitlesObj;
     private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
-    private VideoModel videoModel;
     private boolean fromLandscape, wasHiding;
 
     /**
@@ -245,7 +244,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 int currentPos = 0;
                 try {
                     currentPos = youTubePlayer.getCurrentTimeMillis();
-                    DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).updateVideoLastPlayedOffset(unit.getId(), currentPos, null);
+                    saveCurrentPlaybackPosition(currentPos);
 
                 }
                 catch (Exception e ){
@@ -341,8 +340,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     @Override
     protected void initTranscriptListView(){
-        transcriptAdapter = new TranscriptAdapter(getContext(), environment);
-        transcriptListView.setAdapter(transcriptAdapter);
+        super.initTranscriptListView();
         transcriptListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -356,13 +354,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     private void setVideoModel(){
-        videoModel = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).getVideoEntryByVideoId(unit.getId(), null);
+        videoModel = (DownloadEntry) DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).getVideoEntryByVideoId(unit.getId(), null);
 
         if (videoModel == null) {
             DownloadEntry e = new DownloadEntry();
             e.videoId = unit.getId();
             addVideoDatatoDb(e);
-            videoModel = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).getVideoEntryByVideoId(unit.getId(), null);
+            videoModel = e;
         }
     }
 
