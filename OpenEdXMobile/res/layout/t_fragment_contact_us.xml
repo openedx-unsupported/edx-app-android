@@ -3,84 +3,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.profile.view_model.ContactUsViewModel" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_background"
-        android:orientation="vertical">
+        android:background="@color/app_background">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/toolbar"
-            android:background="@color/app_background"
-            app:title="@string/contact_us"
-            app:navigationIcon="@drawable/back"
-            app:titleTextAppearance="@style/ta_toolbar_title_style"
-            android:gravity="start|center_vertical"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            app:contentInsetStartWithNavigation="0dp"
-            app:titleMarginStart="0dp" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_48px"
-            android:layout_marginStart="@dimen/_40px"
-            android:text="@string/connect_with_us"
-            android:textColor="@color/primary_navy"
-            android:textSize="15sp"
-            android:fontFamily="@font/hind_medium"/>
+            android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_40px"
-            android:layout_marginTop="@dimen/_48px"
-            android:layout_marginEnd="@dimen/_40px"
-            app:hintTextAppearance="@color/primary_navy">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/app_background"
+                android:gravity="start|center_vertical"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:navigationIcon="@drawable/back"
+                app:title="@string/contact_us"
+                app:titleMarginStart="0dp"
+                app:titleTextAppearance="@style/ta_toolbar_title_style" />
 
-            <android.support.design.widget.TextInputEditText
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/write_here"
-                android:text="@{viewModel.message}"
-                android:textColorHint="@color/gray_1"
-                android:textColor="@color/gray_4"
-                android:textSize="14sp"
+                android:layout_marginStart="@dimen/_40px"
+                android:layout_marginTop="@dimen/_48px"
                 android:fontFamily="@font/hind_medium"
-                text_changed_listener="@{viewModel.watcher}"
-                android:paddingBottom="@dimen/_14px" />
+                android:text="@string/connect_with_us"
+                android:textColor="@color/primary_navy"
+                android:textSize="15sp" />
 
-        </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_40px"
+                android:layout_marginTop="@dimen/_48px"
+                android:layout_marginEnd="@dimen/_40px"
+                android:textColorHint="@color/gray_1"
+                android:theme="@style/TextAppearence.App.TextInputLayout"
+                app:hintTextAppearance="@style/TextColorHint">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+                <android.support.design.widget.TextInputEditText
+                    text_changed_listener="@{viewModel.watcher}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/hind_medium"
+                    android:hint="@string/write_here"
+                    android:paddingBottom="@dimen/_14px"
+                    android:text="@{viewModel.message}"
+                    android:textColor="@color/gray_4"
+                    android:textColorHint="@color/gray_1"
+                    android:textSize="14sp" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:layout_width="200dp"
-                android:layout_height="25dp"
+                android:layout_width="240dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="125dp"
+                android:layout_marginBottom="125dp"
                 android:background="@drawable/btn_selector_filled"
                 android:enabled="@{viewModel.msgValid}"
                 android:fontFamily="@font/hind_medium"
                 android:gravity="center"
-                android:layout_centerInParent="true"
+                android:onClick="@{()->viewModel.send()}"
+                android:text="Send"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="14sp"
-                android:text="Send"
-                android:onClick="@{()->viewModel.send()}" />
+                android:textSize="14sp" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
 </layout>
