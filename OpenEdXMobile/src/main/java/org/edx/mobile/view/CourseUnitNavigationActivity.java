@@ -78,7 +78,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                     firstTime = false;
                     CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.instantiateItem(pager, position);
                     if (initialPage != null) {
-                        initialPage.onPageShow();
+                        initialPage.setUserVisibleHint(true);
                     }
                 }
             }

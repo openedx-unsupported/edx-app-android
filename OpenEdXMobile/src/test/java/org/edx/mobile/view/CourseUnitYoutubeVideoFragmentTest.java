@@ -94,7 +94,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
     public void onPageShowTest() {
         CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
-        fragment.onPageShow();
+        fragment.setUserVisibleHint(true);
 
         Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
         assertNotNull(playerContainer);
@@ -106,7 +106,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
         CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
 
-        fragment.onPageDisappear();
+        fragment.setUserVisibleHint(false);
 
         Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
         assertNotNull(playerContainer);

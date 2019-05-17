@@ -48,6 +48,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private YouTubePlayer youTubePlayer, previousYouTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
     private Handler transcriptsHandler = new Handler();
+    private Handler initializeHandler = new Handler();
     private TimedTextObject subtitlesObj;
     private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
@@ -79,10 +80,29 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser) {
-            removeFragment();
-        }
+        if (isVisibleToUser && unit != null) {
+            initializeYoutubePlayer();
 
+            if (!initTranscripts()) {
+            /*
+             The subtitles are not been loaded the first time that the user watch the video component.
+             So this allows to reload the subtitles and reload the menu items after a second.
+             */
+            transcriptsHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initTranscripts();
+                        getActivity().invalidateOptionsMenu();
+                    }
+                }, 1000);
+            }
+        } else {
+            removeFragment();
+            fromLandscape = false;
+            transcriptsHandler.removeCallbacksAndMessages(null);
+            subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
+            initializeHandler.removeCallbacks(null);
+        }
     }
 
     public void initializeYoutubePlayer() {
@@ -93,11 +113,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             removeFragment();
         }
         youTubePlayerFragment = new YouTubePlayerSupportFragment();
-        String apiKey =environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
-        if (apiKey == null || apiKey.isEmpty()) {
-            return;
-        }
-        youTubePlayerFragment.initialize(apiKey, this);
 
         try {
             FragmentManager fm = getChildFragmentManager();
@@ -107,6 +122,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         } catch (Exception ex) {
             logger.error(ex);
         }
+        initializeHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initializeYoutubePlayerFragment();
+            }
+        }, 1000);
+
     }
 
     @Override
@@ -127,26 +149,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     @Override
-    public void onPageShow() {
-        super.onPageShow();
-        initializeYoutubePlayer();
-
-        if (!initTranscripts()) {
-            /*
-             The subtitles are not been loaded the first time that the user watch the video component.
-             So this allows to reload the subtitles and reload the menu items after a second.
-             */
-            transcriptsHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initTranscripts();
-                    getActivity().invalidateOptionsMenu();
-                }
-            }, 1000);
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         wasHiding = true;
@@ -159,19 +161,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     @Override
-    public void onPageDisappear() {
-        super.onPageDisappear();
-        removeFragment();
-        fromLandscape = false;
-        transcriptsHandler.removeCallbacksAndMessages(null);
-        subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
-    }
-
-    @Override
     public void onInitializationSuccess(Provider provider,
                                         YouTubePlayer player,
                                         boolean wasRestored) {
-
         try {
             if(!NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())){
                 player.release();
@@ -205,7 +197,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         subtitleDisplayHandler.postDelayed(subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
 
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -268,6 +259,18 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         }
     };
 
+
+    private void initializeYoutubePlayerFragment() {
+
+        if ( getUserVisibleHint() && youTubePlayerFragment != null) {
+            String apiKey =environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
+            if (apiKey == null || apiKey.isEmpty()) {
+                return;
+            }
+            youTubePlayerFragment.initialize(apiKey, this);
+        }
+    }
+
     private void loadTranscriptsData(VideoBlockModel unit) {
         TranscriptManager transcriptManager = new TranscriptManager(getContext());
         TranscriptModel transcript = getTranscriptModel(unit.getDownloadEntry(environment.getStorage()));
@@ -325,6 +328,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         try {
             if (youTubePlayer != null){
                 youTubePlayer.release();
+                youTubePlayer = null;
             }
 
             if (youTubePlayerFragment != null){
@@ -401,7 +405,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 previousYouTubePlayer.release();
             }
             youTubePlayer.release();
-            youTubePlayer = null;
             initializeYoutubePlayer();
         }
     }
@@ -422,9 +425,17 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onStopped() {
-            if (wasHiding) {
-                youTubePlayer.play();
-                wasHiding = false;
+            if (wasHiding && getUserVisibleHint()) {
+                try {
+                    wasHiding = false;
+                    youTubePlayer.play();
+                } catch (Exception error) {
+                    initializeYoutubePlayer();
+                }
+
+            }
+            else if (!getUserVisibleHint()) {
+                youTubePlayer.release();
             }
         }
 
