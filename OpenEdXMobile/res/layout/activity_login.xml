@@ -71,7 +71,7 @@
                         android:paddingStart="-4dp"
                         android:textColorHint="@color/grey_text">
 
-                        <android.support.design.widget.TextInputEditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/email_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
                         android:paddingStart="-4dp"
                         android:textColorHint="@color/grey_text">
 
-                        <android.support.design.widget.TextInputEditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/password_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
