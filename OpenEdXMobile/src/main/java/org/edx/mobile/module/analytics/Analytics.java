@@ -83,6 +83,19 @@ public interface Analytics {
                              String courseId, String unitUrl);
 
     /**
+     * This function is used to track the video playback speed changes
+     *
+     * @param videoId
+     * @param currentTime
+     * @param courseId
+     * @param unitUrl
+     * @param oldSpeed
+     * @param newSpeed
+     */
+    void trackVideoSpeed(String videoId, Double currentTime, String courseId,
+                         String unitUrl, float oldSpeed, float newSpeed);
+
+    /**
      * This function is used to track Video Loading
      *
      * @param videoId
@@ -383,6 +396,8 @@ public interface Analytics {
         String USER_ID = "user_id";
         String OLD_TIME = "old_time";
         String NEW_TIME = "new_time";
+        String NEW_SPEED = "new_speed";
+        String OLD_SPEED = "old_speed";
         String SEEK_TYPE = "seek_type";
         String REQUESTED_SKIP_INTERVAL = "requested_skip_interval";
         String MODULE_ID = "module_id";
@@ -458,6 +473,7 @@ public interface Analytics {
         //The seek event name has been changed as per MOB-1273
         String VIDEO_SEEKED = "edx.video.position.changed";
         String TRANSCRIPT_SHOWN = "edx.video.transcript.shown";
+        String VIDEO_PLAYBACK_SPEED_CHANGED = "edx.bi.video.speed.changed";
         String TRANSCRIPT_HIDDEN = "edx.video.transcript.hidden";
         String TRANSCRIPT_LANGUAGE = "edx.bi.video.transcript.language.selected";
         String FULLSREEN_TOGGLED = "edx.bi.video.screen.fullscreen.toggled";
@@ -586,6 +602,7 @@ public interface Analytics {
         String STOPPED_VIDEO = "Stopped Video";
         String SEEK_VIDEO = "Seeked Video";
         String SHOW_TRANSCRIPT = "Show Transcript";
+        String SPEED_CHANGE_VIDEO = "Speed Change Video";
         String HIDE_TRANSCRIPT = "Hide Transcript";
         String VIDEO_DOWNLOADED = "Video Downloaded";
         String BULK_DOWNLOAD_SUBSECTION = "Bulk Download Subsection";

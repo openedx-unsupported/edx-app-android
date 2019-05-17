@@ -1453,9 +1453,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         speedDialogFragment = SpeedDialogFragment.getInstance(new SpeedDialogFragment.IListDialogCallback() {
             @Override
             public void onItemClicked(Float speed) {
-                loginPrefs.saveDefaultPlaybackSpeed(speed);
                 if (player != null) {
+                    float oldSpeed = loginPrefs.getDefaultPlaybackSpeed();
+                    loginPrefs.saveDefaultPlaybackSpeed(speed);
                     player.setPlaybackSpeed(speed);
+
+                    environment.getAnalyticsRegistry().trackVideoSpeed(videoEntry.videoId,
+                            player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                            videoEntry.eid, videoEntry.lmsUrl, oldSpeed, speed);
                 }
             }
 
