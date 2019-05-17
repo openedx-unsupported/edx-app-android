@@ -5,10 +5,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/facebook_text"
-        android:minHeight="@dimen/social_btn_min_height"
         android:focusable="true"
         android:foreground="@drawable/light_selectable_rounded_box_overlay"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/social_btn_min_height">
 
         <ImageView
             android:layout_width="match_parent"
@@ -24,18 +24,15 @@
 
             <ImageView
                 android:id="@+id/imgview_facebook"
-                android:layout_width="17dp"
-                android:layout_height="17dp"
-                android:layout_marginEnd="9dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="9dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="@dimen/social_btn_icon_size"
+                android:layout_height="@dimen/social_btn_icon_size"
+                android:layout_margin="@dimen/social_btn_margin"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_facebook_img" />
 
             <View
-                android:layout_width="1dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/social_btn_divider_width"
+                android:layout_height="@dimen/social_btn_divider_height"
                 android:background="@color/transparent_white_20" />
 
             <TextView
@@ -46,7 +43,7 @@
                 android:gravity="center"
                 android:text="@string/facebook_text"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="@dimen/social_btn_text_size" />
         </LinearLayout>
     </FrameLayout>
 </layout>

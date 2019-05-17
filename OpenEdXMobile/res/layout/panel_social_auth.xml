@@ -13,10 +13,10 @@
         android:weightSum="1">
 
         <include
-            android:id="@+id/facebook_button"
-            layout="@layout/panel_facebook_button"
+            android:id="@+id/google_button"
+            layout="@layout/panel_google_button"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/social_btn_height"
             android:layout_weight="0.5" />
 
         <View
@@ -25,11 +25,10 @@
             android:layout_height="1dp" />
 
         <include
-            android:id="@+id/google_button"
-            layout="@layout/panel_google_button"
+            android:id="@+id/facebook_button"
+            layout="@layout/panel_facebook_button"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/social_btn_height"
             android:layout_weight="0.5" />
-
     </LinearLayout>
 </layout>
