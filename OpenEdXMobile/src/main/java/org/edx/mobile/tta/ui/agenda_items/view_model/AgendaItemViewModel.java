@@ -32,6 +32,7 @@ import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
+import org.edx.mobile.tta.event.ContentBookmarkChangedEvent;
 import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.event.ContentStatusesReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -239,6 +240,17 @@ public class AgendaItemViewModel extends BaseViewModel {
     public void onEventMainThread(ContentStatusReceivedEvent event){
         contentStatusMap.put(event.getContentStatus().getContent_id(), event.getContentStatus());
         adapter.notifyDataSetChanged();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ContentBookmarkChangedEvent event){
+        if (!event.isBookmarked()){
+            contents.remove(event.getContent());
+        } else if (!contents.contains(event.getContent())){
+            contents.add(event.getContent());
+        }
+        adapter.notifyDataSetChanged();
+        toggleEmptyVisibility();
     }
 
     public void registerEventBus(){

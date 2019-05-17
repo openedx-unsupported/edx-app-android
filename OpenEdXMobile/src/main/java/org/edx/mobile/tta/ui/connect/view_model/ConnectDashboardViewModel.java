@@ -27,6 +27,7 @@ import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.event.ContentBookmarkChangedEvent;
 import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
@@ -368,6 +369,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
                             content.getName() , Action.UnbookmarkPost, content.getSource().getName(),
                             Source.Mobile, content.getSource_identity());
                 }
+
+                EventBus.getDefault().post(new ContentBookmarkChangedEvent(content, data.isIs_active()));
             }
 
             @Override

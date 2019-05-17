@@ -43,6 +43,7 @@ import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.event.ContentBookmarkChangedEvent;
 import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.PDFBlockModel;
@@ -495,6 +496,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
                             content.getName() , Action.UnbookmarkCourse, content.getName(),
                             Source.Mobile, content.getSource_identity());
                 }
+
+                EventBus.getDefault().post(new ContentBookmarkChangedEvent(content, data.isIs_active()));
 
             }
 
