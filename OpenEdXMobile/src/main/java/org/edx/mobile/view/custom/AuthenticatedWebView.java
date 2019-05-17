@@ -373,4 +373,8 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     public boolean isShowingError() {
         return fullScreenErrorNotification != null && fullScreenErrorNotification.isShowing();
     }
+
+    public boolean isPageLoaded() {
+        return pageIsLoaded;
+    }
 }

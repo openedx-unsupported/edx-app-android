@@ -11,7 +11,6 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
-import org.edx.mobile.services.ViewPagerDownloadManager;
 
 public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
 
@@ -43,17 +42,5 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
             }
         });
         return v;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
-            ViewPagerDownloadManager.instance.addTask(this);
-    }
-
-    @Override
-    public void run() {
-        ViewPagerDownloadManager.instance.done(this, true);
     }
 }

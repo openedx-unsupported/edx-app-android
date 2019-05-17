@@ -47,8 +47,4 @@ public class CourseUnitDiscussionFragment extends CourseUnitFragment {
             fragmentTransaction.commit();
         }
     }
-
-    @Override
-    public void run() {
-    }
 }
