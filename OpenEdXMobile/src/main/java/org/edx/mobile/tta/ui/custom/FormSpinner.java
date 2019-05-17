@@ -69,11 +69,12 @@ public class FormSpinner extends LinearLayout {
                 } else {
                     selectedOption = options.get(position);
                     setError(null);
-                    if (listener != null) {
-                        listener.onItemClick(view, selectedOption);
-                    }
                     mBinding.spinnerLabel.setVisibility(VISIBLE);
                     mBinding.etRegion.setTextColor(ContextCompat.getColor(context, R.color.gray_4));
+                }
+
+                if (listener != null) {
+                    listener.onItemClick(view, selectedOption);
                 }
                 mBinding.etRegion.setText(item.toString());
             }
@@ -153,6 +154,10 @@ public class FormSpinner extends LinearLayout {
         } else {
             mBinding.spinnerError.setVisibility(GONE);
         }
+    }
+
+    public void notifyDataSetChanged(){
+        adapter.notifyDataSetChanged();
     }
 
     private void select(@android.support.annotation.Nullable String value) {

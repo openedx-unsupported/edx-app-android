@@ -75,18 +75,8 @@ public class EditProfileFragment extends TaBaseFragment {
     private ProfileImage profileImage;
     private Account account;
     private SearchFilter searchFilter;
-    /*private List<String> classTags, skillTags;
-    private List<String> selectedClassTags, selectedSkillTags;
 
-    public ArrayAdapter<String> classesAdapter;
-    public ArrayAdapter<String> skillsAdapter;
-
-    private NonScrollListView classesList, skillsList;
-    private LinearLayout classesExpandedLayout, skillsExpandedLayout;
-    private LinearLayout classesLayout, skillsLayout;
-    private Button btnSave;*/
     private ImageView userImage;
-
     private LinearLayout userInfoLayout;
     private FormEditText etFirstName;
     private FormSpinner stateSpinner;
@@ -101,8 +91,6 @@ public class EditProfileFragment extends TaBaseFragment {
     private Button btn;
 
     private String tagLabel;
-
-    private boolean classesOpened, skillsOpened;
 
     public static EditProfileFragment newInstance(ProfileModel profileModel, ProfileImage profileImage,
                                                   Account account, SearchFilter searchFilter){
@@ -128,15 +116,7 @@ public class EditProfileFragment extends TaBaseFragment {
         View view = binding(inflater, container, R.layout.t_fragment_edit_profile, viewModel)
                 .getRoot();
 
-        /*classesList = view.findViewById(R.id.classes_multi_choice_list);
-        skillsList = view.findViewById(R.id.skills_multi_choice_list);
-        classesExpandedLayout = view.findViewById(R.id.classes_expanded);
-        skillsExpandedLayout = view.findViewById(R.id.skills_expanded);
-        classesLayout = view.findViewById(R.id.classes_layout);
-        skillsLayout = view.findViewById(R.id.skills_layout);
-        btnSave = view.findViewById(R.id.btn_save);*/
         userImage = view.findViewById(R.id.user_image);
-
         userInfoLayout = view.findViewById(R.id.user_info_fields_layout);
 
         if (profileModel != null && profileModel.getTagLabel() != null){
@@ -148,41 +128,13 @@ public class EditProfileFragment extends TaBaseFragment {
         getBlocks();
         getClassesAndSkills();
 
-        /*classTags = new ArrayList<>();
-        skillTags = new ArrayList<>();
-        selectedClassTags = new ArrayList<>();
-        selectedSkillTags = new ArrayList<>();
-
-        setupLists();*/
-
-        /*classesList.setOnItemClickListener((parent, view1, position, id) -> {
-            String c = (String) parent.getItemAtPosition(position);
-            if (selectedClassTags.contains(c)){
-                selectedClassTags.remove(c);
-            } else {
-                selectedClassTags.add(c);
-            }
-        });
-
-        skillsList.setOnItemClickListener((parent, view1, position, id) -> {
-            String s = (String) parent.getItemAtPosition(position);
-            if (selectedSkillTags.contains(s)){
-                selectedSkillTags.remove(s);
-            } else {
-                selectedSkillTags.add(s);
-            }
-        });
-
-        classesLayout.setOnClickListener(this);
-        skillsLayout.setOnClickListener(this);
-        btnSave.setOnClickListener(this);
-        view.setOnClickListener(this);*/
-
         return view;
     }
 
     private void getBlocks() {
         if (viewModel.currentState == null || viewModel.currentDistrict == null) {
+            viewModel.blocks.clear();
+            blockSpinner.setItems(viewModel.blocks, null);
             return;
         }
         viewModel.getActivity().showLoading();
@@ -329,6 +281,15 @@ public class EditProfileFragment extends TaBaseFragment {
         });
 
         stateSpinner.setOnItemSelectedListener((view, item) -> {
+            if (item == null){
+                viewModel.currentState = null;
+                viewModel.districts.clear();
+                districtSpinner.setItems(viewModel.districts, null);
+                viewModel.dietCodes.clear();
+                dietSpinner.setItems(viewModel.dietCodes, null);
+                return;
+            }
+
             viewModel.currentState = item.getName();
 
             viewModel.districts.clear();
@@ -343,7 +304,11 @@ public class EditProfileFragment extends TaBaseFragment {
         });
 
         districtSpinner.setOnItemSelectedListener((view, item) -> {
-            viewModel.currentDistrict = item.getName();
+            if (item != null) {
+                viewModel.currentDistrict = item.getName();
+            } else {
+                viewModel.currentDistrict = null;
+            }
             getBlocks();
         });
     }
@@ -389,76 +354,6 @@ public class EditProfileFragment extends TaBaseFragment {
 
         return valid;
     }
-
-    /*private void setupLists() {
-
-        if (searchFilter == null){
-            return;
-        }
-
-        String[] section_tag_list = new String[]{};
-        String tagLabel = null;
-
-        if (profileModel != null && profileModel.getTagLabel() != null){
-            tagLabel = profileModel.getTagLabel().trim();
-        }
-
-        if (tagLabel != null && tagLabel.length() > 0) {
-            section_tag_list = tagLabel.split(" ");
-
-            Map<String, List<String>> sectionTagsMap = new HashMap<>();
-            for (String section_tag: section_tag_list){
-                String[] duet = section_tag.split("_");
-                if (!sectionTagsMap.containsKey(duet[0])){
-                    sectionTagsMap.put(duet[0], new ArrayList<>());
-                }
-                sectionTagsMap.get(duet[0]).add(duet[1]);
-            }
-
-            for (FilterSection section: searchFilter.getResult()){
-                if (section.isIn_profile()){
-                    if (sectionTagsMap.containsKey(section.getName())){
-                        if (section.getName().contains("कक्षा")){
-                            selectedClassTags.addAll(sectionTagsMap.get(section.getName()));
-                        } else if (section.getName().contains("कौशल")){
-                            selectedSkillTags.addAll(sectionTagsMap.get(section.getName()));
-                        }
-                    }
-                }
-            }
-        }
-
-        if (searchFilter != null && searchFilter.getResult() != null){
-            for (FilterSection section: searchFilter.getResult()){
-                if (section.isIn_profile() && section.getTags() != null){
-                    if (section.getName().contains("कक्षा")){
-                        for (FilterTag tag: section.getTags()){
-                            classTags.add(tag.getValue());
-                        }
-                    } else if (section.getName().contains("कौशल")){
-                        for (FilterTag tag: section.getTags()){
-                            skillTags.add(tag.getValue());
-                        }
-                    }
-                }
-            }
-        }
-
-        classesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, classTags);
-        skillsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, skillTags);
-
-        classesList.setAdapter(classesAdapter);
-        skillsList.setAdapter(skillsAdapter);
-
-        for (String c: selectedClassTags){
-            classesList.setItemChecked(classTags.indexOf(c), true);
-        }
-
-        for (String s: selectedSkillTags){
-            skillsList.setItemChecked(skillTags.indexOf(s), true);
-        }
-
-    }*/
 
     @Override
     public void onPermissionGranted(String[] permissions, int requestCode) {
@@ -522,46 +417,6 @@ public class EditProfileFragment extends TaBaseFragment {
             }
         }
     }
-
-    /*private void collapseTags(){
-        classesExpandedLayout.setVisibility(View.GONE);
-        skillsExpandedLayout.setVisibility(View.GONE);
-        classesOpened = false;
-        skillsOpened = false;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.classes_layout:
-                if (classesOpened || skillsOpened){
-                    collapseTags();
-                } else {
-                    classesExpandedLayout.setVisibility(View.VISIBLE);
-                    classesOpened = true;
-                }
-                break;
-
-            case R.id.skills_layout:
-                if (classesOpened || skillsOpened){
-                    collapseTags();
-                } else {
-                    skillsExpandedLayout.setVisibility(View.VISIBLE);
-                    skillsOpened = true;
-                }
-                break;
-
-            case R.id.btn_save:
-                collapseTags();
-                viewModel.setSelectedClassTags(selectedClassTags);
-                viewModel.setSelectedSkillTags(selectedSkillTags);
-                viewModel.save();
-                break;
-
-            default:
-                collapseTags();
-        }
-    }*/
 
     @Override
     public void onResume() {

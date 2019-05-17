@@ -55,6 +55,8 @@ public class UserInfoActivity extends BaseVMActivity {
 
     private void getBlocks() {
         if (mViewModel.currentState == null || mViewModel.currentDistrict == null) {
+            mViewModel.blocks.clear();
+            blockSpinner.setItems(mViewModel.blocks, null);
             return;
         }
         showLoading();
@@ -151,6 +153,15 @@ public class UserInfoActivity extends BaseVMActivity {
         });
 
         stateSpinner.setOnItemSelectedListener((view, item) -> {
+            if (item == null){
+                mViewModel.currentState = null;
+                mViewModel.districts.clear();
+                districtSpinner.setItems(mViewModel.districts, null);
+                mViewModel.dietCodes.clear();
+                dietSpinner.setItems(mViewModel.dietCodes, null);
+                return;
+            }
+
             mViewModel.currentState = item.getName();
 
             mViewModel.districts.clear();
@@ -163,7 +174,11 @@ public class UserInfoActivity extends BaseVMActivity {
         });
 
         districtSpinner.setOnItemSelectedListener((view, item) -> {
-            mViewModel.currentDistrict = item.getName();
+            if (item != null) {
+                mViewModel.currentDistrict = item.getName();
+            } else {
+                mViewModel.currentDistrict = null;
+            }
             getBlocks();
         });
     }
