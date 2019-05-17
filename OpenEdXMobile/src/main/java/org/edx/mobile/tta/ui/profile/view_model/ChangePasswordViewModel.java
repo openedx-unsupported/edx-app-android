@@ -20,15 +20,20 @@ public class ChangePasswordViewModel extends BaseViewModel {
 
     public ObservableField<String> oldPass = new ObservableField<>("");
     public ObservableField<String> newPass = new ObservableField<>("");
+    public ObservableField<String> confirmPassword = new ObservableField<>("");
     public ObservableBoolean oldValid = new ObservableBoolean();
     public ObservableBoolean newValid = new ObservableBoolean();
+    public ObservableBoolean confirmPassValid = new ObservableBoolean();
     public ObservableInt oldPassDrawable = new ObservableInt();
     public ObservableInt newPassDrawable = new ObservableInt();
+    public ObservableInt confirmPassDrawable = new ObservableInt();
     public ObservableBoolean oldPassToggleEnabled = new ObservableBoolean();
     public ObservableBoolean newPassToggleEnabled = new ObservableBoolean();
+    public ObservableBoolean confirmPassToggleEnabled = new ObservableBoolean();
 
     private boolean oldPassVisible = false;
     private boolean newPassVisible = false;
+    private boolean confirmPassVisible = false;
 
     public TextWatcher oldWatcher = new TextWatcher() {
         @Override
@@ -71,18 +76,41 @@ public class ChangePasswordViewModel extends BaseViewModel {
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s != null){
-                newPass.set(s.toString());
-                if (newPass.get().length() >= 3){
-                    newValid.set(true);
-                } else {
-                    newValid.set(false);
-                }
-            } else {
-                newPass.set("");
-                newValid.set(false);
-            }
+            newPass.set(s.toString());
             setNewPassDrawable();
+            String passString = s.toString();
+            if (passString.length() >= 3 && passString.equals(confirmPassword.get())){
+                newValid.set(true);
+                confirmPassValid.set(true);
+            } else {
+                newValid.set(false);
+                confirmPassValid.set(false);
+            }
+        }
+    };
+
+    public TextWatcher ConfirmPassWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            confirmPassword.set(s.toString());
+            setConfirmPassDrawable();
+            String confirmPassString = s.toString();
+            if (confirmPassString.length() >= 3 && confirmPassString.equals(newPass.get())){
+                newValid.set(true);
+                confirmPassValid.set(true);
+            } else {
+                newValid.set(false);
+                confirmPassValid.set(false);
+            }
         }
     };
 
@@ -136,6 +164,19 @@ public class ChangePasswordViewModel extends BaseViewModel {
             }
         } else {
             newPassToggleEnabled.set(false);
+        }
+    }
+
+    private void setConfirmPassDrawable() {
+        if (confirmPassword.get().length() > 0) {
+            confirmPassToggleEnabled.set(true);
+            if (confirmPassVisible) {
+                confirmPassDrawable.set(R.drawable.ic_visibility_green_24dp);
+            } else {
+                confirmPassDrawable.set(R.drawable.ic_visibility_gray_4_24dp);
+            }
+        } else {
+            confirmPassToggleEnabled.set(false);
         }
     }
 }
