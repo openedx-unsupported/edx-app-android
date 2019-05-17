@@ -12,7 +12,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bt_google"
+            android:background="@drawable/google_btn_bg"
             android:contentDescription="@null" />
 
         <LinearLayout
@@ -22,16 +22,15 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
+                android:layout_width="@dimen/social_btn_icon_size"
+                android:layout_height="@dimen/social_btn_icon_size"
+                android:layout_margin="@dimen/social_btn_margin"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_googleplus" />
+                android:src="@drawable/ic_google" />
 
             <View
-                android:layout_width="1dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/social_btn_divider_width"
+                android:layout_height="@dimen/social_btn_divider_height"
                 android:background="@color/transparent_white_20" />
 
             <TextView
@@ -42,7 +41,7 @@
                 android:gravity="center"
                 android:text="@string/google_text"
                 android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textSize="@dimen/social_btn_text_size" />
         </LinearLayout>
     </FrameLayout>
 </layout>

@@ -244,4 +244,9 @@
     <dimen name="social_btn_radius">3dp</dimen>
     <dimen name="social_btn_min_height">40dp</dimen>
     <dimen name="social_btn_divider_width">1dp</dimen>
+    <dimen name="social_btn_icon_size">24dp</dimen>
+    <dimen name="social_btn_margin">8dp</dimen>
+    <dimen name="social_btn_divider_height">40dp</dimen>
+    <dimen name="social_btn_text_size">14sp</dimen>
+    <dimen name="social_btn_height">40dp</dimen>
 </resources>
