@@ -12,6 +12,6 @@ class RegistrationTextView extends RegistrationEditTextView {
 
     public RegistrationTextView(RegistrationFormField field, View view) {
         super(field, view);
-        mTextInputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+        mEditText.setInputType(InputType.TYPE_CLASS_TEXT);
     }
 }

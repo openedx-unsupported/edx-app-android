@@ -15,13 +15,13 @@ class RegistrationTextAreaView extends RegistrationEditTextView {
     public RegistrationTextAreaView(RegistrationFormField field, View view) {
         super(field, view);
 
-        mTextInputEditText.setLines(INIT_LINES);
-        mTextInputEditText.setMaxLines(MAX_LINES);
+        mEditText.setLines(INIT_LINES);
+        mEditText.setMaxLines(MAX_LINES);
 
         // allow multiline text
-        mTextInputEditText.setInputType(InputType.TYPE_CLASS_TEXT
+        mEditText.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         // text should start from the left-top
-        mTextInputEditText.setGravity(Gravity.START | Gravity.TOP);
+        mEditText.setGravity(Gravity.START | Gravity.TOP);
     }
 }

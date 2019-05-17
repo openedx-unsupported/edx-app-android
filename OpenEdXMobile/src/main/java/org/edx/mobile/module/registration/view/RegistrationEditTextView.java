@@ -1,9 +1,9 @@
 package org.edx.mobile.module.registration.view;
 
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
@@ -26,7 +26,7 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
     protected RegistrationFormField mField;
     private View mView;
     protected TextInputLayout mTextInputLayout;
-    protected TextInputEditText mTextInputEditText;
+    protected AppCompatEditText mEditText;
     protected TextView mInstructionsTextView;
     protected TextView mErrorTextView;
 
@@ -36,12 +36,12 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
         this.mView = view;
 
         mTextInputLayout = (TextInputLayout) view.findViewById(R.id.register_edit_text_til);
-        mTextInputEditText = (TextInputEditText) view.findViewById(R.id.register_edit_text_tilEt);
+        mEditText = (AppCompatEditText) view.findViewById(R.id.register_edit_text_tilEt);
         mInstructionsTextView = (TextView) view.findViewById(R.id.input_instructions);
         mErrorTextView = (TextView) view.findViewById(R.id.input_error);
 
         // set max lines for this input to be 1
-        mTextInputEditText.setLines(1);
+        mEditText.setLines(1);
 
         // apply max length
         if (mField.getRestriction().getMaxLength() > 0) {
@@ -49,7 +49,7 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
 
             InputFilter[] FilterArray = new InputFilter[1];
             FilterArray[0] = new InputFilter.LengthFilter(mField.getRestriction().getMaxLength());
-            mTextInputEditText.setFilters(FilterArray);
+            mEditText.setFilters(FilterArray);
         }
 
         setInstructions(field.getInstructions());
@@ -58,7 +58,7 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
         mTextInputLayout.setHint(mField.getLabel());
 
         // set default
-        mTextInputEditText.setText(mField.getDefaultValue());
+        mEditText.setText(mField.getDefaultValue());
 
         // hide error text view
         mErrorTextView.setVisibility(View.GONE);
@@ -68,11 +68,11 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
 
         // Do a11y adjustment
         mTextInputLayout.setContentDescription(String.format("%s. %s.", mField.getLabel(), field.getInstructions()));
-        mTextInputEditText.setContentDescription(mField.getLabel());
+        mEditText.setContentDescription(mField.getLabel());
         ViewCompat.setImportantForAccessibility(mInstructionsTextView, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
         // Add text change listener
-        mTextInputEditText.addTextChangedListener(new TextWatcher() {
+        mEditText.addTextChangedListener(new TextWatcher() {
             /*
              TextWatcher events also trigger at time of registration of this listener. Which we
              don't want in this case. So, to handle it, a flag is required to check if the text
@@ -102,19 +102,19 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
     }
 
     public boolean setRawValue(String value){
-        mTextInputEditText.setText(value);
+        mEditText.setText(value);
         return true;
     }
 
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(mTextInputEditText.getText().toString());
+        return new JsonPrimitive(mEditText.getText().toString());
     }
 
     @Override
     public boolean hasValue() {
-        return !mTextInputEditText.getText().toString().isEmpty();
+        return !mEditText.getText().toString().isEmpty();
     }
 
     @Override
@@ -210,8 +210,8 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
     }
 
     public void setEditTextFocusable(boolean focusable) {
-        mTextInputEditText.setFocusable(focusable);
-        mTextInputEditText.setFocusableInTouchMode(focusable);
+        mEditText.setFocusable(focusable);
+        mEditText.setFocusableInTouchMode(focusable);
     }
 
     @Override
