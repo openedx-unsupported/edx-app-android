@@ -317,4 +317,14 @@ public class AnswersAnalytics implements Analytics {
     public void trackSubjectClicked(@NonNull String subjectId) {
 
     }
+
+    @Override
+    public void trackDownloadToSdCardSwitchOn() {
+
+    }
+
+    @Override
+    public void trackDownloadToSdCardSwitchOff() {
+
+    }
 }

@@ -404,4 +404,18 @@ public class AnalyticsRegistry implements Analytics {
             service.trackSubjectClicked(subjectId);
         }
     }
+
+    @Override
+    public void trackDownloadToSdCardSwitchOn() {
+        for (Analytics service : services) {
+            service.trackDownloadToSdCardSwitchOn();
+        }
+    }
+
+    @Override
+    public void trackDownloadToSdCardSwitchOff() {
+        for (Analytics service : services) {
+            service.trackDownloadToSdCardSwitchOff();
+        }
+    }
 }
