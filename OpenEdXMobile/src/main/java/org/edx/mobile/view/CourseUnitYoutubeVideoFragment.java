@@ -164,16 +164,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onInitializationSuccess(Provider provider,
                                         YouTubePlayer player,
                                         boolean wasRestored) {
-        try {
-            if(!NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())){
-                player.release();
-                return;
-            }
-        }
-        catch (NullPointerException e) {
-            player.release();
-            return;
-        }
 
         final int orientation = getResources().getConfiguration().orientation;
         int currentPos = 0;
@@ -235,8 +225,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 int currentPos = 0;
                 try {
                     currentPos = youTubePlayer.getCurrentTimeMillis();
-                    saveCurrentPlaybackPosition(currentPos);
-
+                    if (currentPos >= 0) {
+                        saveCurrentPlaybackPosition(currentPos);
+                    }
                 }
                 catch (Exception e ){
                     return;
@@ -262,12 +253,17 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private void initializeYoutubePlayerFragment() {
 
-        if ( getUserVisibleHint() && youTubePlayerFragment != null) {
-            String apiKey =environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
-            if (apiKey == null || apiKey.isEmpty()) {
-                return;
+        try {
+            if (getUserVisibleHint() && youTubePlayerFragment != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
+                String apiKey = environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
+                if (apiKey == null || apiKey.isEmpty()) {
+                    return;
+                }
+                youTubePlayerFragment.initialize(apiKey, this);
             }
-            youTubePlayerFragment.initialize(apiKey, this);
+        }
+        catch (NullPointerException e) {
+            return;
         }
     }
 
@@ -316,12 +312,17 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private boolean initTranscripts(){
         loadTranscriptsData(unit);
-        if (subtitlesObj != null) {
-            initTranscriptListView();
-            updateTranscript(subtitlesObj);
-            return true;
+        try {
+            if (subtitlesObj != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
+                initTranscriptListView();
+                updateTranscript(subtitlesObj);
+                return true;
+            }
+            return false;
         }
-        return false;
+        catch (NullPointerException e) {
+            return false;
+        }
     }
 
     private void removeFragment(){
