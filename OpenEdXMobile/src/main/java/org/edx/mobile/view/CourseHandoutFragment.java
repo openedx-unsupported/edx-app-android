@@ -52,7 +52,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     private OkHttpClientProvider okHttpClientProvider;
 
     @InjectView(R.id.webview)
-    private WebView webview;
+    private WebView webView;
 
     private FullScreenErrorNotification errorNotification;
 
@@ -67,16 +67,16 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_handout, container, false);
+        return inflater.inflate(R.layout.fragment_webview_with_paddings, container, false);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorNotification = new FullScreenErrorNotification(webview);
-        snackbarErrorNotification = new SnackbarErrorNotification(webview);
-        new URLInterceptorWebViewClient(getActivity(), webview).setAllLinksAsExternal(true);
+        errorNotification = new FullScreenErrorNotification(webView);
+        snackbarErrorNotification = new SnackbarErrorNotification(webView);
+        new URLInterceptorWebViewClient(getActivity(), webView).setAllLinksAsExternal(true);
         loadData();
     }
 
@@ -130,13 +130,13 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
         buff.append("</div>");
         buff.append("</body>");
 
-        webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(),
+        webView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(),
                 "text/html", Encoding.UTF_8.toString(), null);
 
     }
 
     private void hideErrorMessage() {
-        webview.setVisibility(View.VISIBLE);
+        webView.setVisibility(View.VISIBLE);
         errorNotification.hideError();
     }
 
