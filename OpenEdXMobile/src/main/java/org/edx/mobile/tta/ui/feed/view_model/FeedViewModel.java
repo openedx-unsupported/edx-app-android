@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.ui.feed.view_model;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
@@ -39,10 +40,14 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectDashboardActivity;
 import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
+import org.edx.mobile.tta.ui.feed.FeedShareBottomSheet;
 import org.edx.mobile.tta.ui.feed.NotificationsFragment;
 import org.edx.mobile.tta.ui.feed.RecommendedUsersFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.BadgeHelper;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
+import org.edx.mobile.tta.utils.DataUtil;
+import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +67,7 @@ public class FeedViewModel extends BaseViewModel {
 
     public ObservableBoolean suggestedUsersVisible = new ObservableBoolean();
     public ObservableBoolean featureListVisible = new ObservableBoolean();
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
 
     private List<Feed> feeds;
     List<SuggestedUser> users;
@@ -107,45 +113,67 @@ public class FeedViewModel extends BaseViewModel {
                     mActivity.showShortSnack(item.getMeta_data().getUser_name());
                     break;
                 case R.id.feed_share:
-                    mActivity.showShortSnack("Share: " + item.getMeta_data().getText());
+                    openShareMenu(item);
                     break;
                 default:
-                    switch (Action.valueOf(item.getAction())){
-                        case CertificateGenerate:
-                        case GenerateCertificate:
-                        case Certificate:
-                        case Badge:
-                            mActivity.showShortSnack(item.getMeta_data().getUser_name());
-                            break;
+                    try {
+                        switch (Action.valueOf(item.getAction())){
+                            case CertificateGenerate:
+                            case GenerateCertificate:
+                            case Certificate:
+                            case Badge:
+                                mActivity.showShortSnack(item.getMeta_data().getUser_name());
+                                break;
 
-                        case DBComment:
-                        case DBCommentlike:
-                        case DBCommentReply:
-                        case DBLike:
-                        case DBPost:
-                            mActivity.showShortSnack(item.getMeta_data().getText());
-                            break;
+                            case DBComment:
+                            case DBCommentlike:
+                            case DBCommentReply:
+                            case DBLike:
+                            case DBPost:
+                                if (item.getMeta_data().getCourse_key() != null) {
+                                    mActivity.showLoading();
+                                    mDataManager.getContentFromSourceIdentity(item.getMeta_data().getCourse_key(),
+                                            new OnResponseCallback<Content>() {
+                                                @Override
+                                                public void onSuccess(Content data) {
+                                                    mActivity.hideLoading();
+                                                    showContentDashboard(data);
+                                                }
 
-                        default:
-                            mActivity.showLoading();
-                            mDataManager.getContentFromSourceIdentity(item.getMeta_data().getId(),
-                                    new OnResponseCallback<Content>() {
-                                        @Override
-                                        public void onSuccess(Content data) {
-                                            mActivity.hideLoading();
-                                            showContentDashboard(data);
-                                        }
+                                                @Override
+                                                public void onFailure(Exception e) {
+                                                    mActivity.hideLoading();
+                                                    mActivity.showLongSnack(e.getLocalizedMessage());
+                                                }
+                                            });
+                                    break;
+                                }
 
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            mActivity.hideLoading();
-                                            mActivity.showLongSnack(e.getLocalizedMessage());
-                                        }
-                                    });
+                            default:
+                                if (item.getMeta_data().getId() != null) {
+                                    mActivity.showLoading();
+                                    mDataManager.getContentFromSourceIdentity(item.getMeta_data().getId(),
+                                            new OnResponseCallback<Content>() {
+                                                @Override
+                                                public void onSuccess(Content data) {
+                                                    mActivity.hideLoading();
+                                                    showContentDashboard(data);
+                                                }
 
+                                                @Override
+                                                public void onFailure(Exception e) {
+                                                    mActivity.hideLoading();
+                                                    mActivity.showLongSnack(e.getLocalizedMessage());
+                                                }
+                                            });
+                                }
+
+                        }
+
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
                     }
-
-                    break;
                 /*case R.id.feed_like_layout:
 
                     switch (Action.valueOf(item.getAction())){
@@ -280,6 +308,7 @@ public class FeedViewModel extends BaseViewModel {
                 mActivity.hideLoading();
                 allLoaded = true;
                 feedAdapter.setLoadingDone();
+                toggleEmptyVisibility();
             }
         });
 
@@ -316,6 +345,15 @@ public class FeedViewModel extends BaseViewModel {
         if (newItemsAdded) {
             feedAdapter.notifyItemRangeInserted(feeds.size() - n, n);
         }
+        toggleEmptyVisibility();
+    }
+
+    private void toggleEmptyVisibility(){
+        if (feeds == null || feeds.isEmpty()){
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
+        }
     }
 
     public void showContentDashboard(Content selectedContent){
@@ -342,58 +380,155 @@ public class FeedViewModel extends BaseViewModel {
         );
     }
 
+    private void openShareMenu(Feed feed){
+
+        FeedShareBottomSheet bottomSheet = FeedShareBottomSheet.newInstance(
+                (componentName, shareType) -> {
+
+                    mActivity.analytic.addMxAnalytics_db(feed.getMeta_data().getText(), Action.Share,
+                            feed.getMeta_data().getSource_name(), Source.Mobile, feed.getMeta_data().getId(),
+                            BreadcrumbUtil.getBreadcrumb() + "/" + shareType.name());
+
+                }, feed
+        );
+        bottomSheet.show(mActivity.getSupportFragmentManager(), FeedShareBottomSheet.TAG);
+
+    }
+
     private String getFeedTitle(Feed feed){
 
-        switch (Action.valueOf(feed.getAction())){
-            case CourseLike:
-            case LikePost:
-                return String.format(
-                        mActivity.getString(R.string.feed_format_content_like),
-                        feed.getAction_by(), feed.getMeta_data().getSource_title()
-                );
+        try {
+            switch (Action.valueOf(feed.getAction())){
+                case CourseLike:
+                case LikePost:
+                    if (feed.getState() == null) {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_content_like),
+                                feed.getAction_by(), feed.getMeta_data().getSource_title()
+                        );
+                    } else {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_content_like_from),
+                                feed.getAction_by(), DataUtil.getStateNameFromValue(feed.getState()),
+                                feed.getMeta_data().getSource_title()
+                        );
+                    }
 
-            case DBComment:
-                return String.format(mActivity.getString(R.string.feed_format_db_comment), feed.getAction_by());
+                case DBComment:
+                    if (feed.getState() == null) {
+                        return String.format(mActivity.getString(R.string.feed_format_db_comment), feed.getAction_by());
+                    } else {
+                        return String.format(mActivity.getString(R.string.feed_format_db_comment_from),
+                                feed.getAction_by(), DataUtil.getStateNameFromValue(feed.getState()));
+                    }
 
-            case MostPopular:
-                return String.format(mActivity.getString(R.string.feed_format_most_popular), feed.getAction_by());
+                case MostPopular:
+                    if (feed.getState() == null) {
+                        return String.format(mActivity.getString(R.string.feed_format_most_popular),
+                                feed.getMeta_data().getSource_title());
+                    } else {
+                        return String.format(mActivity.getString(R.string.feed_format_most_popular_in),
+                                feed.getMeta_data().getSource_title(), DataUtil.getStateNameFromValue(feed.getState()));
+                    }
 
-            case CommentPost:
-                return String.format(
-                        mActivity.getString(R.string.feed_format_comment_post),
-                        feed.getAction_by(), feed.getMeta_data().getSource_title()
-                );
+                case CommentPost:
+                    if (feed.getState() == null) {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_comment_post),
+                                feed.getAction_by(), feed.getMeta_data().getSource_title()
+                        );
+                    } else {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_comment_post_from),
+                                feed.getAction_by(), DataUtil.getStateNameFromValue(feed.getState()),
+                                feed.getMeta_data().getSource_title()
+                        );
+                    }
 
-            case Share:
-            case SharePostApp:
-            case ShareCourse:
-                return String.format(
-                        mActivity.getString(R.string.feed_format_share),
-                        feed.getAction_by(), feed.getMeta_data().getSource_title()
-                );
+                case Share:
+                case SharePostApp:
+                case ShareCourse:
+                    if (feed.getAction_by() != null) {
+                        if (feed.getState() == null) {
+                            return String.format(
+                                    mActivity.getString(R.string.feed_format_share),
+                                    feed.getAction_by(), feed.getMeta_data().getSource_title()
+                            );
+                        } else {
+                            return String.format(
+                                    mActivity.getString(R.string.feed_format_share_from),
+                                    feed.getAction_by(), DataUtil.getStateNameFromValue(feed.getState()),
+                                    feed.getMeta_data().getSource_title()
+                            );
+                        }
+                    } else {
+                        if (feed.getState() == null) {
+                            return String.format(
+                                    mActivity.getString(R.string.feed_format_advanced_share),
+                                    String.valueOf(feed.getCount()), feed.getMeta_data().getSource_title()
+                            );
+                        } else {
+                            return String.format(
+                                    mActivity.getString(R.string.feed_format_advanced_share_from),
+                                    String.valueOf(feed.getCount()), DataUtil.getStateNameFromValue(feed.getState()),
+                                    feed.getMeta_data().getSource_title()
+                            );
+                        }
+                    }
 
-            case GenerateCertificate:
-            case CertificateGenerate:
-            case Certificate:
-                return String.format(
-                        mActivity.getString(R.string.feed_format_certificate),
-                        feed.getAction_by(), feed.getMeta_data().getText()
-                );
+                case GenerateCertificate:
+                case CertificateGenerate:
+                case Certificate:
+                    return String.format(
+                            mActivity.getString(R.string.feed_format_certificate),
+                            feed.getAction_by(), feed.getMeta_data().getText()
+                    );
 
-            case Badge:
-                return String.format(
-                        mActivity.getString(R.string.feed_format_badge),
-                        feed.getAction_by(), feed.getMeta_data().getSource_title()
-                );
+                case Badge:
+                    return String.format(
+                            mActivity.getString(R.string.feed_format_badge),
+                            feed.getAction_by(), feed.getMeta_data().getSource_title()
+                    );
 
-            case NewPost:
-                return String.format(
-                        mActivity.getString(R.string.feed_format_badge),
-                        feed.getAction_by(), feed.getMeta_data().getSource_title()
-                );
+                case NewPost:
+                    return String.format(
+                            mActivity.getString(R.string.feed_format_new_post),
+                            feed.getAction_by(), feed.getMeta_data().getSource_title()
+                    );
 
-            default:
-                return "";
+                case Like:
+                    if (feed.getState() == null) {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_advanced_like),
+                                String.valueOf(feed.getCount()), feed.getMeta_data().getSource_title()
+                        );
+                    } else {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_advanced_like_from),
+                                String.valueOf(feed.getCount()), DataUtil.getStateNameFromValue(feed.getState()),
+                                feed.getMeta_data().getSource_title()
+                        );
+                    }
+
+                case Comment:
+                    if (feed.getState() == null) {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_advanced_comment),
+                                String.valueOf(feed.getCount()), feed.getMeta_data().getSource_title()
+                        );
+                    } else {
+                        return String.format(
+                                mActivity.getString(R.string.feed_format_advanced_comment_from),
+                                String.valueOf(feed.getCount()), DataUtil.getStateNameFromValue(feed.getState()),
+                                feed.getMeta_data().getSource_title()
+                        );
+                    }
+
+                default:
+                    return feed.getMeta_data().getSource_title();
+            }
+        } catch (IllegalArgumentException e) {
+            return feed.getMeta_data().getSource_title();
         }
 
     }
@@ -504,73 +639,83 @@ public class FeedViewModel extends BaseViewModel {
 
                 feedBinding.feedTitle.setText(Html.fromHtml(getFeedTitle(model)));
 
-                switch (Action.valueOf(model.getAction())){
-                    case LikePost:
-                    case CourseLike:
-                    case MostPopular:
-                    case CommentPost:
-                    case Share:
-                    case SharePostApp:
-                    case ShareCourse:
+                try {
+                    switch (Action.valueOf(model.getAction())){
+                        case LikePost:
+                        case CourseLike:
+                        case MostPopular:
+                        case CommentPost:
+                        case Share:
+                        case SharePostApp:
+                        case ShareCourse:
+                        case Like:
+                        case Comment:
 
-                        Glide.with(getContext())
-                                .load(model.getMeta_data().getIcon())
-                                .placeholder(R.drawable.placeholder_course_card_image)
-                                .into(feedBinding.feedContentImage);
-                        feedBinding.feedMetaText.setText(model.getMeta_data().getText());
-                        feedBinding.feedBtn.setText(getContext().getString(R.string.view));
-                        feedBinding.feedBtn.setVisibility(View.VISIBLE);
-                        feedBinding.feedLikeCommentLayout.setVisibility(View.VISIBLE);
+                            Glide.with(getContext())
+                                    .load(model.getMeta_data().getIcon())
+                                    .placeholder(R.drawable.placeholder_course_card_image)
+                                    .into(feedBinding.feedContentImage);
+                            feedBinding.feedMetaText.setText(model.getMeta_data().getText());
+                            feedBinding.feedBtn.setText(getContext().getString(R.string.view));
+                            feedBinding.feedBtn.setVisibility(View.VISIBLE);
+                            feedBinding.feedLikeCommentLayout.setVisibility(View.VISIBLE);
 
-                        break;
+                            break;
 
-                    case Certificate:
-                    case GenerateCertificate:
-                    case CertificateGenerate:
+                        case Certificate:
+                        case GenerateCertificate:
+                        case CertificateGenerate:
 
-                        Glide.with(getContext())
-                                .load(mDataManager.getConfig().getApiHostURL() +
-                                        model.getMeta_data().getUser_icon().getFull())
-                                .placeholder(R.drawable.profile_photo_placeholder)
-                                .into(feedBinding.feedContentImage);
-                        feedBinding.feedMetaText.setText(model.getMeta_data().getUser_name());
-                        feedBinding.feedMetaSubtext.setText(getUserClasses(model.getMeta_data().getTag_label()));
-                        feedBinding.feedMetaSubtext.setVisibility(View.VISIBLE);
-                        Glide.with(getContext())
-                                .load(R.drawable.t_image_cert_1)
-                                .into(feedBinding.itemImage);
-                        feedBinding.itemImage.setVisibility(View.VISIBLE);
+                            Glide.with(getContext())
+                                    .load(mDataManager.getConfig().getApiHostURL() +
+                                            model.getMeta_data().getUser_icon().getFull())
+                                    .placeholder(R.drawable.profile_photo_placeholder)
+                                    .into(feedBinding.feedContentImage);
+                            feedBinding.feedMetaText.setText(model.getMeta_data().getUser_name());
+                            feedBinding.feedMetaSubtext.setText(getUserClasses(model.getMeta_data().getTag_label()));
+                            feedBinding.feedMetaSubtext.setVisibility(View.VISIBLE);
+                            Glide.with(getContext())
+                                    .load(R.drawable.t_image_cert_1)
+                                    .into(feedBinding.itemImage);
+                            feedBinding.itemImage.setVisibility(View.VISIBLE);
 
-                        break;
+                            break;
 
-                    case Badge:
+                        case Badge:
 
-                        Glide.with(getContext())
-                                .load(mDataManager.getConfig().getApiHostURL() +
-                                        model.getMeta_data().getUser_icon().getFull())
-                                .placeholder(R.drawable.profile_photo_placeholder)
-                                .into(feedBinding.feedContentImage);
-                        feedBinding.feedMetaText.setText(model.getMeta_data().getUser_name());
-                        feedBinding.feedMetaSubtext.setText(getUserClasses(model.getMeta_data().getTag_label()));
-                        feedBinding.feedMetaSubtext.setVisibility(View.VISIBLE);
-                        feedBinding.itemImage.setImageResource(BadgeHelper.getBadgeIcon(
-                                BadgeType.valueOf(model.getMeta_data().getSource_name())));
-                        feedBinding.itemImage.setVisibility(View.VISIBLE);
-                        feedBinding.itemText.setText(model.getMeta_data().getSource_title());
-                        feedBinding.itemText.setVisibility(View.VISIBLE);
+                            Glide.with(getContext())
+                                    .load(mDataManager.getConfig().getApiHostURL() +
+                                            model.getMeta_data().getUser_icon().getFull())
+                                    .placeholder(R.drawable.profile_photo_placeholder)
+                                    .into(feedBinding.feedContentImage);
+                            feedBinding.feedMetaText.setText(model.getMeta_data().getUser_name());
+                            feedBinding.feedMetaSubtext.setText(getUserClasses(model.getMeta_data().getTag_label()));
+                            feedBinding.feedMetaSubtext.setVisibility(View.VISIBLE);
+                            feedBinding.itemImage.setImageResource(BadgeHelper.getBadgeIcon(
+                                    BadgeType.valueOf(model.getMeta_data().getSource_name())));
+                            feedBinding.itemImage.setVisibility(View.VISIBLE);
+                            feedBinding.itemText.setText(model.getMeta_data().getSource_title());
+                            feedBinding.itemText.setVisibility(View.VISIBLE);
 
-                        break;
+                            break;
 
-                    case NewPost:
+                        case NewPost:
 
-                        Glide.with(getContext())
-                                .load(model.getMeta_data().getIcon())
-                                .placeholder(R.drawable.placeholder_course_card_image)
-                                .into(feedBinding.feedContentImage);
-                        feedBinding.feedMetaText.setText(model.getMeta_data().getText());
+                            Glide.with(getContext())
+                                    .load(model.getMeta_data().getIcon())
+                                    .placeholder(R.drawable.placeholder_course_card_image)
+                                    .into(feedBinding.feedContentImage);
+                            feedBinding.feedMetaText.setText(model.getMeta_data().getText());
 
-                        break;
+                            break;
 
+                    }
+                } catch (IllegalArgumentException e) {
+                    Glide.with(getContext())
+                            .load(model.getMeta_data().getIcon())
+                            .placeholder(R.drawable.placeholder_course_card_image)
+                            .into(feedBinding.feedContentImage);
+                    feedBinding.feedMetaText.setText(model.getMeta_data().getText());
                 }
 
                 if (model.getMeta_data().isLiked()) {
@@ -579,11 +724,16 @@ public class FeedViewModel extends BaseViewModel {
                     feedBinding.feedLikeImage.setImageResource(R.drawable.t_icon_like);
                 }
 
-                feedBinding.feedShare.setOnClickListener(v -> {
-                    if (listener != null){
-                        listener.onItemClick(v, model);
-                    }
-                });
+                if (model.getMeta_data().getShare_url() != null) {
+                    feedBinding.feedShare.setVisibility(View.VISIBLE);
+                    feedBinding.feedShare.setOnClickListener(v -> {
+                        if (listener != null){
+                            listener.onItemClick(v, model);
+                        }
+                    });
+                } else {
+                    feedBinding.feedShare.setVisibility(View.GONE);
+                }
 
                 feedBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){
@@ -623,20 +773,24 @@ public class FeedViewModel extends BaseViewModel {
                 feedWithUserBinding.feedUserClasses.setText(getUserClasses(model.getMeta_data().getTag_label()));
                 feedWithUserBinding.feedContentTitle.setText(model.getMeta_data().getText());
 
-                switch (Action.valueOf(model.getAction())) {
-                    case DBComment:
+                try {
+                    switch (Action.valueOf(model.getAction())) {
+                        case DBComment:
 
-                        feedWithUserBinding.feedContentImage.setVisibility(View.GONE);
-                        feedWithUserBinding.feedContentViewBtn.setText(getContext().getString(R.string.view_discussion));
+                            feedWithUserBinding.feedContentImage.setVisibility(View.GONE);
+                            feedWithUserBinding.feedContentViewBtn.setText(getContext().getString(R.string.view_discussion));
 
-                        break;
-                    default:
-                        feedWithUserBinding.feedContentImage.setVisibility(View.VISIBLE);
-                        feedWithUserBinding.feedContentViewBtn.setText(getContext().getString(R.string.view));
-                        Glide.with(getContext())
-                                .load(model.getMeta_data().getIcon())
-                                .placeholder(R.drawable.placeholder_course_card_image)
-                                .into(feedWithUserBinding.feedContentImage);
+                            break;
+                        default:
+                            feedWithUserBinding.feedContentImage.setVisibility(View.VISIBLE);
+                            feedWithUserBinding.feedContentViewBtn.setText(getContext().getString(R.string.view));
+                            Glide.with(getContext())
+                                    .load(model.getMeta_data().getIcon())
+                                    .placeholder(R.drawable.placeholder_course_card_image)
+                                    .into(feedWithUserBinding.feedContentImage);
+                    }
+                } catch (IllegalArgumentException e) {
+                    feedWithUserBinding.feedContentViewBtn.setText(getContext().getString(R.string.view));
                 }
 
                 if (model.getMeta_data().isLiked()) {
@@ -651,11 +805,16 @@ public class FeedViewModel extends BaseViewModel {
                     }
                 });
 
-                feedWithUserBinding.feedShare.setOnClickListener(v -> {
-                    if (listener != null){
-                        listener.onItemClick(v, model);
-                    }
-                });
+                if (model.getMeta_data().getShare_url() != null) {
+                    feedWithUserBinding.feedShare.setVisibility(View.VISIBLE);
+                    feedWithUserBinding.feedShare.setOnClickListener(v -> {
+                        if (listener != null){
+                            listener.onItemClick(v, model);
+                        }
+                    });
+                } else {
+                    feedWithUserBinding.feedShare.setVisibility(View.GONE);
+                }
 
                 feedWithUserBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){
@@ -689,32 +848,29 @@ public class FeedViewModel extends BaseViewModel {
             if (isLoadMoreDisplayable() && position == getItemCount() - 1) {
                 return getLoadingMoreLayout();
             } else {
-                switch (Action.valueOf(getItem(position).getAction())){
-                    case CourseLike:
-                    case ShareCourse:
-                    case Certificate:
-                    case GenerateCertificate:
-                    case CertificateGenerate:
-                    case Badge:
-                        return R.layout.t_row_feed;
+                try {
+                    switch (Action.valueOf(getItem(position).getAction())){
 
-                    case LikePost:
-                    case MostPopular:
-                    case CommentPost:
-                    case Share:
-                    case SharePostApp:
-                    case NewPost:
-                    case DBComment:
-                    case DBLike:
-                        if (getItem(position).getMeta_data().getUser_name() != null) {
-                            return R.layout.t_row_feed_with_user;
-                        } else {
+                        case LikePost:
+                        case MostPopular:
+                        case CommentPost:
+                        case Share:
+                        case SharePostApp:
+                        case NewPost:
+                        case DBComment:
+                        case DBLike:
+                        case Like:
+                        case Comment:
+                            if (getItem(position).getMeta_data().getUser_name() != null) {
+                                return R.layout.t_row_feed_with_user;
+                            }
+
+                        default:
                             return R.layout.t_row_feed;
-                        }
 
-                    default:
-                        return R.layout.t_row_feed;
-
+                    }
+                } catch (IllegalArgumentException e) {
+                    return R.layout.t_row_feed;
                 }
             }
         }

@@ -22,6 +22,7 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.tta.analytics.Analytic;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
+import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.util.ResourceUtil;
 
@@ -72,7 +73,7 @@ public enum ShareUtils {
 
                         Analytic analytic = new Analytic(activity);
                         analytic.addMxAnalytics_db(courseData.getCourse().getName(), Action.Share,
-                                courseData.getCourse().getName(), Source.Mobile, courseData.getCourse().getId(),
+                                SourceName.course.name(), Source.Mobile, courseData.getCourse().getId(),
                                 BreadcrumbUtil.getBreadcrumb() + "/" + shareType.name());
 
                         if (!shareType.equals(ShareType.TTA)) {
@@ -167,7 +168,7 @@ public enum ShareUtils {
     }
 
     @NonNull
-    private static ShareType getShareTypeFromComponentName(@NonNull ComponentName componentName) {
+    public static ShareType getShareTypeFromComponentName(@NonNull ComponentName componentName) {
         switch (componentName.getPackageName()) {
             case "com.facebook.katana":
             case "com.facebook.lite":

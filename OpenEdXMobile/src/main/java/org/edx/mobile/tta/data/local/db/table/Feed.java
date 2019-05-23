@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import org.edx.mobile.tta.data.model.feed.FeedMetadata;
 
 @Entity(tableName = "feed", primaryKeys = {"id", "username"})
-public class Feed {
+public class Feed implements Comparable<Feed> {
 
     @NonNull
     private String id;
@@ -34,6 +34,10 @@ public class Feed {
     private String state;
 
     private boolean have_read;
+
+    private double order;
+
+    private long count;
 
     @NonNull
     public String getId() {
@@ -117,8 +121,29 @@ public class Feed {
         this.have_read = have_read;
     }
 
+    public double getOrder() {
+        return order;
+    }
+
+    public void setOrder(double order) {
+        this.order = order;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         return obj instanceof Feed && (((Feed) obj).id.equals(id));
+    }
+
+    @Override
+    public int compareTo(Feed o) {
+        return (int) (order - o.order);
     }
 }

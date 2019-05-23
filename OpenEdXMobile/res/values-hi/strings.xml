@@ -103,4 +103,6 @@
         <item>2nd</item>
         <item>3rd</item>
     </string-array>
+    <string name="share_message">कृपया इस {source_title} को {platform_name} में देखें। {content_name}</string>
+    <string name="share">साझा करें</string>
 </resources>

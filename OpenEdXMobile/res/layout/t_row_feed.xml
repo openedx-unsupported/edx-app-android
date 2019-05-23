@@ -39,11 +39,16 @@
             <ImageView
                 android:id="@+id/feed_share"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_40px"
-                app:layout_constraintBottom_toBottomOf="@id/feed_title"
+                android:layout_height="0dp"
+                android:layout_marginEnd="@dimen/_20px"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@id/line1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/feed_title"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/t_icon_share" />
 
             <View
@@ -74,7 +79,7 @@
                         android:id="@+id/feed_content_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY" />
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/play_icon"

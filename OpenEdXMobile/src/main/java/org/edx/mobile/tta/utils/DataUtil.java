@@ -472,4 +472,14 @@ public class DataUtil {
         return dietCodes;
     }
 
+    public static String getStateNameFromValue(String value){
+        List<RegistrationOption> states = getAllStates();
+        for (RegistrationOption state: states){
+            if (state.getValue().equalsIgnoreCase(value)){
+                return state.getName();
+            }
+        }
+        return value;
+    }
+
 }

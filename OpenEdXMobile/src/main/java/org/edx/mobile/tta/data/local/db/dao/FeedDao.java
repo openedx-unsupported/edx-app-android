@@ -13,7 +13,7 @@ import java.util.List;
 public interface FeedDao {
 
     @Query("Select * from feed where username = :username " +
-            "order by action_on desc " +
+            "order by action_on desc, `order` asc " +
             "limit :take offset (:take * :skip)")
     List<Feed> getAll(String username, int take, int skip);
 

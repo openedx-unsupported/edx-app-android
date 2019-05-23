@@ -2,6 +2,8 @@ package org.edx.mobile.tta.data.model.feed;
 
 import android.arch.persistence.room.Embedded;
 
+import com.google.gson.annotations.SerializedName;
+
 public class FeedMetadata {
 
     private String id;
@@ -19,6 +21,11 @@ public class FeedMetadata {
     private long comment_count;
     private String text;
     private boolean liked;
+
+    @SerializedName("share_link")
+    private String share_url;
+
+    private String course_key;
 
     public String getId() {
         return id;
@@ -114,5 +121,21 @@ public class FeedMetadata {
 
     public void setLiked(boolean liked) {
         this.liked = liked;
+    }
+
+    public String getShare_url() {
+        return share_url;
+    }
+
+    public void setShare_url(String share_url) {
+        this.share_url = share_url;
+    }
+
+    public String getCourse_key() {
+        return course_key;
+    }
+
+    public void setCourse_key(String course_key) {
+        this.course_key = course_key;
     }
 }

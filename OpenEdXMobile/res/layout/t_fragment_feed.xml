@@ -33,8 +33,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/_20px"
-                android:layout_marginTop="@dimen/_30px"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 app:srcCompat="@drawable/t_icon_notification"
                 android:onClick="@{()->viewModel.showNotifications()}"/>
 
@@ -83,13 +89,48 @@
 
             </android.support.design.widget.AppBarLayout>
 
-            <com.maurya.mx.mxlib.view.MxRecyclerView
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                mx:infinite_recycler_adapter="@{viewModel.feedAdapter}"
-                layout_manager="@{viewModel.layoutManager}"
-                infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <com.maurya.mx.mxlib.view.MxRecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    mx:infinite_recycler_adapter="@{viewModel.feedAdapter}"
+                    layout_manager="@{viewModel.layoutManager}"
+                    infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_60px"
+                    android:orientation="vertical"
+                    android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/t_icon_course_130" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/_46px"
+                        android:layout_marginStart="@dimen/_70px"
+                        android:layout_marginEnd="@dimen/_70px"
+                        android:fontFamily="@font/hind_regular"
+                        android:gravity="center"
+                        android:text="No feeds available at the moment"
+                        android:textColor="@color/primary_cyan"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
         </android.support.design.widget.CoordinatorLayout>
 

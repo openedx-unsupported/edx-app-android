@@ -88,6 +88,9 @@ public enum Action {
     MostPopular,
     Certificate,
     Badge,
-    Share, NewPost
+    Share,
+    NewPost,
+    Like,
+    Comment
 
 }

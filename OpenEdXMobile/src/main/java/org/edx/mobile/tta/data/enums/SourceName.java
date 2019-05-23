@@ -5,6 +5,7 @@ public enum SourceName {
     course,
     chatshala,
     hois,
-    toolkit
+    toolkit,
+    sawaliram
 
 }

@@ -1,6 +1,7 @@
 package org.edx.mobile.tta.ui.feed.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +41,8 @@ public class NotificationsViewModel extends BaseViewModel {
 
     public NotificationsAdapter adapter;
     public RecyclerView.LayoutManager layoutManager;
+
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
 
     private int take, skip;
     private boolean allLoaded;
@@ -124,6 +127,7 @@ public class NotificationsViewModel extends BaseViewModel {
                 mActivity.hideLoading();
                 allLoaded = true;
                 adapter.setLoadingDone();
+                toggleEmptyVisibility();
             }
         });
 
@@ -141,6 +145,15 @@ public class NotificationsViewModel extends BaseViewModel {
 
         if (newItemsAdded) {
             adapter.notifyDataSetChanged();
+        }
+        toggleEmptyVisibility();
+    }
+
+    private void toggleEmptyVisibility(){
+        if (notifications == null || notifications.isEmpty()){
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
         }
     }
 
