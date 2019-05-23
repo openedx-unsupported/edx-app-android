@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_error_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/common_course_display_margin_side"
+    android:paddingTop="@dimen/common_course_display_margin_top"
+    android:paddingRight="@dimen/common_course_display_margin_side"
+    android:paddingBottom="@dimen/common_course_display_margin_top">
+
+    <org.edx.mobile.view.custom.EdxWebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" />
+
+    <include layout="@layout/loading_indicator" />
+
+    <include layout="@layout/content_error" />
+
+</FrameLayout>

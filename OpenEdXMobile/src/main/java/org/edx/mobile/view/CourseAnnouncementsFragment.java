@@ -1,14 +1,11 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
@@ -39,13 +36,10 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import okhttp3.Request;
 
-public class CourseCombinedInfoFragment extends BaseFragment implements RefreshListener {
-
-    static final String TAG = CourseCombinedInfoFragment.class.getCanonicalName();
-
+public class CourseAnnouncementsFragment extends BaseFragment implements RefreshListener {
     private final Logger logger = new Logger(getClass().getName());
 
-    private EdxWebView announcementWebView;
+    private EdxWebView webView;
 
     private EnrolledCoursesResponse courseData;
     private List<AnnouncementsModel> savedAnnouncements;
@@ -61,23 +55,14 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
     private SnackbarErrorNotification snackbarErrorNotification;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        logger.debug("created: " + getClass().getName());
-
-        final Context context = getContext();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_course_combined_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_webview_with_paddings, container, false);
 
-        announcementWebView = (EdxWebView) view.findViewById(R.id.announcement_webview);
+        webView = view.findViewById(R.id.webview);
         URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(
-                getActivity(), announcementWebView);
+                getActivity(), webView);
         // treat every link as external link in this view, so that all links will open in external browser
         client.setAllLinksAsExternal(true);
 
@@ -88,8 +73,8 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorNotification = new FullScreenErrorNotification(announcementWebView);
-        snackbarErrorNotification = new SnackbarErrorNotification(announcementWebView);
+        errorNotification = new FullScreenErrorNotification(webView);
+        snackbarErrorNotification = new SnackbarErrorNotification(webView);
     }
 
     @Override
@@ -160,8 +145,8 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
                         if (getActivity() == null) {
                             return;
                         }
-                        if (!EventBus.getDefault().isRegistered(CourseCombinedInfoFragment.this)) {
-                            EventBus.getDefault().registerSticky(CourseCombinedInfoFragment.this);
+                        if (!EventBus.getDefault().isRegistered(CourseAnnouncementsFragment.this)) {
+                            EventBus.getDefault().registerSticky(CourseAnnouncementsFragment.this);
                         }
                     }
                 });
@@ -185,7 +170,7 @@ public class CourseCombinedInfoFragment extends BaseFragment implements RefreshL
         }
         buff.append("</body>");
 
-        announcementWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", StandardCharsets.UTF_8.name(), null);
+        webView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", StandardCharsets.UTF_8.name(), null);
     }
 
     @SuppressWarnings("unused")
