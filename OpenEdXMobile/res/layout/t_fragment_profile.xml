@@ -93,7 +93,8 @@
                         android:layout_marginEnd="@dimen/_16px"
                         android:layout_marginTop="@dimen/_18px"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -128,7 +129,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_30px"
                 android:progress="35"
-                android:progressDrawable="@drawable/t_progress" />
+                android:progressDrawable="@drawable/t_progress"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/llPoints"
@@ -136,7 +138,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16px"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -382,11 +385,12 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_48px"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                     android:id="@+id/badge_finite_list"
@@ -407,7 +411,7 @@
                     app:mx_titleTextFont="@font/hind_medium"
                     app:mx_titleTextSize="5sp" />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"

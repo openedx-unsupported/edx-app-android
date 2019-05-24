@@ -78,74 +78,80 @@ public class DeepLinkActivity extends BaseVMActivity {
                     } else {
                         ActivityUtil.gotoPage(this, LandingActivity.class);
                         this.finish();
-                        return;
                     }
                 } else {
                     ActivityUtil.gotoPage(this, LandingActivity.class);
                     this.finish();
-                    return;
                 }
             } else {
-
-                if (intent.getData() == null || intent.getData().getEncodedPath() == null) {
-                    ActivityUtil.gotoPage(this, LandingActivity.class);
-                    this.finish();
-                    return;
-                } else {
-                    Log.d("mx_deeplink", intent.getData().toString());
-
-                    String host_url;
-                    String connect_url;
-                    String edx_url;
-
-                    connect_url = viewModel.getDataManager().getConfig().getConnectUrl();
-                    if (!connect_url.endsWith("/"))
-                        connect_url = connect_url + "/";
-
-                    edx_url = viewModel.getDataManager().getConfig().getApiHostURL();
-                    if (!edx_url.endsWith("/"))
-                        edx_url = edx_url + "/";
-
-                    host_url = intent.getData().getScheme() + "://" + intent.getData().getHost();
-                    if (!host_url.endsWith("/"))
-                        host_url = host_url + "/";
-
-                    if (host_url.equals(connect_url) || host_url.equals("http://www.connect.theteacherapp.org/"))
-                        type = "connect";
-                    else if (host_url.equals(edx_url) || host_url.equals("http://www.theteacherapp.org/"))
-                        type = "course";
-                    else {
-                        ActivityUtil.gotoPage(this, LandingActivity.class);
-                        this.finish();
-                        return;
-                    }
-
-                    if (intent.getData().getEncodedPath().split("/").length > 1 &&
-                            intent.getData().getEncodedPath().split("/")[2] != null &&
-                            !intent.getData().getEncodedPath().split("/")[2].equals("")) {
-
-                        if (type.equals("course"))
-                            path = intent.getData().getEncodedPath().split("/")[2];
-                        else if(type.equals("connect"))
-                            path = urldecode(intent.getData().getEncodedPath().split("/")[2]);
-                    } else {
-                        ActivityUtil.gotoPage(this, LandingActivity.class);
-                        this.finish();
-                        return;
-                    }
-                    viewModel.fetchContent(extractContentId(intent.getData()));
-                }
+                onClickLink();
             }
         } else {
-            if (intent.getData() == null) {
-                ActivityUtil.gotoPage(this, LandingActivity.class);
-                this.finish();
-            } else {
-                viewModel.fetchContent(extractContentId(intent.getData()));
-            }
+            onClickLink();
         }
         viewModel.getDataManager().getEdxEnvironment().getAnalyticsRegistry().trackScreenView(getString(R.string.label_my_courses));
 
+    }
+
+    private void onClickLink(){
+        Intent intent = getIntent();
+
+        if (intent.getData() == null || intent.getData().getEncodedPath() == null) {
+            ActivityUtil.gotoPage(this, LandingActivity.class);
+            this.finish();
+        } else {
+            long contentId = extractContentId(intent.getData());
+            if (contentId > 0) {
+                viewModel.fetchContent(contentId);
+            } else if (intent.getData().getEncodedPath().split("/").length > 1 &&
+                    intent.getData().getEncodedPath().split("/")[2] != null &&
+                    !intent.getData().getEncodedPath().split("/")[2].equals("")) {
+
+                String host_url;
+                String connect_url;
+                String edx_url;
+
+                connect_url = viewModel.getDataManager().getConfig().getConnectUrl();
+                if (!connect_url.endsWith("/"))
+                    connect_url = connect_url + "/";
+
+                edx_url = viewModel.getDataManager().getConfig().getApiHostURL();
+                if (!edx_url.endsWith("/"))
+                    edx_url = edx_url + "/";
+
+                host_url = intent.getData().getScheme() + "://" + intent.getData().getHost();
+                if (!host_url.endsWith("/"))
+                    host_url = host_url + "/";
+
+                if (host_url.equals(connect_url) || host_url.equals("http://www.connect.theteacherapp.org/") ||
+                        host_url.equals("http://connect.theteacherapp.org/"))
+                    type = "connect";
+                else if (host_url.equals(edx_url) || host_url.equals("http://www.theteacherapp.org/") ||
+                        host_url.equals("http://theteacherapp.org/"))
+                    type = "course";
+                else {
+                    ActivityUtil.gotoPage(this, LandingActivity.class);
+                    this.finish();
+                    return;
+                }
+
+                if (type.equals("course"))
+                    path = intent.getData().getEncodedPath().split("/")[2];
+                else if(type.equals("connect"))
+                    path = urldecode(intent.getData().getEncodedPath().split("/")[2]);
+
+                if (path != null && !path.equals("")){
+                    viewModel.fetchContent(path);
+                } else {
+                    ActivityUtil.gotoPage(this, LandingActivity.class);
+                    this.finish();
+                }
+
+            } else {
+                ActivityUtil.gotoPage(this, LandingActivity.class);
+                this.finish();
+            }
+        }
     }
 
     private long extractContentId(Uri uri) {

@@ -3,38 +3,21 @@ package org.edx.mobile.tta.ui.profile.view_model;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
-import android.databinding.ViewDataBinding;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.widget.LinearLayout;
-
-import com.bumptech.glide.Glide;
-import com.maurya.mx.mxlib.core.MxFiniteAdapter;
-import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
-import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.databinding.TRowBadgeBinding;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.tta.data.enums.BadgeType;
-import org.edx.mobile.tta.data.local.db.table.Badge;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.profile.AllBadgesFragment;
 import org.edx.mobile.tta.ui.profile.MyCertificatesFragment;
-import org.edx.mobile.tta.ui.profile.PointsFragment;
-import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
-import org.edx.mobile.tta.utils.BadgeHelper;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.ProfileImage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +30,7 @@ public class ProfileViewModel extends BaseViewModel {
     public ProfileImage profileImage;
     public Account account;
     public SearchFilter searchFilter;
-    public BadgeListAdapter adapter;
-
-    private boolean accountReceived, filtersReceived;
-    private String tagLabel;
+//    public BadgeListAdapter adapter;
 
     public ObservableInt userImagePlaceholder = new ObservableInt(R.drawable.profile_photo_placeholder);
     public ObservableField<String> classes = new ObservableField<>();
@@ -58,16 +38,18 @@ public class ProfileViewModel extends BaseViewModel {
     public ObservableField<String> following = new ObservableField<>();
     public ObservableField<String> followers = new ObservableField<>();
     public ObservableField<String> userImageUrl = new ObservableField<>();
-    public ObservableField<String> nCertificates = new ObservableField<String>("0");
+    public ObservableField<String> nCertificates = new ObservableField<>("0");
 
+    private boolean accountReceived, filtersReceived;
+    private String tagLabel;
 
     public ProfileViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
-        adapter = new BadgeListAdapter(context);
+//        adapter = new BadgeListAdapter(context);
         fetchAccount();
         fetchFilters();
         fetchCertificates();
-        adapter.setItems(setbadge());
+//        adapter.setItems(setbadge());
 
     }
 
@@ -78,7 +60,7 @@ public class ProfileViewModel extends BaseViewModel {
         setDetails();
     }
 
-    private List<Badge> setbadge(){
+    /*private List<Badge> setbadge(){
         List<Badge> list= new ArrayList<>();
 
         Badge badge1 = new Badge();
@@ -122,7 +104,7 @@ public class ProfileViewModel extends BaseViewModel {
         list.add(badge8);
 
         return list;
-    }
+    }*/
 
 
     private void refreshFromLocal() {
@@ -193,7 +175,8 @@ public class ProfileViewModel extends BaseViewModel {
         });
 
     }
-    public void onCliCkMoreButton(){
+
+    /*public void onCliCkMoreButton(){
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 AllBadgesFragment.newInstance(),
@@ -210,7 +193,7 @@ public class ProfileViewModel extends BaseViewModel {
                 PointsFragment.TAG,
                 true,
                 null);
-    }
+    }*/
 
     private void fetchCertificates() {
 
@@ -295,7 +278,7 @@ public class ProfileViewModel extends BaseViewModel {
         }
     }
 
-    public class BadgeListAdapter extends MxFiniteAdapter<Badge> {
+    /*public class BadgeListAdapter extends MxFiniteAdapter<Badge> {
 
         public BadgeListAdapter(Context context) {
             super(context);
@@ -314,6 +297,6 @@ public class ProfileViewModel extends BaseViewModel {
                 });
             }
         }
-    }
+    }*/
 
 }

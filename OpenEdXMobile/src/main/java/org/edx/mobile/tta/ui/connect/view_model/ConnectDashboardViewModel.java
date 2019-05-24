@@ -153,14 +153,14 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     public void fetchPost(OnResponseCallback<Post> callback) {
         loadData();
-        long postId = 0;
+        /*long postId = 0;
         try {
             postId = Long.parseLong(content.getSource_identity());
         } catch (NumberFormatException e) {
             return;
-        }
+        }*/
         mActivity.showLoading();
-        mDataManager.getPostById(postId, new OnResponseCallback<Post>() {
+        mDataManager.getPostBySlug(content.getSource_identity(), new OnResponseCallback<Post>() {
             @Override
             public void onSuccess(Post data) {
                 post = data;

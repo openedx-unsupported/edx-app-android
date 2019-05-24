@@ -44,4 +44,30 @@ public class DeepLinkViewModel extends BaseViewModel {
         });
 
     }
+
+    public void fetchContent(String sourceIdentity) {
+
+        mDataManager.getContentFromSourceIdentity(sourceIdentity, new OnResponseCallback<Content>() {
+            @Override
+            public void onSuccess(Content data) {
+                Bundle parameters = new Bundle();
+                parameters.putParcelable(Constants.KEY_CONTENT, data);
+                parameters.putBoolean(Constants.KEY_IS_PUSH, true);
+                if (data.getSource().getType().equalsIgnoreCase(SourceType.course.name()) ||
+                        data.getSource().getType().equalsIgnoreCase(SourceType.edx.name())) {
+                    ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
+                } else {
+                    ActivityUtil.gotoPage(mActivity, ConnectDashboardActivity.class, parameters);
+                }
+                mActivity.finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                mActivity.finish();
+            }
+        });
+
+    }
 }

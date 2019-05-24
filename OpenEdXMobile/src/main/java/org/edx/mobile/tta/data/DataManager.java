@@ -1471,6 +1471,32 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
+    public void getPostBySlug(String slug, OnResponseCallback<Post> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            wpClientRetrofit.getPostBySlug(slug, new WordPressRestResponse<List<Post>>() {
+                @Override
+                public void onSuccess(List<Post> result) {
+                    if (result == null || result.isEmpty()){
+                        callback.onFailure(new TaException("Post not found"));
+                    } else {
+                        callback.onSuccess(result.get(0));
+                    }
+                }
+
+                @Override
+                public void onFailure(HttpServerErrorResponse errorResponse) {
+                    callback.onFailure(new TaException(errorResponse.getMessage()));
+                }
+            });
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
     public void getCommentsByPost(long postId, OnResponseCallback<List<Comment>> callback){
 
         if (NetworkUtil.isConnected(context)){
@@ -2852,7 +2878,7 @@ public class DataManager extends BaseRoboInjector {
                 protected void onSuccess(Content content) throws Exception {
                     super.onSuccess(content);
 
-                    if (content == null){
+                    if (content == null || content.getId() == 0){
                         getLocalContentFromSourceIdentity(sourceIdentity, callback,
                                 new TaException("Content not found"));
                     } else {
@@ -3212,6 +3238,10 @@ public class DataManager extends BaseRoboInjector {
                 }
             }.execute();
 
+        } else {
+            if (callback != null) {
+                callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+            }
         }
 
     }

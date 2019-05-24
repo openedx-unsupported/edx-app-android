@@ -58,7 +58,7 @@ public class ProfileFragment extends TaBaseFragment {
             }
         });
 
-        progressBar = view.findViewById(R.id.progressBar);
+        /*progressBar = view.findViewById(R.id.progressBar);
         progressBar.setOnClickListener( v -> {
             viewModel.onCliCkLl();
         });
@@ -76,7 +76,7 @@ public class ProfileFragment extends TaBaseFragment {
         recyclerView = view.findViewById(R.id.badge_finite_list);
         recyclerView.setOnMoreButtonClickListener(v ->  {
             viewModel.onCliCkMoreButton();
-        });
+        });*/
 
         bottomSheet = ProfileOptionsBottomSheet.newInstance(v -> {
             if (v == null){
