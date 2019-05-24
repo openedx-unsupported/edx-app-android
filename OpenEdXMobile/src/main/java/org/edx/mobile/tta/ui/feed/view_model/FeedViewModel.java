@@ -43,6 +43,7 @@ import org.edx.mobile.tta.ui.course.CourseDashboardActivity;
 import org.edx.mobile.tta.ui.feed.FeedShareBottomSheet;
 import org.edx.mobile.tta.ui.feed.NotificationsFragment;
 import org.edx.mobile.tta.ui.feed.RecommendedUsersFragment;
+import org.edx.mobile.tta.ui.profile.OtherProfileActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.BadgeHelper;
 import org.edx.mobile.tta.utils.BreadcrumbUtil;
@@ -258,6 +259,11 @@ public class FeedViewModel extends BaseViewModel {
                         }
                     });
                     break;
+
+                default:
+                    Bundle parameters = new Bundle();
+                    parameters.putString(Constants.KEY_USERNAME, item.getUsername());
+                    ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
             }
         });
 
@@ -612,6 +618,12 @@ public class FeedViewModel extends BaseViewModel {
                 }
 
                 teacherBinding.followBtn.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                teacherBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }

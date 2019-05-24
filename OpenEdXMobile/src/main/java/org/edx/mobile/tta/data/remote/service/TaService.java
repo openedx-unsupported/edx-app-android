@@ -24,6 +24,7 @@ import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
+import org.edx.mobile.tta.data.model.profile.FollowStatus;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 
 import java.util.List;
@@ -181,4 +182,7 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_UNIT_STATUS)
     Call<List<UnitStatus>> getUnitStatus(@Query(Constants.KEY_COURSE_KEY) String courseId);
+
+    @GET(ApiConstants.URL_MX_GET_FOLLOW_STATUS)
+    Call<FollowStatus> getFollowStatus(@Query(Constants.KEY_USERNAME) String username);
 }

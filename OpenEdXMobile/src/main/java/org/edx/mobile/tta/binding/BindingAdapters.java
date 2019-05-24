@@ -2,6 +2,7 @@ package org.edx.mobile.tta.binding;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.BottomNavigationView;
@@ -18,6 +19,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -387,5 +389,11 @@ public class BindingAdapters {
     @BindingAdapter({"on_view_more_click_listener"})
     public static void setOnViewMoreClickListener(MxFiniteRecyclerView view, View.OnClickListener listener){
         view.setOnMoreButtonClickListener(listener);
+    }
+
+    @BindingAdapter({"android:textColor"})
+    public static void setTextColor(Button view, int id) {
+        Context context = view.getContext();
+        view.setTextColor(ContextCompat.getColor(context, id));
     }
 }

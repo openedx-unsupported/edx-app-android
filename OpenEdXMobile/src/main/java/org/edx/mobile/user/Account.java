@@ -81,6 +81,15 @@ public class Account {
     @SerializedName("tag_label")
     private String tagLabel;
 
+    @SerializedName("follower_count")
+    private long followers;
+
+    @SerializedName("following_count")
+    private long following;
+
+    @SerializedName("certificate_count")
+    private long certificateCount;
+
     @NonNull
     public String getUsername() {
         return username;
@@ -238,5 +247,29 @@ public class Account {
 
     public void setTagLabel(String tagLabel) {
         this.tagLabel = tagLabel;
+    }
+
+    public long getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(long followers) {
+        this.followers = followers;
+    }
+
+    public long getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(long following) {
+        this.following = following;
+    }
+
+    public long getCertificateCount() {
+        return certificateCount;
+    }
+
+    public void setCertificateCount(long certificateCount) {
+        this.certificateCount = certificateCount;
     }
 }

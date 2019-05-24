@@ -83,7 +83,8 @@
                         app:cardCornerRadius="4dp"
                         android:layout_marginTop="@dimen/_16px"
                         app:layout_constraintTop_toBottomOf="@id/thread_title"
-                        app:layout_constraintStart_toStartOf="parent">
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:onClick="@{()->viewModel.onClickThreadUser()}">
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -105,7 +106,8 @@
                         android:textColor="@color/primary_cyan"
                         android:textSize="12sp"
                         app:layout_constraintStart_toEndOf="@id/user_image"
-                        app:layout_constraintTop_toTopOf="@id/user_image" />
+                        app:layout_constraintTop_toTopOf="@id/user_image"
+                        android:onClick="@{()->viewModel.onClickThreadUser()}" />
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.feed.view_model;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +15,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowSuggestedTeacherGridBinding;
+import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
@@ -23,6 +25,8 @@ import org.edx.mobile.tta.event.UserFollowingChangedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.profile.OtherProfileActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +84,11 @@ public class RecommendedUsersViewModel extends BaseViewModel {
                         }
                     });
                     break;
+
+                default:
+                    Bundle parameters = new Bundle();
+                    parameters.putString(Constants.KEY_USERNAME, item.getUsername());
+                    ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
             }
         });
 
@@ -131,6 +140,23 @@ public class RecommendedUsersViewModel extends BaseViewModel {
         }
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UserFollowingChangedEvent event){
+        if (users.contains(event.getUser())){
+            int position = users.indexOf(event.getUser());
+            users.get(position).setFollowed(event.getUser().isFollowed());
+            adapter.notifyItemChanged(position);
+        }
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
+    }
+
     public class SuggestedUsersAdapter extends MxInfiniteAdapter<SuggestedUser> {
 
         public SuggestedUsersAdapter(Context context) {
@@ -162,6 +188,12 @@ public class RecommendedUsersViewModel extends BaseViewModel {
                 }
 
                 teacherBinding.followBtn.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                teacherBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }

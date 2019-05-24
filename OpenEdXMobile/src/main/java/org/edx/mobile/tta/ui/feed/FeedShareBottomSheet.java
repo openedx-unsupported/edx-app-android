@@ -230,7 +230,7 @@ public class FeedShareBottomSheet extends BottomSheetDialogFragment {
             imageView.setImageDrawable(d);
             imageView.setOnClickListener(v -> {
                 if (listener != null){
-                    listener.onMenuItemClick(null, ShareUtils.ShareType.TTA);
+                    listener.onMenuItemClick(null, ShareUtils.ShareType.FACEBOOK);
                 }
 
                 Intent intent = ShareUtils.newShareIntent(getShareString());
@@ -250,7 +250,7 @@ public class FeedShareBottomSheet extends BottomSheetDialogFragment {
             imageView.setImageDrawable(d);
             imageView.setOnClickListener(v -> {
                 if (listener != null){
-                    listener.onMenuItemClick(null, ShareUtils.ShareType.TTA);
+                    listener.onMenuItemClick(null, ShareUtils.ShareType.FACEBOOK);
                 }
 
                 Intent intent = ShareUtils.newShareIntent(getShareString());
@@ -274,7 +274,7 @@ public class FeedShareBottomSheet extends BottomSheetDialogFragment {
             imageView.setImageDrawable(d);
             imageView.setOnClickListener(v -> {
                 if (listener != null){
-                    listener.onMenuItemClick(null, ShareUtils.ShareType.TTA);
+                    listener.onMenuItemClick(null, ShareUtils.ShareType.WHATSAPP);
                 }
 
                 Intent intent = ShareUtils.newShareIntent(getShareString());

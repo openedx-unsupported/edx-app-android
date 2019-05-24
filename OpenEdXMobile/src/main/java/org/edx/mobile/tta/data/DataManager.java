@@ -77,6 +77,7 @@ import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
 import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
+import org.edx.mobile.tta.data.model.profile.FollowStatus;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.data.model.search.FilterSection;
@@ -132,6 +133,7 @@ import org.edx.mobile.tta.task.notification.GetNotificationsTask;
 import org.edx.mobile.tta.task.notification.UpdateNotificationsTask;
 import org.edx.mobile.tta.task.profile.ChangePasswordTask;
 import org.edx.mobile.tta.task.profile.GetAccountTask;
+import org.edx.mobile.tta.task.profile.GetFollowStatusTask;
 import org.edx.mobile.tta.task.profile.GetProfileTask;
 import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
@@ -3242,6 +3244,87 @@ public class DataManager extends BaseRoboInjector {
             if (callback != null) {
                 callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
             }
+        }
+
+    }
+
+    public void getOtherUserAccount(String username, OnResponseCallback<Account> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetAccountTask(context, username){
+                @Override
+                protected void onSuccess(Account account) throws Exception {
+                    super.onSuccess(account);
+                    if (account != null) {
+                        callback.onSuccess(account);
+                    } else {
+                        callback.onFailure(new TaException("Invalid account"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getFollowStatus(String username, OnResponseCallback<FollowStatus> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetFollowStatusTask(context, username){
+                @Override
+                protected void onSuccess(FollowStatus followStatus) throws Exception {
+                    super.onSuccess(followStatus);
+
+                    if (followStatus == null){
+                        callback.onFailure(new TaException("Follow status could not be fetched"));
+                    } else {
+                        callback.onSuccess(followStatus);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getWpUser(long userId, OnResponseCallback<User> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            wpClientRetrofit.getUser(userId, new WordPressRestResponse<User>() {
+                @Override
+                public void onSuccess(User result) {
+                    if (result == null || result.getUsername() == null){
+                        callback.onFailure(new TaException("User could not be fetched"));
+                    } else {
+                        callback.onSuccess(result);
+                    }
+                }
+
+                @Override
+                public void onFailure(HttpServerErrorResponse errorResponse) {
+                    callback.onFailure(new TaException(errorResponse.getMessage()));
+                }
+            });
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
 
     }

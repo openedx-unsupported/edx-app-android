@@ -185,6 +185,10 @@ public class WpClientRetrofit {
         return mRestInterface.getUser(userId);
     }
 
+    public void getUser(long userId, WordPressRestResponse<User> callback) {
+        doRetrofitCall(mRestInterface.getUser(userId), callback);
+    }
+
     public void getUserFromLogin(String login, WordPressRestResponse<User> callback) {
         doRetrofitCall(mRestInterface.getUserFromLogin(login), callback);
     }

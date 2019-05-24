@@ -5,6 +5,7 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,12 +24,15 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.DiscussionTopicType;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.profile.OtherProfileActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -105,7 +109,9 @@ public class DiscussionCommentViewModel extends BaseViewModel {
 
                 case R.id.reply_user_name:
                 case R.id.reply_user_image:
-
+                    Bundle parameters = new Bundle();
+                    parameters.putString(Constants.KEY_USERNAME, item.getAuthor());
+                    ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
                     break;
             }
         });
@@ -172,6 +178,12 @@ public class DiscussionCommentViewModel extends BaseViewModel {
         } else {
             emptyVisible.set(false);
         }
+    }
+
+    public void onClickThreadUser(){
+        Bundle parameters = new Bundle();
+        parameters.putString(Constants.KEY_USERNAME, comment.getAuthor());
+        ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
     }
 
     public void likeComment(){

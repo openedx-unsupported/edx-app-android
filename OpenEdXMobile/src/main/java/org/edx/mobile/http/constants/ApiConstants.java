@@ -153,6 +153,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_UNIT_STATUS = "api/mx_content_analytics/v1/getunitstatus/";
 
+    public static final String URL_MX_GET_FOLLOW_STATUS = "api/mx_feed/v1/getfollowstatus/";
+
     //TTA end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

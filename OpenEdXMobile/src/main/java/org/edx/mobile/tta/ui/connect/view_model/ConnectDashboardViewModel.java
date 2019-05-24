@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -18,6 +19,7 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.services.VideoDownloadHelper;
+import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
@@ -35,12 +37,14 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.connect.ConnectCommentsTab;
 import org.edx.mobile.tta.ui.interfaces.CommentClickListener;
+import org.edx.mobile.tta.ui.profile.OtherProfileActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.CustomFilter;
 import org.edx.mobile.tta.wordpress_client.model.Post;
+import org.edx.mobile.tta.wordpress_client.model.User;
 import org.edx.mobile.tta.wordpress_client.util.MxFilterType;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
@@ -725,6 +729,22 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     @Override
     public void onClickUser(Comment comment) {
+        mActivity.showLoading();
+        mDataManager.getWpUser(comment.getAuthor(), new OnResponseCallback<User>() {
+            @Override
+            public void onSuccess(User data) {
+                mActivity.hideLoading();
+                Bundle parameters = new Bundle();
+                parameters.putString(Constants.KEY_USERNAME, data.getUsername());
+                ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                mActivity.hideLoading();
+                mActivity.showLongSnack(e.getLocalizedMessage());
+            }
+        });
 
     }
 

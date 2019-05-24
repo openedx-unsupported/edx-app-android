@@ -28,6 +28,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.course.discussion.DiscussionCommentActivity;
 import org.edx.mobile.tta.ui.course.discussion.DiscussionCommentsTab;
 import org.edx.mobile.tta.ui.interfaces.DiscussionCommentClickListener;
+import org.edx.mobile.tta.ui.profile.OtherProfileActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.utils.JsonUtil;
 import org.edx.mobile.util.DateUtil;
@@ -226,6 +227,12 @@ public class DiscussionThreadViewModel extends BaseViewModel
 
     }
 
+    public void onClickThreadUser(){
+        Bundle parameters = new Bundle();
+        parameters.putString(Constants.KEY_USERNAME, thread.getAuthor());
+        ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
+    }
+
     public void addComment(){
         resetReplyToComment();
 
@@ -329,7 +336,9 @@ public class DiscussionThreadViewModel extends BaseViewModel
 
     @Override
     public void onClickUser(DiscussionComment comment) {
-
+        Bundle parameters = new Bundle();
+        parameters.putString(Constants.KEY_USERNAME, comment.getAuthor());
+        ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
     }
 
     @Override

@@ -27,6 +27,7 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.course.discussion.DiscussionThreadActivity;
+import org.edx.mobile.tta.ui.profile.OtherProfileActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.DateUtil;
@@ -72,11 +73,21 @@ public class DiscussionTopicViewModel extends BaseViewModel {
 
         adapter = new DiscussionThreadsAdapter(mActivity);
         adapter.setItemClickListener((view, item) -> {
-            Bundle parameters = new Bundle();
-            parameters.putSerializable(Constants.KEY_ENROLLED_COURSE, course);
-            parameters.putSerializable(Constants.KEY_DISCUSSION_TOPIC, topicDepth.getDiscussionTopic());
-            parameters.putSerializable(Constants.KEY_DISCUSSION_THREAD, item);
-            ActivityUtil.gotoPage(mActivity, DiscussionThreadActivity.class, parameters);
+            switch (view.getId()){
+                case R.id.user_image:
+                case R.id.user_name:
+                    Bundle parameter = new Bundle();
+                    parameter.putString(Constants.KEY_USERNAME, item.getAuthor());
+                    ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameter);
+                    break;
+
+                default:
+                    Bundle parameters = new Bundle();
+                    parameters.putSerializable(Constants.KEY_ENROLLED_COURSE, course);
+                    parameters.putSerializable(Constants.KEY_DISCUSSION_TOPIC, topicDepth.getDiscussionTopic());
+                    parameters.putSerializable(Constants.KEY_DISCUSSION_THREAD, item);
+                    ActivityUtil.gotoPage(mActivity, DiscussionThreadActivity.class, parameters);
+            }
         });
         adapter.setItems(threads);
 
@@ -179,6 +190,18 @@ public class DiscussionTopicViewModel extends BaseViewModel {
                 } else {
                     threadBinding.roundedUserImage.setImageResource(R.drawable.profile_photo_placeholder);
                 }
+
+                threadBinding.userImage.setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                threadBinding.userName.setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
 
                 threadBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){

@@ -24,6 +24,7 @@ public class RecommendedUsersFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new RecommendedUsersViewModel(getActivity(), this);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -43,5 +44,11 @@ public class RecommendedUsersFragment extends TaBaseFragment {
     public void onResume() {
         super.onResume();
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.recommended_users.name()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }
