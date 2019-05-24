@@ -43,7 +43,7 @@ import subtitleFile.TimedTextObject;
 
 public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment implements YouTubePlayer.OnInitializedListener {
 
-    private static final int SUBTITLES_DISPLAY_DELAY_MS = 100;
+    private static final int SUBTITLES_DISPLAY_DELAY_MS = 50;
 
     private YouTubePlayer youTubePlayer, previousYouTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
@@ -82,20 +82,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && unit != null) {
             initializeYoutubePlayer();
-
-            if (!initTranscripts()) {
-            /*
-             The subtitles are not been loaded the first time that the user watch the video component.
-             So this allows to reload the subtitles and reload the menu items after a second.
-             */
-            transcriptsHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        initTranscripts();
-                        getActivity().invalidateOptionsMenu();
-                    }
-                }, 1000);
-            }
         } else {
             removeFragment();
             fromLandscape = false;
@@ -255,6 +241,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         try {
             if (getUserVisibleHint() && youTubePlayerFragment != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
+
+                initTranscripts();
                 String apiKey = environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
                 if (apiKey == null || apiKey.isEmpty()) {
                     return;
@@ -313,12 +301,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private boolean initTranscripts(){
         loadTranscriptsData(unit);
         try {
-            if (subtitlesObj != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
-                initTranscriptListView();
-                updateTranscript(subtitlesObj);
-                return true;
-            }
-            return false;
+            initTranscriptListView();
+            updateTranscript(subtitlesObj);
+            return true;
         }
         catch (NullPointerException e) {
             return false;
@@ -350,9 +335,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Caption currentCaption = transcriptAdapter.getItem(position);
-                if (currentCaption != null) {
+                if (currentCaption != null && youTubePlayer != null) {
                     youTubePlayer.seekToMillis(currentCaption.start.getMseconds());
-
                 }
             }
         });
