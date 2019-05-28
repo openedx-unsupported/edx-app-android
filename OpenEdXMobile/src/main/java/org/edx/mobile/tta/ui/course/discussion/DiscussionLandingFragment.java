@@ -33,6 +33,7 @@ public class DiscussionLandingFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new DiscussionLandingViewModel(getActivity(), this, course);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -43,4 +44,9 @@ public class DiscussionLandingFragment extends TaBaseFragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
+    }
 }

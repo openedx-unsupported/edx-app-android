@@ -104,6 +104,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     public ObservableBoolean footerDownloadIconVisible = new ObservableBoolean(false);
     public ObservableBoolean footerDownloadProgressVisible = new ObservableBoolean(false);
     public ObservableField<String> footerBtnText = new ObservableField<>("");
+    public ObservableBoolean footerBtnVisible = new ObservableBoolean(false);
 
     private int numberOfDownloadingVideos;
     private int numberOfDownloadedVideos;
@@ -125,22 +126,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     public void loadData(){
 
-        mDataManager.getUserContentStatus(Collections.singletonList(content.getId()),
-                new OnResponseCallback<List<ContentStatus>>() {
-                    @Override
-                    public void onSuccess(List<ContentStatus> data) {
-                        if (data.size() > 0){
-                            firstDownload = false;
-                            contentStatus = data.get(0);
-                            EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-
-                    }
-                });
+        getContentStatus();
 
         mDataManager.getTotalLikes(content.getId(), new OnResponseCallback<TotalLikeResponse>() {
             @Override
@@ -321,18 +307,6 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
     private void enableFooter(){
 
-        mDataManager.getCertificateStatus(content.getSource_identity(), new OnResponseCallback<CertificateStatusResponse>() {
-            @Override
-            public void onSuccess(CertificateStatusResponse data) {
-                setButtonText(data);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                footerBtnText.set(mActivity.getString(R.string.assessment));
-            }
-        });
-
         if (assessmentComponent.isContainer()) {
             CourseComponent component = (CourseComponent) assessmentComponent.getChildren().get(0);
             if (component instanceof PDFBlockModel || component instanceof ScormBlockModel) {
@@ -347,7 +321,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
 
         footerTitle.set(assessmentComponent.getDisplayName());
         footerDownloadIcon.set(R.drawable.t_icon_download);
-        footerBtnText.set(mActivity.getString(R.string.assessment));
+
+        getCertificateStatus();
 
         adapter.setFooterLayout(R.layout.t_row_course_material_footer);
         adapter.setFooterClickListener(v -> {
@@ -392,6 +367,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 mActivity.analytic.addMxAnalytics_db(
                                         finalScorm.getInternalName(), Action.GenerateCertificate, content.getName(),
                                         Source.Mobile, content.getSource_identity());
+
+                                getContentStatus();
 
                             }
 
@@ -454,6 +431,45 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         }
                     }
                     break;
+            }
+        });
+
+    }
+
+    private void getContentStatus(){
+
+        mDataManager.getUserContentStatus(Collections.singletonList(content.getId()),
+                new OnResponseCallback<List<ContentStatus>>() {
+                    @Override
+                    public void onSuccess(List<ContentStatus> data) {
+                        if (data.size() > 0){
+                            firstDownload = false;
+                            contentStatus = data.get(0);
+                            EventBus.getDefault().post(new ContentStatusReceivedEvent(contentStatus));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                });
+
+    }
+
+    private void getCertificateStatus(){
+
+        mDataManager.getCertificateStatus(content.getSource_identity(), new OnResponseCallback<CertificateStatusResponse>() {
+            @Override
+            public void onSuccess(CertificateStatusResponse data) {
+                setButtonText(data);
+                footerBtnVisible.set(true);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                footerBtnText.set(mActivity.getString(R.string.assessment));
+                footerBtnVisible.set(true);
             }
         });
 
@@ -824,6 +840,7 @@ public class CourseMaterialViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
+        getCertificateStatus();
     }
 
     public void fetchCourseComponent() {
@@ -954,27 +971,27 @@ public class CourseMaterialViewModel extends BaseViewModel {
                             case not_downloaded:
                                 footerDownloadIcon.set(R.drawable.t_icon_download);
                                 footerDownloadIconVisible.set(true);
-                                footerBtnText.set(mActivity.getString(R.string.assessment));
+//                                footerBtnText.set(mActivity.getString(R.string.assessment));
                                 break;
                             case downloading:
                                 footerDownloadIconVisible.set(false);
                                 footerDownloadProgressVisible.set(true);
-                                footerBtnText.set(mActivity.getString(R.string.assessment));
+//                                footerBtnText.set(mActivity.getString(R.string.assessment));
                                 break;
                             case downloaded:
                                 footerDownloadIcon.set(R.drawable.t_icon_delete);
                                 footerDownloadIconVisible.set(true);
-                                footerBtnText.set(mActivity.getString(R.string.assessment));
+//                                footerBtnText.set(mActivity.getString(R.string.assessment));
                                 break;
                             case watching:
                                 footerDownloadIcon.set(R.drawable.t_icon_delete);
                                 footerDownloadIconVisible.set(true);
-                                footerBtnText.set(mActivity.getString(R.string.assessment));
+//                                footerBtnText.set(mActivity.getString(R.string.assessment));
                                 break;
                             case watched:
                                 footerDownloadIcon.set(R.drawable.t_icon_delete);
                                 footerDownloadIconVisible.set(true);
-                                footerBtnText.set(mActivity.getString(R.string.assessment));
+//                                footerBtnText.set(mActivity.getString(R.string.assessment));
                                 break;
                         }
                     }
@@ -1041,8 +1058,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                 .placeholder(R.drawable.placeholder_course_card_image)
                                 .into(itemBinding.itemImage);
 
-                        if (unitStatusMap.containsKey(scorm.getBlockId())){
-                            switch (UnitStatusType.valueOf(unitStatusMap.get(scorm.getBlockId()).getStatus())){
+                        if (unitStatusMap.containsKey(scorm.getId())){
+                            switch (UnitStatusType.valueOf(unitStatusMap.get(scorm.getId()).getStatus())){
                                 case InProgress:
                                     itemBinding.itemStatus.setText(mActivity.getString(R.string.viewing));
                                     itemBinding.itemStatus.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -1058,7 +1075,12 @@ public class CourseMaterialViewModel extends BaseViewModel {
                                     );
                                     itemBinding.itemStatus.setVisibility(View.VISIBLE);
                                     break;
+
+                                default:
+                                    itemBinding.itemStatus.setVisibility(View.GONE);
                             }
+                        } else {
+                            itemBinding.itemStatus.setVisibility(View.GONE);
                         }
                     } else {
                         itemBinding.itemDuration.setText(mActivity.getString(

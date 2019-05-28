@@ -145,11 +145,11 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_FEEDS = "api/mx_feed/v1/feeds/";
 
-    public static final String URL_MX_SET_USER_CONTENT = "api/mx_catalog/v1/setusercontent/";
+    public static final String URL_MX_SET_USER_CONTENT = "api/mx_content_analytics/v1/setusercontent/";
 
-    public static final String URL_MX_GET_MY_CONTENT_STATUS = "api/mx_catalog/v1/getmycontentstatus/";
+    public static final String URL_MX_GET_MY_CONTENT_STATUS = "api/mx_content_analytics/v1/getmycontentstatus/";
 
-    public static final String URL_MX_GET_USER_CONTENT_STATUS = "api/mx_catalog/v1/getcontentstatus/";
+    public static final String URL_MX_GET_USER_CONTENT_STATUS = "api/mx_content_analytics/v1/getcontentstatus/";
 
     public static final String URL_MX_GET_UNIT_STATUS = "api/mx_content_analytics/v1/getunitstatus/";
 

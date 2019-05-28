@@ -126,6 +126,7 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="@{viewModel.footerBtnText}"
+                            android:visibility="@{viewModel.footerBtnVisible?View.VISIBLE:View.GONE}"
                             android:textSize="12sp"
                             android:textColor="@color/primary_cyan"
                             android:fontFamily="@font/hind_regular"/>
