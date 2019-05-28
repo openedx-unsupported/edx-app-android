@@ -171,7 +171,9 @@ dependencies {
 
     // Segment Library
     implementation 'com.segment.analytics.android:analytics:4.2.6'
-
+    // Segment's Firebase integration
+    implementation 'com.segment.analytics.android.integrations:firebase:1.2.0'
+    // Segment's GA integration
     implementation('com.segment.analytics.android.integrations:google-analytics:1.0.0') {
         exclude module: 'play-services-analytics'
         transitive = true

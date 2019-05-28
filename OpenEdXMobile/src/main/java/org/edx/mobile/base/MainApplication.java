@@ -132,10 +132,9 @@ public abstract class MainApplication extends MultiDexApplication {
         // Add Segment as an analytics provider if enabled in the config
         if (config.getSegmentConfig().isEnabled()) {
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
-        }
-
-        // Add Firebase as an analytics provider if enabled in the config
-        if (config.getFirebaseConfig().isAnalyticsEnabled()) {
+        } else if (config.getFirebaseConfig().isAnalyticsEnabled()) {
+            // Only add Firebase as an analytics provider if enabled in the config and Segment is disabled
+            // because if Segment is enabled, we'll be using Segment's implementation for Firebase
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(FirebaseAnalytics.class));
         }
 
