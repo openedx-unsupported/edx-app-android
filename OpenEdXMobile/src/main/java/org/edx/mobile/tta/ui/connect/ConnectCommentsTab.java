@@ -18,6 +18,7 @@ import org.edx.mobile.tta.wordpress_client.model.Comment;
 import org.edx.mobile.tta.wordpress_client.model.Post;
 
 import java.util.List;
+import java.util.Map;
 
 public class ConnectCommentsTab extends TaBaseFragment {
     private int RANK;
@@ -27,17 +28,18 @@ public class ConnectCommentsTab extends TaBaseFragment {
     private Content content;
     private Post post;
     private List<Comment> comments;
-    private List<Comment> replies;
+    private Map<Long, List<Comment>> repliesMap;
     private CommentClickListener commentClickListener;
     private Nav nav;
 
     public static ConnectCommentsTab newInstance(Content content, Post post, List<Comment> comments,
-                                                 List<Comment> replies, Nav nav, CommentClickListener commentClickListener){
+                                                 Map<Long, List<Comment>> repliesMap, Nav nav,
+                                                 CommentClickListener commentClickListener){
         ConnectCommentsTab tab = new ConnectCommentsTab();
         tab.content = content;
         tab.post = post;
         tab.comments = comments;
-        tab.replies = replies;
+        tab.repliesMap = repliesMap;
         tab.commentClickListener = commentClickListener;
         tab.nav = nav;
         tab.RANK = BreadcrumbUtil.getCurrentRank() + 1;
@@ -47,7 +49,8 @@ public class ConnectCommentsTab extends TaBaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ConnectCommentsTabViewModel(getActivity(), this, content, post, comments, replies, commentClickListener);
+        viewModel = new ConnectCommentsTabViewModel(getActivity(), this, content, post, comments, repliesMap, commentClickListener);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -65,9 +68,21 @@ public class ConnectCommentsTab extends TaBaseFragment {
         }
     }
 
+    public void setLoaded(){
+        if (viewModel != null){
+            viewModel.setLoaded();
+        }
+    }
+
     @Override
     public void onPageShow() {
         super.onPageShow();
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, nav.name()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unregisterEvnetBus();
     }
 }

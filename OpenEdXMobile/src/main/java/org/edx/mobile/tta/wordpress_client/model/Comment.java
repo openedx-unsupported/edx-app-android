@@ -3,6 +3,8 @@ package org.edx.mobile.tta.wordpress_client.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -434,5 +436,10 @@ public class Comment extends BaseModel {
                 ", status='" + status + '\'' +
                 ", type='" + type + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof Comment && (((Comment) obj).id == id);
     }
 }

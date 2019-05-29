@@ -29,8 +29,12 @@ import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.event.CommentRepliesReceivedEvent;
 import org.edx.mobile.tta.event.ContentBookmarkChangedEvent;
 import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
+import org.edx.mobile.tta.event.FetchCommentRepliesEvent;
+import org.edx.mobile.tta.event.LoadMoreConnectCommentsEvent;
+import org.edx.mobile.tta.event.RepliedOnCommentEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -55,7 +59,9 @@ import org.edx.mobile.view.common.PageViewStateCallback;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -65,6 +71,9 @@ public class ConnectDashboardViewModel extends BaseViewModel
     private static final int ACTION_DOWNLOAD = 1;
     private static final int ACTION_DELETE = 2;
     private static final int ACTION_PLAY = 3;
+
+    private static final int DEFAULT_TAKE = 10;
+    private static final int DEFAULT_PAGE = 1;
 
     public ConnectPagerAdapter adapter;
     private List<Fragment> fragments;
@@ -77,7 +86,7 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public Content content;
     private Post post;
     private List<Comment> comments;
-    private List<Comment> replies;
+    private Map<Long, List<Comment>> repliesMap;
     public ObservableField<String> comment = new ObservableField<>("");
     public ObservableBoolean commentFocus = new ObservableBoolean();
     public ObservableField<String> replyingToText = new ObservableField<>();
@@ -101,6 +110,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ObservableField<String> likes = new ObservableField<>("0");
 
     public ObservableInt initialPosition = new ObservableInt();
+
+    private int take, page;
 
     public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -126,9 +137,13 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ConnectDashboardViewModel(BaseVMActivity activity, Content content) {
         super(activity);
         this.content = content;
+        comments = new ArrayList<>();
+        repliesMap = new HashMap<>();
         adapter = new ConnectPagerAdapter(mActivity.getSupportFragmentManager());
         fragments = new ArrayList<>();
         titles = new ArrayList<>();
+        take = DEFAULT_TAKE;
+        page = DEFAULT_PAGE;
 
         firstDownload = true;
         mDataManager.getUserContentStatus(Collections.singletonList(content.getId()),
@@ -147,6 +162,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
                     }
                 });
+
+        setTabs();
     }
 
     @Override
@@ -307,43 +324,78 @@ public class ConnectDashboardViewModel extends BaseViewModel
     }
 
     private void fetchComments() {
-        mDataManager.getCommentsByPost(post.getId(), new OnResponseCallback<List<Comment>>() {
+        mDataManager.getCommentsByPost(post.getId(), take, page, new OnResponseCallback<List<Comment>>() {
             @Override
             public void onSuccess(List<Comment> data) {
                 mActivity.hideLoading();
-                comments = new ArrayList<>();
-                replies = new ArrayList<>();
-                for (Comment comment: data){
-                    if (comment.getParent() == 0){
-                        comments.add(comment);
-                    } else {
-                        replies.add(comment);
-                    }
+                if (data.size() < take){
+                    setLoaded();
                 }
-                setTabs();
+                populateComments(data);
             }
 
             @Override
             public void onFailure(Exception e) {
                 mActivity.hideLoading();
-                mActivity.showLongSnack(e.getLocalizedMessage());
+                setLoaded();
             }
         });
     }
 
-    private void setTabs() {
-        fragments.clear();
-        titles.clear();
+    private void fetchReplies(Comment comment){
 
-        tab1 = ConnectCommentsTab.newInstance(content, post, comments, replies, Nav.all, this);
+        mDataManager.getRepliesOnComment(post.getId(), comment.getId(), new OnResponseCallback<List<Comment>>() {
+            @Override
+            public void onSuccess(List<Comment> data) {
+                if (!data.isEmpty()) {
+                    if (!repliesMap.containsKey(comment.getId())){
+                        repliesMap.put(comment.getId(), new ArrayList<>());
+                    }
+
+                    List<Comment> replies = repliesMap.get(comment.getId());
+                    for (Comment reply: data){
+                        if (!replies.contains(reply)){
+                            replies.add(reply);
+                        }
+                    }
+                }
+
+                EventBus.getDefault().post(new CommentRepliesReceivedEvent(comment));
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                EventBus.getDefault().post(new CommentRepliesReceivedEvent(comment));
+            }
+        });
+
+    }
+
+    private void populateComments(List<Comment> data) {
+        boolean newItemsAdded = false;
+        for (Comment comment: data){
+            if (!comments.contains(comment)) {
+                comments.add(comment);
+                newItemsAdded = true;
+            }
+        }
+
+        if (newItemsAdded) {
+            refreshComments();
+        }
+    }
+
+    private void setTabs() {
+
+        tab1 = ConnectCommentsTab.newInstance(content, post, comments, repliesMap, Nav.all, this);
         fragments.add(tab1);
         titles.add(mActivity.getString(R.string.all_list));
 
-        tab2 = ConnectCommentsTab.newInstance(content, post, comments, replies, Nav.recently_added, this);
+        tab2 = ConnectCommentsTab.newInstance(content, post, comments, repliesMap, Nav.recently_added, this);
         fragments.add(tab2);
         titles.add(mActivity.getString(R.string.recently_added_list));
 
-        tab3 = ConnectCommentsTab.newInstance(content, post, comments, replies, Nav.most_relevant, this);
+        tab3 = ConnectCommentsTab.newInstance(content, post, comments, repliesMap, Nav.most_relevant, this);
         fragments.add(tab3);
         titles.add(mActivity.getString(R.string.most_relevant_list));
 
@@ -549,13 +601,17 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
                         } else {
                             mActivity.showLongSnack("Replied successfully");
-                            replies.add(0, data);
                             replyingToVisible.set(false);
                             commentParentId = 0;
 
                             mActivity.analytic.addMxAnalytics_db(
                                     content.getName() , Action.ReplyComment, content.getSource().getName(),
                                     Source.Mobile, String.valueOf(selectedComment.getId()));
+
+                            if (repliesMap.containsKey(selectedComment.getId())){
+                                repliesMap.get(selectedComment.getId()).add(0, data);
+                                EventBus.getDefault().post(new RepliedOnCommentEvent(selectedComment));
+                            }
 
                         }
                         ConnectDashboardViewModel.this.comment.set("");
@@ -677,6 +733,29 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
                 });
 
+    }
+
+    private void setLoaded(){
+        tab1.setLoaded();
+        tab2.setLoaded();
+        tab3.setLoaded();
+    }
+
+    private void refreshComments() {
+        tab1.refreshList();
+        tab2.refreshList();
+        tab3.refreshList();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(LoadMoreConnectCommentsEvent event){
+        page++;
+        fetchComments();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(FetchCommentRepliesEvent event){
+        fetchReplies(event.getComment());
     }
 
     @SuppressWarnings("unused")

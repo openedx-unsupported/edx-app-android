@@ -450,6 +450,15 @@ public interface WordPressRestInterface {
     @GET("wp-json/wp/v2/comments")
     Call<List<Comment>> getCommentsByPost(@Query("post") long postId);
 
+    @GET("wp-json/wp/v2/comments" + "?parent=0")
+    Call<List<Comment>> getCommentsByPost(@Query("post") long postId,
+                                          @Query("per_page") int take,
+                                          @Query("page") int page);
+
+    @GET("wp-json/wp/v2/comments" + "?per_page=100")
+    Call<List<Comment>> getRepliesOnComment(@Query("post") long postId,
+                                            @Query("parent") long commentId);
+
     @GET("wp-json/wp/v2/comments/{id}")
     Call<Comment> getComment(@Path("id") long id);
 

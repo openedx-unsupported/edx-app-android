@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="180dp"
-        app:cardElevation="0dp"
-        app:cardCornerRadius="4dp"
-        android:background="@color/app_background"
-        android:layout_marginTop="@dimen/_18px"
-        android:layout_marginBottom="@dimen/_8px"
         android:layout_marginStart="@dimen/_20px"
-        android:layout_marginEnd="@dimen/_20px">
+        android:layout_marginTop="@dimen/_18px"
+        android:layout_marginEnd="@dimen/_20px"
+        android:layout_marginBottom="@dimen/_8px"
+        android:background="@color/app_background"
+        android:minHeight="180dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/t_background_connect_comment"
             android:minHeight="180dp"
             android:paddingStart="@dimen/_14px"
-            android:paddingEnd="@dimen/_14px"
-            android:background="@drawable/t_background_connect_comment">
+            android:paddingEnd="@dimen/_14px">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/user_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:id="@+id/user_image"
-                app:cardElevation="0dp"
-                app:cardCornerRadius="4dp"
                 android:layout_marginTop="@dimen/_16px"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:cardCornerRadius="4dp"
+                app:cardElevation="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/rounded_user_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/rounded_user_image"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY" />
 
             </android.support.v7.widget.CardView>
 
@@ -53,43 +52,43 @@
                 app:layout_constraintTop_toTopOf="@id/user_image" />
 
             <TextView
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/date"
                 android:layout_marginStart="@dimen/_8px"
                 android:layout_marginTop="@dimen/_6px"
-                app:layout_constraintTop_toBottomOf="@id/user_name"
-                app:layout_constraintBottom_toBottomOf="@id/user_image"
-                app:layout_constraintStart_toEndOf="@id/user_image"
+                android:fontFamily="@font/hind_regular"
                 android:textColor="@color/gray_4"
                 android:textSize="8sp"
-                android:fontFamily="@font/hind_regular"/>
+                app:layout_constraintBottom_toBottomOf="@id/user_image"
+                app:layout_constraintStart_toEndOf="@id/user_image"
+                app:layout_constraintTop_toBottomOf="@id/user_name" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
                 android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16px"
                 android:layout_marginBottom="@dimen/_16px"
-                app:layout_constraintTop_toBottomOf="@id/user_image"
-                app:layout_constraintBottom_toTopOf="@id/divider"
+                android:fontFamily="@font/hind_light"
+                android:minHeight="70dp"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
-                android:fontFamily="@font/hind_light"/>
+                app:layout_constraintTop_toBottomOf="@id/user_image" />
 
             <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:id="@+id/divider"
                 android:background="@color/gray_1"
-                app:layout_constraintBottom_toTopOf="@id/comment_bottom_layout"/>
+                app:layout_constraintTop_toBottomOf="@id/comment" />
 
             <LinearLayout
+                android:id="@+id/like_comment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/comment_bottom_layout"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/divider">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -102,10 +101,10 @@
                         android:id="@+id/comment_like_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
+                        android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="?attr/selectableItemBackground"
+                        android:orientation="horizontal"
                         android:padding="8dp">
 
                         <TextView
@@ -116,7 +115,7 @@
                             android:fontFamily="@font/hind_medium"
                             android:textColor="@color/gray_3"
                             android:textSize="12sp"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/comment_like_image"
@@ -126,7 +125,7 @@
                             android:layout_marginStart="3dp"
                             android:contentDescription="@string/like"
                             android:paddingBottom="4dp"
-                            android:src="@drawable/t_icon_like" />
+                            app:srcCompat="@drawable/t_icon_like" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -153,10 +152,10 @@
                         android:id="@+id/comment_reply_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
+                        android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="?attr/selectableItemBackground"
+                        android:orientation="horizontal"
                         android:padding="8dp">
 
                         <TextView
@@ -167,7 +166,7 @@
                             android:fontFamily="@font/hind_medium"
                             android:textColor="@color/gray_3"
                             android:textSize="12sp"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/comment_reply_image"
@@ -177,7 +176,7 @@
                             android:layout_marginStart="3dp"
                             android:contentDescription="@string/like"
                             android:paddingBottom="4dp"
-                            android:src="@drawable/t_icon_reply" />
+                            app:srcCompat="@drawable/t_icon_reply" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -192,6 +191,61 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bottom_replies_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/like_comment_layout">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/_16px"
+                    android:layout_marginEnd="@dimen/_16px"
+                    android:background="@color/gray_1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/view_replies_text"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/_20px"
+                    android:paddingBottom="@dimen/_20px"
+                    android:text="@string/view_previous_replies"
+                    android:textColor="@color/gray_1" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/replies_frame">
+
+                    <org.edx.mobile.tta.ui.custom.NonScrollRecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/replies_list"
+                        android:layout_marginBottom="@dimen/_20px"
+                        android:layout_marginStart="@dimen/_56px"
+                        android:layout_marginEnd="@dimen/_16px"
+                        android:divider="@color/transparent"
+                        android:scrollbars="none" />
+
+                    <org.edx.mobile.view.custom.IconProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/replies_progressbar"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"/>
+
+                </FrameLayout>
 
             </LinearLayout>
 

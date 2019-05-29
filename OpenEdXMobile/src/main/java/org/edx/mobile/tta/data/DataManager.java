@@ -1499,11 +1499,36 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getCommentsByPost(long postId, OnResponseCallback<List<Comment>> callback){
+    public void getCommentsByPost(long postId, int take, int page, OnResponseCallback<List<Comment>> callback){
 
         if (NetworkUtil.isConnected(context)){
 
-            wpClientRetrofit.getCommentsByPost(postId, new WordPressRestResponse<List<Comment>>() {
+            wpClientRetrofit.getCommentsByPost(postId, take, page, new WordPressRestResponse<List<Comment>>() {
+                @Override
+                public void onSuccess(List<Comment> result) {
+                    if (result == null){
+                        result = new ArrayList<>();
+                    }
+                    callback.onSuccess(result);
+                }
+
+                @Override
+                public void onFailure(HttpServerErrorResponse errorResponse) {
+                    callback.onFailure(new TaException(errorResponse.getMessage()));
+                }
+            });
+
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void getRepliesOnComment(long postId, long commentId, OnResponseCallback<List<Comment>> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            wpClientRetrofit.getRepliesOnComment(postId, commentId, new WordPressRestResponse<List<Comment>>() {
                 @Override
                 public void onSuccess(List<Comment> result) {
                     if (result == null){
