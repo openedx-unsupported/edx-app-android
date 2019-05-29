@@ -244,13 +244,17 @@ public class AgendaItemViewModel extends BaseViewModel {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ContentBookmarkChangedEvent event){
-        if (!event.isBookmarked()){
-            contents.remove(event.getContent());
-        } else if (!contents.contains(event.getContent())){
-            contents.add(event.getContent());
+        if (toolBarData.equalsIgnoreCase(mActivity.getString(R.string.my_agenda)) &&
+                agendaItem.getSource_id() == event.getContent().getSource().getId()
+        ) {
+            if (!event.isBookmarked()){
+                contents.remove(event.getContent());
+            } else if (!contents.contains(event.getContent())){
+                contents.add(event.getContent());
+            }
+            adapter.notifyDataSetChanged();
+            toggleEmptyVisibility();
         }
-        adapter.notifyDataSetChanged();
-        toggleEmptyVisibility();
     }
 
     public void registerEventBus(){
