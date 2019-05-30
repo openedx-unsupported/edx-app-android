@@ -72,7 +72,7 @@ public class MyCertificatesViewModel extends BaseViewModel {
                 TRowCertificateBinding certificateBinding = (TRowCertificateBinding) binding;
                 certificateBinding.contentTitle.setText(model.getCourse_name());
                 Glide.with(getContext())
-                        .load(model.getImage())
+                        .load(mDataManager.getConfig().getApiHostURL() + model.getImage())
                         .placeholder(R.drawable.placeholder_course_card_image)
                         .into(certificateBinding.contentImage);
 
