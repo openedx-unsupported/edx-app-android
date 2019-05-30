@@ -23,7 +23,7 @@
         android:layout_marginRight="@dimen/edx_quadruple_margin"
         android:gravity="center"
         android:singleLine="false"
-        tools:text="@string/assessment_needed_updating_youtube"
+        tools:text="@string/assessment_only_on_youtube"
         android:textAlignment="center"
         android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_base"
@@ -43,7 +43,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/edx_margin"
-        android:text="@string/assessment_update_youtube" />
+        android:text="@string/assessment_update_youtube"
+        android:visibility="gone"/>
 
 </LinearLayout>
 

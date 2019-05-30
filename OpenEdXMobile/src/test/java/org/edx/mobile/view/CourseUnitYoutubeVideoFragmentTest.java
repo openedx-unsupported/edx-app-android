@@ -19,7 +19,9 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
 
+import org.edx.mobile.util.VideoUtil;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.io.IOException;
@@ -32,10 +34,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+
 public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
 
 
     private static final String YOUTUBE_VIDEO = "YOUTUBE_VIDEO"; // Config key for YOUTUBE
+
+    @Mock
+    VideoUtil videoUtil;
 
     private VideoBlockModel getVideoUnit() {
         EnrolledCoursesResponse courseData;
@@ -91,10 +97,12 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
     }
 
     @Test
-    public void onPageShowTest() {
+    public void addOrRemoveYoutubePlayerFragmentTest() {
         CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
-        fragment.setUserVisibleHint(true);
+
+        fragment.addOrRemoveYoutubePlayerFragment(true);
+
 
         Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
         assertNotNull(playerContainer);
@@ -102,11 +110,11 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
     }
 
     @Test
-    public void onPageDisappearTest() {
+    public void onDestroyTest() {
         CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
 
-        fragment.setUserVisibleHint(false);
+        fragment.onDestroy();
 
         Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
         assertNotNull(playerContainer);

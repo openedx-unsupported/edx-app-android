@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.util.AppConstants;
 
 public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
 
@@ -31,25 +32,25 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
+        final View courseUnitOnlyOnYoutube = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
         if (environment.getConfig().getEmbeddedYoutubeConfig().isYoutubeEnabled()) {
-            ((TextView) v.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
-            v.findViewById(R.id.update_youtube_button).setOnClickListener(new View.OnClickListener() {
+            ((TextView) courseUnitOnlyOnYoutube.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
+            courseUnitOnlyOnYoutube.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
+            courseUnitOnlyOnYoutube.findViewById(R.id.update_youtube_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
-                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.youtube"));
-                        startActivity(i);
+                        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.APP_PLAYSTORE_YOUTUBE_URI));
+                        startActivity(intent);
                     } catch (android.content.ActivityNotFoundException e) {
-                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.youtube"));
-                        startActivity(i);
+                        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI));
+                        startActivity(intent);
                     }
                 }
             });
-        } else {
-            ((TextView) v.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_only_on_youtube);
         }
-        v.findViewById(R.id.view_on_youtube_button).setOnClickListener(new View.OnClickListener() {
+
+        courseUnitOnlyOnYoutube.findViewById(R.id.view_on_youtube_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
@@ -57,6 +58,6 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
                 startActivity(i);
             }
         });
-        return v;
+        return courseUnitOnlyOnYoutube;
     }
 }

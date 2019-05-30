@@ -50,16 +50,9 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
      * Create a new instance of fragment
      */
     public static CourseUnitAndroidVideoPlayerFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
-        CourseUnitAndroidVideoPlayerFragment f = new CourseUnitAndroidVideoPlayerFragment();
-
-        // Supply num input as an argument.
-        Bundle args = new Bundle();
-        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
-        args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
-        args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
-        f.setArguments(args);
-
-        return f;
+        CourseUnitAndroidVideoPlayerFragment fragment = new CourseUnitAndroidVideoPlayerFragment();
+        fragment.setArguments(getCourseUnitBundle(unit, hasNextUnit, hasPreviousUnit));
+        return fragment;
     }
 
     @Override
@@ -68,7 +61,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
 
         Intent extraIntent = getActivity().getIntent();
         if(extraIntent!=null){
-            if (extraIntent.hasExtra("FromMyVideos")) {
+            if (extraIntent.hasExtra(Router.EXTRA_FROM_MY_VIDEOS)) {
                 myVideosFlag = extraIntent.getBooleanExtra(
                     "FromMyVideos", false);
             }

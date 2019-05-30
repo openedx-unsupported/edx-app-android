@@ -333,7 +333,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData, videoBlockModel);
             } else if (videoBlockModel.getData().encodedVideos.youtube != null && config.getEmbeddedYoutubeConfig().isYoutubeEnabled()) {
-                viewHolder.bulkDownload.setVisibility(View.VISIBLE);
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_youtube_play);
                 viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
             }

@@ -1,9 +1,6 @@
 package org.edx.mobile.view.adapters;
 
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -25,6 +22,7 @@ import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment;
 import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment;
 import org.edx.mobile.view.CourseUnitYoutubeVideoFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
+import org.edx.mobile.util.VideoUtil;
 
 import java.util.List;
 
@@ -79,16 +77,16 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         }
 
         CourseUnitFragment unitFragment;
-        boolean youtubeVideo = (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null);
+        final boolean isYoutubeVideo = (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null);
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
             unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
         }
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
         else if (isCourseUnitVideo(minifiedUnit)) {
             unitFragment = CourseUnitAndroidVideoPlayerFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
-        } else if (youtubeVideo && config.getEmbeddedYoutubeConfig().isYoutubeEnabled() && isYoutubeSupported()) {
+        } else if (isYoutubeVideo && config.getEmbeddedYoutubeConfig().isYoutubeEnabled() && VideoUtil.isAPIYoutubeSupported(((CourseBaseActivity) callback).getApplicationContext())) {
             unitFragment = CourseUnitYoutubeVideoFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
-        } else if (youtubeVideo) {
+        } else if (isYoutubeVideo) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);
         } else if (config.isDiscussionsEnabled() && minifiedUnit instanceof DiscussionBlockModel) {
             unitFragment = CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData);
@@ -118,16 +116,4 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         return unitList.size();
     }
 
-    private boolean isYoutubeSupported(){
-        Context context = ((CourseBaseActivity) callback).getApplicationContext();
-        try {
-            PackageInfo pinfo = context.getPackageManager().getPackageInfo("com.google.android.youtube", 0);
-            float targetVersion = 12;
-            String [] v = pinfo.versionName.split("\\.");
-            float currentVersion = Float.parseFloat(v[0]);
-            return Float.compare(currentVersion, targetVersion) >= 0;
-        } catch (PackageManager.NameNotFoundException e){
-            return false;
-        }
-    }
 }

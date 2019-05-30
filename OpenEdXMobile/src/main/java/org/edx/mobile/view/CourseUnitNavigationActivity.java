@@ -69,14 +69,18 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
                 environment.getConfig(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             private boolean firstTime = true;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                /**
+                * The method setUserVisibleHint is not called the first time the viewpager loads
+                * so it's necessary to call it literally  in order to run the logic inside it
+                */
                 if (firstTime) {
                     firstTime = false;
-                    CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.instantiateItem(pager, position);
+                    final CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.instantiateItem(pager, position);
                     if (initialPage != null) {
                         initialPage.setUserVisibleHint(true);
                     }

@@ -3,13 +3,11 @@ package org.edx.mobile.view;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
@@ -325,4 +323,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             isTranscriptScrolling = false;
         }
     };
+
+    public static Bundle getCourseUnitBundle(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit){
+        Bundle args = new Bundle();
+        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
+        args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
+        return args;
+    }
 }
