@@ -131,10 +131,10 @@ public class UserInfoActivity extends BaseVMActivity {
             }
             Bundle parameters = new Bundle();
             parameters.putString("name", etFirstName.getText().trim());
-            parameters.putString("state", mViewModel.currentState);
+            parameters.putString("state", stateSpinner.getSelectedOption().getValue());
             parameters.putString("district", mViewModel.currentDistrict);
             parameters.putString("block", blockSpinner.getSelectedOption().getName());
-            parameters.putString("title", professionSpinner.getSelectedOption().getName());
+            parameters.putString("title", professionSpinner.getSelectedOption().getValue());
             parameters.putString("gender", genderSpinner.getSelectedOption().getName());
             if (classTaughtSpinner.getSelectedOptions() != null) {
                 StringBuilder builder = new StringBuilder();

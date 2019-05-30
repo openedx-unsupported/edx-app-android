@@ -39,12 +39,12 @@ public class UserInfoViewModel extends BaseViewModel {
 
     public UserInfoViewModel(BaseVMActivity activity) {
         super(activity);
+
+        blocks = new ArrayList<>();
+        classesTaught = new ArrayList<>();
     }
 
     public void getBlocks(OnResponseCallback<List<RegistrationOption>> callback){
-        if (blocks == null){
-            blocks = new ArrayList<>();
-        }
         Bundle parameters = new Bundle();
 
         parameters.putString("state",currentState);
@@ -54,9 +54,6 @@ public class UserInfoViewModel extends BaseViewModel {
     }
 
     public void getClasses(OnResponseCallback<List<RegistrationOption>> callback){
-        if (classesTaught == null){
-            classesTaught = new ArrayList<>();
-        }
 
         mDataManager.getSearchFilter(new OnResponseCallback<SearchFilter>() {
             @Override

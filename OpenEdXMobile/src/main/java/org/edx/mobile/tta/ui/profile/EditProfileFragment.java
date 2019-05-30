@@ -228,8 +228,11 @@ public class EditProfileFragment extends TaBaseFragment {
 
         classTaughtSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा",
                 viewModel.classesTaught, null);
+        classTaughtSpinner.setMandatory(true);
+
         skillsSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Skills/कौशल",
                 viewModel.skills, null);
+        skillsSpinner.setMandatory(true);
 
         etPmis = ViewUtil.addFormEditText(userInfoLayout, "PMIS Code/पी इम आइ इस कोड");
         if (profileModel.pmis_code != null) {
@@ -342,6 +345,10 @@ public class EditProfileFragment extends TaBaseFragment {
         if (!classTaughtSpinner.validate()){
             valid = false;
             classTaughtSpinner.setError("Required");
+        }
+        if (!skillsSpinner.validate()){
+            valid = false;
+            skillsSpinner.setError("Required");
         }
         if (!etPmis.validate()){
             valid = false;
