@@ -76,10 +76,6 @@
   <!--Error during log in.-->
   <string name="login_failed">Por favor, asegúrese de que su nombre de usuario o dirección de correo electrónico y la contraseña son correctos e inténtelo de nuevo.</string>
   <!--License Agreement related string on Login and Regiser screens-->
-  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">Al crear una cuenta, usted acepta la {license} y {tos_and_honor_code} y reconoce la {privacy_policy}</string>
-  <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">Al registrarse, usted acepta la {license} y {tos_and_honor_code} y reconoce la {privacy_policy}</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">{platform_name} Acuerdo de Licencia de Usuario Final</string>
   <!--Label for Terms of Service and Honor Code-->

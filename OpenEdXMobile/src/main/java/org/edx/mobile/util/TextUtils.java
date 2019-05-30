@@ -94,6 +94,7 @@ public class TextUtils {
         final Map<String, CharSequence> keyValMap = new HashMap<>();
         keyValMap.put("license", agreementSpan);
         keyValMap.put("tos_and_honor_code", termsSpan);
+        keyValMap.put("platform_name", platformName);
         keyValMap.put("privacy_policy", privacyPolicySpan);
 
         return ResourceUtil.getFormattedString(resources, licenseTextId, keyValMap);
