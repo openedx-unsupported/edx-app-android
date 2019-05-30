@@ -459,6 +459,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
 
+        <activity
+            android:name=".tta.ui.profile.OtherProfileActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
+
         <!-- TTA activities end -->
 
         <!-- Setup Google -->
