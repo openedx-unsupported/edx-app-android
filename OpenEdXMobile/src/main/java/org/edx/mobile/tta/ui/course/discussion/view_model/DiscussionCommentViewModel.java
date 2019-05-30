@@ -227,7 +227,7 @@ public class DiscussionCommentViewModel extends BaseViewModel {
         }
 
         mActivity.showLoading();
-        mDataManager.createDiscussionComment(thread.getIdentifier(), reply, comment.getIdentifier(),
+        mDataManager.createDiscussionComment(thread.getIdentifier(), reply.trim(), comment.getIdentifier(),
                 new OnResponseCallback<DiscussionComment>() {
                     @Override
                     public void onSuccess(DiscussionComment data) {
@@ -235,6 +235,7 @@ public class DiscussionCommentViewModel extends BaseViewModel {
                         adapter.add(0, data);
                         comment.incrementChildCount();
                         commentsCount.set(String.valueOf(comment.getChildCount()));
+                        DiscussionCommentViewModel.this.reply.set("");
                     }
 
                     @Override

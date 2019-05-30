@@ -245,6 +245,7 @@ public class DiscussionThreadViewModel extends BaseViewModel
     public void resetReplyToComment(){
         replyingToVisible.set(false);
         commentParentId = null;
+        comment.set("");
     }
 
     public void addReplyToComment(){
@@ -255,7 +256,7 @@ public class DiscussionThreadViewModel extends BaseViewModel
         }
 
         mActivity.showLoading();
-        mDataManager.createDiscussionComment(thread.getIdentifier(), comment, commentParentId,
+        mDataManager.createDiscussionComment(thread.getIdentifier(), comment.trim(), commentParentId,
                 new OnResponseCallback<DiscussionComment>() {
                     @Override
                     public void onSuccess(DiscussionComment data) {
