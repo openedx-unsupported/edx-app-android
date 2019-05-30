@@ -84,14 +84,14 @@
                 <TextView
                     android:id="@+id/reply_comment"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="60dp"
                     android:text="@{viewModel.rawBody}"
                     android:layout_marginTop="@dimen/_16px"
                     android:layout_marginBottom="@dimen/_16px"
                     android:fontFamily="@font/hind_light"
                     android:textColor="@color/gray_5"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toTopOf="@id/reply_divider"
                     app:layout_constraintTop_toBottomOf="@id/reply_user_image" />
 
                 <View
@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/gray_1"
-                    app:layout_constraintBottom_toTopOf="@id/reply_comment_like_layout" />
+                    app:layout_constraintTop_toBottomOf="@id/reply_comment" />
 
                 <LinearLayout
                     android:id="@+id/reply_comment_like_layout"
@@ -110,7 +110,7 @@
                     android:focusable="true"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/reply_divider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 

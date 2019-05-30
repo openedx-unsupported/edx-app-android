@@ -83,14 +83,14 @@
                 <TextView
                     android:id="@+id/comment"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="70dp"
                     android:layout_marginTop="@dimen/_16px"
                     android:layout_marginBottom="@dimen/_16px"
                     android:fontFamily="@font/hind_light"
                     android:text="@{viewModel.rawBody}"
                     android:textColor="@color/gray_5"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toTopOf="@id/divider"
                     app:layout_constraintTop_toBottomOf="@id/user_image" />
 
                 <View
@@ -98,14 +98,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/gray_1"
-                    app:layout_constraintBottom_toTopOf="@id/comment_bottom_layout" />
+                    app:layout_constraintTop_toBottomOf="@id/comment" />
 
                 <LinearLayout
                     android:id="@+id/comment_bottom_layout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/divider">
 
                     <LinearLayout
                         android:layout_width="0dp"
