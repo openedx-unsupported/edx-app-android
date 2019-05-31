@@ -8,9 +8,11 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.segment.analytics.Analytics.Builder;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+import com.segment.analytics.android.integrations.firebase.FirebaseIntegration;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -40,18 +42,22 @@ public class SegmentAnalytics implements Analytics {
         final int flushInterval = context.getResources().getInteger(R.integer.analytics_flush_interval);
 
         // Must be called before any calls to Analytics.with(context)
-        tracker = new com.segment.analytics.Analytics.Builder(context, writeKey)
+        Builder builder = new Builder(context, writeKey)
                 .flushQueueSize(queueSize)
                 .flushInterval(flushInterval, TimeUnit.SECONDS)
-                .logLevel(debugging ? com.segment.analytics.Analytics.LogLevel.VERBOSE : com.segment.analytics.Analytics.LogLevel.NONE)
-                .build();
+                .logLevel(debugging ? com.segment.analytics.Analytics.LogLevel.VERBOSE : com.segment.analytics.Analytics.LogLevel.NONE);
+        if (config.getFirebaseConfig().isAnalyticsEnabled()) {
+            // If Segment & Firebase Analytics are enabled, we'll use Segment's Firebase integration
+            builder = builder.use(FirebaseIntegration.FACTORY);
+        }
+        tracker = builder.build();
     }
 
     /**
      * This function is used to send the event to Segment and log the output.
      *
-     * @param eventName     The name of the event.
-     * @param eventProperties   The Properties of the event.
+     * @param eventName       The name of the event.
+     * @param eventProperties The Properties of the event.
      */
     private void trackSegmentEvent(@NonNull String eventName, @NonNull Properties eventProperties) {
         String csv = "Track," + eventName;
@@ -576,7 +582,7 @@ public class SegmentAnalytics implements Analytics {
     @Override
     public void trackOpenInBrowser(String blockId, String courseId, boolean isSupported,
                                    String minifiedBlockId) {
-        SegmentEvent aEvent = new SegmentEvent ();
+        SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.OPEN_IN_BROWSER);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
@@ -591,7 +597,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackProfileViewed(@NonNull String username) {
-        final SegmentEvent aEvent = new SegmentEvent ();
+        final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.PROFILE_VIEWED);
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.PROFILE, username);
@@ -600,7 +606,7 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackProfilePhotoSet(boolean fromCamera) {
-        final SegmentEvent aEvent = new SegmentEvent ();
+        final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.PROFILE_PHOTO_SET);
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.PROFILE, fromCamera ? Values.CAMERA : Values.LIBRARY);
