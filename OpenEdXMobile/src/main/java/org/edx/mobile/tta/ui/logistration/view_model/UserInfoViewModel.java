@@ -35,7 +35,7 @@ public class UserInfoViewModel extends BaseViewModel {
     public List<RegistrationOption> skills;
     public List<RegistrationOption> dietCodes;
 
-    public String currentState, currentDistrict;
+    public String currentState, currentDistrict, currentProfession;
     public String classesSectionName, skillSectionName;
 
     public UserInfoViewModel(BaseVMActivity activity) {

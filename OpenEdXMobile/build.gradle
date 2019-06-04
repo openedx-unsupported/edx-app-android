@@ -293,7 +293,7 @@ def config = new TaskHelper().loadConfig(project)
 def firebase = config.get('FIREBASE')
 def firebaseEnabled = firebase?.get('ENABLED')
 if (firebaseEnabled?: false) {
-    apply plugin: 'com.google.gms.google-services'
+//    apply plugin: 'com.google.gms.google-services'
 }
 
 android {
@@ -559,3 +559,5 @@ android.applicationVariants.all { variant ->
         }
     }
 }
+
+apply plugin: 'com.google.gms.google-services'

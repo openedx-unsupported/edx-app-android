@@ -15,8 +15,8 @@ import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
+import org.edx.mobile.tta.data.enums.SurveyType;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
-import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -95,7 +95,8 @@ public class SigninViewModel extends BaseViewModel {
             @Override
             public void onSuccess(AuthResponse data) {
                 mActivity.hideLoading();
-                mDataManager.setCustomFieldAttributes(null);
+                performBackgroundTasks();
+
                 if (data.profile.name == null || data.profile.name.equals("") ||
                         data.profile.name.equals(data.profile.username)) {
                     ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -138,6 +139,13 @@ public class SigninViewModel extends BaseViewModel {
                 }
             }
         }.execute();*/
+    }
+
+    private void performBackgroundTasks(){
+        mDataManager.setCustomFieldAttributes(null);
+        mDataManager.setConnectCookies();
+        mDataManager.checkSurvey(mActivity, SurveyType.Login);
+        mDataManager.updateFirebaseToken();
     }
 
     public void changePassword(){

@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.data;
 
+import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.graphics.Rect;
@@ -45,6 +46,7 @@ import org.edx.mobile.tta.data.enums.FeedAction;
 import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.data.enums.SourceType;
+import org.edx.mobile.tta.data.enums.SurveyType;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.data.local.db.LocalDataSource;
 import org.edx.mobile.tta.data.local.db.TADatabase;
@@ -86,7 +88,10 @@ import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
+import org.edx.mobile.tta.data.remote.api.MxCookiesAPI;
+import org.edx.mobile.tta.data.remote.api.MxSurveyAPI;
 import org.edx.mobile.tta.exception.TaException;
+import org.edx.mobile.tta.firebase.FirebaseHelper;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.scorm.ScormStartResponse;
@@ -3384,6 +3389,28 @@ public class DataManager extends BaseRoboInjector {
             }
         }
 
+    }
+
+    public void getCustomFieldAttributes(OnResponseCallback<FieldInfo> callback){
+        FieldInfo fieldInfo = loginPrefs.getMxGenericFieldInfo();
+        if (fieldInfo != null){
+            callback.onSuccess(fieldInfo);
+        } else {
+            setCustomFieldAttributes(callback);
+        }
+    }
+
+    public void setConnectCookies(){
+        new MxCookiesAPI().execute();
+    }
+
+    public void checkSurvey(Activity activity, SurveyType surveyType){
+        new MxSurveyAPI(context, activity, surveyType).execute();
+    }
+
+    public void updateFirebaseToken(){
+//        FirebaseHelper fireBaseHelper=new FirebaseHelper();
+//        fireBaseHelper.updateFirebasetokenToServer(context,fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
     }
 
 }

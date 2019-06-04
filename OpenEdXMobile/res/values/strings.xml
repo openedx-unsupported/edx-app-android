@@ -924,6 +924,8 @@
     <string name="connect_video_post_downloading_msg">Video is downloading, please wait.</string>
     <string name="empty_feed_message">No feeds available at the moment</string>
 
+    <string name="com.crashlytics.android.build_id" translatable="false">RANDOM_UUID</string>
+
     <!-- TTA strings end -->
 
 </resources>

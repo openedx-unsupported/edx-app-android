@@ -51,7 +51,7 @@ public class EditProfileViewModel extends BaseViewModel  {
     public List<RegistrationOption> skills;
     public List<RegistrationOption> dietCodes;
 
-    public String currentState, currentDistrict;
+    public String currentState, currentDistrict, currentProfession;
     public String classesSectionName, skillSectionName;
 
     public EditProfileViewModel(Context context, TaBaseFragment fragment,
@@ -64,9 +64,14 @@ public class EditProfileViewModel extends BaseViewModel  {
         this.account = account;
         this.searchFilter = searchFilter;
 
+        states = new ArrayList<>();
+        districts = new ArrayList<>();
         blocks = new ArrayList<>();
+        professions = new ArrayList<>();
+        genders = new ArrayList<>();
         classesTaught = new ArrayList<>();
         skills = new ArrayList<>();
+        dietCodes = new ArrayList<>();
 
         if (profileImage == null || profileImage.getImageUrlLarge() == null){
             imageAddVisible.set(true);
@@ -197,12 +202,12 @@ public class EditProfileViewModel extends BaseViewModel  {
     }
 
     public void getData() {
-        states = DataUtil.getAllStates();
+        states.addAll(DataUtil.getAllStates());
         currentState = states.get(0).getName();
-        districts = DataUtil.getDistrictsByStateName(states.get(0).getName());
+        districts.addAll(DataUtil.getDistrictsByStateName(states.get(0).getName()));
         currentDistrict = districts.get(0).getName();
-        professions = DataUtil.getAllProfessions();
-        genders = DataUtil.getAllGenders();
-        dietCodes = DataUtil.getAllDietCodesOfState(currentState);
+        professions.addAll(DataUtil.getAllProfessions());
+        genders.addAll(DataUtil.getAllGenders());
+        dietCodes.addAll(DataUtil.getAllDietCodesOfState(currentState));
     }
 }

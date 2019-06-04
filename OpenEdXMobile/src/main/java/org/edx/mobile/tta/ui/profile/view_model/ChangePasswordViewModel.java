@@ -125,6 +125,7 @@ public class ChangePasswordViewModel extends BaseViewModel {
             public void onSuccess(ChangePasswordResponse data) {
                 mActivity.hideLoading();
                 mActivity.showLongSnack("Password changed successfully");
+                mDataManager.setConnectCookies();
                 mActivity.onBackPressed();
             }
 

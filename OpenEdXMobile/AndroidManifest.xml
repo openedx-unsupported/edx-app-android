@@ -509,15 +509,14 @@
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
 
         <!-- Notifications through Firebase Cloud Messaging (FCM) -->
-        <service
+        <!--<service
             android:name="org.edx.mobile.notifications.services.NotificationService"
             android:enabled="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
-        </service>
-        <service android:name=".tta.firebase.TaFirebaseMessagingService"
-            android:enabled="${firebaseEnabled}" >
+        </service>-->
+        <service android:name=".tta.firebase.TaFirebaseMessagingService" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

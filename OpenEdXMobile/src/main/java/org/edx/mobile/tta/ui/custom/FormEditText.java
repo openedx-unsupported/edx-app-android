@@ -107,15 +107,23 @@ public class FormEditText extends LinearLayout {
         }
     }
 
-    public void setShowTv(String data){
-        if (data!=null){
-            mBinding.etText.setText(data);
-            mBinding.etText.setVisibility(VISIBLE);
+    public void setSubLabel(String subLabel){
+        if (subLabel != null){
+            mBinding.subLabel.setText(subLabel);
+            mBinding.subLabel.setVisibility(VISIBLE);
         }else{
-            mBinding.etText.setText("");
-            mBinding.etText.setVisibility(GONE);
+            mBinding.subLabel.setText("");
+            mBinding.subLabel.setVisibility(GONE);
         }
 
+    }
+
+    public void setVisibility(int visibility){
+        mBinding.getRoot().setVisibility(visibility);
+    }
+
+    public boolean isVisible(){
+        return mBinding.getRoot().isShown();
     }
 
     public boolean isMandatory(){

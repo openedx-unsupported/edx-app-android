@@ -1,7 +1,7 @@
 // Source (MIT License): https://github.com/mgouline/android-samples/blob/master/jacoco/jacoco.gradle
 
 apply plugin: 'jacoco'
-
+apply plugin: 'com.google.gms.google-services'
 
 jacoco {
     toolVersion = "0.7.2.201409121644"

@@ -29,6 +29,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
+import org.edx.mobile.tta.ui.survey.UserSurveyActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.SecurityUtil;
@@ -396,5 +397,10 @@ public class Router {
         analyticsRegistry.resetIdentifyUser();
 
         delegate.unsubscribeAll();
+    }
+
+    @NonNull
+    public void getSurveyFeedbackActivity(Activity sourceActivity,String surveyurl) {
+        sourceActivity.startActivity(UserSurveyActivity.newIntent(surveyurl));
     }
 }

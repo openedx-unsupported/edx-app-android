@@ -1,7 +1,6 @@
 package org.edx.mobile.tta.ui.otp.view_model;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -20,6 +19,10 @@ import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Page;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
+import org.edx.mobile.tta.data.enums.SurveyType;
 import org.edx.mobile.tta.data.model.authentication.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.data.model.authentication.RegisterResponse;
 import org.edx.mobile.tta.data.model.authentication.SendOTPResponse;
@@ -27,7 +30,6 @@ import org.edx.mobile.tta.data.model.authentication.VerifyOTPForgotedPasswordRes
 import org.edx.mobile.tta.data.model.authentication.VerifyOTPResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.task.authentication.GenerateOtpTask;
-import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.task.authentication.MobileNumberVerificationTask;
 import org.edx.mobile.tta.task.authentication.OTPVerificationForgotedPasswordTask;
 import org.edx.mobile.tta.task.authentication.RegisterTask;
@@ -35,9 +37,7 @@ import org.edx.mobile.tta.task.authentication.VerifyOtpTask;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.logistration.UserInfoActivity;
-import org.edx.mobile.tta.ui.otp.IMessageReceiver;
 import org.edx.mobile.tta.ui.otp.IncomingSms;
-import org.edx.mobile.tta.ui.otp.OTP_helper;
 import org.edx.mobile.tta.ui.otp.SmsResponse;
 import org.edx.mobile.tta.ui.otp.SmsUtil;
 import org.edx.mobile.tta.ui.reset_password.ResetPasswordActivity;
@@ -503,8 +503,10 @@ public class OtpViewModel extends BaseViewModel {
             @Override
             public void onSuccess(AuthResponse data) {
                 mActivity.hideLoading();
-                mDataManager.setCustomFieldAttributes(null);
+                performBackgroundTasks();
                 ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mActivity.analytic.addMxAnalytics_db("TA Registration",Action.Registration,
+                        Page.RegistrationPage.name(), Source.Mobile, number);
                 mActivity.finish();
             }
 
@@ -544,6 +546,13 @@ public class OtpViewModel extends BaseViewModel {
             }
         }.execute();*/
 
+    }
+
+    private void performBackgroundTasks(){
+        mDataManager.setCustomFieldAttributes(null);
+        mDataManager.setConnectCookies();
+        mDataManager.checkSurvey(mActivity, SurveyType.Login);
+        mDataManager.updateFirebaseToken();
     }
 
     private Bundle getRegisterMeBundle()
