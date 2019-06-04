@@ -20,6 +20,7 @@ import org.edx.mobile.tta.ui.logistration.view_model.UserInfoViewModel;
 import org.edx.mobile.tta.utils.DataUtil;
 import org.edx.mobile.tta.utils.ViewUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserInfoActivity extends BaseVMActivity {
@@ -31,11 +32,14 @@ public class UserInfoActivity extends BaseVMActivity {
     private FormSpinner professionSpinner;
     private FormSpinner genderSpinner;
     private FormMultiSpinner classTaughtSpinner;
+    private FormMultiSpinner skillsSpinner;
     private FormSpinner dietSpinner;
     private FormEditText etPmis;
     private Button btn;
     private Toolbar toolbar;
     private UserInfoViewModel mViewModel;
+
+    private String tagLabel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class UserInfoActivity extends BaseVMActivity {
         });
         mViewModel.getData();
         getBlocks();
-        getClasses();
+        getClassesAndSkills();
         setupForm();
     }
 
@@ -75,12 +79,32 @@ public class UserInfoActivity extends BaseVMActivity {
                 });
     }
 
-    private void getClasses() {
+    private void getClassesAndSkills() {
 
-        mViewModel.getClasses(new OnResponseCallback<List<RegistrationOption>>() {
+        mViewModel.getClassesAndSkills(new OnResponseCallback<List<RegistrationOption>>() {
             @Override
             public void onSuccess(List<RegistrationOption> data) {
                 classTaughtSpinner.setItems(data, null);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        }, new OnResponseCallback<List<RegistrationOption>>() {
+            @Override
+            public void onSuccess(List<RegistrationOption> data) {
+                List<RegistrationOption> selectedOptions = null;
+                if (tagLabel != null && tagLabel.length() > 0){
+                    selectedOptions = new ArrayList<>();
+                    for (String chunk: tagLabel.split(" ")){
+                        String[] duet = chunk.split("_");
+                        if (duet[0].equals(mViewModel.skillSectionName)){
+                            selectedOptions.add(new RegistrationOption(duet[1], duet[1]));
+                        }
+                    }
+                }
+                skillsSpinner.setItems(data, selectedOptions);
             }
 
             @Override
@@ -101,8 +125,7 @@ public class UserInfoActivity extends BaseVMActivity {
         stateSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "State/राज्य", mViewModel.states, null);
         stateSpinner.setMandatory(true);
 
-        districtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "District/" +
-                "जिला", mViewModel.districts, null);
+        districtSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "District/जिला", mViewModel.districts, null);
         districtSpinner.setMandatory(true);
 
         blockSpinner = ViewUtil.addOptionSpinner(userInfoLayout, "Block/तहसील", mViewModel.blocks, null);
@@ -114,6 +137,10 @@ public class UserInfoActivity extends BaseVMActivity {
         classTaughtSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Classes Taught/पढ़ाई गई कक्षा",
                 mViewModel.classesTaught, null);
         classTaughtSpinner.setMandatory(true);
+
+        skillsSpinner = ViewUtil.addMultiOptionSpinner(userInfoLayout, "Skills/कौशल",
+                mViewModel.skills, null);
+        skillsSpinner.setMandatory(true);
 
         etPmis = ViewUtil.addFormEditText(userInfoLayout, "PMIS Code/पी इम आइ इस कोड");
         etPmis.setShowTv(getApplicationContext().getString(R.string.please_insert_valide_pmis_code));
@@ -135,17 +162,23 @@ public class UserInfoActivity extends BaseVMActivity {
             parameters.putString("district", mViewModel.currentDistrict);
             parameters.putString("block", blockSpinner.getSelectedOption().getName());
             parameters.putString("title", professionSpinner.getSelectedOption().getValue());
-            parameters.putString("gender", genderSpinner.getSelectedOption().getName());
+            parameters.putString("gender", genderSpinner.getSelectedOption().getValue());
+
+            StringBuilder builder = new StringBuilder();
             if (classTaughtSpinner.getSelectedOptions() != null) {
-                StringBuilder builder = new StringBuilder();
                 for (RegistrationOption option: classTaughtSpinner.getSelectedOptions()){
                     builder.append(mViewModel.classesSectionName).append("_").append(option.getName()).append(" ");
                 }
-                if (builder.length() > 0){
-                    builder.deleteCharAt(builder.length() - 1);
-                }
-                parameters.putString("tag_label", builder.toString());
             }
+            if (skillsSpinner.getSelectedOptions() != null) {
+                for (RegistrationOption option: skillsSpinner.getSelectedOptions()){
+                    builder.append(mViewModel.skillSectionName).append("_").append(option.getName()).append(" ");
+                }
+            }
+            if (builder.length() > 0){
+                builder.deleteCharAt(builder.length() - 1);
+            }
+            parameters.putString("tag_label", builder.toString());
 
             parameters.putString("pmis_code", etPmis.getText());
             parameters.putString("diet_code", dietSpinner.getSelectedOption().getName());
@@ -185,41 +218,47 @@ public class UserInfoActivity extends BaseVMActivity {
 
     private boolean validate(){
         boolean valid = true;
-        if (!etFirstName.validate()){
+        if (!etFirstName.validate() ||
+                (mViewModel.getDataManager().getLoginPrefs().getUsername() != null &&
+                        etFirstName.getText().trim().equals(mViewModel.getDataManager().getLoginPrefs().getUsername()))){
             valid = false;
-            etFirstName.setError("Required");
+            etFirstName.setError(getString(R.string.error_name));
         }
         if (!stateSpinner.validate()){
             valid = false;
-            stateSpinner.setError("Required");
+            stateSpinner.setError(getString(R.string.error_state));
         }
         if (!districtSpinner.validate()){
             valid = false;
-            districtSpinner.setError("Required");
+            districtSpinner.setError(getString(R.string.error_district));
         }
         if (!blockSpinner.validate()){
             valid = false;
-            blockSpinner.setError("Required");
+            blockSpinner.setError(getString(R.string.error_block));
         }
         if (!professionSpinner.validate()){
             valid = false;
-            professionSpinner.setError("Required");
+            professionSpinner.setError(getString(R.string.error_profession));
         }
         if (!genderSpinner.validate()){
             valid = false;
-            genderSpinner.setError("Required");
+            genderSpinner.setError(getString(R.string.error_gender));
         }
         if (!classTaughtSpinner.validate()){
             valid = false;
-            classTaughtSpinner.setError("Required");
+            classTaughtSpinner.setError(getString(R.string.error_classes));
+        }
+        if (!skillsSpinner.validate()){
+            valid = false;
+            skillsSpinner.setError(getString(R.string.error_skills));
         }
         if (!etPmis.validate()){
             valid = false;
-            etPmis.setError("Required");
+            etPmis.setError(getString(R.string.error_pmis));
         }
         if (!dietSpinner.validate()){
             valid = false;
-            dietSpinner.setError("Required");
+            dietSpinner.setError(getString(R.string.error_diet));
         }
 
         return valid;

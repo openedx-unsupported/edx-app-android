@@ -75,6 +75,14 @@ public class RecommendedUsersViewModel extends BaseViewModel {
                             item.setFollowed(data.getStatus());
                             adapter.notifyItemChanged(adapter.getItemPosition(item));
                             EventBus.getDefault().post(new UserFollowingChangedEvent(item));
+
+                            if (data.getStatus()){
+                                mActivity.analytic.addMxAnalytics_db(item.getUsername(), Action.FollowUser,
+                                        Nav.feed.name(), Source.Mobile, item.getUsername());
+                            } else {
+                                mActivity.analytic.addMxAnalytics_db(item.getUsername(), Action.UnfollowUser,
+                                        Nav.feed.name(), Source.Mobile, item.getUsername());
+                            }
                         }
 
                         @Override
@@ -176,11 +184,7 @@ public class RecommendedUsersViewModel extends BaseViewModel {
                 if (model.isFollowed()) {
                     teacherBinding.followBtn.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_filled));
                     teacherBinding.followBtn.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
-                    teacherBinding.followBtn.setText(mActivity.getString(R.string.unfollow));
-
-                    mActivity.analytic.addMxAnalytics_db(model.getUsername(), Action.FollowUser,
-                            Nav.feed.name(), Source.Mobile, model.getUsername());
-
+                    teacherBinding.followBtn.setText(mActivity.getString(R.string.following));
                 } else {
                     teacherBinding.followBtn.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_hollow));
                     teacherBinding.followBtn.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_cyan));

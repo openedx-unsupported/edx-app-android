@@ -95,6 +95,7 @@ public class SigninViewModel extends BaseViewModel {
             @Override
             public void onSuccess(AuthResponse data) {
                 mActivity.hideLoading();
+                mDataManager.setCustomFieldAttributes(null);
                 if (data.profile.name == null || data.profile.name.equals("") ||
                         data.profile.name.equals(data.profile.username)) {
                     ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

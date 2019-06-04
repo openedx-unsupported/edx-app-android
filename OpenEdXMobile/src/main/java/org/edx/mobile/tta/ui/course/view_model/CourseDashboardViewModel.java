@@ -48,6 +48,9 @@ public class CourseDashboardViewModel extends BaseViewModel {
 
     public ObservableBoolean offlineVisible = new ObservableBoolean();
     public ObservableInt initialPosition = new ObservableInt();
+    public ObservableInt tabPosition = new ObservableInt();
+
+    private int position;
 
     public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -70,9 +73,10 @@ public class CourseDashboardViewModel extends BaseViewModel {
         }
     };
 
-    public CourseDashboardViewModel(BaseVMActivity activity, Content content) {
+    public CourseDashboardViewModel(BaseVMActivity activity, Content content, int tabPosition) {
         super(activity);
         this.content = content;
+        position = tabPosition;
         adapter = new CourseDashboardPagerAdapter(mActivity.getSupportFragmentManager());
         fragments = new ArrayList<>();
         titles = new ArrayList<>();
@@ -176,9 +180,9 @@ public class CourseDashboardViewModel extends BaseViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        initialPosition.set(0);
+        this.tabPosition.set(position);
 
-        PageViewStateCallback callback = (PageViewStateCallback) fragments.get(0);
+        PageViewStateCallback callback = (PageViewStateCallback) fragments.get(position);
         if (callback != null){
             callback.onPageShow();
         }

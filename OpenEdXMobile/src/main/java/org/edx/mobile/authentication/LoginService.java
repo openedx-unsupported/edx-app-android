@@ -10,6 +10,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.tta.data.model.authentication.FieldInfo;
 import org.edx.mobile.tta.data.model.authentication.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.data.model.authentication.ResetForgotedPasswordResponse;
 import org.edx.mobile.tta.data.model.authentication.SendOTPResponse;
@@ -165,4 +166,7 @@ public interface LoginService {
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_FIREBASE_TOKEN_UPDATE)
     Call<FirebaseUpdateTokenResponse> updateFirebaseToken(@FieldMap Map<String, String> parameters);
+
+    @GET(ApiConstants.URL_MX_CUSTOM_FIELD_ATTRIBUTES)
+    Call<FieldInfo> mxGetCustomStateFieldAttributes();
 }

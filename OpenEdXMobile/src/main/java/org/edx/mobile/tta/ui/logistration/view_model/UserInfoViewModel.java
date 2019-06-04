@@ -32,10 +32,11 @@ public class UserInfoViewModel extends BaseViewModel {
     public List<RegistrationOption> professions;
     public List<RegistrationOption> genders;
     public List<RegistrationOption> classesTaught;
+    public List<RegistrationOption> skills;
     public List<RegistrationOption> dietCodes;
 
     public String currentState, currentDistrict;
-    public String classesSectionName;
+    public String classesSectionName, skillSectionName;
 
     public UserInfoViewModel(BaseVMActivity activity) {
         super(activity);
@@ -53,25 +54,35 @@ public class UserInfoViewModel extends BaseViewModel {
         mDataManager.getBlocks(callback, parameters, blocks);
     }
 
-    public void getClasses(OnResponseCallback<List<RegistrationOption>> callback){
+    public void getClassesAndSkills(OnResponseCallback<List<RegistrationOption>> classesCallback,
+                                    OnResponseCallback<List<RegistrationOption>> skillsCallback){
 
         mDataManager.getSearchFilter(new OnResponseCallback<SearchFilter>() {
             @Override
             public void onSuccess(SearchFilter data) {
                 for (FilterSection section : data.getResult()) {
-                    if (section.isIn_profile() && section.getName().contains("कक्षा") && section.getTags() != null) {
-                        classesSectionName = section.getName();
-                        for (FilterTag tag: section.getTags()){
-                            classesTaught.add(new RegistrationOption(tag.toString(), tag.toString()));
+                    if (section.isIn_profile() && section.getTags() != null) {
+                        if (section.getName().contains("कक्षा")) {
+                            classesSectionName = section.getName();
+                            for (FilterTag tag: section.getTags()){
+                                classesTaught.add(new RegistrationOption(tag.toString(), tag.toString()));
+                            }
+                        } else if (section.getName().contains("कौशल")){
+                            skillSectionName = section.getName();
+                            for (FilterTag tag: section.getTags()){
+                                skills.add(new RegistrationOption(tag.toString(), tag.toString()));
+                            }
                         }
                     }
                 }
-                callback.onSuccess(classesTaught);
+                classesCallback.onSuccess(classesTaught);
+                skillsCallback.onSuccess(skills);
             }
 
             @Override
             public void onFailure(Exception e) {
-                callback.onFailure(e);
+                classesCallback.onFailure(e);
+                skillsCallback.onFailure(e);
             }
         });
     }

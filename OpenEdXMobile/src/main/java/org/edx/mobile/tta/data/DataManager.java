@@ -66,6 +66,7 @@ import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
+import org.edx.mobile.tta.data.model.authentication.FieldInfo;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
@@ -93,6 +94,7 @@ import org.edx.mobile.tta.task.agenda.GetMyAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaCountTask;
+import org.edx.mobile.tta.task.authentication.GetGenericUserFieldInfoTask;
 import org.edx.mobile.tta.task.authentication.LoginTask;
 import org.edx.mobile.tta.task.content.GetContentFromSourceIdentityTask;
 import org.edx.mobile.tta.task.content.GetContentTask;
@@ -3350,6 +3352,36 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void setCustomFieldAttributes(OnResponseCallback<FieldInfo> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetGenericUserFieldInfoTask(context)
+            {
+                @Override
+                protected void onSuccess(FieldInfo fieldInfo) {
+                    loginPrefs.setMxGenericFieldInfo(fieldInfo);
+                    if (callback != null){
+                        callback.onSuccess(fieldInfo);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    if (callback != null){
+                        callback.onFailure(ex);
+                    }
+                }
+            }.execute();
+
+        } else {
+            if (callback != null){
+                callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+            }
         }
 
     }

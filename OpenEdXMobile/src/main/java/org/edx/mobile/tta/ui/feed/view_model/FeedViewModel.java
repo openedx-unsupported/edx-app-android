@@ -29,6 +29,7 @@ import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.BadgeType;
+import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.data.enums.SourceType;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.Feed;
@@ -116,6 +117,29 @@ public class FeedViewModel extends BaseViewModel {
                 case R.id.feed_share:
                     openShareMenu(item);
                     break;
+                case R.id.feed_comment_layout:
+                    if (item.getMeta_data().getSource_name().equalsIgnoreCase(SourceName.course.name())){
+                        mActivity.showLoading();
+                        mDataManager.getContentFromSourceIdentity(item.getMeta_data().getId(),
+                                new OnResponseCallback<Content>() {
+                                    @Override
+                                    public void onSuccess(Content data) {
+                                        mActivity.hideLoading();
+
+                                        Bundle parameters = new Bundle();
+                                        parameters.putParcelable(Constants.KEY_CONTENT, data);
+                                        parameters.putInt(Constants.KEY_TAB_POSITION, 1);
+                                        ActivityUtil.gotoPage(mActivity, CourseDashboardActivity.class, parameters);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        mActivity.hideLoading();
+                                        mActivity.showLongSnack(e.getLocalizedMessage());
+                                    }
+                                });
+                        break;
+                    }
                 default:
                     try {
                         switch (Action.valueOf(item.getAction())){
@@ -250,6 +274,14 @@ public class FeedViewModel extends BaseViewModel {
                             mActivity.hideLoading();
                             item.setFollowed(data.getStatus());
                             suggestedUsersAdapter.notifyItemChanged(suggestedUsersAdapter.getItemPosition(item));
+
+                            if (data.getStatus()){
+                                mActivity.analytic.addMxAnalytics_db(item.getUsername(), Action.FollowUser,
+                                        Nav.feed.name(), Source.Mobile, item.getUsername());
+                            } else {
+                                mActivity.analytic.addMxAnalytics_db(item.getUsername(), Action.UnfollowUser,
+                                        Nav.feed.name(), Source.Mobile, item.getUsername());
+                            }
                         }
 
                         @Override
@@ -606,10 +638,7 @@ public class FeedViewModel extends BaseViewModel {
                 if (model.isFollowed()) {
                     teacherBinding.followBtn.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_filled));
                     teacherBinding.followBtn.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
-                    teacherBinding.followBtn.setText(mActivity.getString(R.string.unfollow));
-
-                    mActivity.analytic.addMxAnalytics_db(model.getUsername(), Action.FollowUser,
-                            Nav.feed.name(), Source.Mobile, model.getUsername());
+                    teacherBinding.followBtn.setText(mActivity.getString(R.string.following));
 
                 } else {
                     teacherBinding.followBtn.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.btn_selector_hollow));
@@ -763,13 +792,13 @@ public class FeedViewModel extends BaseViewModel {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
-                });
+                });*/
 
                 feedBinding.feedCommentLayout.setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);
                     }
-                });*/
+                });
 
             } else if (binding instanceof TRowFeedWithUserBinding) {
                 TRowFeedWithUserBinding feedWithUserBinding = (TRowFeedWithUserBinding) binding;

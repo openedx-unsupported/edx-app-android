@@ -53,6 +53,7 @@ public class Constants {
     public static final String KEY_SOURCE_IDENTITY = "source_identity";
     public static final String KEY_CONTENT_IDS = "content_ids";
     public static final String KEY_COURSE_KEY = "course_key";
+    public static final String KEY_TAB_POSITION = "tab_position";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

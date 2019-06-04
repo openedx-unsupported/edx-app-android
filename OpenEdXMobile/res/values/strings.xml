@@ -777,6 +777,17 @@
     <string name="view_discussion">View discussion</string>
     <string name="share_message">Please see this {source_title} on {platform_name}. {content_name}</string>
     <string name="share">Share</string>
+    <string name="error_name">Name cannot be empty or equal to mobile number</string>
+    <string name="error_state">Please select your state</string>
+    <string name="error_district">Select your district</string>
+    <string name="error_block">Select your block</string>
+    <string name="error_profession">Please select your profession</string>
+    <string name="error_gender">Please select your gender</string>
+    <string name="error_classes">Please select the classes you have taught</string>
+    <string name="error_skills">Please select your skills</string>
+    <string name="error_pmis">PMIS code cannot be empty</string>
+    <string name="error_teacher_id">Teacher ID cannot be empty</string>
+    <string name="error_diet">Please select your DIET code</string>
 
     <string name="sign_out_message" translatable="false">Are you sure you want to Sign Out?</string>
     <string name="be_the_first_to_comment" translatable="false">Be the first to comment</string>
@@ -911,6 +922,7 @@
     <string name="Connect_video_pre_download_msg">Please click here to see in offline mode</string>
     <string name="connect_video_post_download_msg">Please click on Play button to see in offline mode</string>
     <string name="connect_video_post_downloading_msg">Video is downloading, please wait.</string>
+    <string name="empty_feed_message">No feeds available at the moment</string>
 
     <!-- TTA strings end -->
 

@@ -503,6 +503,7 @@ public class OtpViewModel extends BaseViewModel {
             @Override
             public void onSuccess(AuthResponse data) {
                 mActivity.hideLoading();
+                mDataManager.setCustomFieldAttributes(null);
                 ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mActivity.finish();
             }

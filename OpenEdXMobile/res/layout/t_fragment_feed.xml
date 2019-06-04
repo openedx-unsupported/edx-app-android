@@ -23,11 +23,11 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_26px"
+                android:layout_marginTop="@dimen/_20px"
                 android:layout_marginBottom="@dimen/_8px"
-                app:srcCompat="@drawable/tta_launcher_icon"/>
+                app:srcCompat="@drawable/teacherapplogo"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -124,7 +124,7 @@
                         android:layout_marginEnd="@dimen/_70px"
                         android:fontFamily="@font/hind_regular"
                         android:gravity="center"
-                        android:text="No feeds available at the moment"
+                        android:text="@string/empty_feed_message"
                         android:textColor="@color/primary_cyan"
                         android:textSize="12sp" />
 

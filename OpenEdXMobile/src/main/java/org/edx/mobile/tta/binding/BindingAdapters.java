@@ -396,4 +396,15 @@ public class BindingAdapters {
         Context context = view.getContext();
         view.setTextColor(ContextCompat.getColor(context, id));
     }
+
+    @BindingAdapter({"tab_position"})
+    public static void setTabPosition(TabLayout view, int position){
+        view.post(() -> {
+            try {
+                view.getTabAt(position).select();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+    }
 }

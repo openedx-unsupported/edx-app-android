@@ -66,7 +66,7 @@
     <string name="change_password_underlined"><u>पासवर्ड बदलें</u></string>
     <string name="classes_taught">कक्षाएं</string>
     <string name="skills">कौशल</string>
-    <string name="following">फालोइंग</string>
+    <string name="following">फॉलोइंग</string>
     <string name="all_parts">एक कोर्स के सभी  भाग देखने पर</string>
     <string name="followers">फालोअर्ज़</string>
     <string name="write_here">यहाँ लिखिए</string>
@@ -105,4 +105,16 @@
     </string-array>
     <string name="share_message">कृपया इस {source_title} को {platform_name} में देखें। {content_name}</string>
     <string name="share">साझा करें</string>
+    <string name="empty_feed_message">खबर उपलब्ध नहीं है</string>
+    <string name="error_name">उपयोगकर्ता नाम रिक्त या मोबाइल नंबर के समान नहीं हो सकता ।</string>
+    <string name="error_state">कृपया अपना राज्य चुनिए</string>
+    <string name="error_district">अपना जिला चुनिए</string>
+    <string name="error_block">अपनी तहसील चुनिए</string>
+    <string name="error_profession">कृपया अपना व्यवसाय चुनिए</string>
+    <string name="error_gender">कृपया अपना लिंग चुनिए</string>
+    <string name="error_classes">कृपया किस स्तर तक पढ़ाया है, चुनिए</string>
+    <string name="error_skills">कृपया अपने कौशल चुनिए</string>
+    <string name="error_diet">कृपया अपना DIET कोड चुनिए</string>
+    <string name="error_pmis">PMIS कोड रिक्त नहीं हो सकता</string>
+    <string name="error_teacher_id">टीचर ID रिक्त नहीं हो सकती</string>
 </resources>

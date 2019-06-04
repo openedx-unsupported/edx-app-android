@@ -260,7 +260,7 @@ public class EditProfileFragment extends TaBaseFragment {
             parameters.putString("district", viewModel.currentDistrict);
             parameters.putString("block", blockSpinner.getSelectedOption().getName());
             parameters.putString("title", professionSpinner.getSelectedOption().getValue());
-            parameters.putString("gender", genderSpinner.getSelectedOption().getName());
+            parameters.putString("gender", genderSpinner.getSelectedOption().getValue());
 
             StringBuilder builder = new StringBuilder();
             if (classTaughtSpinner.getSelectedOptions() != null) {

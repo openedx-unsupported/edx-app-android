@@ -4,6 +4,10 @@ import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.analytics.analytics_enums.Action;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Page;
+import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.profile.FollowStatus;
@@ -133,6 +137,14 @@ public class OtherProfileViewModel extends BaseViewModel {
                 }
                 EventBus.getDefault().post(new UserFollowingChangedEvent(user));
                 setDetails();
+
+                if (data.getStatus()){
+                    mActivity.analytic.addMxAnalytics_db(username, Action.FollowUser,
+                            Page.ProfilePage.name(), Source.Mobile, username);
+                } else {
+                    mActivity.analytic.addMxAnalytics_db(username, Action.UnfollowUser,
+                            Page.ProfilePage.name(), Source.Mobile, username);
+                }
             }
 
             @Override
@@ -201,7 +213,7 @@ public class OtherProfileViewModel extends BaseViewModel {
     private void toggleFollowBtn(){
 
         if (followed){
-            followBtnText.set(mActivity.getString(R.string.unfollow));
+            followBtnText.set(mActivity.getString(R.string.following));
             followBtnBackground.set(R.drawable.btn_selector_filled);
             followTextColor.set(R.color.white);
         } else {

@@ -32,6 +32,7 @@ public class SplashViewModel extends BaseViewModel {
                 if (mDataManager.getLoginPrefs().getCurrentUserProfile() == null) {
                     ActivityUtil.gotoPage(activity, SigninRegisterActivity.class);
                 } else {
+                    mDataManager.setCustomFieldAttributes(null);
                     if (mDataManager.getLoginPrefs().getCurrentUserProfile().name == null ||
                             mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals("") ||
                             mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals(mDataManager.getLoginPrefs().getUsername())

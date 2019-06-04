@@ -12,6 +12,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.tta.data.model.authentication.FieldInfo;
 import org.edx.mobile.tta.wordpress_client.model.WPProfileModel;
 import org.edx.mobile.tta.wordpress_client.model.WpAuthResponse;
 import org.edx.mobile.user.ProfileImage;
@@ -517,5 +518,23 @@ public class LoginPrefs {
             is_loaded=true;
         }
         return is_loaded;
+    }
+
+    @Nullable
+    public FieldInfo getMxGenericFieldInfo() {
+        final String json = pref.getString(PrefManager.Key.USER_GENERIC_FIELD_ATTRIBUTE_INFO);
+        if (null == json) {
+            return null;
+        }
+        return gson.fromJson(json, FieldInfo.class);
+    }
+
+    public void setMxGenericFieldInfo(FieldInfo fieldInfo) {
+        if(fieldInfo==null && fieldInfo.getStateCustomAttribute()==null &&
+                fieldInfo.getStateCustomAttribute().size()==0)
+            return;
+
+        pref.put(PrefManager.Key.USER_GENERIC_FIELD_ATTRIBUTE_INFO, null);
+        pref.put(PrefManager.Key.USER_GENERIC_FIELD_ATTRIBUTE_INFO, gson.toJson(fieldInfo));
     }
 }

@@ -91,6 +91,6 @@ public enum Action {
     Share,
     NewPost,
     Like,
-    Comment
+    UnfollowUser, Comment
 
 }

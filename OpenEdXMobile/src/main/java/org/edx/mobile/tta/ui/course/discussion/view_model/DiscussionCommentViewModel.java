@@ -198,7 +198,7 @@ public class DiscussionCommentViewModel extends BaseViewModel {
                         likeCount.set(String.valueOf(comment.getVoteCount()));
                         likeIcon.set(comment.isVoted() ? R.drawable.t_icon_like_filled : R.drawable.t_icon_like);
 
-                        mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
+                        mActivity.analytic.addMxAnalytics_db(thread.getIdentifier(),
                                 data.isVoted() ? Action.DBCommentlike : Action.DBCommentUnlike,
                                 course.getCourse().getName(),
                                 Source.Mobile, comment.getIdentifier());

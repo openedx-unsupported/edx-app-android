@@ -27,10 +27,12 @@ public class CourseDashboardActivity extends BaseVMActivity {
 
     private Content content;
     private boolean isPush = false;
+    private int tabPosition;
     private CourseDashboardViewModel viewModel;
 
     private Toolbar toolbar;
     private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,13 +40,13 @@ public class CourseDashboardActivity extends BaseVMActivity {
         RANK = BreadcrumbUtil.getCurrentRank() + 1;
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.course.name()));
         getExtras();
-        viewModel = new CourseDashboardViewModel(this, content);
+        viewModel = new CourseDashboardViewModel(this, content, tabPosition);
         binding(R.layout.t_activity_course_dashboard, viewModel);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
@@ -63,6 +65,9 @@ public class CourseDashboardActivity extends BaseVMActivity {
             }
             if (parameters.containsKey(Constants.KEY_CONTENT)){
                 content = parameters.getParcelable(Constants.KEY_CONTENT);
+            }
+            if (parameters.containsKey(Constants.KEY_TAB_POSITION)){
+                tabPosition = parameters.getInt(Constants.KEY_TAB_POSITION);
             }
         }
     }

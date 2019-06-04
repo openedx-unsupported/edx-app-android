@@ -130,7 +130,7 @@
         <activity
             android:name="org.edx.mobile.view.DiscussionAddPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/discussion_post_create_new_post"
+            android:label="@string/start_discussion"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity

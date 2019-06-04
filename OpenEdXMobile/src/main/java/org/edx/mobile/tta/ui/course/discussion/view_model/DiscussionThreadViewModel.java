@@ -278,7 +278,7 @@ public class DiscussionThreadViewModel extends BaseViewModel
                         } else {
                             selectedComment.incrementChildCount();
 
-                            mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
+                            mActivity.analytic.addMxAnalytics_db(thread.getIdentifier(),
                                     Action.DBCommentReply, course.getCourse().getName(),
                                     Source.Mobile, selectedComment.getIdentifier());
 
@@ -307,7 +307,7 @@ public class DiscussionThreadViewModel extends BaseViewModel
                         comment.setVoteCount(data.getVoteCount());
                         refreshComments();
 
-                        mActivity.analytic.addMxAnalytics_db("Postname_" + data.getAuthor(),
+                        mActivity.analytic.addMxAnalytics_db(thread.getIdentifier(),
                                 data.isVoted() ? Action.DBCommentlike : Action.DBCommentUnlike,
                                 course.getCourse().getName(),
                                 Source.Mobile, comment.getIdentifier());

@@ -26,7 +26,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
+                android:layout_height="102dp"
                 android:id="@+id/content_image"
                 android:layout_alignParentTop="true"
                 android:scaleType="fitXY"/>

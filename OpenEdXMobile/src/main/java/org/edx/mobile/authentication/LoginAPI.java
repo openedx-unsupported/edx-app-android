@@ -18,6 +18,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.tta.data.model.authentication.FieldInfo;
 import org.edx.mobile.tta.data.model.authentication.MobileNumberVerificationResponse;
 import org.edx.mobile.tta.data.model.authentication.RegisterResponse;
 import org.edx.mobile.tta.data.model.authentication.RegistrationError;
@@ -351,6 +352,11 @@ public class LoginAPI {
     }
 
     @NonNull
+    public FieldInfo  getCustomStateFieldAttributes() throws Exception {
+        return mxGetCustomStateFieldAttributes();
+    }
+
+    @NonNull
     private MobileNumberVerificationResponse mxMobileNumberVerification(Bundle parameters) throws Exception
     {
         final Map<String, String> parameterMap = new HashMap<>();
@@ -599,5 +605,29 @@ public class LoginAPI {
             throw new HttpResponseStatusException(errorCode);
         }
         return response.body();
+    }
+
+    @NonNull
+    private FieldInfo  mxGetCustomStateFieldAttributes() throws Exception
+    {
+
+        Response<FieldInfo> res = loginService.mxGetCustomStateFieldAttributes().execute();
+
+        if (!res.isSuccessful()) {
+            final int errorCode = res.code();
+            final String errorBody = res.errorBody().string();
+            if ((errorCode == HttpStatus.BAD_REQUEST || errorCode == HttpStatus.CONFLICT) && !android.text.TextUtils.isEmpty(errorBody)) {
+                try {
+                    final FormFieldMessageBody body = gson.fromJson(errorBody, FormFieldMessageBody.class);
+                    if (body != null && body.size() > 0) {
+                        throw new RegistrationException(body);
+                    }
+                } catch (JsonSyntaxException ex) {
+                    // Looks like the response does not contain form validation errors.
+                }
+            }
+            throw new HttpResponseStatusException(errorCode);
+        }
+        return res.body();
     }
 }
