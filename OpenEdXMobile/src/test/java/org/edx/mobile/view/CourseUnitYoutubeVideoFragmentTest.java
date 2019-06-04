@@ -1,13 +1,11 @@
 package org.edx.mobile.view;
 
-import android.support.v4.app.Fragment;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,7 +16,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
-
 import org.edx.mobile.util.VideoUtil;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -32,10 +29,9 @@ import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 
-public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
+public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
 
 
     private static final String YOUTUBE_VIDEO = "YOUTUBE_VIDEO"; // Config key for YOUTUBE
@@ -62,6 +58,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
 
         return courseComponent.getVideos().get(0);
     }
+
     private void testOrientationChange(
             CourseUnitYoutubeVideoFragment fragment, int orientation) {
         Resources resources = fragment.getResources();
@@ -84,6 +81,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
         testOrientationChange(fragment, Configuration.ORIENTATION_LANDSCAPE);
         testOrientationChange(fragment, Configuration.ORIENTATION_PORTRAIT);
     }
+
     @Test
     public void initializeTest() {
         CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
@@ -94,31 +92,6 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
         assertNotNull(view);
         View playerContainer = view.findViewById(R.id.player_container);
         assertNotNull(playerContainer);
-    }
-
-    @Test
-    public void addOrRemoveYoutubePlayerFragmentTest() {
-        CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
-        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
-
-        fragment.addOrRemoveYoutubePlayerFragment(true);
-
-
-        Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
-        assertNotNull(playerContainer);
-        assertTrue(playerContainer instanceof YouTubePlayerSupportFragment);
-    }
-
-    @Test
-    public void onDestroyTest() {
-        CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
-        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
-
-        fragment.onDestroy();
-
-        Fragment playerContainer = fragment.getChildFragmentManager().findFragmentById(R.id.player_container);
-        assertNotNull(playerContainer);
-        assertFalse(playerContainer instanceof YouTubePlayerSupportFragment);
     }
 
     private static class FragmentUtilActivity extends RoboFragmentActivity implements CourseUnitFragment.HasComponent {
@@ -153,8 +126,9 @@ public class CourseUnitYoutubeVideoFragmentTest extends  UiTest {
         properties.add(YOUTUBE_VIDEO, getYoutubeMockConfig());
         return properties;
     }
+
     private JsonElement getYoutubeMockConfig() {
-        String serializedData =  "{\"ENABLED\":\"True\", \"YOUTUBE_API_KEY\":\"TEST_YOUTUBE_API_KEY\"}";
+        String serializedData = "{\"ENABLED\":\"True\", \"YOUTUBE_API_KEY\":\"TEST_YOUTUBE_API_KEY\"}";
         return new JsonParser().parse(serializedData);
     }
 }

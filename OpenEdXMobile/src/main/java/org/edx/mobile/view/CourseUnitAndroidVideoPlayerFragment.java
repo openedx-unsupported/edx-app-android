@@ -29,7 +29,6 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.io.File;
 
-
 import subtitleFile.Caption;
 
 public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragment {
@@ -60,10 +59,10 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
         super.onActivityCreated(savedInstanceState);
 
         Intent extraIntent = getActivity().getIntent();
-        if(extraIntent!=null){
+        if (extraIntent != null) {
             if (extraIntent.hasExtra(Router.EXTRA_FROM_MY_VIDEOS)) {
                 myVideosFlag = extraIntent.getBooleanExtra(
-                    "FromMyVideos", false);
+                        Router.EXTRA_FROM_MY_VIDEOS, false);
             }
 
             // read incoming chapter name
@@ -74,12 +73,12 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
             // read incoming lecture model
             if (lecture == null) {
                 lecture = (LectureModel) extraIntent
-                    .getSerializableExtra("lecture");
+                        .getSerializableExtra("lecture");
             }
             // read incoming enrollment model
             if (enrollment == null) {
                 enrollment = (EnrolledCoursesResponse) extraIntent
-                    .getSerializableExtra(Router.EXTRA_COURSE_DATA);
+                        .getSerializableExtra(Router.EXTRA_COURSE_DATA);
             }
         }
 
@@ -99,7 +98,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 playerFragment.setTranscriptCallback(this);
             }
 
-            final CourseUnitVideoFragment.HasComponent hasComponent = (CourseUnitVideoFragment.HasComponent)getActivity();
+            final CourseUnitVideoFragment.HasComponent hasComponent = (CourseUnitVideoFragment.HasComponent) getActivity();
             if (hasComponent != null) {
                 View.OnClickListener next = null;
                 View.OnClickListener prev = null;
@@ -125,12 +124,12 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 playerFragment.setNextPreviousListeners(next, prev);
             }
 
-            try{
+            try {
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.player_container, playerFragment, "player");
                 ft.commit();
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 logger.error(ex);
             }
         }
@@ -206,8 +205,8 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
         }
     }
 
-    private void startOnlinePlay(DownloadEntry model){
-        if ( !isPlayerVisible()) {
+    private void startOnlinePlay(DownloadEntry model) {
+        if (!isPlayerVisible()) {
             // don't try to showPlayer() if already shown here
             // this will cause player to freeze
             showPlayer();
@@ -220,7 +219,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     }
 
 
-
     public synchronized void playVideoModel(final DownloadEntry video) {
         try {
             if (playerFragment.isPlaying()) {
@@ -229,16 +227,16 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                     return;
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.debug(ex.toString());
         }
-        try{
+        try {
 
             // reload this model
             environment.getStorage().reloadDownloadEntry(video);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
-            if ( !playerFragment.isResumed()) {
+            if (!playerFragment.isResumed()) {
                 // playback can work only if fragment is resume
                 if (playPending != null) {
                     playHandler.removeCallbacks(playPending);
@@ -261,7 +259,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
 
 
             playerFragment.prepare(filepath, video.lastPlayedOffset,
-                video.getTitle(), transcript, video);
+                    video.getTitle(), transcript, video);
 
 
             try {
@@ -275,14 +273,14 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
             } catch (Exception e) {
                 logger.error(e);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
-    private String getVideoPath(DownloadEntry video){
+    private String getVideoPath(DownloadEntry video) {
         String filepath = null;
-        if (video.filepath != null && video.filepath.length()>0) {
+        if (video.filepath != null && video.filepath.length() > 0) {
             if (video.isDownloaded()) {
                 File f = new File(video.filepath);
                 if (f.exists()) {
@@ -292,23 +290,23 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 }
             }
         } else {
-            DownloadEntry de = (DownloadEntry)DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE )
-                .getIVideoModelByVideoUrl(
-                    video.url, null);
-            if(de!=null){
-                if(de.filepath!=null){
+            DownloadEntry de = (DownloadEntry) DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
+                    .getIVideoModelByVideoUrl(
+                            video.url, null);
+            if (de != null) {
+                if (de.filepath != null) {
                     File f = new File(de.filepath);
                     if (f.exists()) {
                         // play from local
                         filepath = de.filepath;
                         logger.debug("playing from local file for " +
-                            "another Download Entry");
+                                "another Download Entry");
                     }
                 }
             }
         }
 
-        if(TextUtils.isEmpty(filepath)){
+        if (TextUtils.isEmpty(filepath)) {
             // not available on local, so play online
             logger.warn("Local file path not available");
 
@@ -319,7 +317,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
 
     private void showPlayer() {
         try {
-            if(getView()!=null){
+            if (getView() != null) {
                 View container = getView().findViewById(R.id.player_container);
                 if (container != null) {
                     container.setVisibility(View.VISIBLE);
@@ -390,8 +388,8 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
         //TODO - should we use load different layout file?
         final int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
-            if ( playerContainer != null ) {
+            LinearLayout playerContainer = (LinearLayout) getView().findViewById(R.id.player_container);
+            if (playerContainer != null) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                 float screenHeight = displayMetrics.heightPixels;
                 playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
@@ -399,8 +397,8 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 playerContainer.requestLayout();
             }
         } else {
-            LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
-            if ( playerContainer != null ) {
+            LinearLayout playerContainer = (LinearLayout) getView().findViewById(R.id.player_container);
+            if (playerContainer != null) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                 float screenWidth = displayMetrics.widthPixels;
                 float ideaHeight = screenWidth * 9 / 16;

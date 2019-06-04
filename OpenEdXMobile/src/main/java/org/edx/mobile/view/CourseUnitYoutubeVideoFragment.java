@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +12,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -23,12 +26,6 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.VideoUtil;
-
-
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayer.Provider;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -62,23 +59,26 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         fragment.setArguments(getCourseUnitBundle(unit, hasNextUnit, hasPreviousUnit));
         return fragment;
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         releaseYoutubePlayer();
-        addOrRemoveYoutubePlayerFragment(VideoUtil.isAPIYoutubeSupported(getContext()));
+        if (VideoUtil.isAPIYoutubeSupported(getContext())) {
+            youTubePlayerFragment = new YouTubePlayerSupportFragment();
+            getChildFragmentManager().beginTransaction().replace(R.id.player_container, youTubePlayerFragment, "player").commit();
+        }
         attempts = 0;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        releaseYoutubePlayer();
 
         if (isVisibleToUser && unit != null) {
             setVideoModel();
-            /**
+            /*
              * This method is not called  property when the user leaves quickly the view on the view pager
              * so the youtube player can not be released( only one youtube player instance is allowed by the library)
              * so in order to avoid to create multiple youtube player instances, the youtube player only will be initialize
@@ -91,6 +91,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 }
             }, 1000);
         } else {
+            releaseYoutubePlayer();
             fromLandscape = false;
             transcriptsHandler.removeCallbacksAndMessages(null);
             subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
@@ -134,7 +135,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onDestroy() {
         super.onDestroy();
         subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
-        addOrRemoveYoutubePlayerFragment(false);
     }
 
     @Override
@@ -147,9 +147,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         if (videoModel != null) {
             currentPos = (int) videoModel.getLastPlayedOffset();
         }
-        if (!wasRestored ) {
+        if (!wasRestored) {
             Uri uri = Uri.parse(unit.getData().encodedVideos.getYoutubeVideoInfo().url);
-            /**
+            /*
              *  Youtube player loads the video using the video id from the url
              *  the url has the following format "https://www.youtube.com/watch?v=3_yD_cEKoCk" where v is the video id
              */
@@ -157,7 +157,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             player.loadVideo(videoId, currentPos);
             previousYouTubePlayer = youTubePlayer;
             youTubePlayer = player;
-            youTubePlayer.setPlayerStateChangeListener( new StateChangeListener());
+            youTubePlayer.setPlayerStateChangeListener(new StateChangeListener());
             youTubePlayer.setPlaybackEventListener(new PlaybackListener());
             youTubePlayer.setOnFullscreenListener(new FullscreenListener());
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -180,9 +180,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        String [] codes = Locale.getISOLanguages();
-        for (String code : codes){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String[] codes = Locale.getISOLanguages();
+        for (String code : codes) {
             Locale loc = new Locale(code);
             if (item.toString().equals(loc.getDisplayName(loc))) {
                 subtitlesObj = srtList.get(code);
@@ -204,7 +204,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         public void run() {
             if (youTubePlayer != null) {
                 int currentPos = youTubePlayer.getCurrentTimeMillis();
-                if (currentPos >= 0) {
+                if (currentPos >= 0 && youTubePlayer.isPlaying()) {
                     saveCurrentPlaybackPosition(currentPos);
                 } else {
                     currentPos = 0;
@@ -227,24 +227,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             subtitleDisplayHandler.postDelayed(this, SUBTITLES_DISPLAY_DELAY_MS);
         }
     };
-
-
-    protected void addOrRemoveYoutubePlayerFragment(boolean add) {
-        if (add){
-            try {
-                youTubePlayerFragment = new YouTubePlayerSupportFragment();
-                getChildFragmentManager().beginTransaction().replace(R.id.player_container, youTubePlayerFragment, "player").commit();
-            } catch (Exception e) {
-                logger.error(e);
-            }
-        } else {
-            try {
-                getChildFragmentManager().beginTransaction().replace(R.id.player_container, new Fragment()).commit();
-            } catch (Exception e) {
-                logger.error(e);
-            }
-        }
-    }
 
     private void loadTranscriptsData(VideoBlockModel unit) {
         TranscriptManager transcriptManager = new TranscriptManager(getContext());
@@ -274,7 +256,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         }
     }
 
-    private void setSubtitlesObj(){
+    private void setSubtitlesObj() {
         String key = Locale.getDefault().getLanguage();
         if (key.equals("iw")) {
             key = "he";
@@ -289,7 +271,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     }
 
-    private void initTranscripts(){
+    private void initTranscripts() {
         loadTranscriptsData(unit);
 
         if (subtitlesObj != null) {
@@ -298,19 +280,15 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         }
     }
 
-    private void releaseYoutubePlayer(){
-        try {
-            if (youTubePlayer != null){
-                youTubePlayer.release();
-                youTubePlayer = null;
-            }
-        } catch (IllegalStateException ex) {
-            logger.error(ex);
+    private void releaseYoutubePlayer() {
+        if (youTubePlayer != null) {
+            youTubePlayer.release();
+            youTubePlayer = null;
         }
     }
 
     @Override
-    protected void initTranscriptListView(){
+    protected void initTranscriptListView() {
         super.initTranscriptListView();
         transcriptListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -323,8 +301,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         });
     }
 
-    private void setVideoModel(){
-        videoModel = (DownloadEntry) DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).getVideoEntryByVideoId(unit.getId(), null);
+    private void setVideoModel() {
+        videoModel = (DownloadEntry) DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).getVideoEntryByVideoId(unit.getId(), null);
 
         if (videoModel == null) {
             DownloadEntry e = new DownloadEntry();
@@ -334,7 +312,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         }
     }
 
-    private  class StateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
+    private class StateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
         @Override
         public void onLoading() {
 
@@ -368,14 +346,14 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
              * and reloads the fragment
              */
             if (attempts <= 3) {
-                if (previousYouTubePlayer != null){
+                if (previousYouTubePlayer != null) {
                     previousYouTubePlayer.release();
                 }
-                youTubePlayer.release();
+                releaseYoutubePlayer();
                 initializeYoutubePlayer();
                 attempts++;
             } else {
-                Toast.makeText(getActivity(), errorReason.toString(), Toast.LENGTH_LONG ).show();
+                Toast.makeText(getActivity(), errorReason.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -397,6 +375,10 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         @Override
         public void onStopped() {
             if (wasHiding && getUserVisibleHint()) {
+                /*
+                 * wasHiding is set on true when the app comes to background from foreground
+                 * so this allow to play a video when the app comes to foreground from background
+                 */
                 try {
                     wasHiding = false;
                     youTubePlayer.play();
@@ -404,9 +386,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                     initializeYoutubePlayer();
                 }
 
-            }
-            else if (!getUserVisibleHint()) {
-                youTubePlayer.release();
             }
         }
 

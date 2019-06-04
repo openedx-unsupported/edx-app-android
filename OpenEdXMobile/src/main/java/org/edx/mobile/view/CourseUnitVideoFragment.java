@@ -34,7 +34,7 @@ import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
 public class CourseUnitVideoFragment extends CourseUnitFragment
-    implements IPlayerEventCallback, TranscriptListener {
+        implements IPlayerEventCallback, TranscriptListener {
 
     protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
     protected final static String HAS_NEXT_UNIT_ID = "has_next_unit";
@@ -69,7 +69,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         unit = getArguments() == null ? null :
-            (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+                (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
@@ -94,7 +94,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         restore(savedInstanceState);
     }
 
-    protected TranscriptModel getTranscriptModel(DownloadEntry video){
+    protected TranscriptModel getTranscriptModel(DownloadEntry video) {
         TranscriptModel transcript = null;
         if (unit != null && unit.getData() != null &&
                 unit.getData().transcripts != null) {
@@ -124,6 +124,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     /**
      * This method inserts the Download Entry Model in the database
      * Called when a user clicks on a Video in the list
+     *
      * @param v - Download Entry object
      */
     public void addVideoDatatoDb(final DownloadEntry v) {
@@ -153,8 +154,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             DownloadEntry v = videoModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
-                DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).updateVideoLastPlayedOffset(v.videoId, offset,
-                    setCurrentPositionCallback);
+                DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).updateVideoLastPlayedOffset(v.videoId, offset,
+                        setCurrentPositionCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -168,7 +169,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Override
     public void onPlaybackStarted() {
-         markPlaying();
+        markPlaying();
     }
 
     public void onPlaybackComplete() {
@@ -324,7 +325,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     };
 
-    public static Bundle getCourseUnitBundle(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit){
+    public static Bundle getCourseUnitBundle(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
         args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);

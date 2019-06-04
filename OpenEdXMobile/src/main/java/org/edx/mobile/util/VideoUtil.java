@@ -93,16 +93,18 @@ public class VideoUtil {
         }
         return preferredVideoUrl;
     }
+
     /**
      * Videos on youtube only are supported if the youtube app is installed
      * and its version is mayor to 12, so this method verifies these requirements.
+     *
      * @param context The activity context
      * @return true if the requirements are satisfied otherwise false
      */
-    public static boolean isAPIYoutubeSupported(Context context){
+    public static boolean isAPIYoutubeSupported(Context context) {
         try {
             final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(YOUTUBE_PACKAGE_NAME, 0);
-            /**
+            /*
              * Youtube documentation says the following "Users need to run version 4.2.16 of the mobile YouTube app (or higher) to use the API."
              * but the feature has been tested over the version 10 and this has not worked,
              * so the target version has been set in the minor version where it works
@@ -111,7 +113,7 @@ public class VideoUtil {
             final float targetVersion = 12;
             final float currentVersion = Float.parseFloat(packageInfo.versionName.split("\\.")[0]);
             return Float.compare(currentVersion, targetVersion) >= 0;
-        } catch (PackageManager.NameNotFoundException e){
+        } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
