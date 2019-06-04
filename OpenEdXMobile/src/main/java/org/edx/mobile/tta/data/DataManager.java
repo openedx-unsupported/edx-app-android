@@ -3409,8 +3409,8 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void updateFirebaseToken(){
-//        FirebaseHelper fireBaseHelper=new FirebaseHelper();
-//        fireBaseHelper.updateFirebasetokenToServer(context,fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
+        FirebaseHelper fireBaseHelper=new FirebaseHelper();
+        fireBaseHelper.updateFirebasetokenToServer(context,fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
     }
 
 }
