@@ -22,6 +22,7 @@ import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.analytics.analytics_enums.Page;
 import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.enums.DownloadType;
 import org.edx.mobile.tta.data.local.db.table.Content;
@@ -29,12 +30,15 @@ import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
+import org.edx.mobile.tta.data.model.feed.SuggestedUser;
+import org.edx.mobile.tta.data.model.profile.FollowStatus;
 import org.edx.mobile.tta.event.CommentRepliesReceivedEvent;
 import org.edx.mobile.tta.event.ContentBookmarkChangedEvent;
 import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.event.FetchCommentRepliesEvent;
 import org.edx.mobile.tta.event.LoadMoreConnectCommentsEvent;
 import org.edx.mobile.tta.event.RepliedOnCommentEvent;
+import org.edx.mobile.tta.event.UserFollowingChangedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -50,6 +54,8 @@ import org.edx.mobile.tta.wordpress_client.model.CustomFilter;
 import org.edx.mobile.tta.wordpress_client.model.Post;
 import org.edx.mobile.tta.wordpress_client.model.User;
 import org.edx.mobile.tta.wordpress_client.util.MxFilterType;
+import org.edx.mobile.user.Account;
+import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
@@ -96,6 +102,8 @@ public class ConnectDashboardViewModel extends BaseViewModel
     private Comment selectedComment;
     private ContentStatus contentStatus;
     private boolean firstDownload;
+    private boolean followed;
+    private String username;
 
     //Header details
     public ObservableInt headerImagePlaceholder = new ObservableInt(R.drawable.placeholder_course_card_image);
@@ -108,6 +116,14 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public ObservableField<String> duration = new ObservableField<>("");
     public ObservableField<String> description = new ObservableField<>("");
     public ObservableField<String> likes = new ObservableField<>("0");
+    public ObservableBoolean userVisible = new ObservableBoolean();
+    public ObservableField<String> userImageUrl = new ObservableField<>();
+    public ObservableInt userImagePlaceholder = new ObservableInt(R.drawable.profile_photo_placeholder);
+    public ObservableField<String> name = new ObservableField<>();
+    public ObservableField<String> date = new ObservableField<>();
+    public ObservableField<String> followBtnText = new ObservableField<>();
+    public ObservableInt followBtnBackground = new ObservableInt();
+    public ObservableInt followTextColor = new ObservableInt();
 
     public ObservableInt initialPosition = new ObservableInt();
 
@@ -172,6 +188,44 @@ public class ConnectDashboardViewModel extends BaseViewModel
         onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
+    private void fetchUser(){
+
+        mDataManager.getOtherUserAccount(username, new OnResponseCallback<Account>() {
+            @Override
+            public void onSuccess(Account data) {
+                userImageUrl.set(data.getProfileImage().getImageUrlFull());
+                name.set(data.getName());
+                date.set(DateUtil.getDisplayTime(post.getDate()));
+                toggleFollowBtn();
+                fetchFollowStatus();
+                userVisible.set(true);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                userVisible.set(false);
+            }
+        });
+
+    }
+
+    private void fetchFollowStatus() {
+
+        mDataManager.getFollowStatus(username, new OnResponseCallback<FollowStatus>() {
+            @Override
+            public void onSuccess(FollowStatus data) {
+                followed = data.is_followed();
+                toggleFollowBtn();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+
+    }
+
     public void fetchPost(OnResponseCallback<Post> callback) {
         loadData();
         /*long postId = 0;
@@ -186,6 +240,12 @@ public class ConnectDashboardViewModel extends BaseViewModel
             public void onSuccess(Post data) {
                 post = data;
                 String downloadUrl = getDownloadUrl();
+                username = getUsername();
+                if (username != null){
+                    fetchUser();
+                } else {
+                    userVisible.set(false);
+                }
                 if (downloadUrl == null || downloadUrl.equals("")){
                     downloadPlayOptionVisible.set(false);
 
@@ -228,6 +288,44 @@ public class ConnectDashboardViewModel extends BaseViewModel
 
     }
 
+    public void openUserProfile(){
+        Bundle parameters = new Bundle();
+        parameters.putString(Constants.KEY_USERNAME, username);
+        ActivityUtil.gotoPage(mActivity, OtherProfileActivity.class, parameters);
+    }
+
+    public void followUnfollow(){
+        mActivity.showLoading();
+        mDataManager.followUnfollowUser(username, new OnResponseCallback<StatusResponse>() {
+            @Override
+            public void onSuccess(StatusResponse data) {
+                mActivity.hideLoading();
+                followed = data.getStatus();
+                toggleFollowBtn();
+                SuggestedUser user = new SuggestedUser();
+                user.setUsername(username);
+                user.setName(name.get());
+                user.setFollowed(followed);
+                EventBus.getDefault().post(new UserFollowingChangedEvent(user));
+
+                if (data.getStatus()){
+                    mActivity.analytic.addMxAnalytics_db(username, Action.FollowUser,
+                            Page.ProfilePage.name(), Source.Mobile, username);
+                } else {
+                    mActivity.analytic.addMxAnalytics_db(username, Action.UnfollowUser,
+                            Page.ProfilePage.name(), Source.Mobile, username);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                mActivity.hideLoading();
+                mActivity.showLongSnack(e.getLocalizedMessage());
+            }
+        });
+
+    }
+
     private String getDownloadUrl(){
         String download_url=null;
         //find the downloaded obj
@@ -247,6 +345,26 @@ public class ConnectDashboardViewModel extends BaseViewModel
             }
         }
         return download_url;
+    }
+
+    private String getUsername(){
+        String username = null;
+        if(post.getFilter()!=null && post.getFilter().size()>0)
+        {
+            for (CustomFilter item:post.getFilter())
+            {
+                if(item==null || TextUtils.isEmpty(item.getName()))
+                    continue;
+
+                if(item.getName().toLowerCase().equals(String.valueOf(MxFilterType.MX_PROFILE).toLowerCase())
+                        && item.getChoices()!=null && item.getChoices().length > 0)
+                {
+                    username=item.getChoices()[0];
+                    break;
+                }
+            }
+        }
+        return username;
     }
 
     private void loadData() {
@@ -748,6 +866,12 @@ public class ConnectDashboardViewModel extends BaseViewModel
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(UserFollowingChangedEvent event){
+        followed = event.getUser().isFollowed();
+        toggleFollowBtn();
+    }
+
+    @SuppressWarnings("unused")
     public void onEventMainThread(LoadMoreConnectCommentsEvent event){
         page++;
         fetchComments();
@@ -853,6 +977,20 @@ public class ConnectDashboardViewModel extends BaseViewModel
     public void resetReplyToComment(){
         replyingToVisible.set(false);
         commentParentId = 0;
+    }
+
+    private void toggleFollowBtn(){
+
+        if (followed){
+            followBtnText.set(mActivity.getString(R.string.following));
+            followBtnBackground.set(R.drawable.btn_selector_filled);
+            followTextColor.set(R.color.white);
+        } else {
+            followBtnText.set(mActivity.getString(R.string.follow));
+            followBtnBackground.set(R.drawable.btn_selector_hollow);
+            followTextColor.set(R.color.primary_cyan);
+        }
+
     }
 
     public class ConnectPagerAdapter extends BasePagerAdapter {

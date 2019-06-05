@@ -5,5 +5,6 @@ package org.edx.mobile.tta.wordpress_client.util;
  */
 
 public enum MxFilterType {
-    MX_VIDEODOWNLOAD
+    MX_VIDEODOWNLOAD,
+    MX_PROFILE
 }
