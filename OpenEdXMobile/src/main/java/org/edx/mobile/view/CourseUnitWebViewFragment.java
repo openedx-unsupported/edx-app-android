@@ -1,8 +1,12 @@
 package org.edx.mobile.view;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +15,14 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.event.UnitLoadedEvent;
 import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.module.download.IDownloadManager;
+import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -29,8 +38,16 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @InjectView(R.id.swipe_container)
     protected SwipeRefreshLayout swipeContainer;
 
+    @Inject
+    private UserPrefs pref;
+
+    @Inject
+    private IDownloadManager dm;
+
     private PreLoadingListener preloadingListener;
     private boolean isPageLoading = false;
+    private String resourceUrl;
+    private final int REQUEST_CODE = 1;
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
@@ -89,6 +106,25 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             }
         });
 
+        authWebView.getWebViewClient().setActionListener(new URLInterceptorWebViewClient.ActionListener() {
+
+            @Override
+            public void onLinkRecognized(@NonNull WebViewLink helper) {
+
+            }
+
+            @Override
+            public void downloadResource(String strUrl) {
+                resourceUrl = strUrl;
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+                } else {
+                    final String fileName = strUrl.substring(strUrl.lastIndexOf("/") + 1);
+                    dm.addDownload(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), strUrl, pref.isDownloadOverWifiOnly(), fileName);
+                }
+            }
+        });
+
         // Only load the unit if it is currently visible to user or the visible unit has finished loading
         if (getUserVisibleHint() || preloadingListener.isMainUnitLoaded()) {
             loadUnit();
@@ -142,5 +178,19 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     public void onEventMainThread(UnitLoadedEvent event) {
         loadUnit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && !resourceUrl.isEmpty()) {
+                    final String fileName = resourceUrl.substring(resourceUrl.lastIndexOf("/") + 1);
+                    dm.addDownload(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), resourceUrl, pref.isDownloadOverWifiOnly(), fileName);
+                }
+                return;
+            }
+        }
     }
 }
