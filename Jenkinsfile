@@ -10,13 +10,13 @@ pipeline {
             ANDROID_HOME = '/opt/android-sdk-linux'
             APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable'
             CONFIG_REPO_NAME = 'edx-mobile-config'
+            TEST_PROJECT_REPO_NAME = 'edx-app-test'
     }       
 
     stages {
         stage('checkingout configs') { 
             steps {
-                sh 'mkdir -p edx-mobile-config'
-                dir('edx-mobile-config'){
+                dir("$CONFIG_REPO_NAME"){
                     sshagent(credentials: ['jenkins-worker', 'jenkins-worker-pem'], ignoreMissing: true) {
                     checkout changelog: false, poll: false, scm: [
                         $class: 'GitSCM', 
@@ -40,18 +40,28 @@ pipeline {
         }
         stage('compiling edx-app-android') {
             steps {
-                writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/prod/\''  
+                writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/stage/\''  
                 sh 'bash ./resources/compile_android.sh'
             }
         }
         stage('valdiate compiled app') {
             steps {
                 sh 'bash ./resources/validate_builds.sh'
+                archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true
+            }   
+        }
+
+        stage('checkout test project repo') {
+            steps {
+                dir("$TEST_PROJECT_REPO_NAME"){
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]])
+                }
             }
         }
-        stage('archive the build') {
+        stage('prepare package for aws device farm') {
             steps {
-                archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true
+                sh 'bash ./resources/prepare_aws_package.sh'
+                archiveArtifacts artifacts: "$TEST_PROJECT_REPO_NAME/test_bundle.zip", onlyIfSuccessful: true
             }
         }
     }
