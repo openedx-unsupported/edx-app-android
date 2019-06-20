@@ -42,6 +42,8 @@
     <!-- Label for searching subjects -->
     <string name="search_subjects">Search Subject</string>
 
+    <string name="media_route_menu_title" tools:ignore="MissingTranslation">Play on&#8230;</string>
+
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share course menu -->

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -15,9 +14,11 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
@@ -131,6 +133,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private boolean pauseDueToDialog;
     private boolean closedCaptionsEnabled = false;
 
+    private MenuItem mediaRouteMenuItem;
+
     private final transient Handler handler = new Handler() {
         private long lastSavedPosition;
         @Override
@@ -164,6 +168,17 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     public void setTranscriptCallback(TranscriptListener listener) {
         this.transcriptListener = listener;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.player_fragment_menu, menu);
+        mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getContext().getApplicationContext(), menu, R.id.media_route_menu_item);
     }
 
     @Override
