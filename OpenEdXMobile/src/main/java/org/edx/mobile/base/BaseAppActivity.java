@@ -64,7 +64,7 @@ public abstract class BaseAppActivity extends RoboAppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.player_fragment_menu, menu);
+        getMenuInflater().inflate(R.menu.google_cast_menu_item, menu);
         mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
         return super.onCreateOptionsMenu(menu);
     }

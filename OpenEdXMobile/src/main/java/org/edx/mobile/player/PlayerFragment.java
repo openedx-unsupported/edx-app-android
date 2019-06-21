@@ -3,6 +3,7 @@ package org.edx.mobile.player;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -45,6 +46,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.googlecast.ExpandedControlsActivity;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -1870,6 +1872,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (remoteMediaClient == null) {
             return;
         }
+        remoteMediaClient.registerCallback(new RemoteMediaClient.Callback() {
+            @Override
+            public void onStatusUpdated() {
+                Intent intent = new Intent(PlayerFragment.this.getContext(), ExpandedControlsActivity.class);
+                startActivity(intent);
+                remoteMediaClient.unregisterCallback(this);
+            }
+        });
         remoteMediaClient.load(buildMediaInfo(),
                 new MediaLoadOptions.Builder()
                         .setAutoplay(autoPlay)

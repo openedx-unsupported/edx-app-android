@@ -54,6 +54,10 @@
         <item name="mediaRouteButtonTint">@color/toolbar_controls_color</item>
     </style>
 
+    <style name="Theme.CastVideosDark" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/black</item>
+    </style>
+
     <style name="AppTheme.NoDisplayTheme" parent="android:style/Theme.NoDisplay">
         <item name="android:windowIsTranslucent">false</item>
     </style>
