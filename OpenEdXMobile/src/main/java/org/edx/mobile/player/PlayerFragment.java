@@ -481,7 +481,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     public synchronized void playOrPrepare(String path, long seekTo, String title,
                                            TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
-        video.castUrl = path;
         isPrepared = false;
         // block to portrait while preparing
         if ( !isScreenLandscape()) {
@@ -535,6 +534,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 player.setUri(path, seekTo);
             else
                 player.setUriAndPlay(path, seekTo);
+
+            video.castUrl = path;
+            if (mCastSession != null && mCastSession.isConnected()) {
+                loadRemoteMedia(player.getController().getProgress(), true);
+            }
         } catch (Exception e) {
             logger.error(e);
         }
