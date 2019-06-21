@@ -832,6 +832,13 @@ public class PlayerController extends FrameLayout {
         }
     }
 
+    public int getProgress() {
+        if (mProgress == null) {
+            return 0;
+        }
+        return mProgress.getProgress();
+    }
+
     @SuppressWarnings("unused")
     public void showProgress() {
         this.mProgress.setVisibility(View.VISIBLE);

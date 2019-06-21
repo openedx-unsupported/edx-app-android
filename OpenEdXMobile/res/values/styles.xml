@@ -43,6 +43,15 @@
         <item name="android:progressBarStyleLargeInverse">
             @style/edX.Widget.ProgressBar.Large.Inverse
         </item>
+        <item name="mediaRouteTheme">@style/CustomMediaRouterTheme</item>
+    </style>
+
+    <!-- Customize Cast Button -->
+    <style name="CustomMediaRouterTheme" parent="Theme.MediaRouter">
+        <item name="mediaRouteButtonStyle">@style/CustomMediaRouteButtonStyle</item>
+    </style>
+    <style name="CustomMediaRouteButtonStyle" parent="Widget.MediaRouter.Light.MediaRouteButton">
+        <item name="mediaRouteButtonTint">@color/toolbar_controls_color</item>
     </style>
 
     <style name="AppTheme.NoDisplayTheme" parent="android:style/Theme.NoDisplay">

@@ -48,6 +48,8 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public String lmsUrl;
     public TranscriptModel transcript;
 
+    public String castUrl;
+
     @Inject
     IEdxEnvironment environment;
 

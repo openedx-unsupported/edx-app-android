@@ -16,9 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -34,7 +31,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaLoadOptions;
+import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
@@ -133,7 +136,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private boolean pauseDueToDialog;
     private boolean closedCaptionsEnabled = false;
 
-    private MenuItem mediaRouteMenuItem;
+    private CastContext mCastContext;
+    private CastSession mCastSession;
+    private SessionManagerListener<CastSession> mSessionManagerListener;
 
     private final transient Handler handler = new Handler() {
         private long lastSavedPosition;
@@ -173,12 +178,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.player_fragment_menu, menu);
-        mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getContext().getApplicationContext(), menu, R.id.media_route_menu_item);
+        setupCastListener();
+        mCastContext = CastContext.getSharedInstance(getContext());
+        mCastSession = mCastContext.getSessionManager().getCurrentCastSession();
     }
 
     @Override
@@ -328,6 +330,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (getUserVisibleHint()) {
             handleOnResume();
         }
+        mCastContext.getSessionManager().addSessionManagerListener(mSessionManagerListener, CastSession.class);
     }
 
     @Override
@@ -336,6 +339,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (getUserVisibleHint()) {
             handleOnPause();
         }
+        mCastContext.getSessionManager().removeSessionManagerListener(
+                mSessionManagerListener, CastSession.class);
     }
 
     @Override
@@ -474,6 +479,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     public synchronized void playOrPrepare(String path, long seekTo, String title,
                                            TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
+        video.castUrl = path;
         isPrepared = false;
         // block to portrait while preparing
         if ( !isScreenLandscape()) {
@@ -1797,5 +1803,96 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     public void seekToCaption(@NonNull Caption caption) {
         player.seekTo(caption.start.getMseconds());
+    }
+
+
+    private void setupCastListener() {
+        mSessionManagerListener = new SessionManagerListener<CastSession>() {
+
+            @Override
+            public void onSessionEnded(CastSession session, int error) {
+                onApplicationDisconnected();
+            }
+
+            @Override
+            public void onSessionResumed(CastSession session, boolean wasSuspended) {
+                onApplicationConnected(session);
+            }
+
+            @Override
+            public void onSessionResumeFailed(CastSession session, int error) {
+                onApplicationDisconnected();
+            }
+
+            @Override
+            public void onSessionStarted(CastSession session, String sessionId) {
+                onApplicationConnected(session);
+            }
+
+            @Override
+            public void onSessionStartFailed(CastSession session, int error) {
+                onApplicationDisconnected();
+            }
+
+            @Override
+            public void onSessionStarting(CastSession session) {}
+
+            @Override
+            public void onSessionEnding(CastSession session) {}
+
+            @Override
+            public void onSessionResuming(CastSession session, String sessionId) {}
+
+            @Override
+            public void onSessionSuspended(CastSession session, int reason) {}
+
+            private void onApplicationConnected(CastSession castSession) {
+                mCastSession = castSession;
+                if (null != videoEntry) {
+                    loadRemoteMedia(player.getController().getProgress(), true);
+                }
+                getActivity().invalidateOptionsMenu();
+//                supportInvalidateOptionsMenu();
+            }
+
+            private void onApplicationDisconnected() {
+                getActivity().invalidateOptionsMenu();
+//                supportInvalidateOptionsMenu();
+            }
+        };
+    }
+
+    private void loadRemoteMedia(int position, boolean autoPlay) {
+        if (mCastSession == null) {
+            return;
+        }
+        RemoteMediaClient remoteMediaClient = mCastSession.getRemoteMediaClient();
+        if (remoteMediaClient == null) {
+            return;
+        }
+        remoteMediaClient.load(buildMediaInfo(),
+                new MediaLoadOptions.Builder()
+                        .setAutoplay(autoPlay)
+                        .setPlayPosition(position).build());
+    }
+
+    private MediaInfo buildMediaInfo() {
+        MediaMetadata movieMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
+
+        movieMetadata.putString(MediaMetadata.KEY_SUBTITLE, videoEntry.title);
+        movieMetadata.putString(MediaMetadata.KEY_TITLE, videoEntry.title);
+//        movieMetadata.addImage(new WebImage(Uri.parse(mSelectedMedia.getImage(0))));
+//        movieMetadata.addImage(new WebImage(Uri.parse(mSelectedMedia.getImage(1))));
+
+        String url;
+        url = videoEntry.castUrl;
+//        url = "https://d2f1egay8yehza.cloudfront.net/MITX60012016-V003000_MB2.mp4";
+        android.util.Log.i("GoogleCast", "Casting url: "+url);
+        return new MediaInfo.Builder(url)
+                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                .setContentType("videos/mp4")
+                .setMetadata(movieMetadata)
+                .setStreamDuration(videoEntry.getDuration() * 1000)
+                .build();
     }
 }
