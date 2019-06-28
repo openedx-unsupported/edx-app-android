@@ -1,6 +1,5 @@
 package org.edx.mobile.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -10,6 +9,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RawRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.View;
@@ -123,5 +123,18 @@ public class UiUtil {
     public static void setSwipeRefreshLayoutColors(@NonNull SwipeRefreshLayout swipeRefreshLayout) {
         swipeRefreshLayout.setColorSchemeResources(R.color.edx_brand_primary_accent,
                 R.color.edx_brand_gray_x_back);
+    }
+
+    /**
+     * Restarts the fragment without destroying the fragment instance.
+     *
+     * @param The fragment to restart.
+     */
+    public static void restartFragment(@Nullable Fragment fragment) {
+        if (fragment != null) {
+            fragment.getFragmentManager().beginTransaction()
+                    .detach(fragment)
+                    .attach(fragment).commitAllowingStateLoss();
+        }
     }
 }

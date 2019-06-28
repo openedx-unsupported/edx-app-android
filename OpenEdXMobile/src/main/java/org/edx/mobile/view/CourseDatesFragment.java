@@ -58,7 +58,9 @@ public class CourseDatesFragment extends AuthenticatedWebViewFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EventBus.getDefault().registerSticky(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().registerSticky(this);
+        }
     }
 
     @Override
@@ -70,7 +72,8 @@ public class CourseDatesFragment extends AuthenticatedWebViewFragment {
 
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
-        OfflineSupportUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(), authWebView.isShowingError());
+        OfflineSupportUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(),
+                authWebView != null && authWebView.isShowingError());
     }
 
     @Override
