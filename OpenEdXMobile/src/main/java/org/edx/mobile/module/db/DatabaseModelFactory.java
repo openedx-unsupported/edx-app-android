@@ -99,7 +99,7 @@ public class DatabaseModelFactory {
         IBlock root = block.getRoot();
         e.eid = root.getCourseId();
         e.duration = vrm.duration;
-        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredVideoInfoForDownloading();
+        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredVideoInfo();
         e.size = preferredVideoInfo.fileSize;
         e.title = block.getDisplayName();
         e.url = preferredVideoInfo.url;

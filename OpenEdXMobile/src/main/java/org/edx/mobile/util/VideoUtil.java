@@ -2,6 +2,7 @@ package org.edx.mobile.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.course.VideoData;
@@ -65,25 +66,27 @@ public class VideoUtil {
      */
     @Nullable
     public static String getPreferredVideoUrlForDownloading(@NonNull VideoData video) {
+        String preferredVideoUrl = null;
         final VideoInfo preferredVideoInfo = video.encodedVideos.getPreferredVideoInfoForDownloading();
-        if (preferredVideoInfo == null || video.onlyOnWeb) {
-            return null;
-        }
-        if (!videoHasFormat(preferredVideoInfo.url, VIDEO_FORMAT_M3U8)) {
+
+        if (preferredVideoInfo != null &&
+                !TextUtils.isEmpty(preferredVideoInfo.url) &&
+                !video.onlyOnWeb &&
+                !videoHasFormat(preferredVideoInfo.url, VIDEO_FORMAT_M3U8)) {
             return preferredVideoInfo.url;
         }
+
         if (!new Config(MainApplication.instance()).isUsingVideoPipeline()) {
-            /**
-             * If preferred video url for downloading has HLS format and
-             * {@link Config#USING_VIDEO_PIPELINE} feature flag is disabled, try to find some .mp4
-             * format url from {@link VideoData#allSources} urls and consider it for download.
+            /*
+              If {@link Config#USING_VIDEO_PIPELINE} feature flag is disabled, try to find some .mp4
+              format url from {@link VideoData#allSources} urls and consider it for download.
              */
             for (String url : video.allSources) {
                 if (VideoUtil.videoHasFormat(url, AppConstants.VIDEO_FORMAT_MP4)) {
-                    return url;
+                    preferredVideoUrl = url;
                 }
             }
         }
-        return null;
+        return preferredVideoUrl;
     }
 }

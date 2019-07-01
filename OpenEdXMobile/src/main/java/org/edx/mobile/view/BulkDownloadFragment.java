@@ -227,7 +227,13 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                                     videosStatus.remainingVideosSize += videoSize;
                                     videosStatus.totalVideosSize += videoSize;
                                 }
-                                remainingVideos.add((VideoBlockModel) video);
+                                /**
+                                 * Assign preferred downloadable url to {@link VideoBlockModel#downloadUrl},
+                                 * to use this url to download. After downloading only downloaded
+                                 * video path will be used for streaming.
+                                 */
+                                videoBlockModel.setDownloadUrl(VideoUtil.getPreferredVideoUrlForDownloading(videoBlockModel.getData()));
+                                remainingVideos.add(videoBlockModel);
                             }
                         }
 
