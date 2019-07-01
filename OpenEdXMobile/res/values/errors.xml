@@ -11,6 +11,8 @@
     <string name="enrollment_error_title">Enrollment Error</string>
     <!-- Error message shown in alert when course enrollment request fails -->
     <string name="enrollment_error_message">We are unable to enroll you in this course at this time using the {platform_name} mobile application. Please try again on your web browser.</string>
+    <!-- Error message shown when a course section is not available on mobile -->
+    <string name="not_available_on_mobile" tools:ignore="MissingTranslation">Not available on Mobile</string>
 
     <!-- Network error messages -->
     <!-- Error shown when  user attempts an action but needs an internet connection -->

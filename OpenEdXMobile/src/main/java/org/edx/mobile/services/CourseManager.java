@@ -63,13 +63,15 @@ public class CourseManager {
      * {@link CourseManager#getCourseDataFromAppLevelCache} can be used as an alternate, specially
      * if its sure course data will be available in app level cache.
      *
+     *
+     * @param blocksApiVersion Version of the API.
      * @param courseId Id of the course.
      * @return Cached course data. In case course data is not present in cache it will return null.
      */
     @Nullable
-    public CourseComponent getCourseDataFromPersistableCache(@NonNull final String courseId) {
+    public CourseComponent getCourseDataFromPersistableCache(@NonNull String blocksApiVersion, @NonNull String courseId) {
         try {
-            final CourseComponent component = courseApi.getCourseStructureFromCache(courseId);
+            final CourseComponent component = courseApi.getCourseStructureFromCache(blocksApiVersion, courseId);
             addCourseDataInAppLevelCache(courseId, component);
             return component;
         } catch (Exception e) {
@@ -80,12 +82,12 @@ public class CourseManager {
 
     @Deprecated
     @Nullable
-    private CourseComponent getCachedCourseData(@NonNull final String courseId) {
+    private CourseComponent getCachedCourseData(@NonNull String blocksApiVersion, @NonNull String courseId) {
         final CourseComponent component = getCourseDataFromAppLevelCache(courseId);
         if (component != null) {
             return component;
         }
-        return getCourseDataFromPersistableCache(courseId);
+        return getCourseDataFromPersistableCache(blocksApiVersion, courseId);
     }
 
     /**
@@ -119,9 +121,10 @@ public class CourseManager {
      */
     @Deprecated
     @Nullable
-    public CourseComponent getComponentById(@NonNull final String courseId,
-                                            @NonNull final String componentId) {
-        CourseComponent courseComponent = getCachedCourseData(courseId);
+    public CourseComponent getComponentById(@NonNull String blocksApiVersion,
+                                            @NonNull String courseId,
+                                            @NonNull String componentId) {
+        CourseComponent courseComponent = getCachedCourseData(blocksApiVersion, courseId);
         if (courseComponent == null)
             return null;
         return courseComponent.find(new Filter<CourseComponent>() {

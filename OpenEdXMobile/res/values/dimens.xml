@@ -184,6 +184,7 @@
     <dimen name="large_indicator_icon_width">100dp</dimen>
     <dimen name="large_indicator_icon_height">100dp</dimen>
     <dimen name="content_unavailable_error_icon_size">80dp</dimen>
+    <dimen name="unit_unavailable_error_icon_size">90dp</dimen>
 
     <!-- Stray dimensions -->
     <dimen name="notification_settings_margin">12dp</dimen>

@@ -7,6 +7,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
+import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.api.IPathNode;
 import org.edx.mobile.util.VideoUtil;
 
@@ -36,6 +37,8 @@ public class CourseComponent implements IBlock, IPathNode {
     private String courseId;
     private String format;
     private String dueDate;
+    private String authorizationDenialMessage;
+    private AuthorizationDenialReason authorizationDenialReason;
 
     public CourseComponent() {
     }
@@ -57,6 +60,8 @@ public class CourseComponent implements IBlock, IPathNode {
         this.courseId = other.courseId;
         this.format = other.format;
         this.dueDate = other.dueDate;
+        this.authorizationDenialMessage = other.authorizationDenialMessage;
+        this.authorizationDenialReason = other.authorizationDenialReason;
     }
 
     /**
@@ -75,6 +80,8 @@ public class CourseComponent implements IBlock, IPathNode {
         this.multiDevice =  blockModel.studentViewMultiDevice;
         this.format = blockModel.format;
         this.dueDate = blockModel.dueDate;
+        this.authorizationDenialMessage = blockModel.authorizationDenialMessage;
+        this.authorizationDenialReason = blockModel.authorizationDenialReason;
         this.blockCount = blockModel.blockCounts == null ? new BlockCount() : blockModel.blockCounts;
         this.parent = parent;
         if ( parent == null){
@@ -460,6 +467,7 @@ public class CourseComponent implements IBlock, IPathNode {
         return null;
     }
 
-
-
+    public AuthorizationDenialReason getAuthorizationDenialReason() {
+        return authorizationDenialReason;
+    }
 }
