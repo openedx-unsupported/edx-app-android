@@ -7,7 +7,7 @@ EXPECTED_FLAG='application-debuggable'
 
 for APK in $APK_PATH/"*.apk"; do
     echo "Checking if $APK is debuggable"
-    DEBUGGABLE=`$ANDROID_HOME/build-tools/27.0.3/aapt dump badging $APK |grep $EXPECTED_FLAG`
+    DEBUGGABLE=`$ANDROID_HOME/build-tools/28.0.3/aapt dump badging $APK |grep $EXPECTED_FLAG`
     if [ $? == 0 ]; then
        echo "The build is debuggable"
        exit 0
