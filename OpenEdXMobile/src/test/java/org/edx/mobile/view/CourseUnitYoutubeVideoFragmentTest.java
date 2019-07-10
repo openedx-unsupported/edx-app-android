@@ -16,9 +16,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
-import org.edx.mobile.util.VideoUtil;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.io.IOException;
@@ -33,11 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
 
-
     private static final String YOUTUBE_VIDEO = "YOUTUBE_VIDEO"; // Config key for YOUTUBE
-
-    @Mock
-    VideoUtil videoUtil;
 
     private VideoBlockModel getVideoUnit() {
         EnrolledCoursesResponse courseData;
@@ -94,6 +88,19 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
         assertNotNull(playerContainer);
     }
 
+    @Override
+    protected JsonObject generateConfigProperties() throws IOException {
+        // Add the mock youtube api key in the test config properties
+        JsonObject properties = super.generateConfigProperties();
+        properties.add(YOUTUBE_VIDEO, getYoutubeMockConfig());
+        return properties;
+    }
+
+    private JsonElement getYoutubeMockConfig() {
+        String serializedData = "{\"ENABLED\":\"True\", \"YOUTUBE_API_KEY\":\"TEST_YOUTUBE_API_KEY\"}";
+        return new JsonParser().parse(serializedData);
+    }
+
     private static class FragmentUtilActivity extends RoboFragmentActivity implements CourseUnitFragment.HasComponent {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -117,18 +124,5 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
         @Override
         public void navigatePreviousComponent() {
         }
-    }
-
-    @Override
-    protected JsonObject generateConfigProperties() throws IOException {
-        // Add the mock youtube api key in the test config properties
-        JsonObject properties = super.generateConfigProperties();
-        properties.add(YOUTUBE_VIDEO, getYoutubeMockConfig());
-        return properties;
-    }
-
-    private JsonElement getYoutubeMockConfig() {
-        String serializedData = "{\"ENABLED\":\"True\", \"YOUTUBE_API_KEY\":\"TEST_YOUTUBE_API_KEY\"}";
-        return new JsonParser().parse(serializedData);
     }
 }

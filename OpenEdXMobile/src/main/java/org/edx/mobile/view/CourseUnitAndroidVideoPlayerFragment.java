@@ -45,6 +45,19 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     private Runnable playPending;
     private final Handler playHandler = new Handler();
 
+    private final Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == MSG_UPDATE_PROGRESS) {
+                if (isActivityStarted()) {
+                    if (NetworkUtil.isConnected(getActivity())) {
+
+                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
+                    }
+                }
+            }
+        }
+    };
+
     /**
      * Create a new instance of fragment
      */
@@ -104,31 +117,21 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 View.OnClickListener prev = null;
 
                 if (hasNextUnit) {
-                    next = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            hasComponent.navigateNextComponent();
-                        }
-                    };
+                    next = v -> hasComponent.navigateNextComponent();
                 }
 
                 if (hasPreviousUnit) {
-                    prev = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            hasComponent.navigatePreviousComponent();
-                        }
-                    };
+                    prev = v -> hasComponent.navigatePreviousComponent();
                 }
 
                 playerFragment.setNextPreviousListeners(next, prev);
             }
 
             try {
-                FragmentManager fm = getChildFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.player_container, playerFragment, "player");
-                ft.commit();
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.player_container, playerFragment, "player");
+                fragmentTransaction.commit();
             } catch (Exception ex) {
                 logger.error(ex);
             }
@@ -199,7 +202,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 public void onNegativeClicked() {
                     ((BaseFragmentActivity) getActivity()).
                             showInfoMessage(getString(R.string.wifi_off_message));
-                    notifyAdapter();
                 }
             });
         }
@@ -215,9 +217,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
         addVideoDatatoDb(model);
 
         playVideoModel(model);
-        notifyAdapter();
     }
-
 
     public synchronized void playVideoModel(final DownloadEntry video) {
         try {
@@ -241,11 +241,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 if (playPending != null) {
                     playHandler.removeCallbacks(playPending);
                 }
-                playPending = new Runnable() {
-                    public void run() {
-                        playVideoModel(video);
-                    }
-                };
+                playPending = () -> playVideoModel(video);
                 playHandler.postDelayed(playPending, 200);
                 return;
             } else {
@@ -254,7 +250,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 }
             }
 
-            TranscriptModel transcript = getTranscriptModel(video);
+            TranscriptModel transcript = getTranscriptModel();
             String filepath = getVideoPath(video);
 
 
@@ -333,7 +329,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     public void onStop() {
         super.onStop();
         isActivityStarted = false;
-        AppConstants.videoListDeleteMode = false;
 
         try {
             if (playerFragment != null) {
@@ -342,11 +337,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
         } catch (Exception ex) {
             logger.error(ex);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -362,25 +352,8 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
         return isActivityStarted;
     }
 
-    private final Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (NetworkUtil.isConnected(getActivity())) {
-
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
-                    }
-                }
-            }
-        }
-    };
-
     private boolean isPlayerVisible() {
         return getActivity() != null;
-    }
-
-    public void notifyAdapter() {
-
     }
 
     @Override
@@ -412,24 +385,8 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     }
 
     @Override
-    protected void initTranscriptListView() {
-        super.initTranscriptListView();
-        transcriptListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Caption currentCaption = transcriptAdapter.getItem(position);
-                if (currentCaption != null) {
-                    transcriptListView.removeCallbacks(UNFREEZE_AUTO_SCROLL);
-                    isTranscriptScrolling = false;
-
-                    transcriptAdapter.unselectAll();
-                    transcriptAdapter.select(position);
-                    transcriptAdapter.notifyDataSetChanged();
-                    playerFragment.seekToCaption(currentCaption);
-                }
-            }
-        });
-
+    public void seekToCaption(Caption caption) {
+        playerFragment.seekToCaption(caption);
     }
 
 }

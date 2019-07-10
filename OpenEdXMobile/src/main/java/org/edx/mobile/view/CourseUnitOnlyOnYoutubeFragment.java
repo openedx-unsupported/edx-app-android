@@ -32,32 +32,27 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View courseUnitOnlyOnYoutube = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
+        final View courseUnitOnlyOnYoutubeView = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
         if (environment.getConfig().getEmbeddedYoutubeConfig().isYoutubeEnabled()) {
-            ((TextView) courseUnitOnlyOnYoutube.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
-            courseUnitOnlyOnYoutube.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
-            courseUnitOnlyOnYoutube.findViewById(R.id.update_youtube_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.APP_PLAYSTORE_YOUTUBE_URI));
-                        startActivity(intent);
-                    } catch (android.content.ActivityNotFoundException e) {
-                        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI));
-                        startActivity(intent);
-                    }
+            ((TextView) courseUnitOnlyOnYoutubeView.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
+            courseUnitOnlyOnYoutubeView.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
+            courseUnitOnlyOnYoutubeView.findViewById(R.id.update_youtube_button).setOnClickListener(v -> {
+                try {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.YOUTUBE_APP_URI_PLAY_STORE));
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException e) {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI));
+                    startActivity(intent);
                 }
             });
         }
 
-        courseUnitOnlyOnYoutube.findViewById(R.id.view_on_youtube_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(((VideoBlockModel) unit).getData().encodedVideos.youtube.url));
-                startActivity(i);
-            }
+        courseUnitOnlyOnYoutubeView.findViewById(R.id.view_on_youtube_button).setOnClickListener(v -> {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(((VideoBlockModel) unit).getData().encodedVideos.youtube.url));
+            startActivity(i);
         });
-        return courseUnitOnlyOnYoutube;
+
+        return courseUnitOnlyOnYoutubeView;
     }
 }

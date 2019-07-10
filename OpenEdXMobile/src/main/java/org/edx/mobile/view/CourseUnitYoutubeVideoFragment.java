@@ -40,20 +40,50 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private static final int SUBTITLES_DISPLAY_DELAY_MS = 50;
 
-    private YouTubePlayer youTubePlayer, previousYouTubePlayer;
+    private YouTubePlayer youTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
     private Handler transcriptsHandler = new Handler();
     private Handler initializeHandler = new Handler();
     private TimedTextObject subtitlesObj;
     private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
+    /*
+     * wasHiding is set on true when the app comes to background from foreground
+     * so this allow to play a video when the app comes to foreground from background
+     * fromLandscape allow to know if the user has exited from fullscreen on landscape mode a keep the normal screen size.
+     */
     private boolean fromLandscape, wasHiding;
     private int attempts;
+
+    private Runnable subtitlesProcessorRunnable = () -> {
+        if (youTubePlayer != null) {
+            int currentPos = youTubePlayer.getCurrentTimeMillis();
+            if (currentPos >= 0 && youTubePlayer.isPlaying()) {
+                saveCurrentPlaybackPosition(currentPos);
+            } else {
+                currentPos = 0;
+            }
+
+            if (subtitlesObj != null) {
+                Collection<Caption> subtitles = subtitlesObj.captions.values();
+                int currentSubtitleIndex = 0;
+                for (Caption subtitle : subtitles) {
+                    int startMillis = subtitle.start.getMseconds();
+                    int endMillis = subtitle.end.getMseconds();
+                    if (currentPos >= startMillis && currentPos <= endMillis) {
+                        updateSelection(currentSubtitleIndex);
+                        break;
+                    }
+                    currentSubtitleIndex++;
+                }
+            }
+        }
+        subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable , SUBTITLES_DISPLAY_DELAY_MS);
+    };
 
     /**
      * Create a new instance of fragment
      */
-
     public static CourseUnitYoutubeVideoFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
         CourseUnitYoutubeVideoFragment fragment = new CourseUnitYoutubeVideoFragment();
         fragment.setArguments(getCourseUnitBundle(unit, hasNextUnit, hasPreviousUnit));
@@ -155,7 +185,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
              */
             final String videoId = uri.getQueryParameter("v");
             player.loadVideo(videoId, currentPos);
-            previousYouTubePlayer = youTubePlayer;
             youTubePlayer = player;
             youTubePlayer.setPlayerStateChangeListener(new StateChangeListener());
             youTubePlayer.setPlaybackEventListener(new PlaybackListener());
@@ -199,38 +228,9 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                                         YouTubeInitializationResult result) {
     }
 
-    private Runnable subtitlesProcessorRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (youTubePlayer != null) {
-                int currentPos = youTubePlayer.getCurrentTimeMillis();
-                if (currentPos >= 0 && youTubePlayer.isPlaying()) {
-                    saveCurrentPlaybackPosition(currentPos);
-                } else {
-                    currentPos = 0;
-                }
-
-                if (subtitlesObj != null) {
-                    Collection<Caption> subtitles = subtitlesObj.captions.values();
-                    int currentSubtitleIndex = 0;
-                    for (Caption subtitle : subtitles) {
-                        int startMillis = subtitle.start.getMseconds();
-                        int endMillis = subtitle.end.getMseconds();
-                        if (currentPos >= startMillis && currentPos <= endMillis) {
-                            updateSelection(currentSubtitleIndex);
-                            break;
-                        }
-                        currentSubtitleIndex++;
-                    }
-                }
-            }
-            subtitleDisplayHandler.postDelayed(this, SUBTITLES_DISPLAY_DELAY_MS);
-        }
-    };
-
     private void loadTranscriptsData(VideoBlockModel unit) {
         TranscriptManager transcriptManager = new TranscriptManager(getContext());
-        TranscriptModel transcript = getTranscriptModel(unit.getDownloadEntry(environment.getStorage()));
+        TranscriptModel transcript = getTranscriptModel();
         transcriptManager.downloadTranscriptsForVideo(transcript);
 
         try {
@@ -288,17 +288,10 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     @Override
-    protected void initTranscriptListView() {
-        super.initTranscriptListView();
-        transcriptListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Caption currentCaption = transcriptAdapter.getItem(position);
-                if (currentCaption != null && youTubePlayer != null) {
-                    youTubePlayer.seekToMillis(currentCaption.start.getMseconds());
-                }
-            }
-        });
+    public void seekToCaption(Caption caption) {
+        if (caption != null && youTubePlayer != null) {
+            youTubePlayer.seekToMillis(caption.start.getMseconds());
+        }
     }
 
     private void setVideoModel() {
@@ -346,9 +339,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
              * and reloads the fragment
              */
             if (attempts <= 3) {
-                if (previousYouTubePlayer != null) {
-                    previousYouTubePlayer.release();
-                }
                 releaseYoutubePlayer();
                 initializeYoutubePlayer();
                 attempts++;

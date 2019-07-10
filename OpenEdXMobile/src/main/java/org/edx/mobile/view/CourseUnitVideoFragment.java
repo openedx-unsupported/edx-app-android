@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
@@ -33,7 +34,7 @@ import java.util.Map;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
-public class CourseUnitVideoFragment extends CourseUnitFragment
+public abstract class CourseUnitVideoFragment extends CourseUnitFragment
         implements IPlayerEventCallback, TranscriptListener {
 
     protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
@@ -60,6 +61,18 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Inject
     private CourseAPI courseApi;
     private ViewTreeObserver.OnGlobalLayoutListener transcriptListLayoutListener;
+
+
+    protected abstract void seekToCaption(Caption caption);
+    protected abstract void updateUIForOrientation();
+
+    public static Bundle getCourseUnitBundle(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
+        Bundle args = new Bundle();
+        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
+        args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
+        return args;
+    }
 
     /**
      * When creating, retrieve this instance's number from its arguments.
@@ -94,7 +107,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         restore(savedInstanceState);
     }
 
-    protected TranscriptModel getTranscriptModel(DownloadEntry video) {
+    protected TranscriptModel getTranscriptModel() {
         TranscriptModel transcript = null;
         if (unit != null && unit.getData() != null &&
                 unit.getData().transcripts != null) {
@@ -107,7 +120,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onStop() {
         super.onStop();
         transcriptListView.getViewTreeObserver().removeOnGlobalLayoutListener(transcriptListLayoutListener);
-
     }
 
     @Override
@@ -233,10 +245,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         updateUIForOrientation();
     }
 
-    protected void updateUIForOrientation() {
-
-    }
-
     protected void updateUI(int orientation) {
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             messageContainer.setVisibility(View.GONE);
@@ -312,6 +320,19 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 return false;
             }
         });
+
+        transcriptListView.setOnItemClickListener((parent, view, position, id) -> {
+            final Caption currentCaption = transcriptAdapter.getItem(position);
+            if (currentCaption != null) {
+                transcriptListView.removeCallbacks(UNFREEZE_AUTO_SCROLL);
+                isTranscriptScrolling = false;
+
+                transcriptAdapter.unselectAll();
+                transcriptAdapter.select(position);
+                transcriptAdapter.notifyDataSetChanged();
+                seekToCaption(currentCaption);
+            }
+        });
     }
 
     /**
@@ -324,12 +345,4 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             isTranscriptScrolling = false;
         }
     };
-
-    public static Bundle getCourseUnitBundle(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
-        Bundle args = new Bundle();
-        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
-        args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
-        args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
-        return args;
-    }
 }
