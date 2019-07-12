@@ -17,6 +17,7 @@ import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.FacebookSdk;
+import com.google.firebase.FirebaseApp;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.joanzapata.iconify.Iconify;
@@ -132,17 +133,22 @@ public abstract class MainApplication extends MultiDexApplication {
         // Add Segment as an analytics provider if enabled in the config
         if (config.getSegmentConfig().isEnabled()) {
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
-        } else if (config.getFirebaseConfig().isAnalyticsEnabled()) {
+        }
+        if (config.getFirebaseConfig().isAnalyticsSourceFirebase()) {
             // Only add Firebase as an analytics provider if enabled in the config and Segment is disabled
             // because if Segment is enabled, we'll be using Segment's implementation for Firebase
             analyticsRegistry.addAnalyticsProvider(injector.getInstance(FirebaseAnalytics.class));
         }
 
-        if (config.getFirebaseConfig().areNotificationsEnabled()) {
-            NotificationUtil.subscribeToTopics(config);
-        } else if (!config.getFirebaseConfig().areNotificationsEnabled() &&
-                config.getFirebaseConfig().isEnabled()) {
-            NotificationUtil.unsubscribeFromTopics(config);
+        if (config.getFirebaseConfig().isEnabled()) {
+            // Firebase notification needs to initialize the FirebaseApp before
+            // subscribe/unsubscribe to/from the topics
+            FirebaseApp.initializeApp(this);
+            if (config.getFirebaseConfig().areNotificationsEnabled()) {
+                NotificationUtil.subscribeToTopics(config);
+            } else if (!config.getFirebaseConfig().areNotificationsEnabled()) {
+                NotificationUtil.unsubscribeFromTopics(config);
+            }
         }
 
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));

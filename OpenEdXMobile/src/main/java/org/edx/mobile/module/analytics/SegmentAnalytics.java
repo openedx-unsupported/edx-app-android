@@ -46,7 +46,7 @@ public class SegmentAnalytics implements Analytics {
                 .flushQueueSize(queueSize)
                 .flushInterval(flushInterval, TimeUnit.SECONDS)
                 .logLevel(debugging ? com.segment.analytics.Analytics.LogLevel.VERBOSE : com.segment.analytics.Analytics.LogLevel.NONE);
-        if (config.getFirebaseConfig().isAnalyticsEnabled()) {
+        if (config.getFirebaseConfig().isAnalyticsSourceSegment()) {
             // If Segment & Firebase Analytics are enabled, we'll use Segment's Firebase integration
             builder = builder.use(FirebaseIntegration.FACTORY);
         }

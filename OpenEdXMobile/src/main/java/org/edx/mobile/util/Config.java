@@ -545,18 +545,31 @@ public class Config {
         @SerializedName("ENABLED")
         private boolean mEnabled;
 
-        @SerializedName("ANALYTICS_ENABLED")
-        private boolean mAnalyticsEnabled;
+        @SerializedName("ANALYTICS_SOURCE")
+        private AnalyticsSource mAnalyticsSource;
 
         @SerializedName("CLOUD_MESSAGING_ENABLED")
         private boolean mCloudMessagingEnabled;
+
+        public enum AnalyticsSource {
+            @SerializedName("segment")
+            SEGMENT,
+            @SerializedName("firebase")
+            FIREBASE,
+            @SerializedName("none")
+            NONE
+        }
 
         public boolean isEnabled() {
             return mEnabled;
         }
 
-        public boolean isAnalyticsEnabled() {
-            return mEnabled && mAnalyticsEnabled;
+        public boolean isAnalyticsSourceSegment() {
+            return mEnabled && mAnalyticsSource == AnalyticsSource.SEGMENT;
+        }
+
+        public boolean isAnalyticsSourceFirebase() {
+            return mEnabled && mAnalyticsSource == AnalyticsSource.FIREBASE;
         }
 
         public boolean areNotificationsEnabled() {
