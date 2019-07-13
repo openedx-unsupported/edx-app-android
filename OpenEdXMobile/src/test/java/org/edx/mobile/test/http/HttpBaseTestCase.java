@@ -2,6 +2,8 @@ package org.edx.mobile.test.http;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Injector;
 
@@ -15,6 +17,7 @@ import org.edx.mobile.http.interceptor.OnlyIfCachedStrippingInterceptor;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.test.util.MockDataUtil;
+import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
@@ -45,6 +48,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     private static final int ERROR_DELAY_FACTOR = 3; // Network errors will be scaled by this value.
     private static final Random random = new Random(); // Random instance for determining delays
     private static final String API_HOST_URL = "API_HOST_URL"; // Config key for API host url
+    private static final String API_URL_VERSION = "API_URL_VERSION"; // Config key for API url version
     // Use a mock server to serve fixed responses
     protected MockWebServer server;
     // Per-test configuration for whether the mock web server should create artificial delays
@@ -61,6 +65,11 @@ public class HttpBaseTestCase extends BaseTestCase {
      */
     private String getBaseMockUrl() {
         return "http://" + server.getHostName() + ":" + server.getPort();
+    }
+
+    private JsonElement getMockUrlVersion() {
+        final Config.ApiUrlVersionConfig mockUrlVersionConfig = new Config.ApiUrlVersionConfig("v2");
+        return new Gson().toJsonTree(mockUrlVersionConfig);
     }
 
     @Override
@@ -82,6 +91,7 @@ public class HttpBaseTestCase extends BaseTestCase {
         // Add the mock host url in the test config properties
         JsonObject properties = super.generateConfigProperties();
         properties.addProperty(API_HOST_URL, getBaseMockUrl());
+        properties.add(API_URL_VERSION, getMockUrlVersion());
         return properties;
     }
 
@@ -261,7 +271,7 @@ public class HttpBaseTestCase extends BaseTestCase {
                     // TODO: Find out if this is a wrong API call or server issue
                     response.setResponseCode(HttpStatus.NOT_FOUND);
                     response.setBody("{\"detail\": \"Not found\"}");
-                } else if (urlMatches(path, "/api/courses/v1/blocks/")) {
+                } else if (urlMatches(path, "/api/courses/v2/blocks/")) {
                     // TODO: Return different responses based on the parameters?
                     response.setBody(MockDataUtil.getMockResponse("get_course_structure"));
                     response.setResponseCode(HttpStatus.OK);

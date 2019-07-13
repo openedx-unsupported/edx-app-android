@@ -19,6 +19,7 @@ import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -51,8 +52,12 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
     @Inject
     CourseManager courseManager;
 
+    @Inject
+    Config config;
+
     protected EnrolledCoursesResponse courseData;
     protected String courseComponentId;
+    protected String blocksApiVersion;
 
     private Call<CourseStructureV1Model> getHierarchyCall;
 
@@ -103,12 +108,13 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
     }
 
     protected void restore(Bundle savedInstanceState) {
+        blocksApiVersion = config.getApiUrlVersionConfig().getBlocksApiVersion();
         courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
         courseComponentId = savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
 
         if (courseComponentId == null) {
             final String courseId = courseData.getCourse().getId();
-            getHierarchyCall = courseApi.getCourseStructure(courseId);
+            getHierarchyCall = courseApi.getCourseStructure(blocksApiVersion, courseId);
             getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
                     new ProgressViewController(progressWheel), errorNotification,
                     snackbarErrorNotification, this) {
@@ -191,7 +197,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
 
     protected boolean isOnCourseOutline(){
         if (courseComponentId == null) return true;
-        CourseComponent outlineComp = courseManager.getComponentById(
+        CourseComponent outlineComp = courseManager.getComponentById(blocksApiVersion,
                 courseData.getCourse().getId(), courseComponentId);
         BlockPath outlinePath = outlineComp.getPath();
         int outlinePathSize = outlinePath.getPath().size();

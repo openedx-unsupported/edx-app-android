@@ -111,7 +111,7 @@ public interface CourseService {
     @POST("/api/enrollment/v1/enrollment")
     Call<ResponseBody> enrollInACourse(@Body final EnrollBody body);
 
-    @GET("/api/courses/v1/blocks/?" +
+    @GET("/api/courses/{api_version}/blocks/?" +
             "depth=all&" +
             "requested_fields=graded,format,student_view_multi_device,due&" +
             "student_view_data=video,discussion&" +
@@ -119,6 +119,7 @@ public interface CourseService {
             "nav_depth=3")
     Call<CourseStructureV1Model> getCourseStructure(
             @Header("Cache-Control") String cacheControlHeaderParam,
+            @Path("api_version") String blocksApiVersion,
             @Query("username") final String username,
             @Query("course_id") final String courseId);
 

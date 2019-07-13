@@ -10,7 +10,6 @@ import com.google.inject.Singleton;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
-import org.edx.mobile.http.interceptor.CustomCacheQueryInterceptor;
 import org.edx.mobile.http.interceptor.NewVersionBroadcastInterceptor;
 import org.edx.mobile.http.interceptor.NoCacheHeaderStrippingInterceptor;
 import org.edx.mobile.http.interceptor.OauthHeaderRequestInterceptor;
@@ -79,7 +78,6 @@ public interface OkHttpClientProvider extends Provider<OkHttpClient> {
                     builder.cache(cache);
                     interceptors.add(new StaleIfErrorInterceptor());
                     interceptors.add(new StaleIfErrorHandlingInterceptor());
-                    interceptors.add(new CustomCacheQueryInterceptor(context));
                     builder.networkInterceptors().add(new NoCacheHeaderStrippingInterceptor());
                 }
                 interceptors.add(new UserAgentInterceptor(

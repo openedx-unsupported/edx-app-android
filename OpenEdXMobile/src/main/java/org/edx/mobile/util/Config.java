@@ -60,6 +60,7 @@ public class Config {
     private static final String FIREBASE = "FIREBASE";
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
+    private static final String API_URL_VERSION = "API_URL_VERSION";
 
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
@@ -577,6 +578,20 @@ public class Config {
         }
     }
 
+    public static class ApiUrlVersionConfig {
+        private static final String DEFAULT_API_VERSION = "v1";
+        @SerializedName("BLOCKS")
+        private String blocksApiVersion;
+
+        public ApiUrlVersionConfig(@NonNull String blocksApiVersion) {
+            this.blocksApiVersion = blocksApiVersion;
+        }
+
+        public String getBlocksApiVersion() {
+            return blocksApiVersion != null ? blocksApiVersion : DEFAULT_API_VERSION;
+        }
+    }
+
     @Inject
     public Config(Context context) {
         try {
@@ -816,6 +831,11 @@ public class Config {
     @NonNull
     public EndToEndConfig getEndToEndConfig() {
         return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
+    }
+
+    @NonNull
+    public ApiUrlVersionConfig getApiUrlVersionConfig() {
+        return getObjectOrNewInstance(API_URL_VERSION, ApiUrlVersionConfig.class);
     }
 
     @NonNull

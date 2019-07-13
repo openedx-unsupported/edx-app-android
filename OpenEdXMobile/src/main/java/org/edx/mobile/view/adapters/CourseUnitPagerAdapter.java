@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -73,8 +74,11 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         }
 
         CourseUnitFragment unitFragment;
+        if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+        }
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
-        if (isCourseUnitVideo(minifiedUnit)) {
+        else if (isCourseUnitVideo(minifiedUnit)) {
             unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
         } else if (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);
@@ -91,7 +95,6 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         } else if (minifiedUnit instanceof HtmlBlockModel) {
             unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) minifiedUnit);
         }
-
         //fallback
         else {
             unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);

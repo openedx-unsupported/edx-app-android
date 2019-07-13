@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.edx.mobile.model.api.AuthorizationDenialReason;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -41,6 +43,12 @@ public class BlockModel implements Serializable {
 
     @SerializedName("due")
     public String dueDate;
+
+    @SerializedName("authorization_denial_message")
+    public String authorizationDenialMessage;
+
+    @SerializedName("authorization_denial_reason")
+    public AuthorizationDenialReason authorizationDenialReason;
 
     // descendants: (list) A list of IDs of the children of the block if the block's depth in the
     // course hierarchy is less than the navigation_depth.  Otherwise, a list of IDs of the aggregate descendants

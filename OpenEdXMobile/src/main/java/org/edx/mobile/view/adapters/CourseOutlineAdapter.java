@@ -26,6 +26,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.RoboAppCompatActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
@@ -361,8 +362,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void getRowViewForLeaf(ViewHolder viewHolder,
-                                   final SectionRow row) {
+    private void getRowViewForLeaf(ViewHolder viewHolder, final SectionRow row) {
         final CourseComponent unit = row.component;
         viewHolder.rowType.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
@@ -372,17 +372,18 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
         viewHolder.rowTitle.setText(unit.getDisplayName());
 
+        boolean isDenialFeatureBasedEnrolments =
+                row.component.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS;
+
         if (row.component instanceof VideoBlockModel) {
             final VideoBlockModel videoBlockModel = (VideoBlockModel) row.component;
             final DownloadEntry videoData = videoBlockModel.getDownloadEntry(storage);
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData, videoBlockModel);
-                return;
             }
-        }
-        if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
+        } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
-            checkAccessStatus(viewHolder, unit);
+            checkAccessStatus(isDenialFeatureBasedEnrolments, viewHolder, unit);
         } else if (!unit.isMultiDevice()) {
             // If we reach here & the type is VIDEO, it means the video is webOnly
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
@@ -395,26 +396,35 @@ public class CourseOutlineAdapter extends BaseAdapter {
             } else {
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_book);
             }
-            checkAccessStatus(viewHolder, unit);
+            checkAccessStatus(isDenialFeatureBasedEnrolments, viewHolder, unit);
+        }
+
+        if (isDenialFeatureBasedEnrolments) {
+            viewHolder.rowSubtitle.setText(R.string.not_available_on_mobile);
+            viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
+            viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
+            viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
         }
     }
 
-    private void checkAccessStatus(final ViewHolder viewHolder, final CourseComponent unit) {
-        dbStore.isUnitAccessed(new DataCallback<Boolean>(true) {
-            @Override
-            public void onResult(Boolean accessed) {
-                if (accessed) {
-                    viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
-                } else {
-                    viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
+    private void checkAccessStatus(boolean isDenialFeatureBasedEnrolments, final ViewHolder viewHolder, final CourseComponent unit) {
+        if (!isDenialFeatureBasedEnrolments) {
+            dbStore.isUnitAccessed(new DataCallback<Boolean>(true) {
+                @Override
+                public void onResult(Boolean accessed) {
+                    if (accessed) {
+                        viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
+                    } else {
+                        viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
+                    }
                 }
-            }
 
-            @Override
-            public void onFail(Exception ex) {
-                logger.error(ex);
-            }
-        }, unit.getId());
+                @Override
+                public void onFail(Exception ex) {
+                    logger.error(ex);
+                }
+            }, unit.getId());
+        }
     }
 
     private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData,

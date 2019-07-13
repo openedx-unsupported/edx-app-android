@@ -180,7 +180,8 @@ public class ApiTests extends HttpBaseTestCase {
         // General overall testing of CourseComponent API without recursion
         EnrolledCoursesResponse e = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         final String courseId = e.getCourse().getId();
-        final CourseStructureV1Model model = executeStrict(courseAPI.getCourseStructure(courseId));
+        final CourseStructureV1Model model = executeStrict(courseAPI.getCourseStructure(
+                config.getApiUrlVersionConfig().getBlocksApiVersion(), courseId));
         final CourseComponent courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
         assertNotNull(courseComponent);
         assertNotNull(courseComponent.getRoot());

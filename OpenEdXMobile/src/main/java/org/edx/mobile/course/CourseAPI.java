@@ -169,20 +169,20 @@ public class CourseAPI {
     }
 
     @NonNull
-    public Call<CourseStructureV1Model> getCourseStructureWithoutStale(@NonNull final String courseId) {
-        return courseService.getCourseStructure(null, getUsername(), courseId);
+    public Call<CourseStructureV1Model> getCourseStructureWithoutStale(@NonNull String blocksApiVersion, @NonNull String courseId) {
+        return courseService.getCourseStructure(null, blocksApiVersion, getUsername(), courseId);
     }
 
     @NonNull
-    public Call<CourseStructureV1Model> getCourseStructure(@NonNull final String courseId) {
-        return courseService.getCourseStructure("max-stale=" + HOUR, getUsername(), courseId);
+    public Call<CourseStructureV1Model> getCourseStructure(@NonNull String blocksApiVersion, @NonNull String courseId) {
+        return courseService.getCourseStructure("max-stale=" + HOUR, blocksApiVersion, getUsername(), courseId);
     }
 
     @NonNull
-    public CourseComponent getCourseStructureFromCache(@NonNull final String courseId)
+    public CourseComponent getCourseStructureFromCache(@NonNull String blocksApiVersion, @NonNull String courseId)
             throws Exception {
         CourseStructureV1Model model = executeStrict(
-                courseService.getCourseStructure("only-if-cached, max-stale", getUsername(), courseId));
+                courseService.getCourseStructure("only-if-cached, max-stale", blocksApiVersion, getUsername(), courseId));
         return (CourseComponent) normalizeCourseStructure(model, courseId);
     }
 
