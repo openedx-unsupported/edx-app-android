@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RawRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.View;
@@ -21,6 +22,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * Created by marcashman on 2014-12-02.
@@ -135,6 +137,23 @@ public class UiUtil {
             fragment.getFragmentManager().beginTransaction()
                     .detach(fragment)
                     .attach(fragment).commitAllowingStateLoss();
+        }
+    }
+
+    /**
+     * Method to remove the child {@link Fragment} against the provided tag.
+     *
+     * @param parentFragment {@link Fragment} that containing the child {@link Fragment}
+     * @param tag            string to search the fragment.
+     */
+    public static void removeFragmentByTag(@NonNull Fragment parentFragment, @NonNull String tag) {
+        if (parentFragment.isAdded()) {
+            final FragmentManager fragmentManager = parentFragment.getChildFragmentManager();
+            final Fragment fragment = fragmentManager.findFragmentByTag(tag);
+            if (fragment != null) {
+                fragmentManager.beginTransaction().remove(fragment)
+                        .commit();
+            }
         }
     }
 }

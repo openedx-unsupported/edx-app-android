@@ -1,11 +1,9 @@
 package org.edx.mobile.view.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
@@ -23,7 +21,6 @@ import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.RoboAppCompatActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthorizationDenialReason;
@@ -47,7 +44,6 @@ import org.edx.mobile.util.TimeZoneUtils;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
-import org.edx.mobile.view.BulkDownloadFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,7 +64,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     private Context context;
-    private Fragment parentFragment;
     private CourseComponent rootComponent;
     private LayoutInflater inflater;
     private List<SectionRow> adapterData;
@@ -80,13 +75,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private EnrolledCoursesResponse courseData;
     private DownloadListener downloadListener;
     private boolean isVideoMode;
-    private boolean isOnCourseOutline;
 
-    public CourseOutlineAdapter(final Context context, Fragment fragment, final EnrolledCoursesResponse courseData,
+    public CourseOutlineAdapter(final Context context, final EnrolledCoursesResponse courseData,
                                 final IEdxEnvironment environment, DownloadListener listener,
                                 boolean isVideoMode, boolean isOnCourseOutline) {
         this.context = context;
-        this.parentFragment = fragment;
         this.environment = environment;
         this.config = environment.getConfig();
         this.dbStore = environment.getDatabase();
@@ -94,7 +87,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         this.courseData = courseData;
         this.downloadListener = listener;
         this.isVideoMode = isVideoMode;
-        this.isOnCourseOutline = isOnCourseOutline;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
         if (isOnCourseOutline && !isVideoMode) {
@@ -110,10 +102,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                             }
                         }));
             }
-        }
-        if (isVideoMode) {
-            // Add bulk video download item
-            adapterData.add(new SectionRow(SectionRow.BULK_DOWNLOAD, null));
         }
     }
 
@@ -184,23 +172,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
                     break;
                 }
-                case SectionRow.BULK_DOWNLOAD: {
-                    convertView = inflater.inflate(R.layout.row_bulk_download_container, parent, false);
-                    final Activity activity = parentFragment.getActivity();
-                    if (activity != null && ((RoboAppCompatActivity) activity).isInForeground()) {
-                        final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
-                        final View finalConvertView = convertView;
-                        // Wait until the convertView has attached with the parent view.
-                        // Using commitNowAllowingStateLoss() method here because there is
-                        // chance transaction could have happened even the fragments state
-                        // is saved.
-                        convertView.post(() -> parentFragment.getChildFragmentManager().
-                                beginTransaction().replace(finalConvertView.getId(), fragment).
-                                commitNowAllowingStateLoss());
-                        convertView.setTag(fragment);
-                    }
-                    break;
-                }
                 default: {
                     throw new IllegalArgumentException(String.valueOf(type));
                 }
@@ -222,18 +193,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 return getCertificateView(position, convertView);
             case SectionRow.LAST_ACCESSED_ITEM: {
                 return getLastAccessedView(position, convertView);
-            }
-            case SectionRow.BULK_DOWNLOAD: {
-                if (rootComponent != null) {
-                    final Object tag = convertView.getTag();
-                    if (tag instanceof BulkDownloadFragment) {
-                        final BulkDownloadFragment fragment = (BulkDownloadFragment) tag;
-                        fragment.populateViewHolder(
-                                isOnCourseOutline ? rootComponent.getCourseId() : rootComponent.getId(),
-                                rootComponent.getVideos(true));
-                    }
-                }
-                return convertView;
             }
             default: {
                 throw new IllegalArgumentException(String.valueOf(type));
@@ -270,13 +229,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 } else {
                     SectionRow row = new SectionRow(SectionRow.ITEM, true, comp);
                     adapterData.add(row);
-                }
-            }
-
-            if (isVideoMode && rootComponent.getDownloadableVideosCount() == 0) {
-                // Remove bulk video download row if the course has NO downloadable videos
-                if (adapterData.size() > 0 && adapterData.get(0).type == SectionRow.BULK_DOWNLOAD) {
-                    adapterData.remove(0);
                 }
             }
         }
@@ -801,7 +753,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         public static final int LAST_ACCESSED_ITEM = 2;
         public static final int SECTION = 3;
         public static final int ITEM = 4;
-        public static final int BULK_DOWNLOAD = 5;
 
         // Update this count according to the section types mentioned above
         public static final int NUM_OF_SECTION_ROWS = 6;
