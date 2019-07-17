@@ -81,13 +81,20 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/bulk_download_progress_height"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/row_whole_separator"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:progress="50"
             tools:visibility="visible" />
+
+        <View
+            android:id="@+id/row_whole_separator"
+            style="@style/gray_separator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import com.google.inject.Inject;
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.internal.Animation;
@@ -38,7 +39,12 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.VideoPrefs;
 import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.edx.mobile.module.storage.BulkVideosDownloadStartedEvent;
-import org.edx.mobile.util.*;
+import org.edx.mobile.util.DownloadUtil;
+import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.PermissionsUtil;
+import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 
 import java.util.ArrayList;
@@ -78,7 +84,8 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
 
     private RowBulkDownloadBinding binding;
     private CourseOutlineAdapter.DownloadListener downloadListener;
-    private IEdxEnvironment environment;
+    @Inject
+    protected IEdxEnvironment environment;
     private VideoPrefs prefManager;
     private SwitchState switchState = SwitchState.DEFAULT;
     private boolean isDeleteScheduled = false;
@@ -112,13 +119,6 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     private List<VideoModel> removableVideos = new ArrayList<>();
 
     public BulkDownloadFragment() {
-    }
-
-    @SuppressLint("ValidFragment")
-    public BulkDownloadFragment(@NonNull CourseOutlineAdapter.DownloadListener downloadListener,
-                                @NonNull IEdxEnvironment environment) {
-        this.downloadListener = downloadListener;
-        this.environment = environment;
     }
 
     @Override
@@ -161,7 +161,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         ViewCompat.setImportantForAccessibility(binding.swDownload, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
         initDownloadSwitch();
         if (totalDownloadableVideos != null && videosStatus.courseComponentId != null) {
-            populateViewHolder(videosStatus.courseComponentId, totalDownloadableVideos);
+            populateViewHolder(downloadListener, videosStatus.courseComponentId, totalDownloadableVideos);
         }
         if (bulkDownloadWasCancelled) {
             onEvent(new BulkVideosDownloadCancelledEvent());
@@ -173,15 +173,20 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         }
     }
 
-    public void populateViewHolder(@NonNull String componentId,
+
+    public void populateViewHolder(CourseOutlineAdapter.DownloadListener downloadListener, @NonNull String componentId,
                                    @Nullable List<CourseComponent> downloadableVideos) {
-        videosStatus.reset();
+        this.downloadListener = downloadListener;
         this.totalDownloadableVideos = downloadableVideos;
         videosStatus.courseComponentId = componentId;
         if (binding == null || totalDownloadableVideos == null) return;
+        updateVideoStatus();
+    }
+
+    public void updateVideoStatus() {
+        videosStatus.reset();
         remainingVideos.clear();
         removableVideos.clear();
-
         videosStatus.total = totalDownloadableVideos.size();
 
         // Get all the videos of this course from DB that we have downloaded or are downloading
@@ -243,27 +248,42 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                             // deleted by user or a video download was cancelled.
                             prefManager.setBulkDownloadSwitchState(SwitchState.DEFAULT, videosStatus.courseComponentId);
                         }
+                        updateRootViewVisibility(View.VISIBLE);
 
-                        binding.getRoot().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                binding.getRoot().setVisibility(View.VISIBLE);
-                                // Lets populate the view now that we have all the info
-                                updateUI();
-                            }
-                        });
                     }
 
                     @Override
                     public void onFail(Exception ex) {
-                        binding.getRoot().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                binding.getRoot().setVisibility(View.GONE);
-                            }
-                        });
+                        updateRootViewVisibility(View.GONE);
                     }
                 });
+    }
+
+    private void updateRootViewVisibility(final int visibility) {
+        if (binding.getRoot().isAttachedToWindow()) {
+            binding.getRoot().post(() -> {
+                binding.getRoot().setVisibility(visibility);
+                if (visibility == View.VISIBLE) {
+                    // Lets populate the view now that we have all the info
+                    updateUI();
+                }
+            });
+        } else {
+            // Wait until root view attached with the window/context
+            binding.getRoot().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    // remove listener because it may create loop.
+                    v.removeOnAttachStateChangeListener(this);
+                    updateRootViewVisibility(visibility);
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+
+                }
+            });
+        }
     }
 
     private void updateUI() {
@@ -557,7 +577,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     @Override
     public void onRevisit() {
         if (totalDownloadableVideos != null && videosStatus.courseComponentId != null) {
-            populateViewHolder(videosStatus.courseComponentId, totalDownloadableVideos);
+            populateViewHolder(downloadListener, videosStatus.courseComponentId, totalDownloadableVideos);
         }
     }
 

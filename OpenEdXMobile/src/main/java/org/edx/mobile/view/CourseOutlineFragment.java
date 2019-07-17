@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
@@ -111,6 +113,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     protected IEdxEnvironment environment;
 
     private View loadingIndicator;
+    private FrameLayout flBulkDownload;
+    private CourseOutlineAdapter.DownloadListener downloadListener;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
@@ -144,6 +148,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
+        flBulkDownload = view.findViewById(R.id.fl_bulk_download_container);
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -155,7 +160,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
         });
         UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
-        
+
         restore(bundle);
         initListView(view);
         fetchCourseComponent();
@@ -258,6 +263,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     logger.error(error, true);
                 }
                 swipeContainer.setRefreshing(false);
+                // Remove bulk video download if the course has NO downloadable videos
+                UiUtil.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
             }
 
             @Override
@@ -326,29 +333,30 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private void initAdapter() {
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseOutlineAdapter(getActivity(), this, courseData, environment,
-                    new CourseOutlineAdapter.DownloadListener() {
-                        @Override
-                        public void download(List<? extends HasDownloadEntry> models) {
-                            downloadEntries = models;
-                            isSingleVideoDownload = false;
-                            askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
-                        }
+            downloadListener = new CourseOutlineAdapter.DownloadListener() {
+                @Override
+                public void download(List<? extends HasDownloadEntry> models) {
+                    downloadEntries = models;
+                    isSingleVideoDownload = false;
+                    askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                }
 
-                        @Override
-                        public void download(DownloadEntry videoData) {
-                            downloadEntry = videoData;
-                            isSingleVideoDownload = true;
-                            askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
-                        }
+                @Override
+                public void download(DownloadEntry videoData) {
+                    downloadEntry = videoData;
+                    isSingleVideoDownload = true;
+                    askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+                }
 
-                        @Override
-                        public void viewDownloadsStatus() {
-                            environment.getRouter().showDownloads(getActivity());
-                        }
-                    }, isVideoMode, isOnCourseOutline);
+                @Override
+                public void viewDownloadsStatus() {
+                    environment.getRouter().showDownloads(getActivity());
+                }
+            };
+            adapter = new CourseOutlineAdapter(getActivity(), courseData, environment, downloadListener,
+                    isVideoMode, isOnCourseOutline);
         }
     }
 
@@ -506,8 +514,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
         adapter.setData(courseComponent);
         if (adapter.hasCourseData()) {
+            setUpBulkDownloadHeader(courseComponent);
             errorNotification.hideError();
         } else {
+            // Remove bulk video download if the course has NO downloadable videos
+            UiUtil.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
             errorNotification.showError(isVideoMode ? R.string.no_videos_text : R.string.no_chapter_text, null, -1, null);
         }
 
@@ -520,6 +531,30 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
 
         fetchLastAccessed();
+    }
+
+    private void setUpBulkDownloadHeader(CourseComponent courseComponent) {
+        if (isVideoMode) {
+            if (courseComponent.getDownloadableVideosCount() == 0) {
+                // Remove bulk video download if the course has NO downloadable videos
+                UiUtil.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
+            } else if (getActivity() != null) {
+                Fragment fragment = getChildFragmentManager().findFragmentByTag("bulk_download");
+                if (fragment == null) {
+                    // Add bulk video download item
+                    fragment = new BulkDownloadFragment();
+                    // Using commitAllowingStateLoss() method here because there is
+                    // chance transaction could have happened even the fragments state
+                    // is saved.
+                    getChildFragmentManager().
+                            beginTransaction().replace(flBulkDownload.getId(), fragment, "bulk_download").
+                            commitAllowingStateLoss();
+                }
+                ((BulkDownloadFragment) fragment).populateViewHolder(downloadListener,
+                        isOnCourseOutline ? courseComponent.getCourseId() : courseComponent.getId(),
+                        courseComponent.getVideos(true));
+            }
+        }
     }
 
     @Override
@@ -626,6 +661,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
         adapter.notifyDataSetChanged();
+        updateBulkDownloadFragment();
     }
 
     @SuppressWarnings("unused")
@@ -636,6 +672,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadedVideoDeletedEvent e) {
         adapter.notifyDataSetChanged();
+        updateBulkDownloadFragment();
     }
 
     @SuppressWarnings("unused")
@@ -704,11 +741,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     public void onDownloadStarted(Long result) {
         reloadList();
+        updateBulkDownloadFragment();
     }
 
     @Override
     public void onDownloadFailedToStart() {
         reloadList();
+        updateBulkDownloadFragment();
     }
 
     @Override
@@ -718,6 +757,15 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     public void updateListUI() {
         reloadList();
+        updateBulkDownloadFragment();
+    }
+
+    private void updateBulkDownloadFragment() {
+        final Fragment bulkDownloadFragment = getChildFragmentManager()
+                .findFragmentByTag("bulk_download");
+        if (bulkDownloadFragment instanceof BulkDownloadFragment) {
+            ((BulkDownloadFragment) bulkDownloadFragment).updateVideoStatus();
+        }
     }
 
     @Override
