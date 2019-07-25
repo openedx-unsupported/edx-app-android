@@ -70,7 +70,7 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         if (searchQueryExtra != null) {
             initSearch(searchQueryExtra);
         } else {
-            loadUrl(searchUrl == null ? getInitialUrl() : searchUrl);
+            loadUrl(searchUrl == null || !URLUtil.isValidUrl(searchUrl) ? getInitialUrl() : searchUrl);
         }
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -97,7 +97,10 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(INSTANCE_CURRENT_DISCOVER_URL, binding.webview.getUrl());
+        if (URLUtil.isValidUrl(binding.webview.getUrl())) {
+            // Saving the url to maintain the filtered state of the screen if user has applied it
+            outState.putString(INSTANCE_CURRENT_DISCOVER_URL, binding.webview.getUrl());
+        }
         super.onSaveInstanceState(outState);
     }
 
