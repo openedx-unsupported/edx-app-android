@@ -224,4 +224,9 @@
         <item name="android:textColor">@color/edx_brand_gray_base</item>
     </style>
 
+    <style name="discussion_responses_action_bar_small_text" parent="discussion_responses_small_text">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
 </resources>
