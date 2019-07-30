@@ -206,7 +206,8 @@
     <!-- Auth Panel -->
     <dimen name="auth_panel_height">92dp</dimen>
     <dimen name="auth_panel_btn_height">50dp</dimen>
-    <dimen name="auth_panel_login_btn_width">96dp</dimen>
+    <dimen name="auth_panel_login_btn_width">100dp</dimen>
+    <dimen name="auth_panel_login_btn_horizontal_padding">10dp</dimen>
 
     <!-- Subject Items -->
     <dimen name="subject_item_width">138dp</dimen>

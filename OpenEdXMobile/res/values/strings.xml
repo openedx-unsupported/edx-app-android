@@ -36,11 +36,11 @@
     <!-- Subjects Discovery -->
 
     <!-- Label for browsing courses by a subject -->
-    <string name="browse_by_subject">Browse by Subject</string>
+    <string name="browse_by_subject" tools:ignore="MissingTranslation">Browse by Subject</string>
     <!-- Button's Label for viewing all subjects -->
-    <string name="view_all_subjects">View All Subjects</string>
+    <string name="view_all_subjects" tools:ignore="MissingTranslation">View All Subjects</string>
     <!-- Label for searching subjects -->
-    <string name="search_subjects">Search Subject</string>
+    <string name="search_subjects" tools:ignore="MissingTranslation">Search Subject</string>
 
     <!-- Course Sharing -->
 
@@ -481,7 +481,7 @@
     <!--Label for video playback speed in video player-->
     <string name="lbl_video_speed" tools:ignore="MissingTranslation">Video Speed</string>
     <!-- Label for None captions selected -->
-    <string name="lbl_cc_none">None</string>
+    <string name="lbl_cc_none" tools:ignore="MissingTranslation">None</string>
     <!-- Accessibility Label for Video Player -->
     <string name="video_player">Video Player</string>
     <!-- Accessibility Label for View on Web button on Video Player top bar -->
@@ -597,7 +597,7 @@
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
     <!-- Title for default channel notifications -->
-    <string name="default_notification_channel_title">General Notification</string>
+    <string name="default_notification_channel_title" tools:ignore="MissingTranslation">General Notification</string>
 
 
     <!-- Discussion/Forum -->
