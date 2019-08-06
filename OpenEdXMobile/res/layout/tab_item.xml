@@ -22,5 +22,7 @@
         android:textAlignment="center"
         android:textColor="@color/edx_brand_primary_base"
         android:textSize="@dimen/edx_small"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="Title" />
 </LinearLayout>
