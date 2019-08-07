@@ -401,6 +401,8 @@ public interface Analytics {
      */
     void trackDownloadToSdCardSwitchOff();
 
+    void trackRemoteConfigs(Map<String, String> values);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -663,6 +665,7 @@ public interface Analytics {
         // Settings events
         String DOWNLOAD_TO_SD_CARD_ON = "Download to sd-card On";
         String DOWNLOAD_TO_SD_CARD_OFF = "Download to sd-card Off";
+        String MOBILE_EXPERIMENT_EVALUATED = "Mobile Experiment Evaluated";
     }
 
     /**

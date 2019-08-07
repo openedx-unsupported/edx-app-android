@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+
+import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.EdxEnvironment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.logger.Logger;
@@ -12,11 +17,15 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.branch.referral.Branch;
 
 // We are extending the normal Activity class here so that we can use Theme.NoDisplay, which does not support AppCompat activities
 public class SplashActivity extends Activity {
     protected final Logger logger = new Logger(getClass().getName());
+
     private Config config = new Config(MainApplication.instance());
 
     @Override
@@ -47,6 +56,27 @@ public class SplashActivity extends Activity {
             startActivity(environment.getRouter().getLogInIntent());
         } else {
             environment.getRouter().showLaunchScreen(SplashActivity.this);
+        }
+        initRemoteConfigs();
+    }
+
+    private void initRemoteConfigs() {
+        if (config.getFirebaseConfig().isEnabled()) {
+            FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+            FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                    .setMinimumFetchIntervalInSeconds(3600)
+                    .build();
+            firebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+            firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+            firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
+                final Map<String, String> values = new HashMap<>();
+                values.put("experiment", "aa_experiment");
+                values.put("remote_config_fetch", String.valueOf(task.getResult()));
+                values.put("group", firebaseRemoteConfig.getString("aa_experiment"));
+                EdxEnvironment environment = MainApplication.instance()
+                        .getInjector().getInstance(EdxEnvironment.class);
+                environment.getAnalyticsRegistry().trackRemoteConfigs(values);
+            });
         }
     }
 

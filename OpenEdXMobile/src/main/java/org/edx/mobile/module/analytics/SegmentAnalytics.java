@@ -836,4 +836,12 @@ public class SegmentAnalytics implements Analytics {
         aEvent.properties.putValue(Keys.NAME, Values.DOWNLOAD_TO_SD_CARD_SWITCH_OFF);
         trackSegmentEvent(Events.DOWNLOAD_TO_SD_CARD_OFF, aEvent.properties);
     }
+
+    @Override
+    public void trackRemoteConfigs(Map<String, String> values) {
+        // Sending screen view
+        SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putAll(values);
+        trackSegmentEvent(Events.MOBILE_EXPERIMENT_EVALUATED, aEvent.properties);
+    }
 }

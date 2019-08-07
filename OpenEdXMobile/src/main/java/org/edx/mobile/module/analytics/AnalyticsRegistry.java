@@ -418,4 +418,11 @@ public class AnalyticsRegistry implements Analytics {
             service.trackDownloadToSdCardSwitchOff();
         }
     }
+
+    @Override
+    public void trackRemoteConfigs(Map<String, String> values) {
+        for (Analytics service : services) {
+            service.trackRemoteConfigs(values);
+        }
+    }
 }

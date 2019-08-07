@@ -327,4 +327,9 @@ public class AnswersAnalytics implements Analytics {
     public void trackDownloadToSdCardSwitchOff() {
 
     }
+
+    @Override
+    public void trackRemoteConfigs(Map<String, String> values) {
+
+    }
 }
