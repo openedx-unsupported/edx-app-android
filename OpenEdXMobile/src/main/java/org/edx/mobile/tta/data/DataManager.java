@@ -276,7 +276,7 @@ public class DataManager extends BaseRoboInjector {
 
     public void login(String username, String password, OnResponseCallback<AuthResponse> callback) {
 
-        wpClientRetrofit.getAccessToken(username, password, new WordPressRestResponse<WpAuthResponse>() {
+        /*wpClientRetrofit.getAccessToken(username, password, new WordPressRestResponse<WpAuthResponse>() {
             @Override
             public void onSuccess(WpAuthResponse result) {
                 loginPrefs.storeWPAuthTokenResponse(result);
@@ -291,7 +291,9 @@ public class DataManager extends BaseRoboInjector {
                     doEdxLogin(username, password, callback);
                 }
             }
-        });
+        });*/
+
+        doEdxLogin(username, password, callback);
 
     }
 

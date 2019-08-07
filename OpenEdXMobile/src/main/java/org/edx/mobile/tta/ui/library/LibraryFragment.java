@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
+import org.edx.mobile.tta.programs.schedule.ScheduleFragment;
+import org.edx.mobile.tta.programs.students.StudentsFragment;
+import org.edx.mobile.tta.programs.units.UnitsFragment;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
@@ -44,29 +47,30 @@ public class LibraryFragment extends TaBaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_fragment_library, viewModel)
                 .getRoot();
-
+        viewModel = new LibraryViewModel(getActivity(), this, searchPageOpenedListener);
         TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);
+
         viewPager = view.findViewById(R.id.listing_view_pager);
         viewPager.setOffscreenPageLimit(5);
         tabLayout.setupWithViewPager(viewPager);
-
         return view;
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.library.name()));
-        viewPager.post(() -> {
-            try {
-                PageViewStateCallback callback = (PageViewStateCallback) ((BasePagerAdapter) viewPager.getAdapter())
-                        .getItem(viewModel.initialPosition.get());
-                if (callback != null){
-                    callback.onPageShow();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+//        viewPager.post(() -> {
+//            try {
+//                PageViewStateCallback callback = (PageViewStateCallback) ((BasePagerAdapter) viewPager.getAdapter())
+//                        .getItem(viewModel.initialPosition.get());
+//                if (callback != null){
+//                    callback.onPageShow();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
     }
 }

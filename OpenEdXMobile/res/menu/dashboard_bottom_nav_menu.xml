@@ -2,20 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/action_library"
-        android:title="@string/library"
+        android:title="@string/program"
         android:icon="@drawable/library"/>
 
     <item android:id="@+id/action_feed"
-        android:title="@string/feed"
-        android:icon="@drawable/feed"/>
+        android:title="@string/course"
+        android:icon="@drawable/t_icon_course"/>
 
     <item android:id="@+id/action_search"
         android:title="@string/search"
         android:icon="@drawable/search"/>
 
-    <item android:id="@+id/action_agenda"
-        android:title="@string/agenda"
-        android:icon="@drawable/agenda"/>
+    <!--<item android:id="@+id/action_agenda"-->
+        <!--android:title="@string/agenda"-->
+        <!--android:icon="@drawable/agenda"/>-->
 
     <item android:id="@+id/action_profile"
         android:title="@string/profile"

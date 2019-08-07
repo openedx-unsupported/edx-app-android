@@ -702,7 +702,8 @@
     <string name="confirm_new_password">Confirm new password</string>
     <string name="submit" translatable="false">Submit</string>
     <string name="library">Library</string>
-    <string name="feed">Feed</string>
+    <string name="program">Program</string>
+     <string name="feed">Feed</string>
     <string name="search">Search</string>
     <string name="agenda">Agenda</string>
     <string name="profile">Profile</string>

@@ -49,7 +49,7 @@ public class SearchFragment extends TaBaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_fragment_search, viewModel).getRoot();
-
+        viewModel.getDataManager().getEdxEnvironment().getRouter().showFindCourses(view.getContext());
         return view;
     }
 

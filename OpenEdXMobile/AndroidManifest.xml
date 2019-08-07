@@ -40,7 +40,7 @@
     <application
         android:name=".base.RuntimeApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/tta_launcher"
+        android:icon="@mipmap/humana_launcher"
         android:label="@string/app_name"
         tools:replace="android:supportsRtl"
         android:supportsRtl="${supportsRtl}"

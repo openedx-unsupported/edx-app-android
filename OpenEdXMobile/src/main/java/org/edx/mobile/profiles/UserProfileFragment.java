@@ -33,6 +33,7 @@ import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
@@ -98,9 +99,11 @@ public class UserProfileFragment
         }
     }
 
+    // changed here
     @NonNull
     private String getUsername() {
-        return getArguments().getString(UserProfileActivity.EXTRA_USERNAME);
+        //return getArguments().getString(UserProfileActivity.EXTRA_USERNAME);
+        return BrowserUtil.loginPrefs.getUsername();
     }
 
     @NonNull

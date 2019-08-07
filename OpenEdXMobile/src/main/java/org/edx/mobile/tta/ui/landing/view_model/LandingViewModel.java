@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.profiles.UserProfileFragment;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.event.ContentStatusesReceivedEvent;
@@ -21,6 +22,16 @@ import org.edx.mobile.tta.ui.profile.ProfileFragment;
 import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.BaseWebViewDiscoverFragment;
+import org.edx.mobile.view.CourseDetailFragment;
+import org.edx.mobile.view.CourseDiscussionPostsSearchFragment;
+import org.edx.mobile.view.CourseTabsDashboardFragment;
+import org.edx.mobile.view.CourseUnitEmptyFragment;
+import org.edx.mobile.view.DiscoveryLaunchActivity;
+import org.edx.mobile.view.MainTabsDashboardFragment;
+import org.edx.mobile.view.MyCoursesListFragment;
+import org.edx.mobile.view.WebViewDiscoverCoursesFragment;
+import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +64,10 @@ public class LandingViewModel extends BaseViewModel {
                 selectedId = R.id.action_search;
                 showSearch();
                 return true;
-            case R.id.action_agenda:
-                selectedId = R.id.action_agenda;
-                showAgenda();
-                return true;
+//            case R.id.action_agenda:
+//                selectedId = R.id.action_agenda;
+//                showAgenda();
+//                return true;
             case R.id.action_profile:
                 selectedId = R.id.action_profile;
                 showProfile();
@@ -98,7 +109,7 @@ public class LandingViewModel extends BaseViewModel {
 //        mActivity.showShortSnack("Coming soon");
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                new FeedFragment(),
+                new MyCoursesListFragment(),
                 R.id.dashboard_fragment,
                 FeedFragment.TAG,
                 false,
@@ -109,7 +120,7 @@ public class LandingViewModel extends BaseViewModel {
     public void showSearch(){
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                new SearchFragment(),
+                new NativeFindCoursesFragment(),
                 R.id.dashboard_fragment,
                 SearchFragment.TAG,
                 false,
@@ -131,7 +142,7 @@ public class LandingViewModel extends BaseViewModel {
     public void showProfile() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                new ProfileFragment(),
+                new UserProfileFragment(),
                 R.id.dashboard_fragment,
                 ProfileFragment.TAG,
                 false,

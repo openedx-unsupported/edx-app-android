@@ -9,6 +9,11 @@ import android.support.v4.view.ViewPager;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.programs.curricullam.CurricullamFragment;
+import org.edx.mobile.tta.programs.discussion.DiscussionFragment;
+import org.edx.mobile.tta.programs.schedule.ScheduleFragment;
+import org.edx.mobile.tta.programs.students.StudentsFragment;
+import org.edx.mobile.tta.programs.units.UnitsFragment;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -62,8 +67,9 @@ public class LibraryViewModel extends BaseViewModel {
         this.searchPageOpenedListener = searchPageOpenedListener;
 
         adapter = new ListingPagerAdapter(mFragment.getChildFragmentManager());
+        populateTabs();
 
-        getData();
+//        getData();
 
     }
 
@@ -98,17 +104,32 @@ public class LibraryViewModel extends BaseViewModel {
     private void populateTabs(){
         fragments.clear();
         titles.clear();
-        for (Category category: categories){
-            fragments.add(LibraryTab.newInstance(cr, category, searchPageOpenedListener));
-            titles.add(category.getName());
-        }
+        ArrayList<String> demolist = new ArrayList<String>();
+        demolist.add("Schedule");
+        demolist.add("Units");
+        demolist.add("Students");
+        demolist.add("Discussion");
+        demolist.add("Curriculum");
 
+
+//        fragments.add(LibraryTab.newInstance())
+//        for (String category: demolist){
+//            fragments.add(LibraryTab.demoInstance(category, searchPageOpenedListener));
+//            titles.add(category);
+//        }
+//
         try {
-            adapter.setFragments(fragments, titles);
+
+            fragments.add(new ScheduleFragment());
+            fragments.add(new UnitsFragment());
+            fragments.add(new StudentsFragment());
+            fragments.add(new DiscussionFragment());
+            fragments.add(new CurricullamFragment());
+            adapter.setFragments(fragments, demolist);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        initialPosition.set(0);
+//        initialPosition.set(0);
 
         if (!categories.isEmpty()){
             PageViewStateCallback callback = (PageViewStateCallback) fragments.get(0);
@@ -119,7 +140,8 @@ public class LibraryViewModel extends BaseViewModel {
 
     }
 
-    public class ListingPagerAdapter extends BasePagerAdapter {
+
+        public class ListingPagerAdapter extends BasePagerAdapter {
         public ListingPagerAdapter(FragmentManager fm) {
             super(fm);
         }

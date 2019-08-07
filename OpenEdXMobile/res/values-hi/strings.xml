@@ -23,11 +23,14 @@
     <string name="confirm_new_password">कन्फर्म नया पासवर्ड</string>
     <string name="library">लाइब्रेरी</string>
     <string name="feed">खबर</string>
-    <string name="search">खोज</string>
+    <string name="search">Search</string>
+    <!--<string name="search">खोज</string>-->
     <string name="agenda">लक्ष्य</string>
-    <string name="profile">प्रोफाइल</string>
+    <!--<string name="profile">प्रोफाइल</string>-->
+    <string name="profile">Profile</string>
     <string name="view_more">और देखें</string>
-    <string name="course">कोर्स</string>
+    <!--<string name="course">कोर्स</string>-->
+    <string name="course">Course</string>
     <string name="toolkit">शिक्षण सामग्री</string>
     <string name="hois">प्रेरणा स्त्रोत</string>
     <string name="chatshala">Chatशाला</string>
@@ -117,4 +120,5 @@
     <string name="error_diet">कृपया अपना DIET कोड चुनिए</string>
     <string name="error_pmis">PMIS कोड रिक्त नहीं हो सकता</string>
     <string name="error_teacher_id">टीचर ID रिक्त नहीं हो सकती</string>
+    <string name="program">Program</string>
 </resources>

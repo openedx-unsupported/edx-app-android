@@ -23,6 +23,7 @@
             app:tabIndicatorColor="@color/primary_cyan"
             app:tabIndicatorHeight="2dp"
             app:tabMode="scrollable"
+
             app:tabTextAppearance="@style/ta_tab_text_appearance"/>
 
         <android.support.v4.view.ViewPager

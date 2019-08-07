@@ -38,14 +38,16 @@ public class SplashViewModel extends BaseViewModel {
                     ActivityUtil.gotoPage(activity, SigninRegisterActivity.class);
                 } else {
                     performBackgroundTasks();
-                    if (mDataManager.getLoginPrefs().getCurrentUserProfile().name == null ||
+                   /* if (mDataManager.getLoginPrefs().getCurrentUserProfile().name == null ||
                             mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals("") ||
                             mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals(mDataManager.getLoginPrefs().getUsername())
                     ) {
                         ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     } else {
                         ActivityUtil.gotoPage(activity, LandingActivity.class);
-                    }
+                    }*/
+
+                    ActivityUtil.gotoPage(activity, LandingActivity.class);
 
                     mActivity.analytic.addMxAnalytics_db("TA App open", Action.AppOpen,
                             Page.LoginPage.name(), Source.Mobile, null);

@@ -27,6 +27,7 @@ public class LibraryTab extends TaBaseFragment {
     private CollectionConfigResponse cr;
 
     private Category category;
+    private String demoCat;
 
     private SearchPageOpenedListener searchPageOpenedListener;
 
@@ -40,6 +41,15 @@ public class LibraryTab extends TaBaseFragment {
         fragment.searchPageOpenedListener = searchPageOpenedListener;
         return fragment;
     }
+    public static LibraryTab demoInstance( String demoCat,
+                                         SearchPageOpenedListener searchPageOpenedListener){
+        LibraryTab fragment = new LibraryTab();
+        fragment.demoCat = demoCat;
+        fragment.searchPageOpenedListener = searchPageOpenedListener;
+        return fragment;
+    }
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

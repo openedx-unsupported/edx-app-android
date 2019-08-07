@@ -54,7 +54,7 @@
     </style>
 
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@drawable/launch_background_tta</item>
+        <item name="android:windowBackground">@drawable/spalsh_humana</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -572,7 +572,7 @@
     <!-- TTA styles start -->
 
     <style name="AppTheme.NoActionBar.Fullscreen.TaLaunch">
-        <item name="android:windowBackground">@drawable/launch_background_tta</item>
+        <item name="android:windowBackground">@drawable/spalsh_humana</item>
     </style>
 
     <style name="AppTheme.NoActionBar.CustomStatusBar" />

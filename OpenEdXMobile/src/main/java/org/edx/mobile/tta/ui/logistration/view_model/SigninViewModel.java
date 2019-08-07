@@ -97,7 +97,7 @@ public class SigninViewModel extends BaseViewModel {
                 mActivity.hideLoading();
                 performBackgroundTasks();
 
-                if (data.profile.name == null || data.profile.name.equals("") ||
+/*                if (data.profile.name == null || data.profile.name.equals("") ||
                         data.profile.name.equals(data.profile.username)) {
                     ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 } else {
@@ -107,7 +107,14 @@ public class SigninViewModel extends BaseViewModel {
                     mActivity.analytic.addMxAnalytics_db(null, Action.SignIn, Nav.signin.name(),
                             Source.Mobile, null);
 
-                }
+                }*/
+
+
+                mDataManager.refreshLocalDatabase();
+                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+
+                mActivity.analytic.addMxAnalytics_db(null, Action.SignIn, Nav.signin.name(),
+                        Source.Mobile, null);
                 mActivity.finish();
             }
 
