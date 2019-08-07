@@ -9,9 +9,12 @@ import android.support.v4.view.ViewPager;
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.launch.LaunchFragment;
+import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.view.SplashActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +59,14 @@ public class SwipeLaunchViewModel extends BaseViewModel {
 
     public void next() {
         mActivity.finish();
-        ActivityUtil.gotoPage(mActivity, SigninRegisterActivity.class);
+
+        if (mDataManager.getEdxEnvironment().getUserPrefs().getProfile() != null) {
+            //environment.getRouter().showMainDashboard(SplashActivity.this);
+            ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+        }
+        else {
+            mDataManager.getEdxEnvironment().getRouter().showLaunchScreen(mActivity);
+        }
     }
 
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {

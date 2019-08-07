@@ -29,6 +29,8 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
@@ -279,9 +281,11 @@ public class LoginActivity
     public void onUserLoginSuccess(ProfileModel profile) {
         setResult(RESULT_OK);
         finish();
-        if (!environment.getConfig().isRegistrationEnabled()) {
+        /*if (!environment.getConfig().isRegistrationEnabled()) {
             environment.getRouter().showMainDashboard(this);
-        }
+        }*/
+
+        ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class);
     }
 
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {

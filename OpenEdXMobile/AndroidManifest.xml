@@ -46,12 +46,12 @@
         android:supportsRtl="${supportsRtl}"
         android:theme="@style/AppTheme">
 
-        <activity
+<!--        <activity
             android:name="org.edx.mobile.view.SplashActivity"
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoDisplayTheme">
-            <!--<intent-filter>
+            &lt;!&ndash;<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -61,7 +61,25 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>-->
+            </intent-filter>&ndash;&gt;
+        </activity>-->
+
+
+        <activity
+            android:name="org.edx.mobile.view.SplashActivity"
+            android:label="@string/app_shortcut_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoDisplayTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="edx" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
 
         <activity

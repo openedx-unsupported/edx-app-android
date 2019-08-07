@@ -10,12 +10,17 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
+import org.edx.mobile.tta.data.pref.AppPref;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import static org.edx.mobile.util.BrowserUtil.appPref;
 
 // We are extending the normal Activity class here so that we can use Theme.NoDisplay, which does not support AppCompat activities
 public class SplashActivity extends Activity {
@@ -48,11 +53,27 @@ public class SplashActivity extends Activity {
         }
 
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
-        if (environment.getUserPrefs().getProfile() != null) {
-            environment.getRouter().showMainDashboard(SplashActivity.this);
+ /*       if (environment.getUserPrefs().getProfile() != null) {
+            //environment.getRouter().showMainDashboard(SplashActivity.this);
+            ActivityUtil.gotoPage(SplashActivity.this, LandingActivity.class);
         } else if (!environment.getConfig().isRegistrationEnabled()) {
             startActivity(environment.getRouter().getLogInIntent());
         } else {
+            environment.getRouter().showLaunchScreen(SplashActivity.this);
+        }*/
+
+
+ if(appPref.isFirstLaunch())
+ {
+     ActivityUtil.gotoPage(SplashActivity.this, SwipeLaunchActivity.class);
+     return;
+ }
+
+        if (environment.getUserPrefs().getProfile() != null) {
+            //environment.getRouter().showMainDashboard(SplashActivity.this);
+            ActivityUtil.gotoPage(SplashActivity.this, LandingActivity.class);
+        }
+        else {
             environment.getRouter().showLaunchScreen(SplashActivity.this);
         }
     }
