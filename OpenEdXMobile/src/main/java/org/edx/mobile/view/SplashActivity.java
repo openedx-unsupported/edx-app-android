@@ -63,11 +63,11 @@ public class SplashActivity extends Activity {
         }*/
 
 
- if(appPref.isFirstLaunch())
- {
-     ActivityUtil.gotoPage(SplashActivity.this, SwipeLaunchActivity.class);
-     return;
- }
+        if(appPref.isFirstLaunch()) {
+            ActivityUtil.gotoPage(SplashActivity.this, SwipeLaunchActivity.class);
+            appPref.setFirstLaunch(false);
+            return;
+        }
 
         if (environment.getUserPrefs().getProfile() != null) {
             //environment.getRouter().showMainDashboard(SplashActivity.this);
