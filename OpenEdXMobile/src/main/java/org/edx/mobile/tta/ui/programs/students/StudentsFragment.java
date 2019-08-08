@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.programs.curricullam;
+package org.edx.mobile.tta.ui.programs.students;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,22 +12,17 @@ import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
 
-public class CurricullamFragment extends TaBaseFragment {
+public class StudentsFragment extends TaBaseFragment {
+
     public static final String TAG = LibraryFragment.class.getCanonicalName();
-    public CurricullamViewModel viewModel;
-    TextView mtext_nothing;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = binding(inflater, container, R.layout.nothing_to_show, viewModel)
-                .getRoot();
-
-        viewModel = new CurricullamViewModel(getActivity(), this);
-
+        View rootView = inflater.inflate(R.layout.nothing_to_show, container, false);
+        TextView mtext_nothing;
         mtext_nothing = rootView.findViewById(R.id.text_nothing);
-        mtext_nothing.setText("No curriculum available");
-
+        mtext_nothing.setText("No students found..");
         return rootView;
     }
 }

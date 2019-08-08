@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.programs.schedule;
+package org.edx.mobile.tta.ui.programs.discussion;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,10 +12,10 @@ import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
 
-public class ScheduleFragment extends TaBaseFragment {
+public class DiscussionFragment extends TaBaseFragment {
+
     public static final String TAG = LibraryFragment.class.getCanonicalName();
-    public ScheduleViewModel viewModel;
-    TextView mtext_nothing;
+    public DiscussionViewModel viewModel;
 
     @Nullable
     @Override
@@ -23,10 +23,10 @@ public class ScheduleFragment extends TaBaseFragment {
         View rootView = binding(inflater, container, R.layout.nothing_to_show, viewModel)
                 .getRoot();
 
-        viewModel = new ScheduleViewModel(getActivity(), this);
-
+        viewModel = new DiscussionViewModel(getActivity(), this);
+        TextView mtext_nothing;
         mtext_nothing = rootView.findViewById(R.id.text_nothing);
-        mtext_nothing.setText("No schedule available");
+        mtext_nothing.setText("No discussions available..");
         return rootView;
     }
 }

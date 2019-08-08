@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.programs.schedule;
+package org.edx.mobile.tta.ui.programs.schedule;
 
 import android.content.Context;
 

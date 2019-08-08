@@ -2,28 +2,34 @@ package org.edx.mobile.tta.ui.library.view_model;
 
 import android.content.Context;
 import android.databinding.ObservableInt;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
-import org.edx.mobile.tta.programs.curricullam.CurricullamFragment;
-import org.edx.mobile.tta.programs.discussion.DiscussionFragment;
-import org.edx.mobile.tta.programs.schedule.ScheduleFragment;
-import org.edx.mobile.tta.programs.students.StudentsFragment;
-import org.edx.mobile.tta.programs.units.UnitsFragment;
+import org.edx.mobile.tta.ui.programs.curricullam.CurricullamFragment;
+import org.edx.mobile.tta.ui.programs.discussion.DiscussionFragment;
+import org.edx.mobile.tta.ui.programs.schedule.ScheduleFragment;
+import org.edx.mobile.tta.ui.programs.students.StudentsFragment;
+import org.edx.mobile.tta.ui.programs.units.UnitsFragment;
 import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
-import org.edx.mobile.tta.ui.library.LibraryTab;
+import org.edx.mobile.user.Account;
+import org.edx.mobile.view.CourseDiscussionTopicsFragment;
+import org.edx.mobile.view.Router;
 import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.edx.mobile.view.Router.EXTRA_COURSE_DATA;
 
 public class LibraryViewModel extends BaseViewModel {
 
@@ -34,6 +40,7 @@ public class LibraryViewModel extends BaseViewModel {
     private CollectionConfigResponse cr;
     private List<Category> categories;
     private SearchPageOpenedListener searchPageOpenedListener;
+    private EnrolledCoursesResponse course;
 
     public ObservableInt initialPosition = new ObservableInt();
 
@@ -67,7 +74,27 @@ public class LibraryViewModel extends BaseViewModel {
         this.searchPageOpenedListener = searchPageOpenedListener;
 
         adapter = new ListingPagerAdapter(mFragment.getChildFragmentManager());
-        populateTabs();
+        mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+            @Override
+            public void onSuccess(List<EnrolledCoursesResponse> data) {
+
+                for (EnrolledCoursesResponse item: data) {
+                    if(item.getCourse().getId().trim().toLowerCase().equals("course-v1:Humana+NETT101+2019-20".trim().toLowerCase())) {
+                        course = item;
+                        break;
+                    }
+                }
+                populateTabs();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                populateTabs();
+            }
+        });
+
+
+       // populateTabs();
 
 //        getData();
 
@@ -111,19 +138,23 @@ public class LibraryViewModel extends BaseViewModel {
         demolist.add("Discussion");
         demolist.add("Curriculum");
 
-
-//        fragments.add(LibraryTab.newInstance())
-//        for (String category: demolist){
-//            fragments.add(LibraryTab.demoInstance(category, searchPageOpenedListener));
-//            titles.add(category);
-//        }
-//
         try {
-
             fragments.add(new ScheduleFragment());
             fragments.add(new UnitsFragment());
             fragments.add(new StudentsFragment());
-            fragments.add(new DiscussionFragment());
+
+            CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();
+            if (course != null) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
+                discussionFragment.setArguments(bundle);
+
+                discussionFragment.setRetainInstance(true);
+                fragments.add(discussionFragment);
+            } else {
+                fragments.add(new DiscussionFragment());
+            }
+
             fragments.add(new CurricullamFragment());
             adapter.setFragments(fragments, demolist);
         } catch (Exception e) {
