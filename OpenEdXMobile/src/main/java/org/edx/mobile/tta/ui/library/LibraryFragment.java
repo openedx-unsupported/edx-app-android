@@ -11,15 +11,10 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.analytics.analytics_enums.Nav;
-import org.edx.mobile.tta.programs.schedule.ScheduleFragment;
-import org.edx.mobile.tta.programs.students.StudentsFragment;
-import org.edx.mobile.tta.programs.units.UnitsFragment;
-import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.view_model.LibraryViewModel;
 import org.edx.mobile.tta.utils.BreadcrumbUtil;
-import org.edx.mobile.view.common.PageViewStateCallback;
 
 public class LibraryFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();

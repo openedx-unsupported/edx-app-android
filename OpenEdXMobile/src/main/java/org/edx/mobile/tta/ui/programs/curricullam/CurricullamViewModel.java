@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.programs.curricullam;
+package org.edx.mobile.tta.ui.programs.curricullam;
 
 import android.content.Context;
 

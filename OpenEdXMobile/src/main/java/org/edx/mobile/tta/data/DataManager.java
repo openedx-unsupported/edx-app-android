@@ -95,6 +95,7 @@ import org.edx.mobile.tta.firebase.FirebaseHelper;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.scorm.ScormStartResponse;
+import org.edx.mobile.tta.task.GetEnrolledCourseTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaContentTask;
 import org.edx.mobile.tta.task.agenda.GetMyAgendaCountTask;
 import org.edx.mobile.tta.task.agenda.GetStateAgendaContentTask;
@@ -3413,6 +3414,33 @@ public class DataManager extends BaseRoboInjector {
     public void updateFirebaseToken(){
 //        FirebaseHelper fireBaseHelper=new FirebaseHelper();
 //        fireBaseHelper.updateFirebasetokenToServer(context,fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
+    }
+
+
+
+    public void getenrolledCourseByOrg(String org, OnResponseCallback<List<EnrolledCoursesResponse>> callback)
+    {
+        if (NetworkUtil.isConnected(context)) {
+            new GetEnrolledCourseTask(context, org,loginPrefs.getUsername()) {
+                @Override
+                protected void onSuccess(List<EnrolledCoursesResponse> response) throws Exception {
+                    super.onSuccess(response);
+                    if (response != null && response.size() > 0) {
+                        callback.onSuccess(response);
+                    } else {
+                        callback.onFailure(new TaException("No data found"));
+                    }
+
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+        } else {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+        }
     }
 
 }
