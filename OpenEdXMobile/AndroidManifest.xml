@@ -69,7 +69,7 @@
             android:name="org.edx.mobile.view.SplashActivity"
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoDisplayTheme">
+            android:theme="@style/AppTheme.Launch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

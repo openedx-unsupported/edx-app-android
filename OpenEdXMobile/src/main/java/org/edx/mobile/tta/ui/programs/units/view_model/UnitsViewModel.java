@@ -79,7 +79,8 @@ public class UnitsViewModel extends BaseViewModel {
         List<Notification> notifications = new ArrayList<>();
         for (int i = 0 ; i < 20; i++){
             Notification notification = new Notification();
-            notification.setTitle("Unit - " + (i+1));
+            notification.setTitle("NeTT Unit - " + (i+1));
+            notification.setDescription("NeTT_2019");
             notifications.add(notification);
         }
         adapter.setItems(notifications);
@@ -96,7 +97,7 @@ public class UnitsViewModel extends BaseViewModel {
             if (binding instanceof TRowNotificationBinding){
                 TRowNotificationBinding notificationBinding = (TRowNotificationBinding) binding;
                 notificationBinding.setViewModel(model);
-                notificationBinding.notificationDate.setText(model.getTitle());
+                notificationBinding.notificationDate.setText(model.getDescription());
 
                 Glide.with(mActivity)
                         .load("http://www.humana-india.org/images/GSN_1618_GOLD.JPG")

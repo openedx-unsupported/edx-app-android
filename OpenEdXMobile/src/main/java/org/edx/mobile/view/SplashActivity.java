@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.google.inject.Inject;
 
@@ -23,6 +24,9 @@ import static org.edx.mobile.util.BrowserUtil.appPref;
 
 // We are extending the normal Activity class here so that we can use Theme.NoDisplay, which does not support AppCompat activities
 public class SplashActivity extends Activity {
+
+    private static final long DELAY = 1500;
+
     protected final Logger logger = new Logger(getClass().getName());
     private Config config = new Config(MainApplication.instance());
 
@@ -32,9 +36,9 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+        /*if (!Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
             finish();
-        }
+        }*/
 
         /*
         Recommended solution to avoid opening of multiple tasks of our app's launcher activity.
@@ -44,14 +48,22 @@ public class SplashActivity extends Activity {
         - https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508#16447508
          */
 
-        if (!isTaskRoot()) {
-            final Intent intent = getIntent();
-            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(intent.getAction())) {
-                return;
-            }
-        }
+        startRouting();
+    }
 
-        final IEdxEnvironment environment = MainApplication.getEnvironment(this);
+    private void startRouting(){
+
+        new Handler().postDelayed(() -> {
+            finish();
+
+            if (!isTaskRoot()) {
+                final Intent intent = getIntent();
+                if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(intent.getAction())) {
+                    return;
+                }
+            }
+
+            final IEdxEnvironment environment = MainApplication.getEnvironment(this);
  /*       if (environment.getUserPrefs().getProfile() != null) {
             //environment.getRouter().showMainDashboard(SplashActivity.this);
             ActivityUtil.gotoPage(SplashActivity.this, LandingActivity.class);
@@ -62,25 +74,28 @@ public class SplashActivity extends Activity {
         }*/
 
 
-        if(appPref.isFirstLaunch()) {
-            ActivityUtil.gotoPage(SplashActivity.this, SwipeLaunchActivity.class);
-            appPref.setFirstLaunch(false);
-            return;
-        }
+            if(appPref.isFirstLaunch()) {
+                ActivityUtil.gotoPage(SplashActivity.this, SwipeLaunchActivity.class);
+                appPref.setFirstLaunch(false);
+                return;
+            }
 
-        if (environment.getUserPrefs().getProfile() != null) {
-            //environment.getRouter().showMainDashboard(SplashActivity.this);
-            ActivityUtil.gotoPage(SplashActivity.this, LandingActivity.class);
-        }
-        else {
-            environment.getRouter().showLaunchScreen(SplashActivity.this);
-        }
+            if (environment.getUserPrefs().getProfile() != null) {
+                //environment.getRouter().showMainDashboard(SplashActivity.this);
+                ActivityUtil.gotoPage(SplashActivity.this, LandingActivity.class);
+            }
+            else {
+                environment.getRouter().showLaunchScreen(SplashActivity.this);
+            }
+
+        }, DELAY);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+        /*if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
             Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
                 @Override
                 public void onInitFinished(JSONObject referringParams, BranchError error) {
@@ -98,7 +113,7 @@ public class SplashActivity extends Activity {
             }, this.getIntent().getData(), this);
 
             finish();
-        }
+        }*/
     }
 
     @Override
