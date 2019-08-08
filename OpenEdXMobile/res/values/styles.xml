@@ -54,7 +54,7 @@
     </style>
 
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@drawable/spalsh_humana</item>
+        <item name="android:windowBackground">@drawable/launch_background_humana</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
