@@ -285,7 +285,8 @@ public class LoginActivity
             environment.getRouter().showMainDashboard(this);
         }*/
 
-        ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class);
+        ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class,
+                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     }
 
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
