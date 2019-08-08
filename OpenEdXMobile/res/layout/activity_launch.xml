@@ -6,11 +6,12 @@
         android:id="@+id/rl_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:background="@drawable/launch_background"
+        tools:background="@drawable/launch_background_humana"
         android:splitMotionEvents="false">
 
         <ImageView
             android:id="@+id/edx_logo"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -40,6 +41,7 @@
                 android:background="@drawable/edx_brand_button"
                 android:contentDescription="@string/sign_up_and_learn"
                 android:focusable="true"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:text="@string/sign_up_and_learn"
                 android:textColor="@android:color/white"
@@ -51,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/light_selectable_rounded_box_overlay"
+                android:background="@drawable/edx_brand_button"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/already_have_an_account"
