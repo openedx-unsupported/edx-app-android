@@ -41,9 +41,9 @@ public class LaunchActivity extends BaseFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (environment.getLoginPrefs().getUsername() != null) {
+        /*if (environment.getLoginPrefs().getUsername() != null) {
             finish();
             environment.getRouter().showMainDashboard(this);
-        }
+        }*/
     }
 }

@@ -22,6 +22,7 @@ import org.edx.mobile.tta.ui.profile.ProfileFragment;
 import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.AccountFragment;
 import org.edx.mobile.view.BaseWebViewDiscoverFragment;
 import org.edx.mobile.view.CourseDetailFragment;
 import org.edx.mobile.view.CourseDiscussionPostsSearchFragment;
@@ -142,7 +143,7 @@ public class LandingViewModel extends BaseViewModel {
     public void showProfile() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                new UserProfileFragment(),
+                new AccountFragment(),
                 R.id.dashboard_fragment,
                 ProfileFragment.TAG,
                 false,

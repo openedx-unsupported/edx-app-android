@@ -101,7 +101,7 @@ public class Router {
     }
 
     public void showSplashScreen(Context context) {
-        final Intent launchIntent = new Intent(context, SigninRegisterActivity.class);
+        final Intent launchIntent = new Intent(context, LaunchActivity.class);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(launchIntent);
     }
