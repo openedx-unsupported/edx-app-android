@@ -10,7 +10,6 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
-import org.edx.mobile.tta.data.pref.AppPref;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;

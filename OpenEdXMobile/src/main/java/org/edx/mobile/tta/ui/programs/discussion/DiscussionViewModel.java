@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.programs.discussion;
+package org.edx.mobile.tta.ui.programs.discussion;
 
 import android.content.Context;
 

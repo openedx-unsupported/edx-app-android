@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.programs.discussion;
+package org.edx.mobile.tta.ui.programs.units;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,24 +9,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.tta.programs.units.view_model.UnitsViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
 
-public class DiscussionFragment extends TaBaseFragment {
-
+public class UnitsFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
-    public DiscussionViewModel viewModel;
+
+    private UnitsViewModel viewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new UnitsViewModel(getActivity(), this);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = binding(inflater, container, R.layout.nothing_to_show, viewModel)
-                .getRoot();
+        View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
 
-        viewModel = new DiscussionViewModel(getActivity(), this);
-        TextView mtext_nothing;
-        mtext_nothing = rootView.findViewById(R.id.text_nothing);
-        mtext_nothing.setText("No discussions available..");
         return rootView;
     }
 }
