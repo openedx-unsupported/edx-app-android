@@ -1,0 +1,609 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!--Certificates-->
+  <!--Label congratulation user on finishing course-->
+  <string name="course_details_congratulations">Félicitations!</string>
+  <!--Message for user who has successfully completed a certificate course-->
+  <string name="course_details_earned_cert">Vous avez réussit le cours.</string>
+  <!--Button that opens a full view of an earned certificate-->
+  <string name="course_details_view_cert_button">Voir le Certificat</string>
+  <!--Course Discovery-->
+  <!--Enroll Now button text-->
+  <string name="enroll_now_button_text">S\'inscrire</string>
+  <!--Invitation Only button text-->
+  <string name="invitation_only_button_text">Sur invitation</string>
+  <!--Effort field name-->
+  <string name="effort_field_name">Effort:</string>
+  <!--When discovering courses, some courses have an externally hosted video that describes it.
+    In that case, a play icon is shown on top of the course image. This is the content description.-->
+  <string name="go_to_video">Aller à la vidéo</string>
+  <!--View Course button text text-->
+  <string name="view_course_button_text">Voir le cours</string>
+  <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
+  <string name="you_are_now_enrolled">Vous êtes maintenant inscrit au cours.</string>
+  <!--Error message shown when dashboard cannot be shown from course detail view-->
+  <string name="cannot_show_dashboard">Tableau de bord indisponible.</string>
+  <!--Error message shown when browser cannot handle request for given web url-->
+  <!--Subjects Discovery-->
+  <!--Label for browsing courses by a subject-->
+  <!--Button's Label for viewing all subjects-->
+  <!--Label for searching subjects-->
+  <!--Course Sharing-->
+  <!--Description of button that will open the share course menu-->
+  <string name="share_course_button">Partagez votre cours</string>
+  <!--Share course-->
+  <string name="share_course_message">Je suis un cours sur {platform_name}! Check this out:</string>
+  <!--Settings Page-->
+  <!--Label for wifi only switch-->
+  <string name="settings_wifi_top">Téléchargement uniquement disponible en Wi-Fi</string>
+  <!--Label explaining what wifi only means in detail-->
+  <string name="settings_wifi_bottom">Télécharger les données uniquement lorsque le Wi-Fi est activé</string>
+  <!--Label for the Download to sd-card setting-->
+  <!--Label explaining the download location setting in detail-->
+  <!--Certificate Page-->
+  <!--Description of button that will open the certificate sharing menu-->
+  <string name="share_certificate_button">Partagez votre certificat</string>
+  <!--Text that pre-populates your post/email/SMS when sharing certificate-->
+  <string name="share_certificate_message">J\'ai reçu un certificat sur {platform_name}! Check this out: {certificate_url}</string>
+  <!--Tab of tab for certicate for finished course-->
+  <string name="tab_label_certificate">Certificat</string>
+  <!--Data Usage Dialog-->
+  <!--Alert dialog error message shown when using a feature with a required Internet connection-->
+  <string name="need_data">Cette options requiert une connexion Internet.</string>
+  <!--Login Activity Place Holders-->
+  <!--Hint text for login field-->
+  <string name="email_username">Nom d\'utilisateur ou adresse e-mail</string>
+  <!--Hint text for email address field in reset password dialog-->
+  <string name="email">Adresse e-mail</string>
+  <!--Hint text for password field-->
+  <string name="password">Mot de passe</string>
+  <!--Button text allowing user to reset their password-->
+  <string name="forgot_password">Mot de passe oublié ?</string>
+  <!--Button initiating login process after user enters credentials like username and password-->
+  <string name="login">Inscrivez-vous</string>
+  <!--Accessible content description of sign in button on Log in screen-->
+  <string name="login_btn">Bouton de connexion</string>
+  <!--Message shown while waiting for action-->
+  <string name="progress_text">Veuillez patienter</string>
+  <!--Message shown while user waits for response to a sign in request-->
+  <string name="signing_in">Connexion en cours</string>
+  <!--Message for shown after tapping Sign In-->
+  <string name="error_message">Message d\'erreur</string>
+  <!--Generic error during log in-->
+  <string name="error_heading">L\'erreur suivante est survenue lors de votre connexion</string>
+  <!--Error during log in.-->
+  <string name="login_failed">Veuillez vérifier que votre nom d\'utilisateur ou adresse e-mail et mot de passe sont corrects puis réessayez.</string>
+  <!--License Agreement related string on Login and Regiser screens-->
+  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Label for End User License Agreement-->
+  <string name="licensing_agreement">engagements de licence {platform_name}</string>
+  <!--Label for Terms of Service and Honor Code-->
+  <string name="tos_and_honor_code">les conditions d\'utilisation {platform_name}</string>
+  <!--Label for Privacy Policy-->
+  <string name="privacy_policy">politique de confidentialité</string>
+  <string name="login_title">Connexion</string>
+  <!--Accessible content description of close button on Sign in and Sign up screen-->
+  <string name="close">Fermer</string>
+  <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
+  <string name="dropdown_list_prefix">Liste de sélection.</string>
+  <!--Navigation Drawer Labels-->
+  <!--Button text to show user current downloads screen-->
+  <string name="label_current_downloads">Voir les téléchargements en cours</string>
+  <!--Content description for edit profile button-->
+  <string name="open_profile_button">Ouvrir votre profil</string>
+  <!--Title of user's course list screen-->
+  <string name="label_my_courses">Cours</string>
+  <!--Title of user's program list screen-->
+  <!--Title of native Find Courses Screen-->
+  <string name="label_find_courses">Trouver des cours</string>
+  <!--Title of webview based Find Courses Screen-->
+  <string name="label_discover">Découvrir</string>
+  <!--Title of Degrees tab on Discovery screen-->
+  <!--Title of Find Courses tab on Main Dashboard screen-->
+  <string name="label_discovery">Découverte</string>
+  <!--Button allowing users to send an email for feedback-->
+  <string name="label_submit_feedback">Envoyer commentaire</string>
+  <!--Toggle switch on state label-->
+  <string name="toggle_turn_on">On</string>
+  <!--Toggle switch off state label-->
+  <string name="toggle_turn_off">Off</string>
+  <!--Logout button label-->
+  <string name="logout">Déconnexion</string>
+  <!--Settings screen title-->
+  <string name="settings_txt">Paramètres</string>
+  <!--Settings screen version-->
+  <string name="label_version">Version de l\'App</string>
+  <!--Button text to show user Settings screen-->
+  <string name="label_settings">Paramètres</string>
+  <!--Title of Account screen-->
+  <string name="title_account">Compte</string>
+  <!--Help Dialog Place Holder messages-->
+  <!--Reset password alert dialog title-->
+  <string name="confirm_dialog_title_help">Réinitialiser le mot de passe</string>
+  <!--Reset password alert dialog message-->
+  <string name="success_dialog_title_help">Email de réinitialisation de mot de passe envoyé</string>
+  <!--Reset password alert dialog title-->
+  <string name="title_reset_password_failed">Erreur lors du changement de mot de passe</string>
+  <!--Label for switch controlling whether users permit downloading using cellular data or only wifi-->
+  <string name="wifi_dialog_title_help">Autoriser téléchargement cellulaire</string>
+  <!--Password reset sent succesfully alert-->
+  <string name="success_dialog_message_help">Nous avons envoyé un email pour réinitialiser votre mot de passe. 
+        Vérifiez votre dossier de spams si vous ne le recevez pas dans les 5 minutes.</string>
+  <!--Password reset dialog prompt-->
+  <string name="confirm_dialog_message_help">Saisir l\'email de votre compte, nous vous enverrons un message pour réinitialiser votre mot de passe.</string>
+  <!--Label explaining toggle for cellular data access-->
+  <string name="wifi_dialog_message_help">Autoriser l\'appareil à télécharger les vidéos en utilisant la connexion de données quand le Wi-Fi n\'est pas disponible. Ceci peut entraîner des frais supplémentaires.</string>
+  <!--Info message text for to let use know how many videos were deleted-->
+  <plurals name="delete_video_snackbar_msg">
+    <item quantity="one">%s vidéo supprimée</item>
+    <item quantity="other">%s vidéos supprimées</item>
+  </plurals>
+  <!--Alert dialog title for users with zero rated data-->
+  <string name="leaving_app_data_title">Déconnexion de l\'App {platform_name}</string>
+  <!--Alert dialog content for users with zero rated data-->
+  <string name="leaving_app_data_message">Si vous quittez l\'app, vous ne pourrez plus accéder au contenu  {platform_name} gratuit. Des charges additionnelles peuvent s\'appliquer.</string>
+  <!--Title of agreement users must accept to use the app-->
+  <string name="end_user_title">Engagement de Licence</string>
+  <!--Title of privacy policy users must accept to use the app-->
+  <!--Title of terms of service & honor code users must accept to use the app-->
+  <string name="terms_of_service_title">Conditions d\'utilisation</string>
+  <!--My Courses-->
+  <!--Row of course on dashboard screen-->
+  <string name="courseware_title">Cours</string>
+  <!--Row of course on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="courseware_subtitle">Accédez aux vidéos et quizz</string>
+  <!--Row title of videos on dashboard screen-->
+  <string name="videos_title">Vidéos</string>
+  <!--Row subtitle of videos on dashboard screen-->
+  <string name="videos_subtitle">Visionnez les vidéos de cours</string>
+  <!--Row of Discussion on dashboard screen-->
+  <string name="discussion_title">Discussion</string>
+  <!--Row of Discussion on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="discussion_subtitle">Rejoindre la conversation</string>
+  <!--Row of Handouts on dashboard screen-->
+  <string name="handouts_title">Documents</string>
+  <!--Row of Handouts on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="handouts_subtitle">Trouvez les informations importantes</string>
+  <!--Row of announcement on dashboard screen-->
+  <string name="announcement_title">Annonces</string>
+  <!--Title text for the important dates section on the course dashboard-->
+  <string name="course_dates_title">Dates importantes</string>
+  <!--Title text for the additional resources section on the tabular course dashboard-->
+  <string name="resources_title">Ressources</string>
+  <!--Row of announcement on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="announcement_subtitle">Les dernières actualités</string>
+  <!--Subtitle text describing the important dates section on the course dashboard-->
+  <string name="course_dates_subtitle">Suivez les échéances et restez à la page</string>
+  <!--Accessible content description of course name label field-->
+  <string name="course_name">Nom du cours</string>
+  <!--Label indicating new course content has been downloaded-->
+  <string name="new_course_content">Nouveau contenu de cours</string>
+  <!--Label for date when course starts-->
+  <string name="label_starting">Démarre le {date}</string>
+  <!--Label for course that has ended-->
+  <string name="label_ended">Terminé le {date}</string>
+  <!--Label for date when course is ending-->
+  <string name="label_ending">Se termine le {date}</string>
+  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
+  <!--Label for date when course is expiring on a specific date like on December 5-->
+  <!--Label for date when course expired a specific time ago like 2 days ago-->
+  <!--Label for date when course expired on a specific date like on November 5-->
+  <!--Course Details-->
+  <!--Accessible content description of label for course content-->
+  <string name="course_content">Contenu du cours</string>
+  <!--Tab title for course handouts section-->
+  <string name="tab_label_handouts">Polycopiés</string>
+  <!--Button for last accessed course section. Will be followed by course name-->
+  <string name="last_accessed">Accédé dernièrement</string>
+  <!--Label shown when no courseware content is available-->
+  <string name="no_chapter_text">Aucun contenu de cours de disponible</string>
+  <!--Label shown when no mobile-friendly videos are available in a course-->
+  <string name="no_videos_text">Ce cours de contient pas de vidéos.</string>
+  <!--Label shown when user is enrolled in no courses-->
+  <string name="no_courses_to_display">Vous n\'êtes inscrit à aucun cours pour le moment.</string>
+  <!--Label shown when no announcements are available for a course-->
+  <string name="no_announcements_to_display">Il n\'y a actuellement aucune annonce pour ce cours.</string>
+  <!--Label shown when no handouts are available for a course-->
+  <string name="no_handouts_to_display">Il n\'y a actuellement aucun polycopié pour ce cours.</string>
+  <!--Label shown when no important dates are available for a course-->
+  <string name="no_course_dates_to_display">Les dates de cours ne sont pas disponibles actuellement.</string>
+  <!--Title of the screen where user can delete videos-->
+  <string name="delete_videos_title">Supprimer vidéos</string>
+  <!--Label for a course item's due date for same day-->
+  <string name="due_date_today">échéance le {due_date} </string>
+  <!--Label for a course item's due date-->
+  <string name="due_date_past_future">fin au {due_date} </string>
+  <!--Discussion Topics-->
+  <!--Label for the discussion topics page-->
+  <string name="discussion_topics_title">Sujets de discussion</string>
+  <!--Hint displayed in search view for discussion posts-->
+  <string name="topics_search">Rechercher tous les posts</string>
+  <!--Discussion Posts Fragment-->
+  <!--Title for discussion post search results-->
+  <string name="discussion_posts_search_title">Résultats de recherche</string>
+  <!--Label for the the filter and sort options for refining the thread list-->
+  <string name="discussion_posts_refine">Affiner:</string>
+  <!--Label for creating a new post-->
+  <string name="discussion_post_create_new_post">Creer un nouveau post</string>
+  <!--Label for creating a new comment-->
+  <!--Discussion posts filter options-->
+  <!--Discussion posts filter for all posts-->
+  <string name="discussion_posts_filter_all_posts">Tous les posts</string>
+  <!--Discussion posts filter for unread posts-->
+  <string name="discussion_posts_filter_unread_posts">Non lus</string>
+  <!--Discussion posts filter for unanswered posts-->
+  <string name="discussion_posts_filter_unanswered_posts">Non répondus</string>
+  <!--Discussion posts sort options-->
+  <!--Discussion posts sort by recent activity-->
+  <string name="discussion_posts_sort_recent_activity">Activités récentes</string>
+  <!--Discussion posts sort by most activity-->
+  <string name="discussion_posts_sort_most_activity">Plus d\'activite</string>
+  <!--Discussion posts sort by most votes-->
+  <string name="discussion_posts_sort_most_votes">Plus de votes</string>
+  <!--Label for the visibility of a discussion post that is only visible to cohort-->
+  <string name="discussion_post_visibility_cohort">Ce post est visible uniquement pour {cohort}</string>
+  <!--Label for the visibility of a discussion post that is visible to everyone-->
+  <string name="discussion_post_visibility_everyone">Ce post est visible par tous.</string>
+  <!--Used while constructing the author attribution text for a discussion post e.g. "3 days ago by Brian (Staff)"-->
+  <string name="discussion_post_author_attribution">par {author}</string>
+  <!--Used while constructing the author attribution text for an answer response e.g. "Marked as answer 2 days ago by Khalid (Community TA)"-->
+  <string name="discussion_post_marked_as_answer">Marquer comme réponse</string>
+  <!--Used while constructing the author attribution text for an endorsed response e.g. "Endorsed 2 days ago by Khalid"-->
+  <string name="discussion_post_endorsed">Liker</string>
+  <!--Used for putting authorLabel into parenthesis e.g. (Community TA) or (Staff)-->
+  <string name="discussion_post_author_label_attribution">({text})</string>
+  <!--Label indicating the number of replies on a post e.g. 47 total-->
+  <string name="discussion_post_total_replies">{total_replies} total</string>
+  <!--Label indicating the last time a post was updated e.g. Last post: Jun 22, 2016-->
+  <string name="discussion_post_last_interaction_date">Dernier post: {date}</string>
+  <!--Discussion Responses-->
+  <!--Label for question type discussions that are answered-->
+  <string name="course_discussion_answered_title">Question répondue</string>
+  <!--Label for question type discussions that are unanswered-->
+  <string name="course_discussion_unanswered_title">Question non répondue</string>
+  <!--Label for adding a discussion response-->
+  <!--Label for number of discussion responses-->
+  <plurals name="number_responses_or_comments_responses_label">
+    <item quantity="one">%s reponse</item>
+    <item quantity="other">%s réponses</item>
+  </plurals>
+  <!--Label for number of discussion comments-->
+  <plurals name="number_responses_or_comments_comments_label">
+    <item quantity="one">%s commentaire</item>
+    <item quantity="other">%s commentaires</item>
+  </plurals>
+  <!--Label for adding a new comment-->
+  <!--Label for indicating that a response is an answer-->
+  <string name="discussion_responses_answer">Réponse</string>
+  <!--Label for indicating that a response is endorsed-->
+  <string name="discussion_responses_endorsed">Like</string>
+  <!--Label for time span when its less than a second after posting a response/comment-->
+  <string name="just_now">Maintenant</string>
+  <!--Label for letting the user know his/her response was successfully added-->
+  <string name="discussion_response_posted">Votre réponse a été ajoutée.</string>
+  <!--Label for letting the user know his/her comment was successfully added-->
+  <string name="discussion_comment_posted">Votre commentaire a été ajouté.</string>
+  <!--Discussion Responses Action Bar-->
+  <!--Label to indicate number of votes-->
+  <!--Label to indicate discussion response is not marked as inappropriate-->
+  <string name="discussion_responses_report_label">Signaler</string>
+  <!--Label for discussion response that has been marked as inappropriate-->
+  <string name="discussion_responses_reported_label">Ne plus signaler</string>
+  <!--Title in adding a new comment-->
+  <string name="discussion_add_comment_title">Ajouter un commentaire</string>
+  <!--Title when adding a new comment is disabled-->
+  <string name="discussion_add_comment_disabled_title">Les commentaires sont fermés pour cette réponse</string>
+  <!--Title in showing list of comments-->
+  <string name="discussion_comments">Commentaires</string>
+  <!--Add comment button title in adding a new comment-->
+  <string name="discussion_add_comment_button_label">Ajouter un commentaire</string>
+  <!--Add comment button description for accessibility in adding a new comment-->
+  <string name="discussion_add_comment_button_description">Bouton Ajouter commentaire</string>
+  <!--Add your comment placeholder in adding a new comment-->
+  <!--Title in adding a new response-->
+  <string name="discussion_add_response_title">Ajouter une réponse</string>
+  <!--Title when adding a new response is disabled-->
+  <string name="discussion_add_response_disabled_title">Les réponses sont fermées pour ce post</string>
+  <!--Add response button title in adding a new response-->
+  <string name="discussion_add_response_button_label">Ajouter un réponse</string>
+  <!--Add response button description for accessibility in adding a new response-->
+  <string name="discussion_add_response_button_description">Bouton Ajouter une réponse</string>
+  <!--Add your response placeholder in adding a new response-->
+  <!--Title placeholder in adding a new post-->
+  <string name="discussion_post_title">Titre</string>
+  <!--Label for selected topic when creating a post-->
+  <string name="discussion_add_post_topic_selection">Sujet: {topic}</string>
+  <!--Add post button title in adding a new discussion-->
+  <string name="discussion_add_post_button_label">Poster une discussion</string>
+  <!--Add post button description for accessibility in adding a new discussion-->
+  <string name="discussion_add_post_button_description">Bouton Poster la discussion</string>
+  <!--Add post button title in adding a new post-->
+  <string name="discussion_add_question_button_label">Poster une question</string>
+  <!--Add post button content description for accessibility in adding a new post-->
+  <string name="discussion_add_question_button_description">Bouton Poster une question</string>
+  <!--Add your post placeholder in adding a new post-->
+  <!--Add your post placeholder in adding a new post-->
+  <!--Question text in adding a new post-->
+  <string name="discussion_question">Question</string>
+  <!--Assessment-->
+  <!--Label showing next unit in a sub-section on assessment navigation bar-->
+  <string name="assessment_next">Suivant</string>
+  <!--Label showing previous unit in a sub-section on assessment navigation bar-->
+  <string name="assessment_previous">Précédent</string>
+  <!--Label showing assessment only available on website-->
+  <string name="assessment_not_available">Ce composant n\'est pas disponible sur mobile pour le moment.</string>
+  <!--Label showing assessment only available on website-->
+  <string name="assessment_explore_on_web">Continuez le cours ou voir ce composant dans un navigateur web.</string>
+  <!--Button to show wiew on web for assessment-->
+  <string name="assessment_view_on_web">Voir sur le web</string>
+  <!--Label to show empty assessment-->
+  <string name="assessment_empty">Pas de contenu de cours dans cette section.</string>
+  <!--Label to show a course will be starting soon-->
+  <string name="assessment_soon">Bientôt</string>
+  <!--Label to notify user to rotate device for viewing a video in full screen-->
+  <string name="assessment_rotate_for_fullscreen">Pivoter votre écran pour voir la vidéo en plein écran.</string>
+  <!--Label showing only youtube is available-->
+  <string name="assessment_only_on_youtube">Cette vidéo ne peut être vue que sur Youtube</string>
+  <!--Label for button to open on youtube-->
+  <string name="assessment_open_on_youtube">Voir sur Youtube</string>
+  <!--Video List-->
+  <!--Title of video download screen-->
+  <string name="title_download">Téléchargements</string>
+  <!--Label indicating user has no Internet connection-->
+  <string name="offline_text">Hors connexion</string>
+  <!--Cancel video download-->
+  <string name="cancel_download">Annuler téléchargement</string>
+  <!--My Downloads-->
+  <!--Button action label to view an item-->
+  <string name="view_button_text">Voir</string>
+  <!--Error text when downloading an item fails-->
+  <string name="download_failed_text">Le téléchargement a échoué</string>
+  <!--Alert dialog title to confirm download of a large quantity of data-->
+  <string name="download_exceed_title">Téléchargement volumineux</string>
+  <!--Message shown a single video download begins-->
+  <string name="msg_started_one_video_download">1 vidéo en cours de téléchargement</string>
+  <!--When a video download is about to start and we don't know it's file size yet-->
+  <string name="download_pending">Téléchargement en attente....</string>
+  <!--Error shown when video download fails-->
+  <string name="msg_video_not_downloaded">Impossible de télécharger la vidéo</string>
+  <!--Error shown when video download fails-->
+  <string name="msg_video_not_available">Cette vidéo n\'est pas disponible.\n Revenez plus tard.</string>
+  <!--Error shown when video has flag to indicate it is not available for mobile app-->
+  <string name="video_only_on_web_label">Cette vidéos est uniquement sur le web. Cliquez pour voir sur le web.</string>
+  <!--Message to indicate the it is not available for mobile app-->
+  <string name="video_only_on_web_short">Cette vidéo n\'est pas encore disponible sur mobile.</string>
+  <!--Alert dialog title when login fails-->
+  <string name="login_error">Erreur d\'inscription</string>
+  <!--Alert dialog title when login fails due to lack of Internet-->
+  <string name="no_connectivity">Erreur de connexion</string>
+  <!--Bulk Videos Download-->
+  <!--Accessibility label of bulk download switch-->
+  <string name="bulk_download_switch">Bouton de téléchargemenet de vidéo en masse</string>
+  <!--Title for bulk videos download view when in new or partial videos' download state-->
+  <string name="download_to_device">Télécharger sur l\'appareil</string>
+  <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
+  <!--Title for bulk videos download view when download is starting-->
+  <string name="download_starting">Démarrage...</string>
+  <!--Title for bulk videos download view when in downloading state-->
+  <string name="downloading_videos">Téléchargement vidéos en cours...</string>
+  <!--Subtitle for bulk videos download view when in downloading state-->
+  <string name="download_remaining">{remaining_videos_count} restante, {remaining_videos_size} total</string>
+  <!--Title for bulk videos download view when in downloaded state-->
+  <string name="download_complete">Vidéos téléchargées</string>
+  <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
+  <string name="switch_off_no_downloading">Activer pour télécharger toutes les vidéos de ce cours.</string>
+  <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
+  <string name="switch_on_all_downloading">Désactiver pour annuler et supprimer les vidéos téléchargées de ce cours.</string>
+  <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
+  <string name="switch_on_all_downloaded">Désactiver pour supprimer les vidéos téléchargées pour ce cours.</string>
+  <!--Accessibility label of full bulk download view when videos are being downloaded-->
+  <string name="view_downloads">Toucher deux fois pour voir les téléchargements.</string>
+  <!--Wifi New Message-->
+  <!--Toggle to allow downloads using cellular data-->
+  <string name="allow">Autoriser</string>
+  <!--Toggle to disallow downloads using cellular data-->
+  <string name="do_not_allow">Ne pas autoriser</string>
+  <!--Player Settings-->
+  <!--Label for closed captions in video player-->
+  <string name="lbl_closed_caption">Sous-titres</string>
+  <!--Label for video playback speed in video player-->
+  <!--Label for None captions selected-->
+  <!--Accessibility Label for Video Player-->
+  <string name="video_player">Lecteur vidéo</string>
+  <!--Accessibility Label for View on Web button on Video Player top bar-->
+  <string name="video_player_view_on_web">Voir sur le web</string>
+  <!--Accessibility Label for Play button of Video Player-->
+  <string name="video_player_play">Lire</string>
+  <!--Accessibility Label for Pause button of Video Player-->
+  <string name="video_player_next">Suivant</string>
+  <!--Accessibility Label for Previous button of Video Player-->
+  <string name="video_player_previous">Précédent</string>
+  <!--Accessibility Label for Pause button of Video Player-->
+  <string name="video_player_pause">Pause</string>
+  <!--Accessibility Label for Rewind button on Video Player bottom bar-->
+  <string name="video_player_rewind">Retour 30 secondes</string>
+  <!--Accessibility Label for Settings button on Video Player bottom bar-->
+  <string name="video_player_settings">Paramètres</string>
+  <!--Accessibility Label for Entering Fullscreen button on Video Player bottom bar-->
+  <string name="video_player_enter_fullscreen">Voir en plein écran</string>
+  <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
+  <string name="video_player_exit_fullscreen">Quitter le plein écran</string>
+  <!--Button label to bring up course finder-->
+  <string name="find_course_text">À la recherche d\'un nouveau challenge?</string>
+  <!--Button label to bring up course finder-->
+  <string name="find_course_btn_text">Trouver un cours</string>
+  <!--Message between sign in button and social login buttons-->
+  <string name="or_sign_in_with">Ou se connecter avec</string>
+  <!--Facebook login method-->
+  <string name="facebook_text">Facebook</string>
+  <!--Google login method-->
+  <string name="google_text">Google</string>
+  <!--Prompt allowing user to choose email program-->
+  <string name="email_chooser_header">Envoyer email avec...</string>
+  <!--Error shown when user attempts to send email, but has no email app-->
+  <string name="email_client_not_present">Pas de client email installe</string>
+  <!--Search for a course prompt-->
+  <string name="search_for_courses">Rechercher des cours</string>
+  <!--Search for a program prompt-->
+  <!--Search for a degree prompt-->
+  <!--Landing Activity text-->
+  <!--Prompt leading user to sign in screen-->
+  <string name="already_have_an_account">Vous avez déjà un compte ? Connectez-vous</string>
+  <!--Prompt leading user to create account screen-->
+  <string name="sign_up_and_learn">Inscrivez-vous et commencez à apprendre</string>
+  <!--In Register screen-->
+  <string name="register_with">S\'inscrire avec</string>
+  <string name="or_register_with_email">ou s\'inscrire avec un email</string>
+  <!--New Logistration Launch screen text-->
+  <!--Button leading user to create account screen-->
+  <string name="launch_register">Créer votre compte</string>
+  <!--Button leading user to log in screen-->
+  <string name="launch_login">Connexion</string>
+  <!--Introduction text on the launch screen-->
+  <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
+  <string name="launch_search_courses">Rechercher des cours</string>
+  <!--Registration Screen-->
+  <!--Button text allowing user to show hidden optional registration fields-->
+  <string name="show_optional_text">Montrer les champs optionnels</string>
+  <!--Button text allowing user to hide visible optional registration fields-->
+  <string name="hide_optional_text">Cacher les champs optionnels</string>
+  <!--Button text allowing user create an account-->
+  <string name="create_account_text">Créer mon compte</string>
+  <!--Accessible content description of create account button on Registration screen-->
+  <string name="create_account_btn">Bouton Créer mon compte</string>
+  <!--Text shown while waiting for registration request-->
+  <string name="creating_account_text">Créer un compte...</string>
+  <!--Registration screen title-->
+  <string name="register_title">Inscription</string>
+  <!--Text for successful registration with social token-->
+  <string name="sign_up_with_facebook_ok">Connexion avec Facebook réussie.</string>
+  <string name="sign_up_with_google_ok">Connexion avec Google réussie.</string>
+  <string name="sign_up_with_social_ok">Nous avons besoin d\'un petit peu plus d\'information pour apprendre sur {platform_name}.</string>
+  <!--Continue registration after social login-->
+  <string name="complete_registration">Terminer votre inscription</string>
+  <!--Message shown when enrolling in a course fails-->
+  <string name="enrollment_failure">Erreur d\'inscription au cours.</string>
+  <!--Alert dialog button allowing user to repeat their attempted action-->
+  <string name="try_again">Réessayez</string>
+  <!--Registration error-->
+  <string name="registration_error_title">Erreur d\'inscription</string>
+  <string name="registration_error_message">Modifier les champs et réessayez.</string>
+  <!--data charges may apply dialog text-->
+  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
+  <string name="open_external_url_title">Des frais de données peuvent vous être réclamés.</string>
+  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
+  <string name="open_external_url_desc">Ce lien s\'ouvrira dans votre navigateur mobile et peut entraîner des frais supplémentaires.</string>
+  <string name="android">Android</string>
+  <!--Email subject line when user attempts to submit feedback about the app-->
+  <string name="email_subject">Retour client</string>
+  <!--Email subject line when a user attempts to submit a review using the app review workflow-->
+  <string name="review_email_subject">Revue client</string>
+  <!--Submit Feedback app version text-->
+  <string name="app_version">Version de l\'App:</string>
+  <!--Submit Feedback android version text-->
+  <string name="android_os_version">Android OS: </string>
+  <!--Submit Feedback android model text-->
+  <string name="android_device_model">Device Model: </string>
+  <!--Submit Feedback feedback text-->
+  <string name="insert_feedback">Feedback: </string>
+  <!--Notification related-->
+  <!--toggle between subscribe and unsubscribe to course announcement-->
+  <string name="notification_toggle">Autoriser les notifications</string>
+  <!--Placeholder title for course content with no title-->
+  <string name="untitled_block">Sans titre</string>
+  <!--Title for default channel notifications-->
+  <!--Discussion/Forum-->
+  <string name="forum_no_results_for_search_query">Aucun résultat pour “{search_query}”. Essayer avec un autre terme ou parcourir les catégories de discussion.</string>
+  <string name="forum_no_results_for_all_posts">Il n\'y a pas de post pour cette discussion.</string>
+  <string name="forum_no_results_for_following">Vous ne suivez aucun post.</string>
+  <string name="forum_no_results_for_filtered_following">Les résultats n\'inclus pas les posts suivis.</string>
+  <string name="forum_no_results_in_category">Il n\'y a pas de post pour cette catégorie de discussion.</string>
+  <string name="forum_no_results_with_filter">Essayez de supprimer vos filtres.</string>
+  <string name="forum_post_i_am_following">Les posts que je suis</string>
+  <string name="forum_follow">Suivre</string>
+  <string name="forum_unfollow">Ne plussuivre</string>
+  <!--User Profiles-->
+  <!--Window title for the user profile screen-->
+  <string name="profile_title">Profil</string>
+  <!--The accessibility description for the username section-->
+  <string name="profile_username_description">Nom d\'utilisateur: {username}</string>
+  <!--The accessibility description for the language section-->
+  <string name="profile_language_description">Langue: {language}</string>
+  <!--The accessibility description for the location section-->
+  <string name="profile_location_description">Pays: {location}</string>
+  <!--The accessibility description for the "About Me" section-->
+  <string name="profile_about_me_description">À propos de moi: {about_me}</string>
+  <!--Label for toolbar icon that launches the edit profile screen for the current user-->
+  <string name="profile_toolbar_edit_button">Modifier</string>
+  <!--Shown when viewing your own profile and you are not sharing a full profile-->
+  <string name="profile_sharing_limited_by_you">Vous partagez votre profil limite</string>
+  <!--Shown when viewing another user's profile and that user is not sharing a full profile-->
+  <string name="profile_sharing_limited_by_other_user">Cette personne partage son profil limite</string>
+  <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
+  <string name="profile_consent_needed_explanation">Vous devez avoir au moins 13 ans pour partager votre profil complet.</string>
+  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
+  <string name="profile_consent_needed_edit_button">Paramètres</string>
+  <!--Shown when viewing your own incomplete profile-->
+  <string name="profile_incomplete_explanation">Il semblerait que votre profil est incomplet. Allons-y.</string>
+  <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->
+  <string name="profile_incomplete_edit_button">Démarrer</string>
+  <!--This text is shown in place of the "About Me" text if the user has not filled in their "About Me"-->
+  <string name="profile_incomplete_about_me">Pas d\'information \"A propos de moi\".</string>
+  <!--Window title for edit profile screen-->
+  <string name="edit_user_profile_title">Modifier le profil</string>
+  <!--How most profile fields are formatted when viewing the edit screen-->
+  <string name="edit_user_profile_field">{label}: {value}</string>
+  <!--Default placeholder if a profile field is blank-->
+  <string name="edit_user_profile_field_placeholder">Sélectionner</string>
+  <!--Button that saves changes to a profile text field-->
+  <string name="edit_user_profile_textarea_submit_button">Envoyer</string>
+  <!--An option that will set the user profile's primary language to the language of their device's configured locale-->
+  <string name="edit_user_profile_current_language">Langue: {current_language}</string>
+  <!--An option that will set the user profile's location to the country of their device's configured locale-->
+  <string name="edit_user_profile_current_location">Lieu: {current_location}</string>
+  <!--Button label that will open gallery or camera for choosing new profile photo-->
+  <string name="edit_user_profile_change_photo">Modifier</string>
+  <!--Content Description for change photo button-->
+  <string name="edit_user_profile_change_photo_description">Modifier la photo de profil</string>
+  <!--Button that will open a camera for taking a new profile photo-->
+  <string name="edit_user_profile_take_photo">Prendre un photo</string>
+  <!--Button that will open photo gallery for choosing a new profile photo-->
+  <string name="edit_user_profile_choose_photo">Sélectionner une photo</string>
+  <!--Button that will open a camera for taking a new profile photo-->
+  <string name="edit_user_profile_remove_photo">Supprimer la photo</string>
+  <!--Title when cropping newly selected profile photo-->
+  <string name="edit_user_profile_photo_crop_title">Recadrer</string>
+  <!--Button that will exit the crop tool without saving the image-->
+  <string name="edit_user_profile_photo_crop_cancel">Annuler</string>
+  <!--Button that will confirm the crop region and continue to upload the cropped photo-->
+  <string name="edit_user_profile_photo_crop_save">Sélectionner</string>
+  <!--Tab title for section of profile that displays a user's bio-->
+  <string name="profile_tab_bio">À propos</string>
+  <!--Tab title for section of profile that lists a user's accomplishments-->
+  <string name="profile_tab_accomplishment">Accomplissements</string>
+  <!--Button that will initiate sharing one of a user's accomplishments-->
+  <string name="share_accomplishment_button">Partagez vos accomplissements</string>
+  <!--Text that pre-populates your post/email/SMS when sharing certificate-->
+  <string name="share_accomplishment_message">J\'ai gagné un badge sur {platform_name}! Check it out: {badge_url}</string>
+  <!--Question on the app rating dialog-->
+  <string name="rating_dialog_message">Quell note donneriez-vous à l\'app?</string>
+  <!--Dialog title for positive app review-->
+  <string name="rate_app_dialog_title">Notez l\'app</string>
+  <!--Dialog message for positive app review-->
+  <string name="rate_app_dialog_message">Dites aux autres ce que vous pensez de l\'app {platform_name}</string>
+  <!--Dialog title for negative app review-->
+  <string name="feedback_dialog_title">Envoyer commentaire?</string>
+  <!--Dialog message for negative app review-->
+  <string name="feedback_dialog_message">Aidez nous à améliorer!</string>
+  <!--accessibility label for rating bar-->
+  <string name="rating_bar">Control avis</string>
+  <!--accessibility label for rating selection on rating bar-->
+  <string name="rating_bar_selection">{rating} sur {num_of_stars}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <string name="whats_new_title">Nouveautés de la version {version_number}</string>
+</resources>

@@ -17,7 +17,8 @@
             android:paddingLeft="@dimen/edx_double_margin"
             android:paddingRight="@dimen/edx_double_margin"
             android:paddingTop="@dimen/edx_margin"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:id="@+id/bio_text"
