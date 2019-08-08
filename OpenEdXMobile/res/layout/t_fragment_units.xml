@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.programs.units.view_model.UnitsViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal">
+
+                <org.edx.mobile.tta.ui.custom.DropDownFilterView
+                    drop_down_items="@{viewModel.periodFilters}"
+                    drop_down_listener="@{viewModel.periodListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="27dp"
+                    android:layout_marginEnd="@dimen/_6px" />
+
+                <org.edx.mobile.tta.ui.custom.DropDownFilterView
+                    drop_down_items="@{viewModel.typeFilters}"
+                    drop_down_listener="@{viewModel.typeListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_6px"
+                    android:layout_marginEnd="@dimen/_6px" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <com.maurya.mx.mxlib.view.MxRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mx_itemLayout="@layout/t_row_notification"
+            infinite_recycler_adapter="@{viewModel.adapter}"
+            layout_manager="@{viewModel.layoutManager}"/>
+
+    </LinearLayout>
+</layout>

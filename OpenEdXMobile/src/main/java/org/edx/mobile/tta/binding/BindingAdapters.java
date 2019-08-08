@@ -32,12 +32,14 @@ import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 import com.maurya.mx.mxlib.view.MxRecyclerView;
 
 import org.edx.mobile.tta.ui.base.BaseArrayAdapter;
+import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 import org.edx.mobile.tta.ui.custom.FormEditText;
 import org.edx.mobile.tta.ui.custom.NonScrollListView;
 import org.edx.mobile.tta.utils.BottomNavigationViewHelper;
 import org.edx.mobile.util.SoftKeyboardUtil;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 
 /**
@@ -406,5 +408,15 @@ public class BindingAdapters {
                 e.printStackTrace();
             }
         });
+    }
+
+    @BindingAdapter({"drop_down_items"})
+    public static void setDropDownItems(DropDownFilterView view, List<DropDownFilterView.FilterItem> items){
+        view.setFilterItems(items);
+    }
+
+    @BindingAdapter({"drop_down_listener"})
+    public static void setDropDownListener(DropDownFilterView view, DropDownFilterView.OnFilterClickListener listener){
+        view.setOnFilterItemListener(listener);
     }
 }

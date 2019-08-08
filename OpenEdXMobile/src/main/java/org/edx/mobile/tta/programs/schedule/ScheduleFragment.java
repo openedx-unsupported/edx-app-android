@@ -14,19 +14,20 @@ import org.edx.mobile.tta.ui.library.LibraryFragment;
 
 public class ScheduleFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
+
     public ScheduleViewModel viewModel;
-    TextView mtext_nothing;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ScheduleViewModel(getActivity(), this);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = binding(inflater, container, R.layout.nothing_to_show, viewModel)
-                .getRoot();
+        View rootView = binding(inflater, container, R.layout.t_fragment_schedules, viewModel).getRoot();
 
-        viewModel = new ScheduleViewModel(getActivity(), this);
-
-        mtext_nothing = rootView.findViewById(R.id.text_nothing);
-        mtext_nothing.setText("No schedule available");
         return rootView;
     }
 }

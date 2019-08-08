@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.programs.students.view_model.StudentsViewModel" />
+    </data>
+
+    <com.maurya.mx.mxlib.view.MxRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        app:mx_itemLayout="@layout/t_row_suggested_teacher_grid"
+        infinite_recycler_adapter="@{viewModel.adapter}"
+        layout_manager="@{viewModel.layoutManager}"/>
+</layout>
