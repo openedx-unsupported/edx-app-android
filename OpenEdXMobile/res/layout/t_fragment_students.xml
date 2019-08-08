@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.programs.students.view_model.StudentsViewModel" />
+            type="org.edx.mobile.tta.ui.programs.students.view_model.StudentsViewModel" />
     </data>
 
     <com.maurya.mx.mxlib.view.MxRecyclerView

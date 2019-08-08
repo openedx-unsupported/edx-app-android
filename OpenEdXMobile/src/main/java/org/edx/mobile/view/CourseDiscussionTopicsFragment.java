@@ -32,6 +32,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
+import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
-        implements RefreshListener {
+        implements RefreshListener, PageViewStateCallback {
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
 
     @InjectView(R.id.discussion_topics_searchview)
@@ -215,5 +216,15 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     public void onDetach() {
         super.onDetach();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onPageShow() {
+
+    }
+
+    @Override
+    public void onPageDisappear() {
+
     }
 }

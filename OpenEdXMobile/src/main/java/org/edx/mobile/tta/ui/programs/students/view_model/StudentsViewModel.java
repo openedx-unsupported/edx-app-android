@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.programs.students.view_model;
+package org.edx.mobile.tta.ui.programs.students.view_model;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
