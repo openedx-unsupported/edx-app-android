@@ -52,9 +52,13 @@
 
     <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
     <color name="edx_brand_primary_dark">#065683</color>
-    <color name="edx_brand_primary_base">#0075B4</color>
+    <color name="edx_brand_primary_base">#5c6473</color>
+
+
     <color name="edx_brand_primary_accent">#2991C3</color>
     <color name="edx_brand_primary_back">#CCE3F0</color>
+
+
     <color name="edx_brand_primary_x_back">#F2F8FB</color>
     <color name="edx_brand_secondary_dark">#982C62</color>
     <color name="edx_brand_secondary_base">#C2387D</color>
@@ -77,7 +81,7 @@
 
     <!--  TTA color palette start  -->
     <color name="primary_navy">#3A495F</color>
-    <color name="primary_cyan">#63D0C5</color>
+    <color name="primary_cyan">#5c6473</color>
     <color name="primary_white">#FFFFFF</color>
 
     <color name="secondary_blue_light">#86D2F2</color>
