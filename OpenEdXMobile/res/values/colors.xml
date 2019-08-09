@@ -105,4 +105,13 @@
 
     <color name="transparent">#00FFFFFF</color>
     <!--  TTA color palette end  -->
+
+    <!-- Humana color palette start -->
+
+    <color name="status_pending">#60BDBDBD</color>
+    <color name="status_in_progress">#60ffc400</color>
+    <color name="status_completed">#6000E676</color>
+
+    <!-- Humana color palette end -->
+
 </resources>

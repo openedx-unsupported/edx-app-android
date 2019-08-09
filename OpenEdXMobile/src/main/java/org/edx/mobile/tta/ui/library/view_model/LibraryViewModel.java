@@ -134,7 +134,9 @@ public class LibraryViewModel extends BaseViewModel {
         ArrayList<String> demolist = new ArrayList<String>();
         demolist.add("Schedule");
         demolist.add("Units");
-        demolist.add("Students");
+        demolist.add(mDataManager.getLoginPrefs().getUsername() != null &&
+                mDataManager.getLoginPrefs().getUsername().equalsIgnoreCase("staff") ?
+                "Staff" : "Students");
         demolist.add("Discussion");
         demolist.add("Curriculum");
 

@@ -59,17 +59,19 @@ public class ScheduleViewModel extends BaseViewModel {
         typeFilters = new ArrayList<>();
         typeFilters.add(new DropDownFilterView.FilterItem("Type", null, true,
                 R.color.gray_5, R.drawable.t_background_tag_hollow));
-        typeFilters.add(new DropDownFilterView.FilterItem("Subject", null, false,
+        typeFilters.add(new DropDownFilterView.FilterItem("Study Task", null, false,
                 R.color.white, R.drawable.t_background_tag_filled));
-        typeFilters.add(new DropDownFilterView.FilterItem("Unit", null, false,
+        typeFilters.add(new DropDownFilterView.FilterItem("Experience", null, false,
+                R.color.white, R.drawable.t_background_tag_filled));
+        typeFilters.add(new DropDownFilterView.FilterItem("Course", null, false,
                 R.color.white, R.drawable.t_background_tag_filled));
 
         sessionFilters = new ArrayList<>();
         sessionFilters.add(new DropDownFilterView.FilterItem("Session", null, true,
                 R.color.gray_5, R.drawable.t_background_tag_hollow));
-        sessionFilters.add(new DropDownFilterView.FilterItem("Session 1", null, false,
+        sessionFilters.add(new DropDownFilterView.FilterItem("Year 1", null, false,
                 R.color.white, R.drawable.t_background_tag_filled));
-        sessionFilters.add(new DropDownFilterView.FilterItem("Session 2", null, false,
+        sessionFilters.add(new DropDownFilterView.FilterItem("Year 2", null, false,
                 R.color.white, R.drawable.t_background_tag_filled));
 
     }
@@ -92,7 +94,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
         @Override
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Content model, @Nullable OnRecyclerItemClickListener<Content> listener) {
-            if (binding instanceof TRowAgendaContentBinding){
+            /*if (binding instanceof TRowAgendaContentBinding){
                 TRowAgendaContentBinding contentBinding = (TRowAgendaContentBinding) binding;
                 contentBinding.contentTitle.setText(model.getName());
                 Glide.with(mActivity)
@@ -104,7 +106,7 @@ public class ScheduleViewModel extends BaseViewModel {
                         listener.onItemClick(v, model);
                     }
                 });
-            }
+            }*/
         }
     }
 }

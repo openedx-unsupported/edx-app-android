@@ -43,9 +43,12 @@ public class StudentsViewModel extends BaseViewModel {
     private void fetchStudents() {
 
         List<SuggestedUser> users = new ArrayList<>();
+        String name = mDataManager.getLoginPrefs().getUsername() != null &&
+                mDataManager.getLoginPrefs().getUsername().equalsIgnoreCase("staff") ?
+                "Staff" : "Student";
         for (int i = 0; i < 20; i++){
             SuggestedUser user = new SuggestedUser();
-            user.setName("Student - " + (i+1));
+            user.setName(name + " - " + (i+1));
             users.add(user);
         }
         adapter.setItems(users);
@@ -64,7 +67,7 @@ public class StudentsViewModel extends BaseViewModel {
                 TRowSuggestedTeacherGridBinding teacherBinding = (TRowSuggestedTeacherGridBinding) binding;
                 teacherBinding.setViewModel(model);
                 Glide.with(getContext())
-                        .load("http://www.humana-india.org/images/GSN_1618_GOLD.JPG")
+                        .load("")
                         .placeholder(R.drawable.profile_photo_placeholder)
                         .into(teacherBinding.userImage);
 

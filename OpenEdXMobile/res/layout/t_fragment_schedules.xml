@@ -52,7 +52,7 @@
             layout_manager="@{viewModel.layoutManager}"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            app:mx_itemLayout="@layout/t_row_agenda_content"/>
+            app:mx_itemLayout="@layout/t_row_schedule"/>
 
     </LinearLayout>
 </layout>

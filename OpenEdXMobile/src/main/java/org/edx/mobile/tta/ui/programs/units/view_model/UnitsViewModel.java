@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -65,11 +66,13 @@ public class UnitsViewModel extends BaseViewModel {
                 R.color.white, R.drawable.t_background_tag_filled));
 
         typeFilters = new ArrayList<>();
-        typeFilters.add(new DropDownFilterView.FilterItem("Types", null, true,
+        typeFilters.add(new DropDownFilterView.FilterItem("Type", null, true,
                 R.color.gray_5, R.drawable.t_background_tag_hollow));
-        typeFilters.add(new DropDownFilterView.FilterItem("Type 1", null, false,
+        typeFilters.add(new DropDownFilterView.FilterItem("Study Task", null, false,
                 R.color.white, R.drawable.t_background_tag_filled));
-        typeFilters.add(new DropDownFilterView.FilterItem("Type 2", null, false,
+        typeFilters.add(new DropDownFilterView.FilterItem("Experience", null, false,
+                R.color.white, R.drawable.t_background_tag_filled));
+        typeFilters.add(new DropDownFilterView.FilterItem("Course", null, false,
                 R.color.white, R.drawable.t_background_tag_filled));
 
     }
@@ -79,8 +82,8 @@ public class UnitsViewModel extends BaseViewModel {
         List<Notification> notifications = new ArrayList<>();
         for (int i = 0 ; i < 20; i++){
             Notification notification = new Notification();
-            notification.setTitle("NeTT Unit - " + (i+1));
-            notification.setDescription("NeTT_2019");
+            notification.setTitle("This is NeTT Unit - " + (i+1));
+            notification.setDescription("Code is NeTT_2019");
             notifications.add(notification);
         }
         adapter.setItems(notifications);
@@ -99,10 +102,12 @@ public class UnitsViewModel extends BaseViewModel {
                 notificationBinding.setViewModel(model);
                 notificationBinding.notificationDate.setText(model.getDescription());
 
-                Glide.with(mActivity)
-                        .load("http://www.humana-india.org/images/GSN_1618_GOLD.JPG")
-                        .placeholder(R.drawable.placeholder_course_card_image)
-                        .into(notificationBinding.notificationIcon);
+//                Glide.with(mActivity)
+//                        .load("http://www.humana-india.org/images/GSN_1618_GOLD.JPG")
+//                        .placeholder(R.drawable.placeholder_course_card_image)
+//                        .into(notificationBinding.notificationIcon);
+
+                notificationBinding.notificationIcon.setVisibility(View.GONE);
 
                 notificationBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){

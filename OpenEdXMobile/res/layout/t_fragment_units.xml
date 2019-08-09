@@ -26,16 +26,16 @@
                 android:orientation="horizontal">
 
                 <org.edx.mobile.tta.ui.custom.DropDownFilterView
-                    drop_down_items="@{viewModel.periodFilters}"
-                    drop_down_listener="@{viewModel.periodListener}"
+                    drop_down_items="@{viewModel.typeFilters}"
+                    drop_down_listener="@{viewModel.typeListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="27dp"
                     android:layout_marginEnd="@dimen/_6px" />
 
                 <org.edx.mobile.tta.ui.custom.DropDownFilterView
-                    drop_down_items="@{viewModel.typeFilters}"
-                    drop_down_listener="@{viewModel.typeListener}"
+                    drop_down_items="@{viewModel.periodFilters}"
+                    drop_down_listener="@{viewModel.periodListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_6px"
