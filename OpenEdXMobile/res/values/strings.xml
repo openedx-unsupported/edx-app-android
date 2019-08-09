@@ -102,7 +102,7 @@
     <!-- Sign In agreement. Followed by list of agreement names like "End User License Agreement" -->
     <string name="by_signing_in" tools:ignore="MissingTranslation">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}</string>
     <!-- Label for End User License Agreement -->
-    <string name="licensing_agreement">{platform_name} End User License Agreement</string>
+    <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} End User License Agreement</string>
     <!-- Label for Terms of Service and Honor Code -->
     <string name="tos_and_honor_code">{platform_name} Terms of Service and Honor Code</string>
     <!-- Label for Privacy Policy -->
@@ -130,7 +130,7 @@
     <!-- Title of Degrees tab on Discovery screen -->
     <string name="label_degrees" tools:ignore="MissingTranslation">Degrees</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
-    <string name="label_discovery">Discovery</string>
+    <string name="label_discovery" tools:ignore="MissingTranslation">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
     <string name="label_submit_feedback">Submit Feedback</string>
     <!-- Toggle switch on state label -->
@@ -174,7 +174,7 @@
     <!-- Alert dialog content for users with zero rated data -->
     <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
     <!-- Title of agreement users must accept to use the app -->
-    <string name="end_user_title">End User License Agreement</string>
+    <string name="end_user_title" tools:ignore="MissingTranslation">End User License Agreement</string>
     <!-- Title of privacy policy users must accept to use the app -->
     <string name="privacy_policy_title" translatable="false">@string/privacy_policy</string>
     <!-- Title of terms of service & honor code users must accept to use the app -->
@@ -283,7 +283,7 @@
     <!--Discussion posts sort by recent activity-->
     <string name="discussion_posts_sort_recent_activity">Recent Activity</string>
     <!--Discussion posts sort by most activity-->
-    <string name="discussion_posts_sort_most_activity">Most Activity</string>
+    <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">Most Activity</string>
     <!--Discussion posts sort by most votes-->
     <string name="discussion_posts_sort_most_votes">Most Votes</string>
     <!-- Label for the visibility of a discussion post that is only visible to cohort -->
@@ -373,9 +373,9 @@
     <!-- Label for selected topic when creating a post -->
     <string name="discussion_add_post_topic_selection">Topic: {topic}</string>
     <!-- Add post button title in adding a new discussion -->
-    <string name="discussion_add_post_button_label">Post discussion</string>
+    <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">Post discussion</string>
     <!-- Add post button description for accessibility in adding a new discussion -->
-    <string name="discussion_add_post_button_description">Post discussion button</string>
+    <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">Post discussion button</string>
     <!-- Add post button title in adding a new post -->
     <string name="discussion_add_question_button_label">Post question</string>
     <!-- Add post button content description for accessibility in adding a new post -->
@@ -606,7 +606,7 @@
     <string name="forum_no_results_for_following">You are not following any posts.</string>
     <string name="forum_no_results_for_filtered_following">Filter results do not include any followed posts.</string>
     <string name="forum_no_results_in_category">There are no posts in this discussion category.</string>
-    <string name="forum_no_results_with_filter">Try removing your post filter.</string>
+    <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">Try removing your post filter.</string>
     <string name="forum_post_i_am_following">Posts I’m Following</string>
     <string name="forum_follow">Follow</string>
     <string name="forum_unfollow">Unfollow</string>
@@ -685,7 +685,7 @@
     <!-- Dialog message for negative app review -->
     <string name="feedback_dialog_message">Help us improve!</string>
     <!-- accessibility label for rating bar -->
-    <string name="rating_bar">Rating control</string>
+    <string name="rating_bar" tools:ignore="MissingTranslation">Rating control</string>
     <!-- accessibility label for rating selection on rating bar -->
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
