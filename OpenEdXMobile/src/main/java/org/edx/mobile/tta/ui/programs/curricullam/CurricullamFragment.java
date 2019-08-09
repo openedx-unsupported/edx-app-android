@@ -16,7 +16,7 @@ public class CurricullamFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
     public CurricullamViewModel viewModel;
     WebView webView;
-    final String url_to_load = "https://www.google.com";
+    final String url_to_load = "http://www.humana-india.org/results-and-data/annual-reports";
 
     @Nullable
     @Override
