@@ -84,7 +84,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
         else if (isCourseUnitVideo(minifiedUnit)) {
             unitFragment = CourseUnitAndroidVideoPlayerFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
-        } else if (isYoutubeVideo && config.getEmbeddedYoutubeConfig().isYoutubeEnabled() && VideoUtil.isAPIYoutubeSupported(((CourseBaseActivity) callback).getApplicationContext())) {
+        } else if (isYoutubeVideo && config.getEmbeddedYoutubeConfig().isYoutubeEnabled() && VideoUtil.isYoutubeAPISupported(((CourseBaseActivity) callback).getApplicationContext())) {
             unitFragment = CourseUnitYoutubeVideoFragment.newInstance((VideoBlockModel) minifiedUnit, (pos < unitList.size()), (pos > 0));
         } else if (isYoutubeVideo) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);

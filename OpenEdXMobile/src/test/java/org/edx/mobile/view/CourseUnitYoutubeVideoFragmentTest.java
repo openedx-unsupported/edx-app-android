@@ -60,6 +60,18 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
         assertNotEquals(orientation, config.orientation);
         config.orientation = orientation;
         fragment.onConfigurationChanged(config);
+
+        View playerContainer = view.findViewById(R.id.player_container);
+        if (playerContainer != null) {
+            assertThat(playerContainer).isInstanceOf(ViewGroup.class);
+            ViewGroup.LayoutParams layoutParams = playerContainer.getLayoutParams();
+            assertNotNull(layoutParams);
+            assertThat(layoutParams).hasWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            int height = isLandscape ? displayMetrics.heightPixels :
+                    (displayMetrics.widthPixels * 9 / 16);
+            assertThat(layoutParams).hasHeight(height);
+        }
     }
 
     /**

@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -22,7 +21,6 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.PlayerFragment;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;

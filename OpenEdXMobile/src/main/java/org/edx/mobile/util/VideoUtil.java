@@ -101,7 +101,7 @@ public class VideoUtil {
      * @param context The activity context
      * @return true if the requirements are satisfied otherwise false
      */
-    public static boolean isAPIYoutubeSupported(Context context) {
+    public static boolean isYoutubeAPISupported(Context context) {
         try {
             final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(YOUTUBE_PACKAGE_NAME, 0);
             /*

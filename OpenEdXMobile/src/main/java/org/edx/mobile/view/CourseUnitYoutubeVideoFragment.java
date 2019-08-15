@@ -8,8 +8,6 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -48,11 +46,11 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     /*
-     * wasHiding is set on true when the app comes to background from foreground
+     * isInForeground is set on false when the app comes to background from foreground
      * so this allow to play a video when the app comes to foreground from background
-     * fromLandscape allow to know if the user has exited from fullscreen on landscape mode a keep the normal screen size.
+     * allowFullScreen allow to know if the user has exited from fullscreen on landscape mode a keep the normal screen size.
      */
-    private boolean fromLandscape, wasHiding;
+    private boolean allowFullScreen, isInForeground;
     private int attempts;
 
     private Runnable subtitlesProcessorRunnable = () -> {
@@ -78,7 +76,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 }
             }
         }
-        subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable , SUBTITLES_DISPLAY_DELAY_MS);
+        subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
     };
 
     /**
@@ -95,7 +93,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         releaseYoutubePlayer();
-        if (VideoUtil.isAPIYoutubeSupported(getContext())) {
+        if (VideoUtil.isYoutubeAPISupported(getContext())) {
             youTubePlayerFragment = new YouTubePlayerSupportFragment();
             getChildFragmentManager().beginTransaction().replace(R.id.player_container, youTubePlayerFragment, "player").commit();
         }
@@ -109,20 +107,17 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         if (isVisibleToUser && unit != null) {
             setVideoModel();
             /*
-             * This method is not called  property when the user leaves quickly the view on the view pager
+             * This method is not called property when the user leaves quickly the view on the view pager
              * so the youtube player can not be released( only one youtube player instance is allowed by the library)
              * so in order to avoid to create multiple youtube player instances, the youtube player only will be initialize
              * after a second and if the view is visible to the user.
              */
-            initializeHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initializeYoutubePlayer();
-                }
+            initializeHandler.postDelayed(() -> {
+                initializeYoutubePlayer();
             }, 1000);
         } else {
             releaseYoutubePlayer();
-            fromLandscape = false;
+            allowFullScreen = true;
             transcriptsHandler.removeCallbacksAndMessages(null);
             subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
             initializeHandler.removeCallbacks(null);
@@ -130,35 +125,39 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     public void initializeYoutubePlayer() {
-        if (getUserVisibleHint() && youTubePlayerFragment != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
+        try {
+            if (getUserVisibleHint() && youTubePlayerFragment != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
 
-            initTranscripts();
-            String apiKey = environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
-            if (apiKey == null || apiKey.isEmpty()) {
-                return;
+                initTranscripts();
+                String apiKey = environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
+                if (apiKey == null || apiKey.isEmpty()) {
+                    return;
+                }
+                youTubePlayerFragment.initialize(apiKey, this);
             }
-            youTubePlayerFragment.initialize(apiKey, this);
+        } catch (NullPointerException localException) {
+            logger.error(localException);
         }
+
     }
 
     @Override
     protected void updateUIForOrientation() {
         final int orientation = getResources().getConfiguration().orientation;
         if (youTubePlayer != null) {
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE && allowFullScreen) {
                 youTubePlayer.setFullscreen(true);
             } else {
                 youTubePlayer.setFullscreen(false);
             }
         }
         updateUI(orientation);
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        wasHiding = true;
+        isInForeground = false;
     }
 
     @Override
@@ -171,8 +170,10 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     public void onInitializationSuccess(Provider provider,
                                         YouTubePlayer player,
                                         boolean wasRestored) {
-
-        final int orientation = getResources().getConfiguration().orientation;
+        if (getActivity() == null) {
+            return;
+        }
+        final int orientation = getActivity().getResources().getConfiguration().orientation;
         int currentPos = 0;
         if (videoModel != null) {
             currentPos = (int) videoModel.getLastPlayedOffset();
@@ -228,7 +229,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                                         YouTubeInitializationResult result) {
     }
 
-    private void loadTranscriptsData(VideoBlockModel unit) {
+    private void loadTranscriptsData() {
         TranscriptManager transcriptManager = new TranscriptManager(getContext());
         TranscriptModel transcript = getTranscriptModel();
         transcriptManager.downloadTranscriptsForVideo(transcript);
@@ -272,7 +273,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     private void initTranscripts() {
-        loadTranscriptsData(unit);
+        loadTranscriptsData();
 
         if (subtitlesObj != null) {
             initTranscriptListView();
@@ -352,7 +353,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onPlaying() {
-            if (getActivity() != null && !fromLandscape) {
+            if (getActivity() != null && allowFullScreen) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             }
         }
@@ -364,13 +365,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onStopped() {
-            if (wasHiding && getUserVisibleHint()) {
+            if (!isInForeground && getUserVisibleHint()) {
                 /*
-                 * wasHiding is set on true when the app comes to background from foreground
+                 * isInForeground is set on false when the app comes to background from foreground
                  * so this allow to play a video when the app comes to foreground from background
                  */
                 try {
-                    wasHiding = false;
+                    isInForeground = true;
                     youTubePlayer.play();
                 } catch (Exception error) {
                     initializeYoutubePlayer();
@@ -396,7 +397,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             final int orientation = getResources().getConfiguration().orientation;
             if (!fullScreen && getActivity() != null && orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                fromLandscape = true;
+                allowFullScreen = false;
             } else {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             }

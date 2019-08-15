@@ -37,13 +37,8 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
             ((TextView) courseUnitOnlyOnYoutubeView.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
             courseUnitOnlyOnYoutubeView.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
             courseUnitOnlyOnYoutubeView.findViewById(R.id.update_youtube_button).setOnClickListener(v -> {
-                try {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.YOUTUBE_APP_URI_PLAY_STORE));
-                    startActivity(intent);
-                } catch (android.content.ActivityNotFoundException e) {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI));
-                    startActivity(intent);
-                }
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI));
+                startActivity(intent);
             });
         }
 
