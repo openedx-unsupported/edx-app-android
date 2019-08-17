@@ -38,9 +38,9 @@
   <string name="error_account_not_linked_desc_fb">Assurez-vous  que votre compte Facebook est associé avec votre  compte {platform_name} sur {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google">Compte google non associé avec  compte {platform_name}</string>
+  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">Compte google non associé avec  compte {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google">Assurez-vous que votre compte google est associé avec votre compte  {platform_name} sur  {platform_destination} </string>
+  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">Assurez-vous que votre compte google est associé avec votre compte  {platform_name} sur  {platform_destination} </string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->

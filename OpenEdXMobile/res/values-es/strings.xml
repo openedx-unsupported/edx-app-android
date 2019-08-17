@@ -23,13 +23,14 @@
   <string name="you_are_now_enrolled">Ya está inscrito en este curso.</string>
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">No es posible mostrar el panel de control.</string>
+  <!--Error message shown when browser cannot handle request for given web url-->
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Buscar por Asignatura</string>
+  <string name="browse_by_subject" tools:ignore="MissingTranslation">Buscar por Asignatura</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Ver todas las Asignaturas</string>
+  <string name="view_all_subjects" tools:ignore="MissingTranslation">Ver todas las Asignaturas</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects">Buscar Asignatura</string>
+  <string name="search_subjects" tools:ignore="MissingTranslation">Buscar Asignatura</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartir este curso</string>
@@ -76,8 +77,10 @@
   <!--Error during log in.-->
   <string name="login_failed">Por favor, asegúrese de que su nombre de usuario o dirección de correo electrónico y la contraseña son correctos e inténtelo de nuevo.</string>
   <!--License Agreement related string on Login and Regiser screens-->
+  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement">{platform_name} Acuerdo de Licencia de Usuario Final</string>
+  <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} Acuerdo de Licencia de Usuario Final</string>
   <!--Label for Terms of Service and Honor Code-->
   <string name="tos_and_honor_code">{platform_name} Términos de Servicio y Código de Honor</string>
   <!--Label for Privacy Policy-->
@@ -101,7 +104,7 @@
   <string name="label_discover">Exploración</string>
   <!--Title of Degrees tab on Discovery screen-->
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Descubrir</string>
+  <string name="label_discovery" tools:ignore="MissingTranslation">Descubrir</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentario</string>
   <!--Toggle switch on state label-->
@@ -144,7 +147,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">Si sale de la aplicación, no seguirá viendo el contenido gratuito de {platform_name}. Pueden aplicarse cargos por consumo de datos.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title">Acuerdo de Licencia del Usuario</string>
+  <string name="end_user_title" tools:ignore="MissingTranslation">Acuerdo de Licencia del Usuario</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
   <string name="terms_of_service_title">Términos de Servicio</string>
@@ -242,7 +245,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">Actividad reciente</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity">Mayor actividad</string>
+  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">Mayor actividad</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">Más votos</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -323,9 +326,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">Tema: {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label">Publicar discusión</string>
+  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">Publicar discusión</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description">Botón de Publicar discusión</string>
+  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">Botón de Publicar discusión</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">Publicar pregunta</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -421,7 +424,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="lbl_closed_caption">Sutítulos</string>
   <!--Label for video playback speed in video player-->
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none">Ninguno</string>
+  <string name="lbl_cc_none" tools:ignore="MissingTranslation">Ninguno</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Reproductor de video</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -526,14 +529,14 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">Sin título</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title">Notificación General</string>
+  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">Notificación General</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">Resultados no encontrados para \"{search_query}\". Intente usando otro término de búsqueda o seleccione una categoría de discusión para explorar.</string>
   <string name="forum_no_results_for_all_posts">No hay comentarios en esta discusión.</string>
   <string name="forum_no_results_for_following">Usted no está siguiendo ninguna publicación.</string>
   <string name="forum_no_results_for_filtered_following">Los resultados filtrados no contienen ninguna publicación que esté siguiendo.</string>
   <string name="forum_no_results_in_category">No hay entradas en esta categoría de discusión.</string>
-  <string name="forum_no_results_with_filter">Intente borrar su filtro de publicaciones.</string>
+  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">Intente borrar su filtro de publicaciones.</string>
   <string name="forum_post_i_am_following">Publicaciones que estoy siguiendo</string>
   <string name="forum_follow">Seguir</string>
   <string name="forum_unfollow">Dejar de seguir</string>
@@ -611,7 +614,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">¡Ayúdenos a mejorar!</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar">Control de valoraciones</string>
+  <string name="rating_bar" tools:ignore="MissingTranslation">Control de valoraciones</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} de {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

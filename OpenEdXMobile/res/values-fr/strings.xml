@@ -77,7 +77,7 @@
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement">engagements de licence {platform_name}</string>
+  <string name="licensing_agreement" tools:ignore="MissingTranslation">engagements de licence {platform_name}</string>
   <!--Label for Terms of Service and Honor Code-->
   <string name="tos_and_honor_code">les conditions d\'utilisation {platform_name}</string>
   <!--Label for Privacy Policy-->
@@ -101,7 +101,7 @@
   <string name="label_discover">Découvrir</string>
   <!--Title of Degrees tab on Discovery screen-->
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Découverte</string>
+  <string name="label_discovery" tools:ignore="MissingTranslation">Découverte</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Envoyer commentaire</string>
   <!--Toggle switch on state label-->
@@ -144,7 +144,7 @@
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">Si vous quittez l\'app, vous ne pourrez plus accéder au contenu  {platform_name} gratuit. Des charges additionnelles peuvent s\'appliquer.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title">Engagement de Licence</string>
+  <string name="end_user_title" tools:ignore="MissingTranslation">Engagement de Licence</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
   <string name="terms_of_service_title">Conditions d\'utilisation</string>
@@ -242,7 +242,7 @@
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">Activités récentes</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity">Plus d\'activite</string>
+  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">Plus d\'activite</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">Plus de votes</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -319,9 +319,9 @@
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">Sujet: {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label">Poster une discussion</string>
+  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">Poster une discussion</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description">Bouton Poster la discussion</string>
+  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">Bouton Poster la discussion</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">Poster une question</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -523,7 +523,7 @@
   <string name="forum_no_results_for_following">Vous ne suivez aucun post.</string>
   <string name="forum_no_results_for_filtered_following">Les résultats n\'inclus pas les posts suivis.</string>
   <string name="forum_no_results_in_category">Il n\'y a pas de post pour cette catégorie de discussion.</string>
-  <string name="forum_no_results_with_filter">Essayez de supprimer vos filtres.</string>
+  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">Essayez de supprimer vos filtres.</string>
   <string name="forum_post_i_am_following">Les posts que je suis</string>
   <string name="forum_follow">Suivre</string>
   <string name="forum_unfollow">Ne plussuivre</string>
@@ -601,7 +601,7 @@
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">Aidez nous à améliorer!</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar">Control avis</string>
+  <string name="rating_bar" tools:ignore="MissingTranslation">Control avis</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} sur {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

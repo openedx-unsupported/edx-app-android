@@ -27,11 +27,11 @@
   <string name="cannot_open_url" tools:ignore="MissingTranslation">Web sayfası gösterilemiyor.</string>
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Konulara göre Tara</string>
+  <string name="browse_by_subject" tools:ignore="MissingTranslation">Konulara göre Tara</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Tüm Konulara Göz At</string>
+  <string name="view_all_subjects" tools:ignore="MissingTranslation">Tüm Konulara Göz At</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects">Konu Ara</string>
+  <string name="search_subjects" tools:ignore="MissingTranslation">Konu Ara</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Dersinizi paylaşın</string>
@@ -85,7 +85,7 @@
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
   <string name="by_signing_in" tools:ignore="MissingTranslation">Bu uygulamaya giriş yaparak, {license} ve {tos_and_honor_code} kurallarını ve {privacy_policy} doğrultusunda {platform_name} platformunun kişisel verilerinizi işleyeceğini kabul ediyorsunuz.</string>
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement">{platform_name} Son Kullanıcı Lisans Anlaşması</string>
+  <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} Son Kullanıcı Lisans Anlaşması</string>
   <!--Label for Terms of Service and Honor Code-->
   <string name="tos_and_honor_code">{platform_name} Hizmet Şartları ve Etik Şartlar</string>
   <!--Label for Privacy Policy-->
@@ -111,7 +111,7 @@
   <!--Title of Degrees tab on Discovery screen-->
   <string name="label_degrees" tools:ignore="MissingTranslation">Diplomalar</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Keşfet</string>
+  <string name="label_discovery" tools:ignore="MissingTranslation">Keşfet</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Geribildirim Gönder</string>
   <!--Toggle switch on state label-->
@@ -154,7 +154,7 @@
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">Uygulamayı terkederseniz, {platform_name} platformunun ücretsiz içeriklerini artık göremezsiniz. Veri trafiği ücretlendirilebilir.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title">Son Kullanıcı Lisans Sözleşmesi</string>
+  <string name="end_user_title" tools:ignore="MissingTranslation">Son Kullanıcı Lisans Sözleşmesi</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
   <string name="terms_of_service_title">Hizmet Şartları</string>
@@ -256,7 +256,7 @@
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">Son Aktivite</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity">En Çok Aktivite</string>
+  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">En Çok Aktivite</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">En Çok Oylanan</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -337,9 +337,9 @@
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">Konu:  {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label">Tartışma gönder</string>
+  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">Tartışma gönder</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description">Tartışma gönder düğmesi</string>
+  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">Tartışma gönder düğmesi</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">Soru gönder</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -436,7 +436,7 @@
   <!--Label for video playback speed in video player-->
   <string name="lbl_video_speed" tools:ignore="MissingTranslation">Video Hızı</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none">Hiçbiri</string>
+  <string name="lbl_cc_none" tools:ignore="MissingTranslation">Hiçbiri</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Video Oynatıcı</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -544,14 +544,14 @@
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">Başlıksız</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title">Genel Bildirim</string>
+  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">Genel Bildirim</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">“{search_query}” için hiç sonuç bulunamadı. Başka bir arama yapmayı ya da tartışma kategorisi seçmeyi deneyin.</string>
   <string name="forum_no_results_for_all_posts">Bu ders tartışmasında herhangi bir gönderi yok.</string>
   <string name="forum_no_results_for_following">Herhangi bir gönderiyi takibe almadınız.</string>
   <string name="forum_no_results_for_filtered_following">Filtrelenmiş sonuçlar arasında takip ettiğiniz gönderiler yok.</string>
   <string name="forum_no_results_in_category">Bu tartışma kategorisinde herhangi bir gönderi yok.</string>
-  <string name="forum_no_results_with_filter">Gönderi filtresini kaldırmayı deneyin.</string>
+  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">Gönderi filtresini kaldırmayı deneyin.</string>
   <string name="forum_post_i_am_following">Takibe Aldığım Gönderiler</string>
   <string name="forum_follow">Takip et</string>
   <string name="forum_unfollow">Takipten çık</string>
@@ -629,7 +629,7 @@
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">Geliştirmemize yardım et!</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar">Derecelendirme çubuğu</string>
+  <string name="rating_bar" tools:ignore="MissingTranslation">Derecelendirme çubuğu</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{num_of_stars} üzerinden {rating}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
