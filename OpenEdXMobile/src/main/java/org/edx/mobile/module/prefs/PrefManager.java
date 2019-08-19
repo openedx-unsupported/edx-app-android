@@ -334,6 +334,9 @@ public class PrefManager {
 
         public static final String WP_AUTH_JSON = "wp_auth_json";
         public static final String WP_PROFILE_JSON = "wp_profile_json";
+
+        //Mx Chirag: To store search filters
+        public static final String PROGRAM_FILTERS_JSON = "program_filters_json";
     }
 
     public static final class Value {

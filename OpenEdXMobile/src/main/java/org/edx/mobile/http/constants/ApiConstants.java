@@ -157,6 +157,34 @@ public class ApiConstants {
 
     //TTA end
 
+    //Humana start
+
+    public static final String URL_MX_GET_PROGRAMS = "ENDPOINT";
+
+    public static final String URL_MX_GET_SECTIONS = "ENDPOINT";
+
+    public static final String URL_MX_GET_PROGRAM_FILTERS = "ENDPOINT";
+
+    public static final String URL_MX_GET_PERIODS = "ENDPOINT";
+
+    public static final String URL_MX_GET_UNITS = "ENDPOINT";
+
+    public static final String URL_MX_GET_ALL_UNITS = "ENDPOINT";
+
+    public static final String URL_MX_GET_USERS = "ENDPOINT";
+
+    public static final String URL_MX_GET_PENDING_USERS = "ENDPOINT";
+
+    public static final String URL_MX_GET_PENDING_UNITS = "ENDPOINT";
+
+    public static final String URL_MX_CREATE_PERIOD = "ENDPOINT";
+
+    public static final String URL_MX_SAVE_PERIOD = "ENDPOINT";
+
+    public static final String URL_MX_APPROVE_UNIT = "ENDPOINT";
+
+    //Humana end
+
     public static final String TOKEN_TYPE_ACCESS = "access_token";
 
     public static final String TOKEN_TYPE_REFRESH = "refresh_token";

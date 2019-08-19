@@ -7,6 +7,9 @@ import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Period;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
@@ -214,5 +217,65 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void insertUnitStatuses(List<UnitStatus> statuses) {
         mAppDatabase.unitStatusDao().insert(statuses);
+    }
+
+    @Override
+    public List<Program> getPrograms(String username) {
+        return mAppDatabase.programDao().getAll(username);
+    }
+
+    @Override
+    public Program getProgram(String id) {
+        return mAppDatabase.programDao().getById(id);
+    }
+
+    @Override
+    public void insertPrograms(List<Program> programs) {
+        mAppDatabase.programDao().insert(programs);
+    }
+
+    @Override
+    public void insertProgram(Program program) {
+        mAppDatabase.programDao().insert(program);
+    }
+
+    @Override
+    public List<Section> getSections(String username) {
+        return mAppDatabase.sectionDao().getAll(username);
+    }
+
+    @Override
+    public Section getSection(String id) {
+        return mAppDatabase.sectionDao().getById(id);
+    }
+
+    @Override
+    public void insertSections(List<Section> sections) {
+        mAppDatabase.sectionDao().insert(sections);
+    }
+
+    @Override
+    public void insertSection(Section section) {
+        mAppDatabase.sectionDao().insert(section);
+    }
+
+    @Override
+    public List<Period> getPeriods(String username) {
+        return mAppDatabase.periodDao().getAll(username);
+    }
+
+    @Override
+    public Period getPeriod(long id) {
+        return mAppDatabase.periodDao().getById(id);
+    }
+
+    @Override
+    public void insertPeriods(List<Period> periods) {
+        mAppDatabase.periodDao().insert(periods);
+    }
+
+    @Override
+    public void insertPeriod(Period period) {
+        mAppDatabase.periodDao().insert(period);
     }
 }

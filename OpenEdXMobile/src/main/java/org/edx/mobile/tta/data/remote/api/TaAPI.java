@@ -6,14 +6,19 @@ import android.support.annotation.NonNull;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Period;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
+import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
@@ -26,6 +31,8 @@ import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.profile.FollowStatus;
+import org.edx.mobile.tta.data.model.program.ProgramFilter;
+import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.remote.service.TaService;
@@ -245,5 +252,85 @@ public class TaAPI {
 
     public Call<FollowStatus> getFollowStatus(String username){
         return taService.getFollowStatus(username);
+    }
+
+    public Call<List<Program>> getPrograms(){
+        return taService.getPrograms();
+    }
+
+    public Call<List<Section>> getSections(){
+        return taService.getSections();
+    }
+
+    public Call<List<ProgramFilter>> getProgramFilters(){
+        return taService.getProgramFilters();
+    }
+
+    public Call<List<Period>> getPeriods(List<ProgramFilter> filters, String programId, String sectionId, int take, int skip){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_TAKE, take);
+        parameters.put(Constants.KEY_SKIP, skip);
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_FILTERS, filters);
+
+        return taService.getPeriods(parameters);
+    }
+
+    public Call<List<CourseComponent>> getUnits(List<ProgramFilter> filters, String programId, String sectionId, int take, int skip){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_TAKE, take);
+        parameters.put(Constants.KEY_SKIP, skip);
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_FILTERS, filters);
+
+        return taService.getUnits(parameters);
+    }
+
+    public Call<List<CourseComponent>> getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText, int take, int skip){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_TAKE, take);
+        parameters.put(Constants.KEY_SKIP, skip);
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_FILTERS, filters);
+        parameters.put(Constants.KEY_SEARCH_TEXT, searchText);
+
+        return taService.getAllUnits(parameters);
+    }
+
+    public Call<List<ProgramUser>> getUsers(String programId, String sectionId, int take, int skip){
+        return taService.getUsers(programId, sectionId, take, skip);
+    }
+
+    public Call<List<ProgramUser>> getPendingUsers(String programId, String sectionId, int take, int skip){
+        return taService.getPendingUsers(programId, sectionId, take, skip);
+    }
+
+    public Call<List<CourseComponent>> getPendingUnits(String programId, String username, int take, int skip){
+        return taService.getPendingUnits(programId, username, take, skip);
+    }
+
+    public Call<SuccessResponse> createPeriod(String programId, String sectionId, String lang){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_LANG, lang);
+        return taService.createPeriod(parameters);
+    }
+
+    public Call<SuccessResponse> savePeriod(long periodId, List<String> unitIds){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
+        parameters.put(Constants.KEY_UNITS, String.valueOf(unitIds));
+        return taService.savePeriod(parameters);
+    }
+
+    public Call<SuccessResponse> approveUnit(String unitId, String username){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_UNIT_ID, unitId);
+        parameters.put(Constants.KEY_USERNAME, username);
+        return taService.approveUnit(parameters);
     }
 }

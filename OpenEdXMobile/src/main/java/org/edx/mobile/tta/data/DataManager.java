@@ -40,9 +40,7 @@ import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.analytics.Analytic;
-import org.edx.mobile.tta.analytics.analytics_enums.Action;
 import org.edx.mobile.tta.data.enums.CertificateStatus;
-import org.edx.mobile.tta.data.enums.FeedAction;
 import org.edx.mobile.tta.data.enums.ScormStatus;
 import org.edx.mobile.tta.data.enums.SourceName;
 import org.edx.mobile.tta.data.enums.SourceType;
@@ -59,6 +57,9 @@ import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Period;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.BaseResponse;
@@ -66,6 +67,7 @@ import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.EmptyResponse;
 import org.edx.mobile.tta.data.model.HtmlResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
+import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaItem;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.authentication.FieldInfo;
@@ -73,7 +75,6 @@ import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
 import org.edx.mobile.tta.data.model.content.MyCertificatesResponse;
 import org.edx.mobile.tta.data.model.content.TotalLikeResponse;
-import org.edx.mobile.tta.data.model.feed.FeedMetadata;
 import org.edx.mobile.tta.data.model.feed.SuggestedUser;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.data.model.library.CollectionItemsResponse;
@@ -83,6 +84,8 @@ import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.profile.FollowStatus;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
+import org.edx.mobile.tta.data.model.program.ProgramFilter;
+import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 import org.edx.mobile.tta.data.pref.AppPref;
@@ -90,8 +93,8 @@ import org.edx.mobile.tta.data.remote.IRemoteDataSource;
 import org.edx.mobile.tta.data.remote.RetrofitServiceUtil;
 import org.edx.mobile.tta.data.remote.api.MxCookiesAPI;
 import org.edx.mobile.tta.data.remote.api.MxSurveyAPI;
+import org.edx.mobile.tta.exception.NoConnectionException;
 import org.edx.mobile.tta.exception.TaException;
-import org.edx.mobile.tta.firebase.FirebaseHelper;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.scorm.ScormBlockModel;
 import org.edx.mobile.tta.scorm.ScormStartResponse;
@@ -146,6 +149,18 @@ import org.edx.mobile.tta.task.profile.GetProfileTask;
 import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
+import org.edx.mobile.tta.task.program.ApproveUnitTask;
+import org.edx.mobile.tta.task.program.CreatePeriodTask;
+import org.edx.mobile.tta.task.program.GetAllUnitsTask;
+import org.edx.mobile.tta.task.program.GetPendingUnitsTask;
+import org.edx.mobile.tta.task.program.GetPendingUsersTask;
+import org.edx.mobile.tta.task.program.GetPeriodsTask;
+import org.edx.mobile.tta.task.program.GetProgramFiltersTask;
+import org.edx.mobile.tta.task.program.GetProgramsTask;
+import org.edx.mobile.tta.task.program.GetSectionsTask;
+import org.edx.mobile.tta.task.program.GetUnitsTask;
+import org.edx.mobile.tta.task.program.GetUsersTask;
+import org.edx.mobile.tta.task.program.SavePeriodTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
 import org.edx.mobile.tta.utils.RxUtil;
@@ -154,7 +169,6 @@ import org.edx.mobile.tta.wordpress_client.model.CustomComment;
 import org.edx.mobile.tta.wordpress_client.model.Post;
 import org.edx.mobile.tta.wordpress_client.model.User;
 import org.edx.mobile.tta.wordpress_client.model.WPProfileModel;
-import org.edx.mobile.tta.wordpress_client.model.WpAuthResponse;
 import org.edx.mobile.tta.wordpress_client.rest.HttpServerErrorResponse;
 import org.edx.mobile.tta.wordpress_client.rest.WordPressRestResponse;
 import org.edx.mobile.tta.wordpress_client.rest.WpClientRetrofit;
@@ -3441,6 +3455,459 @@ public class DataManager extends BaseRoboInjector {
         } else {
             callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
         }
+    }
+
+    public void getPrograms(OnResponseCallback<List<Program>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetProgramsTask(context){
+                @Override
+                protected void onSuccess(List<Program> programs) throws Exception {
+                    super.onSuccess(programs);
+                    if (programs == null || programs.isEmpty()){
+                        callback.onFailure(new TaException("No programs available"));
+                        return;
+                    }
+
+                    for (Program program: programs){
+                        program.setUsername(loginPrefs.getUsername());
+                    }
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            mLocalDataSource.insertPrograms(programs);
+                        }
+                    }.start();
+
+                    callback.onSuccess(programs);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getProgramsFromLocal(callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getProgramsFromLocal(callback, new NoConnectionException(context));
+        }
+
+    }
+
+    private void getProgramsFromLocal(OnResponseCallback<List<Program>> callback, Exception e){
+
+        new Task<List<Program>>(context) {
+            @Override
+            public List<Program> call() {
+                return mLocalDataSource.getPrograms(loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onSuccess(List<Program> programs) throws Exception {
+                super.onSuccess(programs);
+                if (programs == null || programs.isEmpty()){
+                    callback.onFailure(e);
+                    return;
+                }
+
+                callback.onSuccess(programs);
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(e);
+            }
+        }.execute();
+
+    }
+
+    public void getSections(OnResponseCallback<List<Section>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetSectionsTask(context){
+                @Override
+                protected void onSuccess(List<Section> sections) throws Exception {
+                    super.onSuccess(sections);
+                    if (sections == null || sections.isEmpty()){
+                        callback.onFailure(new TaException("No sections available"));
+                        return;
+                    }
+
+                    for (Section section: sections){
+                        section.setUsername(loginPrefs.getUsername());
+                    }
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            mLocalDataSource.insertSections(sections);
+                        }
+                    }.start();
+
+                    callback.onSuccess(sections);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getSectionsFromLocal(callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getSectionsFromLocal(callback, new NoConnectionException(context));
+        }
+
+    }
+
+    private void getSectionsFromLocal(OnResponseCallback<List<Section>> callback, Exception e){
+
+        new Task<List<Section>>(context) {
+            @Override
+            public List<Section> call() {
+                return mLocalDataSource.getSections(loginPrefs.getUsername());
+            }
+
+            @Override
+            protected void onSuccess(List<Section> sections) throws Exception {
+                super.onSuccess(sections);
+                if (sections == null || sections.isEmpty()){
+                    callback.onFailure(e);
+                    return;
+                }
+
+                callback.onSuccess(sections);
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(e);
+            }
+        }.execute();
+
+    }
+
+    public void getProgramFilters(OnResponseCallback<List<ProgramFilter>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetProgramFiltersTask(context){
+                @Override
+                protected void onSuccess(List<ProgramFilter> programFilters) throws Exception {
+                    super.onSuccess(programFilters);
+                    if (programFilters == null || programFilters.isEmpty()){
+                        callback.onFailure(new TaException("Filters are not available"));
+                        return;
+                    }
+
+                    List<ProgramFilter> removables = new ArrayList<>();
+                    for (ProgramFilter filter: programFilters){
+                        if (filter.getTags() == null || filter.getTags().isEmpty()){
+                            removables.add(filter);
+                        } else {
+                            Collections.sort(filter.getTags());
+                        }
+                    }
+
+                    for (ProgramFilter filter: removables){
+                        programFilters.remove(filter);
+                    }
+
+                    Collections.sort(programFilters);
+                    loginPrefs.setProgramFilters(programFilters);
+                    callback.onSuccess(programFilters);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getProgramFiltersFromLocal(callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getProgramFiltersFromLocal(callback, new NoConnectionException(context));
+        }
+
+    }
+
+    private void getProgramFiltersFromLocal(OnResponseCallback<List<ProgramFilter>> callback, Exception e){
+
+        List<ProgramFilter> filters = loginPrefs.getProgramFilters();
+        if (filters == null){
+            callback.onFailure(e);
+        } else {
+            callback.onSuccess(filters);
+        }
+
+    }
+
+    public void getPeriods(List<ProgramFilter> filters, String programId, String sectionId,
+                           int take, int skip, OnResponseCallback<List<Period>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetPeriodsTask(context, filters, programId, sectionId, take, skip){
+                @Override
+                protected void onSuccess(List<Period> periods) throws Exception {
+                    super.onSuccess(periods);
+                    if (periods == null || periods.isEmpty()){
+                        callback.onFailure(new TaException("No periods are created"));
+                        return;
+                    }
+
+                    for (Period period: periods){
+                        period.setUsername(loginPrefs.getUsername());
+                    }
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            mLocalDataSource.insertPeriods(periods);
+                        }
+                    }.start();
+
+                    callback.onSuccess(periods);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
+                           int take, int skip, OnResponseCallback<List<CourseComponent>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetUnitsTask(context, filters, programId, sectionId, take, skip){
+                @Override
+                protected void onSuccess(List<CourseComponent> units) throws Exception {
+                    super.onSuccess(units);
+                    if (units == null || units.isEmpty()){
+                        callback.onFailure(new TaException("No units are available"));
+                        return;
+                    }
+
+                    callback.onSuccess(units);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText,
+                         int take, int skip, OnResponseCallback<List<CourseComponent>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetAllUnitsTask(context, filters, programId, sectionId, searchText, take, skip){
+                @Override
+                protected void onSuccess(List<CourseComponent> units) throws Exception {
+                    super.onSuccess(units);
+                    if (units == null || units.isEmpty()){
+                        callback.onFailure(new TaException("No units are available"));
+                        return;
+                    }
+
+                    callback.onSuccess(units);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void getUsers(String programId, String sectionId, int take, int skip,
+                         OnResponseCallback<List<ProgramUser>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetUsersTask(context, programId, sectionId, take, skip){
+                @Override
+                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
+                    super.onSuccess(programUsers);
+                    if (programUsers == null || programUsers.isEmpty()){
+                        callback.onFailure(new TaException("No users are available"));
+                        return;
+                    }
+
+                    callback.onSuccess(programUsers);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void getPendingUsers(String programId, String sectionId, int take, int skip,
+                         OnResponseCallback<List<ProgramUser>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetPendingUsersTask(context, programId, sectionId, take, skip){
+                @Override
+                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
+                    super.onSuccess(programUsers);
+                    if (programUsers == null || programUsers.isEmpty()){
+                        callback.onFailure(new TaException("No users are available with units pending for approval"));
+                        return;
+                    }
+
+                    callback.onSuccess(programUsers);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void getPendingUnits(String programId, String username, int take, int skip,
+                                OnResponseCallback<List<CourseComponent>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetPendingUnitsTask(context, programId, username, take, skip){
+                @Override
+                protected void onSuccess(List<CourseComponent> units) throws Exception {
+                    super.onSuccess(units);
+                    if (units == null || units.isEmpty()){
+                        callback.onFailure(new TaException("No units are pending for approval"));
+                        return;
+                    }
+
+                    callback.onSuccess(units);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void createPeriod(String programId, String sectionId, String lang,
+                             OnResponseCallback<SuccessResponse> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new CreatePeriodTask(context, programId, sectionId, lang){
+                @Override
+                protected void onSuccess(SuccessResponse successResponse) throws Exception {
+                    super.onSuccess(successResponse);
+                    if (successResponse == null){
+                        callback.onFailure(new TaException("Unable to create periods"));
+                        return;
+                    }
+
+                    callback.onSuccess(successResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new SavePeriodTask(context, periodId, unitIds){
+                @Override
+                protected void onSuccess(SuccessResponse successResponse) throws Exception {
+                    super.onSuccess(successResponse);
+                    if (successResponse == null){
+                        callback.onFailure(new TaException("Unable to save period"));
+                        return;
+                    }
+
+                    callback.onSuccess(successResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void approveUnit(String unitId, String username, OnResponseCallback<SuccessResponse> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new ApproveUnitTask(context, unitId, username){
+                @Override
+                protected void onSuccess(SuccessResponse successResponse) throws Exception {
+                    super.onSuccess(successResponse);
+                    if (successResponse == null){
+                        callback.onFailure(new TaException("Unable to approve unit"));
+                        return;
+                    }
+
+                    callback.onSuccess(successResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
     }
 
 }

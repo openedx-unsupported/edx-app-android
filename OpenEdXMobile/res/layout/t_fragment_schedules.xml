@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.schedule.ScheduleViewModel" />
+            type="org.edx.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

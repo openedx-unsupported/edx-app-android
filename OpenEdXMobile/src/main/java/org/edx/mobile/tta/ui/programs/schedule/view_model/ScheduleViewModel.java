@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.programs.schedule;
+package org.edx.mobile.tta.ui.programs.schedule.view_model;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;

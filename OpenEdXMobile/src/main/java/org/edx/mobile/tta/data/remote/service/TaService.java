@@ -5,14 +5,19 @@ import com.google.inject.Provider;
 
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Content;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Period;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
+import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
@@ -25,6 +30,8 @@ import org.edx.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.edx.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.edx.mobile.tta.data.model.profile.FeedbackResponse;
 import org.edx.mobile.tta.data.model.profile.FollowStatus;
+import org.edx.mobile.tta.data.model.program.ProgramFilter;
+import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 
 import java.util.List;
@@ -185,4 +192,52 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_FOLLOW_STATUS)
     Call<FollowStatus> getFollowStatus(@Query(Constants.KEY_USERNAME) String username);
+
+    @GET(ApiConstants.URL_MX_GET_PROGRAMS)
+    Call<List<Program>> getPrograms();
+
+    @GET(ApiConstants.URL_MX_GET_SECTIONS)
+    Call<List<Section>> getSections();
+
+    @GET(ApiConstants.URL_MX_GET_PROGRAM_FILTERS)
+    Call<List<ProgramFilter>> getProgramFilters();
+
+    @POST(ApiConstants.URL_MX_GET_PERIODS)
+    Call<List<Period>> getPeriods(@Body Map<String, Object> parameters);
+
+    @POST(ApiConstants.URL_MX_GET_UNITS)
+    Call<List<CourseComponent>> getUnits(@Body Map<String, Object> parameters);
+
+    @POST(ApiConstants.URL_MX_GET_ALL_UNITS)
+    Call<List<CourseComponent>> getAllUnits(@Body Map<String, Object> parameters);
+
+    @GET(ApiConstants.URL_MX_GET_USERS)
+    Call<List<ProgramUser>> getUsers(@Query(Constants.KEY_PROGRAM_ID) String programId,
+                                     @Query(Constants.KEY_SECTION_ID) String sectionId,
+                                     @Query(Constants.KEY_TAKE) int take,
+                                     @Query(Constants.KEY_SKIP) int skip);
+
+    @GET(ApiConstants.URL_MX_GET_PENDING_USERS)
+    Call<List<ProgramUser>> getPendingUsers(@Query(Constants.KEY_PROGRAM_ID) String programId,
+                                     @Query(Constants.KEY_SECTION_ID) String sectionId,
+                                     @Query(Constants.KEY_TAKE) int take,
+                                     @Query(Constants.KEY_SKIP) int skip);
+
+    @GET(ApiConstants.URL_MX_GET_PENDING_UNITS)
+    Call<List<CourseComponent>> getPendingUnits(@Query(Constants.KEY_PROGRAM_ID) String programId,
+                                            @Query(Constants.KEY_USERNAME) String username,
+                                            @Query(Constants.KEY_TAKE) int take,
+                                            @Query(Constants.KEY_SKIP) int skip);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_CREATE_PERIOD)
+    Call<SuccessResponse> createPeriod(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_SAVE_PERIOD)
+    Call<SuccessResponse> savePeriod(@FieldMap Map<String, String> parameters);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_APPROVE_UNIT)
+    Call<SuccessResponse> approveUnit(@FieldMap Map<String, String> parameters);
 }

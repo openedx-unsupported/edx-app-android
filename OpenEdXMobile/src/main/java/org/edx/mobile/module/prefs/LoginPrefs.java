@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.base.MainApplication;
@@ -13,10 +14,12 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.tta.data.model.authentication.FieldInfo;
+import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.wordpress_client.model.WPProfileModel;
 import org.edx.mobile.tta.wordpress_client.model.WpAuthResponse;
 import org.edx.mobile.user.ProfileImage;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -536,5 +539,20 @@ public class LoginPrefs {
 
         pref.put(PrefManager.Key.USER_GENERIC_FIELD_ATTRIBUTE_INFO, null);
         pref.put(PrefManager.Key.USER_GENERIC_FIELD_ATTRIBUTE_INFO, gson.toJson(fieldInfo));
+    }
+
+    public void setProgramFilters(@NonNull List<ProgramFilter> programFilters){
+        pref.put(PrefManager.Key.PROGRAM_FILTERS_JSON, gson.toJson(programFilters));
+    }
+
+    @Nullable
+    public List<ProgramFilter> getProgramFilters(){
+        final String json = pref.getString(PrefManager.Key.PROGRAM_FILTERS_JSON);
+        if (null == json) {
+            return null;
+        }
+
+        Type collectionType = new TypeToken<List<ProgramFilter>>(){}.getType();
+        return gson.fromJson(json, collectionType);
     }
 }
