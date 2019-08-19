@@ -10,6 +10,9 @@ import org.edx.mobile.tta.data.local.db.dao.ContentListDao;
 import org.edx.mobile.tta.data.local.db.dao.ContentStatusDao;
 import org.edx.mobile.tta.data.local.db.dao.FeedDao;
 import org.edx.mobile.tta.data.local.db.dao.NotificationDao;
+import org.edx.mobile.tta.data.local.db.dao.PeriodDao;
+import org.edx.mobile.tta.data.local.db.dao.ProgramDao;
+import org.edx.mobile.tta.data.local.db.dao.SectionDao;
 import org.edx.mobile.tta.data.local.db.dao.SourceDao;
 import org.edx.mobile.tta.data.local.db.dao.UnitStatusDao;
 import org.edx.mobile.tta.data.local.db.dao.UserDao;
@@ -17,6 +20,9 @@ import org.edx.mobile.tta.data.local.db.table.Certificate;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Period;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.local.db.table.Category;
@@ -35,9 +41,12 @@ import org.edx.mobile.tta.data.local.db.table.Source;
                 Certificate.class,
                 Notification.class,
                 ContentStatus.class,
-                UnitStatus.class
+                UnitStatus.class,
+                Program.class,
+                Section.class,
+                Period.class
         },
-        version = 4,
+        version = 5,
         exportSchema = false
 )
 @TypeConverters({DbTypeConverters.class})
@@ -53,4 +62,7 @@ public abstract class TADatabase extends RoomDatabase {
     public abstract NotificationDao notificationDao();
     public abstract ContentStatusDao contentStatusDao();
     public abstract UnitStatusDao unitStatusDao();
+    public abstract ProgramDao programDao();
+    public abstract SectionDao sectionDao();
+    public abstract PeriodDao periodDao();
 }

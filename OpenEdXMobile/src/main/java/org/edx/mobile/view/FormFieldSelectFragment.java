@@ -44,7 +44,7 @@ public class FormFieldSelectFragment extends BaseFragment {
     @InjectExtra(FormFieldActivity.EXTRA_FIELD)
     private FormField formField;
 
-    @InjectView(android.R.id.list)
+    @InjectView(R.id.list)
     private ListView listView;
 
     @Nullable

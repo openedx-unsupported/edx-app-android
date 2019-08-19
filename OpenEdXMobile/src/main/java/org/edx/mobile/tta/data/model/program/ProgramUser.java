@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.edx.mobile.user.ProfileImage;
 
-public class User {
+public class ProgramUser {
 
     private String username;
 

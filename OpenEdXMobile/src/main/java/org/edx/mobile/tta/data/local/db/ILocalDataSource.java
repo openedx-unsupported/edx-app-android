@@ -6,6 +6,9 @@ import org.edx.mobile.tta.data.local.db.table.ContentList;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
 import org.edx.mobile.tta.data.local.db.table.Feed;
 import org.edx.mobile.tta.data.local.db.table.Notification;
+import org.edx.mobile.tta.data.local.db.table.Period;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.Source;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
@@ -65,4 +68,19 @@ public interface ILocalDataSource {
 
     List<UnitStatus> getUnitStatusByCourse(String username, String courseId);
     void insertUnitStatuses(List<UnitStatus> statuses);
+
+    List<Program> getPrograms(String username);
+    Program getProgram(String id);
+    void insertPrograms(List<Program> programs);
+    void insertProgram(Program program);
+
+    List<Section> getSections(String username);
+    Section getSection(String id);
+    void insertSections(List<Section> sections);
+    void insertSection(Section section);
+
+    List<Period> getPeriods(String username);
+    Period getPeriod(long id);
+    void insertPeriods(List<Period> periods);
+    void insertPeriod(Period period);
 }
