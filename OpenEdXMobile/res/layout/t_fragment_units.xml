@@ -2,6 +2,7 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel" />
@@ -10,47 +11,61 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
 
-        <HorizontalScrollView
+        <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:scrollbars="none">
+            app:mx_titleVisible="false"
+            app:mx_moreButtonVisible="false"
+            app:mx_itemLayout="@layout/t_row_filter_drop_down"
+            app:mx_itemLimit="100"
+            android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.maurya.mx.mxlib.view.MxRecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mx_itemLayout="@layout/t_row_unit"
+                infinite_recycler_adapter="@{viewModel.unitsAdapter}"
+                layout_manager="@{viewModel.layoutManager}"
+                infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:orientation="horizontal">
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}">
 
-                <org.edx.mobile.tta.ui.custom.DropDownFilterView
-                    drop_down_items="@{viewModel.typeFilters}"
-                    drop_down_listener="@{viewModel.typeListener}"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="27dp"
-                    android:layout_marginEnd="@dimen/_6px" />
+                    android:layout_gravity="center_horizontal"
+                    app:srcCompat="@drawable/t_icon_error" />
 
-                <org.edx.mobile.tta.ui.custom.DropDownFilterView
-                    drop_down_items="@{viewModel.periodFilters}"
-                    drop_down_listener="@{viewModel.periodListener}"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_6px"
-                    android:layout_marginEnd="@dimen/_6px" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_46px"
+                    android:layout_marginStart="@dimen/_70px"
+                    android:layout_marginEnd="@dimen/_70px"
+                    android:fontFamily="@font/hind_regular"
+                    android:gravity="center"
+                    android:text="@string/empty_list_message"
+                    android:textColor="@color/primary_cyan"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
-        </HorizontalScrollView>
-
-        <com.maurya.mx.mxlib.view.MxRecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:mx_itemLayout="@layout/t_row_notification"
-            infinite_recycler_adapter="@{viewModel.adapter}"
-            layout_manager="@{viewModel.layoutManager}"/>
+        </FrameLayout>
 
     </LinearLayout>
 </layout>

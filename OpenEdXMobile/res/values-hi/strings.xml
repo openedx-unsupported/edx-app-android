@@ -121,4 +121,5 @@
     <string name="error_pmis">PMIS कोड रिक्त नहीं हो सकता</string>
     <string name="error_teacher_id">टीचर ID रिक्त नहीं हो सकती</string>
     <string name="program">Program</string>
+    <string name="empty_list_message">सूची खाली है</string>
 </resources>

@@ -337,6 +337,9 @@ public class PrefManager {
 
         //Mx Chirag: To store search filters
         public static final String PROGRAM_FILTERS_JSON = "program_filters_json";
+
+        public static final String PROGRAM_ID = "program_id";
+        public static final String SECTION_ID = "section_id";
     }
 
     public static final class Value {
