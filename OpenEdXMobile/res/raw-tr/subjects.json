@@ -1,0 +1,182 @@
+[
+    {
+        "name": "Mimari",
+        "image_name": "architecture",
+        "filter": "Architecture",
+        "type": "normal"
+    },
+    {
+        "name": "Sanat & Kültür",
+        "image_name": "art",
+        "filter": "Art & Culture",
+        "type": "normal"
+    },
+    {
+        "name": "Biology & Life Sciences",
+        "image_name": "biology",
+        "filter": "Biology & Life Sciences",
+        "type": "normal"
+    },
+    {
+        "name": "Business & Management",
+        "image_name": "business",
+        "filter": "Business & Management",
+        "type": "popular"
+    },
+    {
+        "name": "Kimya",
+        "image_name": "chemistry",
+        "filter": "Chemistry",
+        "type": "normal"
+    },
+    {
+        "name": "İletişim",
+        "image_name": "communication",
+        "filter": "Communication",
+        "type": "normal"
+    },
+    {
+        "name": "Bilgisayar Bilimleri",
+        "image_name": "computer_science",
+        "filter": "Computer Science",
+        "type": "popular"
+    },
+    {
+        "name": "Veri Analizi & İstatistik",
+        "image_name": "data_science",
+        "filter": "Data Analysis & Statistics",
+        "type": "popular"
+    },
+    {
+        "name": "Tasarım",
+        "image_name": "design",
+        "filter": "Design",
+        "type": "normal"
+    },
+    {
+        "name": "Ekonomi & Finans",
+        "image_name": "economics_finance",
+        "filter": "Economics & Finance",
+        "type": "normal"
+    },
+    {
+        "name": "Education & Teacher Training",
+        "image_name": "education",
+        "filter": "Education & Teacher Training",
+        "type": "normal"
+    },
+    {
+        "name": "Elektronik",
+        "image_name": "electronics",
+        "filter": "Electronics",
+        "type": "normal"
+    },
+    {
+        "name": "Energy & Earth Sciences",
+        "image_name": "energy",
+        "filter": "Energy & Earth Sciences",
+        "type": "normal"
+    },
+    {
+        "name": "Mühendislik",
+        "image_name": "engineering",
+        "filter": "Engineering",
+        "type": "normal"
+    },
+    {
+        "name": "Environmental Studies",
+        "image_name": "environmental_studies",
+        "filter": "Environmental Studies",
+        "type": "normal"
+    },
+    {
+        "name": "Ethics",
+        "image_name": "ethics",
+        "filter": "Ethics",
+        "type": "normal"
+    },
+    {
+        "name": "Food & Nutrition",
+        "image_name": "food_nutrition",
+        "filter": "Food & Nutrition",
+        "type": "normal"
+    },
+    {
+        "name": "Health & Safety",
+        "image_name": "health",
+        "filter": "Health & Safety",
+        "type": "normal"
+    },
+    {
+        "name": "Tarih",
+        "image_name": "history",
+        "filter": "History",
+        "type": "normal"
+    },
+    {
+        "name": "Beşeri Bilimler",
+        "image_name": "humanities",
+        "filter": "Humanities",
+        "type": "popular"
+    },
+    {
+        "name": "Dil",
+        "image_name": "language",
+        "filter": "Language",
+        "type": "popular"
+    },
+    {
+        "name": "Hukuk",
+        "image_name": "law",
+        "filter": "Law",
+        "type": "normal"
+    },
+    {
+        "name": "Edebiyat",
+        "image_name": "literature",
+        "filter": "Literature",
+        "type": "normal"
+    },
+    {
+        "name": "Matematik",
+        "image_name": "math",
+        "filter": "Math",
+        "type": "normal"
+    },
+    {
+        "name": "Tıp",
+        "image_name": "medicine",
+        "filter": "Medicine",
+        "type": "normal"
+    },
+    {
+        "name": "Müzik",
+        "image_name": "music",
+        "filter": "Music",
+        "type": "normal"
+    },
+    {
+        "name": "Philosophy & Ethics",
+        "image_name": "philosophy_ethics",
+        "filter": "Philosophy & Ethics",
+        "type": "normal"
+    },
+    {
+        "name": "Fizik",
+        "image_name": "physics",
+        "filter": "Physics",
+        "type": "normal"
+    },
+    {
+        "name": "Bilim",
+        "image_name": "science",
+        "filter": "Science",
+        "type": "normal"
+    },
+    {
+        "name": "Sosyal Bilimler",
+        "image_name": "social_sciences",
+        "filter": "Social Sciences",
+        "type": "normal"
+    }
+]
