@@ -93,8 +93,9 @@ public class ScheduleViewModel extends BaseViewModel {
         }
 
         @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull Content model, @Nullable OnRecyclerItemClickListener<Content> listener) {
-            /*if (binding instanceof TRowAgendaContentBinding){
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull Content model,
+                           @Nullable OnRecyclerItemClickListener<Content> listener) {
+            if (binding instanceof TRowAgendaContentBinding){
                 TRowAgendaContentBinding contentBinding = (TRowAgendaContentBinding) binding;
                 contentBinding.contentTitle.setText(model.getName());
                 Glide.with(mActivity)
@@ -106,7 +107,7 @@ public class ScheduleViewModel extends BaseViewModel {
                         listener.onItemClick(v, model);
                     }
                 });
-            }*/
+            }
         }
     }
 }

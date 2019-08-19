@@ -12,6 +12,25 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                android:id="@+id/recycler_filter"
+                style="@style/agenda_list_style"
+                app:mx_itemLayout="@layout/t_row_agenda_item"
+                app:mx_titleTextColor="@color/gray_6"
+                app:mx_titleTextFont="@font/hind_semibold"
+                app:mx_titleTextSize="@dimen/_10px"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+<!--
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,6 +63,7 @@
             </LinearLayout>
 
         </HorizontalScrollView>
+-->
 
         <com.maurya.mx.mxlib.view.MxRecyclerView
             android:layout_width="match_parent"

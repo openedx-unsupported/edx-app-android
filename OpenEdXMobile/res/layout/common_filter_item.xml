@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal">
+
+            <org.edx.mobile.tta.ui.custom.DropDownFilterView
+                drop_down_items="@{viewModel.typeFilters}"
+                drop_down_listener="@{viewModel.typeListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8px"
+                android:id="@+id/filter_view_common"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>
