@@ -774,6 +774,7 @@
     <string name="empty_region_wise_list">\“%s\” does not have any %s</string>
     <string name="empty_my_agenda_list">\“%s\” does not have any selected %s. To select a %s, please click on @</string>
     <string name="empty_download_list">\“%s\” does not have any %s</string>
+    <string name="empty_list_message">List is empty</string>
     <string name="you_are_offline">You are offline</string>
     <string name="view_discussion">View discussion</string>
     <string name="share_message">Please see this {source_title} on {platform_name}. {content_name}</string>

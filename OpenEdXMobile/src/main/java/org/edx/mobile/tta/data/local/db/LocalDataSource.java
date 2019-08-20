@@ -11,6 +11,7 @@ import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Program;
 import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
@@ -277,5 +278,25 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void insertPeriod(Period period) {
         mAppDatabase.periodDao().insert(period);
+    }
+
+    @Override
+    public List<Unit> getUnits() {
+        return mAppDatabase.unitDao().getAll();
+    }
+
+    @Override
+    public Unit getUnit(String id) {
+        return mAppDatabase.unitDao().getById(id);
+    }
+
+    @Override
+    public void insertUnits(List<Unit> units) {
+        mAppDatabase.unitDao().insert(units);
+    }
+
+    @Override
+    public void insertUnit(Unit unit) {
+        mAppDatabase.unitDao().insert(unit);
     }
 }

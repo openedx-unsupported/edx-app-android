@@ -14,6 +14,7 @@ import org.edx.mobile.tta.data.local.db.dao.PeriodDao;
 import org.edx.mobile.tta.data.local.db.dao.ProgramDao;
 import org.edx.mobile.tta.data.local.db.dao.SectionDao;
 import org.edx.mobile.tta.data.local.db.dao.SourceDao;
+import org.edx.mobile.tta.data.local.db.dao.UnitDao;
 import org.edx.mobile.tta.data.local.db.dao.UnitStatusDao;
 import org.edx.mobile.tta.data.local.db.dao.UserDao;
 import org.edx.mobile.tta.data.local.db.table.Certificate;
@@ -23,6 +24,7 @@ import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Program;
 import org.edx.mobile.tta.data.local.db.table.Section;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.local.db.table.Category;
@@ -44,7 +46,8 @@ import org.edx.mobile.tta.data.local.db.table.Source;
                 UnitStatus.class,
                 Program.class,
                 Section.class,
-                Period.class
+                Period.class,
+                Unit.class
         },
         version = 5,
         exportSchema = false
@@ -65,4 +68,5 @@ public abstract class TADatabase extends RoomDatabase {
     public abstract ProgramDao programDao();
     public abstract SectionDao sectionDao();
     public abstract PeriodDao periodDao();
+    public abstract UnitDao unitDao();
 }

@@ -555,4 +555,20 @@ public class LoginPrefs {
         Type collectionType = new TypeToken<List<ProgramFilter>>(){}.getType();
         return gson.fromJson(json, collectionType);
     }
+
+    public void setProgramId(String programId){
+        pref.put(PrefManager.Key.PROGRAM_ID, programId);
+    }
+
+    public String getProgramId(){
+        return pref.getString(PrefManager.Key.PROGRAM_ID);
+    }
+
+    public void setSectionId(String sectionId){
+        pref.put(PrefManager.Key.SECTION_ID, sectionId);
+    }
+
+    public String getSectionId(){
+        return pref.getString(PrefManager.Key.SECTION_ID);
+    }
 }

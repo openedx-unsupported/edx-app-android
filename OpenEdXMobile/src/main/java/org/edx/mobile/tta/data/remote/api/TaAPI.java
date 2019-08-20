@@ -15,6 +15,7 @@ import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Program;
 import org.edx.mobile.tta.data.local.db.table.Section;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
@@ -277,7 +278,7 @@ public class TaAPI {
         return taService.getPeriods(parameters);
     }
 
-    public Call<List<CourseComponent>> getUnits(List<ProgramFilter> filters, String programId, String sectionId, int take, int skip){
+    public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId, int take, int skip){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);
@@ -288,7 +289,7 @@ public class TaAPI {
         return taService.getUnits(parameters);
     }
 
-    public Call<List<CourseComponent>> getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText, int take, int skip){
+    public Call<List<Unit>> getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText, int take, int skip){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);

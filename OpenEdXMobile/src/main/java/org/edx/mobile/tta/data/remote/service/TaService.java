@@ -14,6 +14,7 @@ import org.edx.mobile.tta.data.local.db.table.Notification;
 import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Program;
 import org.edx.mobile.tta.data.local.db.table.Section;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
@@ -206,10 +207,10 @@ public interface TaService {
     Call<List<Period>> getPeriods(@Body Map<String, Object> parameters);
 
     @POST(ApiConstants.URL_MX_GET_UNITS)
-    Call<List<CourseComponent>> getUnits(@Body Map<String, Object> parameters);
+    Call<List<Unit>> getUnits(@Body Map<String, Object> parameters);
 
     @POST(ApiConstants.URL_MX_GET_ALL_UNITS)
-    Call<List<CourseComponent>> getAllUnits(@Body Map<String, Object> parameters);
+    Call<List<Unit>> getAllUnits(@Body Map<String, Object> parameters);
 
     @GET(ApiConstants.URL_MX_GET_USERS)
     Call<List<ProgramUser>> getUsers(@Query(Constants.KEY_PROGRAM_ID) String programId,
