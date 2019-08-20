@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel" />
     </data>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -15,64 +20,76 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
             <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/recycler_filter"
-                style="@style/agenda_list_style"
-                app:mx_itemLayout="@layout/t_row_agenda_item"
-                app:mx_titleTextColor="@color/gray_6"
-                app:mx_titleTextFont="@font/hind_semibold"
-                app:mx_titleTextSize="@dimen/_10px"
-                android:visibility="visible"/>
+                finite_recycler_adapter="@{viewModel.filtersAdapter}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:mx_itemLayout="@layout/common_filter_item"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleVisible="false" />
         </LinearLayout>
 
-<!--
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:orientation="horizontal">
-
-                <org.edx.mobile.tta.ui.custom.DropDownFilterView
-                    drop_down_items="@{viewModel.typeFilters}"
-                    drop_down_listener="@{viewModel.typeListener}"
-                    android:layout_width="wrap_content"
+        <!--
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="27dp"
-                    android:layout_marginEnd="@dimen/_6px" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:scrollbars="none">
 
-                <org.edx.mobile.tta.ui.custom.DropDownFilterView
-                    drop_down_items="@{viewModel.sessionFilters}"
-                    drop_down_listener="@{viewModel.sessionListener}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_6px"
-                    android:layout_marginEnd="@dimen/_6px" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="horizontal">
 
-            </LinearLayout>
+                        <org.edx.mobile.tta.ui.custom.DropDownFilterView
+                            drop_down_items="@{viewModel.typeFilters}"
+                            drop_down_listener="@{viewModel.typeListener}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="27dp"
+                            android:layout_marginEnd="@dimen/_6px" />
 
-        </HorizontalScrollView>
--->
+                        <org.edx.mobile.tta.ui.custom.DropDownFilterView
+                            drop_down_items="@{viewModel.sessionFilters}"
+                            drop_down_listener="@{viewModel.sessionListener}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_6px"
+                            android:layout_marginEnd="@dimen/_6px" />
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+        -->
 
         <com.maurya.mx.mxlib.view.MxRecyclerView
+            infinite_recycler_adapter="@{viewModel.periodAdapter}"
+            layout_manager="@{viewModel.gridLayoutManager}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            infinite_recycler_adapter="@{viewModel.adapter}"
-            layout_manager="@{viewModel.layoutManager}"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            app:mx_itemLayout="@layout/t_row_schedule"/>
+            app:mx_itemLayout="@layout/t_row_schedule" />
 
     </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:src="@android:drawable/ic_input_add"
+            android:tint="@color/white"
+            android:contentDescription="@string/submit"
+            android:layout_margin="16dp" />
+
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

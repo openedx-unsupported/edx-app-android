@@ -13,6 +13,7 @@ import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.programs.curricullam.CurricullamFragment;
 import org.edx.mobile.tta.ui.programs.discussion.DiscussionFragment;
+import org.edx.mobile.tta.ui.programs.pendingUsers.PendingUsersFragment;
 import org.edx.mobile.tta.ui.programs.schedule.ScheduleFragment;
 import org.edx.mobile.tta.ui.programs.students.StudentsFragment;
 import org.edx.mobile.tta.ui.programs.units.UnitsFragment;
@@ -134,6 +135,7 @@ public class LibraryViewModel extends BaseViewModel {
         ArrayList<String> demolist = new ArrayList<String>();
         demolist.add("Schedule");
         demolist.add("Units");
+        demolist.add("Pending");
         demolist.add(mDataManager.getLoginPrefs().getUsername() != null &&
                 mDataManager.getLoginPrefs().getUsername().equalsIgnoreCase("staff") ?
                 "Staff" : "Students");
@@ -143,6 +145,7 @@ public class LibraryViewModel extends BaseViewModel {
         try {
             fragments.add(new ScheduleFragment());
             fragments.add(new UnitsFragment());
+            fragments.add(new PendingUsersFragment());
             fragments.add(new StudentsFragment());
 
             CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();

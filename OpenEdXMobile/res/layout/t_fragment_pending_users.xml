@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.students.view_model.StudentsViewModel" />
+            type="org.edx.mobile.tta.ui.programs.pendingUsers.viewModel.PendingUsersViewModel" />
     </data>
 
     <LinearLayout
@@ -22,25 +22,24 @@
 
             <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:id="@+id/recycler_filter"
-                finite_recycler_adapter="@{viewModel.filtersAdapter}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
-                app:mx_itemLayout="@layout/t_row_student_filter"
-                app:mx_titleTextColor="@color/gray_6"
                 app:mx_moreButtonVisible="false"
+                app:mx_titleTextColor="@color/gray_6"
                 app:mx_titleTextFont="@font/hind_semibold"
+                finite_recycler_adapter="@{viewModel.filtersAdapter}"
                 app:mx_titleTextSize="@dimen/_10px" />
         </LinearLayout>
+
         <com.maurya.mx.mxlib.view.MxRecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
+            infinite_recycler_adapter="@{viewModel.usersAdapter}"
+            layout_manager="@{viewModel.layoutManager}"
             android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            app:mx_itemLayout="@layout/t_row_students_grid"
-            infinite_recycler_adapter="@{viewModel.adapter}"
-            layout_manager="@{viewModel.layoutManager}"/>
+            android:paddingEnd="12dp" />
     </LinearLayout>
 
 

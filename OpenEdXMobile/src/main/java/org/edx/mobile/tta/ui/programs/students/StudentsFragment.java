@@ -13,8 +13,6 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
 
 public class StudentsFragment extends TaBaseFragment {
-    public static final String TAG = LibraryFragment.class.getCanonicalName();
-
     private StudentsViewModel viewModel;
 
     @Override
@@ -27,7 +25,8 @@ public class StudentsFragment extends TaBaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.t_fragment_students, viewModel).getRoot();
-
+        viewModel.getFilters();
+        viewModel.getUsers();
         return rootView;
     }
 }

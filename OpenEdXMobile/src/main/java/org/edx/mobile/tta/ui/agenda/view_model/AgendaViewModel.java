@@ -309,7 +309,8 @@ public class AgendaViewModel extends BaseViewModel {
         }
 
         @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull AgendaItem model, @Nullable OnRecyclerItemClickListener<AgendaItem> listener) {
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull AgendaItem model,
+                           @Nullable OnRecyclerItemClickListener<AgendaItem> listener) {
             if (binding instanceof TRowAgendaItemBinding){
                 TRowAgendaItemBinding itemBinding = (TRowAgendaItemBinding) binding;
 

@@ -2,10 +2,12 @@ package org.edx.mobile.tta.data.local.db.table;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "program")
 public class Program {
 
+    @NonNull
     @PrimaryKey
     private String id;
 
