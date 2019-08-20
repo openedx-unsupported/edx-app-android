@@ -10,6 +10,7 @@ import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Program;
 import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.local.db.table.Content;
@@ -83,4 +84,9 @@ public interface ILocalDataSource {
     Period getPeriod(long id);
     void insertPeriods(List<Period> periods);
     void insertPeriod(Period period);
+
+    List<Unit> getUnits();
+    Unit getUnit(String id);
+    void insertUnits(List<Unit> units);
+    void insertUnit(Unit unit);
 }

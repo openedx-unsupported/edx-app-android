@@ -2,11 +2,13 @@ package org.edx.mobile.tta.data.local.db.table;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "period")
-public class Period {
+public class Period implements Parcelable {
 
     @PrimaryKey
     private long id;
@@ -24,6 +26,31 @@ public class Period {
     private long totalCount;
 
     private String username;
+
+    public Period() {
+    }
+
+    protected Period(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        code = in.readString();
+        weeks = in.readLong();
+        completedCount = in.readLong();
+        totalCount = in.readLong();
+        username = in.readString();
+    }
+
+    public static final Creator<Period> CREATOR = new Creator<Period>() {
+        @Override
+        public Period createFromParcel(Parcel in) {
+            return new Period(in);
+        }
+
+        @Override
+        public Period[] newArray(int size) {
+            return new Period[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -79,5 +106,21 @@ public class Period {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(code);
+        dest.writeLong(weeks);
+        dest.writeLong(completedCount);
+        dest.writeLong(totalCount);
+        dest.writeString(username);
     }
 }

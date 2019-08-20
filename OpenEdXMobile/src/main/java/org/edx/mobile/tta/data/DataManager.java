@@ -61,6 +61,7 @@ import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Program;
 import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.data.local.db.table.Source;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.BaseResponse;
 import org.edx.mobile.tta.data.model.CountResponse;
@@ -3681,13 +3682,13 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
-                           int take, int skip, OnResponseCallback<List<CourseComponent>> callback){
+                           int take, int skip, OnResponseCallback<List<Unit>> callback){
 
         if (NetworkUtil.isConnected(context)) {
 
             new GetUnitsTask(context, filters, programId, sectionId, take, skip){
                 @Override
-                protected void onSuccess(List<CourseComponent> units) throws Exception {
+                protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
                     if (units == null || units.isEmpty()){
                         callback.onFailure(new TaException("No units are available"));
@@ -3710,13 +3711,13 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText,
-                         int take, int skip, OnResponseCallback<List<CourseComponent>> callback){
+                         int take, int skip, OnResponseCallback<List<Unit>> callback){
 
         if (NetworkUtil.isConnected(context)) {
 
             new GetAllUnitsTask(context, filters, programId, sectionId, searchText, take, skip){
                 @Override
-                protected void onSuccess(List<CourseComponent> units) throws Exception {
+                protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
                     if (units == null || units.isEmpty()){
                         callback.onFailure(new TaException("No units are available"));

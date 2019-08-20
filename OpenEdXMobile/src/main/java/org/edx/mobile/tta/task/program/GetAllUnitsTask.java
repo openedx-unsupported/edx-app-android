@@ -6,12 +6,13 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 import java.util.List;
 
-public class GetAllUnitsTask extends Task<List<CourseComponent>> {
+public class GetAllUnitsTask extends Task<List<Unit>> {
 
     private List<ProgramFilter> filters;
     private String programId, sectionId, searchText;
@@ -31,7 +32,7 @@ public class GetAllUnitsTask extends Task<List<CourseComponent>> {
     }
 
     @Override
-    public List<CourseComponent> call() throws Exception {
+    public List<Unit> call() throws Exception {
         return taAPI.getAllUnits(filters, programId, sectionId, searchText, take, skip).execute().body();
     }
 

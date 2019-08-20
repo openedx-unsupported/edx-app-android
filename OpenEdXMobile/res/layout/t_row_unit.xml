@@ -5,7 +5,7 @@
     <data>
         <variable
             name="unit"
-            type="org.edx.mobile.model.course.CourseComponent" />
+            type="org.edx.mobile.tta.data.local.db.table.Unit" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -18,34 +18,56 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkbox"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="12dp"
+                android:visibility="gone"/>
+
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/unit_title"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="@dimen/_40px"
-                android:layout_marginEnd="@dimen/_40px"
+                app:layout_constraintStart_toEndOf="@id/checkbox"
+                app:layout_constraintEnd_toStartOf="@id/status_icon"
+                android:layout_marginStart="@dimen/_20px"
+                android:layout_marginEnd="@dimen/_20px"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
                 android:fontFamily="@font/hind_medium"
-                android:text="@{unit.displayName}"/>
+                android:text="@{unit.title}"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/unit_date"
                 app:layout_constraintTop_toBottomOf="@id/unit_title"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="@dimen/_40px"
-                android:layout_marginEnd="@dimen/_40px"
+                app:layout_constraintStart_toEndOf="@id/checkbox"
+                app:layout_constraintEnd_toStartOf="@id/status_icon"
+                android:layout_marginStart="@dimen/_20px"
+                android:layout_marginEnd="@dimen/_20px"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="12dp"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
                 android:fontFamily="@font/hind_medium"
-                android:text="@{unit.id}"/>
+                android:text="@{unit.code}"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/status_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="12dp"
+                android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"
