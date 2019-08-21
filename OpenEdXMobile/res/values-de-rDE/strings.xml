@@ -26,11 +26,11 @@
   <!--Error message shown when browser cannot handle request for given web url-->
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Themen erkunden</string>
+  <string name="browse_by_subject" tools:ignore="MissingTranslation">Themen erkunden</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Alle Themen sehen</string>
+  <string name="view_all_subjects" tools:ignore="MissingTranslation">Alle Themen sehen</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects">Thema suchen</string>
+  <string name="search_subjects" tools:ignore="MissingTranslation">Thema suchen</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Meine Kurse teilen</string>
@@ -427,7 +427,7 @@ Kontrollieren Sie auch Ihren Spam-Ordner.</string>
   <!--Label for video playback speed in video player-->
   <string name="lbl_video_speed" tools:ignore="MissingTranslation">Video Geschwindigkeit</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none">Keine</string>
+  <string name="lbl_cc_none" tools:ignore="MissingTranslation">Keine</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Video Player</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -535,7 +535,7 @@ Kontrollieren Sie auch Ihren Spam-Ordner.</string>
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">Unbetitelt</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title">Allgemeine Benachrichtigung</string>
+  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">Allgemeine Benachrichtigung</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">Ihre Suche \"{query_string}\" hat keine Ergebnisse ergeben. Versuchen Sie es mit einem anderen Suchbegriff erneut oder setzen Sie Filter.</string>
   <string name="forum_no_results_for_all_posts">Es gibt keine Beiträge in dieser Diskussion.</string>

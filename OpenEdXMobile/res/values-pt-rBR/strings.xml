@@ -26,11 +26,11 @@
   <!--Error message shown when browser cannot handle request for given web url-->
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Navegue por Assunto</string>
+  <string name="browse_by_subject" tools:ignore="MissingTranslation">Navegue por Assunto</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Visualizar Todos os Assuntos</string>
+  <string name="view_all_subjects" tools:ignore="MissingTranslation">Visualizar Todos os Assuntos</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects">Procurar por Assunto</string>
+  <string name="search_subjects" tools:ignore="MissingTranslation">Procurar por Assunto</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartilhe seu curso</string>
@@ -82,7 +82,7 @@
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement">{platform_name} Contrato de Licença de Usuário Final</string>
+  <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} Contrato de Licença de Usuário Final</string>
   <!--Label for Terms of Service and Honor Code-->
   <string name="tos_and_honor_code">{platform_name} Termos de Serviço e Código de Honra</string>
   <!--Label for Privacy Policy-->
@@ -108,7 +108,7 @@
   <!--Title of Degrees tab on Discovery screen-->
   <string name="label_degrees" tools:ignore="MissingTranslation">Níveis</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Descubra</string>
+  <string name="label_discovery" tools:ignore="MissingTranslation">Descubra</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentário</string>
   <!--Toggle switch on state label-->
@@ -151,7 +151,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">Se você sair do aplicativo, não estará mais visualizando o conteúdo grátis do {platform_name}. Sujeito à cobrança de dados.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title"> Contrato de Licença de Usuário Final</string>
+  <string name="end_user_title" tools:ignore="MissingTranslation"> Contrato de Licença de Usuário Final</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
   <string name="terms_of_service_title">Termos de Serviços</string>
@@ -253,7 +253,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">Atividade recente</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity">Mais ativas</string>
+  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">Mais ativas</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">Mais votadas</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -330,9 +330,9 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">Tópico: {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label">Publicar discussão</string>
+  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">Publicar discussão</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description">Botão publicar discussão</string>
+  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">Botão publicar discussão</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">Publicar pergunta</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -425,7 +425,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label for video playback speed in video player-->
   <string name="lbl_video_speed" tools:ignore="MissingTranslation">Velocidade de vídeo</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none">Nenhum</string>
+  <string name="lbl_cc_none" tools:ignore="MissingTranslation">Nenhum</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Player de vídeo</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -533,14 +533,14 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">Sem título</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title">Notificação Geral</string>
+  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">Notificação Geral</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">Nenhum resultado encontrado para \"{search_query}\". Tente usar outro termo de busca ou selecione uma categoria de discussão para navegar.</string>
   <string name="forum_no_results_for_all_posts">Não há publicações na discussão deste curso.</string>
   <string name="forum_no_results_for_following">Você não está seguindo nenhuma publicação.</string>
   <string name="forum_no_results_for_filtered_following">Os resultados filtrados não incluem nenhuma publicação seguida.</string>
   <string name="forum_no_results_in_category">Não há nenhuma publicação nessa categoria de discussão. </string>
-  <string name="forum_no_results_with_filter">Tente remover o filtro da publicação.</string>
+  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">Tente remover o filtro da publicação.</string>
   <string name="forum_post_i_am_following">Publicações que estou seguindo</string>
   <string name="forum_follow">Seguir</string>
   <string name="forum_unfollow">Deixar de seguir</string>
@@ -618,7 +618,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">Ajude-nos a melhorar</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar">Controle de avaliação</string>
+  <string name="rating_bar" tools:ignore="MissingTranslation">Controle de avaliação</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} de {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
