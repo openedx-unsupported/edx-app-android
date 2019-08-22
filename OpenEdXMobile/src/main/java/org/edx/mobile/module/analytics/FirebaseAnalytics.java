@@ -586,8 +586,8 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackRemoteConfigs(Map<String, String> values) {
-        final FirebaseEvent event = new FirebaseEvent(Events.MOBILE_EXPERIMENT_EVALUATED);
+    public void trackExperimentParams(String experimentName, Map<String, String> values) {
+        final FirebaseEvent event = new FirebaseEvent(experimentName);
         event.putMap(values);
         logFirebaseEvent(event.getName(), event.getBundle());
     }

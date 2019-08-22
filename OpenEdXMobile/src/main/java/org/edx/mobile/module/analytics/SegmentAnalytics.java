@@ -838,10 +838,9 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackRemoteConfigs(Map<String, String> values) {
-        // Sending screen view
-        SegmentEvent aEvent = new SegmentEvent();
+    public void trackExperimentParams(String experimentName, Map<String, String> values) {
+        final SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putAll(values);
-        trackSegmentEvent(Events.MOBILE_EXPERIMENT_EVALUATED, aEvent.properties);
+        trackSegmentEvent(experimentName, aEvent.properties);
     }
 }

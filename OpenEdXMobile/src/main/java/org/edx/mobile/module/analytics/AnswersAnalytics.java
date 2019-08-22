@@ -329,7 +329,7 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackRemoteConfigs(Map<String, String> values) {
+    public void trackExperimentParams(String experimentName, Map<String, String> values) {
 
     }
 }

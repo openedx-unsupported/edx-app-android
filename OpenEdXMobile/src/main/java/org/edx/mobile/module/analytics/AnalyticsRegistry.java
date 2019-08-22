@@ -420,9 +420,9 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackRemoteConfigs(Map<String, String> values) {
+    public void trackExperimentParams(String experimentName, Map<String, String> values) {
         for (Analytics service : services) {
-            service.trackRemoteConfigs(values);
+            service.trackExperimentParams(experimentName, values);
         }
     }
 }
