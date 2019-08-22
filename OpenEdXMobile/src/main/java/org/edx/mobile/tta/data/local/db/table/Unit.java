@@ -17,6 +17,10 @@ public class Unit {
 
     private String status;
 
+    private String programId;
+
+    private String sectionId;
+
     @NonNull
     public String getId() {
         return id;
@@ -48,5 +52,21 @@ public class Unit {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(String programId) {
+        this.programId = programId;
+    }
+
+    public String getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(String sectionId) {
+        this.sectionId = sectionId;
     }
 }

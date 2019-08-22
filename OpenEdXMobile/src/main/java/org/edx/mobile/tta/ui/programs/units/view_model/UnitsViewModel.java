@@ -20,6 +20,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
+import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -27,6 +28,8 @@ import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class UnitsViewModel extends BaseViewModel {
 
@@ -94,7 +97,7 @@ public class UnitsViewModel extends BaseViewModel {
                 List<ProgramFilter> removables = new ArrayList<>();
                 for (ProgramFilter filter: data){
                     if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains("schedule")){
+                            !filter.getShowIn().contains("units")){
                         removables.add(filter);
                     }
                 }
@@ -122,6 +125,7 @@ public class UnitsViewModel extends BaseViewModel {
     private void fetchData(){
 
         if (changesMade){
+            changesMade = false;
             skip = 0;
             unitsAdapter.reset(true);
             setUnitFilters();
@@ -210,6 +214,21 @@ public class UnitsViewModel extends BaseViewModel {
         } else {
             emptyVisible.set(false);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PeriodSavedEvent event){
+        changesMade = true;
+        allLoaded = false;
+        fetchData();
+    }
+
+    public void registerEventBus(){
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus(){
+        EventBus.getDefault().unregister(this);
     }
 
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {

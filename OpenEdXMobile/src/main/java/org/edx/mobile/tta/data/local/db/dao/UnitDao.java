@@ -12,8 +12,10 @@ import java.util.List;
 @Dao
 public interface UnitDao {
 
-    @Query("Select * from unit")
-    List<Unit> getAll();
+    @Query("Select * from unit " +
+            "where programId = :programId and sectionId = :sectionId " +
+            "limit :take offset (:take*:skip)")
+    List<Unit> getAll(String programId, String sectionId, int take, int skip);
 
     @Query("Select * from unit where id = :id")
     Unit getById(String id);

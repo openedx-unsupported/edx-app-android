@@ -259,8 +259,8 @@ public class TaAPI {
         return taService.getPrograms();
     }
 
-    public Call<List<Section>> getSections(){
-        return taService.getSections();
+    public Call<List<Section>> getSections(String programId){
+        return taService.getSections(programId);
     }
 
     public Call<List<ProgramFilter>> getProgramFilters(){

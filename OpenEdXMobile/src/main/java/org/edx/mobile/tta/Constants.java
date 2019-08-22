@@ -60,6 +60,7 @@ public class Constants {
     public static final String KEY_UNITS = "units";
     public static final String KEY_FILTERS = "filters";
     public static final String KEY_LANG = "lang";
+    public static final String KEY_PERIOD = "period";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

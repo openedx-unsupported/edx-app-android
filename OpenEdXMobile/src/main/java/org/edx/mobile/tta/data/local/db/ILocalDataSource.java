@@ -85,7 +85,7 @@ public interface ILocalDataSource {
     void insertPeriods(List<Period> periods);
     void insertPeriod(Period period);
 
-    List<Unit> getUnits();
+    List<Unit> getUnits(String programId, String sectionId, int take, int skip);
     Unit getUnit(String id);
     void insertUnits(List<Unit> units);
     void insertUnit(Unit unit);

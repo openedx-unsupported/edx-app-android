@@ -12,15 +12,18 @@ import java.util.List;
 
 public class GetSectionsTask extends Task<List<Section>> {
 
+    private String programId;
+
     @Inject
     private TaAPI taAPI;
 
-    public GetSectionsTask(Context context) {
+    public GetSectionsTask(Context context, String programId) {
         super(context);
+        this.programId = programId;
     }
 
     @Override
     public List<Section> call() throws Exception {
-        return taAPI.getSections().execute().body();
+        return taAPI.getSections(programId).execute().body();
     }
 }

@@ -13,6 +13,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
+import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
@@ -82,7 +83,7 @@ public class SplashActivity extends Activity {
 
             if (environment.getUserPrefs().getProfile() != null) {
                 //environment.getRouter().showMainDashboard(SplashActivity.this);
-                ActivityUtil.gotoPage(SplashActivity.this, LandingActivity.class);
+                ActivityUtil.gotoPage(SplashActivity.this, SelectProgramActivity.class);
             }
             else {
                 environment.getRouter().showLaunchScreen(SplashActivity.this);
@@ -116,8 +117,8 @@ public class SplashActivity extends Activity {
         }*/
     }
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        this.setIntent(intent);
-    }
+//    @Override
+//    public void onNewIntent(Intent intent) {
+//        this.setIntent(intent);
+//    }
 }
