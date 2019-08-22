@@ -27,7 +27,6 @@ public class PendingUsersFragment extends TaBaseFragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.t_fragment_pending_users, viewModel).getRoot();
-        viewModel.fetchUsers();
         return rootView;
     }
 }

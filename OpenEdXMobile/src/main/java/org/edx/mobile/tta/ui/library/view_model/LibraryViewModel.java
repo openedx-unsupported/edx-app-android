@@ -135,17 +135,21 @@ public class LibraryViewModel extends BaseViewModel {
         ArrayList<String> demolist = new ArrayList<String>();
         demolist.add("Schedule");
         demolist.add("Units");
-        demolist.add("Pending");
-        demolist.add(mDataManager.getLoginPrefs().getUsername() != null &&
-                mDataManager.getLoginPrefs().getUsername().equalsIgnoreCase("staff") ?
-                "Staff" : "Students");
+        if (mDataManager.getLoginPrefs().getUsername() != null &&
+                mDataManager.getLoginPrefs().getUsername().equals("staff")) {
+            demolist.add("Pending users");
+        }
+        demolist.add("Students");
         demolist.add("Discussion");
         demolist.add("Curriculum");
 
         try {
             fragments.add(new ScheduleFragment());
             fragments.add(new UnitsFragment());
-            fragments.add(new PendingUsersFragment());
+            if (mDataManager.getLoginPrefs().getUsername() != null &&
+                    mDataManager.getLoginPrefs().getUsername().equals("staff")) {
+                fragments.add(new PendingUsersFragment());
+            }
             fragments.add(new StudentsFragment());
 
             CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();

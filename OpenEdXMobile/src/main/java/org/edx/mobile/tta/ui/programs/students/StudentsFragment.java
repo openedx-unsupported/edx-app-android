@@ -25,8 +25,7 @@ public class StudentsFragment extends TaBaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.t_fragment_students, viewModel).getRoot();
-        viewModel.getFilters();
-        viewModel.getUsers();
+
         return rootView;
     }
 }
