@@ -6,20 +6,20 @@ import org.edx.mobile.user.ProfileImage;
 
 public class ProgramUser {
 
-    private String username;
+    public String username;
 
-    private String name;
+    public String name;
 
     @SerializedName("profile_image")
-    private ProfileImage profileImage;
+    public ProfileImage profileImage;
 
     @SerializedName("completed_units")
-    private long completedUnits;
+    public long completedUnits;
 
     @SerializedName("completed_hours")
-    private long completedHours;
+    public long completedHours;
 
     @SerializedName("pending_count")
-    private long pendingCount;
+    public long pendingCount;
 
 }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -217,6 +218,12 @@ public class StudentsViewModel extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
+                itemBinding.txtCompleted.setText(String.valueOf(model.completedUnits));
+                itemBinding.txtPending.setText(String.valueOf(model.pendingCount));
+
+                if(!mDataManager.getLoginPrefs().getUsername().equals("staff")){
+                    itemBinding.llStatus.setVisibility(View.GONE);
+                }
 
             }
         }
