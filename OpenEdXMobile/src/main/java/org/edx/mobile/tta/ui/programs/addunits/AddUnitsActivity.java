@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.programs.addunits;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.MenuItem;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.Constants;
@@ -27,6 +28,18 @@ public class AddUnitsActivity extends BaseVMActivity {
 
         viewModel = new AddUnitsViewModel(this, period);
         binding(R.layout.t_activity_add_units, viewModel);
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

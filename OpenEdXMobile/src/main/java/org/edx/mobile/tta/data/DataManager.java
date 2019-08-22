@@ -3812,7 +3812,26 @@ public class DataManager extends BaseRoboInjector {
     public void getPeriods(List<ProgramFilter> filters, String programId, String sectionId,
                            int take, int skip, OnResponseCallback<List<Period>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        List<Period> periods = new ArrayList<>();
+        if (skip >= 10){
+            callback.onFailure(new TaException("Periods not available"));
+            return;
+        }
+
+        for (int i = 0; i < take; i++){
+            Period period = new Period();
+            period.setTotalCount(5);
+            period.setUsername(loginPrefs.getUsername());
+            period.setCode("PC_" + (take*skip + i + 1));
+            period.setCompletedCount(i%5);
+            period.setId(take*skip + i);
+            period.setTitle("Period " + (take*skip + i + 1));
+            period.setWeeks(4);
+            periods.add(period);
+        }
+        callback.onSuccess(periods);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new GetPeriodsTask(context, filters, programId, sectionId, take, skip){
                 @Override
@@ -3844,7 +3863,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }
+        }*/
 
     }
 
@@ -4082,7 +4101,11 @@ public class DataManager extends BaseRoboInjector {
     public void createPeriod(String programId, String sectionId, String lang,
                              OnResponseCallback<SuccessResponse> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        SuccessResponse response = new SuccessResponse();
+        response.setSuccess(true);
+        callback.onSuccess(response);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new CreatePeriodTask(context, programId, sectionId, lang){
                 @Override
@@ -4104,7 +4127,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }
+        }*/
 
     }
 

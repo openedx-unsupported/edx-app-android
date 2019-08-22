@@ -5,6 +5,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "period")
@@ -122,5 +124,10 @@ public class Period implements Parcelable {
         dest.writeLong(completedCount);
         dest.writeLong(totalCount);
         dest.writeString(username);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (obj instanceof Period) && (((Period) obj).id == id);
     }
 }
