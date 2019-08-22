@@ -1,0 +1,65 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+       <variable
+           name="user"
+           type="org.edx.mobile.tta.data.local.db.table.User" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        app:cardCornerRadius="4dp"
+        android:background="@color/white"
+        app:cardElevation="@dimen/_16px"
+        android:shadowColor="@color/gray_1"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="@dimen/_14px"
+        android:layout_marginBottom="@dimen/_30px">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:id="@+id/user_image"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitXY"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_name"
+                android:textSize="12sp"
+                android:textColor="@color/gray_5"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:fontFamily="@font/hind_medium"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:text="@{user.name}"/>
+
+        </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            app:fabSize="mini"
+            android:textSize="@dimen/_16px_sp"
+            android:textColor="@color/white"
+            android:contentDescription="@string/submit" />
+    </android.support.design.widget.CoordinatorLayout>
+    </android.support.v7.widget.CardView>
+
+</layout>

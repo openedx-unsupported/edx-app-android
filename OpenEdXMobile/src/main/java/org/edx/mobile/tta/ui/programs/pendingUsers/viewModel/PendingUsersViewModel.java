@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.programs.students.view_model;
+package org.edx.mobile.tta.ui.programs.pendingUsers.viewModel;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
@@ -14,7 +14,9 @@ import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.TFragmentPendingUsersBinding;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
+import org.edx.mobile.databinding.TRowPendingFilterBinding;
 import org.edx.mobile.databinding.TRowStudentsGridBinding;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
@@ -27,18 +29,17 @@ import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentsViewModel extends BaseViewModel {
+public class PendingUsersViewModel extends BaseViewModel {
 
-    public RecyclerView.LayoutManager layoutManager;
-    public RecyclerView.LayoutManager filterLayoutManager;
-    public List<ProgramUser> users;
+    public List<ProgramFilter> filterList;
+    public List<ProgramUser> programUserList;
+    public FiltersAdapter filtersAdapter;
+    public UsersAdapter usersAdapter;
 
     public List<ProgramFilter> allFilters;
     public List<ProgramFilter> filters;
     public List<ProgramFilterTag> tags;
 
-    public FiltersAdapter filtersAdapter;
-    public UsersAdapter usersAdapter;
 
     private static final int TAKE = 0;
     private static final int SKIP = 10;
@@ -50,22 +51,17 @@ public class StudentsViewModel extends BaseViewModel {
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
 
+    public RecyclerView.LayoutManager filterLayoutManager;
+    public RecyclerView.LayoutManager layoutManager;
 
-    public StudentsViewModel(Context context, TaBaseFragment fragment) {
+    public PendingUsersViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
         usersAdapter = new UsersAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        layoutManager = new GridLayoutManager(mActivity, 2);
-        filterLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-
         take = TAKE;
+
         skip = SKIP;
 
         mActivity.showLoading();
@@ -74,28 +70,12 @@ public class StudentsViewModel extends BaseViewModel {
     }
 
 
-    public void getUsers() {
-        mDataManager.getUsers(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(),
-                take, skip, new OnResponseCallback<List<ProgramUser>>() {
-                    @Override
-                    public void onSuccess(List<ProgramUser> data) {
-                        mActivity.hideLoading();
-                        if (data.size() < take) {
-                            allLoaded = true;
-                        }
-                        populateStudents(data);
-                        usersAdapter.setLoadingDone();
-                    }
+    @Override
+    public void onResume() {
+        super.onResume();
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        allLoaded = true;
-                        usersAdapter.setLoadingDone();
-                        toggleEmptyVisibility();
-                    }
-                });
+        filterLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new GridLayoutManager(mActivity, 2);
 
     }
 
@@ -114,8 +94,7 @@ public class StudentsViewModel extends BaseViewModel {
             usersAdapter.reset(true);
             setFilters();
         }
-
-        getUsers();
+    fetchUsers();
 
     }
 
@@ -142,6 +121,7 @@ public class StudentsViewModel extends BaseViewModel {
                 pf.setOrder(filter.getOrder());
                 pf.setShowIn(filter.getShowIn());
                 pf.setTags(selectedTags);
+
                 filters.add(pf);
             }
         }
@@ -180,31 +160,58 @@ public class StudentsViewModel extends BaseViewModel {
 
     }
 
-    private void populateStudents(List<ProgramUser> data) {
+
+    public void fetchUsers() {
+        mDataManager.getUsers(mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(),
+                take, skip, new OnResponseCallback<List<ProgramUser>>() {
+                    @Override
+                    public void onSuccess(List<ProgramUser> data) {
+                        mActivity.hideLoading();
+                        if (data.size() < take) {
+                            allLoaded = true;
+                        }
+                        populateUsers(data);
+                        usersAdapter.setLoadingDone();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+                        allLoaded = true;
+                        usersAdapter.setLoadingDone();
+                        toggleEmptyVisibility();
+                    }
+                });
+    }
+
+
+    private void populateUsers(List<ProgramUser> data) {
         boolean newItemsAdded = false;
         int n = 0;
         for (ProgramUser user : data) {
-            if (!users.contains(user)) {
-                users.add(user);
+            if (!programUserList.contains(user)) {
+                programUserList.add(user);
                 newItemsAdded = true;
                 n++;
             }
         }
 
         if (newItemsAdded) {
-            usersAdapter.notifyItemRangeInserted(users.size() - n, n);
+            usersAdapter.notifyItemRangeInserted(programUserList.size() - n, n);
         }
 
         toggleEmptyVisibility();
     }
 
     private void toggleEmptyVisibility() {
-        if (users == null || users.isEmpty()) {
+        if (programUserList == null || programUserList.isEmpty()) {
             emptyVisible.set(true);
         } else {
             emptyVisible.set(false);
         }
     }
+
 
     public class UsersAdapter extends MxInfiniteAdapter<ProgramUser> {
 
@@ -216,7 +223,7 @@ public class StudentsViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull ProgramUser model,
                            @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
             if (binding instanceof TRowStudentsGridBinding) {
-                TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
+                TFragmentPendingUsersBinding teacherBinding = (TFragmentPendingUsersBinding) binding;
 
             }
         }
@@ -255,7 +262,7 @@ public class StudentsViewModel extends BaseViewModel {
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
-                    getUsers();
+                    fetchUsers();
                 });
             }
         }

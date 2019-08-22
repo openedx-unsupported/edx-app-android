@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <data>
+        <variable
+            name="period"
+            type="org.edx.mobile.tta.data.local.db.table.Period" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="170dp"
@@ -38,7 +45,7 @@
                     android:textSize="16sp"
                     android:textColor="@color/gray_5"
                     android:fontFamily="@font/hind_medium"
-                    android:text="Period"/>
+                    android:text="@{period.title}"/>
 
                 <TextView
                     android:id="@+id/tv_scheduled_date"
@@ -78,7 +85,7 @@
                 android:fontFamily="@font/hind_medium"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="Program Code" />
+                android:text="@{period.code}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,8 +111,7 @@
                     android:background="@color/status_completed"
                     android:gravity="center"
                     android:padding="12dp"
-                    android:fontFamily="@font/hind_medium"
-                    android:text="5" />
+                    android:fontFamily="@font/hind_medium" />
 
 
             </LinearLayout>

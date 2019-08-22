@@ -3,53 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import
-            type="android.view.View"/>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel" />
+            type="org.edx.mobile.tta.ui.programs.pendingUsers.viewModel.PendingUsersViewModel" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal"
+            android:visibility="@{viewModel.filtersVisible ? View.VISIBLE : View.GONE}">
 
-            <LinearLayout
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:animateLayoutChanges="true"
-                android:orientation="horizontal"
-                android:visibility="@{viewModel.filtersVisible ? View.VISIBLE : View.GONE}">
-
-                <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:mx_itemLayout="@layout/t_row_filter_drop_down"
-                    app:mx_itemLimit="100"
-                    app:mx_moreButtonVisible="false"
-                    app:mx_titleVisible="false" />
-            </LinearLayout>
-
+                app:mx_itemLayout="@layout/t_row_filter_drop_down"
+                app:mx_itemLimit="100"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleVisible="false" />
+        </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.maurya.mx.mxlib.view.MxRecyclerView
-                infinite_recycler_adapter="@{viewModel.periodAdapter}"
-                layout_manager="@{viewModel.gridLayoutManager}"
+                infinite_recycler_adapter="@{viewModel.usersAdapter}"
+                layout_manager="@{viewModel.layoutManager}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                app:mx_itemLayout="@layout/t_row_schedule" />
+                app:mx_itemLayout="@layout/t_row_pending_user_grid" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,18 +72,7 @@
             </LinearLayout>
 
         </FrameLayout>
-        </LinearLayout>
+    </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:contentDescription="@string/submit"
-            android:src="@android:drawable/ic_input_add"
-            android:tint="@color/white"
-            android:onClick="@{() -> viewModel.addPeriod()}"/>
 
-    </android.support.design.widget.CoordinatorLayout>
 </layout>

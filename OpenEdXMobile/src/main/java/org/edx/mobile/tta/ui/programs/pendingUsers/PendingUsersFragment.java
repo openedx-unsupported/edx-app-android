@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.programs.students;
+package org.edx.mobile.tta.ui.programs.pendingUsers;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,24 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
-import org.edx.mobile.tta.ui.programs.students.view_model.StudentsViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
+import org.edx.mobile.tta.ui.programs.pendingUsers.viewModel.PendingUsersViewModel;
 
-public class StudentsFragment extends TaBaseFragment {
-    private StudentsViewModel viewModel;
+public class PendingUsersFragment extends TaBaseFragment{
+    public static final String TAG = LibraryFragment.class.getCanonicalName();
+
+    private PendingUsersViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new StudentsViewModel(getActivity(), this);
+        viewModel = new PendingUsersViewModel(getActivity(), this);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = binding(inflater, container, R.layout.t_fragment_students, viewModel).getRoot();
-
+        View rootView = binding(inflater, container, R.layout.t_fragment_pending_users, viewModel).getRoot();
         return rootView;
     }
 }

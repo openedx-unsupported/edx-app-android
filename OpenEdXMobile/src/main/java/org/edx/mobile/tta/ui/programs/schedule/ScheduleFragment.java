@@ -1,5 +1,6 @@
 package org.edx.mobile.tta.ui.programs.schedule;
 
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,8 +14,6 @@ import org.edx.mobile.tta.ui.library.LibraryFragment;
 import org.edx.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel;
 
 public class ScheduleFragment extends TaBaseFragment {
-    public static final String TAG = LibraryFragment.class.getCanonicalName();
-
     public ScheduleViewModel viewModel;
 
     @Override
@@ -26,8 +25,10 @@ public class ScheduleFragment extends TaBaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = binding(inflater, container, R.layout.t_fragment_schedules, viewModel).getRoot();
+//        View rootView = binding(inflater, container, R.layout.t_fragment_schedules, viewModel).getRoot();
+        ViewDataBinding binding = binding(inflater, container, R.layout.t_fragment_schedules, viewModel);
+//        viewModel = new ScheduleViewModel(getActivity(), this, binding);
 
-        return rootView;
+        return binding.getRoot();
     }
 }
