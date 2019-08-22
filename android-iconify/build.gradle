@@ -7,6 +7,9 @@ android {
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         consumerProguardFiles 'proguard-rules.txt'
+
+        //Added for x64 bit architecture support
+        ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
     }
 
     compileOptions {
