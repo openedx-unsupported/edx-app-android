@@ -5,6 +5,7 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -91,9 +92,17 @@ public class AddUnitsViewModel extends BaseViewModel {
             unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(item));
         });
 
-        mActivity.showLoading();
-        fetchFilters();
-        fetchData();
+        if (this.period != null){
+            mActivity.showLoading();
+            fetchFilters();
+            fetchData();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        layoutManager = new LinearLayoutManager(mActivity);
     }
 
     private void fetchFilters() {
@@ -107,7 +116,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                             !filter.getShowIn().contains("period")){
                         removables.add(filter);
                     }
-                    if (filter.getInternalName().equalsIgnoreCase("periods")){
+                    if (filter.getInternalName().equalsIgnoreCase("period")){
                         ProgramFilterTag tag = new ProgramFilterTag();
                         tag.setDisplayName(period.getTitle());
                         tag.setInternalName(period.getCode());
@@ -144,6 +153,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     private void fetchData(){
 
         if (changesMade){
+            changesMade = false;
             isUnitModePeriod = true;
             skip = 0;
             unitsAdapter.reset(true);
@@ -204,6 +214,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                             mActivity.hideLoading();
                             if (data.size() < take) {
                                 isUnitModePeriod = false;
+                                skip = -1;
                             }
 
                             for (Unit unit: data){
@@ -222,6 +233,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                             isUnitModePeriod = false;
 //                            unitsAdapter.setLoadingDone();
 //                            toggleEmptyVisibility();
+                            skip = 0;
                             fetchUnits();
                         }
                     });
@@ -281,6 +293,9 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     public void savePeriod(){
+        if (period == null){
+            return;
+        }
         mActivity.showLoading();
 
         List<String> ids = new ArrayList<>();

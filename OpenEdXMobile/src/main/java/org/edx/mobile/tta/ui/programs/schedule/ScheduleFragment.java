@@ -20,6 +20,7 @@ public class ScheduleFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ScheduleViewModel(getActivity(), this);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -30,5 +31,11 @@ public class ScheduleFragment extends TaBaseFragment {
 //        viewModel = new ScheduleViewModel(getActivity(), this, binding);
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

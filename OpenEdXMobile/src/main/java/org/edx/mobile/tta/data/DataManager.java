@@ -86,6 +86,7 @@ import org.edx.mobile.tta.data.model.profile.FollowStatus;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
+import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
@@ -3460,7 +3461,17 @@ public class DataManager extends BaseRoboInjector {
 
     public void getPrograms(OnResponseCallback<List<Program>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        List<Program> programs = new ArrayList<>();
+        for (int i = 0; i < 5; i++){
+            Program program = new Program();
+            program.setUsername(loginPrefs.getUsername());
+            program.setId("program" + i);
+            program.setTitle("Program " + (i+1));
+            programs.add(program);
+        }
+        callback.onSuccess(programs);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new GetProgramsTask(context){
                 @Override
@@ -3492,7 +3503,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             getProgramsFromLocal(callback, new NoConnectionException(context));
-        }
+        }*/
 
     }
 
@@ -3523,11 +3534,21 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getSections(OnResponseCallback<List<Section>> callback){
+    public void getSections(String programId, OnResponseCallback<List<Section>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        List<Section> sections = new ArrayList<>();
+        for (int i = 0; i < 5; i++){
+            Section section = new Section();
+            section.setUsername(loginPrefs.getUsername());
+            section.setId("section" + i + "_" + programId);
+            section.setTitle("Section " + (i+1) + " in " + programId);
+            sections.add(section);
+        }
+        callback.onSuccess(sections);
 
-            new GetSectionsTask(context){
+        /*if (NetworkUtil.isConnected(context)) {
+
+            new GetSectionsTask(context, programId){
                 @Override
                 protected void onSuccess(List<Section> sections) throws Exception {
                     super.onSuccess(sections);
@@ -3557,7 +3578,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             getSectionsFromLocal(callback, new NoConnectionException(context));
-        }
+        }*/
 
     }
 
@@ -3590,7 +3611,153 @@ public class DataManager extends BaseRoboInjector {
 
     public void getProgramFilters(OnResponseCallback<List<ProgramFilter>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        List<ProgramFilter> filters = new ArrayList<>();
+        ProgramFilter filter;
+        ProgramFilterTag tag;
+        List<ProgramFilterTag> tags;
+
+        filter = new ProgramFilter();
+        filter.setDisplayName("Type");
+        filter.setInternalName("type");
+        filter.setId(1);
+        filter.setOrder(1);
+        filter.setShowIn(Arrays.asList("schedule", "units", "period"));
+
+        tags = new ArrayList<>();
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Study Task");
+        tag.setInternalName("study_task");
+        tag.setId(1);
+        tag.setOrder(1);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Experience");
+        tag.setInternalName("experience");
+        tag.setId(2);
+        tag.setOrder(2);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Course");
+        tag.setInternalName("course");
+        tag.setId(3);
+        tag.setOrder(3);
+        tags.add(tag);
+
+        filter.setTags(tags);
+        filters.add(filter);
+
+        filter = new ProgramFilter();
+        filter.setDisplayName("Session");
+        filter.setInternalName("session");
+        filter.setId(2);
+        filter.setOrder(2);
+        filter.setShowIn(Arrays.asList("schedule", "period"));
+
+        tags = new ArrayList<>();
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Session 1");
+        tag.setInternalName("session1");
+        tag.setId(11);
+        tag.setOrder(11);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Session 2");
+        tag.setInternalName("session2");
+        tag.setId(22);
+        tag.setOrder(22);
+        tags.add(tag);
+
+        filter.setTags(tags);
+        filters.add(filter);
+
+        filter = new ProgramFilter();
+        filter.setDisplayName("Language");
+        filter.setInternalName("lang");
+        filter.setId(3);
+        filter.setOrder(3);
+        filter.setShowIn(Arrays.asList("schedule", "units", "period"));
+
+        tags = new ArrayList<>();
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("English");
+        tag.setInternalName("en");
+        tag.setId(111);
+        tag.setOrder(111);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Hindi");
+        tag.setInternalName("hi");
+        tag.setId(222);
+        tag.setOrder(222);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Tamil");
+        tag.setInternalName("ta");
+        tag.setId(333);
+        tag.setOrder(333);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Telugu");
+        tag.setInternalName("te");
+        tag.setId(444);
+        tag.setOrder(444);
+        tags.add(tag);
+
+        filter.setTags(tags);
+        filters.add(filter);
+
+        filter = new ProgramFilter();
+        filter.setDisplayName("Period");
+        filter.setInternalName("period");
+        filter.setId(4);
+        filter.setOrder(4);
+        filter.setShowIn(Arrays.asList("units"));
+
+        tags = new ArrayList<>();
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Period 1");
+        tag.setInternalName("period1");
+        tag.setId(1111);
+        tag.setOrder(1111);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Period 2");
+        tag.setInternalName("period2");
+        tag.setId(2222);
+        tag.setOrder(2222);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Period 3");
+        tag.setInternalName("period3");
+        tag.setId(3333);
+        tag.setOrder(3333);
+        tags.add(tag);
+
+        tag = new ProgramFilterTag();
+        tag.setDisplayName("Period 4");
+        tag.setInternalName("period4");
+        tag.setId(4444);
+        tag.setOrder(4444);
+        tags.add(tag);
+
+        filter.setTags(tags);
+        filters.add(filter);
+
+        callback.onSuccess(filters);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new GetProgramFiltersTask(context){
                 @Override
@@ -3627,7 +3794,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             getProgramFiltersFromLocal(callback, new NoConnectionException(context));
-        }
+        }*/
 
     }
 
@@ -3645,7 +3812,26 @@ public class DataManager extends BaseRoboInjector {
     public void getPeriods(List<ProgramFilter> filters, String programId, String sectionId,
                            int take, int skip, OnResponseCallback<List<Period>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        List<Period> periods = new ArrayList<>();
+        if (skip >= 10){
+            callback.onFailure(new TaException("Periods not available"));
+            return;
+        }
+
+        for (int i = 0; i < take; i++){
+            Period period = new Period();
+            period.setTotalCount(5);
+            period.setUsername(loginPrefs.getUsername());
+            period.setCode("PC_" + (take*skip + i + 1));
+            period.setCompletedCount(i%5);
+            period.setId(take*skip + i);
+            period.setTitle("Period " + (take*skip + i + 1));
+            period.setWeeks(4);
+            periods.add(period);
+        }
+        callback.onSuccess(periods);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new GetPeriodsTask(context, filters, programId, sectionId, take, skip){
                 @Override
@@ -3677,14 +3863,32 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }
+        }*/
 
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
                            int take, int skip, OnResponseCallback<List<Unit>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        if (skip >= 10){
+            callback.onFailure(new TaException("Units not available"));
+            return;
+        }
+
+        List<Unit> units = new ArrayList<>();
+        for (int i = 0; i < take; i++){
+            Unit unit = new Unit();
+            unit.setSectionId(sectionId);
+            unit.setProgramId(programId);
+            unit.setCode("NeTT_" + (take*skip + i + 1));
+            unit.setId("unit_" + (take*skip + i + 1));
+            unit.setTitle("This is Unit number " + (take*skip + i + 1));
+            unit.setStatus("completed");
+            units.add(unit);
+        }
+        callback.onSuccess(units);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new GetUnitsTask(context, filters, programId, sectionId, take, skip){
                 @Override
@@ -3695,6 +3899,17 @@ public class DataManager extends BaseRoboInjector {
                         return;
                     }
 
+                    for (Unit unit: units){
+                        unit.setProgramId(programId);
+                        unit.setSectionId(sectionId);
+                    }
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            mLocalDataSource.insertUnits(units);
+                        }
+                    }.start();
+
                     callback.onSuccess(units);
                 }
 
@@ -3706,14 +3921,32 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }
+        }*/
 
     }
 
     public void getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText,
                          int take, int skip, OnResponseCallback<List<Unit>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        if (skip >= 20){
+            callback.onFailure(new TaException("Units not available"));
+            return;
+        }
+
+        List<Unit> units = new ArrayList<>();
+        for (int i = 0; i < take; i++){
+            Unit unit = new Unit();
+            unit.setSectionId(sectionId);
+            unit.setProgramId(programId);
+            unit.setCode("NeTT_all_" + (take*skip + i + 1));
+            unit.setId("unit_all_" + (take*skip + i + 1));
+            unit.setTitle("This is all Unit number " + (take*skip + i + 1));
+            unit.setStatus("viewing");
+            units.add(unit);
+        }
+        callback.onSuccess(units);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new GetAllUnitsTask(context, filters, programId, sectionId, searchText, take, skip){
                 @Override
@@ -3724,18 +3957,57 @@ public class DataManager extends BaseRoboInjector {
                         return;
                     }
 
+                    for (Unit unit: units){
+                        unit.setProgramId(programId);
+                        unit.setSectionId(sectionId);
+                    }
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            mLocalDataSource.insertUnits(units);
+                        }
+                    }.start();
+
                     callback.onSuccess(units);
                 }
 
                 @Override
                 protected void onException(Exception ex) {
-                    callback.onFailure(ex);
+                    getAllUnitsFromLocal(programId, sectionId, take, skip, callback, ex);
                 }
             }.execute();
 
         } else {
-            callback.onFailure(new NoConnectionException(context));
-        }
+            getAllUnitsFromLocal(programId, sectionId, take, skip, callback, new NoConnectionException(context));
+        }*/
+
+    }
+
+    private void getAllUnitsFromLocal(String programId, String sectionId, int take, int skip,
+                                      OnResponseCallback<List<Unit>> callback, Exception e){
+
+        new Task<List<Unit>>(context) {
+            @Override
+            public List<Unit> call() {
+                return mLocalDataSource.getUnits(programId, sectionId, take, skip);
+            }
+
+            @Override
+            protected void onSuccess(List<Unit> units) throws Exception {
+                super.onSuccess(units);
+                if (units == null || units.isEmpty()){
+                    callback.onFailure(e);
+                    return;
+                }
+
+                callback.onSuccess(units);
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(e);
+            }
+        }.execute();
 
     }
 
@@ -3829,7 +4101,11 @@ public class DataManager extends BaseRoboInjector {
     public void createPeriod(String programId, String sectionId, String lang,
                              OnResponseCallback<SuccessResponse> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        SuccessResponse response = new SuccessResponse();
+        response.setSuccess(true);
+        callback.onSuccess(response);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new CreatePeriodTask(context, programId, sectionId, lang){
                 @Override
@@ -3851,13 +4127,17 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }
+        }*/
 
     }
 
     public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        SuccessResponse response = new SuccessResponse();
+        response.setSuccess(true);
+        callback.onSuccess(response);
+
+        /*if (NetworkUtil.isConnected(context)) {
 
             new SavePeriodTask(context, periodId, unitIds){
                 @Override
@@ -3879,7 +4159,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }
+        }*/
 
     }
 

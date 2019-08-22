@@ -23,6 +23,7 @@
             app:mx_moreButtonVisible="false"
             app:mx_itemLayout="@layout/t_row_filter_drop_down"
             app:mx_itemLimit="100"
+            finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
 
         <FrameLayout

@@ -299,6 +299,7 @@ public class DropDownFilterView extends FrameLayout
             FilterItem item = getItem(position);
             textView = (TextView) view;
             textView.setText(item.name);
+            textView.setTextColor(ContextCompat.getColor(getContext(), item.selectedColor));
             return view;
         }
 
@@ -366,6 +367,7 @@ public class DropDownFilterView extends FrameLayout
             textView.setText(item.name);
 
             if (item.isSelected){
+                textView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 if (position == 0){
                     view.setBackgroundResource(R.drawable.t_background_drop_down_top);
                 } else if (position == filterItems.size() - 1){
@@ -374,6 +376,7 @@ public class DropDownFilterView extends FrameLayout
                     view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_cyan));
                 }
             } else {
+                textView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_cyan));
                 view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent));
             }
 

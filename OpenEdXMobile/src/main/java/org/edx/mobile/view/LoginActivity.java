@@ -30,6 +30,7 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.Config;
@@ -285,7 +286,7 @@ public class LoginActivity
             environment.getRouter().showMainDashboard(this);
         }*/
 
-        ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class,
+        ActivityUtil.gotoPage(LoginActivity.this, SelectProgramActivity.class,
                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     }
 

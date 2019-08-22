@@ -198,7 +198,7 @@ public interface TaService {
     Call<List<Program>> getPrograms();
 
     @GET(ApiConstants.URL_MX_GET_SECTIONS)
-    Call<List<Section>> getSections();
+    Call<List<Section>> getSections(@Query(Constants.KEY_PROGRAM_ID) String programId);
 
     @GET(ApiConstants.URL_MX_GET_PROGRAM_FILTERS)
     Call<List<ProgramFilter>> getProgramFilters();

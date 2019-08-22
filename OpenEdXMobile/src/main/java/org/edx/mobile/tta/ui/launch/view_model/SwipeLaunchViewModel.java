@@ -13,6 +13,7 @@ import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.launch.LaunchFragment;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
+import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.view.SplashActivity;
 
@@ -62,7 +63,7 @@ public class SwipeLaunchViewModel extends BaseViewModel {
 
         if (mDataManager.getEdxEnvironment().getUserPrefs().getProfile() != null) {
             //environment.getRouter().showMainDashboard(SplashActivity.this);
-            ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+            ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class);
         }
         else {
             mDataManager.getEdxEnvironment().getRouter().showLaunchScreen(mActivity);

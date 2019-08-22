@@ -111,7 +111,8 @@
                     android:background="@color/status_completed"
                     android:gravity="center"
                     android:padding="12dp"
-                    android:fontFamily="@font/hind_medium" />
+                    android:fontFamily="@font/hind_medium"
+                    android:text="@{String.valueOf(period.totalCount)}"/>
 
 
             </LinearLayout>

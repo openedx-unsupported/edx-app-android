@@ -281,8 +281,8 @@ public class LocalDataSource implements ILocalDataSource {
     }
 
     @Override
-    public List<Unit> getUnits() {
-        return mAppDatabase.unitDao().getAll();
+    public List<Unit> getUnits(String programId, String sectionId, int take, int skip) {
+        return mAppDatabase.unitDao().getAll(programId, sectionId, take, skip);
     }
 
     @Override

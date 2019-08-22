@@ -21,6 +21,7 @@ public class UnitsFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new UnitsViewModel(getActivity(), this);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -29,5 +30,11 @@ public class UnitsFragment extends TaBaseFragment {
         View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

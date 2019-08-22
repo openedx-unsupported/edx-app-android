@@ -127,13 +127,14 @@ public class FormSpinner extends LinearLayout {
 
     public void setMandatory(boolean isMandatory) {
         this.isMandatory = isMandatory;
-        if (isMandatory && label != null) {
-            mBinding.spinnerLabel.append(getResources().getString(R.string.asterisk_red));
-        }
     }
 
-    public boolean isMandatory() {
-        return isMandatory;
+    public void setVisibility(int visibility){
+        mBinding.getRoot().setVisibility(visibility);
+    }
+
+    public boolean isVisible(){
+        return mBinding.getRoot().isShown();
     }
 
     public boolean validate() {
