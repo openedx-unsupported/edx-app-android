@@ -142,6 +142,9 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:18.0.0"
     // Add the dependency for the Performance Monitoring library
     implementation 'com.google.firebase:firebase-perf:17.0.2'
+    // Firebase remote config
+    implementation 'com.google.firebase:firebase-config:16.5.0'
+
     // Add the In-App Messaging dependency:
     implementation('com.google.firebase:firebase-inappmessaging-display:17.2.0') {
         // This exclusion has been added due to a conflict between this library and Roboguice

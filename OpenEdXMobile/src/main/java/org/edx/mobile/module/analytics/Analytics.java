@@ -401,6 +401,15 @@ public interface Analytics {
      */
     void trackDownloadToSdCardSwitchOff();
 
+    /**
+     * Track the parameters relevant to the experiment of Firebase Remote Configs.
+     * Ref: https://openedx.atlassian.net/browse/LEARNER-7394
+     *
+     * @param experimentName
+     * @param values any custom key-value pairs we need to send with event
+     */
+    void trackExperimentParams(String experimentName, Map<String, String> values);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -464,6 +473,11 @@ public interface Analytics {
         String REMAINING_DOWNLOADABLE_VIDEOS = "remaining_downloadable_videos";
         // Subjects
         String SUBJECT_ID = "subject_id";
+        // Firebase Remote Configs keys for A/A test
+        // Ref: https://openedx.atlassian.net/browse/LEARNER-7394
+        String EXPERIMENT = "experiment";
+        String GROUP = "group";
+        String AA_EXPERIMENT = "aa_experiment";
     }
 
     interface Values {
@@ -663,6 +677,9 @@ public interface Analytics {
         // Settings events
         String DOWNLOAD_TO_SD_CARD_ON = "Download to sd-card On";
         String DOWNLOAD_TO_SD_CARD_OFF = "Download to sd-card Off";
+        // Firebase Remote Configs Event name for A/A test
+        // Ref: https://openedx.atlassian.net/browse/LEARNER-7394
+        String MOBILE_EXPERIMENT_EVALUATED = "Mobile Experiment Evaluated";
     }
 
     /**

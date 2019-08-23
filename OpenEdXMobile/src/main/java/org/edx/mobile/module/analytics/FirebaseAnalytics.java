@@ -584,4 +584,11 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.DOWNLOAD_TO_SD_CARD_OFF, Values.DOWNLOAD_TO_SD_CARD_SWITCH_OFF);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackExperimentParams(String experimentName, Map<String, String> values) {
+        final FirebaseEvent event = new FirebaseEvent(experimentName);
+        event.putMap(values);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

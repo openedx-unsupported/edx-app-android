@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -65,7 +66,9 @@ import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -164,7 +167,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         restore(bundle);
         initListView(view);
         fetchCourseComponent();
-
+        // Track CourseOutline for A/A test
+        trackAATestCourseOutline();
         return view;
     }
 
@@ -211,6 +215,24 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         loadingIndicator.setVisibility(View.VISIBLE);
         // Prepare the loader. Either re-connect with an existing one or start a new one.
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    private void trackAATestCourseOutline() {
+        if (!isVideoMode &&
+                environment.getConfig().getFirebaseConfig().isEnabled()) {
+            final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+            firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
+                final String group = firebaseRemoteConfig.getString(Analytics.Keys.AA_EXPERIMENT);
+                if (!TextUtils.isEmpty(group)) {
+                    final Map<String, String> values = new HashMap<>();
+                    values.put(Analytics.Keys.EXPERIMENT, Analytics.Keys.AA_EXPERIMENT);
+                    values.put(Analytics.Keys.GROUP, group);
+                    values.put(Analytics.Keys.USER_ID, environment.getLoginPrefs().getCurrentUserProfile().id.toString());
+                    values.put(Analytics.Keys.COURSE_ID, courseData.getCourse().getId());
+                    environment.getAnalyticsRegistry().trackExperimentParams(Analytics.Events.MOBILE_EXPERIMENT_EVALUATED, values);
+                }
+            });
+        }
     }
 
     @NonNull
