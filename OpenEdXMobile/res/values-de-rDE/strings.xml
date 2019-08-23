@@ -360,6 +360,10 @@ Kontrollieren Sie auch Ihren Spam-Ordner.</string>
   <string name="assessment_only_on_youtube">Dieses Video kann nur in YouTube abgespielt werden.</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">Video in YouTube anschauen</string>
+  <!-- Label showing that you need to update youtube in order to watch the video -->
+  <string name="assessment_needed_updating_youtube">Für dieses Video musst du die YouTube-App aktualisieren.</string>
+  <!-- Label for button to update youtube -->
+  <string name="assessment_update_youtube">Aktualisiere YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">Downloads</string>

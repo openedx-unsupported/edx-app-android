@@ -412,7 +412,7 @@
     <!-- Label showing that you need to update youtube in order to watch the video -->
     <string name="assessment_needed_updating_youtube">This video requires that you update the YouTube app.</string>
     <!-- Label for button to update youtube -->
-    <string name="assessment_update_youtube">Update Youtube</string>
+    <string name="assessment_update_youtube">Update YouTube</string>
 
     <!-- Video List -->
     <!-- Title of video download screen -->
