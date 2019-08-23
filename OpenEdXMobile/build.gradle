@@ -24,11 +24,13 @@ buildscript {
 }
 
 apply plugin: 'edxapp'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 edx {
     platform = ANDROID
 }
 
-apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
 apply from: 'jacoco.gradle'
@@ -243,6 +245,7 @@ dependencies {
     androidTestImplementation ('org.mockito:mockito-core:1.10.19'){
         exclude group: 'org.hamcrest'
     }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
 }
 
 configurations {
