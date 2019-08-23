@@ -485,11 +485,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 when(videoData2.encodedVideos.getYoutubeVideoInfo())
                         .thenReturn(Mockito.mock(VideoInfo.class));
                 when(youtubeVideosModel.getData()).thenReturn(videoData2);
-                if (config.getEmbeddedYoutubeConfig().isYoutubeEnabled()) {
-                    argsList.add(new Object[] {youtubeVideosModel, CourseUnitYoutubeVideoFragment.class, true});
-                } else {
-                    argsList.add(new Object[] {youtubeVideosModel, CourseUnitOnlyOnYoutubeFragment.class, true});
-                }
+                argsList.add(new Object[] {youtubeVideosModel, CourseUnitOnlyOnYoutubeFragment.class, true});
 
                 DiscussionBlockModel discussionModel = Mockito.mock(DiscussionBlockModel.class);
                 argsList.add(new Object[] {discussionModel, CourseUnitDiscussionFragment.class, true});

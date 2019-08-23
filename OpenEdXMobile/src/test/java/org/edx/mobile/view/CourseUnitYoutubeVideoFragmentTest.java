@@ -3,7 +3,9 @@ package org.edx.mobile.view;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.gson.JsonElement;
@@ -23,6 +25,7 @@ import java.io.IOException;
 
 import roboguice.activity.RoboFragmentActivity;
 
+import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -44,7 +47,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
         CourseStructureV1Model model;
         CourseComponent courseComponent;
         try {
-            model = executeStrict(courseAPI.getCourseStructure(courseId));
+            model = executeStrict(courseAPI.getCourseStructure(config.getApiUrlVersionConfig().getBlocksApiVersion(), courseId));
             courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -60,6 +63,8 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
         assertNotEquals(orientation, config.orientation);
         config.orientation = orientation;
         fragment.onConfigurationChanged(config);
+        View view = fragment.getView();
+        boolean isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         View playerContainer = view.findViewById(R.id.player_container);
         if (playerContainer != null) {

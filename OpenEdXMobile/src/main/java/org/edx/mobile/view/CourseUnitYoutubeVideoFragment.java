@@ -5,9 +5,11 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -50,7 +52,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
      * so this allow to play a video when the app comes to foreground from background
      * allowFullScreen allow to know if the user has exited from fullscreen on landscape mode a keep the normal screen size.
      */
-    private boolean allowFullScreen, isInForeground;
+    private boolean allowFullScreen = true;
+    private boolean isInForeground = true;
     private int attempts;
 
     private Runnable subtitlesProcessorRunnable = () -> {
@@ -144,13 +147,34 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     @Override
     protected void updateUIForOrientation() {
         final int orientation = getResources().getConfiguration().orientation;
-        if (youTubePlayer != null) {
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE && allowFullScreen) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && allowFullScreen) {
+            LinearLayout playerContainer = getView().findViewById(R.id.player_container);
+            if (playerContainer != null) {
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                float screenHeight = displayMetrics.heightPixels;
+                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
+                playerContainer.requestLayout();
+            }
+            if (youTubePlayer != null) {
                 youTubePlayer.setFullscreen(true);
-            } else {
+            }
+        } else {
+            LinearLayout playerContainer = getView().findViewById(R.id.player_container);
+            if (playerContainer != null) {
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                float screenWidth = displayMetrics.widthPixels;
+                float ideaHeight = screenWidth * 9 / 16;
+
+                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
+                playerContainer.requestLayout();
+            }
+            if (youTubePlayer != null) {
                 youTubePlayer.setFullscreen(false);
             }
         }
+
         updateUI(orientation);
     }
 
