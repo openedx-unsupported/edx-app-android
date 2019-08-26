@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -263,6 +264,12 @@ public class ScheduleViewModel extends BaseViewModel {
         dialog.setContentView(R.layout.t_alert_add_period);
         Button dialogButton = (Button) dialog.findViewById(R.id.submit_button);
         DropDownFilterView drop = dialog.findViewById(R.id.filter_drop_down);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.FIRST_SUB_WINDOW;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
         drop.setFilterItems(langTags);
         drop.setOnFilterItemListener((v, item, position, prev) -> {
             if (item.getItem() == null){

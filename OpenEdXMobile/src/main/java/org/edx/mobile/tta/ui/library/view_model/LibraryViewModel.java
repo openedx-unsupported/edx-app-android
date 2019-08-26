@@ -130,6 +130,7 @@ public class LibraryViewModel extends BaseViewModel {
     }
 
     private void populateTabs(){
+        mActivity.showLoading();
         fragments.clear();
         titles.clear();
         ArrayList<String> demolist = new ArrayList<String>();
@@ -166,6 +167,7 @@ public class LibraryViewModel extends BaseViewModel {
 
             fragments.add(new CurricullamFragment());
             adapter.setFragments(fragments, demolist);
+            mActivity.hideLoading();
         } catch (Exception e) {
             e.printStackTrace();
         }

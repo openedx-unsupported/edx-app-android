@@ -87,6 +87,7 @@ public class LandingViewModel extends BaseViewModel {
         selectedId = R.id.action_library;
         showLibrary();
         onAppStart();
+        mActivity.showLoading();
     }
 
     @Override
@@ -96,6 +97,7 @@ public class LandingViewModel extends BaseViewModel {
     }
 
     public void showLibrary() {
+        mActivity.showLoading();
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 LibraryFragment.newInstance(() -> selectedId = R.id.action_search),
@@ -104,6 +106,7 @@ public class LandingViewModel extends BaseViewModel {
                 false,
                 null
         );
+        mActivity.hideLoading();
     }
 
     public void showFeed() {

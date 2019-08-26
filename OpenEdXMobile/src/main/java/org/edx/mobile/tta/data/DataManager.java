@@ -4014,58 +4014,93 @@ public class DataManager extends BaseRoboInjector {
     public void getUsers(String programId, String sectionId, int take, int skip,
                          OnResponseCallback<List<ProgramUser>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
+        List<ProgramUser> users = new ArrayList<>();
+        ProgramUser user;
 
-            new GetUsersTask(context, programId, sectionId, take, skip){
-                @Override
-                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
-                    super.onSuccess(programUsers);
-                    if (programUsers == null || programUsers.isEmpty()){
-                        callback.onFailure(new TaException("No users are available"));
-                        return;
-                    }
-
-                    callback.onSuccess(programUsers);
-                }
-
-                @Override
-                protected void onException(Exception ex) {
-                    callback.onFailure(ex);
-                }
-            }.execute();
-
-        } else {
-            callback.onFailure(new NoConnectionException(context));
+//        user = new ProgramUser();
+//        user.username = "default";
+//        user.completedHours = 10L;
+//        user.pendingCount = 2L;
+//        user.completedUnits = 3L;
+//        user.name = "name";
+        for (int i = 0; i<12; i++){
+            user = new ProgramUser();
+            user.username = "student "+(i + 1);
+            user.completedHours = 10L + i;
+            user.pendingCount = 2L + i;
+            user.completedUnits = 3L + i;
+            user.name = "name";
+            users.add(user);
         }
+
+        callback.onSuccess(users);
+
+//        if (NetworkUtil.isConnected(context)) {
+//
+//            new GetUsersTask(context, programId, sectionId, take, skip){
+//                @Override
+//                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
+//                    super.onSuccess(programUsers);
+//                    if (programUsers == null || programUsers.isEmpty()){
+//                        callback.onFailure(new TaException("No users are available"));
+//                        return;
+//                    }
+//
+//                    callback.onSuccess(programUsers);
+//                }
+//
+//                @Override
+//                protected void onException(Exception ex) {
+//                    callback.onFailure(ex);
+//                }
+//            }.execute();
+//
+//        } else {
+//            callback.onFailure(new NoConnectionException(context));
+//        }
 
     }
 
     public void getPendingUsers(String programId, String sectionId, int take, int skip,
                          OnResponseCallback<List<ProgramUser>> callback){
 
-        if (NetworkUtil.isConnected(context)) {
 
-            new GetPendingUsersTask(context, programId, sectionId, take, skip){
-                @Override
-                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
-                    super.onSuccess(programUsers);
-                    if (programUsers == null || programUsers.isEmpty()){
-                        callback.onFailure(new TaException("No users are available with units pending for approval"));
-                        return;
-                    }
-
-                    callback.onSuccess(programUsers);
-                }
-
-                @Override
-                protected void onException(Exception ex) {
-                    callback.onFailure(ex);
-                }
-            }.execute();
-
-        } else {
-            callback.onFailure(new NoConnectionException(context));
+        List<ProgramUser> users = new ArrayList<>();
+        ProgramUser user;
+        for (int i = 0; i<7; i++){
+            user = new ProgramUser();
+            user.username = "User "+(i + 1);
+            user.completedHours = 10L + i;
+            user.pendingCount = 2L + i;
+            user.completedUnits = 3L + i;
+            user.name = "name";
+            users.add(user);
         }
+        callback.onSuccess(users);
+
+//        if (NetworkUtil.isConnected(context)) {
+//
+//            new GetPendingUsersTask(context, programId, sectionId, take, skip){
+//                @Override
+//                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
+//                    super.onSuccess(programUsers);
+//                    if (programUsers == null || programUsers.isEmpty()){
+//                        callback.onFailure(new TaException("No users are available with units pending for approval"));
+//                        return;
+//                    }
+//
+//                    callback.onSuccess(programUsers);
+//                }
+//
+//                @Override
+//                protected void onException(Exception ex) {
+//                    callback.onFailure(ex);
+//                }
+//            }.execute();
+//
+//        } else {
+//            callback.onFailure(new NoConnectionException(context));
+//        }
 
     }
 

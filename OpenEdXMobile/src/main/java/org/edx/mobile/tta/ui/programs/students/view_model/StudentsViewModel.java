@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -20,6 +21,7 @@ import org.edx.mobile.databinding.TRowStudentsGridBinding;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
+import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -57,6 +59,8 @@ public class StudentsViewModel extends BaseViewModel {
 
         usersAdapter = new UsersAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
+        users = new ArrayList<>();
+        usersAdapter.setItems(users);
 
     }
 
@@ -70,7 +74,7 @@ public class StudentsViewModel extends BaseViewModel {
         skip = SKIP;
 
         mActivity.showLoading();
-        getFilters();
+//        getFilters();
         fetchData();
     }
 
@@ -99,6 +103,7 @@ public class StudentsViewModel extends BaseViewModel {
                 });
 
     }
+
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -156,7 +161,7 @@ public class StudentsViewModel extends BaseViewModel {
                 List<ProgramFilter> removables = new ArrayList<>();
                 for (ProgramFilter filter : data) {
                     if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains("Students")) {
+                            !filter.getShowIn().contains("students")) {
                         removables.add(filter);
                     }
                 }
@@ -220,6 +225,13 @@ public class StudentsViewModel extends BaseViewModel {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
                 itemBinding.txtCompleted.setText(String.valueOf(model.completedUnits));
                 itemBinding.txtPending.setText(String.valueOf(model.pendingCount));
+                itemBinding.userName.setText(model.username);
+                if (model.profileImage != null){
+                    Glide.with(mActivity).load(model.profileImage.getImageUrlSmall())
+                            .centerCrop()
+                            .placeholder(R.drawable.profile)
+                            .into(itemBinding.userImage);
+                }
 
                 if(!mDataManager.getLoginPrefs().getUsername().equals("staff")){
                     itemBinding.llStatus.setVisibility(View.GONE);
