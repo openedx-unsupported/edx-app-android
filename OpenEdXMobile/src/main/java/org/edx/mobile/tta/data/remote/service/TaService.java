@@ -19,6 +19,7 @@ import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.SuccessResponse;
+import org.edx.mobile.tta.data.model.UpdateResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
@@ -241,4 +242,9 @@ public interface TaService {
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_APPROVE_UNIT)
     Call<SuccessResponse> approveUnit(@FieldMap Map<String, String> parameters);
+
+    //for app update
+    @GET(ApiConstants.URL_MX_GET_APP_UPDATE)
+    Call<UpdateResponse> getAppUpdate(@Query(Constants.VERSION_NAME) String v_name,
+                                      @Query(Constants.VERSION_CODE) Long v_code);
 }

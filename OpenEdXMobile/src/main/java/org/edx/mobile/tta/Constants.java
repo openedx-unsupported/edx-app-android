@@ -64,4 +64,14 @@ public class Constants {
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";
+    public static Boolean IsUpdateDelay = false;
+    public static final String KEY_CLASS_NAME = "class_name";
+    public static final String KEY_FUNCTION_NAME = "function_name";
+    public static final String KEY_DATA = "data";
+    public static String DefaultUpdateMessage = "<html><body><div style=\"margin:0 auto;padding:10px;\"> <ul><li>कृपया अपना ऐप अपडेट करें ।</li></ul>\n" +
+            "</div></body></html>\n";
+
+    //for app update
+    public static final String VERSION_NAME = "version_name";
+    public static final String VERSION_CODE = "version_code";
 }

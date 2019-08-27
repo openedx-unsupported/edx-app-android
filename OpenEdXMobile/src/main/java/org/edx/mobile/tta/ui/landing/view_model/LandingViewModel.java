@@ -1,14 +1,23 @@
 package org.edx.mobile.tta.ui.landing.view_model;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
-import android.support.annotation.NonNull;
+import android.net.Uri;
 import android.support.design.widget.BottomNavigationView;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
-import org.edx.mobile.profiles.UserProfileFragment;
+import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.app_update.UpdateType;
 import org.edx.mobile.tta.data.local.db.table.ContentStatus;
+import org.edx.mobile.tta.data.model.UpdateResponse;
 import org.edx.mobile.tta.event.ContentStatusReceivedEvent;
 import org.edx.mobile.tta.event.ContentStatusesReceivedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -16,25 +25,17 @@ import org.edx.mobile.tta.ui.agenda.AgendaFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.feed.FeedFragment;
-import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
 import org.edx.mobile.tta.ui.profile.ProfileFragment;
 import org.edx.mobile.tta.ui.search.SearchFragment;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.AccountFragment;
-import org.edx.mobile.view.BaseWebViewDiscoverFragment;
-import org.edx.mobile.view.CourseDetailFragment;
-import org.edx.mobile.view.CourseDiscussionPostsSearchFragment;
-import org.edx.mobile.view.CourseTabsDashboardFragment;
-import org.edx.mobile.view.CourseUnitEmptyFragment;
-import org.edx.mobile.view.DiscoveryLaunchActivity;
-import org.edx.mobile.view.MainTabsDashboardFragment;
 import org.edx.mobile.view.MyCoursesListFragment;
-import org.edx.mobile.view.WebViewDiscoverCoursesFragment;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -198,5 +199,124 @@ public class LandingViewModel extends BaseViewModel {
 
     public void unRegisterEventBus(){
         EventBus.getDefault().unregister(this);
+    }
+
+
+    // App Update
+
+    //hit the api one a day
+    //store the latest version info in login pref
+    //refresh latest version info every day.
+    //now check the show update panel by checking the current and api latest version app
+    private void getAppUpdate() {
+        mDataManager.getUpdatedVersion(new OnResponseCallback<UpdateResponse>() {
+            @Override
+            public void onSuccess(UpdateResponse res) {
+                if(res==null|| res.version_code==null)
+                    return;
+
+                //set last update date time
+                mDataManager.getAppPref().setUpdateSeenDate(Calendar.getInstance().getTime().toString());
+
+                //store latest version info ,in-case user go to play store and come back without update.
+                mDataManager.getLoginPrefs().storeLatestAppInfo(res);
+                if (res.getVersion_code()>mDataManager.getCurrent_vCode()) {
+                    decideUpdateUI(res);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+            }
+        },mDataManager.getCurrentV_name(),mDataManager.getCurrent_vCode());
+    }
+
+    private void decideUpdateUI(UpdateResponse res)
+    {
+        if(res==null || res.version_code==null)
+            return;
+
+        String mFinal_notes = new String();
+        if(res.getRelease_note()==null || res.getRelease_note().isEmpty())
+            mFinal_notes=Constants.DefaultUpdateMessage;
+        else
+            mFinal_notes=res.getRelease_note();
+
+        if (res.getStatus().toLowerCase().equals(UpdateType.FLEXIBLE.toString().toLowerCase())) {
+            showFlexibleUpdate(mFinal_notes);
+
+        } else if (res.getStatus().toLowerCase().equals(UpdateType.IMMEDIATE.toString().toLowerCase())) {
+            showImmediateUpdate(mFinal_notes);
+        }
+    }
+
+    private void showFlexibleUpdate(String notes_html) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        LayoutInflater i = mActivity.getLayoutInflater();
+
+        View v = i.inflate(R.layout.alert_dialog_layout, null);
+        TextView title = v.findViewById(R.id.title);
+        title.setText("नया अपडेट उपलब्ध हैं |");
+
+        Button mbtn_delay = v.findViewById(R.id.btn_delay);
+        Button mbtn_update = v.findViewById(R.id.btn_update);
+
+        WebView flxible_notes_wv=v.findViewById(R.id.notes_flxible_wv);
+
+        flxible_notes_wv.loadData(notes_html,
+                "text/html", "UTF-8");
+
+        builder.setView(v);
+        AlertDialog dialog = builder.create();
+
+        mbtn_delay.setOnClickListener(v1 -> {
+            Constants.IsUpdateDelay = true;
+            dialog.dismiss();
+        });
+
+        mbtn_update.setOnClickListener(v12 -> {
+            mActivity.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=org.tta.mobile")));
+            dialog.dismiss();
+        });
+
+        builder.setCancelable(false);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    private void showImmediateUpdate(String notes_html) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        LayoutInflater i = mActivity.getLayoutInflater();
+
+        View v = i.inflate(R.layout.alert_dialog_full_screen, null);
+        WebView immediate_notes_wv=v.findViewById(R.id.immediate_notes_wv);
+
+        immediate_notes_wv.loadData(notes_html,
+                "text/html", "UTF-8");
+
+        TextView title = v.findViewById(R.id.tv_title);
+        title.setText("नया अपडेट उपलब्ध हैं |");
+
+        Button mbtn_update = v.findViewById(R.id.btn_update);
+        ImageView miv_close = v.findViewById(R.id.iv_close);
+
+        builder.setView(v);
+        AlertDialog dialog = builder.create();
+
+        mbtn_update.setOnClickListener(v12 -> {
+            mActivity.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=org.tta.mobile")));
+            dialog.dismiss();
+        });
+
+        miv_close.setOnClickListener(v1 -> {
+            mActivity.finishAffinity();
+            System.exit(0);
+        });
+
+        builder.setCancelable(false);
+        dialog.setCancelable(false);
+        dialog.show();
     }
 }

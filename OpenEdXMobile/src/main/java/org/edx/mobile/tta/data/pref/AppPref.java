@@ -38,4 +38,11 @@ public class AppPref {
         String breadcrumb = prefManager.getString(PrefManager.Key.CURRENT_BREADCRUMB);
         return breadcrumb == null ? "" : breadcrumb;
     }
+
+    public void setUpdateSeenDate(String updateSeenDate) {
+        prefManager.put(PrefManager.Key.IS_UPDATE_SEEN_DATE, updateSeenDate);
+    }
+    public String getUpdateSeenDate() {
+        return prefManager.getString(PrefManager.Key.IS_UPDATE_SEEN_DATE);
+    }
 }

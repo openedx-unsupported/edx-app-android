@@ -113,5 +113,9 @@
     <color name="status_completed">#6000E676</color>
 
     <!-- Humana color palette end -->
-
+    <!--Added for mx_tooltip start-->
+    <color name="mx_tooltip_background">@color/colorPrimary</color>
+    <color name="mx_tooltip_text">@color/white</color>
+    <color name="mx_tooltip_arrow">@color/colorAccent</color>
+    <!--Added for mx_tooltip end-->
 </resources>

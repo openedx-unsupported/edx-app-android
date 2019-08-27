@@ -20,6 +20,7 @@ import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.SuccessResponse;
+import org.edx.mobile.tta.data.model.UpdateResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
@@ -333,5 +334,9 @@ public class TaAPI {
         parameters.put(Constants.KEY_UNIT_ID, unitId);
         parameters.put(Constants.KEY_USERNAME, username);
         return taService.approveUnit(parameters);
+    }
+
+    public Call<UpdateResponse> getVersionUpdate(String v_name, Long v_code){
+        return taService.getAppUpdate(v_name,v_code);
     }
 }
