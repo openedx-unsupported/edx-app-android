@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.programs.selectprogram.viewmodel.SelectProgramViewModel2" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Select Program"
+            android:textSize="@dimen/_16px_sp"
+            android:layout_margin="@dimen/_12px"/>
+        <com.maurya.mx.mxlib.view.MxRecyclerView
+            infinite_recycler_adapter="@{viewModel.programsAdapter}"
+            layout_manager="@{viewModel.layoutManager}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:mx_itemLayout="@layout/t_row_select_prog_section" />
+
+
+    </LinearLayout>
+</layout>
