@@ -32,6 +32,14 @@
                 android:id="@+id/feedback_btn"
                 style="@style/account_option"
                 android:text="@string/label_submit_feedback" />
+            <TextView
+                android:id="@+id/change_prog_btn"
+                style="@style/account_option"
+                android:text="@string/label_change_program" />
+            <TextView
+                android:id="@+id/activate_tutorial_btn"
+                style="@style/account_option"
+                android:text="@string/label_activate_tutorial" />
 
             <TextView
                 android:id="@+id/logout_btn"

@@ -22,6 +22,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.maurya.mx.mxlib.R;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -373,5 +374,9 @@ public class MxFiniteRecyclerView extends LinearLayout {
      */
     protected void canShowProgress(boolean b) {
         mBinding.mxProgressBar.setVisibility(b ? View.VISIBLE : View.GONE);
+    }
+
+    public TextView getTitleTextView(){
+        return mBinding.mxTitleText;
     }
 }

@@ -114,8 +114,8 @@
 
     <!-- Humana color palette end -->
     <!--Added for mx_tooltip start-->
-    <color name="mx_tooltip_background">@color/colorPrimary</color>
-    <color name="mx_tooltip_text">@color/white</color>
-    <color name="mx_tooltip_arrow">@color/colorAccent</color>
+    <color name="mx_tooltip_background">#5c6473</color>
+    <color name="mx_tooltip_text">#FFFFFF</color>
+    <color name="mx_tooltip_arrow">#7C9397</color>
     <!--Added for mx_tooltip end-->
 </resources>

@@ -50,10 +50,10 @@ public class LandingViewModel extends BaseViewModel {
     private List<ContentStatus> statuses;
 
     public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = item -> {
-        if (item.getItemId() == selectedId){
+        if (item.getItemId() == selectedId) {
             return true;
         }
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_library:
                 selectedId = R.id.action_library;
                 showLibrary();
@@ -122,7 +122,7 @@ public class LandingViewModel extends BaseViewModel {
         );
     }
 
-    public void showSearch(){
+    public void showSearch() {
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 new NativeFindCoursesFragment(),
@@ -155,7 +155,7 @@ public class LandingViewModel extends BaseViewModel {
         );
     }
 
-    private void onAppStart(){
+    private void onAppStart() {
         mDataManager.updateNotifications(null);
         mDataManager.getMyContentStatuses(new OnResponseCallback<List<ContentStatus>>() {
             @Override
@@ -171,13 +171,13 @@ public class LandingViewModel extends BaseViewModel {
         });
     }
 
-    public void selectLibrary(){
+    public void selectLibrary() {
         selectedId = R.id.action_library;
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(NetworkConnectivityChangeEvent event){
-        if (NetworkUtil.isConnected(mActivity)){
+    public void onEventMainThread(NetworkConnectivityChangeEvent event) {
+        if (NetworkUtil.isConnected(mActivity)) {
             offlineVisible.set(false);
         } else {
             offlineVisible.set(true);
@@ -185,42 +185,40 @@ public class LandingViewModel extends BaseViewModel {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(ContentStatusReceivedEvent event){
-        if (statuses == null){
+    public void onEventMainThread(ContentStatusReceivedEvent event) {
+        if (statuses == null) {
             statuses = new ArrayList<>();
         }
         statuses.remove(event.getContentStatus());
         statuses.add(event.getContentStatus());
     }
 
-    public void registerEventBus(){
+    public void registerEventBus() {
         EventBus.getDefault().register(this);
     }
 
-    public void unRegisterEventBus(){
+    public void unRegisterEventBus() {
         EventBus.getDefault().unregister(this);
     }
 
-
     // App Update
-
     //hit the api one a day
     //store the latest version info in login pref
     //refresh latest version info every day.
     //now check the show update panel by checking the current and api latest version app
+
     private void getAppUpdate() {
         mDataManager.getUpdatedVersion(new OnResponseCallback<UpdateResponse>() {
             @Override
             public void onSuccess(UpdateResponse res) {
-                if(res==null|| res.version_code==null)
+                if (res == null || res.version_code == null)
                     return;
-
                 //set last update date time
                 mDataManager.getAppPref().setUpdateSeenDate(Calendar.getInstance().getTime().toString());
 
                 //store latest version info ,in-case user go to play store and come back without update.
                 mDataManager.getLoginPrefs().storeLatestAppInfo(res);
-                if (res.getVersion_code()>mDataManager.getCurrent_vCode()) {
+                if (res.getVersion_code() > mDataManager.getCurrent_vCode()) {
                     decideUpdateUI(res);
                 }
             }
@@ -228,19 +226,18 @@ public class LandingViewModel extends BaseViewModel {
             @Override
             public void onFailure(Exception e) {
             }
-        },mDataManager.getCurrentV_name(),mDataManager.getCurrent_vCode());
+        }, mDataManager.getCurrentV_name(), mDataManager.getCurrent_vCode());
     }
 
-    private void decideUpdateUI(UpdateResponse res)
-    {
-        if(res==null || res.version_code==null)
+    private void decideUpdateUI(UpdateResponse res) {
+        if (res == null || res.version_code == null)
             return;
 
         String mFinal_notes = new String();
-        if(res.getRelease_note()==null || res.getRelease_note().isEmpty())
-            mFinal_notes=Constants.DefaultUpdateMessage;
+        if (res.getRelease_note() == null || res.getRelease_note().isEmpty())
+            mFinal_notes = Constants.DefaultUpdateMessage;
         else
-            mFinal_notes=res.getRelease_note();
+            mFinal_notes = res.getRelease_note();
 
         if (res.getStatus().toLowerCase().equals(UpdateType.FLEXIBLE.toString().toLowerCase())) {
             showFlexibleUpdate(mFinal_notes);
@@ -256,12 +253,12 @@ public class LandingViewModel extends BaseViewModel {
 
         View v = i.inflate(R.layout.alert_dialog_layout, null);
         TextView title = v.findViewById(R.id.title);
-        title.setText("नया अपडेट उपलब्ध हैं |");
+        title.setText("An Update is Available !!");
 
         Button mbtn_delay = v.findViewById(R.id.btn_delay);
         Button mbtn_update = v.findViewById(R.id.btn_update);
 
-        WebView flxible_notes_wv=v.findViewById(R.id.notes_flxible_wv);
+        WebView flxible_notes_wv = v.findViewById(R.id.notes_flxible_wv);
 
         flxible_notes_wv.loadData(notes_html,
                 "text/html", "UTF-8");
@@ -290,13 +287,13 @@ public class LandingViewModel extends BaseViewModel {
         LayoutInflater i = mActivity.getLayoutInflater();
 
         View v = i.inflate(R.layout.alert_dialog_full_screen, null);
-        WebView immediate_notes_wv=v.findViewById(R.id.immediate_notes_wv);
+        WebView immediate_notes_wv = v.findViewById(R.id.immediate_notes_wv);
 
         immediate_notes_wv.loadData(notes_html,
                 "text/html", "UTF-8");
 
         TextView title = v.findViewById(R.id.tv_title);
-        title.setText("नया अपडेट उपलब्ध हैं |");
+        title.setText("An Update is Available !!");
 
         Button mbtn_update = v.findViewById(R.id.btn_update);
         ImageView miv_close = v.findViewById(R.id.iv_close);

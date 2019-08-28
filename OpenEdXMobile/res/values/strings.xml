@@ -124,6 +124,8 @@
     <string name="label_discovery" translatable="false">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
     <string name="label_submit_feedback" translatable="false">Submit Feedback</string>
+    <string name="label_change_program" translatable="false">Change Program</string>
+    <string name="label_activate_tutorial" translatable="false">Activate In-App-Tutorial</string>
     <!-- Toggle switch on state label -->
     <string name="toggle_turn_on" translatable="false">On</string>
     <!-- Toggle switch off state label -->

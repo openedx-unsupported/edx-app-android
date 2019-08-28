@@ -3,12 +3,15 @@ package org.edx.mobile.tta.ui.programs.schedule.view_model;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -27,6 +30,7 @@ import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.tutorials.MxTooltip;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
@@ -51,6 +55,11 @@ public class ScheduleViewModel extends BaseViewModel {
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+
+    public ObservableInt initialPosition = new ObservableInt();
+    public ObservableInt toolTipPosition = new ObservableInt();
+    public ObservableInt toolTipGravity = new ObservableInt();
+    public ObservableField<String> toolTiptext = new ObservableField<>();
 
     public FiltersAdapter filtersAdapter;
     public PeriodAdapter periodAdapter;
@@ -92,6 +101,9 @@ public class ScheduleViewModel extends BaseViewModel {
         mActivity.showLoading();
         getFilters();
         fetchData();
+        toolTiptext.set("test");
+        toolTipGravity.set(Gravity.TOP);
+        toolTipPosition.set(0);
 
     }
 
@@ -353,6 +365,8 @@ public class ScheduleViewModel extends BaseViewModel {
                     mActivity.showLoading();
                     fetchData();
                 });
+
+
             }
         }
     }

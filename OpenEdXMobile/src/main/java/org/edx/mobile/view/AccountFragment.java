@@ -14,6 +14,8 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentAccountBinding;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.Config;
 
 public class AccountFragment extends BaseFragment {
@@ -66,6 +68,12 @@ public class AccountFragment extends BaseFragment {
                         environment.getAnalyticsRegistry(), environment.getNotificationDelegate());
             }
         });
+
+        binding.activateTutorialBtn.setOnClickListener(v -> {
+
+        });
+
+        binding.changeProgBtn.setOnClickListener(v -> ActivityUtil.gotoPage(getActivity(), SelectProgramActivity.class));
 
         binding.tvVersionNo.setText(String.format("%s %s %s", getString(R.string.label_version),
                 BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));

@@ -35,6 +35,7 @@ public class SelectSectionViewModel extends BaseViewModel {
     public SectionAdapter sectionAdapter;
     public RecyclerView.LayoutManager layoutManager;
     public ObservableField<String> programId = new ObservableField<>();
+    public ObservableField<String> programForSection = new ObservableField<>();
 
 
     public SelectSectionViewModel(BaseVMActivity activity) {
@@ -45,6 +46,7 @@ public class SelectSectionViewModel extends BaseViewModel {
         layoutManager = new LinearLayoutManager(mActivity);
         sectionAdapter = new SectionAdapter(mActivity);
         selectedSections = new ArrayList<>();
+        programForSection.set("Select Section for " + programId);
 
         fetchSections();
         sectionAdapter.setItems(section);
