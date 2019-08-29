@@ -46,7 +46,6 @@ public class SelectSectionViewModel extends BaseViewModel {
         layoutManager = new LinearLayoutManager(mActivity);
         sectionAdapter = new SectionAdapter(mActivity);
         selectedSections = new ArrayList<>();
-        programForSection.set("Select Section for " + programId);
 
         fetchSections();
         sectionAdapter.setItems(section);
@@ -79,6 +78,7 @@ public class SelectSectionViewModel extends BaseViewModel {
     public void fetchSections() {
 
         mActivity.showLoading();
+        programForSection.set("Select Section for " + mDataManager.getLoginPrefs().getProgramId());
         mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<List<Section>>() {
             @Override
             public void onSuccess(List<Section> data) {
