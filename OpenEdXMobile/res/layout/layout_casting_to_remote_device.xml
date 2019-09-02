@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_black_80"
+    android:clickable="true"
+    android:focusable="true">
+
+    <com.joanzapata.iconify.widget.IconImageButton
+        android:id="@+id/remote_play_button"
+        style="@style/video_player_play_pause_button"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/edx_half_margin"
+        android:contentDescription="@string/video_player_play"
+        android:visibility="gone"
+        app:iconName="fa-play"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_casting_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/remote_play_button"
+        android:layout_centerInParent="true"
+        android:text="@string/remote_device_casting_message"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

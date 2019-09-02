@@ -1,5 +1,6 @@
 package org.edx.mobile.util;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -8,8 +9,12 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
+import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
+
+import java.io.File;
 
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_MP4;
@@ -109,5 +114,42 @@ public class VideoUtil {
         dm.downloaded = downloadState;
         videoModel.setDownloadInfo(dm);
         db.updateDownloadingVideoInfoByVideoId(videoModel, null);
+    }
+
+    /**
+     * @param context Current Activity context
+     * @param video   {@link DownloadEntry} object having different video encodings
+     * @return Best encoding video url that can be locally downloaded path or online url
+     */
+    public static String getVideoPath(Context context, DownloadEntry video) {
+        String filepath = null;
+        if (video.filepath != null && video.filepath.length() > 0) {
+            if (video.isDownloaded()) {
+                final File f = new File(video.filepath);
+                if (f.exists()) {
+                    // play from local
+                    filepath = video.filepath;
+                }
+            }
+        } else {
+            final DownloadEntry de = (DownloadEntry) DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
+                    .getIVideoModelByVideoUrl(
+                            video.url, null);
+            if (de != null) {
+                if (de.filepath != null) {
+                    final File f = new File(de.filepath);
+                    if (f.exists()) {
+                        // play from local
+                        filepath = de.filepath;
+                    }
+                }
+            }
+        }
+
+        if (TextUtils.isEmpty(filepath)) {
+            // not available on local, so play online
+            filepath = video.getBestEncodingUrl(context);
+        }
+        return filepath;
     }
 }

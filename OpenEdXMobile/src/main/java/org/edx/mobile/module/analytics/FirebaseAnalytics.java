@@ -84,10 +84,13 @@ public class FirebaseAnalytics implements Analytics {
 
     @Override
     public void trackVideoPlaying(String videoId, Double currentTime,
-                                  String courseId, String unitUrl) {
+                                  String courseId, String unitUrl, String playMedium) {
         final FirebaseEvent event = new FirebaseEvent(Events.PLAYED_VIDEO, videoId,
                 Values.VIDEO_PLAYED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
+        if (!TextUtils.isEmpty(playMedium)) {
+            event.putString(Keys.PLAY_MEDIUM, playMedium);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
@@ -589,6 +592,13 @@ public class FirebaseAnalytics implements Analytics {
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final FirebaseEvent event = new FirebaseEvent(experimentName);
         event.putMap(values);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState, @NonNull String playMedium) {
+        final FirebaseEvent event = new FirebaseEvent(eventName, connectionState);
+        event.putString(Keys.PLAY_MEDIUM, playMedium);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

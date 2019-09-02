@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.util.UrlUtil;
 
 /**
  * common base class for all type of units
@@ -14,6 +15,7 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
     private DownloadEntry downloadEntry;
     private VideoData data;
     private String downloadUrl;
+    private String videoThumbnail;
 
     public VideoBlockModel(@NonNull VideoBlockModel other) {
         super(other);
@@ -41,6 +43,15 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
 
     public void setDownloadUrl(@Nullable String downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    @Nullable
+    public String getVideoThumbnail(@Nullable String baseURL) {
+        return UrlUtil.makeAbsolute(videoThumbnail, baseURL);
+    }
+
+    public void setVideoThumbnail(String videoThumbnail) {
+        this.videoThumbnail = videoThumbnail;
     }
 
     @Nullable

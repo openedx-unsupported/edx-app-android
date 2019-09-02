@@ -38,7 +38,7 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoPlaying(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackVideoPlaying(String videoId, Double currentTime, String courseId, String unitUrl, String playMedium) {
 
     }
 
@@ -330,6 +330,11 @@ public class AnswersAnalytics implements Analytics {
 
     @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
+
+    }
+
+    @Override
+    public void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState, @NonNull String playMedium) {
 
     }
 }

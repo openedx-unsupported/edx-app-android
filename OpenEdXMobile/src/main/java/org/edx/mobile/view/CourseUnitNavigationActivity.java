@@ -252,4 +252,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     public boolean isMainUnitLoaded() {
         return viewPagerState == State.MAIN_UNIT_LOADED;
     }
+
+    @Override
+    public boolean showGoogleCastButton() {
+        return true;
+    }
 }

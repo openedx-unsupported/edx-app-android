@@ -2,6 +2,9 @@ package org.edx.mobile.util;
 
 import android.support.annotation.NonNull;
 
+import org.edx.mobile.model.api.TranscriptModel;
+
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 public class LocaleUtils {
@@ -52,5 +55,18 @@ public class LocaleUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * Default Language List
+     *
+     * @param transcript
+     * @return list of languages available in transcript
+     */
+    public static LinkedHashMap<String, String> getLanguageList(TranscriptModel transcript) {
+        if (transcript != null) {
+            return transcript.getLanguageList();
+        }
+        return null;
     }
 }

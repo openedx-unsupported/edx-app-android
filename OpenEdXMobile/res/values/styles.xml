@@ -43,6 +43,49 @@
         <item name="android:progressBarStyleLargeInverse">
             @style/edX.Widget.ProgressBar.Large.Inverse
         </item>
+        <item name="mediaRouteTheme">@style/MediaRouterTheme</item>
+        <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
+    </style>
+
+    <!-- Customize Cast Button -->
+    <style name="MediaRouterTheme" parent="Theme.MediaRouter">
+        <item name="mediaRouteButtonStyle">@style/MediaRouteButtonStyle</item>
+    </style>
+
+    <style name="MediaRouteButtonStyle" parent="Widget.MediaRouter.Light.MediaRouteButton">
+        <item name="mediaRouteButtonTint">@color/toolbar_controls_color</item>
+    </style>
+
+    <style name="CastMiniControllerTheme" parent="CastMiniController">
+        <item name="castShowImageThumbnail">true</item>
+        <item name="castTitleTextAppearance">@style/CastMiniControllerTitle</item>
+        <item name="castProgressBarColor">@color/edx_brand_primary_base</item>
+        <item name="castMiniControllerLoadingIndicatorColor">@color/edx_brand_primary_base</item>
+        <item name="castButtonColor">@color/edx_brand_primary_base</item>
+    </style>
+
+    <style name="CastMiniControllerTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/toolbar_controls_color</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+    </style>
+
+    <style name="CastExpandedControllerTheme" parent="CastExpandedController">
+        <item name="castSeekBarProgressAndThumbColor">@color/edx_brand_primary_base</item>
+        <item name="castSeekBarSecondaryProgressColor">@color/edx_brand_primary_dark</item>
+        <item name="castControlButtons">
+            @array/cast_expanded_controller_control_buttons
+        </item>
+    </style>
+
+    <style name="Theme.CastVideosTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="castExpandedControllerToolbarStyle">
+            @style/ThemeOverlay.AppCompat.Dark.ActionBar
+        </item>
+        <item name="colorPrimary">@color/edx_brand_primary_base</item>
+        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
+        <item name="colorAccent">@color/edx_brand_primary_accent</item>
+        <item name="castExpandedControllerStyle">@style/CastExpandedControllerTheme</item>
     </style>
 
     <style name="AppTheme.NoDisplayTheme" parent="android:style/Theme.NoDisplay">

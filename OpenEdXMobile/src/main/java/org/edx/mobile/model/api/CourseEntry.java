@@ -60,6 +60,10 @@ public class CourseEntry implements Serializable {
         return UrlUtil.makeAbsolute(course_image, baseURL);
     }
 
+    public String getCourse_image() {
+        return course_image;
+    }
+
     public void setCourse_image(String course_image) {
         this.course_image = course_image;
     }
