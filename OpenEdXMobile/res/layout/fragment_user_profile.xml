@@ -111,8 +111,29 @@
                         tools:text="@string/profile_sharing_limited_by_you"
                         tools:visibility="visible" />
                 </LinearLayout>
-            </LinearLayout>
 
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="Pending Units"
+                    android:padding="@dimen/_12px"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:id="@+id/unit_count"
+                    android:padding="@dimen/_12px"
+
+                    android:textColor="@color/white"
+                    android:background="@color/colorAccent"/>
+            </LinearLayout>
             <android.support.design.widget.TabLayout
                 android:id="@+id/profile_section_tabs"
                 android:layout_width="match_parent"
@@ -122,6 +143,7 @@
             <include layout="@layout/edx_divider" />
 
         </android.support.design.widget.AppBarLayout>
+
 
         <FrameLayout
             android:id="@+id/profile_body"

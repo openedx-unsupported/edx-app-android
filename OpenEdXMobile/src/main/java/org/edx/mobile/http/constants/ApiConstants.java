@@ -159,21 +159,23 @@ public class ApiConstants {
 
     //Humana start
 
-    public static final String URL_MX_GET_PROGRAMS = "ENDPOINT";
+    public static final String URL_MX_GET_PROGRAMS = "mx_humana_lms/api/v1/getPrograms";
 
-    public static final String URL_MX_GET_SECTIONS = "ENDPOINT";
+    public static final String URL_MX_GET_SECTIONS = "mx_humana_lms/api/v1/getSections";
 
     public static final String URL_MX_GET_PROGRAM_FILTERS = "ENDPOINT";
 
     public static final String URL_MX_GET_PERIODS = "ENDPOINT";
 
-    public static final String URL_MX_GET_UNITS = "ENDPOINT";
+    public static final String URL_MX_GET_UNITS = "mx_humana_lms/api/v1/getUnits";
 
-    public static final String URL_MX_GET_ALL_UNITS = "ENDPOINT";
+    public static final String URL_MX_GET_ALL_UNITS = "mx_humana_lms/api/v1/getAllUnits";
 
     public static final String URL_MX_GET_USERS = "ENDPOINT";
 
     public static final String URL_MX_GET_PENDING_USERS = "ENDPOINT";
+
+    public static final String URL_MX_GET_COURSE_COMPONENT_UNITS = "ENDPOINT";
 
     public static final String URL_MX_GET_PENDING_UNITS = "ENDPOINT";
 

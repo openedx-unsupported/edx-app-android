@@ -22,16 +22,24 @@ public class SelectProgramActivity extends BaseVMActivity {
 
     private SelectProgramViewModel2 viewModel;
 
-    private LinearLayout fieldsLayout;
-    private FormSpinner programSpinner;
-    private FormSpinner sectionSpinner;
-    private FloatingActionButton fabSave;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new SelectProgramViewModel2(this);
+        savedInstanceState = new Bundle();
+        if (savedInstanceState != null) {
+            savedInstanceState = getIntent().getExtras();
+            if (savedInstanceState != null) {
+                boolean prev = savedInstanceState.getBoolean("isPrev", false);
+                viewModel.isPrev.set(prev);
+            }
+        }
+
+
         binding(R.layout.t_activity_select_program_section, viewModel);
+
+
 
 //        fieldsLayout = findViewById(R.id.fields_layout);
 //        fabSave = findViewById(R.id.fab_save);

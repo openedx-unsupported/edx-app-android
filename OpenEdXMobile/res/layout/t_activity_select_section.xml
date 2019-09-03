@@ -2,6 +2,7 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="org.edx.mobile.tta.ui.programs.selectSection.viewModel.SelectSectionViewModel" />
@@ -25,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
             android:layout_margin="16dp"
+            android:visibility="@{viewModel.fabPrevVisibility?View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.selectProg()}"
             app:srcCompat="@drawable/ic_keyboard_arrow_left_white_24dp"
             android:tint="@color/white" />

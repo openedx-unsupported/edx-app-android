@@ -1,8 +1,10 @@
 package org.edx.mobile.tta.ui.programs.selectSection.viewModel;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +22,7 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
 import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
@@ -36,6 +39,8 @@ public class SelectSectionViewModel extends BaseViewModel {
     public RecyclerView.LayoutManager layoutManager;
     public ObservableField<String> programId = new ObservableField<>();
     public ObservableField<String> programForSection = new ObservableField<>();
+    public ObservableBoolean fabPrevVisibility = new ObservableBoolean();
+
 
 
     public SelectSectionViewModel(BaseVMActivity activity) {
@@ -46,6 +51,7 @@ public class SelectSectionViewModel extends BaseViewModel {
         layoutManager = new LinearLayoutManager(mActivity);
         sectionAdapter = new SectionAdapter(mActivity);
         selectedSections = new ArrayList<>();
+        mActivity.showLoading();
 
         fetchSections();
         sectionAdapter.setItems(section);
@@ -101,6 +107,7 @@ public class SelectSectionViewModel extends BaseViewModel {
     }
 
     public void save() {
+        mActivity.showLoading();
         if (!sectionId.isEmpty()) {
             mDataManager.getLoginPrefs().setProgramId(programId.get());
             mDataManager.getLoginPrefs().setSectionId(sectionId);
@@ -121,8 +128,13 @@ public class SelectSectionViewModel extends BaseViewModel {
     }
 
     private void populateSection(List<Section> data) {
+        mActivity.showLoading();
         boolean newItemsAdded = false;
         int n = 0;
+        if (data.size() == 1){
+            sectionId = data.get(0).getId();
+            save();
+        }
         for (Section user : data) {
             if (!section.contains(user)) {
                 section.add(user);
@@ -131,10 +143,10 @@ public class SelectSectionViewModel extends BaseViewModel {
             }
         }
 
-
         if (newItemsAdded) {
             sectionAdapter.notifyItemRangeInserted(section.size() - n, n);
         }
+        mActivity.hideLoading();
     }
 
 
@@ -169,7 +181,9 @@ public class SelectSectionViewModel extends BaseViewModel {
     }
 
     public void selectProg() {
-        ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class);
+        Bundle b = new Bundle();
+        b.putBoolean("isPrev", true);
+        ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class, b);
         mActivity.finish();
     }
 }

@@ -231,6 +231,9 @@ public interface TaService {
                                             @Query(Constants.KEY_TAKE) int take,
                                             @Query(Constants.KEY_SKIP) int skip);
 
+    @GET(ApiConstants.URL_MX_GET_COURSE_COMPONENT_UNITS)
+    Call<CourseComponent> getCourseComponentUnits(@Query(Constants.KEY_UNIT_ID) String unit_id);
+
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_CREATE_PERIOD)
     Call<SuccessResponse> createPeriod(@FieldMap Map<String, String> parameters);

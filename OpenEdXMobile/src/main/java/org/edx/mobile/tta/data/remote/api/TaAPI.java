@@ -314,6 +314,10 @@ public class TaAPI {
         return taService.getPendingUnits(programId, username, take, skip);
     }
 
+    public Call<CourseComponent> getCourseComponentUnits(String unit_id){
+        return taService.getCourseComponentUnits(unit_id);
+    }
+
     public Call<SuccessResponse> createPeriod(String programId, String sectionId, String lang){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PROGRAM_ID, programId);

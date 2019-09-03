@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.programs.selectprogram.viewmodel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,9 @@ public class SelectProgramViewModel2 extends BaseViewModel {
     private static View itemView;
     public ProgramsAdapter programsAdapter;
     public RecyclerView.LayoutManager layoutManager;
+    public Boolean prevVisible = false;
+    public ObservableBoolean isPrev = new ObservableBoolean();
+
 
 
     public SelectProgramViewModel2(BaseVMActivity activity) {
@@ -48,9 +52,27 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 
         fetchPrograms();
 
-//        programsAdapter.setItemClickListener((view, item) -> {
-//
-//        });
+        programsAdapter.setItemClickListener((view, item) -> {
+            if (selectPrograms.size() > 0) {
+                if (view == itemView) {
+                    selectPrograms.clear();
+                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+                } else {
+                    selectPrograms.clear();
+                    selectPrograms.add(item);
+                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+                    itemView = view;
+                    programId = item.getId();
+                }
+            } else {
+                selectPrograms.add(item);
+                itemView = view;
+                programId = item.getId();
+                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+            }
+
+        });
     }
 
     public void fetchPrograms() {
@@ -61,6 +83,8 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 mActivity.hideLoading();
                 populatePrograms(data);
                 programsAdapter.setLoadingDone();
+
+
             }
 
             @Override
@@ -75,6 +99,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
     @Override
     public void onResume() {
         super.onResume();
+
 //        fetchPrograms();
     }
 
@@ -84,8 +109,10 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 
         if (data.size()==1){
             programId = data.get(0).getId();
+            prevVisible = true;
             Bundle b = new Bundle();
             b.putCharSequence("program", programId);
+            b.putBoolean("prevVisible",prevVisible);
             ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
             mDataManager.getLoginPrefs().setProgramId(programId);
             mActivity.finish();
@@ -135,12 +162,22 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                     }
                 });
 
+                if (isPrev.get()) {
+                    if (model.getId().equals(mDataManager.getLoginPrefs().getProgramId())) {
+                        itemView = itemBinding.llProg;
+                        itemBinding.llProg.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+                    }
+                }
+
+
                 itemBinding.llProg.setOnClickListener(v -> {
                     programId = model.getId();
+//                    itemBinding.llProg.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
                     mDataManager.getLoginPrefs().setProgramId(programId);
-                    itemBinding.llProg.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+//                    itemBinding.llProg.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     Bundle b = new Bundle();
                     b.putCharSequence("program", programId);
+                    b.putBoolean("prevVisible",prevVisible);
                     ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
                     mActivity.finish();
                 });
