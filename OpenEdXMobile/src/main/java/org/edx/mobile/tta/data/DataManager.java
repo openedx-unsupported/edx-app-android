@@ -156,13 +156,18 @@ import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.task.program.ApproveUnitTask;
+import org.edx.mobile.tta.task.program.CreatePeriodTask;
 import org.edx.mobile.tta.task.program.GetAllUnitsTask;
 import org.edx.mobile.tta.task.program.GetCourseComponentTask;
 import org.edx.mobile.tta.task.program.GetPendingUnitsTask;
+import org.edx.mobile.tta.task.program.GetPendingUsersTask;
 import org.edx.mobile.tta.task.program.GetPeriodsTask;
+import org.edx.mobile.tta.task.program.GetProgramFiltersTask;
 import org.edx.mobile.tta.task.program.GetProgramsTask;
 import org.edx.mobile.tta.task.program.GetSectionsTask;
 import org.edx.mobile.tta.task.program.GetUnitsTask;
+import org.edx.mobile.tta.task.program.GetUsersTask;
+import org.edx.mobile.tta.task.program.SavePeriodTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
 import org.edx.mobile.tta.utils.RxUtil;
@@ -3611,7 +3616,7 @@ public class DataManager extends BaseRoboInjector {
 
     public void getProgramFilters(OnResponseCallback<List<ProgramFilter>> callback) {
 
-        List<ProgramFilter> filters = new ArrayList<>();
+       /* List<ProgramFilter> filters = new ArrayList<>();
         ProgramFilter filter;
         ProgramFilterTag tag;
         List<ProgramFilterTag> tags;
@@ -3755,9 +3760,9 @@ public class DataManager extends BaseRoboInjector {
         filter.setTags(tags);
         filters.add(filter);
 
-        callback.onSuccess(filters);
+        callback.onSuccess(filters);*/
 
-        /*if (NetworkUtil.isConnected(context)) {
+        if (NetworkUtil.isConnected(context)) {
 
             new GetProgramFiltersTask(context){
                 @Override
@@ -3794,7 +3799,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             getProgramFiltersFromLocal(callback, new NoConnectionException(context));
-        }*/
+        }
 
     }
 
@@ -3812,7 +3817,7 @@ public class DataManager extends BaseRoboInjector {
     public void getPeriods(List<ProgramFilter> filters, String programId, String sectionId,
                            int take, int skip, OnResponseCallback<List<Period>> callback) {
 
-        List<Period> periods = new ArrayList<>();
+/*        List<Period> periods = new ArrayList<>();
         if (skip >= 10) {
             callback.onFailure(new TaException("Periods not available"));
             return;
@@ -3829,9 +3834,9 @@ public class DataManager extends BaseRoboInjector {
             period.setWeeks(4);
             periods.add(period);
         }
-        callback.onSuccess(periods);
+        callback.onSuccess(periods);*/
 
-       /* if (NetworkUtil.isConnected(context)) {
+        if (NetworkUtil.isConnected(context)) {
 
             new GetPeriodsTask(context, filters, programId, sectionId, take, skip){
                 @Override
@@ -3863,7 +3868,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }*/
+        }
 
     }
 
@@ -3933,20 +3938,20 @@ public class DataManager extends BaseRoboInjector {
             return;
         }
 
-        List<Unit> units = new ArrayList<>();
-        for (int i = 0; i < take; i++) {
-            Unit unit = new Unit();
-            unit.setSectionId(sectionId);
-            unit.setProgramId(programId);
-            unit.setCode("NeTT_all_" + (take * skip + i + 1));
-            unit.setId("unit_all_" + (take * skip + i + 1));
-            unit.setTitle("This is all Unit number " + (take * skip + i + 1));
-            unit.setStatus("viewing");
-            units.add(unit);
-        }
-        callback.onSuccess(units);
+//        List<Unit> units = new ArrayList<>();
+//        for (int i = 0; i < take; i++) {
+//            Unit unit = new Unit();
+//            unit.setSectionId(sectionId);
+//            unit.setProgramId(programId);
+//            unit.setCode("NeTT_all_" + (take * skip + i + 1));
+//            unit.setId("unit_all_" + (take * skip + i + 1));
+//            unit.setTitle("This is all Unit number " + (take * skip + i + 1));
+//            unit.setStatus("viewing");
+//            units.add(unit);
+//        }
+//        callback.onSuccess(units);
 
-       /* if (NetworkUtil.isConnected(context)) {
+        if (NetworkUtil.isConnected(context)) {
 
             new GetAllUnitsTask(context, filters, programId, sectionId, searchText, take, skip){
                 @Override
@@ -3980,7 +3985,6 @@ public class DataManager extends BaseRoboInjector {
         } else {
             getAllUnitsFromLocal(programId, sectionId, take, skip, callback, new NoConnectionException(context));
         }
-*/
     }
 
     public void getBlockUnit(String unit_id, OnResponseCallback<CourseComponent> callback) {
@@ -4046,8 +4050,8 @@ public class DataManager extends BaseRoboInjector {
     public void getUsers(String programId, String sectionId, int take, int skip,
                          OnResponseCallback<List<ProgramUser>> callback) {
 
-        List<ProgramUser> users = new ArrayList<>();
-        ProgramUser user;
+//        List<ProgramUser> users = new ArrayList<>();
+//        ProgramUser user;
 
 //        user = new ProgramUser();
 //        user.username = "default";
@@ -4055,41 +4059,41 @@ public class DataManager extends BaseRoboInjector {
 //        user.pendingCount = 2L;
 //        user.completedUnits = 3L;
 //        user.name = "name";
-        for (int i = 0; i < 12; i++) {
-            user = new ProgramUser();
-            user.username = "student " + (i + 1);
-            user.completedHours = 10L + i;
-            user.pendingCount = 2L + i;
-            user.completedUnits = 3L + i;
-            user.name = "name";
-            users.add(user);
-        }
-
-        callback.onSuccess(users);
-
-//        if (NetworkUtil.isConnected(context)) {
-//
-//            new GetUsersTask(context, programId, sectionId, take, skip){
-//                @Override
-//                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
-//                    super.onSuccess(programUsers);
-//                    if (programUsers == null || programUsers.isEmpty()){
-//                        callback.onFailure(new TaException("No users are available"));
-//                        return;
-//                    }
-//
-//                    callback.onSuccess(programUsers);
-//                }
-//
-//                @Override
-//                protected void onException(Exception ex) {
-//                    callback.onFailure(ex);
-//                }
-//            }.execute();
-//
-//        } else {
-//            callback.onFailure(new NoConnectionException(context));
+//        for (int i = 0; i < 12; i++) {
+//            user = new ProgramUser();
+//            user.username = "student " + (i + 1);
+//            user.completedHours = 10L + i;
+//            user.pendingCount = 2L + i;
+//            user.completedUnits = 3L + i;
+//            user.name = "name";
+//            users.add(user);
 //        }
+//
+//        callback.onSuccess(users);
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetUsersTask(context, programId, sectionId, take, skip){
+                @Override
+                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
+                    super.onSuccess(programUsers);
+                    if (programUsers == null || programUsers.isEmpty()){
+                        callback.onFailure(new TaException("No users are available"));
+                        return;
+                    }
+
+                    callback.onSuccess(programUsers);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
 
     }
 
@@ -4097,7 +4101,7 @@ public class DataManager extends BaseRoboInjector {
                                 OnResponseCallback<List<ProgramUser>> callback) {
 
 
-        List<ProgramUser> users = new ArrayList<>();
+      /*  List<ProgramUser> users = new ArrayList<>();
         ProgramUser user;
         for (int i = 0; i < 7; i++) {
             user = new ProgramUser();
@@ -4108,31 +4112,31 @@ public class DataManager extends BaseRoboInjector {
             user.name = "name";
             users.add(user);
         }
-        callback.onSuccess(users);
+        callback.onSuccess(users);*/
 
-//        if (NetworkUtil.isConnected(context)) {
-//
-//            new GetPendingUsersTask(context, programId, sectionId, take, skip){
-//                @Override
-//                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
-//                    super.onSuccess(programUsers);
-//                    if (programUsers == null || programUsers.isEmpty()){
-//                        callback.onFailure(new TaException("No users are available with units pending for approval"));
-//                        return;
-//                    }
-//
-//                    callback.onSuccess(programUsers);
-//                }
-//
-//                @Override
-//                protected void onException(Exception ex) {
-//                    callback.onFailure(ex);
-//                }
-//            }.execute();
-//
-//        } else {
-//            callback.onFailure(new NoConnectionException(context));
-//        }
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetPendingUsersTask(context, programId, sectionId, take, skip){
+                @Override
+                protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
+                    super.onSuccess(programUsers);
+                    if (programUsers == null || programUsers.isEmpty()){
+                        callback.onFailure(new TaException("No users are available with units pending for approval"));
+                        return;
+                    }
+
+                    callback.onSuccess(programUsers);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
 
     }
 
@@ -4168,11 +4172,11 @@ public class DataManager extends BaseRoboInjector {
     public void createPeriod(String programId, String sectionId, String lang,
                              OnResponseCallback<SuccessResponse> callback) {
 
-        SuccessResponse response = new SuccessResponse();
-        response.setSuccess(true);
-        callback.onSuccess(response);
+//        SuccessResponse response = new SuccessResponse();
+//        response.setSuccess(true);
+//        callback.onSuccess(response);
 
-        /*if (NetworkUtil.isConnected(context)) {
+        if (NetworkUtil.isConnected(context)) {
 
             new CreatePeriodTask(context, programId, sectionId, lang){
                 @Override
@@ -4194,17 +4198,17 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }*/
+        }
 
     }
 
     public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback) {
 
-        SuccessResponse response = new SuccessResponse();
-        response.setSuccess(true);
-        callback.onSuccess(response);
+//        SuccessResponse response = new SuccessResponse();
+//        response.setSuccess(true);
+//        callback.onSuccess(response);
 
-        /*if (NetworkUtil.isConnected(context)) {
+        if (NetworkUtil.isConnected(context)) {
 
             new SavePeriodTask(context, periodId, unitIds){
                 @Override
@@ -4226,7 +4230,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }*/
+        }
 
     }
 

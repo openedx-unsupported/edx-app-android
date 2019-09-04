@@ -64,14 +64,6 @@ public class PendingUsersViewModel extends BaseViewModel {
         programUserList = new ArrayList<>();
         usersAdapter.setItems(programUserList);
 
-
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
         filterLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         layoutManager = new GridLayoutManager(mActivity, 2);
         take = TAKE;
@@ -81,6 +73,14 @@ public class PendingUsersViewModel extends BaseViewModel {
         mActivity.showLoading();
         getFilters();
         fetchData();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
     }
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {

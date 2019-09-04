@@ -565,6 +565,14 @@ public class LoginPrefs {
         return pref.getString(PrefManager.Key.PROGRAM_ID);
     }
 
+    public void setProgramTitle(String programTitle){
+        pref.put(PrefManager.Key.PROGRAM_TITLE, programTitle);
+    }
+
+    public String getProgramTitle(){
+        return pref.getString(PrefManager.Key.PROGRAM_TITLE);
+    }
+
     public void setSectionId(String sectionId){
         pref.put(PrefManager.Key.SECTION_ID, sectionId);
     }

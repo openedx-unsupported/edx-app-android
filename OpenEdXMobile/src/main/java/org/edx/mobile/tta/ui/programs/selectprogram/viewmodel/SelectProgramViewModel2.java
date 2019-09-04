@@ -174,6 +174,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                     programId = model.getId();
 //                    itemBinding.llProg.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
                     mDataManager.getLoginPrefs().setProgramId(programId);
+                    mDataManager.getLoginPrefs().setProgramTitle(model.getTitle());
 //                    itemBinding.llProg.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     Bundle b = new Bundle();
                     b.putCharSequence("program", programId);

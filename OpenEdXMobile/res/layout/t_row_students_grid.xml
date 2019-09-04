@@ -27,7 +27,6 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:id="@+id/user_image"
-                android:src="@drawable/profile_photo_placeholder"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"/>
 

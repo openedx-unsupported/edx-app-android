@@ -61,12 +61,6 @@ public class StudentsViewModel extends BaseViewModel {
         filtersAdapter = new FiltersAdapter(mActivity);
         users = new ArrayList<>();
         usersAdapter.setItems(users);
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         layoutManager = new GridLayoutManager(mActivity, 2);
         filterLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
 
@@ -76,6 +70,12 @@ public class StudentsViewModel extends BaseViewModel {
         mActivity.showLoading();
 //        getFilters();
         fetchData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
 
@@ -227,7 +227,7 @@ public class StudentsViewModel extends BaseViewModel {
                 itemBinding.txtPending.setText(String.valueOf(model.pendingCount));
                 itemBinding.userName.setText(model.username);
                 if (model.profileImage != null){
-                    Glide.with(mActivity).load(model.profileImage.getImageUrlSmall())
+                    Glide.with(mActivity).load("http://192.168.1.29:18000"+ model.profileImage.getImageUrlSmall())
                             .centerCrop()
                             .placeholder(R.drawable.profile)
                             .into(itemBinding.userImage);

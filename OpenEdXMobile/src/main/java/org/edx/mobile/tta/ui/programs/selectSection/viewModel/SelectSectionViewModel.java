@@ -38,6 +38,7 @@ public class SelectSectionViewModel extends BaseViewModel {
     public SectionAdapter sectionAdapter;
     public RecyclerView.LayoutManager layoutManager;
     public ObservableField<String> programId = new ObservableField<>();
+    public ObservableField<String> progTitle = new ObservableField<>();
     public ObservableField<String> programForSection = new ObservableField<>();
     public ObservableBoolean fabPrevVisibility = new ObservableBoolean();
 
@@ -84,7 +85,7 @@ public class SelectSectionViewModel extends BaseViewModel {
     public void fetchSections() {
 
         mActivity.showLoading();
-        programForSection.set("Select Section for " + mDataManager.getLoginPrefs().getProgramId());
+        programForSection.set("Select section for : " + mDataManager.getLoginPrefs().getProgramTitle());
         mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<List<Section>>() {
             @Override
             public void onSuccess(List<Section> data) {
@@ -107,7 +108,7 @@ public class SelectSectionViewModel extends BaseViewModel {
     }
 
     public void save() {
-        mActivity.showLoading();
+//        mActivity.showLoading();
         if (!sectionId.isEmpty()) {
             mDataManager.getLoginPrefs().setProgramId(programId.get());
             mDataManager.getLoginPrefs().setSectionId(sectionId);

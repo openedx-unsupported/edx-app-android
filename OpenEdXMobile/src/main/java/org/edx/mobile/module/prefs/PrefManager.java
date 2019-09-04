@@ -339,6 +339,7 @@ public class PrefManager {
         public static final String PROGRAM_FILTERS_JSON = "program_filters_json";
 
         public static final String PROGRAM_ID = "program_id";
+        public static final String PROGRAM_TITLE = "program_title";
         public static final String SECTION_ID = "section_id";
 
         //MX Ankit: To store app update
