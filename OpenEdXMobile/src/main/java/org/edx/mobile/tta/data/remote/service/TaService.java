@@ -36,6 +36,7 @@ import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,7 @@ import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -238,9 +240,10 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_CREATE_PERIOD)
     Call<SuccessResponse> createPeriod(@FieldMap Map<String, String> parameters);
 
-    @FormUrlEncoded
+
     @POST(ApiConstants.URL_MX_SAVE_PERIOD)
-    Call<SuccessResponse> savePeriod(@FieldMap Map<String, String> parameters);
+//    Call<SuccessResponse> savePeriod(@FieldMap Map<String, String> parameters);
+    Call<SuccessResponse> savePeriod(@Body Map<String, String> parameters);
 
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_APPROVE_UNIT)

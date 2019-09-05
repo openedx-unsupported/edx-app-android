@@ -15,24 +15,26 @@ import java.util.List;
 public class GetUnitsTask extends Task<List<Unit>> {
 
     private List<ProgramFilter> filters;
-    private String programId, sectionId;
+    private String programId, sectionId, role;
     private int take, skip;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetUnitsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId, int take, int skip) {
+    public GetUnitsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId,
+                        String role, int take, int skip) {
         super(context);
         this.filters = filters;
         this.programId = programId;
         this.sectionId = sectionId;
+        this.role = role;
         this.take = take;
         this.skip = skip;
     }
 
     @Override
     public List<Unit> call() throws Exception {
-        return taAPI.getUnits(filters, programId, sectionId, take, skip).execute().body();
+        return taAPI.getUnits(filters, programId, sectionId, role, take, skip).execute().body();
     }
 
 }

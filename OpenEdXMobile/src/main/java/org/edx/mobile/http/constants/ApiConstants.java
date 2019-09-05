@@ -163,7 +163,7 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_SECTIONS = "mx_humana_lms/api/v1/getSections";
 
-    public static final String URL_MX_GET_PROGRAM_FILTERS = "ENDPOINT";
+    public static final String URL_MX_GET_PROGRAM_FILTERS = "mx_humana_lms/api/v1/getProgramFilters";
 
     public static final String URL_MX_GET_PERIODS = "mx_humana_lms/api/v1/getPeriods";
 

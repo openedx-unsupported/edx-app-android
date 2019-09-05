@@ -10,20 +10,21 @@ import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 public class CreatePeriodTask extends Task<SuccessResponse> {
 
-    private String programId, sectionId, lang;
+    private String programId, sectionId, lang, periodName;
 
     @Inject
     private TaAPI taAPI;
 
-    public CreatePeriodTask(Context context, String programId, String sectionId, String lang) {
+    public CreatePeriodTask(Context context, String programId, String sectionId, String lang, String periodName) {
         super(context);
         this.programId = programId;
         this.sectionId = sectionId;
+        this.periodName = periodName;
         this.lang = lang;
     }
 
     @Override
     public SuccessResponse call() throws Exception {
-        return taAPI.createPeriod(programId, sectionId, lang).execute().body();
+        return taAPI.createPeriod(programId, sectionId, lang, periodName).execute().body();
     }
 }

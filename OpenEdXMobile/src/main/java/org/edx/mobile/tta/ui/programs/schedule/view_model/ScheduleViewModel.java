@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -101,9 +102,9 @@ public class ScheduleViewModel extends BaseViewModel {
         mActivity.showLoading();
         getFilters();
         fetchData();
-        toolTiptext.set("test");
-        toolTipGravity.set(Gravity.TOP);
-        toolTipPosition.set(0);
+//        toolTiptext.set("test");
+//        toolTipGravity.set(Gravity.TOP);
+//        toolTipPosition.set(0);
 
     }
 
@@ -153,7 +154,7 @@ public class ScheduleViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         gridLayoutManager = new GridLayoutManager(mActivity, 2);
-
+        fetchData();
     }
 
     private void getFilters() {
@@ -204,7 +205,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
 
     private void getPeriods() {
-
+        periodAdapter.reset(true);
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
@@ -275,6 +276,7 @@ public class ScheduleViewModel extends BaseViewModel {
         final Dialog dialog = new Dialog(mActivity);
         dialog.setContentView(R.layout.t_alert_add_period);
         Button dialogButton = (Button) dialog.findViewById(R.id.submit_button);
+        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
         DropDownFilterView drop = dialog.findViewById(R.id.filter_drop_down);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
@@ -298,17 +300,18 @@ public class ScheduleViewModel extends BaseViewModel {
                 mActivity.showLongSnack("Please select a language");
                 return;
             }
-
-            createPeriods(lang);
+            String periodName = dialogText.getText().toString();
+            createPeriods(lang, periodName);
             dialog.dismiss();
         });
         dialog.show();
     }
 
-    private void createPeriods(String lang) {
+    private void createPeriods(String lang, String periodName) {
+        lang = "hi";
         mActivity.showLoading();
         mDataManager.createPeriod(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), lang, new OnResponseCallback<SuccessResponse>() {
+                mDataManager.getLoginPrefs().getSectionId(), lang, periodName, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         if (data.getSuccess()) {

@@ -279,13 +279,15 @@ public class TaAPI {
         return taService.getPeriods(parameters);
     }
 
-    public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId, int take, int skip){
+    public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId,String role,
+                                     int take, int skip){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);
         parameters.put(Constants.KEY_PROGRAM_ID, programId);
         parameters.put(Constants.KEY_SECTION_ID, sectionId);
         parameters.put(Constants.KEY_FILTERS, filters);
+        parameters.put(Constants.KEY_ROLE, role);
 
         return taService.getUnits(parameters);
     }
@@ -318,15 +320,16 @@ public class TaAPI {
         return taService.getCourseComponentUnits(unit_id);
     }
 
-    public Call<SuccessResponse> createPeriod(String programId, String sectionId, String lang){
+    public Call<SuccessResponse> createPeriod(String programId, String sectionId, String lang, String periodName){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PROGRAM_ID, programId);
         parameters.put(Constants.KEY_SECTION_ID, sectionId);
         parameters.put(Constants.KEY_LANG, lang);
+        parameters.put(Constants.KEY_PERIOD_NAME, periodName);
         return taService.createPeriod(parameters);
     }
 
-    public Call<SuccessResponse> savePeriod(long periodId, List<String> unitIds){
+    public Call<SuccessResponse> savePeriod(long periodId, List<CharSequence> unitIds){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
         parameters.put(Constants.KEY_UNITS, String.valueOf(unitIds));

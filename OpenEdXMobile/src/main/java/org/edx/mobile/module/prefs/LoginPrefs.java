@@ -584,4 +584,12 @@ public class LoginPrefs {
     public void storeLatestAppInfo(@NonNull UpdateResponse res) {
         pref.put(PrefManager.Key.LATEST_APP_INFO_JSON, gson.toJson(res));
     }
+
+    public String getRole(){
+        return pref.getString(PrefManager.Key.ROLE);
+    }
+
+    public void setRole(String role){
+        pref.put(PrefManager.Key.ROLE, role);
+    }
 }

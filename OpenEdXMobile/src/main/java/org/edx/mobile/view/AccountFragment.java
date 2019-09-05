@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -14,9 +15,15 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentAccountBinding;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.tta.data.constants.Constants;
+import org.edx.mobile.tta.data.local.db.table.Section;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.Config;
+
+import java.util.List;
 
 public class AccountFragment extends BaseFragment {
     private static final String TAG = AccountFragment.class.getCanonicalName();
@@ -73,11 +80,18 @@ public class AccountFragment extends BaseFragment {
 
         });
 
-        binding.changeProgBtn.setOnClickListener(v -> ActivityUtil.gotoPage(getActivity(), SelectProgramActivity.class));
+        binding.changeProgBtn.setOnClickListener(v -> {
+            if (!Constants.isSingleRow) {
+                ActivityUtil.gotoPage(getActivity(), SelectProgramActivity.class);
+            }else {
+                Toast.makeText(getActivity(),"Only single program exist", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         binding.tvVersionNo.setText(String.format("%s %s %s", getString(R.string.label_version),
                 BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));
 
         return binding.getRoot();
     }
+
 }

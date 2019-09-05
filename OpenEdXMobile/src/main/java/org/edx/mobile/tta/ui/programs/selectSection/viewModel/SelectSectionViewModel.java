@@ -38,7 +38,6 @@ public class SelectSectionViewModel extends BaseViewModel {
     public SectionAdapter sectionAdapter;
     public RecyclerView.LayoutManager layoutManager;
     public ObservableField<String> programId = new ObservableField<>();
-    public ObservableField<String> progTitle = new ObservableField<>();
     public ObservableField<String> programForSection = new ObservableField<>();
     public ObservableBoolean fabPrevVisibility = new ObservableBoolean();
 
@@ -68,12 +67,15 @@ public class SelectSectionViewModel extends BaseViewModel {
                     view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     itemView = view;
                     sectionId = item.getId();
+                    mDataManager.getLoginPrefs().setRole(item.getRole());
+
                 }
             } else {
                 selectedSections.add(item);
                 itemView = view;
                 sectionItem = item;
                 sectionId = item.getId();
+                mDataManager.getLoginPrefs().setRole(item.getRole());
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
             }
 
@@ -108,16 +110,16 @@ public class SelectSectionViewModel extends BaseViewModel {
     }
 
     public void save() {
-//        mActivity.showLoading();
+        mActivity.showLoading();
         if (!sectionId.isEmpty()) {
             mDataManager.getLoginPrefs().setProgramId(programId.get());
             mDataManager.getLoginPrefs().setSectionId(sectionId);
             ActivityUtil.gotoPage(mActivity, LandingActivity.class);
             mActivity.finish();
         } else {
+            mActivity.hideLoading();
             mActivity.showShortSnack("Please select a section");
         }
-
 
     }
 

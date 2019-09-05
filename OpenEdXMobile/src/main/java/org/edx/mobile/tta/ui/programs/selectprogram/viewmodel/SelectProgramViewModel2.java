@@ -84,7 +84,6 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 populatePrograms(data);
                 programsAdapter.setLoadingDone();
 
-
             }
 
             @Override
@@ -110,6 +109,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         if (data.size()==1){
             programId = data.get(0).getId();
             prevVisible = true;
+            mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
             Bundle b = new Bundle();
             b.putCharSequence("program", programId);
             b.putBoolean("prevVisible",prevVisible);

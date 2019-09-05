@@ -3616,7 +3616,7 @@ public class DataManager extends BaseRoboInjector {
 
     public void getProgramFilters(OnResponseCallback<List<ProgramFilter>> callback) {
 
-       /* List<ProgramFilter> filters = new ArrayList<>();
+      /*  List<ProgramFilter> filters = new ArrayList<>();
         ProgramFilter filter;
         ProgramFilterTag tag;
         List<ProgramFilterTag> tags;
@@ -3800,7 +3800,6 @@ public class DataManager extends BaseRoboInjector {
         } else {
             getProgramFiltersFromLocal(callback, new NoConnectionException(context));
         }
-
     }
 
     private void getProgramFiltersFromLocal(OnResponseCallback<List<ProgramFilter>> callback, Exception e) {
@@ -3872,7 +3871,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
+    public void getUnits(List<ProgramFilter> filters, String programId, String sectionId, String role,
                          int take, int skip, OnResponseCallback<List<Unit>> callback) {
 //
 //        if (skip >= 10) {
@@ -3895,7 +3894,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, take, skip){
+            new GetUnitsTask(context, filters, programId, sectionId, role, take, skip){
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
@@ -4170,6 +4169,7 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void createPeriod(String programId, String sectionId, String lang,
+                             String periodName,
                              OnResponseCallback<SuccessResponse> callback) {
 
 //        SuccessResponse response = new SuccessResponse();
@@ -4177,8 +4177,7 @@ public class DataManager extends BaseRoboInjector {
 //        callback.onSuccess(response);
 
         if (NetworkUtil.isConnected(context)) {
-
-            new CreatePeriodTask(context, programId, sectionId, lang){
+            new CreatePeriodTask(context, programId, sectionId, lang, periodName){
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);
@@ -4202,7 +4201,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback) {
+    public void savePeriod(long periodId, List<CharSequence> unitIds, OnResponseCallback<SuccessResponse> callback) {
 
 //        SuccessResponse response = new SuccessResponse();
 //        response.setSuccess(true);

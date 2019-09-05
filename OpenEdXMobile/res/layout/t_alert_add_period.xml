@@ -1,33 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/_10px"
-        android:gravity="center"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-
+    <LinearLayout
+        android:id="@+id/header_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="left"
+        android:orientation="vertical" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:textSize="@dimen/_16px_sp"
+            android:layout_marginTop="10dp"
+            android:text="Create new period"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/primary_cyan"
+            android:fontFamily="@font/hind_bold"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/release_notes_ll"
+        android:layout_below="@id/header_ll"
+        android:layout_above="@id/footer"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/_16px"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_16px_sp"
+            android:text="Select language"
+            android:layout_margin="@dimen/_12px"
+            android:textColor="@color/primary_cyan"
+            android:fontFamily="@font/hind_bold"/>
         <org.edx.mobile.tta.ui.custom.DropDownFilterView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/filter_drop_down"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_8px"
-            android:layout_marginStart="@dimen/_6px"
-            android:layout_marginEnd="@dimen/_6px" />
+            android:layout_margin="@dimen/_12px"
+            android:id="@+id/filter_drop_down" />
 
-        <Button
-            android:layout_width="wrap_content"
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_8px"
-            android:id="@+id/submit_button"
-            android:text="@string/submit"
-            android:padding="@dimen/_16px"
-            android:layout_margin="@dimen/_16px"
-            android:textColor="@color/white"
-            android:background="@color/colorAccent"
-            style="@style/edX.Widget.RegularButton"/>
+            android:layout_marginTop="@dimen/_10px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/et_period_name"
+                android:hint="Period Name"
+                android:padding="@dimen/_16px"
+                android:layout_margin="@dimen/_16px"
+                android:textColor="@color/black"
+                style="@style/edX.Widget.EditText"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:id="@+id/submit_button"
+                android:text="@string/submit"
+                android:padding="@dimen/_16px"
+                android:layout_margin="@dimen/_16px"
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"
+                style="@style/edX.Widget.RegularButton"/>
+
+        </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 </layout>
