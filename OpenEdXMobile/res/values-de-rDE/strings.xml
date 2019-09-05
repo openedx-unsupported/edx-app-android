@@ -537,7 +537,7 @@ Kontrollieren Sie auch Ihren Spam-Ordner.</string>
   <!--Title for default channel notifications-->
   <string name="default_notification_channel_title" tools:ignore="MissingTranslation">Allgemeine Benachrichtigung</string>
   <!--Discussion/Forum-->
-  <string name="forum_no_results_for_search_query">Ihre Suche \"{query_string}\" hat keine Ergebnisse ergeben. Versuchen Sie es mit einem anderen Suchbegriff erneut oder setzen Sie Filter.</string>
+  <string name="forum_no_results_for_search_query">Ihre Suche \"{search_query}\" hat keine Ergebnisse ergeben. Versuchen Sie es mit einem anderen Suchbegriff erneut oder setzen Sie Filter.</string>
   <string name="forum_no_results_for_all_posts">Es gibt keine Beiträge in dieser Diskussion.</string>
   <string name="forum_no_results_for_following">Sie folgen derzeit keinen Beiträgen</string>
   <string name="forum_no_results_for_filtered_following">Suchergebnisse enthalten keine Beiträge, denen Sie derzeit folgen.</string>

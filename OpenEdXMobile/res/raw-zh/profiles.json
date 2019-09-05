@@ -4,7 +4,7 @@
               "name" : "account_privacy",
               "label" : "其他学员可以看到我的：",
               "type" : "switch",
-              "data_type" : "Boolean",
+              "data_type" : "boolean",
               "options" : {
                 "values" : [
                             { "name" : "完整资料", "value" : "all_users" },
