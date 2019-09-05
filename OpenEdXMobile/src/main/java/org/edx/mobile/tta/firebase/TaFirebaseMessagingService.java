@@ -79,7 +79,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
                 .show();
 
         if (loginPrefs.getUsername() != null) {
-            DataManager dataManager = DataManager.getInstance(this);
+            DataManager dataManager = DataManager.getInstance(getApplicationContext());
 
             Notification notification = new Notification();
             notification.setCreated_time(System.currentTimeMillis());

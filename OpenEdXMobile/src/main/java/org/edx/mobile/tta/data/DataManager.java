@@ -152,17 +152,11 @@ import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.task.program.ApproveUnitTask;
-import org.edx.mobile.tta.task.program.CreatePeriodTask;
-import org.edx.mobile.tta.task.program.GetAllUnitsTask;
+import org.edx.mobile.tta.task.program.GetBlockComponentFromCacheTask;
+import org.edx.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.edx.mobile.tta.task.program.GetPendingUnitsTask;
 import org.edx.mobile.tta.task.program.GetPendingUsersTask;
-import org.edx.mobile.tta.task.program.GetPeriodsTask;
-import org.edx.mobile.tta.task.program.GetProgramFiltersTask;
-import org.edx.mobile.tta.task.program.GetProgramsTask;
-import org.edx.mobile.tta.task.program.GetSectionsTask;
-import org.edx.mobile.tta.task.program.GetUnitsTask;
 import org.edx.mobile.tta.task.program.GetUsersTask;
-import org.edx.mobile.tta.task.program.SavePeriodTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
 import org.edx.mobile.tta.utils.RxUtil;
@@ -4188,6 +4182,62 @@ public class DataManager extends BaseRoboInjector {
         } else {
             callback.onFailure(new NoConnectionException(context));
         }
+
+    }
+
+    public void getBlockComponent(String blockId, String courseId, OnResponseCallback<CourseComponent> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetBlockComponentFromServerTask(context, blockId, courseId){
+                @Override
+                protected void onSuccess(CourseComponent courseComponent) throws Exception {
+                    super.onSuccess(courseComponent);
+                    if (courseComponent != null){
+                        courseManager.addBlockComponentInAppLevelCache(courseComponent, courseId);
+                        callback.onSuccess(courseComponent);
+                    } else {
+                        getBlockComponentFromLocal(blockId, courseId, callback, new TaException("Unit not found"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getBlockComponentFromLocal(blockId, courseId, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getBlockComponentFromLocal(blockId, courseId, callback, new NoConnectionException(context));
+        }
+
+    }
+
+    private void getBlockComponentFromLocal(String blockId, String courseId,
+                                           OnResponseCallback<CourseComponent> callback, Exception e){
+
+        CourseComponent component = courseManager.getBlockComponent(blockId, courseId);
+        if (component != null){
+            callback.onSuccess(component);
+            return;
+        }
+
+        new GetBlockComponentFromCacheTask(context, blockId, courseId){
+            @Override
+            protected void onSuccess(CourseComponent courseComponent) throws Exception {
+                super.onSuccess(courseComponent);
+                if (courseComponent != null){
+                    callback.onSuccess(courseComponent);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(e);
+            }
+        }.execute();
 
     }
 

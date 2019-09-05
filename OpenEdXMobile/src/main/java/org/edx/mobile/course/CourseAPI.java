@@ -192,6 +192,24 @@ public class CourseAPI {
         return (CourseComponent) normalizeCourseStructure(model, courseId);
     }
 
+    @NonNull
+    public Call<CourseStructureV1Model> getBlockComponentWithoutStale(@NonNull final String blockId, @NonNull final String courseId) {
+        return courseService.getBlockComponent(blockId, null, getUsername(), courseId);
+    }
+
+    @NonNull
+    public Call<CourseStructureV1Model> getBlockComponent(@NonNull final String blockId, @NonNull final String courseId) {
+        return courseService.getBlockComponent(blockId, "max-stale=" + HOUR, getUsername(), courseId);
+    }
+
+    @NonNull
+    public CourseComponent getBlockComponentFromCache(@NonNull final String blockId, @NonNull final String courseId)
+            throws Exception {
+        CourseStructureV1Model model = executeStrict(
+                courseService.getBlockComponent(blockId, "only-if-cached, max-stale", getUsername(), courseId));
+        return (CourseComponent) normalizeCourseStructure(model, courseId);
+    }
+
     public String downloadScorm(String url, String file) throws Exception {
 //        return api.downloadScorm(url,file);
         return null;

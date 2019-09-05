@@ -16,6 +16,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
 import org.edx.mobile.databinding.TRowUnitBinding;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
@@ -35,6 +36,7 @@ public class UnitsViewModel extends BaseViewModel {
 
     private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_SKIP = 0;
+    private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
 
     public UnitsAdapter unitsAdapter;
     public FiltersAdapter filtersAdapter;
@@ -43,6 +45,7 @@ public class UnitsViewModel extends BaseViewModel {
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
 
+    private EnrolledCoursesResponse course;
     private List<Unit> units;
     private List<ProgramFilterTag> tags;
     private List<ProgramFilter> allFilters;
@@ -59,9 +62,10 @@ public class UnitsViewModel extends BaseViewModel {
         return true;
     };
 
-    public UnitsViewModel(Context context, TaBaseFragment fragment) {
+    public UnitsViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
         super(context, fragment);
 
+        this.course = course;
         units = new ArrayList<>();
         tags = new ArrayList<>();
         filters = new ArrayList<>();
@@ -75,6 +79,28 @@ public class UnitsViewModel extends BaseViewModel {
 
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
+            mActivity.showLoading();
+            mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
+                    new OnResponseCallback<CourseComponent>() {
+                        @Override
+                        public void onSuccess(CourseComponent data) {
+                            mActivity.hideLoading();
+
+                            if (course != null && data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+                                mDataManager.getEdxEnvironment().getRouter().showCourseUnitDetail(
+                                        mFragment, REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                        course, data.getChildren().get(0).getId(), false);
+                            } else {
+                                mActivity.showLongSnack("Unable to open unit");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            mActivity.hideLoading();
+                            mActivity.showLongSnack(e.getLocalizedMessage());
+                        }
+                    });
 
         });
 

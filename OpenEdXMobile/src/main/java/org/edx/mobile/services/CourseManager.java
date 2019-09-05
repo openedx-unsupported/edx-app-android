@@ -12,6 +12,9 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.course.CourseComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class manages the caching mechanism of courses data.
  */
@@ -29,15 +32,19 @@ public class CourseManager {
      */
     private final LruCache<String, CourseComponent> cachedComponent;
 
+    private final LruCache<String, List<CourseComponent>> cachedBlockComponents;
+
     @Inject
     CourseAPI courseApi;
 
     public CourseManager() {
         cachedComponent = new LruCache<>(NO_OF_COURSES_TO_CACHE);
+        cachedBlockComponents = new LruCache<>(NO_OF_COURSES_TO_CACHE);
     }
 
     public void clearAllAppLevelCache() {
         cachedComponent.evictAll();
+        cachedBlockComponents.evictAll();
     }
 
     public void addCourseDataInAppLevelCache(@NonNull String courseId,
@@ -123,13 +130,17 @@ public class CourseManager {
                                             @NonNull final String componentId) {
         CourseComponent courseComponent = getCachedCourseData(courseId);
         if (courseComponent == null)
-            return null;
-        return courseComponent.find(new Filter<CourseComponent>() {
+            return getBlockComponent(componentId, courseId);
+        CourseComponent component = courseComponent.find(new Filter<CourseComponent>() {
             @Override
             public boolean apply(CourseComponent courseComponent) {
                 return componentId.equals(courseComponent.getId());
             }
         });
+        if (component == null)
+            return getBlockComponent(componentId, courseId);
+
+        return component;
     }
 
     public CourseComponent getComponentByCourseId(String courseId){
@@ -141,5 +152,29 @@ public class CourseManager {
         if ( courseComponent == null )
             return null;
         return courseComponent.findMxFirstComponent();
+    }
+
+    public void addBlockComponentInAppLevelCache(CourseComponent block, String courseId){
+        List<CourseComponent> components = cachedBlockComponents.get(courseId);
+        if (components == null){
+            components = new ArrayList<>();
+        }
+        if (!components.contains(block)){
+            components.add(block);
+        }
+        cachedBlockComponents.put(courseId, components);
+    }
+
+    public CourseComponent getBlockComponent(String blockId, String courseId){
+        List<CourseComponent> components = cachedBlockComponents.get(courseId);
+        if (components == null){
+            return null;
+        }
+        for (CourseComponent component: components){
+            if (component.getId().equals(blockId)){
+                return component;
+            }
+        }
+        return null;
     }
 }

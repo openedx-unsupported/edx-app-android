@@ -145,7 +145,15 @@ public class LibraryViewModel extends BaseViewModel {
 
         try {
             fragments.add(new ScheduleFragment());
-            fragments.add(new UnitsFragment());
+
+            UnitsFragment unitsFragment = new UnitsFragment();
+            if (course != null){
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
+                unitsFragment.setArguments(bundle);
+            }
+            fragments.add(unitsFragment);
+
             if (mDataManager.getLoginPrefs().getUsername() != null &&
                     mDataManager.getLoginPrefs().getUsername().equals("staff")) {
                 fragments.add(new PendingUsersFragment());
