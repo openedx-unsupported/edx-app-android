@@ -11,6 +11,7 @@ import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.IBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,6 +174,12 @@ public class CourseManager {
         for (CourseComponent component: components){
             if (component.getId().equals(blockId)){
                 return component;
+            } else if (component.isContainer() && component.getChildren() != null){
+                for (IBlock child: component.getChildren()){
+                    if (child.getId().equals(blockId)){
+                        return (CourseComponent) child;
+                    }
+                }
             }
         }
         return null;

@@ -156,6 +156,7 @@ import org.edx.mobile.tta.task.program.GetBlockComponentFromCacheTask;
 import org.edx.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.edx.mobile.tta.task.program.GetPendingUnitsTask;
 import org.edx.mobile.tta.task.program.GetPendingUsersTask;
+import org.edx.mobile.tta.task.program.GetUnitsTask;
 import org.edx.mobile.tta.task.program.GetUsersTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
@@ -3864,7 +3865,7 @@ public class DataManager extends BaseRoboInjector {
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
                            int take, int skip, OnResponseCallback<List<Unit>> callback){
 
-        if (skip >= 10){
+        /*if (skip >= 10){
             callback.onFailure(new TaException("Units not available"));
             return;
         }
@@ -3880,9 +3881,9 @@ public class DataManager extends BaseRoboInjector {
             unit.setStatus("completed");
             units.add(unit);
         }
-        callback.onSuccess(units);
+        callback.onSuccess(units);*/
 
-        /*if (NetworkUtil.isConnected(context)) {
+        if (NetworkUtil.isConnected(context)) {
 
             new GetUnitsTask(context, filters, programId, sectionId, take, skip){
                 @Override
@@ -3915,7 +3916,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }*/
+        }
 
     }
 
