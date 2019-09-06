@@ -16,13 +16,13 @@ public class SelectSectionActivity extends BaseVMActivity {
         super.onCreate(savedInstanceState);
         viewModel = new SelectSectionViewModel(this);
 //        Intent in = getIntent();
-        assert savedInstanceState != null;
+        /*assert savedInstanceState != null;
         savedInstanceState = getIntent().getExtras();
         programId = savedInstanceState.getString("program");
         prevVisible = savedInstanceState.getBoolean("prevVisible");
         progName = savedInstanceState.getString("progName");
         viewModel.fabPrevVisibility.set(prevVisible);
-        viewModel.programId.set(programId);
+        viewModel.programId.set(programId);*/
         binding(R.layout.t_activity_select_section, viewModel);
     }
 }

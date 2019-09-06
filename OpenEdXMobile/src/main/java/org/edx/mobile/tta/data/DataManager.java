@@ -89,7 +89,6 @@ import org.edx.mobile.tta.data.model.profile.FollowStatus;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
-import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
@@ -3872,7 +3871,7 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
-                           int take, int skip, OnResponseCallback<List<Unit>> callback){
+                         String role, int take, int skip, OnResponseCallback<List<Unit>> callback){
 
         /*if (skip >= 10){
             callback.onFailure(new TaException("Units not available"));
@@ -3894,7 +3893,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, null, take, skip){
+            new GetUnitsTask(context, filters, programId, sectionId, role, take, skip){
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);

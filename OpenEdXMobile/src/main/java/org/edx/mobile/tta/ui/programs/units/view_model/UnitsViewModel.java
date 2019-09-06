@@ -85,10 +85,12 @@ public class UnitsViewModel extends BaseViewModel {
                         public void onSuccess(CourseComponent data) {
                             mActivity.hideLoading();
 
-                            if (course != null && data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+                            if (UnitsViewModel.this.course != null &&
+                                    data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
                                 mDataManager.getEdxEnvironment().getRouter().showCourseUnitDetail(
                                         mFragment, REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                        course, data.getChildren().get(0).getId(), false);
+                                        UnitsViewModel.this.course,
+                                        data.getChildren().get(0).getId(), false);
                             } else {
                                 mActivity.showLongSnack("Unable to open unit");
                             }
