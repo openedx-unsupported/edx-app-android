@@ -8,7 +8,7 @@
               "options" : {
                 "values" : [
                             { "name" : "Perfil Completo", "value" : "all_users" },
-                            { "name" : "Perfil Limitado",  "value" : "privado" }
+                            { "name" : "Perfil Limitado",  "value" : "private" }
                  ]
               },
               "instructions" : "Un perfil limitado comunica solo tu nombre de usuario y tu foto.  ",
@@ -28,7 +28,7 @@
               "sub_instructions" : "Esto no sera desplegado en público"
     },
     {
-              "name" : "país",
+              "name" : "country",
               "label" : "Ubicación",
               "type" : "select",
               "data_type" : "country",

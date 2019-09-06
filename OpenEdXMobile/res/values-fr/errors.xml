@@ -33,7 +33,7 @@
   <!--Error shown during login when user attempts login without entering a password-->
   <string name="error_enter_password">Veuillez entrer votre mot de passe et essayez de nouveau.</string>
   <!--Title of alert shown during login when user attempts login via Facebook without having linked their account-->
-  <string name="error_account_not_linked_title_fb">Aucun compte Facebook associé avec le compte de {plateforme_name}</string>
+  <string name="error_account_not_linked_title_fb">Aucun compte Facebook associé avec le compte de {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">Assurez-vous  que votre compte Facebook est associé avec votre  compte {platform_name} sur {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
