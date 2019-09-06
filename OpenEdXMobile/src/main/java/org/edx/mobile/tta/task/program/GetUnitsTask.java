@@ -17,16 +17,18 @@ public class GetUnitsTask extends Task<List<Unit>> {
     private List<ProgramFilter> filters;
     private String programId, sectionId, role;
     private int take, skip;
+    private long period_id;
 
     @Inject
     private TaAPI taAPI;
 
     public GetUnitsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId,
-                        String role, int take, int skip) {
+                        String role,long period_id, int take, int skip) {
         super(context);
         this.filters = filters;
         this.programId = programId;
         this.sectionId = sectionId;
+        this.period_id = period_id;
         this.role = role;
         this.take = take;
         this.skip = skip;
@@ -34,7 +36,7 @@ public class GetUnitsTask extends Task<List<Unit>> {
 
     @Override
     public List<Unit> call() throws Exception {
-        return taAPI.getUnits(filters, programId, sectionId, role, take, skip).execute().body();
+        return taAPI.getUnits(filters, programId, sectionId, role,period_id, take, skip).execute().body();
     }
 
 }

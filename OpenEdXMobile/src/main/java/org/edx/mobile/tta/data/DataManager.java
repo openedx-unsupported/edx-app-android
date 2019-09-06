@@ -3872,6 +3872,7 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId, String role,
+                         long periodId,
                          int take, int skip, OnResponseCallback<List<Unit>> callback) {
 //
 //        if (skip >= 10) {
@@ -3894,7 +3895,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, role, take, skip){
+            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip){
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
@@ -4201,7 +4202,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void savePeriod(long periodId, List<CharSequence> unitIds, OnResponseCallback<SuccessResponse> callback) {
+    public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback) {
 
 //        SuccessResponse response = new SuccessResponse();
 //        response.setSuccess(true);

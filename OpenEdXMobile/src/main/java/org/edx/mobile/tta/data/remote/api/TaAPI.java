@@ -280,7 +280,7 @@ public class TaAPI {
     }
 
     public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId,String role,
-                                     int take, int skip){
+                                     long period_id, int take, int skip){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);
@@ -288,6 +288,7 @@ public class TaAPI {
         parameters.put(Constants.KEY_SECTION_ID, sectionId);
         parameters.put(Constants.KEY_FILTERS, filters);
         parameters.put(Constants.KEY_ROLE, role);
+        parameters.put(Constants.KEY_PERIOD_ID, period_id);
 
         return taService.getUnits(parameters);
     }
@@ -329,7 +330,7 @@ public class TaAPI {
         return taService.createPeriod(parameters);
     }
 
-    public Call<SuccessResponse> savePeriod(long periodId, List<CharSequence> unitIds){
+    public Call<SuccessResponse> savePeriod(long periodId, List<String> unitIds){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
         parameters.put(Constants.KEY_UNITS, String.valueOf(unitIds));

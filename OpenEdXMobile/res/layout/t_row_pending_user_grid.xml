@@ -23,6 +23,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:orientation="vertical">
 
             <ImageView
@@ -39,7 +40,7 @@
                 android:id="@+id/user_name"
                 android:textSize="12sp"
                 android:textColor="@color/gray_5"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:fontFamily="@font/hind_medium"
                 android:paddingStart="8dp"
@@ -52,7 +53,7 @@
                 android:id="@+id/text_count"
                 android:textSize="12sp"
                 android:textColor="@color/gray_5"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:fontFamily="@font/hind_medium"
                 android:paddingStart="8dp"

@@ -6,9 +6,6 @@ import android.os.Handler;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.tta.analytics.analytics_enums.Action;
-import org.edx.mobile.tta.analytics.analytics_enums.Page;
-import org.edx.mobile.tta.analytics.analytics_enums.Source;
 import org.edx.mobile.tta.data.constants.Constants;
 import org.edx.mobile.tta.data.enums.SurveyType;
 import org.edx.mobile.tta.data.local.db.table.Program;
@@ -18,13 +15,10 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
-import org.edx.mobile.tta.ui.logistration.SigninRegisterActivity;
-import org.edx.mobile.tta.ui.logistration.UserInfoActivity;
 import org.edx.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
 import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.tta.wordpress_client.util.ConnectCookieHelper;
-import org.edx.mobile.view.SplashActivity;
 
 import java.util.List;
 
@@ -39,7 +33,7 @@ public class SplashViewModel extends BaseViewModel {
         mDataManager.onAppStart();
     }
 
-    public void startRouting(Activity activity){
+    public void startRouting(Activity activity) {
 
         new Handler().postDelayed(() -> {
 //            activity.finish();
@@ -86,7 +80,7 @@ public class SplashViewModel extends BaseViewModel {
         }*/
 
 
-            if(appPref.isFirstLaunch()) {
+            if (appPref.isFirstLaunch()) {
                 ActivityUtil.gotoPage(mActivity, SwipeLaunchActivity.class);
                 appPref.setFirstLaunch(false);
                 return;
@@ -97,36 +91,42 @@ public class SplashViewModel extends BaseViewModel {
                 mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
                     @Override
                     public void onSuccess(List<Program> data) {
-                       if (data.size()<=1){
-                           mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
-                           getSection();
-                       }
+                        if (data.size() <= 1) {
+                            mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
+                            getSection();
+                        } else {
+                            ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class,
+                                    Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        }
 
                     }
 
                     @Override
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
+                        ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class,
+                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     }
                 });
-            }
-            else {
+            } else {
                 environment.getRouter().showLaunchScreen(mActivity);
             }
         }, DELAY);
 
     }
-    private void getSection(){
+
+    private void getSection() {
         mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<List<Section>>() {
             @Override
             public void onSuccess(List<Section> data) {
-                if(data.size()<=1){
+                if (data.size() <= 1) {
                     mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
+                    mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
+
                     ActivityUtil.gotoPage(mActivity, LandingActivity.class);
                     Constants.isSingleRow = true;
                     mActivity.finish();
-                }
-                    else {
+                } else {
                     ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class);
                     mActivity.finish();
                 }
@@ -144,9 +144,9 @@ public class SplashViewModel extends BaseViewModel {
         });
     }
 
-    private void performBackgroundTasks(){
+    private void performBackgroundTasks() {
         mDataManager.setCustomFieldAttributes(null);
-        ConnectCookieHelper cHelper=new ConnectCookieHelper();
+        ConnectCookieHelper cHelper = new ConnectCookieHelper();
         if (cHelper.isCookieExpire()) {
             mDataManager.setConnectCookies();
         }
