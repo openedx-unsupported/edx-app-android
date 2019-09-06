@@ -165,7 +165,7 @@ public class ScheduleViewModel extends BaseViewModel {
                 List<ProgramFilter> removables = new ArrayList<>();
                 for (ProgramFilter filter : data) {
 
-                    if (filter.getInternalName().equalsIgnoreCase("lang")) {
+                    if (filter.getInternalName().equalsIgnoreCase("language")) {
                         langTags.clear();
                         langTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
                                 true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
@@ -308,7 +308,6 @@ public class ScheduleViewModel extends BaseViewModel {
     }
 
     private void createPeriods(String lang, String periodName) {
-        lang = "hi";
         mActivity.showLoading();
         mDataManager.createPeriod(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), lang, periodName, new OnResponseCallback<SuccessResponse>() {

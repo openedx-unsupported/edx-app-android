@@ -13,12 +13,12 @@ import java.util.List;
 public class SavePeriodTask extends Task<SuccessResponse> {
 
     private long periodId;
-    private List<CharSequence> unitIds;
+    private List<String> unitIds;
 
     @Inject
     private TaAPI taAPI;
 
-    public SavePeriodTask(Context context, long periodId, List<CharSequence> unitIds) {
+    public SavePeriodTask(Context context, long periodId, List<String> unitIds) {
         super(context);
         this.periodId = periodId;
         this.unitIds = unitIds;

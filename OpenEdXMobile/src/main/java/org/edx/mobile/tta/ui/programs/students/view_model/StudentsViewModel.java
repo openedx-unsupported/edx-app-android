@@ -224,16 +224,16 @@ public class StudentsViewModel extends BaseViewModel {
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
                 itemBinding.txtCompleted.setText(String.valueOf(model.completedUnits));
-                itemBinding.txtPending.setText(String.valueOf(model.pendingCount));
-                itemBinding.userName.setText(model.username);
+                itemBinding.txtPending.setText(String.valueOf(model.completedHours));
+                itemBinding.userName.setText(model.name);
                 if (model.profileImage != null){
-                    Glide.with(mActivity).load("http://192.168.1.29:18000"+ model.profileImage.getImageUrlSmall())
+                    Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL()+ model.profileImage.getImageUrlSmall())
                             .centerCrop()
                             .placeholder(R.drawable.profile)
                             .into(itemBinding.userImage);
                 }
 
-                if(!mDataManager.getLoginPrefs().getUsername().equals("staff")){
+                if(!mDataManager.getLoginPrefs().getRole().equals("Instructor")){
                     itemBinding.llStatus.setVisibility(View.GONE);
                 }
 

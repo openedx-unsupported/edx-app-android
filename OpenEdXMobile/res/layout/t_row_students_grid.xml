@@ -27,6 +27,7 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:id="@+id/user_image"
+                android:layout_marginTop="@dimen/_12px"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"/>
 
@@ -36,7 +37,8 @@
                 android:id="@+id/user_name"
                 android:textSize="12sp"
                 android:textColor="@color/gray_5"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:fontFamily="@font/hind_medium"
                 android:paddingStart="8dp"

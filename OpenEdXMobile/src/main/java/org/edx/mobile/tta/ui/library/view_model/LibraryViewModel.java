@@ -80,7 +80,7 @@ public class LibraryViewModel extends BaseViewModel {
             public void onSuccess(List<EnrolledCoursesResponse> data) {
 
                 for (EnrolledCoursesResponse item: data) {
-                    if(item.getCourse().getId().trim().toLowerCase().equals("course-v1:Humana+NETT101+2019-20".trim().toLowerCase())) {
+                    if(item.getCourse().getId().trim().toLowerCase().equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
                         course = item;
                         break;
                     }

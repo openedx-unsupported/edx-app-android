@@ -29,7 +29,13 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.tta.data.DataManager;
+import org.edx.mobile.tta.data.constants.Constants;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
 import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.AppStoreUtils;
@@ -41,11 +47,14 @@ import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.dialog.ResetPasswordDialogFragment;
 import org.edx.mobile.view.login.LoginPresenter;
 
+import java.util.List;
+
 public class LoginActivity
         extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface>
         implements SocialLoginDelegate.MobileLoginCallback {
     private SocialLoginDelegate socialLoginDelegate;
     private ActivityLoginBinding activityLoginBinding;
+    private DataManager mDataManager;
 
     @Inject
     LoginPrefs loginPrefs;
@@ -99,6 +108,7 @@ public class LoginActivity
             }
         });
 
+        mDataManager = DataManager.getInstance(this);
         activityLoginBinding.endUserAgreementTv.setMovementMethod(LinkMovementMethod.getInstance());
         activityLoginBinding.endUserAgreementTv.setText(TextUtils.generateLicenseText(getResources(), R.string.by_signing_in));
 
@@ -285,9 +295,59 @@ public class LoginActivity
         /*if (!environment.getConfig().isRegistrationEnabled()) {
             environment.getRouter().showMainDashboard(this);
         }*/
+        if (environment.getUserPrefs().getProfile() != null) {
+            //environment.getRouter().showMainDashboard(SplashActivity.this);
+            mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
+                @Override
+                public void onSuccess(List<Program> data) {
+                    if (data.size() <= 1) {
+                        mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
+                        getSection();
+                    } else {
+                        ActivityUtil.gotoPage(LoginActivity.this, SelectProgramActivity.class,
+                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    }
 
-        ActivityUtil.gotoPage(LoginActivity.this, SelectProgramActivity.class,
-                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+        }
+
+//        ActivityUtil.gotoPage(LoginActivity.this, SelectProgramActivity.class,
+//                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    }
+
+    private void getSection() {
+        mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<List<Section>>() {
+            @Override
+            public void onSuccess(List<Section> data) {
+                if (data.size() <= 1) {
+                    mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
+                    mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
+
+                    ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class);
+                    Constants.isSingleRow = true;
+                    finish();
+                } else {
+                    ActivityUtil.gotoPage(LoginActivity.this, SelectSectionActivity.class);
+                    finish();
+                }
+//                for (Section unit: data){
+//                    if (!selectedSections.contains(unit)){
+//                        selectedSections.add(unit);
+//                    }
+//                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {

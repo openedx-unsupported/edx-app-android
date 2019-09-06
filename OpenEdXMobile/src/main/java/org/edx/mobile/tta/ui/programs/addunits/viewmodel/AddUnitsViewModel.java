@@ -49,6 +49,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     private ProgramFilter periodFilter;
     private List<Unit> units;
     private List<Unit> selectedUnits;
+    private List<Unit> removedUnits;
     private List<ProgramFilterTag> tags;
     private List<ProgramFilter> allFilters;
     private List<ProgramFilter> filters;
@@ -70,6 +71,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         this.period = period;
         units = new ArrayList<>();
         selectedUnits = new ArrayList<>();
+        removedUnits = new ArrayList<>();
         tags = new ArrayList<>();
         filters = new ArrayList<>();
         take = DEFAULT_TAKE;
@@ -87,6 +89,11 @@ public class AddUnitsViewModel extends BaseViewModel {
                 selectedUnits.remove(item);
             } else {
                 selectedUnits.add(item);
+            }
+            if (removedUnits.contains(item)){
+                removedUnits.remove(item);
+            }else {
+                removedUnits.add(item);
             }
 
             unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(item));
@@ -208,7 +215,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
             mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),
-                    take, skip,
+                    period.getId() ,take, skip,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {
@@ -297,7 +304,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         }
         mActivity.showLoading();
 
-        List<CharSequence> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (Unit unit: selectedUnits){
             ids.add(unit.getId());
         }

@@ -2610,6 +2610,7 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+
     public void findContentForAssistant(String searchText, List<String> tags, OnResponseCallback<List<Content>> callback) {
         if (NetworkUtil.isConnected(context)) {
 
@@ -3871,7 +3872,7 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
-                         String role, int take, int skip, OnResponseCallback<List<Unit>> callback){
+                         String role, long periodId, int take, int skip, OnResponseCallback<List<Unit>> callback){
 
         /*if (skip >= 10){
             callback.onFailure(new TaException("Units not available"));
@@ -3893,7 +3894,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, role, take, skip){
+            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip){
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
@@ -4200,7 +4201,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void savePeriod(long periodId, List<CharSequence> unitIds, OnResponseCallback<SuccessResponse> callback) {
+    public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback) {
 
 //        SuccessResponse response = new SuccessResponse();
 //        response.setSuccess(true);

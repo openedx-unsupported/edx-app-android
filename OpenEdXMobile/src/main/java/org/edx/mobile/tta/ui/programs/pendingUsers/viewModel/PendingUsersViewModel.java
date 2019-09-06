@@ -233,7 +233,8 @@ public class PendingUsersViewModel extends BaseViewModel {
                 itemBinding.textCount.setText(String.format("Pending : %d", model.pendingCount));
 
                 if (model.profileImage != null){
-                    Glide.with(mActivity).load(model.profileImage.getImageUrlSmall())
+                    Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL()+
+                            model.profileImage.getImageUrlSmall())
                             .centerCrop()
                             .placeholder(R.drawable.profile_photo_placeholder)
                             .into(itemBinding.userImage);
