@@ -130,15 +130,16 @@ public class LibraryViewModel extends BaseViewModel {
     }
 
     private void populateTabs(){
+        mActivity.showLoading();
         fragments.clear();
         titles.clear();
         ArrayList<String> demolist = new ArrayList<String>();
         demolist.add("Schedule");
         demolist.add("Units");
-        if (mDataManager.getLoginPrefs().getUsername() != null &&
-                mDataManager.getLoginPrefs().getUsername().equals("staff")) {
+//        if (mDataManager.getLoginPrefs().getUsername() != null &&
+//                mDataManager.getLoginPrefs().getUsername().equals("staff")) {
             demolist.add("Pending users");
-        }
+//        }
         demolist.add("Students");
         demolist.add("Discussion");
         demolist.add("Curriculum");
@@ -154,10 +155,10 @@ public class LibraryViewModel extends BaseViewModel {
             }
             fragments.add(unitsFragment);
 
-            if (mDataManager.getLoginPrefs().getUsername() != null &&
-                    mDataManager.getLoginPrefs().getUsername().equals("staff")) {
+//            if (mDataManager.getLoginPrefs().getUsername() != null &&
+//                    mDataManager.getLoginPrefs().getUsername().equals("staff")) {
                 fragments.add(new PendingUsersFragment());
-            }
+//            }
             fragments.add(new StudentsFragment());
 
             CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();
@@ -174,6 +175,7 @@ public class LibraryViewModel extends BaseViewModel {
 
             fragments.add(new CurricullamFragment());
             adapter.setFragments(fragments, demolist);
+            mActivity.hideLoading();
         } catch (Exception e) {
             e.printStackTrace();
         }

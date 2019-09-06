@@ -3,14 +3,19 @@ package org.edx.mobile.tta.ui.programs.schedule.view_model;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -26,6 +31,7 @@ import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.tutorials.MxTooltip;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
@@ -50,6 +56,11 @@ public class ScheduleViewModel extends BaseViewModel {
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+
+    public ObservableInt initialPosition = new ObservableInt();
+    public ObservableInt toolTipPosition = new ObservableInt();
+    public ObservableInt toolTipGravity = new ObservableInt();
+    public ObservableField<String> toolTiptext = new ObservableField<>();
 
     public FiltersAdapter filtersAdapter;
     public PeriodAdapter periodAdapter;
@@ -91,6 +102,9 @@ public class ScheduleViewModel extends BaseViewModel {
         mActivity.showLoading();
         getFilters();
         fetchData();
+//        toolTiptext.set("test");
+//        toolTipGravity.set(Gravity.TOP);
+//        toolTipPosition.set(0);
 
     }
 
@@ -140,7 +154,7 @@ public class ScheduleViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         gridLayoutManager = new GridLayoutManager(mActivity, 2);
-
+        fetchData();
     }
 
     private void getFilters() {
@@ -191,7 +205,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
 
     private void getPeriods() {
-
+        periodAdapter.reset(true);
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
@@ -262,7 +276,14 @@ public class ScheduleViewModel extends BaseViewModel {
         final Dialog dialog = new Dialog(mActivity);
         dialog.setContentView(R.layout.t_alert_add_period);
         Button dialogButton = (Button) dialog.findViewById(R.id.submit_button);
+        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
         DropDownFilterView drop = dialog.findViewById(R.id.filter_drop_down);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.FIRST_SUB_WINDOW;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
         drop.setFilterItems(langTags);
         drop.setOnFilterItemListener((v, item, position, prev) -> {
             if (item.getItem() == null){
@@ -279,17 +300,18 @@ public class ScheduleViewModel extends BaseViewModel {
                 mActivity.showLongSnack("Please select a language");
                 return;
             }
-
-            createPeriods(lang);
+            String periodName = dialogText.getText().toString();
+            createPeriods(lang, periodName);
             dialog.dismiss();
         });
         dialog.show();
     }
 
-    private void createPeriods(String lang) {
+    private void createPeriods(String lang, String periodName) {
+        lang = "hi";
         mActivity.showLoading();
         mDataManager.createPeriod(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), lang, new OnResponseCallback<SuccessResponse>() {
+                mDataManager.getLoginPrefs().getSectionId(), lang, periodName, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         if (data.getSuccess()) {
@@ -346,6 +368,8 @@ public class ScheduleViewModel extends BaseViewModel {
                     mActivity.showLoading();
                     fetchData();
                 });
+
+
             }
         }
     }

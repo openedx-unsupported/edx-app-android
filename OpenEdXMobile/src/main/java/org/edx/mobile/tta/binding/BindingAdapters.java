@@ -2,7 +2,6 @@ package org.edx.mobile.tta.binding;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.BottomNavigationView;
@@ -16,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,6 +31,8 @@ import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
 import com.maurya.mx.mxlib.view.MxRecyclerView;
 
+import org.edx.mobile.R;
+import org.edx.mobile.tta.tutorials.MxTooltip;
 import org.edx.mobile.tta.ui.base.BaseArrayAdapter;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 import org.edx.mobile.tta.ui.custom.FormEditText;
@@ -418,5 +420,122 @@ public class BindingAdapters {
     @BindingAdapter({"drop_down_listener"})
     public static void setDropDownListener(DropDownFilterView view, DropDownFilterView.OnFilterClickListener listener){
         view.setOnFilterItemListener(listener);
+    }
+
+
+    // Tooltip
+    @BindingAdapter({"tool_tip", "tool_tip_gravity"})
+    public static void showToolTip(View view, String message, int gravity) {
+        if (!MxTooltip.isToolTipAdded(view))
+            if (message != null && !message.trim().equals("")) {
+                if (view instanceof MxFiniteRecyclerView) {
+                    MxFiniteRecyclerView mxView = (MxFiniteRecyclerView) view;
+                    if (gravity == Gravity.TOP) {
+                        new MxTooltip.Builder(mxView.getContext())
+                                .anchorView(mxView.getTitleTextView())
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.down_arrow)
+                                .build()
+                                .show();
+                    }else {
+                        new MxTooltip.Builder(mxView.getContext())
+                                .anchorView(mxView.getTitleTextView())
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.up_arrow)
+                                .build()
+                                .show();
+                    }
+                } else {
+                    if (gravity == Gravity.TOP) {
+                        new MxTooltip.Builder(view.getContext())
+                                .anchorView(view)
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.down_arrow)
+                                .build()
+                                .show();
+                    }else {
+                        new MxTooltip.Builder(view.getContext())
+                                .anchorView(view)
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.up_arrow)
+                                .build()
+                                .show();
+                    }
+                }
+            }
+    }
+
+    @BindingAdapter({"tool_tip", "tool_tip_gravity", "tool_tip_position"})
+    public static void showToolTipPos(TabLayout view, String message, int gravity, int position) {
+        view.post(() -> {
+            View v = view.getChildAt(position);
+            if (v != null && !MxTooltip.isToolTipAdded(v))
+                if (message != null && !message.trim().equals(""))
+//                    ToolTipView.showToolTip(v.getContext(), message.trim(), v, gravity);
+                    if (gravity == Gravity.TOP) {
+                        new MxTooltip.Builder(v.getContext())
+                                .anchorView(v)
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.down_arrow)
+                                .build()
+                                .show();
+                    }else {
+                        new MxTooltip.Builder(v.getContext())
+                                .anchorView(v)
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.up_arrow)
+                                .build()
+                                .show();
+                    }
+        });
+    }
+
+    @BindingAdapter({"tool_tip", "tool_tip_gravity", "tool_tip_position"})
+    public static void showToolTipPos(BottomNavigationView view, String message, int gravity, int position) {
+        view.post(() -> {
+            View v = view.findViewById(R.id.action_library);
+            if (v != null && !MxTooltip.isToolTipAdded(v))
+                if (message != null && !message.trim().equals(""))
+//                    ToolTipView.showToolTip(v.getContext(), message.trim(), v, gravity);
+                    if (gravity == Gravity.TOP) {
+                        new MxTooltip.Builder(v.getContext())
+                                .anchorView(v)
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.down_arrow)
+                                .build()
+                                .show();
+                    }else {
+                        new MxTooltip.Builder(v.getContext())
+                                .anchorView(v)
+                                .text(message.trim())
+                                .gravity(gravity)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.up_arrow)
+                                .build()
+                                .show();
+                    }
+        });
     }
 }

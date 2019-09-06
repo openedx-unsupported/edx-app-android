@@ -19,6 +19,7 @@ import org.edx.mobile.tta.data.local.db.table.UnitStatus;
 import org.edx.mobile.tta.data.model.CountResponse;
 import org.edx.mobile.tta.data.model.StatusResponse;
 import org.edx.mobile.tta.data.model.SuccessResponse;
+import org.edx.mobile.tta.data.model.UpdateResponse;
 import org.edx.mobile.tta.data.model.agenda.AgendaList;
 import org.edx.mobile.tta.data.model.content.BookmarkResponse;
 import org.edx.mobile.tta.data.model.content.CertificateStatusResponse;
@@ -35,6 +36,7 @@ import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -230,15 +233,24 @@ public interface TaService {
                                             @Query(Constants.KEY_TAKE) int take,
                                             @Query(Constants.KEY_SKIP) int skip);
 
+    @GET(ApiConstants.URL_MX_GET_COURSE_COMPONENT_UNITS)
+    Call<CourseComponent> getCourseComponentUnits(@Query(Constants.KEY_UNIT_ID) String unit_id);
+
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_CREATE_PERIOD)
     Call<SuccessResponse> createPeriod(@FieldMap Map<String, String> parameters);
 
-    @FormUrlEncoded
+
     @POST(ApiConstants.URL_MX_SAVE_PERIOD)
-    Call<SuccessResponse> savePeriod(@FieldMap Map<String, String> parameters);
+//    Call<SuccessResponse> savePeriod(@FieldMap Map<String, String> parameters);
+    Call<SuccessResponse> savePeriod(@Body Map<String, String> parameters);
 
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_APPROVE_UNIT)
     Call<SuccessResponse> approveUnit(@FieldMap Map<String, String> parameters);
+
+    //for app update
+    @GET(ApiConstants.URL_MX_GET_APP_UPDATE)
+    Call<UpdateResponse> getAppUpdate(@Query(Constants.VERSION_NAME) String v_name,
+                                      @Query(Constants.VERSION_CODE) Long v_code);
 }

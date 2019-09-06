@@ -12,6 +12,10 @@ public class ProfileModel implements Serializable {
     public String name;
     public String course_enrollments;
 
+
+
+    public String role;
+
     public String gender;
     public String title;
     public String classes_taught;
@@ -58,5 +62,13 @@ public class ProfileModel implements Serializable {
 
     public void setFollowers(long followers) {
         this.followers = followers;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

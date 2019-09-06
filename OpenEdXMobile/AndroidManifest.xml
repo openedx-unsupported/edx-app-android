@@ -70,10 +70,7 @@
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launch">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
             <intent-filter>
                 <data android:scheme="edx" android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
@@ -312,12 +309,12 @@
         <!-- TTA activities start -->
 
         <activity android:name=".tta.ui.splash.SplashActivity"
-            android:label="@string/app_name"
+            android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Fullscreen.TaLaunch">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
+            android:theme="@style/AppTheme.Launch">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--</intent-filter>-->
 
             <intent-filter>
                 <data android:scheme="edx" android:host="open" />
@@ -330,6 +327,10 @@
                 <data android:mimeType="text/plain" />
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -492,6 +493,10 @@
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <activity android:name=".tta.ui.programs.selectprogram.SelectProgramActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
+        <activity android:name=".tta.ui.programs.selectSection.SelectSectionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />

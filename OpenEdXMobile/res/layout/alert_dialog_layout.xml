@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/header_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="left"
+        android:orientation="vertical" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:textSize="@dimen/_16px_sp"
+            android:layout_marginTop="10dp"
+            android:text="Title"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/primary_cyan"
+            android:fontFamily="@font/hind_bold"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/release_notes_ll"
+        android:layout_below="@id/header_ll"
+        android:layout_above="@id/footer"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="110dp"
+        android:orientation="vertical" >
+        <WebView android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/notes_flxible_wv"
+            android:layout_width="match_parent"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/primary_cyan"
+                android:layout_margin="@dimen/_6px"
+                android:text="बाद में करे"
+                android:paddingTop="@dimen/_10px"
+                android:paddingBottom="@dimen/_10px"
+                android:paddingLeft="@dimen/_20px"
+                android:paddingRight="@dimen/_20px"
+                android:gravity="center"
+                android:textSize="@dimen/_12px_sp"
+                android:fontFamily="@font/hind_regular"
+                android:id="@+id/btn_delay"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edx_brand_button"
+                android:gravity="center"
+                android:layout_margin="@dimen/_6px"
+                android:textColor="@color/white"
+                android:paddingTop="@dimen/_10px"
+                android:paddingBottom="@dimen/_10px"
+                android:paddingLeft="@dimen/_20px"
+                android:paddingRight="@dimen/_20px"
+                android:text="अपडेट करें"
+                android:textSize="@dimen/_12px_sp"
+                android:fontFamily="@font/hind_regular"
+                android:id="@+id/btn_update"/>
+
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:id="@+id/app_name"
+                android:layout_marginBottom="@dimen/_4px"
+                android:contentDescription="@string/label_update"
+                android:layout_gravity="start"
+                android:text="@string/app_name"
+                android:layout_marginStart="@dimen/_18px"
+                android:src="@drawable/teacherapplogo"
+                android:textColor="@color/light_gray"
+                android:fontFamily="@font/hind_bold"/>
+        </LinearLayout>
+            </LinearLayout>
+</LinearLayout>

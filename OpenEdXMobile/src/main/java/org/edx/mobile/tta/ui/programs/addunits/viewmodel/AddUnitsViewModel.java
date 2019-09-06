@@ -207,7 +207,8 @@ public class AddUnitsViewModel extends BaseViewModel {
         if (isUnitModePeriod) {
 
             mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                    mDataManager.getLoginPrefs().getSectionId(), take, skip,
+                    mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),
+                    take, skip,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {
@@ -231,15 +232,14 @@ public class AddUnitsViewModel extends BaseViewModel {
                         public void onFailure(Exception e) {
                             mActivity.hideLoading();
                             isUnitModePeriod = false;
-//                            unitsAdapter.setLoadingDone();
-//                            toggleEmptyVisibility();
+                            unitsAdapter.setLoadingDone();
+                            toggleEmptyVisibility();
                             skip = 0;
                             fetchUnits();
                         }
                     });
 
         } else {
-
             mDataManager.getAllUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(), null, take, skip,
                     new OnResponseCallback<List<Unit>>() {
@@ -261,7 +261,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                             toggleEmptyVisibility();
                         }
                     });
-
         }
 
     }
@@ -298,7 +297,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         }
         mActivity.showLoading();
 
-        List<String> ids = new ArrayList<>();
+        List<CharSequence> ids = new ArrayList<>();
         for (Unit unit: selectedUnits){
             ids.add(unit.getId());
         }
@@ -371,7 +370,8 @@ public class AddUnitsViewModel extends BaseViewModel {
         }
 
         @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model,
+                           @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);

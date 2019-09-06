@@ -7,19 +7,19 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class ProfileImage implements Serializable {
-    @SerializedName("image_url_full")
+    @SerializedName("full")
     @Nullable
     private String imageUrlFull;
 
-    @SerializedName("image_url_large")
+    @SerializedName("large")
     @Nullable
     private String imageUrlLarge;
 
-    @SerializedName("image_url_medium")
+    @SerializedName("medium")
     @Nullable
     private String imageUrlMedium;
 
-    @SerializedName("image_url_small")
+    @SerializedName("small")
     @Nullable
     private String imageUrlSmall;
 

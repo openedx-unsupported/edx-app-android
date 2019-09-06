@@ -49,28 +49,7 @@ public class SelectProgramViewModel extends BaseViewModel {
 
     }
 
-    public void fetchSections(OnResponseCallback<List<Section>> callback) {
-        sections.clear();
 
-        mActivity.showLoading();
-        mDataManager.getSections(programId, new OnResponseCallback<List<Section>>() {
-            @Override
-            public void onSuccess(List<Section> data) {
-                for (Section section : data) {
-                    sections.add(new RegistrationOption(section.getTitle(), section.getId()));
-                }
-                mActivity.hideLoading();
-                callback.onSuccess(data);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                mActivity.hideLoading();
-                callback.onFailure(e);
-            }
-        });
-
-    }
 
     public void save() {
         mDataManager.getLoginPrefs().setProgramId(programId);

@@ -308,4 +308,14 @@
     <dimen name="btn_width">240dp</dimen>
     <dimen name="btn_height">32dp</dimen>
     <!-- TTA dimensions end -->
+
+    <!--Added for mx_tooltip start-->
+    <dimen name="text_size_button_material">14sp</dimen>
+    <dimen name="mx_tooltip_overlay_offset">10dp</dimen>
+    <dimen name="mx_tooltip_margin">10dp</dimen>
+    <dimen name="mx_tooltip_padding">8dp</dimen>
+    <dimen name="mx_tooltip_arrow_width">30dp</dimen>
+    <dimen name="mx_tooltip_arrow_height">35dp</dimen>
+    <dimen name="mx_tooltip_animation_padding">4dp</dimen>
+    <!--Added for mx_tooltip end-->
 </resources>

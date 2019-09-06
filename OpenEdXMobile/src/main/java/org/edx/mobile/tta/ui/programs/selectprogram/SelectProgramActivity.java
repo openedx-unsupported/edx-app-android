@@ -13,33 +13,42 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.custom.FormSpinner;
 import org.edx.mobile.tta.ui.programs.selectprogram.viewmodel.SelectProgramViewModel;
+import org.edx.mobile.tta.ui.programs.selectprogram.viewmodel.SelectProgramViewModel2;
 import org.edx.mobile.tta.utils.ViewUtil;
 
 import java.util.List;
 
 public class SelectProgramActivity extends BaseVMActivity {
 
-    private SelectProgramViewModel viewModel;
+    private SelectProgramViewModel2 viewModel;
 
-    private LinearLayout fieldsLayout;
-    private FormSpinner programSpinner;
-    private FormSpinner sectionSpinner;
-    private FloatingActionButton fabSave;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new SelectProgramViewModel(this);
-        binding(R.layout.t_activity_select_program, viewModel);
+        viewModel = new SelectProgramViewModel2(this);
+        savedInstanceState = new Bundle();
+        if (savedInstanceState != null) {
+            savedInstanceState = getIntent().getExtras();
+            if (savedInstanceState != null) {
+                boolean prev = savedInstanceState.getBoolean("isPrev", false);
+                viewModel.isPrev.set(prev);
+            }
+        }
 
-        fieldsLayout = findViewById(R.id.fields_layout);
-        fabSave = findViewById(R.id.fab_save);
 
-        setupForm();
-        getPrograms();
+        binding(R.layout.t_activity_select_program_section, viewModel);
+
+
+
+//        fieldsLayout = findViewById(R.id.fields_layout);
+//        fabSave = findViewById(R.id.fab_save);
+//
+//        setupForm();
+//        getPrograms();
     }
 
-    private void getPrograms() {
+ /*   private void getPrograms() {
 
         viewModel.fetchPrograms(new OnResponseCallback<List<Program>>() {
             @Override
@@ -91,7 +100,7 @@ public class SelectProgramActivity extends BaseVMActivity {
                         new RegistrationOption(viewModel.sectionId, viewModel.sectionId));
         sectionSpinner.setMandatory(true);
 
-        setListeners();
+//        setListeners();
 
     }
 
@@ -123,19 +132,19 @@ public class SelectProgramActivity extends BaseVMActivity {
             }
         });
 
-    }
+    }*/
 
-    private boolean validate() {
-        boolean valid = true;
-        if (!programSpinner.validate()) {
-            valid = false;
-            programSpinner.setError("Required");
-        }
-        if (!sectionSpinner.validate()) {
-            valid = false;
-            sectionSpinner.setError("Required");
-        }
-
-        return valid;
-    }
+//    private boolean validate() {
+//        boolean valid = true;
+//        if (!programSpinner.validate()) {
+//            valid = false;
+//            programSpinner.setError("Required");
+//        }
+//        if (!sectionSpinner.validate()) {
+//            valid = false;
+//            sectionSpinner.setError("Required");
+//        }
+//
+//        return valid;
+//    }
 }

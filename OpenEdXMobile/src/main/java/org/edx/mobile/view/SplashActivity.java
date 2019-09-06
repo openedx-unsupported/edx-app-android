@@ -7,17 +7,25 @@ import android.os.Handler;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.tta.analytics.analytics_enums.Nav;
 import org.edx.mobile.tta.data.local.db.ILocalDataSource;
+import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
+import org.edx.mobile.tta.ui.splash.SplashViewModel;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.tta.utils.BreadcrumbUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -48,6 +56,7 @@ public class SplashActivity extends Activity {
         - https://stackoverflow.com/questions/4341600/how-to-prevent-multiple-instances-of-an-activity-when-it-is-launched-with-differ/
         - https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508#16447508
          */
+
 
         startRouting();
     }

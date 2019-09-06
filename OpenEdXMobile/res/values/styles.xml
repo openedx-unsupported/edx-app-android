@@ -638,5 +638,6 @@
     </style>
 
     <!-- TTA styles end -->
-    
+    <style name="simpletooltip_default" parent="@android:style/TextAppearance.Medium"></style>
+
 </resources>

@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -17,6 +18,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TFragmentPendingUsersBinding;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
 import org.edx.mobile.databinding.TRowPendingFilterBinding;
+import org.edx.mobile.databinding.TRowPendingUserGridBinding;
 import org.edx.mobile.databinding.TRowStudentsGridBinding;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
@@ -59,7 +61,11 @@ public class PendingUsersViewModel extends BaseViewModel {
 
         usersAdapter = new UsersAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
+        programUserList = new ArrayList<>();
+        usersAdapter.setItems(programUserList);
 
+        filterLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new GridLayoutManager(mActivity, 2);
         take = TAKE;
 
         skip = SKIP;
@@ -74,8 +80,6 @@ public class PendingUsersViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
 
-        filterLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-        layoutManager = new GridLayoutManager(mActivity, 2);
 
     }
 
@@ -162,7 +166,7 @@ public class PendingUsersViewModel extends BaseViewModel {
 
 
     public void fetchUsers() {
-        mDataManager.getUsers(mDataManager.getLoginPrefs().getProgramId(),
+        mDataManager.getPendingUsers(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(),
                 take, skip, new OnResponseCallback<List<ProgramUser>>() {
                     @Override
@@ -197,6 +201,7 @@ public class PendingUsersViewModel extends BaseViewModel {
             }
         }
 
+
         if (newItemsAdded) {
             usersAdapter.notifyItemRangeInserted(programUserList.size() - n, n);
         }
@@ -222,8 +227,17 @@ public class PendingUsersViewModel extends BaseViewModel {
         @Override
         public void onBind(@NonNull ViewDataBinding binding, @NonNull ProgramUser model,
                            @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
-            if (binding instanceof TRowStudentsGridBinding) {
-                TFragmentPendingUsersBinding teacherBinding = (TFragmentPendingUsersBinding) binding;
+            if (binding instanceof TRowPendingUserGridBinding) {
+                TRowPendingUserGridBinding itemBinding = (TRowPendingUserGridBinding) binding;
+                itemBinding.userName.setText(model.username);
+                itemBinding.textCount.setText(String.format("Pending : %d", model.pendingCount));
+
+                if (model.profileImage != null){
+                    Glide.with(mActivity).load(model.profileImage.getImageUrlSmall())
+                            .centerCrop()
+                            .placeholder(R.drawable.profile_photo_placeholder)
+                            .into(itemBinding.userImage);
+                }
 
             }
         }

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -121,13 +120,13 @@ public class UnitsViewModel extends BaseViewModel {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
                 List<ProgramFilter> removables = new ArrayList<>();
-                for (ProgramFilter filter: data){
+                for (ProgramFilter filter : data) {
                     if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains("units")){
+                            !filter.getShowIn().contains("units")) {
                         removables.add(filter);
                     }
                 }
-                for (ProgramFilter filter: removables){
+                for (ProgramFilter filter : removables) {
                     data.remove(filter);
                 }
 
@@ -148,9 +147,9 @@ public class UnitsViewModel extends BaseViewModel {
 
     }
 
-    private void fetchData(){
+    private void fetchData() {
 
-        if (changesMade){
+        if (changesMade) {
             changesMade = false;
             skip = 0;
             unitsAdapter.reset(true);
@@ -161,22 +160,22 @@ public class UnitsViewModel extends BaseViewModel {
 
     }
 
-    private void setUnitFilters(){
+    private void setUnitFilters() {
         filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()){
+        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
             return;
         }
 
-        for (ProgramFilter filter: allFilters){
+        for (ProgramFilter filter : allFilters) {
 
             List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag: filter.getTags()){
-                if (tags.contains(tag)){
+            for (ProgramFilterTag tag : filter.getTags()) {
+                if (tags.contains(tag)) {
                     selectedTags.add(tag);
                 }
             }
 
-            if (!selectedTags.isEmpty()){
+            if (!selectedTags.isEmpty()) {
                 ProgramFilter pf = new ProgramFilter();
                 pf.setDisplayName(filter.getDisplayName());
                 pf.setInternalName(filter.getInternalName());
@@ -193,7 +192,8 @@ public class UnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), take, skip,
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
+                take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -243,17 +243,17 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(PeriodSavedEvent event){
+    public void onEventMainThread(PeriodSavedEvent event) {
         changesMade = true;
         allLoaded = false;
         fetchData();
     }
 
-    public void registerEventBus(){
+    public void registerEventBus() {
         EventBus.getDefault().registerSticky(this);
     }
 
-    public void unRegisterEventBus(){
+    public void unRegisterEventBus() {
         EventBus.getDefault().unregister(this);
     }
 
@@ -285,10 +285,10 @@ public class UnitsViewModel extends BaseViewModel {
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-                    if (prev != null && prev.getItem() != null){
+                    if (prev != null && prev.getItem() != null) {
                         tags.remove((ProgramFilterTag) prev.getItem());
                     }
-                    if (item.getItem() != null){
+                    if (item.getItem() != null) {
                         tags.add((ProgramFilterTag) item.getItem());
                     }
 

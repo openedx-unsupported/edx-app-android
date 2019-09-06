@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import androidx.annotation.Nullable;
+
 @Entity(tableName = "unit")
 public class Unit {
 
@@ -68,5 +70,10 @@ public class Unit {
 
     public void setSectionId(String sectionId) {
         this.sectionId = sectionId;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof Unit && (((Unit) obj).id.equals(id));
     }
 }

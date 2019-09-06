@@ -13,6 +13,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.tta.data.model.UpdateResponse;
 import org.edx.mobile.tta.data.model.authentication.FieldInfo;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.wordpress_client.model.WPProfileModel;
@@ -564,11 +565,31 @@ public class LoginPrefs {
         return pref.getString(PrefManager.Key.PROGRAM_ID);
     }
 
+    public void setProgramTitle(String programTitle){
+        pref.put(PrefManager.Key.PROGRAM_TITLE, programTitle);
+    }
+
+    public String getProgramTitle(){
+        return pref.getString(PrefManager.Key.PROGRAM_TITLE);
+    }
+
     public void setSectionId(String sectionId){
         pref.put(PrefManager.Key.SECTION_ID, sectionId);
     }
 
     public String getSectionId(){
         return pref.getString(PrefManager.Key.SECTION_ID);
+    }
+
+    public void storeLatestAppInfo(@NonNull UpdateResponse res) {
+        pref.put(PrefManager.Key.LATEST_APP_INFO_JSON, gson.toJson(res));
+    }
+
+    public String getRole(){
+        return pref.getString(PrefManager.Key.ROLE);
+    }
+
+    public void setRole(String role){
+        pref.put(PrefManager.Key.ROLE, role);
     }
 }

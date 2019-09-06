@@ -159,29 +159,25 @@ public class ApiConstants {
 
     //Humana start
 
-    public static final String URL_MX_GET_PROGRAMS = "ENDPOINT";
+    public static final String URL_MX_GET_PROGRAMS = "mx_humana_lms/api/v1/getPrograms";
 
-    public static final String URL_MX_GET_SECTIONS = "ENDPOINT";
+    public static final String URL_MX_GET_SECTIONS = "mx_humana_lms/api/v1/getSections";
 
-    public static final String URL_MX_GET_PROGRAM_FILTERS = "ENDPOINT";
+    public static final String URL_MX_GET_PROGRAM_FILTERS = "mx_humana_lms/api/v1/getProgramFilters";
 
-    public static final String URL_MX_GET_PERIODS = "ENDPOINT";
+    public static final String URL_MX_GET_PERIODS = "mx_humana_lms/api/v1/getPeriods";
 
-    public static final String URL_MX_GET_UNITS = "ENDPOINT";
+    public static final String URL_MX_GET_UNITS = "mx_humana_lms/api/v1/getUnits";
 
-    public static final String URL_MX_GET_ALL_UNITS = "ENDPOINT";
+    public static final String URL_MX_GET_ALL_UNITS = "mx_humana_lms/api/v1/getAllUnits";
 
-    public static final String URL_MX_GET_USERS = "ENDPOINT";
+    public static final String URL_MX_GET_USERS = "mx_humana_lms/api/v1/getUsers";
 
-    public static final String URL_MX_GET_PENDING_USERS = "ENDPOINT";
+    public static final String URL_MX_GET_PENDING_USERS = "mx_humana_lms/api/v1/getPendingUsers";
+
+    public static final String URL_MX_GET_COURSE_COMPONENT_UNITS = "ENDPOINT";
 
     public static final String URL_MX_GET_PENDING_UNITS = "ENDPOINT";
-
-    public static final String URL_MX_CREATE_PERIOD = "ENDPOINT";
-
-    public static final String URL_MX_SAVE_PERIOD = "ENDPOINT";
-
-    public static final String URL_MX_APPROVE_UNIT = "ENDPOINT";
 
     //Humana end
 
@@ -192,6 +188,12 @@ public class ApiConstants {
     @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TokenType {}
+    public static final String URL_MX_CREATE_PERIOD = "mx_humana_lms/api/v1/createPeriod";
+
+    public static final String URL_MX_SAVE_PERIOD = "mx_humana_lms/api/v1/savePeriodUnits";
+
+    public static final String URL_MX_APPROVE_UNIT = "ENDPOINT";
+
 
     public static final int STANDARD_PAGE_SIZE = 20;
 
@@ -211,4 +213,7 @@ public class ApiConstants {
             }
         }
     }
+
+    public static final String URL_MX_GET_APP_UPDATE = "api/appupdate/v1/getappupdate/";
+
 }

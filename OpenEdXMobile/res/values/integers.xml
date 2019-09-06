@@ -9,4 +9,8 @@
     TODO: Remove AppBarLayout's shadow fix when the support library fixes it
     -->
     <integer name="app_bar_elevation_anim_duration" tools:override="true">0</integer>
+    <!--Added for mx_tooltip start-->
+    <integer name="mx_tooltip_overlay_alpha">120</integer>
+    <integer name="mx_tooltip_animation_duration">800</integer>
+    <!--Added for mx_tooltip end-->
 </resources>
