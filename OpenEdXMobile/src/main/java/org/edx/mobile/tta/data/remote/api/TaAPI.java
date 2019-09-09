@@ -321,12 +321,12 @@ public class TaAPI {
         return taService.getCourseComponentUnits(unit_id);
     }
 
-    public Call<SuccessResponse> createPeriod(String programId, String sectionId, String lang, String periodName){
+    public Call<SuccessResponse> createPeriod(String programId, String sectionId, String lang){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PROGRAM_ID, programId);
         parameters.put(Constants.KEY_SECTION_ID, sectionId);
         parameters.put(Constants.KEY_LANG, lang);
-        parameters.put(Constants.KEY_PERIOD_NAME, periodName);
+//        parameters.put(Constants.KEY_PERIOD_NAME, periodName);
         return taService.createPeriod(parameters);
     }
 

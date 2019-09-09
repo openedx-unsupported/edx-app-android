@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.programs.pendingUsers;
+package org.edx.mobile.tta.ui.programs.pendingUnits;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
-import org.edx.mobile.tta.ui.programs.pendingUsers.viewModel.PendingUsersViewModel;
+import org.edx.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUsersViewModel;
 
 public class PendingUsersFragment extends TaBaseFragment{
     public static final String TAG = LibraryFragment.class.getCanonicalName();

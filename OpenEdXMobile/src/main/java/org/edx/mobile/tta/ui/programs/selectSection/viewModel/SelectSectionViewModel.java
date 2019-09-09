@@ -40,6 +40,7 @@ public class SelectSectionViewModel extends BaseViewModel {
     public ObservableField<String> programId = new ObservableField<>();
     public ObservableField<String> programForSection = new ObservableField<>();
     public ObservableBoolean fabPrevVisibility = new ObservableBoolean();
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
 
 
 
@@ -104,6 +105,8 @@ public class SelectSectionViewModel extends BaseViewModel {
             @Override
             public void onFailure(Exception e) {
                 mActivity.hideLoading();
+                toggleEmptyVisibility();
+
             }
         });
 
@@ -122,7 +125,13 @@ public class SelectSectionViewModel extends BaseViewModel {
         }
 
     }
-
+    private void toggleEmptyVisibility() {
+        if (section == null || section.isEmpty()) {
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
+        }
+    }
 
     @Override
     public void onResume() {

@@ -292,7 +292,7 @@ public class ScheduleViewModel extends BaseViewModel {
         final Dialog dialog = new Dialog(mActivity);
         dialog.setContentView(R.layout.t_alert_add_period);
         Button dialogButton = (Button) dialog.findViewById(R.id.submit_button);
-        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
+//        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
         DropDownFilterView drop = dialog.findViewById(R.id.filter_drop_down);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
@@ -316,17 +316,17 @@ public class ScheduleViewModel extends BaseViewModel {
                 mActivity.showLongSnack("Please select a language");
                 return;
             }
-            String periodName = dialogText.getText().toString();
-            createPeriods(lang, periodName);
+//            String periodName = dialogText.getText().toString();
+            createPeriods(lang);
             dialog.dismiss();
         });
         dialog.show();
     }
 
-    private void createPeriods(String lang, String periodName) {
+    private void createPeriods(String lang) {
         mActivity.showLoading();
         mDataManager.createPeriod(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), lang, periodName, new OnResponseCallback<SuccessResponse>() {
+                mDataManager.getLoginPrefs().getSectionId(), lang, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         if (data.getSuccess()) {

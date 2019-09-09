@@ -4169,7 +4169,6 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void createPeriod(String programId, String sectionId, String lang,
-                             String periodName,
                              OnResponseCallback<SuccessResponse> callback) {
 
 //        SuccessResponse response = new SuccessResponse();
@@ -4177,7 +4176,7 @@ public class DataManager extends BaseRoboInjector {
 //        callback.onSuccess(response);
 
         if (NetworkUtil.isConnected(context)) {
-            new CreatePeriodTask(context, programId, sectionId, lang, periodName){
+            new CreatePeriodTask(context, programId, sectionId, lang){
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);

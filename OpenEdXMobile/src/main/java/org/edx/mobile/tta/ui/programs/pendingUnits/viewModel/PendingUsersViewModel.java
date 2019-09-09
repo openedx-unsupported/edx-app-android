@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.programs.pendingUsers.viewModel;
+package org.edx.mobile.tta.ui.programs.pendingUnits.viewModel;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
@@ -15,11 +15,8 @@ import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
-import org.edx.mobile.databinding.TFragmentPendingUsersBinding;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
-import org.edx.mobile.databinding.TRowPendingFilterBinding;
 import org.edx.mobile.databinding.TRowPendingUserGridBinding;
-import org.edx.mobile.databinding.TRowStudentsGridBinding;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;

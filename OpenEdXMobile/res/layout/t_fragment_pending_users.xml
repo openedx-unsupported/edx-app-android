@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.pendingUsers.viewModel.PendingUsersViewModel" />
+            type="org.edx.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUsersViewModel" />
     </data>
 
     <LinearLayout

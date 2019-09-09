@@ -13,7 +13,7 @@ import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.programs.curricullam.CurricullamFragment;
 import org.edx.mobile.tta.ui.programs.discussion.DiscussionFragment;
-import org.edx.mobile.tta.ui.programs.pendingUsers.PendingUsersFragment;
+import org.edx.mobile.tta.ui.programs.pendingUnits.PendingUsersFragment;
 import org.edx.mobile.tta.ui.programs.schedule.ScheduleFragment;
 import org.edx.mobile.tta.ui.programs.students.StudentsFragment;
 import org.edx.mobile.tta.ui.programs.units.UnitsFragment;
@@ -21,7 +21,6 @@ import org.edx.mobile.tta.ui.base.BasePagerAdapter;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
-import org.edx.mobile.user.Account;
 import org.edx.mobile.view.CourseDiscussionTopicsFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.common.PageViewStateCallback;
@@ -29,8 +28,6 @@ import org.edx.mobile.view.common.PageViewStateCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.edx.mobile.view.Router.EXTRA_COURSE_DATA;
 
 public class LibraryViewModel extends BaseViewModel {
 

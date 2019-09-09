@@ -37,6 +37,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
     public RecyclerView.LayoutManager layoutManager;
     public Boolean prevVisible = false;
     public ObservableBoolean isPrev = new ObservableBoolean();
+    public ObservableBoolean emptyVisible = new ObservableBoolean();
 
 
 
@@ -64,12 +65,26 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                     view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     itemView = view;
                     programId = item.getId();
+                    mDataManager.getLoginPrefs().setProgramId(programId);
+                    mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
+                    Bundle b = new Bundle();
+                    b.putCharSequence("program", programId);
+                    b.putBoolean("prevVisible",prevVisible);
+                    ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
+                    mActivity.finish();
                 }
             } else {
                 selectPrograms.add(item);
                 itemView = view;
                 programId = item.getId();
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+                mDataManager.getLoginPrefs().setProgramId(programId);
+                mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
+                Bundle b = new Bundle();
+                b.putCharSequence("program", programId);
+                b.putBoolean("prevVisible",prevVisible);
+                ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
+                mActivity.finish();
             }
 
         });
@@ -89,6 +104,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
             @Override
             public void onFailure(Exception e) {
                 mActivity.hideLoading();
+                toggleEmptyVisibility();
             }
         });
 
@@ -106,7 +122,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         boolean newItemsAdded = false;
         int n = 0;
 
-        if (data.size()==1){
+        if (data.size() == 1){
             programId = data.get(0).getId();
             prevVisible = true;
             mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
@@ -131,16 +147,16 @@ public class SelectProgramViewModel2 extends BaseViewModel {
             }
         }
 
-//        toggleEmptyVisibility();
+        toggleEmptyVisibility();
     }
 
-//    private void toggleEmptyVisibility() {
-//        if (programs == null || programs.isEmpty()) {
-//            emptyVisible.set(true);
-//        } else {
-//            emptyVisible.set(false);
-//        }
-//    }
+    private void toggleEmptyVisibility() {
+        if (programs == null || programs.isEmpty()) {
+            emptyVisible.set(true);
+        } else {
+            emptyVisible.set(false);
+        }
+    }
 
 
     public class ProgramsAdapter extends MxInfiniteAdapter<Program> {
@@ -168,20 +184,6 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                         itemBinding.llProg.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     }
                 }
-
-
-                itemBinding.llProg.setOnClickListener(v -> {
-                    programId = model.getId();
-//                    itemBinding.llProg.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
-                    mDataManager.getLoginPrefs().setProgramId(programId);
-                    mDataManager.getLoginPrefs().setProgramTitle(model.getTitle());
-//                    itemBinding.llProg.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
-                    Bundle b = new Bundle();
-                    b.putCharSequence("program", programId);
-                    b.putBoolean("prevVisible",prevVisible);
-                    ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
-                    mActivity.finish();
-                });
 
             }
         }
