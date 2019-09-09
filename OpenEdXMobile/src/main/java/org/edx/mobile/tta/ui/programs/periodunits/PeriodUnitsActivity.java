@@ -1,4 +1,4 @@
-package org.edx.mobile.tta.ui.programs.addunits;
+package org.edx.mobile.tta.ui.programs.periodunits;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,12 +9,12 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
-import org.edx.mobile.tta.ui.programs.addunits.viewmodel.AddUnitsViewModel;
+import org.edx.mobile.tta.ui.programs.periodunits.viewmodel.PeriodUnitsViewModel;
 import org.edx.mobile.view.Router;
 
-public class AddUnitsActivity extends BaseVMActivity {
+public class PeriodUnitsActivity extends BaseVMActivity {
 
-    private AddUnitsViewModel viewModel;
+    private PeriodUnitsViewModel viewModel;
 
     private Period period;
     private EnrolledCoursesResponse course;
@@ -29,10 +29,11 @@ public class AddUnitsActivity extends BaseVMActivity {
             getBundledData(savedInstanceState);
         }
 
-        viewModel = new AddUnitsViewModel(this, period, course);
-        binding(R.layout.t_activity_add_units, viewModel);
+        viewModel = new PeriodUnitsViewModel(this, period, course);
+        binding(R.layout.t_activity_period_units, viewModel);
 
         setSupportActionBar(findViewById(R.id.toolbar));
+        viewModel.registerEventBus();
     }
 
     @Override
@@ -63,5 +64,11 @@ public class AddUnitsActivity extends BaseVMActivity {
         if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
             course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

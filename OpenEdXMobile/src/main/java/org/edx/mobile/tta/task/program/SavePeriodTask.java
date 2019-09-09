@@ -13,19 +13,21 @@ import java.util.List;
 public class SavePeriodTask extends Task<SuccessResponse> {
 
     private long periodId;
-    private List<String> unitIds;
+    private List<String> addedIds;
+    private List<String> removedIds;
 
     @Inject
     private TaAPI taAPI;
 
-    public SavePeriodTask(Context context, long periodId, List<String> unitIds) {
+    public SavePeriodTask(Context context, long periodId, List<String> addedIds, List<String> removedIds) {
         super(context);
         this.periodId = periodId;
-        this.unitIds = unitIds;
+        this.addedIds = addedIds;
+        this.removedIds = removedIds;
     }
 
     @Override
     public SuccessResponse call() throws Exception {
-        return taAPI.savePeriod(periodId, unitIds).execute().body();
+        return taAPI.savePeriod(periodId, addedIds, removedIds).execute().body();
     }
 }

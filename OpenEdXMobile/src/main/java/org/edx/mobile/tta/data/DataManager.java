@@ -4201,7 +4201,8 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback) {
+    public void savePeriod(long periodId, List<String> addedIds, List<String> removedIds,
+                           OnResponseCallback<SuccessResponse> callback) {
 
 //        SuccessResponse response = new SuccessResponse();
 //        response.setSuccess(true);
@@ -4209,7 +4210,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new SavePeriodTask(context, periodId, unitIds){
+            new SavePeriodTask(context, periodId, addedIds, removedIds){
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);

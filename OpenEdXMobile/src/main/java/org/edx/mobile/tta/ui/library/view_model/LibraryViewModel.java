@@ -145,7 +145,13 @@ public class LibraryViewModel extends BaseViewModel {
         demolist.add("Curriculum");
 
         try {
-            fragments.add(new ScheduleFragment());
+            ScheduleFragment scheduleFragment = new ScheduleFragment();
+            if (course != null){
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
+                scheduleFragment.setArguments(bundle);
+            }
+            fragments.add(scheduleFragment);
 
             UnitsFragment unitsFragment = new UnitsFragment();
             if (course != null){
