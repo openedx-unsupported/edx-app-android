@@ -91,7 +91,7 @@ public class SplashViewModel extends BaseViewModel {
                 mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
                     @Override
                     public void onSuccess(List<Program> data) {
-                        if (data.size() <= 1) {
+                        if (data.size() == 1) {
                             mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                             getSection();
                         } else {
@@ -119,7 +119,7 @@ public class SplashViewModel extends BaseViewModel {
         mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<List<Section>>() {
             @Override
             public void onSuccess(List<Section> data) {
-                if (data.size() <= 1) {
+                if (data.size() == 1) {
                     mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
                     mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
 

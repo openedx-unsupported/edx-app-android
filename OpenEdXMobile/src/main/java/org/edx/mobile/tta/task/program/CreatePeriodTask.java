@@ -15,16 +15,16 @@ public class CreatePeriodTask extends Task<SuccessResponse> {
     @Inject
     private TaAPI taAPI;
 
-    public CreatePeriodTask(Context context, String programId, String sectionId, String lang, String periodName) {
+    public CreatePeriodTask(Context context, String programId, String sectionId, String lang) {
         super(context);
         this.programId = programId;
         this.sectionId = sectionId;
-        this.periodName = periodName;
+//        this.periodName = periodName;
         this.lang = lang;
     }
 
     @Override
     public SuccessResponse call() throws Exception {
-        return taAPI.createPeriod(programId, sectionId, lang, periodName).execute().body();
+        return taAPI.createPeriod(programId, sectionId, lang).execute().body();
     }
 }
