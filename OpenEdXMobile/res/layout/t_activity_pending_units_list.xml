@@ -25,8 +25,8 @@
                 android:layout_height="match_parent">
 
                 <com.maurya.mx.mxlib.view.MxRecyclerView
-                    infinite_recycler_adapter="@{viewModel.periodAdapter}"
-                    layout_manager="@{viewModel.gridLayoutManager}"
+                    infinite_recycler_adapter="@{viewModel.unitsAdapter}"
+                    layout_manager="@{viewModel.layoutManager}"
                     infinite_load_more_listener="@{viewModel.loadMoreListener}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

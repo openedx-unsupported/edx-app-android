@@ -20,6 +20,7 @@ public class Constants {
     public static final String KEY_TERMS_OF_SERVICE = "terms_of_service";
     public static final String KEY_NAME = "name";
     public static final String KEY_USERNAME = "username";
+    public static final String KEY_SECTIONID = "sectionId";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_STATE = "state";
     public static final String KEY_LIST_IDS = "list_ids";

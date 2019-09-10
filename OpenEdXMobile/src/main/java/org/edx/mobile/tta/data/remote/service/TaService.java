@@ -230,6 +230,7 @@ public interface TaService {
     @GET(ApiConstants.URL_MX_GET_PENDING_UNITS)
     Call<List<CourseComponent>> getPendingUnits(@Query(Constants.KEY_PROGRAM_ID) String programId,
                                             @Query(Constants.KEY_USERNAME) String username,
+                                            @Query(Constants.KEY_SECTION_ID) String sectionId,
                                             @Query(Constants.KEY_TAKE) int take,
                                             @Query(Constants.KEY_SKIP) int skip);
 

@@ -16,5 +16,9 @@ public class PendingUnitsListActivity extends BaseVMActivity {
         viewModel = new PendingUnitsListViewModel(this);
         binding(R.layout.t_activity_pending_units_list, viewModel);
 
+        savedInstanceState = getIntent().getExtras();
+        assert savedInstanceState != null;
+        viewModel.userName = savedInstanceState.getString("username");
+
     }
 }

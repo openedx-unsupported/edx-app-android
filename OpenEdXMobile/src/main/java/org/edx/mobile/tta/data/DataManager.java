@@ -4140,12 +4140,12 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getPendingUnits(String programId, String username, int take, int skip,
+    public void getPendingUnits(String programId, String sectionId, String username, int take, int skip,
                                 OnResponseCallback<List<CourseComponent>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetPendingUnitsTask(context, programId, username, take, skip) {
+            new GetPendingUnitsTask(context, programId, sectionId, username, take, skip) {
                 @Override
                 protected void onSuccess(List<CourseComponent> units) throws Exception {
                     super.onSuccess(units);

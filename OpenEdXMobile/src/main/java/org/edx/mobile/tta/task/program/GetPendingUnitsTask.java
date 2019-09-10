@@ -12,22 +12,23 @@ import java.util.List;
 
 public class GetPendingUnitsTask extends Task<List<CourseComponent>> {
 
-    private String programId, username;
+    private String programId, username, sectionId;
     private int take, skip;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetPendingUnitsTask(Context context, String programId, String username, int take, int skip) {
+    public GetPendingUnitsTask(Context context, String programId,String sectionId, String username, int take, int skip) {
         super(context);
         this.programId = programId;
         this.username = username;
+        this.sectionId = sectionId;
         this.take = take;
         this.skip = skip;
     }
 
     @Override
     public List<CourseComponent> call() throws Exception {
-        return taAPI.getPendingUnits(programId, username, take, skip).execute().body();
+        return taAPI.getPendingUnits(programId,sectionId, username, take, skip).execute().body();
     }
 }
