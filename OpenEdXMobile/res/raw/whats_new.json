@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.20",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Expanded Language Support",
+        "message": "You can now view the edX app in German, French, Portuguese, Chinese, and Turkish. The application uses your device language to specify this setting."
+      }
+    ]
+  },
+  {
     "version": "2.19",
     "messages": [
       {

@@ -1,0 +1,15 @@
+[
+  {
+    "version": "2.20",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Prise en charge linguistique étendue",
+        "message": "Vous pouvez maintenant afficher l'application edX en allemand, français, portugais, chinois et turc. L'application utilise la langue de votre appareil pour spécifier ce paramètre."
+      }
+    ]
+  }
+]

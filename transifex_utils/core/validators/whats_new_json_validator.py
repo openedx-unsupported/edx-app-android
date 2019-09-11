@@ -20,7 +20,7 @@ def validate(file_path, template):
 
 def validate_translation_data(source_data, translation_data,
                               translation_file):
-    for i in range(0, len(source_data)):
+    for i in range(0, len(translation_data)):
         validate_fields(i, source_data, translation_data, translation_file)
 
 
