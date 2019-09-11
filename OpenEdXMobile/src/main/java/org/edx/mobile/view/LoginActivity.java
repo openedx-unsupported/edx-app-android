@@ -291,12 +291,15 @@ public class LoginActivity
 
     public void onUserLoginSuccess(ProfileModel profile) {
         setResult(RESULT_OK);
-        finish();
+
         /*if (!environment.getConfig().isRegistrationEnabled()) {
             environment.getRouter().showMainDashboard(this);
         }*/
         if (environment.getUserPrefs().getProfile() != null) {
             //environment.getRouter().showMainDashboard(SplashActivity.this);
+            activityLoginBinding.progress.progressIndicator.setVisibility(View.VISIBLE);
+            activityLoginBinding.progress.getRoot().setVisibility(View.VISIBLE);
+            tryToSetUIInteraction(false);
             mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
                 @Override
                 public void onSuccess(List<Program> data) {
@@ -304,6 +307,9 @@ public class LoginActivity
                         mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                         getSection();
                     } else {
+                        activityLoginBinding.progress.progressIndicator.setVisibility(View.GONE);
+                        tryToSetUIInteraction(true);
+                        finish();
                         ActivityUtil.gotoPage(LoginActivity.this, SelectProgramActivity.class,
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     }
@@ -312,9 +318,12 @@ public class LoginActivity
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    activityLoginBinding.progress.progressIndicator.setVisibility(View.GONE);
+                    tryToSetUIInteraction(true);
                 }
             });
+        } else {
+            finish();
         }
 
 //        ActivityUtil.gotoPage(LoginActivity.this, SelectProgramActivity.class,
@@ -325,15 +334,19 @@ public class LoginActivity
         mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<List<Section>>() {
             @Override
             public void onSuccess(List<Section> data) {
+                activityLoginBinding.progress.progressIndicator.setVisibility(View.GONE);
+                tryToSetUIInteraction(true);
                 if (data.size() <= 1) {
                     mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
                     mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
 
-                    ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class);
+                    ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class,
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     Constants.isSingleRow = true;
                     finish();
                 } else {
-                    ActivityUtil.gotoPage(LoginActivity.this, SelectSectionActivity.class);
+                    ActivityUtil.gotoPage(LoginActivity.this, SelectSectionActivity.class,
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     finish();
                 }
 //                for (Section unit: data){
@@ -345,7 +358,8 @@ public class LoginActivity
 
             @Override
             public void onFailure(Exception e) {
-
+                activityLoginBinding.progress.progressIndicator.setVisibility(View.GONE);
+                tryToSetUIInteraction(true);
             }
         });
     }
