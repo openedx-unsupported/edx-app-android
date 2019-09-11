@@ -167,6 +167,7 @@ import org.edx.mobile.tta.task.program.GetProgramsTask;
 import org.edx.mobile.tta.task.program.GetSectionsTask;
 import org.edx.mobile.tta.task.program.GetUnitsTask;
 import org.edx.mobile.tta.task.program.GetUsersTask;
+import org.edx.mobile.tta.task.program.RejectUnitTask;
 import org.edx.mobile.tta.task.program.SavePeriodTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
@@ -4143,7 +4144,15 @@ public class DataManager extends BaseRoboInjector {
     public void getPendingUnits(String programId, String sectionId, String username, int take, int skip,
                                 OnResponseCallback<List<CourseComponent>> callback) {
 
-        if (NetworkUtil.isConnected(context)) {
+        List<CourseComponent> units = new ArrayList<>();
+        CourseComponent user;
+        for (int i = 0; i < 15; i++) {
+            user = new CourseComponent();
+            user.setDisplayName("Unit " + i);
+            units.add(user);
+        }
+        callback.onSuccess(units);
+       /* if (NetworkUtil.isConnected(context)) {
 
             new GetPendingUnitsTask(context, programId, sectionId, username, take, skip) {
                 @Override
@@ -4165,7 +4174,7 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             callback.onFailure(new NoConnectionException(context));
-        }
+        }*/
 
     }
 
@@ -4243,6 +4252,33 @@ public class DataManager extends BaseRoboInjector {
                     super.onSuccess(successResponse);
                     if (successResponse == null) {
                         callback.onFailure(new TaException("Unable to approve unit"));
+                        return;
+                    }
+
+                    callback.onSuccess(successResponse);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+    public void rejectUnit(String unitId, String username, OnResponseCallback<SuccessResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new RejectUnitTask(context, unitId, username) {
+                @Override
+                protected void onSuccess(SuccessResponse successResponse) throws Exception {
+                    super.onSuccess(successResponse);
+                    if (successResponse == null) {
+                        callback.onFailure(new TaException("Unable to reject unit"));
                         return;
                     }
 

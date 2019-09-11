@@ -250,6 +250,10 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_APPROVE_UNIT)
     Call<SuccessResponse> approveUnit(@FieldMap Map<String, String> parameters);
 
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_REJECT_UNIT)
+    Call<SuccessResponse> rejectUnit(@FieldMap Map<String, String> parameters);
+
     //for app update
     @GET(ApiConstants.URL_MX_GET_APP_UPDATE)
     Call<UpdateResponse> getAppUpdate(@Query(Constants.VERSION_NAME) String v_name,

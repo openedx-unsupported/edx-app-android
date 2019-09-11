@@ -344,6 +344,13 @@ public class TaAPI {
         return taService.approveUnit(parameters);
     }
 
+    public Call<SuccessResponse> rejectUnit(String unitId, String username){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_UNIT_ID, unitId);
+        parameters.put(Constants.KEY_USERNAME, username);
+        return taService.rejectUnit(parameters);
+    }
+
     public Call<UpdateResponse> getVersionUpdate(String v_name, Long v_code){
         return taService.getAppUpdate(v_name,v_code);
     }

@@ -3,11 +3,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="200dp"
         android:orientation="vertical">
     <LinearLayout
         android:id="@+id/header_ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical" >
         <TextView
             android:layout_width="match_parent"
@@ -24,11 +27,10 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/release_notes_ll"
-        android:layout_below="@id/header_ll"
-        android:layout_above="@id/footer"
         android:layout_width="match_parent"
         android:layout_margin="5dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal" >
         <TextView
@@ -39,6 +41,7 @@
             android:layout_margin="@dimen/_12px"
             android:textColor="@color/primary_cyan"
             android:fontFamily="@font/hind_bold"/>
+
         <org.edx.mobile.tta.ui.custom.DropDownFilterView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,46 +49,58 @@
             android:id="@+id/filter_drop_down" />
 
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:orientation="vertical" >
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:gravity="end"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|bottom"
+            android:background="@color/white"
+            android:orientation="horizontal">
 
-         <!--   <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/et_period_name"
-                android:hint="Period Name"
+            <!--   <EditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:id="@+id/et_period_name"
+                   android:hint="Period Name"
+                   android:padding="@dimen/_16px"
+                   android:layout_margin="@dimen/_16px"
+                   android:textColor="@color/black"
+                   style="@style/edX.Widget.EditText"/>-->
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:id="@+id/btn_cancel"
+                android:text="@string/label_cancel"
                 android:padding="@dimen/_16px"
+                android:fontFamily="@font/hind_medium"
+                android:textColor="@color/grey_text"
+                android:background="@color/transparent"
+                style="?borderlessButtonStyle"/>
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_text"
                 android:layout_margin="@dimen/_16px"
-                android:textColor="@color/black"
-                style="@style/edX.Widget.EditText"/>-->
+                android:orientation="horizontal">
+            </LinearLayout>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="end"
+                android:layout_weight="1"
                 android:id="@+id/submit_button"
-                android:text="@string/submit"
+                android:text="Create"
+                android:background="@color/transparent"
+                android:fontFamily="@font/hind_medium"
                 android:padding="@dimen/_16px"
-                android:layout_margin="@dimen/_16px"
-                android:textColor="@color/white"
-                android:background="@color/colorAccent"
-                style="@style/edX.Widget.RegularButton"/>
+                android:textColor="@color/grey_text"
+                style="?borderlessButtonStyle"/>
 
         </LinearLayout>
-    </LinearLayout>
     </LinearLayout>
 </layout>

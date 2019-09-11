@@ -55,12 +55,12 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         mActivity.showLoading();
 
 
-        unitsAdapter.setItemClickListener((view, item) -> {
-            if(item != null){
-                String unitId = item.getCourseId();
-                approveUnits(unitId);
-            }
-        });
+//        unitsAdapter.setItemClickListener((view, item) -> {
+//            if(item != null){
+//                String unitId = item.getCourseId();
+//                approveUnits(unitId);
+//            }
+//        });
     }
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -105,7 +105,27 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 });
     }
     public void approveUnits(String unitId) {
+
         mDataManager.approveUnit(unitId,
+                userName, new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+                        mActivity.hideLoading();
+                        fetchUnits();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+                        allLoaded = true;
+                        unitsAdapter.setLoadingDone();
+                        toggleEmptyVisibility();
+                    }
+                });
+    }
+
+    public void rejectUnits(String unitId) {
+        mDataManager.rejectUnit(unitId,
                 userName, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
@@ -163,6 +183,14 @@ public class PendingUnitsListViewModel extends BaseViewModel {
             if (binding instanceof TRowPendingUnitsBinding) {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
                 itemBinding.textUnitName.setText(model.getDisplayName());
+                itemBinding.btnApprove.setOnClickListener(v -> {
+                        approveUnits(model.getId());
+                });
+
+                itemBinding.btnReject.setOnClickListener(v -> {
+                    rejectUnits(model.getId());
+                });
+
 
             }
         }

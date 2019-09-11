@@ -1,7 +1,9 @@
 package org.edx.mobile.tta.ui.programs.schedule.view_model;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -39,6 +42,7 @@ import org.edx.mobile.tta.ui.programs.addunits.AddUnitsActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -276,12 +280,13 @@ public class ScheduleViewModel extends BaseViewModel {
         final Dialog dialog = new Dialog(mActivity);
         dialog.setContentView(R.layout.t_alert_add_period);
         Button dialogButton = (Button) dialog.findViewById(R.id.submit_button);
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
 //        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
         DropDownFilterView drop = dialog.findViewById(R.id.filter_drop_down);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.FIRST_SUB_WINDOW;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialog.show();
         dialog.getWindow().setAttributes(lp);
         drop.setFilterItems(langTags);
@@ -304,6 +309,9 @@ public class ScheduleViewModel extends BaseViewModel {
             createPeriods(lang);
             dialog.dismiss();
         });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        dialog.setCancelable(false);
         dialog.show();
     }
 
