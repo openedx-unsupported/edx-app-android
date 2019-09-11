@@ -135,7 +135,7 @@ public class LibraryViewModel extends BaseViewModel {
         demolist.add("Units");
 //        if (mDataManager.getLoginPrefs().getUsername() != null &&
 //                mDataManager.getLoginPrefs().getUsername().equals("staff")) {
-            demolist.add("Pending users");
+            demolist.add("Pending units");
 //        }
         demolist.add("Students");
         demolist.add("Discussion");

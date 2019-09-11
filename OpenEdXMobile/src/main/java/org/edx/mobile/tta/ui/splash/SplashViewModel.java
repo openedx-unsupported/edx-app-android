@@ -104,6 +104,7 @@ public class SplashViewModel extends BaseViewModel {
                     @Override
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
+                        mDataManager.getLoginPrefs().setProgramId("");
                         ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class,
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     }
@@ -140,6 +141,9 @@ public class SplashViewModel extends BaseViewModel {
             @Override
             public void onFailure(Exception e) {
                 mActivity.hideLoading();
+                mDataManager.getLoginPrefs().setSectionId("");
+                ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class);
+                mActivity.finish();
             }
         });
     }

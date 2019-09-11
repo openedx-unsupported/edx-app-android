@@ -313,8 +313,8 @@ public class TaAPI {
         return taService.getPendingUsers(programId, sectionId, take, skip);
     }
 
-    public Call<List<CourseComponent>> getPendingUnits(String programId, String username, int take, int skip){
-        return taService.getPendingUnits(programId, username, take, skip);
+    public Call<List<CourseComponent>> getPendingUnits(String programId, String sectionId, String username, int take, int skip){
+        return taService.getPendingUnits(programId, sectionId, username, take, skip);
     }
 
     public Call<CourseComponent> getCourseComponentUnits(String unit_id){

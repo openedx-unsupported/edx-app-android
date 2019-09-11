@@ -3,11 +3,13 @@ package org.edx.mobile.tta.ui.programs.pendingUnits.viewModel;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -24,9 +26,13 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
+import org.edx.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class PendingUsersViewModel extends BaseViewModel {
 
@@ -70,13 +76,23 @@ public class PendingUsersViewModel extends BaseViewModel {
         mActivity.showLoading();
         getFilters();
         fetchData();
+
+
+        usersAdapter.setItemClickListener((view, item) -> {
+
+            if (item != null){
+                Bundle b = new Bundle();
+                b.putString("username", item.username);
+                ActivityUtil.gotoPage(mActivity, PendingUnitsListActivity.class, b);
+            }
+
+        });
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-
 
     }
 
