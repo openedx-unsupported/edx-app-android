@@ -127,6 +127,18 @@ public interface CourseService {
             @Query("username") final String username,
             @Query("course_id") final String courseId);
 
+    @GET("/api/courses/v1/blocks/{block_id}/?" +
+            "depth=all&" +
+            "requested_fields=graded,format,student_view_multi_device,due&" +
+            "student_view_data=video,discussion&" +
+            "block_counts=video&" +
+            "nav_depth=3")
+    Call<CourseStructureV1Model> getBlockComponent(
+            @Path("block_id") final String blockId,
+            @Header("Cache-Control") String cacheControlHeaderParam,
+            @Query("username") final String username,
+            @Query("course_id") final String courseId);
+
     final class SyncLastAccessedSubsectionBody {
         @NonNull
         private final String lastVisitedModuleId;

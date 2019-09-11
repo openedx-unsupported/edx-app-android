@@ -27,7 +27,9 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
 import org.edx.mobile.databinding.TRowScheduleBinding;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
+import org.edx.mobile.tta.data.enums.ShowIn;
 import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
@@ -39,7 +41,9 @@ import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 import org.edx.mobile.tta.ui.programs.addunits.AddUnitsActivity;
+import org.edx.mobile.tta.ui.programs.periodunits.PeriodUnitsActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.view.Router;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +56,7 @@ public class ScheduleViewModel extends BaseViewModel {
     private static final int TAKE = 10;
     private static final int SKIP = 0;
 
+    private EnrolledCoursesResponse course;
     private List<ProgramFilter> allFilters;
     private List<ProgramFilter> filters;
     private List<Period> periodList;
@@ -83,8 +88,9 @@ public class ScheduleViewModel extends BaseViewModel {
     };
     private String lang;
 
-    public ScheduleViewModel(Context context, TaBaseFragment fragment) {
+    public ScheduleViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
         super(context, fragment);
+        this.course = course;
         filters = new ArrayList<>();
         periodList = new ArrayList<>();
         tags = new ArrayList<>();
@@ -98,9 +104,19 @@ public class ScheduleViewModel extends BaseViewModel {
 
         periodAdapter.setItems(periodList);
         periodAdapter.setItemClickListener((view, item) -> {
-            Bundle parameters = new Bundle();
-            parameters.putParcelable(Constants.KEY_PERIOD, item);
-            ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
+            switch (view.getId()){
+                case R.id.textview_add:
+                    Bundle parameters = new Bundle();
+                    parameters.putParcelable(Constants.KEY_PERIOD, item);
+                    parameters.putSerializable(Router.EXTRA_COURSE_DATA, ScheduleViewModel.this.course);
+                    ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
+                    break;
+                default:
+                    Bundle parameters1 = new Bundle();
+                    parameters1.putParcelable(Constants.KEY_PERIOD, item);
+                    parameters1.putSerializable(Router.EXTRA_COURSE_DATA, ScheduleViewModel.this.course);
+                    ActivityUtil.gotoPage(mActivity, PeriodUnitsActivity.class, parameters1);
+            }
         });
 
         mActivity.showLoading();
@@ -181,7 +197,7 @@ public class ScheduleViewModel extends BaseViewModel {
                     }
 
                     if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains("schedule")) {
+                            !filter.getShowIn().contains(ShowIn.schedule.name())) {
                         removables.add(filter);
                     }
                 }
@@ -393,6 +409,13 @@ public class ScheduleViewModel extends BaseViewModel {
             if (binding instanceof TRowScheduleBinding) {
                 TRowScheduleBinding scheduleBinding = (TRowScheduleBinding) binding;
                 scheduleBinding.setPeriod(model);
+
+                scheduleBinding.textviewAdd.setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
+
                 scheduleBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);

@@ -8,19 +8,31 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
+import org.edx.mobile.view.Router;
 
 public class UnitsFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
 
     private UnitsViewModel viewModel;
 
+    private EnrolledCoursesResponse course;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new UnitsViewModel(getActivity(), this);
+
+        if (savedInstanceState != null){
+            getDataFromBundle(savedInstanceState);
+        }
+        if (course == null && getArguments() != null){
+            getDataFromBundle(getArguments());
+        }
+
+        viewModel = new UnitsViewModel(getActivity(), this, course);
         viewModel.registerEventBus();
     }
 
@@ -30,6 +42,20 @@ public class UnitsFragment extends TaBaseFragment {
         View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (course != null){
+            outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
+        }
+    }
+
+    private void getDataFromBundle(Bundle bundle){
+        if (bundle.containsKey(Router.EXTRA_COURSE_DATA)){
+            course = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
+        }
     }
 
     @Override

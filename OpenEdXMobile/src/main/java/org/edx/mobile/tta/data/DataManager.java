@@ -89,7 +89,6 @@ import org.edx.mobile.tta.data.model.profile.FollowStatus;
 import org.edx.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.edx.mobile.tta.data.model.profile.UserAddressResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
-import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.FilterSection;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
@@ -156,6 +155,8 @@ import org.edx.mobile.tta.task.profile.GetUserAddressTask;
 import org.edx.mobile.tta.task.profile.SubmitFeedbackTask;
 import org.edx.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.edx.mobile.tta.task.program.ApproveUnitTask;
+import org.edx.mobile.tta.task.program.GetBlockComponentFromCacheTask;
+import org.edx.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.edx.mobile.tta.task.program.CreatePeriodTask;
 import org.edx.mobile.tta.task.program.GetAllUnitsTask;
 import org.edx.mobile.tta.task.program.GetCourseComponentTask;
@@ -1638,7 +1639,6 @@ public class DataManager extends BaseRoboInjector {
             public void onSuccess(Comment result) {
                 callback.onSuccess(result);
             }
-
             @Override
             public void onFailure(HttpServerErrorResponse errorResponse) {
                 callback.onFailure(new TaException(errorResponse.getMessage()));
@@ -3872,27 +3872,26 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getUnits(List<ProgramFilter> filters, String programId, String sectionId, String role,
-                         long periodId,
-                         int take, int skip, OnResponseCallback<List<Unit>> callback) {
-//
-//        if (skip >= 10) {
-//            callback.onFailure(new TaException("Units not available"));
-//            return;
-//        }
-//
-//        List<Unit> units = new ArrayList<>();
-//        for (int i = 0; i < take; i++) {
-//            Unit unit = new Unit();
-//            unit.setSectionId(sectionId);
-//            unit.setProgramId(programId);
-//            unit.setCode("NeTT_" + (take * skip + i + 1));
-//            unit.setId("unit_" + (take * skip + i + 1));
-//            unit.setTitle("This is Unit number " + (take * skip + i + 1));
-//            unit.setStatus("completed");
-//            units.add(unit);
-//        }
-//        callback.onSuccess(units);
+    public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
+                         String role, long periodId, int take, int skip, OnResponseCallback<List<Unit>> callback){
+
+        /*if (skip >= 10){
+            callback.onFailure(new TaException("Units not available"));
+            return;
+        }
+
+        List<Unit> units = new ArrayList<>();
+        for (int i = 0; i < take; i++){
+            Unit unit = new Unit();
+            unit.setSectionId(sectionId);
+            unit.setProgramId(programId);
+            unit.setCode("NeTT_" + (take*skip + i + 1));
+            unit.setId("unit_" + (take*skip + i + 1));
+            unit.setTitle("This is Unit number " + (take*skip + i + 1));
+            unit.setStatus("completed");
+            units.add(unit);
+        }
+        callback.onSuccess(units);*/
 
         if (NetworkUtil.isConnected(context)) {
 
@@ -4210,7 +4209,8 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void savePeriod(long periodId, List<String> unitIds, OnResponseCallback<SuccessResponse> callback) {
+    public void savePeriod(long periodId, List<String> addedIds, List<String> removedIds,
+                           OnResponseCallback<SuccessResponse> callback) {
 
 //        SuccessResponse response = new SuccessResponse();
 //        response.setSuccess(true);
@@ -4218,7 +4218,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new SavePeriodTask(context, periodId, unitIds){
+            new SavePeriodTask(context, periodId, addedIds, removedIds){
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);
@@ -4404,6 +4404,62 @@ public class DataManager extends BaseRoboInjector {
         }
 
         return v_name;
+    }
+
+    public void getBlockComponent(String blockId, String courseId, OnResponseCallback<CourseComponent> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new GetBlockComponentFromServerTask(context, blockId, courseId){
+                @Override
+                protected void onSuccess(CourseComponent courseComponent) throws Exception {
+                    super.onSuccess(courseComponent);
+                    if (courseComponent != null){
+                        courseManager.addBlockComponentInAppLevelCache(courseComponent, courseId);
+                        callback.onSuccess(courseComponent);
+                    } else {
+                        getBlockComponentFromLocal(blockId, courseId, callback, new TaException("Unit not found"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getBlockComponentFromLocal(blockId, courseId, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getBlockComponentFromLocal(blockId, courseId, callback, new NoConnectionException(context));
+        }
+
+    }
+
+    private void getBlockComponentFromLocal(String blockId, String courseId,
+                                           OnResponseCallback<CourseComponent> callback, Exception e){
+
+        CourseComponent component = courseManager.getBlockComponent(blockId, courseId);
+        if (component != null){
+            callback.onSuccess(component);
+            return;
+        }
+
+        new GetBlockComponentFromCacheTask(context, blockId, courseId){
+            @Override
+            protected void onSuccess(CourseComponent courseComponent) throws Exception {
+                super.onSuccess(courseComponent);
+                if (courseComponent != null){
+                    callback.onSuccess(courseComponent);
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(e);
+            }
+        }.execute();
+
     }
 
 }

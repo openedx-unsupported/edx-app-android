@@ -59,6 +59,8 @@ public class Constants {
     public static final String KEY_SECTION_ID = "section_id";
     public static final String KEY_PERIOD_ID = "period_id";
     public static final String KEY_UNITS = "units";
+    public static final String KEY_ADDED_UNITS = "added_units";
+    public static final String KEY_REMOVED_UNITS = "removed_units";
     public static final String KEY_FILTERS = "filters";
     public static final String KEY_LANG = "language";
     public static final String KEY_PERIOD_NAME = "period_name";
@@ -68,6 +70,7 @@ public class Constants {
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";
+    public static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     public static Boolean IsUpdateDelay = false;
     public static final String KEY_CLASS_NAME = "class_name";
     public static final String KEY_FUNCTION_NAME = "function_name";

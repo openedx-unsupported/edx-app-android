@@ -330,10 +330,11 @@ public class TaAPI {
         return taService.createPeriod(parameters);
     }
 
-    public Call<SuccessResponse> savePeriod(long periodId, List<String> unitIds){
+    public Call<SuccessResponse> savePeriod(long periodId, List<String> addedIds, List<String> removedIds){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
-        parameters.put(Constants.KEY_UNITS, String.valueOf(unitIds));
+        parameters.put(Constants.KEY_ADDED_UNITS, String.valueOf(addedIds));
+        parameters.put(Constants.KEY_REMOVED_UNITS, String.valueOf(removedIds));
         return taService.savePeriod(parameters);
     }
 

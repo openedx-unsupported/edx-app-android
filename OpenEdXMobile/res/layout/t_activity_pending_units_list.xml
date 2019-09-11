@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
@@ -63,7 +63,7 @@
                 </LinearLayout>
 
             </FrameLayout>
-        </LinearLayout>
+        </LinearLayout>-->
 
 
     </android.support.design.widget.CoordinatorLayout>

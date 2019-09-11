@@ -1,8 +1,9 @@
-package org.edx.mobile.tta.ui.programs.units.view_model;
+package org.edx.mobile.tta.ui.programs.periodunits.viewmodel;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,21 +21,26 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ShowIn;
+import org.edx.mobile.tta.data.enums.UserRole;
+import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
-import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
+import org.edx.mobile.tta.ui.programs.addunits.AddUnitsActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.view.Router;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class UnitsViewModel extends BaseViewModel {
+public class PeriodUnitsViewModel extends BaseViewModel {
 
     private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_SKIP = 0;
@@ -45,12 +51,15 @@ public class UnitsViewModel extends BaseViewModel {
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableBoolean addUnitsVisible = new ObservableBoolean();
 
     private EnrolledCoursesResponse course;
+    public Period period;
+    private ProgramFilter periodFilter;
     private List<Unit> units;
     private List<ProgramFilterTag> tags;
-    private List<ProgramFilter> allFilters;
     private List<ProgramFilter> filters;
+    private List<ProgramFilter> allFilters;
     private int take, skip;
     private boolean allLoaded;
     private boolean changesMade;
@@ -63,10 +72,11 @@ public class UnitsViewModel extends BaseViewModel {
         return true;
     };
 
-    public UnitsViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
-        super(context, fragment);
+    public PeriodUnitsViewModel(BaseVMActivity activity, Period period, EnrolledCoursesResponse course) {
+        super(activity);
 
         this.course = course;
+        this.period = period;
         units = new ArrayList<>();
         tags = new ArrayList<>();
         filters = new ArrayList<>();
@@ -87,11 +97,11 @@ public class UnitsViewModel extends BaseViewModel {
                         public void onSuccess(CourseComponent data) {
                             mActivity.hideLoading();
 
-                            if (UnitsViewModel.this.course != null &&
+                            if (PeriodUnitsViewModel.this.course != null &&
                                     data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
                                 mDataManager.getEdxEnvironment().getRouter().showCourseUnitDetail(
                                         mFragment, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                        UnitsViewModel.this.course,
+                                        PeriodUnitsViewModel.this.course,
                                         data.getChildren().get(0).getId(), false);
                             } else {
                                 mActivity.showLongSnack("Unable to open unit");
@@ -104,12 +114,20 @@ public class UnitsViewModel extends BaseViewModel {
                             mActivity.showLongSnack(e.getLocalizedMessage());
                         }
                     });
-
         });
 
-        mActivity.showLoading();
-        fetchFilters();
-        fetchData();
+        if (mDataManager.getLoginPrefs().getRole() != null &&
+                mDataManager.getLoginPrefs().getRole().equalsIgnoreCase(UserRole.Instructor.name())){
+            addUnitsVisible.set(true);
+        } else {
+            addUnitsVisible.set(false);
+        }
+
+        if (this.period != null){
+            mActivity.showLoading();
+            fetchFilters();
+            fetchData();
+        }
     }
 
     @Override
@@ -124,13 +142,25 @@ public class UnitsViewModel extends BaseViewModel {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
                 List<ProgramFilter> removables = new ArrayList<>();
-                for (ProgramFilter filter : data) {
+                for (ProgramFilter filter: data){
                     if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains(ShowIn.units.name())) {
+                            !filter.getShowIn().contains(ShowIn.periodunits.name())){
                         removables.add(filter);
                     }
+                    if (filter.getInternalName().equalsIgnoreCase("period")){
+                        ProgramFilterTag tag = new ProgramFilterTag();
+                        tag.setDisplayName(period.getTitle());
+                        tag.setInternalName(period.getCode());
+                        tag.setId(period.getId());
+
+                        List<ProgramFilterTag> tags = new ArrayList<>();
+                        tags.add(tag);
+                        filter.setTags(tags);
+
+                        periodFilter = filter;
+                    }
                 }
-                for (ProgramFilter filter : removables) {
+                for (ProgramFilter filter: removables){
                     data.remove(filter);
                 }
 
@@ -151,9 +181,9 @@ public class UnitsViewModel extends BaseViewModel {
 
     }
 
-    private void fetchData() {
+    private void fetchData(){
 
-        if (changesMade) {
+        if (changesMade){
             changesMade = false;
             skip = 0;
             unitsAdapter.reset(true);
@@ -164,22 +194,22 @@ public class UnitsViewModel extends BaseViewModel {
 
     }
 
-    private void setUnitFilters() {
+    private void setUnitFilters(){
         filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
+        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()){
             return;
         }
 
-        for (ProgramFilter filter : allFilters) {
+        for (ProgramFilter filter: allFilters){
 
             List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag : filter.getTags()) {
-                if (tags.contains(tag)) {
+            for (ProgramFilterTag tag: filter.getTags()){
+                if (tags.contains(tag)){
                     selectedTags.add(tag);
                 }
             }
 
-            if (!selectedTags.isEmpty()) {
+            if (!selectedTags.isEmpty()){
                 ProgramFilter pf = new ProgramFilter();
                 pf.setDisplayName(filter.getDisplayName());
                 pf.setInternalName(filter.getInternalName());
@@ -194,9 +224,13 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     private void fetchUnits() {
+        if (periodFilter != null && !filters.contains(periodFilter)) {
+            filters.add(periodFilter);
+        }
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),0L,take, skip,
+                mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),
+                period.getId() ,take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -204,6 +238,7 @@ public class UnitsViewModel extends BaseViewModel {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
+
                         populateUnits(data);
                         unitsAdapter.setLoadingDone();
                     }
@@ -245,10 +280,18 @@ public class UnitsViewModel extends BaseViewModel {
         }
     }
 
+    public void addUnits(){
+        Bundle parameters = new Bundle();
+        parameters.putParcelable(Constants.KEY_PERIOD, period);
+        parameters.putSerializable(Router.EXTRA_COURSE_DATA, course);
+        ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(PeriodSavedEvent event) {
         changesMade = true;
         allLoaded = false;
+        mActivity.showLoading();
         fetchData();
     }
 
@@ -288,10 +331,10 @@ public class UnitsViewModel extends BaseViewModel {
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-                    if (prev != null && prev.getItem() != null) {
+                    if (prev != null && prev.getItem() != null){
                         tags.remove((ProgramFilterTag) prev.getItem());
                     }
-                    if (item.getItem() != null) {
+                    if (item.getItem() != null){
                         tags.add((ProgramFilterTag) item.getItem());
                     }
 
@@ -310,12 +353,14 @@ public class UnitsViewModel extends BaseViewModel {
         }
 
         @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model,
+                           @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
+
                 unitBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);

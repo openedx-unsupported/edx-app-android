@@ -142,8 +142,22 @@ public class LibraryViewModel extends BaseViewModel {
         demolist.add("Curriculum");
 
         try {
-            fragments.add(new ScheduleFragment());
-            fragments.add(new UnitsFragment());
+            ScheduleFragment scheduleFragment = new ScheduleFragment();
+            if (course != null){
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
+                scheduleFragment.setArguments(bundle);
+            }
+            fragments.add(scheduleFragment);
+
+            UnitsFragment unitsFragment = new UnitsFragment();
+            if (course != null){
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
+                unitsFragment.setArguments(bundle);
+            }
+            fragments.add(unitsFragment);
+
 //            if (mDataManager.getLoginPrefs().getUsername() != null &&
 //                    mDataManager.getLoginPrefs().getUsername().equals("staff")) {
                 fragments.add(new PendingUsersFragment());
