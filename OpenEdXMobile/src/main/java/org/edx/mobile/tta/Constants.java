@@ -57,6 +57,7 @@ public class Constants {
     public static final String KEY_TAB_POSITION = "tab_position";
     public static final String KEY_PROGRAM_ID = "program_id";
     public static final String KEY_SECTION_ID = "section_id";
+    public static final String KEY_SHOW_IN = "show_in";
     public static final String KEY_PERIOD_ID = "period_id";
     public static final String KEY_UNITS = "units";
     public static final String KEY_ADDED_UNITS = "added_units";

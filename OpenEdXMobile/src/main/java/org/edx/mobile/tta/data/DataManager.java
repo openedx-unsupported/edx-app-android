@@ -3615,7 +3615,8 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getProgramFilters(OnResponseCallback<List<ProgramFilter>> callback) {
+    public void getProgramFilters(String program_id, String section_id, String show_in,
+                                  OnResponseCallback<List<ProgramFilter>> callback) {
 
       /*  List<ProgramFilter> filters = new ArrayList<>();
         ProgramFilter filter;
@@ -3765,7 +3766,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetProgramFiltersTask(context){
+            new GetProgramFiltersTask(context, program_id, show_in, section_id){
                 @Override
                 protected void onSuccess(List<ProgramFilter> programFilters) throws Exception {
                     super.onSuccess(programFilters);

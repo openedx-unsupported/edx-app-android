@@ -18,6 +18,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
 import org.edx.mobile.databinding.TRowStudentsGridBinding;
+import org.edx.mobile.tta.data.enums.ShowIn;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
@@ -155,7 +156,9 @@ public class StudentsViewModel extends BaseViewModel {
 
     public void getFilters() {
 
-        mDataManager.getProgramFilters(new OnResponseCallback<List<ProgramFilter>>() {
+        mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.schedule.name(),
+                new OnResponseCallback<List<ProgramFilter>>() {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
                 List<ProgramFilter> removables = new ArrayList<>();

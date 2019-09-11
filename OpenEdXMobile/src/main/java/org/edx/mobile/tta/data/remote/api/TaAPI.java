@@ -264,8 +264,12 @@ public class TaAPI {
         return taService.getSections(programId);
     }
 
-    public Call<List<ProgramFilter>> getProgramFilters(){
-        return taService.getProgramFilters();
+    public Call<List<ProgramFilter>> getProgramFilters(String programId, String sectionId, String showIn ){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_SHOW_IN, showIn);
+        return taService.getProgramFilters(parameters);
     }
 
     public Call<List<Period>> getPeriods(List<ProgramFilter> filters, String programId, String sectionId, int take, int skip){

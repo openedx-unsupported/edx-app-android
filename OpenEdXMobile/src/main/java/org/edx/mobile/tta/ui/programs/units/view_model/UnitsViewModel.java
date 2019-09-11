@@ -120,7 +120,9 @@ public class UnitsViewModel extends BaseViewModel {
 
     private void fetchFilters() {
 
-        mDataManager.getProgramFilters(new OnResponseCallback<List<ProgramFilter>>() {
+        mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
+                new OnResponseCallback<List<ProgramFilter>>() {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
                 List<ProgramFilter> removables = new ArrayList<>();
