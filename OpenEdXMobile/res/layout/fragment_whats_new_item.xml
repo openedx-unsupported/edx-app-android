@@ -56,6 +56,7 @@
                 android:paddingTop="@dimen/widget_margin"
                 android:textColor="@color/edx_white"
                 android:textSize="@dimen/edx_base"
+                android:scrollbars = "vertical"
                 tools:text="This is the description." />
         </LinearLayout>
     </LinearLayout>
