@@ -265,19 +265,16 @@ public class TaAPI {
     }
 
     public Call<List<ProgramFilter>> getProgramFilters(String programId, String sectionId, String showIn ){
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(Constants.KEY_PROGRAM_ID, programId);
-        parameters.put(Constants.KEY_SECTION_ID, sectionId);
-        parameters.put(Constants.KEY_SHOW_IN, showIn);
-        return taService.getProgramFilters(parameters);
+        return taService.getProgramFilters(programId, sectionId, showIn);
     }
 
-    public Call<List<Period>> getPeriods(List<ProgramFilter> filters, String programId, String sectionId, int take, int skip){
+    public Call<List<Period>> getPeriods(List<ProgramFilter> filters, String programId, String sectionId, String role, int take, int skip){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);
         parameters.put(Constants.KEY_PROGRAM_ID, programId);
         parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_ROLE, role);
         parameters.put(Constants.KEY_FILTERS, filters);
 
         return taService.getPeriods(parameters);
@@ -335,10 +332,10 @@ public class TaAPI {
     }
 
     public Call<SuccessResponse> savePeriod(long periodId, List<String> addedIds, List<String> removedIds){
-        Map<String, String> parameters=new HashMap<>();
+        Map<String, Object> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
-        parameters.put(Constants.KEY_ADDED_UNITS, String.valueOf(addedIds));
-        parameters.put(Constants.KEY_REMOVED_UNITS, String.valueOf(removedIds));
+        parameters.put(Constants.KEY_ADDED_UNITS, addedIds);
+        parameters.put(Constants.KEY_REMOVED_UNITS, removedIds);
         return taService.savePeriod(parameters);
     }
 

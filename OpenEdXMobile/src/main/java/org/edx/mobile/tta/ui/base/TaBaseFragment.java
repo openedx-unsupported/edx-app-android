@@ -110,11 +110,7 @@ public abstract class TaBaseFragment extends RxV4Fragment
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            viewModel.onResume();
-        }catch (NullPointerException ne){
-            ne.printStackTrace();
-        }
+        viewModel.onResume();
     }
 
 

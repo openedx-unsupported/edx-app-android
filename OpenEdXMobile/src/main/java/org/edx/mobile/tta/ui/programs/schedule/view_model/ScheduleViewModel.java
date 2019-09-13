@@ -121,7 +121,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
         mActivity.showLoading();
         getFilters();
-        fetchData();
+//        fetchData();
 //        toolTiptext.set("test");
 //        toolTipGravity.set(Gravity.TOP);
 //        toolTipPosition.set(0);
@@ -184,10 +184,10 @@ public class ScheduleViewModel extends BaseViewModel {
                 new OnResponseCallback<List<ProgramFilter>>() {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
-                List<ProgramFilter> removables = new ArrayList<>();
+
                 for (ProgramFilter filter : data) {
 
-                    if (filter.getInternalName().equalsIgnoreCase("language")) {
+                    if (filter.getInternalName().toLowerCase().contains("lang")) {
                         langTags.clear();
                         langTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
                                 true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
@@ -198,13 +198,6 @@ public class ScheduleViewModel extends BaseViewModel {
                         }
                     }
 
-                    if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains(ShowIn.schedule.name())) {
-                        removables.add(filter);
-                    }
-                }
-                for (ProgramFilter filter : removables) {
-                    data.remove(filter);
                 }
 
                 if (!data.isEmpty()) {
@@ -229,7 +222,8 @@ public class ScheduleViewModel extends BaseViewModel {
     private void getPeriods() {
         periodAdapter.reset(true);
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), take, skip, new OnResponseCallback<List<Period>>() {
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
+                , take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
                         mActivity.hideLoading();

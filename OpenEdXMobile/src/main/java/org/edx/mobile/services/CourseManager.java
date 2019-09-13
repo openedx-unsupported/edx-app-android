@@ -168,20 +168,23 @@ public class CourseManager {
 
     public CourseComponent getBlockComponent(String blockId, String courseId){
         List<CourseComponent> components = cachedBlockComponents.get(courseId);
+        return getComponentFromComponents(components, blockId);
+    }
+
+    private CourseComponent getComponentFromComponents(List<CourseComponent> components, String blockId){
+
         if (components == null){
             return null;
         }
+
         for (CourseComponent component: components){
             if (component.getId().equals(blockId)){
                 return component;
-            } else if (component.isContainer() && component.getChildren() != null){
-                for (IBlock child: component.getChildren()){
-                    if (child.getId().equals(blockId)){
-                        return (CourseComponent) child;
-                    }
-                }
+            } else if (component.isContainer()){
+                return getComponentFromComponents(component.getChildContainers(), blockId);
             }
         }
         return null;
+
     }
 }

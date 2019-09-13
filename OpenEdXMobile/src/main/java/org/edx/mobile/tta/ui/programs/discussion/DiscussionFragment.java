@@ -17,13 +17,18 @@ public class DiscussionFragment extends TaBaseFragment {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
     public DiscussionViewModel viewModel;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new DiscussionViewModel(getActivity(), this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.nothing_to_show, viewModel)
                 .getRoot();
 
-        viewModel = new DiscussionViewModel(getActivity(), this);
         TextView mtext_nothing;
         mtext_nothing = rootView.findViewById(R.id.text_nothing);
         mtext_nothing.setText("No discussions available..");

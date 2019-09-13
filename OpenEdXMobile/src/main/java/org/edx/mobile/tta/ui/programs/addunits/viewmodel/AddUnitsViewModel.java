@@ -99,6 +99,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         unitsAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()){
                 case R.id.layout_checkbox:
+                case R.id.checkbox:
 
                     if (selected.contains(item)){
                         selected.remove(item);
@@ -134,10 +135,10 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                                     if (AddUnitsViewModel.this.course != null &&
                                             data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                        mDataManager.getEdxEnvironment().getRouter().showCourseUnitDetail(
-                                                mFragment, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                        mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
+                                                mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                                                 AddUnitsViewModel.this.course,
-                                                data.getChildren().get(0).getId(), false);
+                                                data.getChildren().get(0).getId(), null, false);
                                     } else {
                                         mActivity.showLongSnack("Unable to open unit");
                                     }
@@ -472,6 +473,12 @@ public class AddUnitsViewModel extends BaseViewModel {
                 }
 
                 unitBinding.layoutCheckbox.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                unitBinding.checkbox.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }

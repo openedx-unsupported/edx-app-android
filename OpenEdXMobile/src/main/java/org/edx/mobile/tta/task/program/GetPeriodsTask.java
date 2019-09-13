@@ -14,23 +14,24 @@ import java.util.List;
 public class GetPeriodsTask extends Task<List<Period>> {
 
     private List<ProgramFilter> filters;
-    private String programId, sectionId;
+    private String programId, sectionId, role;
     private int take, skip;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetPeriodsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId, int take, int skip) {
+    public GetPeriodsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId, String role, int take, int skip) {
         super(context);
         this.filters = filters;
         this.programId = programId;
         this.sectionId = sectionId;
+        this.role = role;
         this.take = take;
         this.skip = skip;
     }
 
     @Override
     public List<Period> call() throws Exception {
-        return taAPI.getPeriods(filters, programId, sectionId, take, skip).execute().body();
+        return taAPI.getPeriods(filters, programId, sectionId, role, take, skip).execute().body();
     }
 }

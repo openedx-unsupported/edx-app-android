@@ -99,10 +99,10 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
                             if (PeriodUnitsViewModel.this.course != null &&
                                     data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                mDataManager.getEdxEnvironment().getRouter().showCourseUnitDetail(
-                                        mFragment, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                        PeriodUnitsViewModel.this.course,
-                                        data.getChildren().get(0).getId(), false);
+                                mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
+                                        mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                        PeriodUnitsViewModel.this.course, data.getChildren().get(0).getId(),
+                                        null, false);
                             } else {
                                 mActivity.showLongSnack("Unable to open unit");
                             }

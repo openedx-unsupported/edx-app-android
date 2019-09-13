@@ -204,7 +204,9 @@ public interface TaService {
     Call<List<Section>> getSections(@Query(Constants.KEY_PROGRAM_ID) String programId);
 
     @GET(ApiConstants.URL_MX_GET_PROGRAM_FILTERS)
-    Call<List<ProgramFilter>> getProgramFilters(@Body Map<String, Object> parameters);
+    Call<List<ProgramFilter>> getProgramFilters(@Query(Constants.KEY_PROGRAM_ID) String programId,
+                                                @Query(Constants.KEY_SECTION_ID) String sectionId,
+                                                @Query(Constants.KEY_SHOW_IN) String showIn);
 
     @POST(ApiConstants.URL_MX_GET_PERIODS)
     Call<List<Period>> getPeriods(@Body Map<String, Object> parameters);
@@ -243,8 +245,7 @@ public interface TaService {
 
 
     @POST(ApiConstants.URL_MX_SAVE_PERIOD)
-//    Call<SuccessResponse> savePeriod(@FieldMap Map<String, String> parameters);
-    Call<SuccessResponse> savePeriod(@Body Map<String, String> parameters);
+    Call<SuccessResponse> savePeriod(@Body Map<String, Object> parameters);
 
     @FormUrlEncoded
     @POST(ApiConstants.URL_MX_APPROVE_UNIT)

@@ -34,7 +34,6 @@ import java.util.List;
 public class StudentsViewModel extends BaseViewModel {
 
     public RecyclerView.LayoutManager layoutManager;
-    public RecyclerView.LayoutManager filterLayoutManager;
     public List<ProgramUser> users;
 
     public List<ProgramFilter> allFilters;
@@ -62,8 +61,9 @@ public class StudentsViewModel extends BaseViewModel {
         filtersAdapter = new FiltersAdapter(mActivity);
         users = new ArrayList<>();
         usersAdapter.setItems(users);
-        layoutManager = new GridLayoutManager(mActivity, 2);
-        filterLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        usersAdapter.setItemClickListener((view, item) -> {
+            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+        });
 
         take = TAKE;
         skip = SKIP;
@@ -76,7 +76,7 @@ public class StudentsViewModel extends BaseViewModel {
     @Override
     public void onResume() {
         super.onResume();
-
+        layoutManager = new GridLayoutManager(mActivity, 2);
     }
 
 
@@ -239,6 +239,12 @@ public class StudentsViewModel extends BaseViewModel {
                 if(!mDataManager.getLoginPrefs().getRole().equals("Instructor")){
                     itemBinding.llStatus.setVisibility(View.GONE);
                 }
+
+                itemBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
 
             }
         }

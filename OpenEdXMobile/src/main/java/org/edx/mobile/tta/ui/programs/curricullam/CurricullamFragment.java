@@ -18,14 +18,18 @@ public class CurricullamFragment extends TaBaseFragment {
     WebView webView;
     final String url_to_load = "http://www.humana-india.org/results-and-data/annual-reports";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new CurricullamViewModel(getActivity(), this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.curricullam_fragment, viewModel)
                 .getRoot();
-
-        viewModel = new CurricullamViewModel(getActivity(), this);
 
         webView = rootView.findViewById(R.id.web_view);
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ProgramFilter implements Comparable<ProgramFilter> {
 
-    private long id;
+    private String id;
 
     @SerializedName("display_name")
     private String displayName;
@@ -21,11 +21,11 @@ public class ProgramFilter implements Comparable<ProgramFilter> {
 
     private List<ProgramFilterTag> tags;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

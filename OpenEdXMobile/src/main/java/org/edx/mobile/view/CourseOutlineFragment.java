@@ -613,7 +613,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (courseComponentId == null) return true;
         final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
                 courseData.getCourse().getId(), courseComponentId);
-        final BlockPath outlinePath = outlineComp.getPath();
+        final BlockPath outlinePath;
+        try {
+            outlinePath = outlineComp.getPath();
+        } catch (Exception e) {
+            return false;
+        }
         final int outlinePathSize = outlinePath.getPath().size();
 
         return outlinePathSize <= 1;

@@ -50,6 +50,7 @@ public abstract class MxBaseAdapter<T> extends RecyclerView.Adapter<MxViewHolder
     @Override
     public void onBindViewHolder(MxViewHolder holder, int position) {
         onBind(holder.getBinding(), getItem(position),mListener);
+        holder.getBinding().executePendingBindings();
     }
 
     @Override
