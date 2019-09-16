@@ -133,10 +133,10 @@ public class LibraryViewModel extends BaseViewModel {
         ArrayList<String> demolist = new ArrayList<String>();
         demolist.add("Schedule");
         demolist.add("Units");
-//        if (mDataManager.getLoginPrefs().getUsername() != null &&
-//                mDataManager.getLoginPrefs().getUsername().equals("staff")) {
+
+        if (mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
             demolist.add("Pending units");
-//        }
+        }
         demolist.add("Students");
         demolist.add("Discussion");
         demolist.add("Curriculum");
@@ -157,11 +157,10 @@ public class LibraryViewModel extends BaseViewModel {
                 unitsFragment.setArguments(bundle);
             }
             fragments.add(unitsFragment);
-
-//            if (mDataManager.getLoginPrefs().getUsername() != null &&
-//                    mDataManager.getLoginPrefs().getUsername().equals("staff")) {
+            if (mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
                 fragments.add(new PendingUsersFragment());
-//            }
+            }
+
             fragments.add(new StudentsFragment());
 
             CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();

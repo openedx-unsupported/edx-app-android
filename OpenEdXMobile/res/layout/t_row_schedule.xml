@@ -2,19 +2,19 @@
 <layout>
 
     <data>
+
         <variable
             name="period"
             type="org.edx.mobile.tta.data.local.db.table.Period" />
     </data>
 
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginTop="@dimen/_14px"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="@dimen/_30px"
         android:background="@color/white"
         app:cardCornerRadius="4dp"
@@ -41,11 +41,11 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="4dp"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/gray_5"
                     android:fontFamily="@font/hind_medium"
-                    android:text="@{period.title}"/>
+                    android:gravity="center"
+                    android:text="@{period.title}"
+                    android:textColor="@color/gray_5"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_scheduled_date"
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="4dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -80,12 +80,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="8dp"
-                android:textSize="14sp"
-                android:textColor="@color/gray_5"
                 android:fontFamily="@font/hind_medium"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="@{period.code}" />
+                android:text="@{period.code}"
+                android:textColor="@color/gray_5"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,9 +98,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:background="@color/status_pending"
+                    android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:padding="12dp"
-                    android:fontFamily="@font/hind_medium"
                     android:text="Add" />
 
                 <TextView
@@ -109,10 +109,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/status_completed"
+                    android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:padding="12dp"
-                    android:fontFamily="@font/hind_medium"
-                    android:text="@{String.valueOf(period.totalCount)}"/>
+                    android:text="@{String.valueOf(period.totalCount)}" />
 
 
             </LinearLayout>

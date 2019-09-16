@@ -412,6 +412,10 @@ public class ScheduleViewModel extends BaseViewModel {
                 TRowScheduleBinding scheduleBinding = (TRowScheduleBinding) binding;
                 scheduleBinding.setPeriod(model);
 
+                if (mDataManager.getLoginPrefs().getRole().equals("Student")){
+                    scheduleBinding.textviewAdd.setVisibility(View.GONE);
+                }else scheduleBinding.textviewAdd.setVisibility(View.VISIBLE);
+
                 scheduleBinding.textviewAdd.setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);

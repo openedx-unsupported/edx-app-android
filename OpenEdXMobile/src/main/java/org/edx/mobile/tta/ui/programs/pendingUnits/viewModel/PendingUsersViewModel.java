@@ -245,6 +245,9 @@ public class PendingUsersViewModel extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
             if (binding instanceof TRowPendingUserGridBinding) {
                 TRowPendingUserGridBinding itemBinding = (TRowPendingUserGridBinding) binding;
+                if (mDataManager.getLoginPrefs().getRole().equals("Student")){
+                    itemBinding.textCount.setVisibility(View.GONE);
+                }else itemBinding.textCount.setVisibility(View.VISIBLE);
                 itemBinding.userName.setText(model.username);
                 itemBinding.textCount.setText(String.format("Pending : %d", model.pendingCount));
 
