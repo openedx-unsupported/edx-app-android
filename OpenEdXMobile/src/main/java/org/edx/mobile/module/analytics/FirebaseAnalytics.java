@@ -591,4 +591,9 @@ public class FirebaseAnalytics implements Analytics {
         event.putMap(values);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackMobilePaymentUpsellDisplayed(String courseId) {
+
+    }
 }

@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.inject.Inject;
@@ -46,6 +48,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.CourseRevenueResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
@@ -72,6 +75,8 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
@@ -118,6 +123,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
     private CourseOutlineAdapter.DownloadListener downloadListener;
+    private Call<CourseRevenueResponse> getCourseRevenueStatus;
+    private View llUpgradeToVerifiedFooter;
+    private TextView tvCourseValue;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
@@ -152,7 +160,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         flBulkDownload = view.findViewById(R.id.fl_bulk_download_container);
-
+        llUpgradeToVerifiedFooter = view.findViewById(R.id.ll_upgrade_to_verified_footer);
+        tvCourseValue = view.findViewById(R.id.tv_course_value);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -410,6 +419,20 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchCourseRevenueStatus();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getCourseRevenueStatus != null) {
+            getCourseRevenueStatus.cancel();
+        }
+    }
+
     /**
      * Callback to handle the deletion of videos using the Contextual Action Bar.
      */
@@ -553,6 +576,38 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
 
         fetchLastAccessed();
+        fetchCourseRevenueStatus();
+    }
+
+    private void fetchCourseRevenueStatus() {
+        if (!isVideoMode) {
+            if (getCourseRevenueStatus != null) {
+                getCourseRevenueStatus.cancel();
+            }
+            getCourseRevenueStatus = courseApi.getCourseRevenueStatus(courseData.getCourse().getId());
+            getCourseRevenueStatus.enqueue(new Callback<CourseRevenueResponse>() {
+                @Override
+                public void onResponse(Call<CourseRevenueResponse> call, Response<CourseRevenueResponse> response) {
+                    CourseRevenueResponse courseRevenueStatus = response.body();
+                    if (courseRevenueStatus != null && courseRevenueStatus.isShowUpsell()) {
+                        llUpgradeToVerifiedFooter.setVisibility(View.VISIBLE);
+                        tvCourseValue.setText(courseRevenueStatus.getPrice());
+                        getView().findViewById(R.id.ll_upgrade_button).setOnClickListener(view -> {
+                            // TODO: Move to the new screen having authenticated webview.
+                        });
+                        environment.getAnalyticsRegistry().trackMobilePaymentUpsellDisplayed(
+                                courseData.getCourse().getId());
+                    } else {
+                        llUpgradeToVerifiedFooter.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CourseRevenueResponse> call, Throwable t) {
+                    llUpgradeToVerifiedFooter.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     private void setUpBulkDownloadHeader(CourseComponent courseComponent) {

@@ -843,4 +843,11 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putAll(values);
         trackSegmentEvent(experimentName, aEvent.properties);
     }
+
+    @Override
+    public void trackMobilePaymentUpsellDisplayed(String courseId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        trackSegmentEvent(Events.MOBILE_PAYMENT_UPSELL_DISPLAYED, aEvent.properties);
+    }
 }

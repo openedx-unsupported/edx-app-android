@@ -410,6 +410,13 @@ public interface Analytics {
      */
     void trackExperimentParams(String experimentName, Map<String, String> values);
 
+    /**
+     * Track the Mobile Payment Upsell Displayed event for the given course
+     *
+     * @param courseId Id of the Course
+     */
+    void trackMobilePaymentUpsellDisplayed(String courseId);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -680,6 +687,8 @@ public interface Analytics {
         // Firebase Remote Configs Event name for A/A test
         // Ref: https://openedx.atlassian.net/browse/LEARNER-7394
         String MOBILE_EXPERIMENT_EVALUATED = "Mobile Experiment Evaluated";
+        // Mobile Payment Upsell Displayed Event
+        String MOBILE_PAYMENT_UPSELL_DISPLAYED = "Mobile Payment Upsell Displayed";
     }
 
     /**

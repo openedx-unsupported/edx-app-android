@@ -425,4 +425,11 @@ public class AnalyticsRegistry implements Analytics {
             service.trackExperimentParams(experimentName, values);
         }
     }
+
+    @Override
+    public void trackMobilePaymentUpsellDisplayed(String courseId) {
+        for (Analytics service : services) {
+            service.trackMobilePaymentUpsellDisplayed(courseId);
+        }
+    }
 }

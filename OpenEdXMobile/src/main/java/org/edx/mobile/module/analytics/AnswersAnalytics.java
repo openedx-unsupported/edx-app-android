@@ -332,4 +332,9 @@ public class AnswersAnalytics implements Analytics {
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
 
     }
+
+    @Override
+    public void trackMobilePaymentUpsellDisplayed(String courseId) {
+
+    }
 }
