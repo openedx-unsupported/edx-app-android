@@ -303,7 +303,12 @@ public class LoginActivity
             mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
                 @Override
                 public void onSuccess(List<Program> data) {
-                    if (data.size() <= 1) {
+                    if (data.size() == 0){
+                        ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class,
+                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        finish();
+                    }
+                    else if (data.size() == 1) {
                         mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                         getSection();
                     } else {
@@ -320,6 +325,9 @@ public class LoginActivity
                 public void onFailure(Exception e) {
                     activityLoginBinding.progress.progressIndicator.setVisibility(View.GONE);
                     tryToSetUIInteraction(true);
+                    ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class,
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    finish();
                 }
             });
         } else {
