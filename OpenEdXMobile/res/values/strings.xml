@@ -158,7 +158,7 @@
     <!-- Label for switch controlling whether users permit downloading using cellular data or only wifi -->
     <string name="wifi_dialog_title_help">Allow cellular download</string>
     <!-- Password reset sent succesfully alert -->
-    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address. 
+    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address.
         If you don’t see it in the next few minutes, make sure to check your spam folder.</string>
     <!-- Password reset dialog prompt -->
     <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>
@@ -690,4 +690,8 @@
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">Version {version_number} New Features</string>
+    <!-- Shown with upgrade yo verified course outline footer -->
+    <string name="verified_today_message" tools:ignore="MissingTranslation">Complete assessments on the go toward a certificate!</string>
+    <!-- Title upgrade to verified today course outline footer -->
+    <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">Upgrade to Verified Today</string>
 </resources>

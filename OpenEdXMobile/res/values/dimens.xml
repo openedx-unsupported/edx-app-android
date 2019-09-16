@@ -250,4 +250,9 @@
     <dimen name="social_btn_divider_height">40dp</dimen>
     <dimen name="social_btn_text_size">14sp</dimen>
     <dimen name="social_btn_height">40dp</dimen>
+
+    <!-- Course outline footer -->
+    <dimen name="course_outline_footer_outline">1dp</dimen>
+    <dimen name="course_outline_footer_margin">8dp</dimen>
+    <dimen name="course_outline_footer_padding">8dp</dimen>
 </resources>
