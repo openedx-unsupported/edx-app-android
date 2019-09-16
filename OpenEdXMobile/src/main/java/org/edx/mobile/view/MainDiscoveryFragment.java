@@ -248,7 +248,7 @@ public class MainDiscoveryFragment extends BaseFragment {
         if (!TextUtils.isEmpty(pathId)) {
             switch (screenName) {
                 case Screen.PROGRAM:
-                    environment.getRouter().showAuthenticatedWebviewActivity(getActivity(),
+                    environment.getRouter().showProgramWebViewActivity(getActivity(),
                             environment, pathId, getActivity().getString(R.string.label_my_programs));
                     break;
                 case Screen.COURSE_DISCOVERY:

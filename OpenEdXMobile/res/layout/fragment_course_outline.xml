@@ -16,6 +16,7 @@
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/ll_upgrade_to_verified_footer"
         android:layout_below="@+id/fl_bulk_download_container">
 
         <ListView
@@ -28,7 +29,63 @@
             tools:visibility="visible" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <include layout="@layout/loading_indicator" />
+
     <include layout="@layout/content_error" />
 
-    <include layout="@layout/loading_indicator" />
+    <LinearLayout
+        android:id="@+id/ll_upgrade_to_verified_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edx_divider_length"
+            android:background="@color/edx_success_accent" />
+
+        <TextView
+            android:id="@+id/upgrade_banner_description"
+            style="@style/regular_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/edx_half_margin"
+            android:gravity="center"
+            android:text="@string/upgrade_banner_description"
+            android:textColor="@color/black"
+            tools:ignore="MissingPrefix" />
+
+        <LinearLayout
+            android:id="@+id/ll_upgrade_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edx_half_margin"
+            android:layout_marginEnd="@dimen/edx_half_margin"
+            android:layout_marginBottom="@dimen/edx_half_margin"
+            android:background="@drawable/edx_success_accent_round_background"
+            android:orientation="vertical"
+            android:padding="@dimen/edx_half_margin">
+
+            <TextView
+                style="@style/edX.Widget.Button"
+                fontPath="fonts/OpenSans-Semibold.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upgrade_to_verified_today_title"
+                android:textColor="@color/white"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                android:id="@+id/tv_upgrade_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/transparent_white_85"
+                tools:text="$99 USD" />
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

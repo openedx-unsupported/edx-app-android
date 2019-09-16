@@ -13,7 +13,6 @@ import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
@@ -33,6 +32,10 @@ public class EdxCookieManager {
     // they'll be requeried on API levels lesser than Marshmallow (which
     // provides an error callback with the HTTP error code) prior to usage.
     private static final long FRESHNESS_INTERVAL = TimeUnit.HOURS.toMillis(1);
+    /**
+     * The cookie to set for the course upsell revenue workflow to work on mobile end.
+     */
+    private static final String REV_934_COOKIE = "REV_934=mobile; expires=Tue, 31 Dec 2021 12:00:20 GMT; domain=.edx.org;";
 
     private long authSessionCookieExpiration = -1;
 
@@ -95,5 +98,13 @@ public class EdxCookieManager {
 
     public boolean isSessionCookieMissingOrExpired() {
         return authSessionCookieExpiration < System.currentTimeMillis();
+    }
+
+    /**
+     * Set a special cookie so that the server knows that the request for the course upsell
+     * revenue workflow is coming from mobile end.
+     */
+    public void setMobileCookie() {
+        CookieManager.getInstance().setCookie(config.getApiHostURL(), REV_934_COOKIE);
     }
 }

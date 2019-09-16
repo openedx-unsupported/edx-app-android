@@ -1,4 +1,4 @@
-package org.edx.mobile.view.dialog;
+package org.edx.mobile.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,14 +8,13 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.view.WebViewProgramFragment;
 
-public class AuthenticatedWebViewActivity extends BaseSingleFragmentActivity {
+public class CourseUpgradeWebViewActivity extends BaseSingleFragmentActivity {
     private static final String ARG_URL = "url";
     private static final String ARG_TITLE = "title";
 
     public static Intent newIntent(@NonNull Context context, @NonNull String url, @NonNull String title) {
-        return new Intent(context, AuthenticatedWebViewActivity.class)
+        return new Intent(context, CourseUpgradeWebViewActivity.class)
                 .putExtra(ARG_URL, url)
                 .putExtra(ARG_TITLE, title);
     }
@@ -31,6 +30,7 @@ public class AuthenticatedWebViewActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        return WebViewProgramFragment.newInstance(getIntent().getStringExtra(ARG_URL));
+        return CourseUpgradeWebViewFragment.newInstance(getIntent().getStringExtra(ARG_URL),
+                null, true);
     }
 }
