@@ -92,7 +92,8 @@ public abstract class MxInfiniteAdapter<T> extends MxBaseAdapter<T> {
                             if (isLoading) {
                                 notifyItemChanged(getItemCount() - 1);
                             } else {
-                                notifyItemRemoved(getItemCount() - 1);
+                                if (isLoadMoreDisplayable())//fix flickering when no loading shown
+                                    notifyItemRemoved(getItemCount() - 1);
                             }
                         }
                     });
