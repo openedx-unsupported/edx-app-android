@@ -83,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
+            android:visibility="@{viewModel.fabVisible ? View.VISIBLE : View.GONE}"
             android:contentDescription="@string/submit"
             android:onClick="@{() -> viewModel.addPeriod()}"
             android:src="@android:drawable/ic_input_add"

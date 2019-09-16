@@ -183,6 +183,11 @@ public class PendingUnitsListViewModel extends BaseViewModel {
             if (binding instanceof TRowPendingUnitsBinding) {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
                 itemBinding.textUnitName.setText(model.getDisplayName());
+                if (mDataManager.getLoginPrefs().getRole().equals("student")){
+                    itemBinding.llApproval.setVisibility(View.GONE);
+                }else {
+                    itemBinding.llApproval.setVisibility(View.VISIBLE);
+                }
                 itemBinding.btnApprove.setOnClickListener(v -> {
                         approveUnits(model.getId());
                 });

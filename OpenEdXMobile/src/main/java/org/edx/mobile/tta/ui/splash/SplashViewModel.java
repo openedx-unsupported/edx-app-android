@@ -91,6 +91,10 @@ public class SplashViewModel extends BaseViewModel {
                 mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
                     @Override
                     public void onSuccess(List<Program> data) {
+                        if (data.size() == 0){
+                            ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                            mActivity.finish();
+                        }
                         if (data.size() == 1) {
                             mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                             getSection();
@@ -105,7 +109,7 @@ public class SplashViewModel extends BaseViewModel {
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
                         mDataManager.getLoginPrefs().setProgramId("");
-                        ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class,
+                        ActivityUtil.gotoPage(mActivity, LandingActivity.class,
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     }
                 });
@@ -120,7 +124,11 @@ public class SplashViewModel extends BaseViewModel {
         mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<List<Section>>() {
             @Override
             public void onSuccess(List<Section> data) {
-                if (data.size() == 1) {
+                if (data.size() == 0){
+                    ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                    mActivity.finish();
+                }
+                else if (data.size() == 1) {
                     mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
                     mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
 

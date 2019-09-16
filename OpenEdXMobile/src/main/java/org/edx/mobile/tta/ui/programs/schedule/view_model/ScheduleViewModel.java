@@ -65,6 +65,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableBoolean fabVisible = new ObservableBoolean();
 
     public ObservableInt initialPosition = new ObservableInt();
     public ObservableInt toolTipPosition = new ObservableInt();
@@ -118,6 +119,11 @@ public class ScheduleViewModel extends BaseViewModel {
                     ActivityUtil.gotoPage(mActivity, PeriodUnitsActivity.class, parameters1);
             }
         });
+
+
+        if (mDataManager.getLoginPrefs().getRole().equals("Student")){
+            fabVisible.set(false);
+        }else fabVisible.set(true);
 
         mActivity.showLoading();
         getFilters();
@@ -405,6 +411,10 @@ public class ScheduleViewModel extends BaseViewModel {
             if (binding instanceof TRowScheduleBinding) {
                 TRowScheduleBinding scheduleBinding = (TRowScheduleBinding) binding;
                 scheduleBinding.setPeriod(model);
+
+                if (mDataManager.getLoginPrefs().getRole().equals("Student")){
+                    scheduleBinding.textviewAdd.setVisibility(View.GONE);
+                }else scheduleBinding.textviewAdd.setVisibility(View.VISIBLE);
 
                 scheduleBinding.textviewAdd.setOnClickListener(v -> {
                     if (listener != null){
