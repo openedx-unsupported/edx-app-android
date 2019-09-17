@@ -11,4 +11,5 @@ public class Constants {
     public static final String SUCCESS_CODE = "OK";
     public static final String USER_NOT_LOGGED_IN = "USER_NOT_LOGGED_IN";
     public static Boolean isSingleRow = false;
+    public static Boolean isSinglePrg = false;
 }

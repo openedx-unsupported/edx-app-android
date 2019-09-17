@@ -309,6 +309,7 @@ public class LoginActivity
                         finish();
                     }
                     else if (data.size() == 1) {
+                        mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
                         mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                         getSection();
                     } else {
@@ -344,9 +345,10 @@ public class LoginActivity
             public void onSuccess(List<Section> data) {
                 activityLoginBinding.progress.progressIndicator.setVisibility(View.GONE);
                 tryToSetUIInteraction(true);
-                if (data.size() <= 1) {
+                if (data.size() == 1) {
                     mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
                     mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
+
 
                     ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class,
                             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

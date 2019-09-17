@@ -97,6 +97,8 @@ public class SplashViewModel extends BaseViewModel {
                         }
                         if (data.size() == 1) {
                             mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
+                            mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
+                            Constants.isSinglePrg = true;
                             getSection();
                         } else {
                             ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class,
