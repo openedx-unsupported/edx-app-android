@@ -144,6 +144,7 @@ public class SelectSectionViewModel extends BaseViewModel {
         int n = 0;
         if (data.size() == 1){
             sectionId = data.get(0).getId();
+            mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
             save();
         }
         for (Section user : data) {
