@@ -50,10 +50,12 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         layoutManager = new LinearLayoutManager(mActivity);
         programsAdapter = new ProgramsAdapter(mActivity);
         programsAdapter.setItems(programs);
+        selectPrograms = new ArrayList<>();
 
         fetchPrograms();
 
         programsAdapter.setItemClickListener((view, item) -> {
+
             if (selectPrograms.size() > 0) {
                 if (view == itemView) {
                     selectPrograms.clear();

@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Category;
+import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.programs.curricullam.CurricullamFragment;
@@ -127,17 +128,18 @@ public class LibraryViewModel extends BaseViewModel {
 
     }
 
-    private void populateTabs(){
+    private void populateTabs() {
         mActivity.showLoading();
         fragments.clear();
         titles.clear();
         ArrayList<String> demolist = new ArrayList<String>();
         demolist.add("Schedule");
         demolist.add("Units");
-
-        if (mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
-            demolist.add("Pending units");
-        }
+        if (mDataManager.getLoginPrefs().getRole() != null){
+            if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                demolist.add("Pending units");
+            }
+    }
         demolist.add("Students");
         demolist.add("Discussion");
         demolist.add("Curriculum");
@@ -158,9 +160,10 @@ public class LibraryViewModel extends BaseViewModel {
                 unitsFragment.setArguments(bundle);
             }
             fragments.add(unitsFragment);
-            if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name()) &&
-                    mDataManager.getLoginPrefs().getRole()!= null) {
-                fragments.add(new PendingUsersFragment());
+            if (mDataManager.getLoginPrefs().getRole() != null) {
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                    fragments.add(new PendingUsersFragment());
+                }
             }
 
             fragments.add(new StudentsFragment());
