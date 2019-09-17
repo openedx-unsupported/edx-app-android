@@ -115,7 +115,6 @@ public class SelectSectionViewModel extends BaseViewModel {
     public void save() {
         mActivity.showLoading();
         if (!sectionId.isEmpty()) {
-            mDataManager.getLoginPrefs().setProgramId(programId.get());
             mDataManager.getLoginPrefs().setSectionId(sectionId);
             ActivityUtil.gotoPage(mActivity, LandingActivity.class);
             mActivity.finish();

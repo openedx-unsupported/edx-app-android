@@ -19,6 +19,8 @@ import org.edx.mobile.tta.data.constants.Constants;
 import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.landing.LandingActivity;
+import org.edx.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
+import org.edx.mobile.tta.ui.programs.selectSection.viewModel.SelectSectionViewModel;
 import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.Config;
@@ -47,7 +49,8 @@ public class AccountFragment extends BaseFragment {
             binding.profileBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    environment.getRouter().showUserProfile(getActivity(), loginPrefs.getUsername());
+                    environment.getRouter().showUserProfile(getActivity(),
+                            loginPrefs.getUsername());
                 }
             });
         } else {
@@ -81,10 +84,14 @@ public class AccountFragment extends BaseFragment {
         });
 
         binding.changeProgBtn.setOnClickListener(v -> {
-            if (!Constants.isSingleRow) {
+            if (!Constants.isSinglePrg) {
                 ActivityUtil.gotoPage(getActivity(), SelectProgramActivity.class);
-            }else {
-                Toast.makeText(getActivity(),"Only single program exist", Toast.LENGTH_SHORT).show();
+            }
+            else if (!Constants.isSingleRow){
+                ActivityUtil.gotoPage(getActivity(), SelectSectionActivity.class);
+
+            } else {
+                Toast.makeText(getActivity(),"Only single program & section exist", Toast.LENGTH_SHORT).show();
             }
         });
 
