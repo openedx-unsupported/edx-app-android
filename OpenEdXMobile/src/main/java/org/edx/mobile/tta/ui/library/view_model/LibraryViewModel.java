@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -157,7 +158,8 @@ public class LibraryViewModel extends BaseViewModel {
                 unitsFragment.setArguments(bundle);
             }
             fragments.add(unitsFragment);
-            if (mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
+            if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name()) &&
+                    mDataManager.getLoginPrefs().getRole()!= null) {
                 fragments.add(new PendingUsersFragment());
             }
 

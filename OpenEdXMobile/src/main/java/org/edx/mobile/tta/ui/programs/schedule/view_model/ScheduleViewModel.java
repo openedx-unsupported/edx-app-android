@@ -30,6 +30,7 @@ import org.edx.mobile.databinding.TRowScheduleBinding;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ShowIn;
+import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
@@ -191,7 +192,8 @@ public class ScheduleViewModel extends BaseViewModel {
                     filtersVisible.set(true);
                     filtersAdapter.setItems(data);
 
-                    if (!mDataManager.getLoginPrefs().getRole().equals("Student")){
+                    if (!mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())
+                            && mDataManager.getLoginPrefs().getRole()!=null){
 
                         for (ProgramFilter filter : data) {
 
@@ -422,7 +424,7 @@ public class ScheduleViewModel extends BaseViewModel {
                 TRowScheduleBinding scheduleBinding = (TRowScheduleBinding) binding;
                 scheduleBinding.setPeriod(model);
 
-                if (mDataManager.getLoginPrefs().getRole().equals("Student")){
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
                     scheduleBinding.textviewAdd.setVisibility(View.GONE);
                 }else scheduleBinding.textviewAdd.setVisibility(View.VISIBLE);
 

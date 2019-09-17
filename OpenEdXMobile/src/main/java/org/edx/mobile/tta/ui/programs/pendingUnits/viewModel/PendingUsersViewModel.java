@@ -20,6 +20,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
 import org.edx.mobile.databinding.TRowPendingUserGridBinding;
 import org.edx.mobile.tta.data.enums.ShowIn;
+import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
@@ -245,7 +246,8 @@ public class PendingUsersViewModel extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
             if (binding instanceof TRowPendingUserGridBinding) {
                 TRowPendingUserGridBinding itemBinding = (TRowPendingUserGridBinding) binding;
-                if (mDataManager.getLoginPrefs().getRole().equals("Student")){
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())
+                && mDataManager.getLoginPrefs().getRole()!=null){
                     itemBinding.textCount.setVisibility(View.GONE);
                 }else itemBinding.textCount.setVisibility(View.VISIBLE);
                 itemBinding.userName.setText(model.username);
