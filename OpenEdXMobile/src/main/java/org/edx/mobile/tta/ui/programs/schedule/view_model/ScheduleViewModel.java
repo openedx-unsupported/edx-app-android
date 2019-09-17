@@ -120,11 +120,6 @@ public class ScheduleViewModel extends BaseViewModel {
             }
         });
 
-
-        if (mDataManager.getLoginPrefs().getRole().equals("Student")){
-            fabVisible.set(false);
-        }else fabVisible.set(true);
-
         mActivity.showLoading();
         getFilters();
 //        fetchData();
@@ -191,27 +186,41 @@ public class ScheduleViewModel extends BaseViewModel {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
 
-                for (ProgramFilter filter : data) {
-
-                    if (filter.getInternalName().toLowerCase().contains("lang")) {
-                        langTags.clear();
-                        langTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-                                true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
-
-                        for (ProgramFilterTag tag : filter.getTags()) {
-                            langTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                    false, R.color.white, R.drawable.t_background_tag_filled));
-                        }
-                    }
-
-                }
-
                 if (!data.isEmpty()) {
                     allFilters = data;
                     filtersVisible.set(true);
                     filtersAdapter.setItems(data);
+
+                    if (!mDataManager.getLoginPrefs().getRole().equals("Student")){
+
+                        for (ProgramFilter filter : data) {
+
+                            if (filter.getInternalName().toLowerCase().contains("lang")) {
+                                langTags.clear();
+                                langTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
+                                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
+
+                                for (ProgramFilterTag tag : filter.getTags()) {
+                                    langTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                            false, R.color.white, R.drawable.t_background_tag_filled));
+                                }
+
+                            }
+
+                        }
+
+                        if (langTags.isEmpty()) {
+                            fabVisible.set(false);
+                        } else {
+                            fabVisible.set(true);
+                        }
+                    }else {
+                        fabVisible.set(false);
+                    }
+
                 } else {
                     filtersVisible.set(false);
+                    fabVisible.set(false);
                 }
 
             }
@@ -219,6 +228,7 @@ public class ScheduleViewModel extends BaseViewModel {
             @Override
             public void onFailure(Exception e) {
                 filtersVisible.set(false);
+                fabVisible.set(false);
             }
         });
 
