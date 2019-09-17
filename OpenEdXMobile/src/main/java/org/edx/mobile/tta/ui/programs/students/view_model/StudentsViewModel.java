@@ -230,7 +230,9 @@ public class StudentsViewModel extends BaseViewModel {
                 itemBinding.txtPending.setText(String.valueOf(model.completedHours));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null){
-                    Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL()+ model.profileImage.getImageUrlSmall())
+                    Glide.with(mActivity).load(
+                            mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
+                                    model.profileImage.getImageUrlFull())
                             .centerCrop()
                             .placeholder(R.drawable.profile)
                             .into(itemBinding.userImage);
