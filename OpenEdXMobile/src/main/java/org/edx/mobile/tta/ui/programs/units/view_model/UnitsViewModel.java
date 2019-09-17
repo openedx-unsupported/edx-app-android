@@ -125,17 +125,6 @@ public class UnitsViewModel extends BaseViewModel {
                 new OnResponseCallback<List<ProgramFilter>>() {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
-                List<ProgramFilter> removables = new ArrayList<>();
-                for (ProgramFilter filter : data) {
-                    if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains(ShowIn.units.name())) {
-                        removables.add(filter);
-                    }
-                }
-                for (ProgramFilter filter : removables) {
-                    data.remove(filter);
-                }
-
                 if (!data.isEmpty()) {
                     allFilters = data;
                     filtersVisible.set(true);

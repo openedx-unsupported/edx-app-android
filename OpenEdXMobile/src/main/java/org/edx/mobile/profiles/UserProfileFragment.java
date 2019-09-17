@@ -102,8 +102,8 @@ public class UserProfileFragment
     // changed here
     @NonNull
     private String getUsername() {
-        //return getArguments().getString(UserProfileActivity.EXTRA_USERNAME);
-        return BrowserUtil.loginPrefs.getUsername();
+        return getArguments().getString(UserProfileActivity.EXTRA_USERNAME);
+//        return BrowserUtil.loginPrefs.getUsername();
     }
 
     @NonNull
