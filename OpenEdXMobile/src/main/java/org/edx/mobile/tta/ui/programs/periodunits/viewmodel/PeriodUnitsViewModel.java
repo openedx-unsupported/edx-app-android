@@ -143,12 +143,8 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 new OnResponseCallback<List<ProgramFilter>>() {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
-                List<ProgramFilter> removables = new ArrayList<>();
+
                 for (ProgramFilter filter: data){
-                    if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains(ShowIn.periodunits.name())){
-                        removables.add(filter);
-                    }
                     if (filter.getInternalName().equalsIgnoreCase("period")){
                         ProgramFilterTag tag = new ProgramFilterTag();
                         tag.setDisplayName(period.getTitle());
@@ -161,9 +157,6 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
                         periodFilter = filter;
                     }
-                }
-                for (ProgramFilter filter: removables){
-                    data.remove(filter);
                 }
 
                 if (!data.isEmpty()) {
