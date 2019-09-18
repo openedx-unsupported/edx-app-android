@@ -17,6 +17,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowPendingUnitsBinding;
 import org.edx.mobile.databinding.TRowPendingUserGridBinding;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -104,6 +105,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                     }
                 });
     }
+
     public void approveUnits(String unitId) {
 
         mDataManager.approveUnit(unitId,
@@ -183,7 +185,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
             if (binding instanceof TRowPendingUnitsBinding) {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
                 itemBinding.textUnitName.setText(model.getDisplayName());
-                if (mDataManager.getLoginPrefs().getRole().equals("student")){
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
                     itemBinding.llApproval.setVisibility(View.GONE);
                 }else {
                     itemBinding.llApproval.setVisibility(View.VISIBLE);
