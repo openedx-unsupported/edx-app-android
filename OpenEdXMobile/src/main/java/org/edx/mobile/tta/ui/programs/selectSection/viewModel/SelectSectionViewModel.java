@@ -17,6 +17,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowSelectProgSectionBinding;
+import org.edx.mobile.tta.data.constants.Constants;
 import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -116,6 +117,7 @@ public class SelectSectionViewModel extends BaseViewModel {
         mActivity.showLoading();
         if (!sectionId.isEmpty()) {
             mDataManager.getLoginPrefs().setSectionId(sectionId);
+            Constants.isSingleRow = false;
             ActivityUtil.gotoPage(mActivity, LandingActivity.class);
             mActivity.finish();
         } else {

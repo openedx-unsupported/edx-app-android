@@ -84,9 +84,11 @@ public class ScheduleViewModel extends BaseViewModel {
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
             return false;
-        this.skip++;
-        fetchData();
-        return true;
+        else {
+            this.skip++;
+            fetchData();
+            return true;
+        }
     };
     private String lang;
 
@@ -245,7 +247,7 @@ public class ScheduleViewModel extends BaseViewModel {
                     @Override
                     public void onSuccess(List<Period> data) {
                         mActivity.hideLoading();
-                        if (data.size() < take) {
+                        if (data.size() <= take) {
                             allLoaded = true;
                         }
                         populatePeriods(data);

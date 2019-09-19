@@ -17,6 +17,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowSelectProgSectionBinding;
+import org.edx.mobile.tta.data.constants.Constants;
 import org.edx.mobile.tta.data.local.db.table.Program;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -72,6 +73,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                     Bundle b = new Bundle();
                     b.putCharSequence("program", programId);
                     b.putBoolean("prevVisible",prevVisible);
+                    Constants.isSinglePrg = false;
                     ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
                     mActivity.finish();
                 }
@@ -85,6 +87,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 Bundle b = new Bundle();
                 b.putCharSequence("program", programId);
                 b.putBoolean("prevVisible",prevVisible);
+                Constants.isSinglePrg = false;
                 ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
                 mActivity.finish();
             }

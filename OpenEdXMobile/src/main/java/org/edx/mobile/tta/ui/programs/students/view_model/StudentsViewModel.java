@@ -43,8 +43,8 @@ public class StudentsViewModel extends BaseViewModel {
     public FiltersAdapter filtersAdapter;
     public UsersAdapter usersAdapter;
 
-    private static final int TAKE = 0;
-    private static final int SKIP = 10;
+    private static final int TAKE = 10;
+    private static final int SKIP = 0;
 
     private boolean allLoaded;
     private boolean changesMade;

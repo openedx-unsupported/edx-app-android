@@ -311,6 +311,7 @@ public class LoginActivity
                     else if (data.size() == 1) {
                         mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
                         mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
+                        Constants.isSinglePrg = true;
                         getSection();
                     } else {
                         activityLoginBinding.progress.progressIndicator.setVisibility(View.GONE);

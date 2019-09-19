@@ -2,7 +2,6 @@ package org.edx.mobile.tta.ui.programs.selectprogram.viewmodel;
 
 import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.tta.data.local.db.table.Program;
-import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
