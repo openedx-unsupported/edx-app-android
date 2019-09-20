@@ -117,7 +117,8 @@ public class ScheduleViewModel extends BaseViewModel {
                     break;
                 default:
                     Bundle parameters1 = new Bundle();
-                    parameters1.putParcelable(Constants.KEY_PERIOD, item);
+                    parameters1.putString(Constants.KEY_PERIOD_NAME, item.getTitle());
+                    parameters1.putLong(Constants.KEY_PERIOD_ID, item.getId());
                     parameters1.putSerializable(Router.EXTRA_COURSE_DATA, ScheduleViewModel.this.course);
                     ActivityUtil.gotoPage(mActivity, PeriodUnitsActivity.class, parameters1);
             }
@@ -284,9 +285,12 @@ public class ScheduleViewModel extends BaseViewModel {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PeriodSavedEvent event) {
-        int position = periodAdapter.getItemPosition(event.getPeriod());
+        Period period = new Period();
+        period.setId(event.getPeriodId());
+        int position = periodAdapter.getItemPosition(period);
         if (position >= 0) {
-            periodList.get(position).setTotalCount(event.getPeriod().getTotalCount());
+            Period p = periodList.get(position);
+            p.setTotalCount(p.getTotalCount() + event.getUnitsCountChange());
             periodAdapter.notifyItemChanged(position);
         }
     }

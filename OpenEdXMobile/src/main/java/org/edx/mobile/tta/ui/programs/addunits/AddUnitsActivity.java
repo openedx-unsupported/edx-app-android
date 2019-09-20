@@ -16,7 +16,8 @@ public class AddUnitsActivity extends BaseVMActivity {
 
     private AddUnitsViewModel viewModel;
 
-    private Period period;
+    private long periodId;
+    private String periodName;
     private EnrolledCoursesResponse course;
 
     @Override
@@ -29,7 +30,7 @@ public class AddUnitsActivity extends BaseVMActivity {
             getBundledData(savedInstanceState);
         }
 
-        viewModel = new AddUnitsViewModel(this, period, course);
+        viewModel = new AddUnitsViewModel(this, periodId, periodName, course);
         binding(R.layout.t_activity_add_units, viewModel);
 
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -48,8 +49,9 @@ public class AddUnitsActivity extends BaseVMActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (period != null){
-            outState.putParcelable(Constants.KEY_PERIOD, period);
+        outState.putLong(Constants.KEY_PERIOD_ID, periodId);
+        if (periodName != null){
+            outState.putSerializable(Constants.KEY_PERIOD_NAME, periodName);
         }
         if (course != null){
             outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
@@ -57,11 +59,11 @@ public class AddUnitsActivity extends BaseVMActivity {
     }
 
     private void getBundledData(Bundle parameters){
-        if (parameters.containsKey(Constants.KEY_PERIOD)){
-            period = parameters.getParcelable(Constants.KEY_PERIOD);
+        if (parameters.containsKey(Constants.KEY_PERIOD_ID)){
+            periodId = parameters.getLong(Constants.KEY_PERIOD_ID);
         }
-        if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
-            course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
+        if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
+            periodName = parameters.getString(Constants.KEY_PERIOD_NAME);
         }
     }
 }

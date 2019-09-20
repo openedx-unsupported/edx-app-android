@@ -39,7 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/unit_date"
+                android:id="@+id/unit_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_20px"
@@ -47,7 +47,6 @@
                 android:layout_marginEnd="@dimen/_20px"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/hind_medium"
-                android:text="@{unit.code}"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/status_icon"

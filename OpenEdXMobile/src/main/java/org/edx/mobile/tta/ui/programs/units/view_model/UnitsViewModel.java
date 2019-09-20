@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -218,7 +219,7 @@ public class UnitsViewModel extends BaseViewModel {
         boolean newItemsAdded = false;
         int n = 0;
         for (Unit unit : data) {
-            if (!units.contains(unit)) {
+            if (!unitAlreadyAdded(unit)) {
                 units.add(unit);
                 newItemsAdded = true;
                 n++;
@@ -230,6 +231,15 @@ public class UnitsViewModel extends BaseViewModel {
         }
 
         toggleEmptyVisibility();
+    }
+
+    private boolean unitAlreadyAdded(Unit unit){
+        for (Unit u: units){
+            if (TextUtils.equals(u.getId(), unit.getId()) && TextUtils.equals(u.getPeriodName(), unit.getPeriodName())){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void toggleEmptyVisibility() {
@@ -310,6 +320,10 @@ public class UnitsViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
+                unitBinding.unitCode.setText(model.getCode());
+                if (!TextUtils.isEmpty(model.getPeriodName())){
+                    unitBinding.unitCode.append("    |    " + model.getPeriodName());
+                }
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
                 unitBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {

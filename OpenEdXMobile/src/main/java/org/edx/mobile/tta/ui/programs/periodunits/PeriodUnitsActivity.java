@@ -16,8 +16,9 @@ public class PeriodUnitsActivity extends BaseVMActivity {
 
     private PeriodUnitsViewModel viewModel;
 
-    private Period period;
     private EnrolledCoursesResponse course;
+    private long periodId;
+    private String periodName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class PeriodUnitsActivity extends BaseVMActivity {
             getBundledData(savedInstanceState);
         }
 
-        viewModel = new PeriodUnitsViewModel(this, period, course);
+        viewModel = new PeriodUnitsViewModel(this, periodId, periodName, course);
         binding(R.layout.t_activity_period_units, viewModel);
 
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -49,8 +50,9 @@ public class PeriodUnitsActivity extends BaseVMActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (period != null){
-            outState.putParcelable(Constants.KEY_PERIOD, period);
+        outState.putLong(Constants.KEY_PERIOD_ID, periodId);
+        if (periodName != null){
+            outState.putSerializable(Constants.KEY_PERIOD_NAME, periodName);
         }
         if (course != null){
             outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
@@ -58,11 +60,11 @@ public class PeriodUnitsActivity extends BaseVMActivity {
     }
 
     private void getBundledData(Bundle parameters){
-        if (parameters.containsKey(Constants.KEY_PERIOD)){
-            period = parameters.getParcelable(Constants.KEY_PERIOD);
+        if (parameters.containsKey(Constants.KEY_PERIOD_ID)){
+            periodId = parameters.getLong(Constants.KEY_PERIOD_ID);
         }
-        if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
-            course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
+        if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
+            periodName = parameters.getString(Constants.KEY_PERIOD_NAME);
         }
     }
 

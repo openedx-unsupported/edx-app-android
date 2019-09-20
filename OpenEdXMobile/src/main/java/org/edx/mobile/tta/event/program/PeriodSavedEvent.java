@@ -4,17 +4,26 @@ import org.edx.mobile.tta.data.local.db.table.Period;
 
 public class PeriodSavedEvent {
 
-    private Period period;
+    private long periodId, unitsCountChange;
 
-    public PeriodSavedEvent(Period period) {
-        this.period = period;
+    public PeriodSavedEvent(long periodId, long unitsCountChange) {
+        this.periodId = periodId;
+        this.unitsCountChange = unitsCountChange;
     }
 
-    public Period getPeriod() {
-        return period;
+    public long getPeriodId() {
+        return periodId;
     }
 
-    public void setPeriod(Period period) {
-        this.period = period;
+    public void setPeriodId(long periodId) {
+        this.periodId = periodId;
+    }
+
+    public long getUnitsCountChange() {
+        return unitsCountChange;
+    }
+
+    public void setUnitsCountChange(long unitsCountChange) {
+        this.unitsCountChange = unitsCountChange;
     }
 }

@@ -25,7 +25,7 @@
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp"
             app:navigationIcon="@drawable/back"
-            app:title="@{viewModel.period.title}"
+            app:title="@{viewModel.periodName}"
             app:titleMarginStart="0dp"
             app:titleTextAppearance="@style/ta_toolbar_title_style" />
 

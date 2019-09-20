@@ -2,6 +2,7 @@ package org.edx.mobile.tta.ui.programs.addunits.viewmodel;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +21,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ShowIn;
-import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
@@ -47,10 +47,10 @@ public class AddUnitsViewModel extends BaseViewModel {
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableField<String> periodName = new ObservableField<>();
 
     private EnrolledCoursesResponse course;
-    public Period period;
-    private ProgramFilter periodFilter;
+    private long periodId;
     private List<Unit> units;
     private List<Unit> selectedOriginal;
     private List<Unit> unselectedOriginal;
@@ -73,11 +73,12 @@ public class AddUnitsViewModel extends BaseViewModel {
         return true;
     };
 
-    public AddUnitsViewModel(BaseVMActivity activity, Period period, EnrolledCoursesResponse course) {
+    public AddUnitsViewModel(BaseVMActivity activity, long periodId, String periodName, EnrolledCoursesResponse course) {
         super(activity);
 
         this.course = course;
-        this.period = period;
+        this.periodId = periodId;
+        this.periodName.set(periodName);
         units = new ArrayList<>();
         selectedOriginal = new ArrayList<>();
         unselectedOriginal = new ArrayList<>();
@@ -157,11 +158,9 @@ public class AddUnitsViewModel extends BaseViewModel {
             }
         });
 
-        if (this.period != null){
-            mActivity.showLoading();
-            fetchFilters();
-            fetchData();
-        }
+        mActivity.showLoading();
+        fetchFilters();
+        fetchData();
     }
 
     @Override
@@ -177,22 +176,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                 new OnResponseCallback<List<ProgramFilter>>() {
             @Override
             public void onSuccess(List<ProgramFilter> data) {
-
-                for (ProgramFilter filter: data){
-                    if (filter.getInternalName().equalsIgnoreCase("period")){
-                        ProgramFilterTag tag = new ProgramFilterTag();
-                        tag.setDisplayName(period.getTitle());
-                        tag.setInternalName(period.getCode());
-                        tag.setId(period.getId());
-
-                        List<ProgramFilterTag> tags = new ArrayList<>();
-                        tags.add(tag);
-                        filter.setTags(tags);
-
-                        periodFilter = filter;
-                    }
-                }
-
                 if (!data.isEmpty()) {
                     allFilters = data;
                     filtersVisible.set(true);
@@ -261,21 +244,12 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     private void fetchUnits() {
-        if (periodFilter != null) {
-            if (isUnitModePeriod){
-                if (!filters.contains(periodFilter)) {
-                    filters.add(periodFilter);
-                }
-            } else {
-                filters.remove(periodFilter);
-            }
-        }
 
         if (isUnitModePeriod) {
 
             mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),
-                    period.getId() ,take, skip,
+                    periodId ,take, skip,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {
@@ -372,9 +346,6 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     public void savePeriod(){
-        if (period == null){
-            return;
-        }
         mActivity.showLoading();
 
         List<String> addedIds = new ArrayList<>();
@@ -387,13 +358,13 @@ public class AddUnitsViewModel extends BaseViewModel {
             removedIds.add(unit.getId());
         }
 
-        mDataManager.savePeriod(period.getId(), addedIds, removedIds, new OnResponseCallback<SuccessResponse>() {
+        mDataManager.savePeriod(periodId, addedIds, removedIds, new OnResponseCallback<SuccessResponse>() {
             @Override
             public void onSuccess(SuccessResponse data) {
                 mActivity.hideLoading();
                 mActivity.showLongToast("Period saved successfully");
-                period.setTotalCount(period.getTotalCount() + added.size() - removed.size());
-                EventBus.getDefault().post(new PeriodSavedEvent(period));
+                EventBus.getDefault().post(
+                        new PeriodSavedEvent(periodId, added.size() - removed.size()));
                 mActivity.onBackPressed();
             }
 
@@ -462,6 +433,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
+                unitBinding.unitCode.setText(model.getCode());
                 unitBinding.layoutCheckbox.setVisibility(View.VISIBLE);
                 if (selected.contains(model)){
                     unitBinding.checkbox.setChecked(true);
