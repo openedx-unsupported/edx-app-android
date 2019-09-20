@@ -133,14 +133,18 @@ public class AddUnitsViewModel extends BaseViewModel {
                                 public void onSuccess(CourseComponent data) {
                                     mActivity.hideLoading();
 
-                                    if (AddUnitsViewModel.this.course != null &&
-                                            data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+                                    if (AddUnitsViewModel.this.course == null){
+                                        mActivity.showLongSnack("You're not enrolled in the program");
+                                        return;
+                                    }
+
+                                    if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
                                         mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
                                                 mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                                AddUnitsViewModel.this.course,
-                                                data.getChildren().get(0).getId(), null, false);
+                                                AddUnitsViewModel.this.course, data.getChildren().get(0).getId(),
+                                                null, false);
                                     } else {
-                                        mActivity.showLongSnack("Unable to open unit");
+                                        mActivity.showLongSnack("This unit is empty");
                                     }
                                 }
 
