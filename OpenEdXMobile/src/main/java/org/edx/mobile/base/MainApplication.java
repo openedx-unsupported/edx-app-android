@@ -99,7 +99,7 @@ public abstract class MainApplication extends MultiDexApplication {
 
         injector.injectMembers(this);
 
-        LocaleHelper.setLocale(getApplicationContext(), "hi");
+        LocaleHelper.setLocale(getApplicationContext(), "en");
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
@@ -194,7 +194,7 @@ public abstract class MainApplication extends MultiDexApplication {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base, "hi"));
+        super.attachBaseContext(LocaleHelper.onAttach(base, "en"));
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
