@@ -5,6 +5,7 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -21,6 +22,8 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ShowIn;
+import org.edx.mobile.tta.data.enums.UnitStatusType;
+import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
@@ -325,6 +328,30 @@ public class UnitsViewModel extends BaseViewModel {
                     unitBinding.unitCode.append("    |    " + model.getPeriodName());
                 }
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
+
+                String role = mDataManager.getLoginPrefs().getRole();
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
+                        !TextUtils.isEmpty(model.getStatus())){
+                    try {
+                        switch (UnitStatusType.valueOf(model.getStatus())){
+                            case Completed:
+                                unitBinding.statusIcon.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
+                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                break;
+                            case InProgress:
+                                unitBinding.statusIcon.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
+                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                    } catch (IllegalArgumentException e) {
+                        unitBinding.statusIcon.setVisibility(View.GONE);
+                    }
+                } else {
+                    unitBinding.statusIcon.setVisibility(View.GONE);
+                }
+
                 unitBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
