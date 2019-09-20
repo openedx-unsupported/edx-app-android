@@ -29,8 +29,8 @@ import java.util.List;
 
 public class PendingUnitsListViewModel extends BaseViewModel {
 
-    private static final int TAKE = 0;
-    private static final int SKIP = 10;
+    private static final int TAKE = 10;
+    private static final int SKIP = 0;
 
     private boolean allLoaded;
     private boolean changesMade;
@@ -54,7 +54,8 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         skip = SKIP;
 
         mActivity.showLoading();
-
+        unitsAdapter.setItems(unitsList);
+        fetchData();
 
 //        unitsAdapter.setItemClickListener((view, item) -> {
 //            if(item != null){

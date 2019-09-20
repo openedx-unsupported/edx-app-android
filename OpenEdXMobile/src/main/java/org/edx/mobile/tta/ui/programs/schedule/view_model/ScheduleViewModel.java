@@ -240,14 +240,13 @@ public class ScheduleViewModel extends BaseViewModel {
 
 
     private void getPeriods() {
-        periodAdapter.reset(true);
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
                 , take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
                         mActivity.hideLoading();
-                        if (data.size() <= take) {
+                        if (data.size() < take) {
                             allLoaded = true;
                         }
                         populatePeriods(data);
@@ -266,6 +265,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
     private void populatePeriods(List<Period> data) {
         boolean newItemsAdded = false;
+        List<Period> periods = new ArrayList<>();
         int n = 0;
         for (Period period : data) {
             if (!periodList.contains(period)) {
@@ -274,9 +274,9 @@ public class ScheduleViewModel extends BaseViewModel {
                 n++;
             }
         }
-
         if (newItemsAdded) {
             periodAdapter.notifyItemRangeInserted(periodList.size() - n, n);
+//            periodAdapter.notifyDataSetChanged();
         }
 
         toggleEmptyVisibility();

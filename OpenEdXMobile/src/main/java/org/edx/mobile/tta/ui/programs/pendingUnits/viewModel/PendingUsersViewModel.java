@@ -48,8 +48,8 @@ public class PendingUsersViewModel extends BaseViewModel {
     public List<ProgramFilterTag> tags;
 
 
-    private static final int TAKE = 0;
-    private static final int SKIP = 10;
+    private static final int TAKE = 10;
+    private static final int SKIP = 0;
 
     private boolean allLoaded;
     private boolean changesMade;
@@ -260,7 +260,11 @@ public class PendingUsersViewModel extends BaseViewModel {
                             .placeholder(R.drawable.profile_photo_placeholder)
                             .into(itemBinding.userImage);
                 }
-
+                itemBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null){
+                        listener.onItemClick(v, model);
+                    }
+                });
             }
         }
     }
