@@ -6,11 +6,12 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 import java.util.List;
 
-public class GetPendingUnitsTask extends Task<List<CourseComponent>> {
+public class GetPendingUnitsTask extends Task<List<Unit>> {
 
     private String programId, username, sectionId;
     private int take, skip;
@@ -28,7 +29,7 @@ public class GetPendingUnitsTask extends Task<List<CourseComponent>> {
     }
 
     @Override
-    public List<CourseComponent> call() throws Exception {
+    public List<Unit> call() throws Exception {
         return taAPI.getPendingUnits(programId,sectionId, username, take, skip).execute().body();
     }
 }

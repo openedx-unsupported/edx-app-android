@@ -177,7 +177,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_COURSE_COMPONENT_UNITS = "ENDPOINT";
 
-    public static final String URL_MX_GET_PENDING_UNITS = "ENDPOINT";
+    public static final String URL_MX_GET_PENDING_UNITS = "mx_humana_lms/api/v1/getPendingUnits";
+
 
     //Humana end
 
@@ -192,8 +193,8 @@ public class ApiConstants {
 
     public static final String URL_MX_SAVE_PERIOD = "mx_humana_lms/api/v1/savePeriodUnits";
 
-    public static final String URL_MX_APPROVE_UNIT = "ENDPOINT";
-    public static final String URL_MX_REJECT_UNIT = "ENDPOINT";
+    public static final String URL_MX_APPROVE_UNIT = "mx_humana_lms/api/v1/approveUnit";
+    public static final String URL_MX_REJECT_UNIT = "mx_humana_lms/api/v1/rejectUnit";
 
 
     public static final int STANDARD_PAGE_SIZE = 20;

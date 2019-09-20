@@ -23,6 +23,10 @@ public class Unit {
 
     private String sectionId;
 
+
+
+    private String unit_id;
+
     @NonNull
     public String getId() {
         return id;
@@ -70,6 +74,14 @@ public class Unit {
 
     public void setSectionId(String sectionId) {
         this.sectionId = sectionId;
+    }
+
+    public String getUnit_id() {
+        return unit_id;
+    }
+
+    public void setUnit_id(String unit_id) {
+        this.unit_id = unit_id;
     }
 
     @Override

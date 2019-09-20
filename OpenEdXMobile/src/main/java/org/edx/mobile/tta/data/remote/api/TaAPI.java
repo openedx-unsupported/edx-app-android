@@ -314,8 +314,15 @@ public class TaAPI {
         return taService.getPendingUsers(programId, sectionId, take, skip);
     }
 
-    public Call<List<CourseComponent>> getPendingUnits(String programId, String sectionId, String username, int take, int skip){
-        return taService.getPendingUnits(programId, sectionId, username, take, skip);
+    public Call<List<Unit>> getPendingUnits(String programId, String sectionId, String username, int take, int skip){
+        Map<String, Object> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_USERNAME, username);
+        parameters.put(Constants.KEY_TAKE, take);
+        parameters.put(Constants.KEY_SKIP, skip);
+//        parameters.put(Constants.KEY_PERIOD_NAME, periodName);
+        return taService.getPendingUnits(parameters);
     }
 
     public Call<CourseComponent> getCourseComponentUnits(String unit_id){

@@ -14,12 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="top"
+                android:background="@color/white"
+                android:gravity="start|center_vertical"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:navigationIcon="@drawable/back"
+                app:title="@{viewModel.userName}"
+                app:titleMarginStart="0dp"
+                app:titleTextAppearance="@style/ta_toolbar_title_style" />
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -63,7 +77,7 @@
                 </LinearLayout>
 
             </FrameLayout>
-        </LinearLayout>-->
+        </LinearLayout>
 
 
     </android.support.design.widget.CoordinatorLayout>
