@@ -34,8 +34,6 @@ import org.edx.mobile.tta.utils.ActivityUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 public class PendingUsersViewModel extends BaseViewModel {
 
     public List<ProgramFilter> filterList;
@@ -82,7 +80,7 @@ public class PendingUsersViewModel extends BaseViewModel {
 
         usersAdapter.setItemClickListener((view, item) -> {
 
-            if (item != null){
+            if (item != null) {
                 Bundle b = new Bundle();
                 b.putString("username", item.username);
                 ActivityUtil.gotoPage(mActivity, PendingUnitsListActivity.class, b);
@@ -113,7 +111,7 @@ public class PendingUsersViewModel extends BaseViewModel {
             usersAdapter.reset(true);
             setFilters();
         }
-    fetchUsers();
+        fetchUsers();
 
     }
 
@@ -151,36 +149,35 @@ public class PendingUsersViewModel extends BaseViewModel {
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
                 new OnResponseCallback<List<ProgramFilter>>() {
-            @Override
-            public void onSuccess(List<ProgramFilter> data) {
-                List<ProgramFilter> removables = new ArrayList<>();
-                for (ProgramFilter filter : data) {
-                    if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains("Students")) {
-                        removables.add(filter);
+                    @Override
+                    public void onSuccess(List<ProgramFilter> data) {
+                        List<ProgramFilter> removables = new ArrayList<>();
+                        for (ProgramFilter filter : data) {
+                            if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
+                                    !filter.getShowIn().contains("Students")) {
+                                removables.add(filter);
+                            }
+                        }
+                        for (ProgramFilter filter : removables) {
+                            data.remove(filter);
+                        }
+
+                        if (!data.isEmpty()) {
+                            allFilters = data;
+                            filtersVisible.set(true);
+                            filtersAdapter.setItems(data);
+                        } else {
+                            filtersVisible.set(false);
+                        }
                     }
-                }
-                for (ProgramFilter filter : removables) {
-                    data.remove(filter);
-                }
 
-                if (!data.isEmpty()) {
-                    allFilters = data;
-                    filtersVisible.set(true);
-                    filtersAdapter.setItems(data);
-                } else {
-                    filtersVisible.set(false);
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                filtersVisible.set(false);
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        filtersVisible.set(false);
+                    }
+                });
 
     }
-
 
     public void fetchUsers() {
         mDataManager.getPendingUsers(mDataManager.getLoginPrefs().getProgramId(),
@@ -247,21 +244,21 @@ public class PendingUsersViewModel extends BaseViewModel {
             if (binding instanceof TRowPendingUserGridBinding) {
                 TRowPendingUserGridBinding itemBinding = (TRowPendingUserGridBinding) binding;
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())
-                && mDataManager.getLoginPrefs().getRole()!=null){
+                        && mDataManager.getLoginPrefs().getRole() != null) {
                     itemBinding.textCount.setVisibility(View.GONE);
-                }else itemBinding.textCount.setVisibility(View.VISIBLE);
+                } else itemBinding.textCount.setVisibility(View.VISIBLE);
                 itemBinding.userName.setText(model.username);
                 itemBinding.textCount.setText(String.format("Pending : %d", model.pendingCount));
 
-                if (model.profileImage != null){
-                    Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL()+
+                if (model.profileImage != null) {
+                    Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
                             model.profileImage.getImageUrlSmall())
                             .centerCrop()
                             .placeholder(R.drawable.profile_photo_placeholder)
                             .into(itemBinding.userImage);
                 }
                 itemBinding.getRoot().setOnClickListener(v -> {
-                    if (listener != null){
+                    if (listener != null) {
                         listener.onItemClick(v, model);
                     }
                 });

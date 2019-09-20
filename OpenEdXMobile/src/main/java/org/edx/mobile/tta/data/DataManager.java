@@ -259,7 +259,7 @@ public class DataManager extends BaseRoboInjector {
                 if (mDataManager == null) {
                     mDataManager = new DataManager(context, RetrofitServiceUtil.create(context, true),
                             new LocalDataSource(Room.databaseBuilder(context, TADatabase.class, TA_DATABASE)
-                                    .addMigrations(TADatabase.MIGRATION_5_6)
+                                    .addMigrations(TADatabase.MIGRATION_5_6, TADatabase.MIGRATION_6_7)
                                     .fallbackToDestructiveMigration()
                                     .build()));
                 }
@@ -272,7 +272,7 @@ public class DataManager extends BaseRoboInjector {
     public void refreshLocalDatabase() {
         mLocalDataSource = new LocalDataSource(
                 Room.databaseBuilder(context, TADatabase.class, TA_DATABASE)
-                        .addMigrations(TADatabase.MIGRATION_5_6)
+                        .addMigrations(TADatabase.MIGRATION_5_6, TADatabase.MIGRATION_6_7)
                         .fallbackToDestructiveMigration()
                         .build());
     }
@@ -3890,13 +3890,13 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getPendingUnits(String programId, String sectionId, String username, int take, int skip,
-                                OnResponseCallback<List<CourseComponent>> callback) {
+                                OnResponseCallback<List<Unit>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
             new GetPendingUnitsTask(context, programId, sectionId, username, take, skip) {
                 @Override
-                protected void onSuccess(List<CourseComponent> units) throws Exception {
+                protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
                     if (units == null || units.isEmpty()) {
                         callback.onFailure(new TaException("No units are pending for approval"));

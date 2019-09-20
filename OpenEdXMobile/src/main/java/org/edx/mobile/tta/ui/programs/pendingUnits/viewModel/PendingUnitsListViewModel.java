@@ -1,8 +1,11 @@
 package org.edx.mobile.tta.ui.programs.pendingUnits.viewModel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,8 +19,8 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowPendingUnitsBinding;
 import org.edx.mobile.databinding.TRowPendingUserGridBinding;
-import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.data.enums.UserRole;
+import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
@@ -35,8 +38,8 @@ public class PendingUnitsListViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private int take, skip;
-    public String userName;
-    private List<CourseComponent> unitsList;
+    public ObservableField<String> userName = new ObservableField<>();
+    private List<Unit> unitsList;
 
     public RecyclerView.LayoutManager layoutManager;
 
@@ -46,9 +49,13 @@ public class PendingUnitsListViewModel extends BaseViewModel {
     public PendingUnitsListViewModel(BaseVMActivity activity) {
         super(activity);
 
+        Bundle bundle = mActivity.getIntent().getExtras();
+        assert bundle != null;
+        userName.set(bundle.getString("username"));
         layoutManager = new LinearLayoutManager(mActivity);
         unitsAdapter = new UnitsAdapter(mActivity);
         unitsList = new ArrayList<>();
+        changesMade = true;
         take = TAKE;
 
         skip = SKIP;
@@ -56,6 +63,8 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         mActivity.showLoading();
         unitsAdapter.setItems(unitsList);
         fetchData();
+
+
 
 //        unitsAdapter.setItemClickListener((view, item) -> {
 //            if(item != null){
@@ -78,6 +87,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         if (changesMade) {
             skip = 0;
             unitsAdapter.reset(true);
+            changesMade = false;
         }
         fetchUnits();
     }
@@ -85,10 +95,10 @@ public class PendingUnitsListViewModel extends BaseViewModel {
     public void fetchUnits() {
         mDataManager.getPendingUnits(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(),
-                userName,
-                take, skip, new OnResponseCallback<List<CourseComponent>>() {
+                userName.get(),
+                take, skip, new OnResponseCallback<List<Unit>>() {
                     @Override
-                    public void onSuccess(List<CourseComponent> data) {
+                    public void onSuccess(List<Unit> data) {
                         mActivity.hideLoading();
                         if (data.size() < take) {
                             allLoaded = true;
@@ -110,11 +120,12 @@ public class PendingUnitsListViewModel extends BaseViewModel {
     public void approveUnits(String unitId) {
 
         mDataManager.approveUnit(unitId,
-                userName, new OnResponseCallback<SuccessResponse>() {
+                userName.get(), new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         mActivity.hideLoading();
-                        fetchUnits();
+                        changesMade = true;
+                        fetchData();
                     }
 
                     @Override
@@ -129,11 +140,12 @@ public class PendingUnitsListViewModel extends BaseViewModel {
 
     public void rejectUnits(String unitId) {
         mDataManager.rejectUnit(unitId,
-                userName, new OnResponseCallback<SuccessResponse>() {
+                userName.get(), new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         mActivity.hideLoading();
-                        fetchUnits();
+                        changesMade = true;
+                        fetchData();
                     }
 
                     @Override
@@ -146,10 +158,10 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 });
     }
 
-    private void populateUnits(List<CourseComponent> data) {
+    private void populateUnits(List<Unit> data) {
         boolean newItemsAdded = false;
         int n = 0;
-        for (CourseComponent unit : data) {
+        for (Unit unit : data) {
             if (!unitsList.contains(unit)) {
                 unitsList.add(unit);
                 newItemsAdded = true;
@@ -174,29 +186,29 @@ public class PendingUnitsListViewModel extends BaseViewModel {
     }
 
 
-    public class UnitsAdapter extends MxInfiniteAdapter<CourseComponent> {
+    public class UnitsAdapter extends MxInfiniteAdapter<Unit> {
 
         public UnitsAdapter(Context context) {
             super(context);
         }
 
         @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull CourseComponent model,
-                           @Nullable OnRecyclerItemClickListener<CourseComponent> listener) {
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model,
+                           @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowPendingUnitsBinding) {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
-                itemBinding.textUnitName.setText(model.getDisplayName());
+                itemBinding.textUnitName.setText(model.getTitle());
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
                     itemBinding.llApproval.setVisibility(View.GONE);
                 }else {
                     itemBinding.llApproval.setVisibility(View.VISIBLE);
                 }
                 itemBinding.btnApprove.setOnClickListener(v -> {
-                        approveUnits(model.getId());
+                        approveUnits(model.getUnit_id());
                 });
 
                 itemBinding.btnReject.setOnClickListener(v -> {
-                    rejectUnits(model.getId());
+                    rejectUnits(model.getUnit_id());
                 });
 
 

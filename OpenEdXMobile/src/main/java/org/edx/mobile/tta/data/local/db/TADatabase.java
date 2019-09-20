@@ -51,7 +51,7 @@ import org.edx.mobile.tta.data.local.db.table.Source;
                 Period.class,
                 Unit.class
         },
-        version = 6,
+        version = 7,
         exportSchema = false
 )
 @TypeConverters({DbTypeConverters.class})
@@ -76,6 +76,13 @@ public abstract class TADatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE unit ADD COLUMN periodName TEXT");
+        }
+    };
+
+    public static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE unit ADD COLUMN unit_id TEXT");
         }
     };
 }

@@ -500,7 +500,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
-        <activity android:name=".tta.ui.programs.pendingUnits.PendingUnitsListActivity" />
+        <activity android:name=".tta.ui.programs.pendingUnits.PendingUnitsListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <activity android:name=".tta.ui.programs.periodunits.PeriodUnitsActivity"
             android:label="@string/app_name"

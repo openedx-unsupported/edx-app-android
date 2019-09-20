@@ -25,6 +25,8 @@ public class Unit {
 
     private String periodName;
 
+    private String unit_id;
+
     @NonNull
     public String getId() {
         return id;
@@ -80,6 +82,14 @@ public class Unit {
 
     public void setPeriodName(String periodName) {
         this.periodName = periodName;
+    }
+
+    public String getUnit_id() {
+        return unit_id;
+    }
+
+    public void setUnit_id(String unit_id) {
+        this.unit_id = unit_id;
     }
 
     @Override
