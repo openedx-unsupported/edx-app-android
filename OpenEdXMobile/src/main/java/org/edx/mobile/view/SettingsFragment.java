@@ -100,8 +100,12 @@ public class SettingsFragment extends BaseFragment {
     private void updateSDCardSwitch() {
         final PrefManager prefManager =
                 new PrefManager(getActivity().getBaseContext(), PrefManager.Pref.USER_PREF);
-        if (!environment.getConfig().isDownloadToSDCardEnabled() || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        if (!environment.getConfig().isDownloadToSDCardEnabled() ||
+                Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT ||
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        ) {
             sdCardSettingsLayout.setVisibility(View.GONE);
+            prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
         } else {
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().registerSticky(this);
