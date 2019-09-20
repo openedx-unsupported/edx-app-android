@@ -1,7 +1,9 @@
 package org.edx.mobile.tta.data.local.db;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 
 import org.edx.mobile.tta.data.local.db.dao.CategoryDao;
 import org.edx.mobile.tta.data.local.db.dao.CertificateDao;
@@ -49,7 +51,7 @@ import org.edx.mobile.tta.data.local.db.table.Source;
                 Period.class,
                 Unit.class
         },
-        version = 5,
+        version = 6,
         exportSchema = false
 )
 @TypeConverters({DbTypeConverters.class})
@@ -69,4 +71,11 @@ public abstract class TADatabase extends RoomDatabase {
     public abstract SectionDao sectionDao();
     public abstract PeriodDao periodDao();
     public abstract UnitDao unitDao();
+
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE unit ADD COLUMN periodName TEXT");
+        }
+    };
 }

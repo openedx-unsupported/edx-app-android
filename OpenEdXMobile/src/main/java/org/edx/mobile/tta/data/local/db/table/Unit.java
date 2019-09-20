@@ -23,6 +23,8 @@ public class Unit {
 
     private String sectionId;
 
+    private String periodName;
+
     @NonNull
     public String getId() {
         return id;
@@ -70,6 +72,14 @@ public class Unit {
 
     public void setSectionId(String sectionId) {
         this.sectionId = sectionId;
+    }
+
+    public String getPeriodName() {
+        return periodName;
+    }
+
+    public void setPeriodName(String periodName) {
+        this.periodName = periodName;
     }
 
     @Override

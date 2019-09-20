@@ -258,7 +258,9 @@ public class DataManager extends BaseRoboInjector {
             synchronized (DataManager.class) {
                 if (mDataManager == null) {
                     mDataManager = new DataManager(context, RetrofitServiceUtil.create(context, true),
-                            new LocalDataSource(Room.databaseBuilder(context, TADatabase.class, TA_DATABASE).fallbackToDestructiveMigration()
+                            new LocalDataSource(Room.databaseBuilder(context, TADatabase.class, TA_DATABASE)
+                                    .addMigrations(TADatabase.MIGRATION_5_6)
+                                    .fallbackToDestructiveMigration()
                                     .build()));
                 }
             }
@@ -270,7 +272,9 @@ public class DataManager extends BaseRoboInjector {
     public void refreshLocalDatabase() {
         mLocalDataSource = new LocalDataSource(
                 Room.databaseBuilder(context, TADatabase.class, TA_DATABASE)
-                        .fallbackToDestructiveMigration().build());
+                        .addMigrations(TADatabase.MIGRATION_5_6)
+                        .fallbackToDestructiveMigration()
+                        .build());
     }
 
     public IEdxEnvironment getEdxEnvironment() {
