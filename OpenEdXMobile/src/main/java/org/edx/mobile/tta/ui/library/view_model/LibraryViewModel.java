@@ -78,10 +78,13 @@ public class LibraryViewModel extends BaseViewModel {
             @Override
             public void onSuccess(List<EnrolledCoursesResponse> data) {
 
-                for (EnrolledCoursesResponse item: data) {
-                    if(item.getCourse().getId().trim().toLowerCase().equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
-                        course = item;
-                        break;
+                if (mDataManager.getLoginPrefs().getProgramId() != null) {
+                    for (EnrolledCoursesResponse item: data) {
+                        if(item.getCourse().getId().trim().toLowerCase()
+                                .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
+                            course = item;
+                            break;
+                        }
                     }
                 }
                 populateTabs();

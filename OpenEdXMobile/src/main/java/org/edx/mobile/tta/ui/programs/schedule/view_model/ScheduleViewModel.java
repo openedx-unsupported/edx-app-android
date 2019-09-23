@@ -361,6 +361,7 @@ public class ScheduleViewModel extends BaseViewModel {
                         if (data.getSuccess()) {
                             changesMade = true;
                             allLoaded = false;
+                            mActivity.showLongSnack("Periods created successfully");
                             fetchData();
                         } else {
                             mActivity.hideLoading();
