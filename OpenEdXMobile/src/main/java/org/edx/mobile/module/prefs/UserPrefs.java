@@ -8,15 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.FileUtil;
-import org.edx.mobile.util.Sha1Util;
-
-import java.io.File;
-import java.io.IOException;
 
 @Singleton
 public class UserPrefs {
@@ -46,9 +38,9 @@ public class UserPrefs {
         return onlyWifi;
     }
 
-    public boolean isDownloadToSDCardEnabled(){
+    public boolean isDownloadToSDCardEnabled() {
         final PrefManager prefManger = new PrefManager(context, PrefManager.Pref.USER_PREF);
-        return prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true);
+        return prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false);
     }
 
     @Nullable
