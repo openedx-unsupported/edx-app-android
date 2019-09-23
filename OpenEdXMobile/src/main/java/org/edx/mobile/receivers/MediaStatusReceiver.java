@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -36,6 +37,9 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
     private LoginPrefs loginPrefs;
 
     private PrefManager prefManager;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     public MediaStatusReceiver() {
     }
@@ -97,7 +101,7 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
             public void onResult(List<VideoModel> result) {
                 final String externalAppDir = FileUtil.getExternalAppDir(context).getAbsolutePath();
                 final String removableStorageAppDir = FileUtil.getRemovableStorageAppDir(context).getAbsolutePath();
-                final boolean downloadToSdCard = prefManager.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, true);
+                final boolean downloadToSdCard = environment.getUserPrefs().isDownloadToSDCardEnabled();
                 for (VideoModel videoModel : result) {
                     updateVideoDownloadFilePathState(
                             videoModel,
