@@ -208,9 +208,7 @@ public class ScheduleViewModel extends BaseViewModel {
                                         langTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
                                                 false, R.color.white, R.drawable.t_background_tag_filled));
                                     }
-
                                 }
-
                             }
 
                             if (langTags.isEmpty()) {

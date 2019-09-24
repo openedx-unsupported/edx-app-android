@@ -36,7 +36,6 @@ public class SelectProgramActivity extends BaseVMActivity {
             }
         }
 
-
         binding(R.layout.t_activity_select_program_section, viewModel);
 
 

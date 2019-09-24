@@ -1,7 +1,6 @@
 package org.edx.mobile.tta.ui.programs.pendingUnits.viewModel;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
@@ -12,17 +11,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
-import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowPendingUnitsBinding;
-import org.edx.mobile.databinding.TRowPendingUserGridBinding;
 import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.SuccessResponse;
-import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;

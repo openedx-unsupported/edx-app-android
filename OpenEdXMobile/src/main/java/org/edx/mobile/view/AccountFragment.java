@@ -147,7 +147,8 @@ public class AccountFragment extends BaseFragment {
                     mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
 
                     Constants.isSingleRow = true;
-                    Toast.makeText(getActivity(),"Only single program & section exist", Toast.LENGTH_SHORT).show();
+                    ActivityUtil.gotoPage(getActivity(), LandingActivity.class,
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 } else {
                     ActivityUtil.gotoPage(getActivity(), SelectSectionActivity.class,
