@@ -42,7 +42,6 @@ public class LibraryFragment extends TaBaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = binding(inflater, container, R.layout.t_fragment_library, viewModel)
                 .getRoot();
-        viewModel = new LibraryViewModel(getActivity(), this, searchPageOpenedListener);
         TabLayout tabLayout = view.findViewById(R.id.listing_tab_layout);
 
         viewPager = view.findViewById(R.id.listing_view_pager);

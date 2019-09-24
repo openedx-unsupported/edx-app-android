@@ -109,13 +109,17 @@ public class CourseManager {
                                                              @NonNull final String componentId) {
         CourseComponent courseComponent = getCourseDataFromAppLevelCache(courseId);
         if (courseComponent == null)
-            return null;
-        return courseComponent.find(new Filter<CourseComponent>() {
+            return getBlockComponent(componentId, courseId);
+        CourseComponent component = courseComponent.find(new Filter<CourseComponent>() {
             @Override
             public boolean apply(CourseComponent courseComponent) {
                 return componentId.equals(courseComponent.getId());
             }
         });
+        if (component == null)
+            return getBlockComponent(componentId, courseId);
+
+        return component;
     }
 
     /**
@@ -181,7 +185,10 @@ public class CourseManager {
             if (component.getId().equals(blockId)){
                 return component;
             } else if (component.isContainer()){
-                return getComponentFromComponents(component.getChildContainers(), blockId);
+                CourseComponent comp = getComponentFromComponents(component.getChildContainers(), blockId);
+                if (comp != null){
+                    return comp;
+                }
             }
         }
         return null;

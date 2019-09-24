@@ -365,7 +365,7 @@ public class ScheduleViewModel extends BaseViewModel {
                             fetchData();
                         } else {
                             mActivity.hideLoading();
-                            mActivity.showLongSnack("Unable to create new periods");
+                            mActivity.showLongSnack("Periods with the selected language already exist");
                         }
                     }
 
