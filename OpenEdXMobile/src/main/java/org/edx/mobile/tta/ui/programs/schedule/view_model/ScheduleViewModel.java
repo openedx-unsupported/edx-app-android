@@ -111,7 +111,8 @@ public class ScheduleViewModel extends BaseViewModel {
             switch (view.getId()){
                 case R.id.textview_add:
                     Bundle parameters = new Bundle();
-                    parameters.putParcelable(Constants.KEY_PERIOD, item);
+                    parameters.putString(Constants.KEY_PERIOD_NAME, item.getTitle());
+                    parameters.putLong(Constants.KEY_PERIOD_ID, item.getId());
                     parameters.putSerializable(Router.EXTRA_COURSE_DATA, ScheduleViewModel.this.course);
                     ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
                     break;
@@ -358,10 +359,11 @@ public class ScheduleViewModel extends BaseViewModel {
                         if (data.getSuccess()) {
                             changesMade = true;
                             allLoaded = false;
+                            mActivity.showLongSnack("Periods created successfully");
                             fetchData();
                         } else {
                             mActivity.hideLoading();
-                            mActivity.showLongSnack("Unable to create new periods");
+                            mActivity.showLongSnack("Periods with the selected language already exist");
                         }
                     }
 

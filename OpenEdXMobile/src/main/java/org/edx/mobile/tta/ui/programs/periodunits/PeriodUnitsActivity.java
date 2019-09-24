@@ -52,7 +52,7 @@ public class PeriodUnitsActivity extends BaseVMActivity {
         super.onSaveInstanceState(outState);
         outState.putLong(Constants.KEY_PERIOD_ID, periodId);
         if (periodName != null){
-            outState.putSerializable(Constants.KEY_PERIOD_NAME, periodName);
+            outState.putString(Constants.KEY_PERIOD_NAME, periodName);
         }
         if (course != null){
             outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
@@ -65,6 +65,9 @@ public class PeriodUnitsActivity extends BaseVMActivity {
         }
         if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
             periodName = parameters.getString(Constants.KEY_PERIOD_NAME);
+        }
+        if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
+            course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
         }
     }
 
