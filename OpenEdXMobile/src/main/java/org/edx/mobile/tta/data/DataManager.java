@@ -3733,11 +3733,11 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText,
-                            int take, int skip, OnResponseCallback<List<Unit>> callback) {
+                            long periodId, int take, int skip, OnResponseCallback<List<Unit>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetAllUnitsTask(context, filters, programId, sectionId, searchText, take, skip){
+            new GetAllUnitsTask(context, filters, programId, sectionId, searchText, periodId, take, skip){
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);

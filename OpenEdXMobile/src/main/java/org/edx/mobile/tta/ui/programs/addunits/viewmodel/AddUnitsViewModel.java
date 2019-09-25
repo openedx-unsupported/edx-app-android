@@ -288,7 +288,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
         } else {
             mDataManager.getAllUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                    mDataManager.getLoginPrefs().getSectionId(), null, take, skip,
+                    mDataManager.getLoginPrefs().getSectionId(), null, periodId, take, skip,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {

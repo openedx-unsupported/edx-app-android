@@ -16,12 +16,13 @@ public class GetAllUnitsTask extends Task<List<Unit>> {
 
     private List<ProgramFilter> filters;
     private String programId, sectionId, searchText;
+    private long periodId;
     private int take, skip;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetAllUnitsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId, String searchText, int take, int skip) {
+    public GetAllUnitsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId, String searchText, long periodId, int take, int skip) {
         super(context);
         this.filters = filters;
         this.programId = programId;
@@ -29,11 +30,12 @@ public class GetAllUnitsTask extends Task<List<Unit>> {
         this.take = take;
         this.skip = skip;
         this.searchText = searchText;
+        this.periodId = periodId;
     }
 
     @Override
     public List<Unit> call() throws Exception {
-        return taAPI.getAllUnits(filters, programId, sectionId, searchText, take, skip).execute().body();
+        return taAPI.getAllUnits(filters, programId, sectionId, searchText, periodId, take, skip).execute().body();
     }
 
 }

@@ -189,6 +189,10 @@ public class CourseManager {
                 if (comp != null){
                     return comp;
                 }
+                comp = getComponentFromComponents(component.getChildLeafs(), blockId);
+                if (comp != null){
+                    return comp;
+                }
             }
         }
         return null;
