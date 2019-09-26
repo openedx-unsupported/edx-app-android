@@ -21,34 +21,41 @@
                 android:textSize="@dimen/_12px_sp"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_8px"
+                android:layout_gravity="end"
                 android:id="@+id/ll_approval"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_approve"
                     style="@style/edX.Widget.Button"
-                    android:layout_width="0dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="start|center"
+                    android:gravity="center"
                     android:padding="@dimen/_8px"
+                    android:layout_margin="@dimen/_10px"
                     android:textSize="@dimen/_12px_sp"
-                    android:text="Approve"
-                    android:drawableLeft="@drawable/check"/>
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/hind_medium"
+                    android:background="@color/secondary_green"
+                    android:text="Approve" />
 
                 <Button
                     android:id="@+id/btn_reject"
                     style="@style/edX.Widget.Button"
-                    android:layout_width="0dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/_8px"
                     android:layout_weight="1"
+                    android:padding="@dimen/_8px"
                     android:textSize="@dimen/_12px_sp"
-                    android:drawableLeft="@drawable/ic_close_black_24dp"
-                    android:gravity="start|center"
+                    android:textColor="@color/white"
+                    android:layout_margin="@dimen/_10px"
+                    android:fontFamily="@font/hind_medium"
+                    android:background="@color/material_red_500"
+                    android:gravity="center"
                     android:text="Reject" />
             </LinearLayout>
 

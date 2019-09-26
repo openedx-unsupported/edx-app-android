@@ -74,8 +74,10 @@ public class PendingUsersViewModel extends BaseViewModel {
         skip = SKIP;
 
         mActivity.showLoading();
+        filters = new ArrayList<>();
+        tags = new ArrayList<>();
+        changesMade = true;
         getFilters();
-        fetchData();
 
 
         usersAdapter.setItemClickListener((view, item) -> {
@@ -93,7 +95,8 @@ public class PendingUsersViewModel extends BaseViewModel {
     @Override
     public void onResume() {
         super.onResume();
-
+        changesMade = true;
+        fetchData();
     }
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -252,7 +255,7 @@ public class PendingUsersViewModel extends BaseViewModel {
 
                 if (model.profileImage != null) {
                     Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
-                            model.profileImage.getImageUrlSmall())
+                            model.profileImage.getImageUrlFull())
                             .centerCrop()
                             .placeholder(R.drawable.profile_photo_placeholder)
                             .into(itemBinding.userImage);
@@ -276,6 +279,7 @@ public class PendingUsersViewModel extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<ProgramFilter> listener) {
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
+
 
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
