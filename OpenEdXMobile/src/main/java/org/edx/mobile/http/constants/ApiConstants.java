@@ -194,7 +194,10 @@ public class ApiConstants {
     public static final String URL_MX_SAVE_PERIOD = "mx_humana_lms/api/v1/savePeriodUnits";
 
     public static final String URL_MX_APPROVE_UNIT = "mx_humana_lms/api/v1/approveUnit";
+
     public static final String URL_MX_REJECT_UNIT = "mx_humana_lms/api/v1/rejectUnit";
+
+    public static final String URL_MX_SET_PROPOSES_DATE = "mx_humana_lms/api/v1/rejectUnit";
 
 
     public static final int STANDARD_PAGE_SIZE = 20;

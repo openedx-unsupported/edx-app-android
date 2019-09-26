@@ -7,6 +7,7 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -23,9 +24,11 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ShowIn;
+import org.edx.mobile.tta.data.enums.UnitStatusType;
 import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Unit;
+import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
@@ -35,6 +38,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 import org.edx.mobile.tta.ui.programs.addunits.AddUnitsActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.view.Router;
 
 import java.util.ArrayList;
@@ -93,34 +97,42 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
-            mActivity.showLoading();
-            mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
-                    new OnResponseCallback<CourseComponent>() {
-                        @Override
-                        public void onSuccess(CourseComponent data) {
-                            mActivity.hideLoading();
 
-                            if (PeriodUnitsViewModel.this.course == null){
-                                mActivity.showLongSnack("You're not enrolled in the program");
-                                return;
-                            }
+            switch (view.getId()){
+                case R.id.tv_my_date:
+                    showDatePicker(item);
+                    break;
+                default:
+                    mActivity.showLoading();
+                    mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
+                            new OnResponseCallback<CourseComponent>() {
+                                @Override
+                                public void onSuccess(CourseComponent data) {
+                                    mActivity.hideLoading();
 
-                            if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
-                                        mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                        PeriodUnitsViewModel.this.course, data.getChildren().get(0).getId(),
-                                        null, false);
-                            } else {
-                                mActivity.showLongSnack("This unit is empty");
-                            }
-                        }
+                                    if (PeriodUnitsViewModel.this.course == null){
+                                        mActivity.showLongSnack("You're not enrolled in the program");
+                                        return;
+                                    }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            mActivity.hideLoading();
-                            mActivity.showLongSnack(e.getLocalizedMessage());
-                        }
-                    });
+                                    if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+                                        mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
+                                                mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                                PeriodUnitsViewModel.this.course, data.getChildren().get(0).getId(),
+                                                null, false);
+                                    } else {
+                                        mActivity.showLongSnack("This unit is empty");
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    mActivity.hideLoading();
+                                    mActivity.showLongSnack(e.getLocalizedMessage());
+                                }
+                            });
+            }
+
         });
 
         if (mDataManager.getLoginPrefs().getRole() != null &&
@@ -138,6 +150,36 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
+    }
+
+    private void showDatePicker(Unit unit){
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+            @Override
+            public void onSuccess(Long data) {
+                mActivity.showLoading();
+                mDataManager.setProposedDate(mDataManager.getLoginPrefs().getProgramId(),
+                        mDataManager.getLoginPrefs().getSectionId(), data, unit.getPeriodId(), unit.getId(),
+                        new OnResponseCallback<SuccessResponse>() {
+                            @Override
+                            public void onSuccess(SuccessResponse response) {
+                                mActivity.hideLoading();
+                                unit.setMyDate(data);
+                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 
     private void fetchFilters() {
@@ -368,6 +410,41 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
                 unitBinding.unitCode.setText(model.getCode());
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
+
+                if (model.getMyDate() > 0){
+                    unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                } else {
+                    unitBinding.tvMyDate.setText(R.string.proposed_date);
+                }
+
+                String role = mDataManager.getLoginPrefs().getRole();
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
+                        !TextUtils.isEmpty(model.getStatus())){
+                    try {
+                        switch (UnitStatusType.valueOf(model.getStatus())){
+                            case Completed:
+                                unitBinding.statusIcon.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
+                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                break;
+                            case InProgress:
+                                unitBinding.statusIcon.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
+                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                    } catch (IllegalArgumentException e) {
+                        unitBinding.statusIcon.setVisibility(View.GONE);
+                    }
+                } else {
+                    unitBinding.statusIcon.setVisibility(View.GONE);
+                }
+
+                unitBinding.tvMyDate.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
 
                 unitBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {

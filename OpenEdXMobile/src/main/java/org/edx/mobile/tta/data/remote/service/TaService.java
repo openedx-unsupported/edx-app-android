@@ -255,4 +255,8 @@ public interface TaService {
     @GET(ApiConstants.URL_MX_GET_APP_UPDATE)
     Call<UpdateResponse> getAppUpdate(@Query(Constants.VERSION_NAME) String v_name,
                                       @Query(Constants.VERSION_CODE) Long v_code);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_MX_SET_PROPOSES_DATE)
+    Call<SuccessResponse> setProposedDate(@FieldMap Map<String, String> parameters);
 }

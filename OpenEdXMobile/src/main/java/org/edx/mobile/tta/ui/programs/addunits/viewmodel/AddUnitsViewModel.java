@@ -30,9 +30,12 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
+import org.edx.mobile.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -57,6 +60,8 @@ public class AddUnitsViewModel extends BaseViewModel {
     private List<Unit> selected;
     private List<Unit> removed;
     private List<Unit> added;
+    private Map<String, Long> proposedDateModified;
+    private Map<String, Long> proposedDateAdded;
     private List<ProgramFilterTag> tags;
     private List<ProgramFilter> allFilters;
     private List<ProgramFilter> filters;
@@ -85,6 +90,8 @@ public class AddUnitsViewModel extends BaseViewModel {
         selected = new ArrayList<>();
         removed = new ArrayList<>();
         added = new ArrayList<>();
+        proposedDateModified = new HashMap<>();
+        proposedDateAdded = new HashMap<>();
         tags = new ArrayList<>();
         filters = new ArrayList<>();
         take = DEFAULT_TAKE;
@@ -111,12 +118,16 @@ public class AddUnitsViewModel extends BaseViewModel {
                     if (selectedOriginal.contains(item)) {
                         if (removed.contains(item)){
                             removed.remove(item);
+                            proposedDateModified.remove(item.getId());
+                            item.setMyDate(0);
                         }else {
                             removed.add(item);
                         }
                     } else {
                         if (added.contains(item)){
                             added.remove(item);
+                            proposedDateAdded.remove(item.getId());
+                            item.setMyDate(0);
                         }else {
                             added.add(item);
                         }
@@ -124,6 +135,9 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                     unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(item));
 
+                    break;
+                case R.id.tv_my_date:
+                    showDatePicker(item);
                     break;
                 default:
 
@@ -167,6 +181,27 @@ public class AddUnitsViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
+    }
+
+    private void showDatePicker(Unit unit){
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+            @Override
+            public void onSuccess(Long data) {
+                unit.setMyDate(data);
+                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+
+                if (selectedOriginal.contains(unit)){
+                    proposedDateModified.put(unit.getId(), data);
+                } else {
+                    proposedDateAdded.put(unit.getId(), data);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 
     private void fetchFilters() {
@@ -358,7 +393,8 @@ public class AddUnitsViewModel extends BaseViewModel {
             removedIds.add(unit.getId());
         }
 
-        mDataManager.savePeriod(periodId, addedIds, removedIds, new OnResponseCallback<SuccessResponse>() {
+        mDataManager.savePeriod(periodId, addedIds, removedIds, proposedDateModified, proposedDateAdded,
+                new OnResponseCallback<SuccessResponse>() {
             @Override
             public void onSuccess(SuccessResponse data) {
                 mActivity.hideLoading();
@@ -437,8 +473,16 @@ public class AddUnitsViewModel extends BaseViewModel {
                 unitBinding.layoutCheckbox.setVisibility(View.VISIBLE);
                 if (selected.contains(model)){
                     unitBinding.checkbox.setChecked(true);
+
+                    if (model.getMyDate() > 0){
+                        unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                    } else {
+                        unitBinding.tvMyDate.setText(R.string.proposed_date);
+                    }
+                    unitBinding.tvMyDate.setVisibility(View.VISIBLE);
                 } else {
                     unitBinding.checkbox.setChecked(false);
+                    unitBinding.tvMyDate.setVisibility(View.GONE);
                 }
 
                 unitBinding.layoutCheckbox.setOnClickListener(v -> {
@@ -448,6 +492,12 @@ public class AddUnitsViewModel extends BaseViewModel {
                 });
 
                 unitBinding.checkbox.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }

@@ -51,7 +51,7 @@ import org.edx.mobile.tta.data.local.db.table.Source;
                 Period.class,
                 Unit.class
         },
-        version = 7,
+        version = 8,
         exportSchema = false
 )
 @TypeConverters({DbTypeConverters.class})

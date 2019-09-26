@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import androidx.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "unit")
 public class Unit {
 
@@ -23,9 +25,19 @@ public class Unit {
 
     private String sectionId;
 
+    @SerializedName("period_id")
+    private long periodId;
+
+    @SerializedName("period_name")
     private String periodName;
 
     private String unit_id;
+
+    @SerializedName("my_date")
+    private long myDate;
+
+    @SerializedName("staff_date")
+    private long staffDate;
 
     @NonNull
     public String getId() {
@@ -76,6 +88,14 @@ public class Unit {
         this.sectionId = sectionId;
     }
 
+    public long getPeriodId() {
+        return periodId;
+    }
+
+    public void setPeriodId(long periodId) {
+        this.periodId = periodId;
+    }
+
     public String getPeriodName() {
         return periodName;
     }
@@ -90,6 +110,22 @@ public class Unit {
 
     public void setUnit_id(String unit_id) {
         this.unit_id = unit_id;
+    }
+
+    public long getMyDate() {
+        return myDate;
+    }
+
+    public void setMyDate(long myDate) {
+        this.myDate = myDate;
+    }
+
+    public long getStaffDate() {
+        return staffDate;
+    }
+
+    public void setStaffDate(long staffDate) {
+        this.staffDate = staffDate;
     }
 
     @Override

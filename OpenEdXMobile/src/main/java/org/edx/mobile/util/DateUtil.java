@@ -1,11 +1,17 @@
 package org.edx.mobile.util;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
+import android.widget.DatePicker;
 
 import com.google.gson.internal.bind.util.ISO8601Utils;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.tta.exception.TaException;
+import org.edx.mobile.tta.interfaces.OnResponseCallback;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -143,6 +149,10 @@ public class DateUtil {
 
     }
 
+    public static String getDisplayDate(long timestamp){
+        return getDisplayTime(new Date(timestamp));
+    }
+
     public static String getDayMonth(long timestamp){
 
         Locale locale = new Locale("en");
@@ -159,32 +169,22 @@ public class DateUtil {
 
     }
 
-    private static String getMonthInShort(int month) {
-        switch (month){
-            case 0:
-                return "Jan";
-            case 1:
-                return "Feb";
-            case 2:
-                return "Mar";
-            case 3:
-                return "Apr";
-            case 4:
-                return "May";
-            case 5:
-                return "Jun";
-            case 6:
-                return "Jul";
-            case 7:
-                return "Aug";
-            case 8:
-                return "Sep";
-            case 9:
-                return "Oct";
-            case 10:
-                return "Nov";
-            default:
-                return "Dec";
+    public static void showDatePicker(Context context, long selectedTime, OnResponseCallback<Long> callback){
+        Calendar cal = Calendar.getInstance();
+        if (selectedTime > 0){
+            cal.setTimeInMillis(selectedTime);
         }
+        DatePickerDialog dialog = new DatePickerDialog(context, (datePicker, i, i1, i2) -> {
+
+            cal.set(i, i1, i2);
+            callback.onSuccess(cal.getTimeInMillis());
+
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnCancelListener(dialogInterface -> {
+            callback.onFailure(new TaException("Date not selected"));
+        });
+        dialog.show();
     }
 }

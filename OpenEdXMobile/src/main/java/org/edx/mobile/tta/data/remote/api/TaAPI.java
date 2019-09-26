@@ -339,11 +339,14 @@ public class TaAPI {
         return taService.createPeriod(parameters);
     }
 
-    public Call<SuccessResponse> savePeriod(long periodId, List<String> addedIds, List<String> removedIds){
+    public Call<SuccessResponse> savePeriod(long periodId, List<String> addedIds, List<String> removedIds,
+                                            Map<String, Long> proposedDateModified, Map<String, Long> proposedDateAdded){
         Map<String, Object> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
         parameters.put(Constants.KEY_ADDED_UNITS, addedIds);
         parameters.put(Constants.KEY_REMOVED_UNITS, removedIds);
+        parameters.put(Constants.KEY_PROPOSED_DATE_MODIFIED, proposedDateModified);
+        parameters.put(Constants.KEY_PROPOSED_DATE_ADDED, proposedDateAdded);
         return taService.savePeriod(parameters);
     }
 
@@ -363,5 +366,16 @@ public class TaAPI {
 
     public Call<UpdateResponse> getVersionUpdate(String v_name, Long v_code){
         return taService.getAppUpdate(v_name,v_code);
+    }
+
+    public Call<SuccessResponse> setProposedDate(String programId, String sectionId, long proposedDate,
+                                                 long periodId, String unitId){
+        Map<String, String> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_UNIT_ID, unitId);
+        parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
+        parameters.put(Constants.KEY_PROPOSED_DATE, String.valueOf(proposedDate));
+        return taService.setProposedDate(parameters);
     }
 }

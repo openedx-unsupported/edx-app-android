@@ -929,6 +929,7 @@
     <string name="empty_feed_message">No feeds available at the moment</string>
 
     <string name="com.crashlytics.android.build_id" translatable="false">RANDOM_UUID</string>
+    <string name="proposed_date">Proposed date</string>
 
     <!-- TTA strings end -->
 

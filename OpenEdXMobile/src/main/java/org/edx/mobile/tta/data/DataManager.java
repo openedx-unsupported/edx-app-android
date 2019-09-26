@@ -170,6 +170,7 @@ import org.edx.mobile.tta.task.program.GetUnitsTask;
 import org.edx.mobile.tta.task.program.GetUsersTask;
 import org.edx.mobile.tta.task.program.RejectUnitTask;
 import org.edx.mobile.tta.task.program.SavePeriodTask;
+import org.edx.mobile.tta.task.program.SetProposedDateTask;
 import org.edx.mobile.tta.task.search.GetSearchFilterTask;
 import org.edx.mobile.tta.task.search.SearchTask;
 import org.edx.mobile.tta.utils.RxUtil;
@@ -3947,11 +3948,12 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void savePeriod(long periodId, List<String> addedIds, List<String> removedIds,
+                           Map<String, Long> proposedDateModified, Map<String, Long> proposedDateAdded,
                            OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new SavePeriodTask(context, periodId, addedIds, removedIds){
+            new SavePeriodTask(context, periodId, addedIds, removedIds, proposedDateModified, proposedDateAdded){
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);
@@ -4192,6 +4194,34 @@ public class DataManager extends BaseRoboInjector {
                 callback.onFailure(e);
             }
         }.execute();
+
+    }
+
+    public void setProposedDate(String programId, String sectionId, long proposedDate, long periodId, String unitId,
+                                OnResponseCallback<SuccessResponse> callback){
+
+        if (NetworkUtil.isConnected(context)){
+
+            new SetProposedDateTask(context, programId, sectionId, periodId, proposedDate, unitId){
+                @Override
+                protected void onSuccess(SuccessResponse response) throws Exception {
+                    super.onSuccess(response);
+                    if (response != null && response.getSuccess()){
+                        callback.onSuccess(response);
+                    } else {
+                        callback.onFailure(new TaException("Error occurred. Unable to set proposed date"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
 
     }
 
