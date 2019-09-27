@@ -417,6 +417,13 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                     unitBinding.tvMyDate.setText(R.string.proposed_date);
                 }
 
+                if (model.getStaffDate() > 0){
+                    unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                    unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                } else {
+                    unitBinding.tvStaffDate.setVisibility(View.GONE);
+                }
+
                 String role = mDataManager.getLoginPrefs().getRole();
                 if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
                         !TextUtils.isEmpty(model.getStatus())){

@@ -67,6 +67,19 @@
                 app:layout_constraintStart_toEndOf="@id/layout_checkbox"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_staff_date"
+                android:textColor="@color/gray_5"
+                android:textSize="12sp"
+                android:fontFamily="@font/hind_medium"
+                app:layout_constraintTop_toBottomOf="@id/unit_code"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="@dimen/_20px"
+                android:visibility="gone"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,7 +99,7 @@
                 android:textStyle="bold"
                 android:elevation="2dp"
                 android:background="@color/white"
-                android:foreground="?attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true" />
 
