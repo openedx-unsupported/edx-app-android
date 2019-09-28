@@ -36,7 +36,6 @@ import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.data.model.search.SearchFilter;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +43,6 @@ import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -256,7 +254,6 @@ public interface TaService {
     Call<UpdateResponse> getAppUpdate(@Query(Constants.VERSION_NAME) String v_name,
                                       @Query(Constants.VERSION_CODE) Long v_code);
 
-    @FormUrlEncoded
-    @POST(ApiConstants.URL_MX_SET_PROPOSES_DATE)
-    Call<SuccessResponse> setProposedDate(@FieldMap Map<String, String> parameters);
+    @POST(ApiConstants.URL_MX_SET_PROPOSED_DATE)
+    Call<SuccessResponse> setProposedDate(@Body Map<String, Object> parameters);
 }

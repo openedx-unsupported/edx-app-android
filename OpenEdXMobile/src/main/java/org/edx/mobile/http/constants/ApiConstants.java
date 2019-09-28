@@ -197,7 +197,7 @@ public class ApiConstants {
 
     public static final String URL_MX_REJECT_UNIT = "mx_humana_lms/api/v1/rejectUnit";
 
-    public static final String URL_MX_SET_PROPOSES_DATE = "mx_humana_lms/api/v1/rejectUnit";
+    public static final String URL_MX_SET_PROPOSED_DATE = "mx_humana_lms/api/v1/setProposedDate";
 
 
     public static final int STANDARD_PAGE_SIZE = 20;

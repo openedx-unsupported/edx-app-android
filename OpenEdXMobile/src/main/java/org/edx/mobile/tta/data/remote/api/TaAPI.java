@@ -370,12 +370,12 @@ public class TaAPI {
 
     public Call<SuccessResponse> setProposedDate(String programId, String sectionId, long proposedDate,
                                                  long periodId, String unitId){
-        Map<String, String> parameters=new HashMap<>();
+        Map<String, Object> parameters=new HashMap<>();
         parameters.put(Constants.KEY_PROGRAM_ID, programId);
         parameters.put(Constants.KEY_SECTION_ID, sectionId);
         parameters.put(Constants.KEY_UNIT_ID, unitId);
-        parameters.put(Constants.KEY_PERIOD_ID, String.valueOf(periodId));
-        parameters.put(Constants.KEY_PROPOSED_DATE, String.valueOf(proposedDate));
+        parameters.put(Constants.KEY_PERIOD_ID, periodId);
+        parameters.put(Constants.KEY_PROPOSED_DATE, proposedDate);
         return taService.setProposedDate(parameters);
     }
 }
