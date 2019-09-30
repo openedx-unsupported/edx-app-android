@@ -1,0 +1,15 @@
+[
+  {
+    "version": "2.20",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Erweiterte Sprachunterstützung",
+        "message": "Sie haben die edX-App jetzt auf Deutsch, Französisch, Portugiesisch, Chinesisch und Türkisch zur Verfügung. Die Anwendung verwendet die Sprache ihres Gerätes, um diese Einstellung festzulegen."
+      }
+    ]
+  }
+]

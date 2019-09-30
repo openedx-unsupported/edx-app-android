@@ -1,0 +1,15 @@
+[
+  {
+    "version": "2.20",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "扩展语言支持",
+        "message": "您现在可以用德语, 法语，葡萄牙语，中文和土耳其语查看edX应用程序。 edX应用程序将依照您的设备设置设定中文"
+      }
+    ]
+  }
+]
