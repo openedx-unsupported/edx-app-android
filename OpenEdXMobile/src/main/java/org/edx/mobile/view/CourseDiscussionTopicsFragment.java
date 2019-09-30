@@ -30,6 +30,7 @@ import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.tta.event.CourseEnrolledEvent;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 import org.edx.mobile.view.common.PageViewStateCallback;
@@ -226,5 +227,11 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     @Override
     public void onPageDisappear() {
 
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CourseEnrolledEvent event) {
+        this.courseData = event.getCourse();
+        EventBus.getDefault().post(new CourseDashboardRefreshEvent());
     }
 }

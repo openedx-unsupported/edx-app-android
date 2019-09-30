@@ -15,6 +15,10 @@ public class Program {
 
     private String username;
 
+
+
+    private String parent_id;
+
     @NonNull
     public String getId() {
         return id;
@@ -38,5 +42,13 @@ public class Program {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getParent_id() {
+        return parent_id;
+    }
+
+    public void setParent_id(String parent_id) {
+        this.parent_id = parent_id;
     }
 }

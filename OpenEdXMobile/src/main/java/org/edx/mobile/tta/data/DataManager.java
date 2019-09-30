@@ -4161,7 +4161,8 @@ public class DataManager extends BaseRoboInjector {
 
                 @Override
                 protected void onException(Exception ex) {
-                    getBlockComponentFromLocal(blockId, courseId, callback, ex);
+                    getBlockComponentFromLocal(blockId, courseId, callback,
+                            new TaException("This unit will be available in few minutes"));
                 }
             }.execute();
 

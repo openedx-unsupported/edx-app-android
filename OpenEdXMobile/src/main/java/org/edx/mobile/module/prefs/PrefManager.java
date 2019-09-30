@@ -341,6 +341,7 @@ public class PrefManager {
         public static final String PROGRAM_ID = "program_id";
         public static final String PROGRAM_TITLE = "program_title";
         public static final String ROLE = "role";
+        public static final String parentId = "parent_id";
         public static final String SECTION_ID = "section_id";
 
         //MX Ankit: To store app update

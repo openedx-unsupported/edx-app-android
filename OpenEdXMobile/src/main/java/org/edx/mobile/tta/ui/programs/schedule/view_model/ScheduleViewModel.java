@@ -30,6 +30,7 @@ import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
+import org.edx.mobile.tta.event.CourseEnrolledEvent;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
@@ -285,6 +286,11 @@ public class ScheduleViewModel extends BaseViewModel {
             p.setTotalCount(p.getTotalCount() + event.getUnitsCountChange());
             periodAdapter.notifyItemChanged(position);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CourseEnrolledEvent event) {
+        this.course = event.getCourse();
     }
 
     public void registerEventBus() {

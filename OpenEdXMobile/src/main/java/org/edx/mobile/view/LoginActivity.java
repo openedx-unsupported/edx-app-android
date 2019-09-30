@@ -311,6 +311,8 @@ public class LoginActivity
                     else if (data.size() == 1) {
                         mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
                         mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
+                        mDataManager.getLoginPrefs().setParentId(data.get(0).getParent_id());
+
                         Constants.isSinglePrg = true;
                         getSection();
                     } else {

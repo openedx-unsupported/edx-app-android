@@ -55,6 +55,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     public ObservableField<String> periodName = new ObservableField<>();
 
     private EnrolledCoursesResponse course;
+    private EnrolledCoursesResponse parentCourse;
     private long periodId;
     private List<Unit> units;
     private List<Unit> selectedOriginal;
@@ -145,26 +146,46 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                     mActivity.showLoading();
 
-                    if (AddUnitsViewModel.this.course == null){
+                    boolean ssp = selectedOriginal.contains(item);
+                    EnrolledCoursesResponse c;
+                    if (ssp) {
+                        c = course;
+                    } else {
+                        c = parentCourse;
+                    }
 
-                        mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<ResponseBody>() {
+                    if (c == null){
+
+                        String courseId;
+                        if (ssp) {
+                            courseId = mDataManager.getLoginPrefs().getProgramId();
+                        } else {
+                            courseId = mDataManager.getLoginPrefs().getParentId();
+                        }
+                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
                             @Override
                             public void onSuccess(ResponseBody responseBody) {
 
                                 mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
                                     @Override
                                     public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                        mActivity.hideLoading();
-                                        if (mDataManager.getLoginPrefs().getProgramId() != null) {
+                                        if (courseId != null) {
                                             for (EnrolledCoursesResponse response: data) {
                                                 if(response.getCourse().getId().trim().toLowerCase()
-                                                        .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
-                                                    AddUnitsViewModel.this.course = response;
-                                                    EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                        .equals(courseId.trim().toLowerCase())) {
+                                                    if (ssp) {
+                                                        AddUnitsViewModel.this.course = response;
+                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                    } else {
+                                                        AddUnitsViewModel.this.parentCourse = response;
+                                                    }
                                                     getBlockComponent(item);
                                                     break;
                                                 }
                                             }
+                                            mActivity.hideLoading();
+                                        } else {
+                                            mActivity.hideLoading();
                                         }
                                     }
 
@@ -205,10 +226,17 @@ public class AddUnitsViewModel extends BaseViewModel {
                     public void onSuccess(CourseComponent data) {
                         mActivity.hideLoading();
 
+                        EnrolledCoursesResponse c;
+                        if (selectedOriginal.contains(unit)) {
+                            c = course;
+                        } else {
+                            c = parentCourse;
+                        }
+
                         if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
                             mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
                                     mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                    AddUnitsViewModel.this.course, data.getChildren().get(0).getId(),
+                                    c, data.getChildren().get(0).getId(),
                                     null, false);
                         } else {
                             mActivity.showLongSnack("This unit is empty");

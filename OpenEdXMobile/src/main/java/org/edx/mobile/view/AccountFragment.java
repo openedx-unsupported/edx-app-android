@@ -112,6 +112,8 @@ public class AccountFragment extends BaseFragment {
                         mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
                         mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                         Constants.isSinglePrg = true;
+                        mDataManager.getLoginPrefs().setParentId(data.get(0).getParent_id());
+
                         getSection();
                     } else {
 

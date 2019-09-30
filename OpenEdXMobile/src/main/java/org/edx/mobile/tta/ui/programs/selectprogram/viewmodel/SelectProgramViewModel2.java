@@ -73,6 +73,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                     itemView = view;
                     programId = item.getId();
                     mDataManager.getLoginPrefs().setProgramId(programId);
+                    mDataManager.getLoginPrefs().setParentId(item.getParent_id());
                     mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
                     mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(),
                             new OnResponseCallback<List<Section>>() {
@@ -113,6 +114,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                 mDataManager.getLoginPrefs().setProgramId(programId);
                 mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
+                mDataManager.getLoginPrefs().setParentId(item.getParent_id());
                 mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(),
                         new OnResponseCallback<List<Section>>() {
                             @Override

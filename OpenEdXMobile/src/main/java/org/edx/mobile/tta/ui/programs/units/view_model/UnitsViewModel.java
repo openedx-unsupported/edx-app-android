@@ -28,6 +28,7 @@ import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
+import org.edx.mobile.tta.event.CourseEnrolledEvent;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
@@ -316,6 +317,11 @@ public class UnitsViewModel extends BaseViewModel {
         fetchData();
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CourseEnrolledEvent event) {
+        this.course = event.getCourse();
+    }
+
     public void registerEventBus() {
         EventBus.getDefault().registerSticky(this);
     }
@@ -391,14 +397,16 @@ public class UnitsViewModel extends BaseViewModel {
                     unitBinding.tvMyDate.setText(R.string.proposed_date);
                 }
 
-                if (model.getStaffDate() > 0) {
-                    unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                    unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                } else {
-                    unitBinding.tvStaffDate.setVisibility(View.GONE);
+                String role = mDataManager.getLoginPrefs().getRole();
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())){
+                    if (model.getStaffDate() > 0) {
+                        unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                        unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                    } else {
+                        unitBinding.tvStaffDate.setVisibility(View.GONE);
+                    }
                 }
 
-                String role = mDataManager.getLoginPrefs().getRole();
                 if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
                         !TextUtils.isEmpty(model.getStatus())) {
                     try {

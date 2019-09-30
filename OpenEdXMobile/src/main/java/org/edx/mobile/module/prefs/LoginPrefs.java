@@ -592,4 +592,11 @@ public class LoginPrefs {
     public void setRole(String role){
         pref.put(PrefManager.Key.ROLE, role);
     }
+    public String getParentId(){
+        return pref.getString(PrefManager.Key.parentId);
+    }
+
+    public void setParentId(String parentId){
+        pref.put(PrefManager.Key.parentId, parentId);
+    }
 }
