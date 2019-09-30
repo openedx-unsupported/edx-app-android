@@ -122,4 +122,5 @@
     <string name="error_teacher_id">टीचर ID रिक्त नहीं हो सकती</string>
     <string name="program">Program</string>
     <string name="empty_list_message">सूची खाली है</string>
+    <string name="proposed_date">Proposed date</string>
 </resources>

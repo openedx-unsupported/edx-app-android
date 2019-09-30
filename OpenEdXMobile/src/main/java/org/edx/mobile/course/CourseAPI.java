@@ -56,6 +56,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 import static org.edx.mobile.http.constants.TimeInterval.HOUR;
@@ -93,6 +94,11 @@ public class CourseAPI {
         // Empty courseId will return a 200 for a list of course details, instead of a single course
         if (TextUtils.isEmpty(courseId)) throw new IllegalArgumentException();
         return courseService.getCourseDetail(courseId, getUsername());
+    }
+
+    @NonNull
+    public Call<ResponseBody> enrolInCourse(String courseId){
+        return courseService.enrollInACourse(new CourseService.EnrollBody(courseId, false));
     }
 
     /**

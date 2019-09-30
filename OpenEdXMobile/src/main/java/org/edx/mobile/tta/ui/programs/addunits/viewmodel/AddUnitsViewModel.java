@@ -25,6 +25,7 @@ import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
+import org.edx.mobile.tta.event.CourseEnrolledEvent;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import okhttp3.ResponseBody;
 
 public class AddUnitsViewModel extends BaseViewModel {
 
@@ -142,39 +144,84 @@ public class AddUnitsViewModel extends BaseViewModel {
                 default:
 
                     mActivity.showLoading();
-                    mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
-                            new OnResponseCallback<CourseComponent>() {
-                                @Override
-                                public void onSuccess(CourseComponent data) {
-                                    mActivity.hideLoading();
 
-                                    if (AddUnitsViewModel.this.course == null){
+                    if (AddUnitsViewModel.this.course == null){
+
+                        mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(), new OnResponseCallback<ResponseBody>() {
+                            @Override
+                            public void onSuccess(ResponseBody responseBody) {
+
+                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                    @Override
+                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                        mActivity.hideLoading();
+                                        if (mDataManager.getLoginPrefs().getProgramId() != null) {
+                                            for (EnrolledCoursesResponse response: data) {
+                                                if(response.getCourse().getId().trim().toLowerCase()
+                                                        .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
+                                                    AddUnitsViewModel.this.course = response;
+                                                    EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                    getBlockComponent(item);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        mActivity.hideLoading();
                                         mActivity.showLongSnack("You're not enrolled in the program");
-                                        return;
                                     }
+                                });
+                            }
 
-                                    if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                        mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
-                                                mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                                AddUnitsViewModel.this.course, data.getChildren().get(0).getId(),
-                                                null, false);
-                                    } else {
-                                        mActivity.showLongSnack("This unit is empty");
-                                    }
-                                }
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack("You're not enrolled in the program");
+                            }
+                        });
 
-                                @Override
-                                public void onFailure(Exception e) {
-                                    mActivity.hideLoading();
-                                    mActivity.showLongSnack(e.getLocalizedMessage());
-                                }
-                            });
+                    } else {
+                        getBlockComponent(item);
+                    }
+
+
+
             }
         });
 
         mActivity.showLoading();
         fetchFilters();
         fetchData();
+    }
+
+    private void getBlockComponent(Unit unit) {
+
+        mDataManager.getBlockComponent(unit.getId(), mDataManager.getLoginPrefs().getProgramId(),
+                new OnResponseCallback<CourseComponent>() {
+                    @Override
+                    public void onSuccess(CourseComponent data) {
+                        mActivity.hideLoading();
+
+                        if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+                            mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
+                                    mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                    AddUnitsViewModel.this.course, data.getChildren().get(0).getId(),
+                                    null, false);
+                        } else {
+                            mActivity.showLongSnack("This unit is empty");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+                        mActivity.showLongSnack(e.getLocalizedMessage());
+                    }
+                });
+
     }
 
     @Override

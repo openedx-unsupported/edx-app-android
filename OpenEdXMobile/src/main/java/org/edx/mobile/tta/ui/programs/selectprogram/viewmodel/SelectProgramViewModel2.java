@@ -7,6 +7,7 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +20,13 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowSelectProgSectionBinding;
 import org.edx.mobile.tta.data.constants.Constants;
 import org.edx.mobile.tta.data.local.db.table.Program;
+import org.edx.mobile.tta.data.local.db.table.Section;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.landing.LandingActivity;
 import org.edx.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
+import org.edx.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.edx.mobile.tta.utils.ActivityUtil;
 
 
@@ -70,12 +74,37 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                     programId = item.getId();
                     mDataManager.getLoginPrefs().setProgramId(programId);
                     mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
-                    Bundle b = new Bundle();
-                    b.putCharSequence("program", programId);
-                    b.putBoolean("prevVisible",prevVisible);
-                    Constants.isSinglePrg = false;
-                    ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
-                    mActivity.finish();
+                    mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(),
+                            new OnResponseCallback<List<Section>>() {
+                        @Override
+                        public void onSuccess(List<Section> data) {
+
+                            if (data.size() == 1) {
+                                mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
+                                mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
+
+                                Constants.isSingleRow = true;
+                                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                                mActivity.finish();
+
+                            } else {
+                                Bundle b = new Bundle();
+                                b.putCharSequence("program", programId);
+                                b.putBoolean("prevVisible",prevVisible);
+                                Constants.isSinglePrg = false;
+                                ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
+                                mActivity.finish();
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+
+                        }
+                    });
+
                 }
             } else {
                 selectPrograms.add(item);
@@ -84,12 +113,42 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                 mDataManager.getLoginPrefs().setProgramId(programId);
                 mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
-                Bundle b = new Bundle();
-                b.putCharSequence("program", programId);
-                b.putBoolean("prevVisible",prevVisible);
-                Constants.isSinglePrg = false;
-                ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
-                mActivity.finish();
+                mDataManager.getSections(mDataManager.getLoginPrefs().getProgramId(),
+                        new OnResponseCallback<List<Section>>() {
+                            @Override
+                            public void onSuccess(List<Section> data) {
+
+                                if (data.size() == 1) {
+                                    mDataManager.getLoginPrefs().setSectionId(data.get(0).getId());
+                                    mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
+
+                                    Constants.isSingleRow = true;
+                                    ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                                    mActivity.finish();
+
+                                } else {
+                                    Bundle b = new Bundle();
+                                    b.putCharSequence("program", programId);
+                                    b.putBoolean("prevVisible",prevVisible);
+                                    Constants.isSinglePrg = false;
+                                    ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
+                                    mActivity.finish();
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+
+                            }
+                        });
+//                Bundle b = new Bundle();
+//                b.putCharSequence("program", programId);
+//                b.putBoolean("prevVisible",prevVisible);
+//                Constants.isSinglePrg = false;
+//                ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
+//                mActivity.finish();
             }
 
         });

@@ -12,6 +12,7 @@ import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.edx.mobile.tta.event.CourseEnrolledEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.programs.curricullam.CurricullamFragment;
 import org.edx.mobile.tta.ui.programs.discussion.DiscussionFragment;
@@ -30,6 +31,8 @@ import org.edx.mobile.view.common.PageViewStateCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class LibraryViewModel extends BaseViewModel {
 
@@ -74,28 +77,8 @@ public class LibraryViewModel extends BaseViewModel {
         this.searchPageOpenedListener = searchPageOpenedListener;
 
         adapter = new ListingPagerAdapter(mFragment.getChildFragmentManager());
-        mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-            @Override
-            public void onSuccess(List<EnrolledCoursesResponse> data) {
 
-                if (mDataManager.getLoginPrefs().getProgramId() != null) {
-                    for (EnrolledCoursesResponse item: data) {
-                        if(item.getCourse().getId().trim().toLowerCase()
-                                .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
-                            course = item;
-                            break;
-                        }
-                    }
-                }
-                populateTabs();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                populateTabs();
-            }
-        });
-
+        getEnrolledCourse();
 
        // populateTabs();
 
@@ -198,6 +181,45 @@ public class LibraryViewModel extends BaseViewModel {
             }
         }
 
+    }
+
+    private void getEnrolledCourse(){
+
+        mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+            @Override
+            public void onSuccess(List<EnrolledCoursesResponse> data) {
+
+                if (mDataManager.getLoginPrefs().getProgramId() != null) {
+                    for (EnrolledCoursesResponse item: data) {
+                        if(item.getCourse().getId().trim().toLowerCase()
+                                .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
+                            course = item;
+                            break;
+                        }
+                    }
+                }
+                populateTabs();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                populateTabs();
+            }
+        });
+
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CourseEnrolledEvent event) {
+        this.course = event.getCourse();
+    }
+
+    public void registerEventBus() {
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus() {
+        EventBus.getDefault().unregister(this);
     }
 
 

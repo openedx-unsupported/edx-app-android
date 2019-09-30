@@ -20,6 +20,7 @@ import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.core.IEdxDataManager;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.course.CourseService;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -205,6 +206,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import okhttp3.HttpUrl;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 import static org.edx.mobile.tta.Constants.TA_DATABASE;
@@ -4195,6 +4197,27 @@ public class DataManager extends BaseRoboInjector {
             }
         }.execute();
 
+    }
+
+    public void enrolInCourse(String courseId, OnResponseCallback<ResponseBody> callback) {
+        if (!NetworkUtil.isConnected(context)) {
+            callback.onFailure(new TaException(context.getString(R.string.no_connection_exception)));
+            return;
+        }
+        Call<ResponseBody> enrolCall = courseApi.enrolInCourse(courseId);
+        enrolCall.enqueue(new CourseService.EnrollCallback(context) {
+            @Override
+            protected void onResponse(@NonNull ResponseBody responseBody) {
+                super.onResponse(responseBody);
+                callback.onSuccess(responseBody);
+            }
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                super.onFailure(error);
+                callback.onFailure(new TaException(error.getMessage()));
+
+            }
+        });
     }
 
     public void setProposedDate(String programId, String sectionId, long proposedDate, long periodId, String unitId,

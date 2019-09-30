@@ -35,6 +35,7 @@ public class LibraryFragment extends TaBaseFragment {
         super.onCreate(savedInstanceState);
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.library.name()));
         viewModel = new LibraryViewModel(getActivity(), this, searchPageOpenedListener);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -66,5 +67,11 @@ public class LibraryFragment extends TaBaseFragment {
 //                e.printStackTrace();
 //            }
 //        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }
