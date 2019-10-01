@@ -87,6 +87,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         this.course = course;
         this.periodId = periodId;
         this.periodName.set(periodName);
+        emptyVisible.set(false);
         units = new ArrayList<>();
         selectedOriginal = new ArrayList<>();
         unselectedOriginal = new ArrayList<>();
@@ -390,9 +391,10 @@ public class AddUnitsViewModel extends BaseViewModel {
                             mActivity.hideLoading();
                             isUnitModePeriod = false;
                             unitsAdapter.setLoadingDone();
-                            toggleEmptyVisibility();
                             skip = 0;
                             fetchUnits();
+//                            toggleEmptyVisibility();
+
                         }
                     });
 
@@ -419,10 +421,10 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                         @Override
                         public void onFailure(Exception e) {
-                            mActivity.hideLoading();
                             allLoaded = true;
                             unitsAdapter.setLoadingDone();
                             toggleEmptyVisibility();
+                            mActivity.hideLoading();
                         }
                     });
         }

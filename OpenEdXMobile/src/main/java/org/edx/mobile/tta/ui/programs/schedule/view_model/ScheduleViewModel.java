@@ -92,7 +92,9 @@ public class ScheduleViewModel extends BaseViewModel {
         filters = new ArrayList<>();
         periodList = new ArrayList<>();
         tags = new ArrayList<>();
+        mActivity.showLoading();
 
+        emptyVisible.set(false);
         filtersAdapter = new FiltersAdapter(mActivity);
         periodAdapter = new PeriodAdapter(mActivity);
         take = TAKE;

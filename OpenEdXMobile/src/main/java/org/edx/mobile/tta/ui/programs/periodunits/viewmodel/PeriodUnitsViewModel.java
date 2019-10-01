@@ -81,7 +81,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     public PeriodUnitsViewModel(BaseVMActivity activity, long periodId, String periodName, EnrolledCoursesResponse course) {
         super(activity);
-
+        emptyVisible.set(false);
         this.course = course;
         this.periodId = periodId;
         this.periodName.set(periodName);

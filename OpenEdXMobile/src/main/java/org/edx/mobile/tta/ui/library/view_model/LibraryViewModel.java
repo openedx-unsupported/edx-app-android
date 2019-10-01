@@ -71,6 +71,7 @@ public class LibraryViewModel extends BaseViewModel {
     public LibraryViewModel(Context context, TaBaseFragment fragment, SearchPageOpenedListener searchPageOpenedListener) {
         super(context, fragment);
 
+        mActivity.showLoading();
         categories = new ArrayList<>();
         fragments = new ArrayList<>();
         titles = new ArrayList<>();
