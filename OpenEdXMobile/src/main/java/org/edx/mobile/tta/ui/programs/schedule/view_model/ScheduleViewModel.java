@@ -100,6 +100,8 @@ public class ScheduleViewModel extends BaseViewModel {
         allLoaded = false;
         changesMade = true;
 
+
+
         periodAdapter.setItems(periodList);
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()){
@@ -175,6 +177,7 @@ public class ScheduleViewModel extends BaseViewModel {
         super.onResume();
         gridLayoutManager = new GridLayoutManager(mActivity, 2);
         fetchData();
+
     }
 
     private void getFilters() {
@@ -397,6 +400,7 @@ public class ScheduleViewModel extends BaseViewModel {
                 }
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
+
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
                     if (prev != null && prev.getItem() != null) {
                         tags.remove((ProgramFilterTag) prev.getItem());
@@ -438,6 +442,12 @@ public class ScheduleViewModel extends BaseViewModel {
                         listener.onItemClick(v, model);
                     }
                 });
+
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
+                    scheduleBinding.txtCompleted.setVisibility(View.VISIBLE);
+                }else{
+                    scheduleBinding.txtCompleted.setVisibility(View.GONE);
+                }
 
                 scheduleBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){

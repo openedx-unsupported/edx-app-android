@@ -65,7 +65,7 @@
                     android:layout_marginEnd="@dimen/_70px"
                     android:fontFamily="@font/hind_regular"
                     android:gravity="center"
-                    android:text="@string/empty_list_message"
+                    android:text="No student is available"
                     android:textColor="@color/primary_cyan"
                     android:textSize="12sp" />
 
