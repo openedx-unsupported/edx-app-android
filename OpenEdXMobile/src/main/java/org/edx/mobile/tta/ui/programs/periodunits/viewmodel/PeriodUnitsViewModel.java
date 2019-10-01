@@ -26,7 +26,6 @@ import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ShowIn;
 import org.edx.mobile.tta.data.enums.UnitStatusType;
 import org.edx.mobile.tta.data.enums.UserRole;
-import org.edx.mobile.tta.data.local.db.table.Period;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
@@ -46,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import okhttp3.ResponseBody;
 
 public class PeriodUnitsViewModel extends BaseViewModel {
 
@@ -70,6 +70,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private int take, skip;
     private boolean allLoaded;
     private boolean changesMade;
+    private EnrolledCoursesResponse parentCourse;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -99,45 +100,81 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
 
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.tv_my_date:
                     showDatePicker(item);
                     break;
                 default:
                     mActivity.showLoading();
-                    mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
-                            new OnResponseCallback<CourseComponent>() {
-                                @Override
-                                public void onSuccess(CourseComponent data) {
-                                    mActivity.hideLoading();
+                    boolean ssp = units.contains(item);
+                    EnrolledCoursesResponse c;
+                    if (ssp) {
+                        c = course;
+                    } else {
+                        c = parentCourse;
+                    }
 
-                                    if (PeriodUnitsViewModel.this.course == null){
-                                        mActivity.showLongSnack("You're not enrolled in the program");
-                                        return;
+                    if (c == null) {
+
+                        String courseId;
+                        if (ssp) {
+                            courseId = mDataManager.getLoginPrefs().getProgramId();
+                        } else {
+                            courseId = mDataManager.getLoginPrefs().getParentId();
+                        }
+                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                            @Override
+                            public void onSuccess(ResponseBody responseBody) {
+
+                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                    @Override
+                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                        if (courseId != null) {
+                                            for (EnrolledCoursesResponse response : data) {
+                                                if (response.getCourse().getId().trim().toLowerCase()
+                                                        .equals(courseId.trim().toLowerCase())) {
+                                                    if (ssp) {
+                                                        PeriodUnitsViewModel.this.course = response;
+                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                    } else {
+                                                        PeriodUnitsViewModel.this.parentCourse = response;
+                                                    }
+                                                    getBlockComponent(item);
+                                                    break;
+                                                }
+                                            }
+                                            mActivity.hideLoading();
+                                        } else {
+                                            mActivity.hideLoading();
+                                        }
                                     }
 
-                                    if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                        mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
-                                                mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                                PeriodUnitsViewModel.this.course, data.getChildren().get(0).getId(),
-                                                null, false);
-                                    } else {
-                                        mActivity.showLongSnack("This unit is empty");
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        mActivity.hideLoading();
+                                        mActivity.showLongSnack("enroll org failure");
                                     }
-                                }
+                                });
+                            }
 
-                                @Override
-                                public void onFailure(Exception e) {
-                                    mActivity.hideLoading();
-                                    mActivity.showLongSnack(e.getLocalizedMessage());
-                                }
-                            });
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack("enroll failure");
+                            }
+                        });
+
+                    } else {
+                        getBlockComponent(item);
+                    }
+
+
             }
 
         });
 
         if (mDataManager.getLoginPrefs().getRole() != null &&
-                mDataManager.getLoginPrefs().getRole().equalsIgnoreCase(UserRole.Instructor.name())){
+                mDataManager.getLoginPrefs().getRole().equalsIgnoreCase(UserRole.Instructor.name())) {
             addUnitsVisible.set(true);
         } else {
             addUnitsVisible.set(false);
@@ -147,13 +184,45 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         fetchFilters();
     }
 
+    private void getBlockComponent(Unit unit) {
+
+        mDataManager.getBlockComponent(unit.getId(), mDataManager.getLoginPrefs().getProgramId(),
+                new OnResponseCallback<CourseComponent>() {
+                    @Override
+                    public void onSuccess(CourseComponent data) {
+                        mActivity.hideLoading();
+
+                        if (PeriodUnitsViewModel.this.course == null) {
+                            mActivity.showLongSnack("You're not enrolled in the program");
+                            return;
+                        }
+
+                        if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+                            mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
+                                    mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                    PeriodUnitsViewModel.this.course, data.getChildren().get(0).getId(),
+                                    null, false);
+                        } else {
+                            mActivity.showLongSnack("This unit is empty");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+                        mActivity.showLongSnack(e.getLocalizedMessage());
+                    }
+                });
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
     }
 
-    private void showDatePicker(Unit unit){
+    private void showDatePicker(Unit unit) {
         DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
@@ -189,44 +258,44 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.periodunits.name(),
                 new OnResponseCallback<List<ProgramFilter>>() {
-            @Override
-            public void onSuccess(List<ProgramFilter> data) {
+                    @Override
+                    public void onSuccess(List<ProgramFilter> data) {
 
-                for (ProgramFilter filter: data){
-                    if (filter.getInternalName().toLowerCase().contains("period")){
-                        for (ProgramFilterTag tag: filter.getTags()){
-                            if (tag.getId() == periodId){
-                                tags.add(tag);
+                        for (ProgramFilter filter : data) {
+                            if (filter.getInternalName().toLowerCase().contains("period")) {
+                                for (ProgramFilterTag tag : filter.getTags()) {
+                                    if (tag.getId() == periodId) {
+                                        tags.add(tag);
+                                        break;
+                                    }
+                                }
                                 break;
                             }
                         }
-                        break;
+
+                        if (!data.isEmpty()) {
+                            allFilters = data;
+                            filtersVisible.set(true);
+                            filtersAdapter.setItems(data);
+                        } else {
+                            filtersVisible.set(false);
+                        }
+
+                        fetchData();
                     }
-                }
 
-                if (!data.isEmpty()) {
-                    allFilters = data;
-                    filtersVisible.set(true);
-                    filtersAdapter.setItems(data);
-                } else {
-                    filtersVisible.set(false);
-                }
-
-                fetchData();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                filtersVisible.set(false);
-                fetchData();
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        filtersVisible.set(false);
+                        fetchData();
+                    }
+                });
 
     }
 
-    private void fetchData(){
+    private void fetchData() {
 
-        if (changesMade){
+        if (changesMade) {
             changesMade = false;
             skip = 0;
             unitsAdapter.reset(true);
@@ -237,22 +306,22 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     }
 
-    private void setUnitFilters(){
+    private void setUnitFilters() {
         filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()){
+        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
             return;
         }
 
-        for (ProgramFilter filter: allFilters){
+        for (ProgramFilter filter : allFilters) {
 
             List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag: filter.getTags()){
-                if (tags.contains(tag)){
+            for (ProgramFilterTag tag : filter.getTags()) {
+                if (tags.contains(tag)) {
                     selectedTags.add(tag);
                 }
             }
 
-            if (!selectedTags.isEmpty()){
+            if (!selectedTags.isEmpty()) {
                 ProgramFilter pf = new ProgramFilter();
                 pf.setDisplayName(filter.getDisplayName());
                 pf.setInternalName(filter.getInternalName());
@@ -269,8 +338,8 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),
-                periodId ,take, skip,
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
+                periodId, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -320,7 +389,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         }
     }
 
-    public void addUnits(){
+    public void addUnits() {
         Bundle parameters = new Bundle();
         parameters.putString(Constants.KEY_PERIOD_NAME, periodName.get());
         parameters.putLong(Constants.KEY_PERIOD_ID, periodId);
@@ -330,7 +399,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PeriodSavedEvent event) {
-        if (event.getPeriodId() != periodId){
+        if (event.getPeriodId() != periodId) {
             return;
         }
         changesMade = true;
@@ -382,12 +451,12 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-                    if (prev != null && prev.getItem() != null){
+                    if (prev != null && prev.getItem() != null) {
                         tags.remove((ProgramFilterTag) prev.getItem());
                     }
-                    if (item.getItem() != null){
+                    if (item.getItem() != null) {
                         ProgramFilterTag tag = (ProgramFilterTag) item.getItem();
-                        if (model.getInternalName().toLowerCase().contains("period")){
+                        if (model.getInternalName().toLowerCase().contains("period")) {
                             periodName.set(tag.getDisplayName());
                             periodId = tag.getId();
                         }
@@ -418,13 +487,13 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 unitBinding.unitCode.setText(model.getCode());
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
 
-                if (model.getMyDate() > 0){
+                if (model.getMyDate() > 0) {
                     unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                 } else {
                     unitBinding.tvMyDate.setText(R.string.proposed_date);
                 }
 
-                if (model.getStaffDate() > 0){
+                if (model.getStaffDate() > 0) {
                     unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
                     unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
                 } else {
@@ -432,7 +501,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 }
 
                 String role = mDataManager.getLoginPrefs().getRole();
-                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())){
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
                     if (model.getStaffDate() > 0) {
                         unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
                         unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
@@ -442,9 +511,9 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 }
 
                 if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                        !TextUtils.isEmpty(model.getStatus())){
+                        !TextUtils.isEmpty(model.getStatus())) {
                     try {
-                        switch (UnitStatusType.valueOf(model.getStatus())){
+                        switch (UnitStatusType.valueOf(model.getStatus())) {
                             case Completed:
                                 unitBinding.statusIcon.setImageDrawable(
                                         ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));

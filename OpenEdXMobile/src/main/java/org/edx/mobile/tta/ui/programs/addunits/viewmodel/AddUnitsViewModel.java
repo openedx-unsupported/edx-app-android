@@ -201,7 +201,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                             @Override
                             public void onFailure(Exception e) {
                                 mActivity.hideLoading();
-                                mActivity.showLongSnack("You're not enrolled in the program");
+                                mActivity.showLongSnack("enroll failure");
                             }
                         });
 
