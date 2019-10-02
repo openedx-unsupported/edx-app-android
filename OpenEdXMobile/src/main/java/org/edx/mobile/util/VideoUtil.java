@@ -5,8 +5,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
+import org.edx.mobile.model.download.NativeDownloadModel;
+import org.edx.mobile.module.db.IDatabase;
 
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_MP4;
@@ -88,5 +91,23 @@ public class VideoUtil {
             }
         }
         return preferredVideoUrl;
+    }
+
+    /**
+     * Utility method to update the downloaded video file info and status in database.
+     *
+     * @param db
+     * @param videoModel    Video info need to update in database.
+     * @param downloadState New file status(DOWNLOADED / ONLINE).
+     */
+    public static void updateVideoDownloadState(IDatabase db, VideoModel videoModel,
+                                                int downloadState) {
+        final NativeDownloadModel dm = new NativeDownloadModel();
+        dm.dmid = videoModel.getDmId();
+        dm.filepath = videoModel.getFilePath();
+        dm.size = videoModel.getSize();
+        dm.downloaded = downloadState;
+        videoModel.setDownloadInfo(dm);
+        db.updateDownloadingVideoInfoByVideoId(videoModel, null);
     }
 }
