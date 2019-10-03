@@ -4,9 +4,6 @@ set -e
 
 cd $TEST_PROJECT_REPO_NAME
 
-# copy requirements file 
-cp tests/requirements.txt ./
-
 # prepare wheel house 
 pip wheel --wheel-dir wheelhouse -r requirements.txt
 
