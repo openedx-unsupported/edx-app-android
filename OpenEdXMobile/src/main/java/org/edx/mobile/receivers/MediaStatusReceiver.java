@@ -11,13 +11,13 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.Sha1Util;
+import org.edx.mobile.util.VideoUtil;
 
 import java.io.File;
 import java.util.List;
@@ -78,7 +78,7 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
             public void onResult(List<VideoModel> result) {
                 for (VideoModel videoModel : result) {
                     if (videoModel.getFilePath() != null && videoModel.getFilePath().contains(sdCardPath)) {
-                        updateVideoDownloadState(
+                        VideoUtil.updateVideoDownloadState(db,
                                 videoModel,
                                 DownloadEntry.DownloadedState.ONLINE.ordinal()
                         );
@@ -162,7 +162,7 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
                 }
             }
 
-            updateVideoDownloadState(
+            VideoUtil.updateVideoDownloadState(db,
                     videoModel,
                     DownloadEntry.DownloadedState.DOWNLOADED.ordinal()
             );
@@ -204,22 +204,5 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
             downloadedFile = new File(videoPath.replace(removableStorageAppDir, externalAppDir));
         }
         return downloadedFile;
-    }
-
-    /**
-     * Utility method to update the downloaded video file info and status in database.
-     *
-     * @param videoModel    Video info need to update in database.
-     * @param downloadState New file status(DOWNLOADED / ONLINE).
-     */
-    public void updateVideoDownloadState(VideoModel videoModel,
-                                         int downloadState) {
-        final NativeDownloadModel dm = new NativeDownloadModel();
-        dm.dmid = videoModel.getDmId();
-        dm.filepath = videoModel.getFilePath();
-        dm.size = videoModel.getSize();
-        dm.downloaded = downloadState;
-        videoModel.setDownloadInfo(dm);
-        db.updateDownloadingVideoInfoByVideoId(videoModel, null);
     }
 }
