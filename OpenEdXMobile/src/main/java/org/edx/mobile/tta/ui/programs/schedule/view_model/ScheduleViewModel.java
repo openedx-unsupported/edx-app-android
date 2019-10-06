@@ -57,6 +57,7 @@ public class ScheduleViewModel extends BaseViewModel {
     private List<Period> periodList;
     private List<ProgramFilterTag> tags;
     private List<DropDownFilterView.FilterItem> langTags;
+    private List<DropDownFilterView.FilterItem> sessionTags;
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
@@ -178,12 +179,14 @@ public class ScheduleViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         gridLayoutManager = new GridLayoutManager(mActivity, 2);
-        fetchData();
+//        fetchData();
 
     }
 
     private void getFilters() {
         langTags = new ArrayList<>();
+        sessionTags = new ArrayList<>();
+
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.schedule.name(),
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -207,8 +210,11 @@ public class ScheduleViewModel extends BaseViewModel {
                                     for (ProgramFilterTag tag : filter.getTags()) {
                                         langTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
                                                 false, R.color.white, R.drawable.t_background_tag_filled));
+
+
                                     }
                                 }
+
                             }
 
                             if (langTags.isEmpty()) {
@@ -221,10 +227,35 @@ public class ScheduleViewModel extends BaseViewModel {
                         }
                     }
 
+                    for (ProgramFilter filter : data) {
+                        sessionTags.clear();
+                        if (filter.getInternalName().toLowerCase().contains("session_id")) {
+                            sessionTags.clear();
+                            sessionTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
+                                    true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
+
+                            for (ProgramFilterTag tag : filter.getTags()) {
+                                sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                        false, R.color.white, R.drawable.t_background_tag_filled));
+
+                                if (tag.getSelected()){
+                                    tags.clear();
+                                    tags.add(tag);
+                                    changesMade = true;
+                                    allLoaded = false;
+                                    fetchData();
+                                }
+                            }
+                        }
+
+                    }
+
                 } else {
                     filtersVisible.set(false);
                     fabVisible.set(false);
                 }
+
+//                fetchData();
 
             }
 
@@ -232,6 +263,7 @@ public class ScheduleViewModel extends BaseViewModel {
             public void onFailure(Exception e) {
                 filtersVisible.set(false);
                 fabVisible.set(false);
+                fetchData();
             }
         });
 
@@ -392,16 +424,21 @@ public class ScheduleViewModel extends BaseViewModel {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
+                String selectedTag="";
                 items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
                         true, R.color.primary_cyan, R.drawable.t_background_tag_hollow
                 ));
                 for (ProgramFilterTag tag : model.getTags()) {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            false, R.color.white, R.drawable.t_background_tag_filled
+                            tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
+                    if (tag.getSelected()){
+                        selectedTag = tag.getDisplayName();
+//                        changesMade = true;
+//                        fetchData();
+                    }
                 }
                 dropDownBinding.filterDropDown.setFilterItems(items);
-
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
                     if (prev != null && prev.getItem() != null) {
@@ -416,7 +453,6 @@ public class ScheduleViewModel extends BaseViewModel {
                     mActivity.showLoading();
                     fetchData();
                 });
-
 
             }
         }

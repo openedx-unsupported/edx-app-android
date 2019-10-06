@@ -13,6 +13,7 @@ import org.edx.mobile.tta.data.local.db.table.Category;
 import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.event.CourseEnrolledEvent;
+import org.edx.mobile.tta.event.program.ShowStudentUnitsEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.programs.curricullam.CurricullamFragment;
 import org.edx.mobile.tta.ui.programs.discussion.DiscussionFragment;
@@ -46,6 +47,7 @@ public class LibraryViewModel extends BaseViewModel {
     private EnrolledCoursesResponse course;
 
     public ObservableInt initialPosition = new ObservableInt();
+    public ObservableInt tabPosition = new ObservableInt();
 
     public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -56,6 +58,7 @@ public class LibraryViewModel extends BaseViewModel {
         @Override
         public void onPageSelected(int i) {
             initialPosition.set(i);
+            tabPosition.set(i);
             PageViewStateCallback callback = (PageViewStateCallback) fragments.get(i);
             if (callback != null){
                 callback.onPageShow();
@@ -213,6 +216,11 @@ public class LibraryViewModel extends BaseViewModel {
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseEnrolledEvent event) {
         this.course = event.getCourse();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ShowStudentUnitsEvent event) {
+        tabPosition.set(1);
     }
 
     public void registerEventBus() {

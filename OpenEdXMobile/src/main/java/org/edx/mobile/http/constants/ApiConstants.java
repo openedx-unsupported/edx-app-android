@@ -169,6 +169,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_UNITS = "mx_humana_lms/api/v1/getUnits";
 
+    public static final String URL_MX_GET_USER_UNITS = "mx_humana_lms/api/v1/getUserStatus";
+
     public static final String URL_MX_GET_ALL_UNITS = "mx_humana_lms/api/v1/getAllUnits";
 
     public static final String URL_MX_GET_USERS = "mx_humana_lms/api/v1/getUsers";

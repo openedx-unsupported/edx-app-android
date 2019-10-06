@@ -168,6 +168,7 @@ import org.edx.mobile.tta.task.program.GetProgramFiltersTask;
 import org.edx.mobile.tta.task.program.GetProgramsTask;
 import org.edx.mobile.tta.task.program.GetSectionsTask;
 import org.edx.mobile.tta.task.program.GetUnitsTask;
+import org.edx.mobile.tta.task.program.GetUserStatusTask;
 import org.edx.mobile.tta.task.program.GetUsersTask;
 import org.edx.mobile.tta.task.program.RejectUnitTask;
 import org.edx.mobile.tta.task.program.SavePeriodTask;
@@ -3696,11 +3697,51 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
+                         String student_username,
                          String role, long periodId, int take, int skip, OnResponseCallback<List<Unit>> callback){
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip){
+            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip,student_username){
+                @Override
+                protected void onSuccess(List<Unit> units) throws Exception {
+                    super.onSuccess(units);
+                    if (units == null || units.isEmpty()){
+                        callback.onFailure(new TaException("No units are available"));
+                        return;
+                    }
+
+                    for (Unit unit: units){
+                        unit.setProgramId(programId);
+                        unit.setSectionId(sectionId);
+                    }
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            mLocalDataSource.insertUnits(units);
+                        }
+                    }.start();
+
+                    callback.onSuccess(units);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+    public void getUserStatus(List<ProgramFilter> filters, String programId, String sectionId,
+                              String role, String studentName, int take, int skip, OnResponseCallback<List<Unit>> callback){
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetUserStatusTask(context, filters, programId, sectionId, role, studentName, take, skip){
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);

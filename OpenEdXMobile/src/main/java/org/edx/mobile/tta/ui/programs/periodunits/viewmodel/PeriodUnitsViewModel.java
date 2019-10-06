@@ -338,7 +338,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
+                mDataManager.getLoginPrefs().getSectionId(),"", mDataManager.getLoginPrefs().getRole(),
                 periodId, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override

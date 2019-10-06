@@ -212,6 +212,9 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_GET_UNITS)
     Call<List<Unit>> getUnits(@Body Map<String, Object> parameters);
 
+    @POST(ApiConstants.URL_MX_GET_USER_UNITS)
+    Call<List<Unit>> getUserUnits(@Body Map<String, Object> parameters);
+
     @POST(ApiConstants.URL_MX_GET_ALL_UNITS)
     Call<List<Unit>> getAllUnits(@Body Map<String, Object> parameters);
 

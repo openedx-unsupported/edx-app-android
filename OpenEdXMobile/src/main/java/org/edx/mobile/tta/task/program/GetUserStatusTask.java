@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.tta.data.local.db.table.Unit;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
@@ -12,32 +11,30 @@ import org.edx.mobile.tta.data.remote.api.TaAPI;
 
 import java.util.List;
 
-public class GetUnitsTask extends Task<List<Unit>> {
+public class GetUserStatusTask extends Task<List<Unit>> {
 
     private List<ProgramFilter> filters;
-    private String programId, sectionId, role,student_username;
+    private String programId, sectionId, role, studentName;
     private int take, skip;
-    private long period_id;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetUnitsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId,
-                        String role,long period_id, int take, int skip, String student_username) {
+    public GetUserStatusTask(Context context, List<ProgramFilter> filters, String programId, String sectionId,
+                        String role, String studentName, int take, int skip) {
         super(context);
         this.filters = filters;
         this.programId = programId;
         this.sectionId = sectionId;
-        this.period_id = period_id;
+        this.studentName = studentName;
         this.role = role;
         this.take = take;
         this.skip = skip;
-        this.student_username = student_username;
     }
 
     @Override
     public List<Unit> call() throws Exception {
-        return taAPI.getUnits(filters, programId, sectionId, role,student_username,period_id, take, skip).execute().body();
+        return taAPI.getUserUnits(filters, programId, sectionId, role,studentName, take, skip).execute().body();
     }
 
 }

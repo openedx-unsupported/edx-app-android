@@ -17,6 +17,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
 import org.edx.mobile.databinding.TRowUnitBinding;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
@@ -32,6 +33,7 @@ import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -257,6 +259,15 @@ public class AddUnitsViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
+        onEventMainThread(new NetworkConnectivityChangeEvent());
+    }
+
+    public void onEventMainThread(NetworkConnectivityChangeEvent event) {
+        if (NetworkUtil.isConnected(mActivity)) {
+
+        } else {
+            mActivity.showIndefiniteSnack("You are offline");
+        }
     }
 
     private void showDatePicker(Unit unit){
@@ -359,7 +370,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         if (isUnitModePeriod) {
 
             mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                    mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),
+                    mDataManager.getLoginPrefs().getSectionId(),"",mDataManager.getLoginPrefs().getRole(),
                     periodId ,take, skip,
                     new OnResponseCallback<List<Unit>>() {
                         @Override

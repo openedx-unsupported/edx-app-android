@@ -19,6 +19,7 @@ public class StudentsFragment extends TaBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new StudentsViewModel(getActivity(), this);
+        viewModel.registerEventBus();
     }
 
     @Nullable
@@ -27,5 +28,11 @@ public class StudentsFragment extends TaBaseFragment {
         View rootView = binding(inflater, container, R.layout.t_fragment_students, viewModel).getRoot();
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.unRegisterEventBus();
     }
 }

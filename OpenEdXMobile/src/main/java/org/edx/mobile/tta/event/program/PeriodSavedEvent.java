@@ -1,6 +1,5 @@
 package org.edx.mobile.tta.event.program;
 
-import org.edx.mobile.tta.data.local.db.table.Period;
 
 public class PeriodSavedEvent {
 

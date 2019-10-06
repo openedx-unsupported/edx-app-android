@@ -70,6 +70,8 @@ public class Constants {
     public static final String KEY_PROPOSED_DATE = "proposed_date";
     public static final String KEY_PROPOSED_DATE_MODIFIED = "proposed_date_modified";
     public static final String KEY_PROPOSED_DATE_ADDED = "proposed_date_added";
+    public static final String KEY_STUDENT_NAME = "student_name";
+    public static final String KEY_STUDENT_USERNAME = "student_username";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

@@ -3,6 +3,7 @@ package org.edx.mobile.tta.ui.programs.students.view_model;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,17 +20,25 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.TRowFilterDropDownBinding;
 import org.edx.mobile.databinding.TRowStudentsGridBinding;
 import org.edx.mobile.tta.data.enums.ShowIn;
+import org.edx.mobile.tta.data.enums.UserRole;
+import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.data.model.program.ProgramUser;
 import org.edx.mobile.tta.event.program.PeriodSavedEvent;
+import org.edx.mobile.tta.event.program.ShowStudentUnitsEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
+import org.edx.mobile.tta.ui.programs.userStatus.UserStatusActivity;
+import org.edx.mobile.tta.utils.ActivityUtil;
+import org.edx.mobile.view.Router;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class StudentsViewModel extends BaseViewModel {
 
@@ -60,9 +69,11 @@ public class StudentsViewModel extends BaseViewModel {
         usersAdapter = new UsersAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
         users = new ArrayList<>();
+        filters = new ArrayList<>();
         usersAdapter.setItems(users);
         usersAdapter.setItemClickListener((view, item) -> {
-            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+//            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+
         });
 
         take = TAKE;
@@ -77,6 +88,8 @@ public class StudentsViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new GridLayoutManager(mActivity, 2);
+        changesMade = true;
+//        fetchData();
     }
 
 
@@ -119,7 +132,7 @@ public class StudentsViewModel extends BaseViewModel {
         if (changesMade) {
             skip = 0;
             usersAdapter.reset(true);
-            setFilters();
+//            setFilters();
         }
 
         getUsers();
@@ -127,7 +140,10 @@ public class StudentsViewModel extends BaseViewModel {
     }
 
     private void setFilters() {
+        filters = new ArrayList<>();
+
         filters.clear();
+
         if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
             return;
         }
@@ -242,6 +258,29 @@ public class StudentsViewModel extends BaseViewModel {
                     itemBinding.llStatus.setVisibility(View.GONE);
                 }
 
+                itemBinding.txtCompleted.setOnClickListener(v -> {
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, model.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+
+//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
+                    }else {
+                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
+                    }
+                });
+                itemBinding.txtPending.setOnClickListener(v -> {
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, model.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+
+//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
+                    }else {
+                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
+                    }
+                });
+
                 itemBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);
@@ -288,6 +327,24 @@ public class StudentsViewModel extends BaseViewModel {
                     getUsers();
                 });
             }
+        }
+    }
+
+    public void registerEventBus() {
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus() {
+        EventBus.getDefault().unregister(this);
+    }
+    public void onEventMainThread(ProgramUser event) {
+        ProgramUser period = new ProgramUser();
+
+        int position = usersAdapter.getItemPosition(period);
+        if (position >= 0) {
+            ProgramUser p = users.get(position);
+            p.pendingCount = period.pendingCount + event.pendingCount;
+            usersAdapter.notifyItemChanged(position);
         }
     }
 }

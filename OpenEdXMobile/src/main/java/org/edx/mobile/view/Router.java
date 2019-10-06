@@ -56,6 +56,7 @@ public class Router {
     public static final String EXTRA_IS_VIDEOS_MODE = "videos_mode";
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
     public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
+    public static final String EXTRA_USERNAME = "username";
 
     @Inject
     Config config;

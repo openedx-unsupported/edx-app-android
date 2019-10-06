@@ -281,7 +281,7 @@ public class TaAPI {
     }
 
     public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId,String role,
-                                     long period_id, int take, int skip){
+                                     String student_username, long period_id, int take, int skip){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);
@@ -290,8 +290,23 @@ public class TaAPI {
         parameters.put(Constants.KEY_FILTERS, filters);
         parameters.put(Constants.KEY_ROLE, role);
         parameters.put(Constants.KEY_PERIOD_ID, period_id);
+        parameters.put(Constants.KEY_STUDENT_USERNAME, student_username);
 
         return taService.getUnits(parameters);
+    }
+
+    public Call<List<Unit>> getUserUnits(List<ProgramFilter> filters, String programId, String sectionId,String role,
+                                     String studentName, int take, int skip){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_TAKE, take);
+        parameters.put(Constants.KEY_SKIP, skip);
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_FILTERS, filters);
+        parameters.put(Constants.KEY_ROLE, role);
+        parameters.put(Constants.KEY_STUDENT_USERNAME, studentName);
+
+        return taService.getUserUnits(parameters);
     }
 
     public Call<List<Unit>> getAllUnits(List<ProgramFilter> filters, String programId, String sectionId, String searchText, long periodId, int take, int skip){

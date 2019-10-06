@@ -12,6 +12,11 @@ public class ProgramFilterTag implements Comparable<ProgramFilterTag> {
     @SerializedName("internal_name")
     private String internalName;
 
+
+
+    @SerializedName("isSelected")
+    private Boolean isSelected;
+
     private long order;
 
     public long getId() {
@@ -49,5 +54,13 @@ public class ProgramFilterTag implements Comparable<ProgramFilterTag> {
     @Override
     public int compareTo(ProgramFilterTag o) {
         return Long.compare(order, o.order);
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
     }
 }
