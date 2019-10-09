@@ -3697,8 +3697,7 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
-                         String student_username,
-                         String role, long periodId, int take, int skip, OnResponseCallback<List<Unit>> callback){
+                         String role,String student_username, long periodId, int take, int skip, OnResponseCallback<List<Unit>> callback){
 
         if (NetworkUtil.isConnected(context)) {
 

@@ -5,6 +5,7 @@ public enum ShowIn {
     schedule,
     units,
     addunits,
-    periodunits
+    periodunits,
+    student_status
 
 }

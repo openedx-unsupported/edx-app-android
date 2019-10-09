@@ -85,12 +85,12 @@
     <color name="primary_white">#FFFFFF</color>
 
     <color name="secondary_blue_light">#86D2F2</color>
-    <color name="secondary_red">#E26A6A</color>
+    <color name="secondary_red">#EC8787</color>
     <color name="secondary_blue">#8083E0</color>
     <color name="secondary_grey_light">#E0E0E0</color>
     <color name="secondary_pink">#F75791</color>
-    <color name="secondary_green">#2FD233</color>
-    <color name="secondary_yellow">#FFDB03</color>
+    <color name="secondary_green">#99EB9E</color>
+    <color name="secondary_yellow">#F8E56B</color>
     <color name="pending">#FFEE6A</color>
 
     <color name="gray_1">#D2DADF</color>

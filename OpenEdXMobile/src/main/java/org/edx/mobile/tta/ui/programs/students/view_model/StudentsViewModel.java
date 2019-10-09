@@ -72,7 +72,7 @@ public class StudentsViewModel extends BaseViewModel {
         filters = new ArrayList<>();
         usersAdapter.setItems(users);
         usersAdapter.setItemClickListener((view, item) -> {
-//            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
 
         });
 

@@ -30,11 +30,11 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
@@ -45,10 +45,11 @@
         finite_recycler_adapter="@{viewModel.filtersAdapter}"
         android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_weight="0.5"
-        android:layout_marginRight="@dimen/_10px"
+        android:layout_marginLeft="@dimen/_8px"
+        android:layout_marginBottom="5dp"
         android:id="@+id/ll_student_name"
         android:gravity="center"
         android:visibility="@{viewModel.studentVisible?View.VISIBLE:View.GONE}"
@@ -71,13 +72,13 @@
             />
 
         <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:srcCompat="@drawable/ic_close_black_24dp"-->
-            <!--android:tint="@color/black"-->
-            <!--android:padding="@dimen/_10px"-->
-            <!--android:onClick="@{()->viewModel.getAllUnits()}"-->
-            <!--/>-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:srcCompat="@drawable/ic_close_black_24dp"-->
+        <!--android:tint="@color/black"-->
+        <!--android:padding="@dimen/_10px"-->
+        <!--android:onClick="@{()->viewModel.getAllUnits()}"-->
+        <!--/>-->
 
     </LinearLayout>
 

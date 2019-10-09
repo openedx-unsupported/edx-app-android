@@ -24,6 +24,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
 import org.edx.mobile.tta.data.enums.ShowIn;
 import org.edx.mobile.tta.data.local.db.table.Unit;
+import org.edx.mobile.tta.data.model.SuccessResponse;
 import org.edx.mobile.tta.data.model.program.ProgramFilter;
 import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
 import org.edx.mobile.tta.event.CourseEnrolledEvent;
@@ -32,6 +33,8 @@ import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.edx.mobile.tta.ui.custom.DropDownFilterView;
+import org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
+import org.edx.mobile.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +55,7 @@ public class UserStatusViewModel extends BaseViewModel {
     public ObservableBoolean studentVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableField<String> name = new ObservableField<>();
+    private List<DropDownFilterView.FilterItem> statusTags;
 
     private EnrolledCoursesResponse course;
     private String studentName;
@@ -85,13 +89,13 @@ public class UserStatusViewModel extends BaseViewModel {
         skip = DEFAULT_SKIP;
         allLoaded = false;
         changesMade = true;
-        studentVisible.set(true);
+
 
         unitsAdapter = new UserStatusAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
 
         unitsAdapter.setItems(units);
-      /*  unitsAdapter.setItemClickListener((view, item) -> {
+        unitsAdapter.setItemClickListener((view, item) -> {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
@@ -161,7 +165,7 @@ public class UserStatusViewModel extends BaseViewModel {
                     } else {
                         getBlockComponent(item);
                     }
-                   *//* mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
+                   /* mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
                             new OnResponseCallback<ResponseBody>() {
                                 @Override
                                 public void onSuccess(ResponseBody responseBody) {
@@ -200,17 +204,47 @@ public class UserStatusViewModel extends BaseViewModel {
                                     mActivity.showLongSnack("error during unit enroll");
                                 }
                             });
-*//*
+*/
             }
 
-        });*/
+        });
 
         mActivity.showLoading();
         fetchFilters();
-        fetchData();
     }
 
+    private void showDatePicker(Unit unit) {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+            @Override
+            public void onSuccess(Long data) {
+                mActivity.showLoading();
+                mDataManager.setProposedDate(mDataManager.getLoginPrefs().getProgramId(),
+                        mDataManager.getLoginPrefs().getSectionId(), data, unit.getPeriodId(), unit.getId(),
+                        new OnResponseCallback<SuccessResponse>() {
+                            @Override
+                            public void onSuccess(SuccessResponse response) {
+                                mActivity.hideLoading();
+                                unit.setMyDate(data);
+                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                                if (response.getSuccess()) {
+                                    mActivity.showLongSnack("Proposed date set successfully");
+                                }
+                            }
 
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
     private void getBlockComponent(Unit unit) {
 
         mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
@@ -263,7 +297,58 @@ public class UserStatusViewModel extends BaseViewModel {
 
 
     private void fetchFilters() {
+        statusTags = new ArrayList<>();
+        mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.student_status.name(),
+                new OnResponseCallback<List<ProgramFilter>>() {
+                    @Override
+                    public void onSuccess(List<ProgramFilter> data) {
+                        if (!data.isEmpty()) {
+                            allFilters = data;
+                            filtersVisible.set(true);
+                            filtersAdapter.setItems(data);
+                            if (!studentName.equals("")){
+                                studentVisible.set(true);
+                            }else {
+                                studentVisible.set(false);
+                            }
+                        } else {
+                            filtersVisible.set(false);
+                        }
+                        for (ProgramFilter filter : data) {
+                            units.clear();
+                            if (filter.getInternalName().toLowerCase().contains("status")) {
+                                statusTags.clear();
+                                statusTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
+                                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
 
+                                for (ProgramFilterTag tag : filter.getTags()) {
+                                    statusTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                            false, R.color.white, R.drawable.t_background_tag_filled));
+
+                                    if (tag.getSelected()){
+                                        tags.clear();
+                                        tags.add(tag);
+                                        changesMade = true;
+                                        allLoaded = false;
+                                        fetchData();
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        filtersVisible.set(false);
+                    }
+                });
+
+    }
+    private void fetchUnitFilters() {
+        allFilters.clear();
+        filtersAdapter.clear();
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -330,8 +415,8 @@ public class UserStatusViewModel extends BaseViewModel {
 
     private void fetchUnits() {
 
-        mDataManager.getUserStatus(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), studentName, take, skip,
+        mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), studentName,0, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -431,7 +516,7 @@ public class UserStatusViewModel extends BaseViewModel {
                 ));
                 for (ProgramFilterTag tag : model.getTags()) {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            false, R.color.white, R.drawable.t_background_tag_filled
+                            tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
                 }
                 dropDownBinding.filterDropDown.setFilterItems(items);
@@ -449,6 +534,8 @@ public class UserStatusViewModel extends BaseViewModel {
                     mActivity.showLoading();
                     fetchData();
                 });
+                fetchData();
+
             }
         }
     }
@@ -466,18 +553,44 @@ public class UserStatusViewModel extends BaseViewModel {
 
                 unitBinding.unitCode.setText(model.getCode());
                 unitBinding.unitTitle.setText(model.getTitle());
-
-
-                if (model.getStatus().equals("submitted")) {
-                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
-                } else if (model.getStatus().equals("approved")) {
-                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
-                } else if (model.getStatus().equals("returned")) {
-                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
-                }else {
-                    unitBinding.statusIcon.setVisibility(View.GONE);
+//                unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+//                unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                if (model.getMyDate() > 0) {
+                    unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                } else {
+                    unitBinding.tvMyDate.setText(R.string.proposed_date);
+                }
+                if (model.getStaffDate() > 0) {
+                    unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                } else {
+                    unitBinding.tvStaffDate.setVisibility(View.GONE);
                 }
 
+//                if (model.getStatus().equals("Submitted")) {
+//                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+//                } else if (model.getStatus().equals("Approved")) {
+//                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+//                } else if (model.getStatus().equals("Returned")) {
+//                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+//                }else {
+//                    unitBinding.statusIcon.setVisibility(View.GONE);
+//                }
+                if (model.getStatus().equals("Submitted")) {
+                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                } else if (model.getStatus().equals("Approved")) {
+                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                } else if (model.getStatus().equals("Return")) {
+                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                }else if (model.getStatus().equals("")){
+                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+                }else if (model.getStatus().equals("None")){
+                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+                }
+                unitBinding.tvMyDate.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
                 unitBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
@@ -489,28 +602,34 @@ public class UserStatusViewModel extends BaseViewModel {
 
     public void getAllUnits() {
         mActivity.showLoading();
-        mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), "",mDataManager.getLoginPrefs().getRole(), 0L, take, skip,
-                new OnResponseCallback<List<Unit>>() {
-                    @Override
-                    public void onSuccess(List<Unit> data) {
-                        mActivity.hideLoading();
-                        if (data.size() < take) {
-                            allLoaded = true;
-                        }
-                        populateUnits(data);
-                        unitsAdapter.setLoadingDone();
-                        studentVisible.set(false);
-                        mActivity.hideLoading();
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        allLoaded = true;
-                        unitsAdapter.setLoadingDone();
-                        toggleEmptyVisibility();
-                    }
-                });
+        changesMade = true;
+        studentName = "";
+        studentVisible.set(false);
+        fetchData();
+        fetchUnitFilters();
+//        mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
+//                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),"", 0L, take, skip,
+//                new OnResponseCallback<List<Unit>>() {
+//                    @Override
+//                    public void onSuccess(List<Unit> data) {
+//                        mActivity.hideLoading();
+//                        if (data.size() < take) {
+//                            allLoaded = true;
+//                        }
+//                        populateUnits(data);
+//                        unitsAdapter.setLoadingDone();
+//                        studentVisible.set(false);
+//                        mActivity.hideLoading();
+//                        fetchUnitFilters();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Exception e) {
+//                        mActivity.hideLoading();
+//                        allLoaded = true;
+//                        unitsAdapter.setLoadingDone();
+//                        toggleEmptyVisibility();
+//                    }
+//                });
     }
 }
