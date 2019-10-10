@@ -225,7 +225,9 @@ public class UserStatusViewModel extends BaseViewModel {
                             public void onSuccess(SuccessResponse response) {
                                 mActivity.hideLoading();
                                 unit.setMyDate(data);
-                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                                changesMade = true;
+                                fetchData();
+//                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
                                 if (response.getSuccess()) {
                                     mActivity.showLongSnack("Proposed date set successfully");
                                 }
@@ -553,38 +555,37 @@ public class UserStatusViewModel extends BaseViewModel {
 
                 unitBinding.unitCode.setText(model.getCode());
                 unitBinding.unitTitle.setText(model.getTitle());
-//                unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-//                unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                if (model.getMyDate() > 0) {
-                    unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+
+                if (model.getStaffDate() > 0) {
+                    unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
                 } else {
                     unitBinding.tvMyDate.setText(R.string.proposed_date);
+
+
                 }
-                if (model.getStaffDate() > 0) {
+                if (model.getMyDate() > 0) {
                     unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                 } else {
                     unitBinding.tvStaffDate.setVisibility(View.GONE);
                 }
 
-//                if (model.getStatus().equals("Submitted")) {
-//                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
-//                } else if (model.getStatus().equals("Approved")) {
-//                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
-//                } else if (model.getStatus().equals("Returned")) {
-//                    unitBinding.statusIcon.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
-//                }else {
-//                    unitBinding.statusIcon.setVisibility(View.GONE);
-//                }
-                if (model.getStatus().equals("Submitted")) {
-                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
-                } else if (model.getStatus().equals("Approved")) {
-                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
-                } else if (model.getStatus().equals("Return")) {
-                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
-                }else if (model.getStatus().equals("")){
-                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
-                }else if (model.getStatus().equals("None")){
-                    unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+
+                switch (model.getStatus()) {
+                    case "Submitted":
+                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                        break;
+                    case "Approved":
+                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                        break;
+                    case "Return":
+                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                        break;
+                    case "":
+                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+                        break;
+                    case "None":
+                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+                        break;
                 }
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {

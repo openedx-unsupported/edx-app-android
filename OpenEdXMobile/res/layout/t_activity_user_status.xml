@@ -52,6 +52,11 @@
         android:layout_marginBottom="5dp"
         android:id="@+id/ll_student_name"
         android:gravity="center"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/rounded_rectange"
         android:visibility="@{viewModel.studentVisible?View.VISIBLE:View.GONE}"
         android:orientation="horizontal">
 
@@ -59,26 +64,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{viewModel.name}"
-            android:textColor="@color/black"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:background="@drawable/rounded_rectange"
+            android:textColor="@color/colorAccent"
             android:gravity="start|center_vertical"
-            android:fontFamily="@font/hind_light"
-            android:drawableRight="@drawable/ic_close_black_24dp"
+            android:fontFamily="@font/hind_semibold"
             android:onClick="@{()->viewModel.getAllUnits()}"
             />
 
-        <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:srcCompat="@drawable/ic_close_black_24dp"-->
-        <!--android:tint="@color/black"-->
-        <!--android:padding="@dimen/_10px"-->
-        <!--android:onClick="@{()->viewModel.getAllUnits()}"-->
-        <!--/>-->
+        <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_close_black_24dp"
+        android:tint="@color/colorAccent"
+        android:onClick="@{()->viewModel.getAllUnits()}"
+        />
 
     </LinearLayout>
 
