@@ -22,9 +22,9 @@
 
             <ImageView
                 android:id="@+id/iv_edx_logo"
-                android:layout_width="@dimen/logo_width"
-                android:layout_height="@dimen/logo_height"
-                android:layout_marginTop="@dimen/logo_top_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp"
                 android:contentDescription="@string/phonetic_app_name"
                 android:src="@drawable/launch_screen_logo" />
 

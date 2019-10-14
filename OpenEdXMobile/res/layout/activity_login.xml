@@ -41,7 +41,8 @@
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         android:scaleType="fitXY"
-                        android:src="@drawable/login_screen_image" />
+                        android:src="@drawable/login_screen_image"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/login_logo"
