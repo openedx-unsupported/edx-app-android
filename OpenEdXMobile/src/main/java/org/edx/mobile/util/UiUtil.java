@@ -152,7 +152,7 @@ public class UiUtil {
             final Fragment fragment = fragmentManager.findFragmentByTag(tag);
             if (fragment != null) {
                 fragmentManager.beginTransaction().remove(fragment)
-                        .commit();
+                        .commitAllowingStateLoss();
             }
         }
     }
