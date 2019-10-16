@@ -783,10 +783,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void updateBulkDownloadFragment() {
-        final Fragment bulkDownloadFragment = getChildFragmentManager()
-                .findFragmentByTag("bulk_download");
-        if (bulkDownloadFragment instanceof BulkDownloadFragment) {
-            ((BulkDownloadFragment) bulkDownloadFragment).updateVideoStatus();
+        if (isAdded()) {
+            final Fragment bulkDownloadFragment = getChildFragmentManager()
+                    .findFragmentByTag("bulk_download");
+            if (bulkDownloadFragment instanceof BulkDownloadFragment) {
+                ((BulkDownloadFragment) bulkDownloadFragment).updateVideoStatus();
+            }
         }
     }
 
