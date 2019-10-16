@@ -60,7 +60,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="@dimen/_20px"
                 android:fontFamily="@font/hind_medium"
-                android:text="@{unit.title}"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/status_icon"

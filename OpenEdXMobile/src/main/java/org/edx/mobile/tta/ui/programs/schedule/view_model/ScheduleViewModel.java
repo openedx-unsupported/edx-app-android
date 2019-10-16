@@ -470,11 +470,11 @@ public class ScheduleViewModel extends BaseViewModel {
             if (binding instanceof TRowScheduleBinding) {
                 TRowScheduleBinding scheduleBinding = (TRowScheduleBinding) binding;
                 scheduleBinding.setPeriod(model);
-                if (mDataManager.getLoginPrefs().getRole() != null) {
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                        scheduleBinding.textviewAdd.setVisibility(View.GONE);
-                    } else scheduleBinding.textviewAdd.setVisibility(View.VISIBLE);
-                }
+//                if (mDataManager.getLoginPrefs().getRole() != null) {
+//                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+//                        scheduleBinding.textviewAdd.setVisibility(View.GONE);
+//                    } else scheduleBinding.textviewAdd.setVisibility(View.VISIBLE);
+//                }
                 scheduleBinding.textviewAdd.setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);

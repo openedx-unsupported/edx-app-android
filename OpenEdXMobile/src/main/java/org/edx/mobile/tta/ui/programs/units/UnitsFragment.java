@@ -3,15 +3,20 @@ package org.edx.mobile.tta.ui.programs.units;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.TFragmentUnitsBinding;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
 import org.edx.mobile.tta.ui.library.LibraryFragment;
+import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.view.Router;
 
 public class UnitsFragment extends TaBaseFragment {
@@ -40,6 +45,8 @@ public class UnitsFragment extends TaBaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
+
+        TFragmentUnitsBinding binding = (TFragmentUnitsBinding) binding(inflater, container, R.layout.t_fragment_units, viewModel);
 
         return rootView;
     }

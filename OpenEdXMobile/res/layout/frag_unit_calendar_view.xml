@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<data>
+    <import type="android.view.View" />
+    <variable
+        name="viewModel"
+        type="org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
+</data>
 
-    <data>
-        <import type="android.view.View" />
-        <variable
-            name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel" />
-    </data>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true">
-
-        <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+        android:background="@android:color/white"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="top"
+            android:background="@color/white"
+            android:gravity="start|center_vertical"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/back"
+            app:title="Units"
+            app:titleMarginStart="0dp"
+            app:titleTextAppearance="@style/ta_toolbar_title_style" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            app:mx_titleVisible="false"
-            app:mx_moreButtonVisible="false"
-            app:mx_itemLimit="100"
-            finite_recycler_adapter="@{viewModel.filtersAdapter}"
-            android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
+            android:id="@+id/calendar_view">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:padding="@dimen/_8px"
-            android:tint="@color/secondary_blue_light"
-            android:src="@drawable/t_icon_calendar"
-            android:onClick="@{()-> viewModel.changeToCalenderView()}"
-            android:id="@+id/switch_unit"/>
-
+        </org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView>
+    </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="@{viewModel.frameVisible ? View.VISIBLE : View.GONE}"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8px"
             android:id="@+id/fl_unit">
 
             <com.maurya.mx.mxlib.view.MxRecyclerView
@@ -47,6 +50,7 @@
                 app:mx_itemLayout="@layout/t_row_unit"
                 infinite_recycler_adapter="@{viewModel.unitsAdapter}"
                 layout_manager="@{viewModel.layoutManager}"
+                android:visibility="@{viewModel.emptyVisible ? View.GONE : View.VISIBLE}"
                 infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
 
             <LinearLayout
@@ -78,21 +82,6 @@
             </LinearLayout>
 
         </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll_calendar"
-            android:visibility="@{viewModel.calVisible ? View.VISIBLE : View.GONE}"
-            android:orientation="vertical">
-
-            <org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/calendar_view">
-
-            </org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView>
-
-        </LinearLayout>
     </LinearLayout>
+
 </layout>

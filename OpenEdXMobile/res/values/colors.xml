@@ -86,6 +86,7 @@
 
     <color name="secondary_blue_light">#86D2F2</color>
     <color name="secondary_red">#EC8787</color>
+    <color name="dark_red">#F11C1C</color>
     <color name="secondary_blue">#8083E0</color>
     <color name="secondary_grey_light">#E0E0E0</color>
     <color name="secondary_pink">#F75791</color>
@@ -119,4 +120,16 @@
     <color name="mx_tooltip_text">#FFFFFF</color>
     <color name="mx_tooltip_arrow">#7C9397</color>
     <!--Added for mx_tooltip end-->
+
+    <!--calendar View-->
+        <color name="daysLabelColor">#8A000000</color>
+        <color name="currentMonthDayColor">#de000000</color>
+        <color name="nextMonthDayColor">#1F000000</color>
+        <color name="disabledDialogButtonColor">#1F000000</color>
+
+        <color name="itemHighlightColor">#1F000000</color>
+        <color name="itemFocusedColor">#1A000000</color>
+
+        <color name="defaultColor">#2962FF</color>
+    <!--calendar View-->
 </resources>

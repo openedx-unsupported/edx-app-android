@@ -933,4 +933,39 @@
 
     <!-- TTA strings end -->
 
+
+    <array name="material_calendar_months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </array>
+
+    <string name="material_calendar_today_button">Today</string>
+    <string name="material_calendar_positive_button">OK</string>
+    <string name="material_calendar_negative_button">Cancel</string>
+    <string name="material_calendar_monday">M</string>
+    <string name="material_calendar_tuesday">T</string>
+    <string name="material_calendar_wednesday">W</string>
+    <string name="material_calendar_thursday">T</string>
+    <string name="material_calendar_friday">F</string>
+    <string name="material_calendar_saturday">S</string>
+    <string name="material_calendar_sunday">S</string>
+    <array name="material_calendar_day_abbreviations_array">
+        <item>@string/material_calendar_sunday</item>
+        <item>@string/material_calendar_monday</item>
+        <item>@string/material_calendar_tuesday</item>
+        <item>@string/material_calendar_wednesday</item>
+        <item>@string/material_calendar_thursday</item>
+        <item>@string/material_calendar_friday</item>
+        <item>@string/material_calendar_saturday</item>
+    </array>
 </resources>

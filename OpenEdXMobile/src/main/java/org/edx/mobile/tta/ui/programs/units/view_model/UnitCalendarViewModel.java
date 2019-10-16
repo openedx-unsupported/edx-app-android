@@ -1,10 +1,8 @@
 package org.edx.mobile.tta.ui.programs.units.view_model;
 
 import android.content.Context;
-import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
-import android.databinding.ObservableList;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,25 +10,24 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.edx.mobile.R;
-import org.edx.mobile.databinding.TRowFilterDropDownBinding;
-import org.edx.mobile.databinding.TRowTextBinding;
 import org.edx.mobile.databinding.TRowUnitBinding;
-import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.data.enums.ShowIn;
 import org.edx.mobile.tta.data.enums.UnitStatusType;
 import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Unit;
@@ -43,14 +40,11 @@ import org.edx.mobile.tta.event.program.PeriodSavedEvent;
 import org.edx.mobile.tta.event.program.ShowStudentUnitsEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
 import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.custom.DropDownFilterView;
 import org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.edx.mobile.tta.ui.mxCalenderView.Events;
-import org.edx.mobile.tta.ui.programs.units.UnitCalendarActivity;
-import org.edx.mobile.tta.utils.ActivityUtil;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.NetworkUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -63,19 +57,17 @@ import java.util.Locale;
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 
-public class UnitsViewModel extends BaseViewModel {
-
+public class UnitCalendarViewModel extends BaseViewModel {
     private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_SKIP = 0;
 
-    public UnitsAdapter unitsAdapter;
-    public FiltersAdapter filtersAdapter;
+    public static UnitsAdapter unitsAdapter;
     public RecyclerView.LayoutManager layoutManager;
     public ProgramUser user;
     private int filterSize = 0;
 
     public static ObservableBoolean filtersVisible = new ObservableBoolean();
-    public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public static ObservableBoolean emptyVisible = new ObservableBoolean();
     public static ObservableBoolean calVisible = new ObservableBoolean();
     public static ObservableBoolean frameVisible = new ObservableBoolean();
     public static List<Events> eventsArrayList = new ArrayList<>();
@@ -84,7 +76,7 @@ public class UnitsViewModel extends BaseViewModel {
 
 
     private EnrolledCoursesResponse course;
-    private List<Unit> units;
+    private static List<Unit> units;
     private List<ProgramFilterTag> tags;
     private List<ProgramFilter> allFilters;
     private List<ProgramFilter> filters;
@@ -92,6 +84,7 @@ public class UnitsViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
+    public static String eventDate;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -101,8 +94,8 @@ public class UnitsViewModel extends BaseViewModel {
         return true;
     };
 
-    public UnitsViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
-        super(context, fragment);
+    public UnitCalendarViewModel(BaseVMActivity activity, EnrolledCoursesResponse course) {
+        super(activity);
 
         this.course = course;
         units = new ArrayList<>();
@@ -115,11 +108,10 @@ public class UnitsViewModel extends BaseViewModel {
         calVisible.set(false);
         frameVisible.set(true);
 
+        layoutManager = new LinearLayoutManager(mActivity);
         unitsAdapter = new UnitsAdapter(mActivity);
-        filtersAdapter = new FiltersAdapter(mActivity);
-        switchText.set("Calendar View");
 
-        unitsAdapter.setItems(units);
+//        unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
 
             switch (view.getId()) {
@@ -157,10 +149,10 @@ public class UnitsViewModel extends BaseViewModel {
                                                 if (response.getCourse().getId().trim().toLowerCase()
                                                         .equals(courseId.trim().toLowerCase())) {
                                                     if (ssp) {
-                                                        UnitsViewModel.this.course = response;
+                                                        UnitCalendarViewModel.this.course = response;
                                                         EventBus.getDefault().post(new CourseEnrolledEvent(response));
                                                     } else {
-                                                        UnitsViewModel.this.parentCourse = response;
+                                                        UnitCalendarViewModel.this.parentCourse = response;
                                                     }
                                                     getBlockComponent(item);
                                                     break;
@@ -190,53 +182,26 @@ public class UnitsViewModel extends BaseViewModel {
                     } else {
                         getBlockComponent(item);
                     }
-                   /* mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
-                            new OnResponseCallback<ResponseBody>() {
-                                @Override
-                                public void onSuccess(ResponseBody responseBody) {
-                                    mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
-                                            new OnResponseCallback<CourseComponent>() {
-                                                @Override
-                                                public void onSuccess(CourseComponent data) {
-                                                    mActivity.hideLoading();
 
-                                                    if (UnitsViewModel.this.course == null) {
-                                                        mActivity.showLongSnack("You're not enrolled in the program");
-                                                        return;
-                                                    }
-
-                                                    if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                                        mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
-                                                                mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                                                UnitsViewModel.this.course, data.getChildren().get(0).getId(),
-                                                                null, false);
-                                                    } else {
-                                                        mActivity.showLongSnack("This unit is empty");
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Exception e) {
-                                                    mActivity.hideLoading();
-                                                    mActivity.showLongSnack(e.getLocalizedMessage());
-                                                }
-                                            });
-                                }
-
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    mActivity.showLongSnack("error during unit enroll");
-                                }
-                            });
-*/
             }
 
         });
 
         mActivity.showLoading();
-        fetchFilters();
         fetchData();
+
+    }
+
+    private void fetchData() {
+
+        if (changesMade) {
+            changesMade = false;
+            skip = 0;
+            unitsAdapter.reset(true);
+        }
+
+        fetchUnits();
+
     }
 
     private void getBlockComponent(Unit unit) {
@@ -251,7 +216,7 @@ public class UnitsViewModel extends BaseViewModel {
                                     public void onSuccess(CourseComponent data) {
                                         mActivity.hideLoading();
 
-                                        if (UnitsViewModel.this.course == null) {
+                                        if (UnitCalendarViewModel.this.course == null) {
                                             mActivity.showLongSnack("You're not enrolled in the program");
                                             return;
                                         }
@@ -259,7 +224,7 @@ public class UnitsViewModel extends BaseViewModel {
                                         if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
                                             mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
                                                     mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                                    UnitsViewModel.this.course, data.getChildren().get(0).getId(),
+                                                    UnitCalendarViewModel.this.course, data.getChildren().get(0).getId(),
                                                     null, false);
                                         } else {
                                             mActivity.showLongSnack("This unit is empty");
@@ -282,17 +247,6 @@ public class UnitsViewModel extends BaseViewModel {
                 });
 
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        layoutManager = new LinearLayoutManager(mActivity);
-        calVisible.set(false);
-//        onEventMainThread(units);
-
-    }
-
-
     private void showDatePicker(Unit unit) {
         DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
             @Override
@@ -306,8 +260,13 @@ public class UnitsViewModel extends BaseViewModel {
                                 mActivity.hideLoading();
                                 unit.setMyDate(data);
                                 unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                                eventsArrayList.clear();
+                                Events events = new Events(DateUtil.getDisplayDate(unit.getMyDate()));
+                                eventsArrayList.add(events);
+                                CustomCalendarView.createEvents(eventsArrayList);
                                 if (response.getSuccess()) {
                                     mActivity.showLongSnack("Proposed date set successfully");
+                                    EventBus.getDefault().post(units);
                                 }
                             }
 
@@ -326,71 +285,10 @@ public class UnitsViewModel extends BaseViewModel {
         });
     }
 
-    private void fetchFilters() {
-
-        mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
-                new OnResponseCallback<List<ProgramFilter>>() {
-                    @Override
-                    public void onSuccess(List<ProgramFilter> data) {
-                        if (!data.isEmpty()) {
-                            allFilters = data;
-                            filterSize = allFilters.size();
-                            filtersVisible.set(true);
-                            filtersAdapter.setItems(allFilters);
-                        } else {
-                            filtersVisible.set(false);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        filtersVisible.set(false);
-                    }
-                });
-
-    }
-
-    private void fetchData() {
-
-        if (changesMade) {
-            changesMade = false;
-            skip = 0;
-            unitsAdapter.reset(true);
-            setUnitFilters();
-        }
-
-        fetchUnits();
-
-    }
-
-    private void setUnitFilters() {
-        filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
-            return;
-        }
-
-        for (ProgramFilter filter : allFilters) {
-
-            List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag : filter.getTags()) {
-                if (tags.contains(tag)) {
-                    selectedTags.add(tag);
-                }
-            }
-
-            if (!selectedTags.isEmpty()) {
-                ProgramFilter pf = new ProgramFilter();
-                pf.setDisplayName(filter.getDisplayName());
-                pf.setInternalName(filter.getInternalName());
-                pf.setId(filter.getId());
-                pf.setOrder(filter.getOrder());
-                pf.setShowIn(filter.getShowIn());
-                pf.setTags(selectedTags);
-
-                filters.add(pf);
-            }
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        layoutManager = new LinearLayoutManager(mActivity);
     }
 
     private void fetchUnits() {
@@ -404,7 +302,9 @@ public class UnitsViewModel extends BaseViewModel {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
+                        units = data;
                         populateUnits(data);
+//                        unitsAdapter.setItems(data);
                         unitsAdapter.setLoadingDone();
                     }
 
@@ -453,7 +353,6 @@ public class UnitsViewModel extends BaseViewModel {
             emptyVisible.set(false);
         }
     }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(PeriodSavedEvent event) {
         changesMade = true;
@@ -461,13 +360,10 @@ public class UnitsViewModel extends BaseViewModel {
         fetchData();
     }
 
-
     @SuppressWarnings("unused")
-    public void onEventMainThread(List<Unit> unit) {
+    public void onEventMainThread(ShowStudentUnitsEvent event) {
 //        filters.clear();
-        changesMade = true;
-        allLoaded = false;
-            fetchData();
+        user = event.getUser();
 //        ProgramFilter pf = new ProgramFilter();
 //        pf.setDisplayName(user.username);
 //        pf.setInternalName(user.name);
@@ -494,70 +390,6 @@ public class UnitsViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
-    public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
-        /**
-         * Base constructor.
-         * Allocate adapter-related objects here if needed.
-         *
-         * @param context Context needed to retrieve LayoutInflater
-         */
-        public FiltersAdapter(Context context) {
-            super(context);
-        }
-
-        @Override
-        public int getItemLayout(int position) {
-
-            if (user == null) {
-                return R.layout.t_row_filter_drop_down;
-            } else {
-                return R.layout.t_row_text;
-            }
-        }
-
-        public int getItemCount() {
-            if (user != null) {
-                return filterSize + 1;
-            } else {
-                return filterSize;
-            }
-        }
-
-        @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull ProgramFilter model, @Nullable OnRecyclerItemClickListener<ProgramFilter> listener) {
-            if (binding instanceof TRowFilterDropDownBinding) {
-                TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
-
-                List<DropDownFilterView.FilterItem> items = new ArrayList<>();
-                items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
-                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow
-                ));
-                for (ProgramFilterTag tag : model.getTags()) {
-                    items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            false, R.color.white, R.drawable.t_background_tag_filled
-                    ));
-                }
-                dropDownBinding.filterDropDown.setFilterItems(items);
-
-                dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-                    if (prev != null && prev.getItem() != null) {
-                        tags.remove((ProgramFilterTag) prev.getItem());
-                    }
-                    if (item.getItem() != null) {
-                        tags.add((ProgramFilterTag) item.getItem());
-                    }
-
-                    changesMade = true;
-                    allLoaded = false;
-                    mActivity.showLoading();
-                    fetchData();
-                });
-            } else if (binding instanceof TRowTextBinding) {
-                TRowTextBinding textBinding = (TRowTextBinding) binding;
-                textBinding.text.setText(user.name);
-            }
-        }
-    }
 
     public class UnitsAdapter extends MxInfiniteAdapter<Unit> {
         public UnitsAdapter(Context context) {
@@ -568,109 +400,67 @@ public class UnitsViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
-               /* if (selectedEvent.get() != null) {
-                    if (selectedEvent.get()== String.valueOf(model.getMyDate())) {
-                        unitBinding.setUnit(model);
 
-                        unitBinding.unitCode.setText(model.getCode());
-                        if (!TextUtils.isEmpty(model.getPeriodName())) {
-                            unitBinding.unitCode.append("    |    " + model.getPeriodName());
-                        }
-                        unitBinding.layoutCheckbox.setVisibility(View.GONE);
+                unitBinding.setUnit(model);
+//                unitBinding.tvStaffDate.setVisibility(View.GONE);
+//                unitBinding.tvMyDate.setVisibility(View.GONE);
+                eventsArrayList.clear();
+                if (DateUtil.getDisplayDate(model.getMyDate()).equals(eventDate)){
+//                    Events et = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
+//                    eventsArrayList.add(et);
+//                    CustomCalendarView.createEvents(eventsArrayList);
+                unitBinding.unitCode.setText(model.getCode());
+                if (!TextUtils.isEmpty(model.getPeriodName())) {
+                    unitBinding.unitCode.append("    |    " + model.getPeriodName());
+                }
+                unitBinding.layoutCheckbox.setVisibility(View.GONE);
 
-                        if (model.getMyDate() > 0) {
-                            unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                            Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                            eventsArrayList.add(e);
-                        } else {
-                            unitBinding.tvMyDate.setText(R.string.proposed_date);
-                        }
+                if (model.getMyDate() > 0) {
+                    unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
 
-                        String role = mDataManager.getLoginPrefs().getRole();
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-                            if (model.getStaffDate() > 0) {
-                                unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                                Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                                eventsArrayList.add(e);
-                            } else {
-                                unitBinding.tvStaffDate.setVisibility(View.GONE);
-                            }
-                        }
 
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                                !TextUtils.isEmpty(model.getStatus())) {
-                            try {
-                                switch (UnitStatusType.valueOf(model.getStatus())) {
-                                    case Completed:
-                                        unitBinding.statusIcon.setImageDrawable(
-                                                ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
-                                        unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                        break;
-                                    case InProgress:
-                                        unitBinding.statusIcon.setImageDrawable(
-                                                ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
-                                        unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                        break;
-                                }
-                            } catch (IllegalArgumentException e) {
-                                unitBinding.statusIcon.setVisibility(View.GONE);
-                            }
-                        } else {
-                            unitBinding.statusIcon.setVisibility(View.GONE);
-                        }
-                    }
-                }else {*/
-                    unitBinding.setUnit(model);
+                } else {
+                    unitBinding.tvMyDate.setText(R.string.proposed_date);
+                }
 
-                    unitBinding.unitCode.setText(model.getCode());
-                    if (!TextUtils.isEmpty(model.getPeriodName())) {
-                        unitBinding.unitCode.append("    |    " + model.getPeriodName());
-                    }
-                    unitBinding.layoutCheckbox.setVisibility(View.GONE);
+                String role = mDataManager.getLoginPrefs().getRole();
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
+                    if (model.getStaffDate() > 0) {
+                        unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                        unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
 
-                    if (model.getMyDate() > 0) {
-                        unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                        Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                        eventsArrayList.add(e);
                     } else {
-                        unitBinding.tvMyDate.setText(R.string.proposed_date);
+                        unitBinding.tvStaffDate.setVisibility(View.GONE);
                     }
+                }
 
-                    String role = mDataManager.getLoginPrefs().getRole();
-                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-                        if (model.getStaffDate() > 0) {
-                            unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                            Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                            eventsArrayList.add(e);
-                        } else {
-                            unitBinding.tvStaffDate.setVisibility(View.GONE);
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
+                        !TextUtils.isEmpty(model.getStatus())) {
+                    try {
+                        switch (UnitStatusType.valueOf(model.getStatus())) {
+                            case Completed:
+                                unitBinding.statusIcon.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
+                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                break;
+                            case InProgress:
+                                unitBinding.statusIcon.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
+                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                break;
                         }
-                    }
-
-                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                            !TextUtils.isEmpty(model.getStatus())) {
-                        try {
-                            switch (UnitStatusType.valueOf(model.getStatus())) {
-                                case Completed:
-                                    unitBinding.statusIcon.setImageDrawable(
-                                            ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
-                                    unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                    break;
-                                case InProgress:
-                                    unitBinding.statusIcon.setImageDrawable(
-                                            ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
-                                    unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                    break;
-                            }
-                        } catch (IllegalArgumentException e) {
-                            unitBinding.statusIcon.setVisibility(View.GONE);
-                        }
-                    } else {
+                    } catch (IllegalArgumentException e) {
                         unitBinding.statusIcon.setVisibility(View.GONE);
                     }
-//                }
+                } else {
+                    unitBinding.statusIcon.setVisibility(View.GONE);
+                }
+                }else{
+                    emptyVisible.set(true);
+//                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
+//                    eventsArrayList.add(ev);
+//                    CustomCalendarView.createEvents(eventsArrayList);
+                }
 
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
@@ -687,25 +477,6 @@ public class UnitsViewModel extends BaseViewModel {
         }
     }
 
-    public void changeToCalenderView() {
-//        if (frameVisible.get()) {
-//            frameVisible.set(false);
-//            calVisible.set(true);
-//            filtersVisible.set(false);
-//            switchText.set("Grid View");
-//        } else {
-//            frameVisible.set(true);
-//            calVisible.set(false);
-//            filtersVisible.set(true);
-//            switchText.set("Calender View");
-//        }
-        CustomCalendarView.createEvents(eventsArrayList);
-        ActivityUtil.gotoPage(mActivity, UnitCalendarActivity.class);
-
-//    FragmentTransaction fragmentTransaction = mFragment.getFragmentManager().beginTransaction();
-//    fragmentTransaction.replace(R.id.fl_unit, new UnitCalenderFragment());
-//    fragmentTransaction.commit();
-    }
 
     public static class CustomCalendarAdapter extends ArrayAdapter {
 
@@ -754,6 +525,7 @@ public class UnitsViewModel extends BaseViewModel {
             View event = view.findViewById(R.id.event_id);
             day.setText(String.valueOf(dayNo));
 
+//            day.setTextColor(ContextCompat.getColor(context, R.color.secondary_blue_light));
 
             if (displayMonth == currentMonth && displayYear == currentYear){
                 view.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
@@ -773,15 +545,13 @@ public class UnitsViewModel extends BaseViewModel {
                     event.setVisibility(View.VISIBLE);
                 }
             }
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    frameVisible.set(true);
-                    calVisible.set(false);
-                    filtersVisible.set(true);
-                    switchText.set("Calender View");
-                    selectedEvent.set(dates.get(position).getDate());
-                }
+            view.setOnClickListener(v -> {
+                eventDate = DateUtil.getDisplayDate(dates.get(position).getTime());
+                unitsAdapter.setItems(units);
+                unitsAdapter.notifyDataSetChanged();
+                emptyVisible.set(false);
+//                CustomCalendarView.createEvents(eventsArrayList);
+
             });
 
             return view;

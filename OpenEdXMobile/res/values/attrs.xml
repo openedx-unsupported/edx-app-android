@@ -42,4 +42,33 @@
     </declare-styleable>
 
     <!-- TTA attributes end -->
+
+    <declare-styleable name="CalendarView">
+        <attr name="headerColor" format="color" />
+        <attr name="headerLabelColor" format="color" />
+        <attr name="previousButtonSrc" format="integer" />
+        <attr name="forwardButtonSrc" format="integer" />
+        <attr name="todayLabelColor" format="color" />
+        <attr name="selectionColor" format="color" />
+        <attr name="selectionLabelColor" format="color" />
+        <attr name="disabledDaysLabelsColor" format="color" />
+        <attr name="highlightedDaysLabelsColor" format="color" />
+        <attr name="pagesColor" format="color" />
+        <attr name="abbreviationsBarColor" format="color" />
+        <attr name="abbreviationsLabelsColor" format="color" />
+        <attr name="daysLabelsColor" format="color" />
+        <attr name="anotherMonthsDaysLabelsColor" format="color" />
+        <attr name="datePicker" format="boolean" />
+        <attr name="eventsEnabled" format="boolean" />
+        <attr name="swipeEnabled" format="boolean" />
+        <attr name="maximumDaysRange" format="integer" />
+        <attr name="type" />
+    </declare-styleable>
+
+    <attr name="type" format="enum">
+        <enum name="classic" value="0"/>
+        <enum name="one_day_picker" value="1"/>
+        <enum name="many_days_picker" value="2"/>
+        <enum name="range_picker" value="3"/>
+    </attr>
 </resources>

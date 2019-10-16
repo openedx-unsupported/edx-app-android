@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cal_day"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:fontFamily="@font/hind_medium"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@android:color/black" />
+        <View
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:id="@+id/event_id"
+            android:textSize="13sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:background="@color/dark_red" />
+    </LinearLayout>
