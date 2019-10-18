@@ -257,6 +257,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         return true;
     }
 
+    public void setHostForThisPage(@Nullable String hostForThisPage) {
+        this.hostForThisPage = hostForThisPage;
+    }
+
     /**
      * Action listener interface for handling a user's click on recognized links in a WebView.
      */

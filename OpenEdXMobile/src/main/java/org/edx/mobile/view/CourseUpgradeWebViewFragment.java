@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,17 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (!isSystemUpdatingWebView()) {
+            /*
+             * Setting the host explicitly to fix a problem on Marshmallow and above devices where
+             * the host is resolved after a number of redirections happen within the webview, which
+             * causes the webview to open phone's browser upon the click of Place Order button.
+             * This is not the case in the pre-Marshmallow devices where the host is resolved correctly.
+             *
+             * Note: The host resolution happens URLInterceptorWebViewClient class's onPageStarted
+             * function which we are overriding in this specific case.
+             */
+            authWebView.getWebViewClient().setHostForThisPage(Uri.parse(getArguments().getString(ARG_URL)).getHost());
+
             authWebView.getWebViewClient().setActionListener(helper -> {
                 if (getActivity() != null) {
                     // This means that the transaction completed successfully and user tapped on the
