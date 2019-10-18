@@ -25,6 +25,16 @@ public enum AppConstants {
     public static final String APP_URI_SCHEME = "org.edx.mobile.innerlinks://";
 
     /**
+     * This class defines all the Firebase constants related to the app.
+     */
+    public static final class FirebaseConstants {
+        /**
+         * Feature flag for course upgrade.
+         */
+        public static final String REV_934_ENABLED = "REV_934_Enabled";
+    }
+
+    /**
      * This class defines the names of various directories which are used for
      * storing application data.
      */
