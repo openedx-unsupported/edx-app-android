@@ -244,8 +244,12 @@
         </activity>
 
         <activity
-            android:name=".view.dialog.AuthenticatedWebViewActivity"
+            android:name=".view.ProgramWebViewActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
+        <activity
+            android:name=".view.CourseUpgradeWebViewActivity"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">

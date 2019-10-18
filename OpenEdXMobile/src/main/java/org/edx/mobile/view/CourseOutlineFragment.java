@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.inject.Inject;
@@ -46,6 +47,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
@@ -58,6 +60,7 @@ import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
@@ -72,6 +75,8 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
@@ -118,6 +123,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
     private CourseOutlineAdapter.DownloadListener downloadListener;
+    private Call<CourseUpgradeResponse> getCourseUpgradeStatus;
+    private View viewUpgradeToVerifiedFooter;
+    private TextView tvUpgradePrice;
+    private View btnUpgradeCourse;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
@@ -152,7 +161,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         flBulkDownload = view.findViewById(R.id.fl_bulk_download_container);
-
+        viewUpgradeToVerifiedFooter = view.findViewById(R.id.ll_upgrade_to_verified_footer);
+        tvUpgradePrice = view.findViewById(R.id.tv_upgrade_price);
+        btnUpgradeCourse = view.findViewById(R.id.ll_upgrade_button);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -169,6 +180,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         fetchCourseComponent();
         // Track CourseOutline for A/A test
         trackAATestCourseOutline();
+        fetchCourseUpgradeStatus();
         return view;
     }
 
@@ -555,6 +567,46 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         fetchLastAccessed();
     }
 
+    private void fetchCourseUpgradeStatus() {
+        if (isOnCourseOutline && !isVideoMode && getCourseUpgradeStatus == null) {
+            getCourseUpgradeStatus = courseApi.getCourseUpgradeStatus(courseData.getCourse().getId());
+            getCourseUpgradeStatus.enqueue(new Callback<CourseUpgradeResponse>() {
+                @Override
+                public void onResponse(Call<CourseUpgradeResponse> call, Response<CourseUpgradeResponse> response) {
+                    // Setting the call to null ensures that only 1 request is enqueued at a specific point in time
+                    getCourseUpgradeStatus = null;
+                    if (getActivity() != null) {
+                        // Set the revenue cookie
+                        EdxCookieManager.getSharedInstance(getActivity()).setMobileCookie();
+                        final CourseUpgradeResponse courseUpgradeResponse = response.body();
+                        if (courseUpgradeResponse != null && courseUpgradeResponse.showUpsell()
+                                && !TextUtils.isEmpty(courseUpgradeResponse.getBasketUrl())) {
+                            viewUpgradeToVerifiedFooter.setVisibility(View.VISIBLE);
+                            if (!TextUtils.isEmpty(courseUpgradeResponse.getPrice())) {
+                                tvUpgradePrice.setText(courseUpgradeResponse.getPrice());
+                            } else {
+                                tvUpgradePrice.setVisibility(View.GONE);
+                            }
+                            btnUpgradeCourse.setOnClickListener(view ->
+                                    environment.getRouter().showCourseUpgradeWebViewActivity(
+                                            getActivity(), courseUpgradeResponse.getBasketUrl()
+                                    ));
+                        } else {
+                            viewUpgradeToVerifiedFooter.setVisibility(View.GONE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CourseUpgradeResponse> call, Throwable t) {
+                    // Setting the call to null ensures that only 1 request is enqueued at a specific point in time
+                    getCourseUpgradeStatus = null;
+                    viewUpgradeToVerifiedFooter.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
     private void setUpBulkDownloadHeader(CourseComponent courseComponent) {
         if (isVideoMode) {
             if (courseComponent.getDownloadableVideosCount() == 0) {
@@ -583,6 +635,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     public void onRevisit() {
         super.onRevisit();
         fetchLastAccessed();
+        fetchCourseUpgradeStatus();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -828,6 +881,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (getHierarchyCall != null) {
             getHierarchyCall.cancel();
             getHierarchyCall = null;
+        }
+        if (getCourseUpgradeStatus != null) {
+            getCourseUpgradeStatus.cancel();
+            getCourseUpgradeStatus = null;
         }
     }
 }

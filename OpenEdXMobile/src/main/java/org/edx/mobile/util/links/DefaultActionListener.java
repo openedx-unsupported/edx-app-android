@@ -76,7 +76,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
     public void onLinkRecognized(@NonNull WebViewLink helper) {
         switch (helper.authority) {
             case ENROLLED_PROGRAM_INFO: {
-                environment.getRouter().showAuthenticatedWebviewActivity(activity, environment,
+                environment.getRouter().showProgramWebViewActivity(activity, environment,
                         helper.params.get(WebViewLink.Param.PATH_ID), activity.getString(R.string.label_my_programs));
                 break;
             }

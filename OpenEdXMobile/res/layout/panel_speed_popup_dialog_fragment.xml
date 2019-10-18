@@ -22,12 +22,12 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:divider="@color/grey_act_background"
-        android:dividerHeight="@dimen/video_player_settings_divider_width" />
+        android:dividerHeight="@dimen/video_player_settings_divider_height" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/video_player_settings_divider_width"
+        android:layout_height="@dimen/video_player_settings_divider_height"
         android:background="@color/grey_act_background" />
 
     <TextView

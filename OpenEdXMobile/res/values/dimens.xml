@@ -112,7 +112,7 @@
     <dimen name="video_player_seekbar_line_width">4dp</dimen>
     <dimen name="video_player_seekbar_right_margin">6dp</dimen>
     <dimen name="video_player_duration_padding">4dp</dimen>
-    <dimen name="video_player_settings_divider_width">1dp</dimen>
+    <dimen name="video_player_settings_divider_height">@dimen/edx_divider_length</dimen>
 
     <!-- Video Player Settings popup dimen values-->
     <dimen name="settings_popup_height">80dp</dimen>
@@ -223,6 +223,7 @@
     <!-- Unorganized -->
     <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_line">3px</dimen>
+    <dimen name="edx_divider_length">1dp</dimen>
     <dimen name="edx_box_radius">5dp</dimen>
     <dimen name="edx_margin">15dp</dimen>
     <dimen name="edx_half_margin">8dp</dimen>
@@ -244,7 +245,7 @@
     <!-- Social platforms -->
     <dimen name="social_btn_radius">3dp</dimen>
     <dimen name="social_btn_min_height">40dp</dimen>
-    <dimen name="social_btn_divider_width">1dp</dimen>
+    <dimen name="social_btn_divider_width">@dimen/edx_divider_length</dimen>
     <dimen name="social_btn_icon_size">24dp</dimen>
     <dimen name="social_btn_margin">8dp</dimen>
     <dimen name="social_btn_divider_height">40dp</dimen>

@@ -16,6 +16,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.IPathNode;
 import org.edx.mobile.model.api.LectureModel;
@@ -79,6 +80,14 @@ public class CourseAPI {
         // Empty courseId will return a 200 for a list of course details, instead of a single course
         if (TextUtils.isEmpty(courseId)) throw new IllegalArgumentException();
         return courseService.getCourseDetail(courseId, getUsername());
+    }
+
+    /**
+     * @return Course upgrade status for the given user.
+     */
+    @NonNull
+    public Call<CourseUpgradeResponse> getCourseUpgradeStatus(@NonNull final String courseId) {
+        return courseService.getCourseUpgradeStatus(courseId);
     }
 
     /**

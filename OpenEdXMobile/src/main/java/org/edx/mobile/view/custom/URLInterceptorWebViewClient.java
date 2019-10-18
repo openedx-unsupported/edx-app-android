@@ -151,8 +151,19 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         }
     }
 
+    @Deprecated
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        return shouldOverrideUrlLoadingWrapper(view, url);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        return shouldOverrideUrlLoadingWrapper(view, request.getUrl().toString());
+    }
+
+    private boolean shouldOverrideUrlLoadingWrapper(WebView view, String url) {
         if (actionListener == null) {
             logger.warn("you have not set IActionLister to this WebViewClient, " +
                     "you might miss some event");
@@ -244,6 +255,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         actionListener.onLinkRecognized(helperObj);
         logger.debug("found a recognized URL: " + strUrl);
         return true;
+    }
+
+    public void setHostForThisPage(@Nullable String hostForThisPage) {
+        this.hostForThisPage = hostForThisPage;
     }
 
     /**

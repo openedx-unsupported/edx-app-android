@@ -256,6 +256,13 @@
     <string name="due_date_today">due today at {due_date}</string>
     <!-- Label for a course item's due date -->
     <string name="due_date_past_future">due {due_date}</string>
+    <!-- Upgrade banner's description which appears on course outline screen. -->
+    <string name="upgrade_banner_description" tools:ignore="MissingTranslation">Complete assessments on the go toward a certificate!</string>
+    <!-- Title upgrade to verified today course outline footer -->
+    <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">Upgrade to Verified Today</string>
+    <!--Title of place order for course upgrade screen-->
+    <string name="place_order_title" tools:ignore="MissingTranslation">Place Order</string>
+
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->

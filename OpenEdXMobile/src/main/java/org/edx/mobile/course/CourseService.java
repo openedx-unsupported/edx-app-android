@@ -10,6 +10,7 @@ import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -80,6 +81,12 @@ public interface CourseService {
     @GET("/api/courses/v1/courses/{course_id}")
     Call<CourseDetail> getCourseDetail(@Path("course_id") final String courseId,
                                        @Query("username") final String username);
+
+    /**
+     * @return Upgrade status for the given course.
+     */
+    @GET("/api/experiments/v0/custom/REV-934")
+    Call<CourseUpgradeResponse> getCourseUpgradeStatus(@Query("course_id") String courseId);
 
     /**
      * @return Enrolled courses of given user.
