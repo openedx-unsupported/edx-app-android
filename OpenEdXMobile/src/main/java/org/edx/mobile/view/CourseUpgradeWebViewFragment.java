@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.links.WebViewLink;
-import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import roboguice.inject.InjectView;
 
@@ -49,6 +47,31 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        /*
+         * Workaround to handle the case where a user has successfully made the payment and has
+         * reached the receipt page and somehow they leave the screen and OS decides to destroy the
+         * activity.
+         * If this workaround is not in place, upon return to the app, the user will again see the
+         * payment page presenting them with a form for the payment to upgrade a course.
+         *
+         * Steps to reproduce the issue:
+         * 1 - Set up don't keep activities to true from developer options.
+         * 2 - Upgrade the course by placing the order and screen will redirect to Thank you page.
+         * 3 - Move the app to background and then back to foreground.
+         * 4 - App opens the place order screen instated of a thank you screen.
+         */
+        if (getActivity() != null && authWebView.getWebView() != null) {
+            final String url = authWebView.getWebView().getUrl();
+            if (url != null && url.contains("checkout/receipt")) {
+                getActivity().finish();
+            }
+
         }
     }
 }
