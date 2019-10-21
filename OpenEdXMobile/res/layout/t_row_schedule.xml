@@ -25,25 +25,34 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textColor="@color/black"
+                android:layout_marginEnd="@dimen/_10px"
+                android:layout_marginTop="@dimen/_10px"
+                android:padding="5dp"
+                android:text="@{period.language}"
+                android:background="@drawable/red_rect_rounded_corner" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_gravity="center"
+                android:gravity="center|top"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_school_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginEnd="4dp"
                     android:fontFamily="@font/hind_medium"
-                    android:gravity="center"
                     android:text="@{period.title}"
+                    android:gravity="top|center"
                     android:textColor="@color/gray_5"
                     android:textSize="16sp" />
 
@@ -96,11 +105,11 @@
                     android:id="@+id/textview_add"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
                     android:background="@color/status_pending"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
-                    android:padding="12dp"
+                    android:padding="5dp"
                     android:text="Add" />
 
                 <TextView
@@ -108,10 +117,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/status_pending"
+                    android:background="@color/pending_orange"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
-                    android:padding="12dp"
+                    android:padding="5dp"
                     android:text="@{String.valueOf(period.completedCount)}"
                     />
                 <TextView
@@ -122,7 +131,7 @@
                     android:background="@color/status_completed"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
-                    android:padding="12dp"
+                    android:padding="5dp"
                     android:text="@{String.valueOf(period.totalCount)}" />
 
             </LinearLayout>

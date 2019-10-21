@@ -93,6 +93,7 @@
     <color name="secondary_green">#99EB9E</color>
     <color name="secondary_yellow">#F8E56B</color>
     <color name="pending">#FFEE6A</color>
+    <color name="pending_orange">#F0B56B</color>
 
     <color name="gray_1">#D2DADF</color>
     <color name="gray_2">#EDEDED</color>

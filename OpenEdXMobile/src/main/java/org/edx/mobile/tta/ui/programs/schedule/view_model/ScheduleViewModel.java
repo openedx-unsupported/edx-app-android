@@ -178,7 +178,13 @@ public class ScheduleViewModel extends BaseViewModel {
     @Override
     public void onResume() {
         super.onResume();
-        gridLayoutManager = new GridLayoutManager(mActivity, 2);
+        boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
+        if (tabletSize) {
+            gridLayoutManager = new GridLayoutManager(mActivity, 2);
+        } else {
+            gridLayoutManager = new GridLayoutManager(mActivity, 1);
+        }
+
 //        fetchData();
 
     }
@@ -238,12 +244,16 @@ public class ScheduleViewModel extends BaseViewModel {
                                 sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
                                         false, R.color.white, R.drawable.t_background_tag_filled));
 
-                                if (tag.getSelected()){
-                                    tags.clear();
-                                    tags.add(tag);
-                                    changesMade = true;
-                                    allLoaded = false;
-                                    fetchData();
+                                try {
+                                    if (tag.getSelected()) {
+                                        tags.clear();
+                                        tags.add(tag);
+                                        changesMade = true;
+                                        allLoaded = false;
+                                        fetchData();
+                                    }
+                                }catch(Exception e){
+                                    e.printStackTrace();
                                 }
                             }
                         }

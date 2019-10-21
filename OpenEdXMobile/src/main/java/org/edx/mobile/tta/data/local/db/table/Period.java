@@ -21,6 +21,8 @@ public class Period implements Parcelable {
 
     private long weeks;
 
+    private String language;
+
     @SerializedName("completed_count")
     private long completedCount;
 
@@ -40,6 +42,7 @@ public class Period implements Parcelable {
         completedCount = in.readLong();
         totalCount = in.readLong();
         username = in.readString();
+        language = in.readString();
     }
 
     public static final Creator<Period> CREATOR = new Creator<Period>() {
@@ -110,6 +113,15 @@ public class Period implements Parcelable {
         this.username = username;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -124,6 +136,7 @@ public class Period implements Parcelable {
         dest.writeLong(completedCount);
         dest.writeLong(totalCount);
         dest.writeString(username);
+        dest.writeString(language);
     }
 
     @Override
