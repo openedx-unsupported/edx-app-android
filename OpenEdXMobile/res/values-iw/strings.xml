@@ -1,0 +1,634 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!--Certificates-->
+  <!--Label congratulation user on finishing course-->
+  <string name="course_details_congratulations">מזל טוב!</string>
+  <!--Message for user who has successfully completed a certificate course-->
+  <string name="course_details_earned_cert">עברת את הקורס.</string>
+  <!--Button that opens a full view of an earned certificate-->
+  <string name="course_details_view_cert_button">הצג תעודת סיום</string>
+  <!--Course Discovery-->
+  <!--Enroll Now button text-->
+  <string name="enroll_now_button_text">הירשמו עכשיו</string>
+  <!--Invitation Only button text-->
+  <string name="invitation_only_button_text">הזמנה בלבד</string>
+  <!--Effort field name-->
+  <string name="effort_field_name">מאמץ:</string>
+  <!--When discovering courses, some courses have an externally hosted video that describes it.
+    In that case, a play icon is shown on top of the course image. This is the content description.-->
+  <string name="go_to_video">המשך לוידאו</string>
+  <!--View Course button text text-->
+  <string name="view_course_button_text">צפו בקורס</string>
+  <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
+  <string name="you_are_now_enrolled">כעת אתם רשומים בקורס זה.</string>
+  <!--Error message shown when dashboard cannot be shown from course detail view-->
+  <string name="cannot_show_dashboard">לא ניתן להציג את לוח הבקרה.</string>
+  <!--Error message shown when browser cannot handle request for given web url-->
+  <!--Subjects Discovery-->
+  <!--Label for browsing courses by a subject-->
+  <string name="browse_by_subject" tools:ignore="MissingTranslation">עיון לפי נושא</string>
+  <!--Button's Label for viewing all subjects-->
+  <string name="view_all_subjects" tools:ignore="MissingTranslation">צפו בכל הנושאים</string>
+  <!--Label for searching subjects-->
+  <string name="search_subjects" tools:ignore="MissingTranslation">חפשו נושאר</string>
+  <!--Course Sharing-->
+  <!--Description of button that will open the share course menu-->
+  <string name="share_course_button">שתפו את הקורסים שלכם</string>
+  <!--Share course-->
+  <string name="share_course_message">אני לוקח\ת קורס ב{platform_name}! תעיפו מבט:</string>
+  <!--Settings Page-->
+  <!--Label for wifi only switch-->
+  <string name="settings_wifi_top">הורדה רק בWi-Fi</string>
+  <!--Label explaining what wifi only means in detail-->
+  <string name="settings_wifi_bottom">הורד תוכן רק כאשר Wi-Fi מחובר</string>
+  <!--Label for the Download to sd-card setting-->
+  <!--Label explaining the download location setting in detail-->
+  <!--Certificate Page-->
+  <!--Description of button that will open the certificate sharing menu-->
+  <string name="share_certificate_button">שתפו את התעודה שלכם</string>
+  <!--Text that pre-populates your post/email/SMS when sharing certificate-->
+  <string name="share_certificate_message">הרגע הרווחתי תעודה ב-{platform_name}! תעיפו מבט: {certificate_url}</string>
+  <!--Tab of tab for certicate for finished course-->
+  <string name="tab_label_certificate">תעודת סיום</string>
+  <!--Data Usage Dialog-->
+  <!--Alert dialog error message shown when using a feature with a required Internet connection-->
+  <string name="need_data">מאפיין זה מצריך חיבור אינטרנט פעיל.</string>
+  <!--Login Activity Place Holders-->
+  <!--Hint text for login field-->
+  <string name="email_username">שם משתמש או כתובת דואר אלקטרוני</string>
+  <!--Hint text for email address field in reset password dialog-->
+  <string name="email">כתובת דוא\"ל</string>
+  <!--Hint text for password field-->
+  <string name="password">סיסמה</string>
+  <!--Button text allowing user to reset their password-->
+  <string name="forgot_password">שכחת את סיסמתך?</string>
+  <!--Button initiating login process after user enters credentials like username and password-->
+  <string name="login">התחבר</string>
+  <!--Accessible content description of sign in button on Log in screen-->
+  <string name="login_btn">כפתור כניסה</string>
+  <!--Message shown while waiting for action-->
+  <string name="progress_text">אנא המתינ</string>
+  <!--Message shown while user waits for response to a sign in request-->
+  <string name="signing_in">נכנס</string>
+  <!--Message for shown after tapping Sign In-->
+  <string name="error_message">הודעת שגיאה</string>
+  <!--Generic error during log in-->
+  <string name="error_heading">השיגאה הבאה קרתה בזמן החיבור שלך</string>
+  <!--Error during log in.-->
+  <string name="login_failed">אנא ודא את נכונות שם המשתמש או כתובת הדוא\"ל והסיסמה, ונסה שוב. </string>
+  <!--License Agreement related string on Login and Regiser screens-->
+  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Label for End User License Agreement-->
+  <string name="licensing_agreement" tools:ignore="MissingTranslation">הסכם רישיון משתמש קצה ב-{platform_name}</string>
+  <!--Label for Terms of Service and Honor Code-->
+  <string name="tos_and_honor_code">תנאי השירות וקוד הכבוד ב-{platform_name}</string>
+  <!--Label for Privacy Policy-->
+  <string name="privacy_policy">מדיניות פרטיות</string>
+  <string name="login_title">היכנס</string>
+  <!--Accessible content description of close button on Sign in and Sign up screen-->
+  <string name="close">סגור</string>
+  <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
+  <string name="dropdown_list_prefix">רשימה נפתחת.</string>
+  <!--Navigation Drawer Labels-->
+  <!--Button text to show user current downloads screen-->
+  <string name="label_current_downloads">צפו בהורדות המתבצעות כעת</string>
+  <!--Content description for edit profile button-->
+  <string name="open_profile_button">פתח פרופיל</string>
+  <!--Title of user's course list screen-->
+  <string name="label_my_courses">קורסים</string>
+  <!--Title of user's program list screen-->
+  <!--Title of native Find Courses Screen-->
+  <string name="label_find_courses">מצא קורסים</string>
+  <!--Title of webview based Find Courses Screen-->
+  <string name="label_discover">גלו</string>
+  <!--Title of Degrees tab on Discovery screen-->
+  <!--Title of Find Courses tab on Main Dashboard screen-->
+  <string name="label_discovery" tools:ignore="MissingTranslation">גילוי</string>
+  <!--Button allowing users to send an email for feedback-->
+  <string name="label_submit_feedback">הגש משוב</string>
+  <!--Toggle switch on state label-->
+  <string name="toggle_turn_on">דולק</string>
+  <!--Toggle switch off state label-->
+  <string name="toggle_turn_off">כבוי</string>
+  <!--Logout button label-->
+  <string name="logout">התנתקות</string>
+  <!--Settings screen title-->
+  <string name="settings_txt">הגדרות</string>
+  <!--Settings screen version-->
+  <string name="label_version">גרסת האפליקציה</string>
+  <!--Button text to show user Settings screen-->
+  <string name="label_settings">הגדרות</string>
+  <!--Title of Account screen-->
+  <string name="title_account">חשבון</string>
+  <!--Help Dialog Place Holder messages-->
+  <!--Reset password alert dialog title-->
+  <string name="confirm_dialog_title_help">איפוס סיסמה</string>
+  <!--Reset password alert dialog message-->
+  <string name="success_dialog_title_help">נשלחה הודעת דוא\"ל לאיפוס סיסמה</string>
+  <!--Reset password alert dialog title-->
+  <string name="title_reset_password_failed">שגיאת איפוס סיסמה</string>
+  <!--Label for switch controlling whether users permit downloading using cellular data or only wifi-->
+  <string name="wifi_dialog_title_help">אפשר הורדה ברשת סלולרית</string>
+  <!--Password reset sent succesfully alert-->
+  <string name="success_dialog_message_help">שלחנו הודעה עם הוראות איפוס הססמא לכתובת האימייל שלך.
+אם את\ה לא רואה את האימייל בדקות הקרובות, מומלץ לבדוק את תיקיית הספאם.</string>
+  <!--Password reset dialog prompt-->
+  <string name="confirm_dialog_message_help">הכניסו את כתובת האימייל של החשבון שלכם, ואנחנו נשלח לכם הוראות לאיפוס הססמה שלכם.</string>
+  <!--Label explaining toggle for cellular data access-->
+  <string name="wifi_dialog_message_help">אפשר למכשירך להוריד סרטונים ברשת הסלולרית כאשר Wi-Fi אינו זמין. עלולות לחול עלויות תקשורת.  </string>
+  <!--Info message text for to let use know how many videos were deleted-->
+  <plurals name="delete_video_snackbar_msg">
+    <item quantity="one">קובץ וידאו %s נמחק</item>
+    <item quantity="two">%s קבצי וידאו נמחקו</item>
+    <item quantity="many">%s קבצי וידאו נמחקו</item>
+    <item quantity="other">%s קבצי וידאו נמחקו</item>
+  </plurals>
+  <!--Alert dialog title for users with zero rated data-->
+  <string name="leaving_app_data_title">עוזב את אפליקציית {platform_name}</string>
+  <!--Alert dialog content for users with zero rated data-->
+  <string name="leaving_app_data_message">אם אתם עוזבים את האפליקציה, לא תוכלו יותר לצפות בתוכן חינמי של {platform_name}. חיובי גלישה עשויים לחול.</string>
+  <!--Title of agreement users must accept to use the app-->
+  <string name="end_user_title" tools:ignore="MissingTranslation">הסכם רישיון למשתמש קצה </string>
+  <!--Title of privacy policy users must accept to use the app-->
+  <!--Title of terms of service & honor code users must accept to use the app-->
+  <string name="terms_of_service_title">תנאי השירות</string>
+  <!--My Courses-->
+  <!--Row of course on dashboard screen-->
+  <string name="courseware_title">קורס</string>
+  <!--Row of course on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="courseware_subtitle">גישה לקבצי וידאו ולמטלות</string>
+  <!--Row title of videos on dashboard screen-->
+  <string name="videos_title">קבצי וידאו</string>
+  <!--Row subtitle of videos on dashboard screen-->
+  <string name="videos_subtitle">צפו בקבצי וידאו של הקורס</string>
+  <!--Row of Discussion on dashboard screen-->
+  <string name="discussion_title">דיון</string>
+  <!--Row of Discussion on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="discussion_subtitle">הצטרפו לשיחה</string>
+  <!--Row of Handouts on dashboard screen-->
+  <string name="handouts_title">מסמכים למסירה</string>
+  <!--Row of Handouts on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="handouts_subtitle">מצאו מידע חשוב אודות הקורס</string>
+  <!--Row of announcement on dashboard screen-->
+  <string name="announcement_title">הודעות</string>
+  <!--Title text for the important dates section on the course dashboard-->
+  <string name="course_dates_title">תאריכים חשובים</string>
+  <!--Title text for the additional resources section on the tabular course dashboard-->
+  <string name="resources_title">משאבים</string>
+  <!--Row of announcement on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <string name="announcement_subtitle">התעדכנו בחדשות הטריות ביותר</string>
+  <!--Subtitle text describing the important dates section on the course dashboard-->
+  <string name="course_dates_subtitle">עקבו אחר מועדי ההגשה והישארו במסלול</string>
+  <!--Accessible content description of course name label field-->
+  <string name="course_name">שם קורס</string>
+  <!--Label indicating new course content has been downloaded-->
+  <string name="new_course_content">תוכן קורס חדש</string>
+  <!--Label for date when course starts-->
+  <string name="label_starting">התחלה {date}</string>
+  <!--Label for course that has ended-->
+  <string name="label_ended">סיום {date}</string>
+  <!--Label for date when course is ending-->
+  <string name="label_ending">סיום {date}</string>
+  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
+  <!--Label for date when course is expiring on a specific date like on December 5-->
+  <!--Label for date when course expired a specific time ago like 2 days ago-->
+  <!--Label for date when course expired on a specific date like on November 5-->
+  <!--Course Details-->
+  <!--Accessible content description of label for course content-->
+  <string name="course_content">תוכן הקורס</string>
+  <!--Tab title for course handouts section-->
+  <string name="tab_label_handouts">דפי מידע</string>
+  <!--Button for last accessed course section. Will be followed by course name-->
+  <string name="last_accessed">ביקרתם לאחרונה</string>
+  <!--Label shown when no courseware content is available-->
+  <string name="no_chapter_text">לא קיים כעת תוכן בקורס זה.</string>
+  <!--Label shown when no mobile-friendly videos are available in a course-->
+  <string name="no_videos_text">קורס זה אינו כולל קבצי וידאו.</string>
+  <!--Label shown when user is enrolled in no courses-->
+  <string name="no_courses_to_display">נראה שטרם נרשמתם בקורסים.</string>
+  <!--Label shown when no announcements are available for a course-->
+  <string name="no_announcements_to_display">כעת, אין הודעות עבור קורס זה.</string>
+  <!--Label shown when no handouts are available for a course-->
+  <string name="no_handouts_to_display">כעת אין דפי מידע לקורס זה.</string>
+  <!--Label shown when no important dates are available for a course-->
+  <string name="no_course_dates_to_display">תאריכי הקורס אינם זמינים כעת.</string>
+  <!--Title of the screen where user can delete videos-->
+  <string name="delete_videos_title">מחק קבצי וידאו</string>
+  <!--Label for a course item's due date for same day-->
+  <string name="due_date_today">להגשה היום ב-{due_date}</string>
+  <!--Label for a course item's due date-->
+  <string name="due_date_past_future">תאריך הגשה {due_date}</string>
+  <!--Upgrade banner's description which appears on course outline screen.-->
+  <!--Title upgrade to verified today course outline footer-->
+  <!--Title of place order for course upgrade screen-->
+  <!--Discussion Topics-->
+  <!--Label for the discussion topics page-->
+  <string name="discussion_topics_title">נושאי דיון</string>
+  <!--Hint displayed in search view for discussion posts-->
+  <string name="topics_search">חפשו בכל הפוסטים</string>
+  <!--Discussion Posts Fragment-->
+  <!--Title for discussion post search results-->
+  <string name="discussion_posts_search_title">תוצאות חיפוש</string>
+  <!--Label for the the filter and sort options for refining the thread list-->
+  <string name="discussion_posts_refine">סנן:</string>
+  <!--Label for creating a new post-->
+  <string name="discussion_post_create_new_post">צרו פוסט חדש</string>
+  <!--Label for creating a new comment-->
+  <!--Discussion posts filter options-->
+  <!--Discussion posts filter for all posts-->
+  <string name="discussion_posts_filter_all_posts">כל הפוסטים</string>
+  <!--Discussion posts filter for unread posts-->
+  <string name="discussion_posts_filter_unread_posts">לא נקרא</string>
+  <!--Discussion posts filter for unanswered posts-->
+  <string name="discussion_posts_filter_unanswered_posts">לא נענה</string>
+  <!--Discussion posts sort options-->
+  <!--Discussion posts sort by recent activity-->
+  <string name="discussion_posts_sort_recent_activity">פעילות אחרונה</string>
+  <!--Discussion posts sort by most activity-->
+  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">הפעילות הרבה ביותר</string>
+  <!--Discussion posts sort by most votes-->
+  <string name="discussion_posts_sort_most_votes">מספר ההצבעות הרב ביותר</string>
+  <!--Label for the visibility of a discussion post that is only visible to cohort-->
+  <string name="discussion_post_visibility_cohort">פוסט זה ניתן לצפייה רק על ידי {cohort}.</string>
+  <!--Label for the visibility of a discussion post that is visible to everyone-->
+  <string name="discussion_post_visibility_everyone">פוסט זה ניתן לצפייה על ידי כולם.</string>
+  <!--Used while constructing the author attribution text for a discussion post e.g. "3 days ago by Brian (Staff)"-->
+  <string name="discussion_post_author_attribution">על ידי {author}</string>
+  <!--Used while constructing the author attribution text for an answer response e.g. "Marked as answer 2 days ago by Khalid (Community TA)"-->
+  <string name="discussion_post_marked_as_answer">סומן כנענה</string>
+  <!--Used while constructing the author attribution text for an endorsed response e.g. "Endorsed 2 days ago by Khalid"-->
+  <string name="discussion_post_endorsed">אומץ</string>
+  <!--Used for putting authorLabel into parenthesis e.g. (Community TA) or (Staff)-->
+  <string name="discussion_post_author_label_attribution">({text})
+</string>
+  <!--Label indicating the number of replies on a post e.g. 47 total-->
+  <string name="discussion_post_total_replies">סך הכל {total_replies}</string>
+  <!--Label indicating the last time a post was updated e.g. Last post: Jun 22, 2016-->
+  <string name="discussion_post_last_interaction_date">פוסט אחרון: {date}</string>
+  <!--Discussion Responses-->
+  <!--Label for question type discussions that are answered-->
+  <string name="course_discussion_answered_title">שאלות שנענו</string>
+  <!--Label for question type discussions that are unanswered-->
+  <string name="course_discussion_unanswered_title">שאלה שלא נענתה</string>
+  <!--Label for adding a discussion response-->
+  <!--Label for number of discussion responses-->
+  <plurals name="number_responses_or_comments_responses_label">
+    <item quantity="one">תשובה %s</item>
+    <item quantity="two">%s תשובות</item>
+    <item quantity="many">%s תשובות</item>
+    <item quantity="other">%s תשובות</item>
+  </plurals>
+  <!--Label for number of discussion comments-->
+  <plurals name="number_responses_or_comments_comments_label">
+    <item quantity="one">תגובה %s</item>
+    <item quantity="two">%s תגובות</item>
+    <item quantity="many">%s תגובות</item>
+    <item quantity="other">%s תגובות</item>
+  </plurals>
+  <!--Label for adding a new comment-->
+  <!--Label for indicating that a response is an answer-->
+  <string name="discussion_responses_answer">תשובה</string>
+  <!--Label for indicating that a response is endorsed-->
+  <string name="discussion_responses_endorsed">אומץ</string>
+  <!--Label for time span when its less than a second after posting a response/comment-->
+  <string name="just_now">זה עתה</string>
+  <!--Label for letting the user know his/her response was successfully added-->
+  <string name="discussion_response_posted">התשובה שלכם נוספה.</string>
+  <!--Label for letting the user know his/her comment was successfully added-->
+  <string name="discussion_comment_posted">ההערה שלכם נוספה.</string>
+  <!--Discussion Responses Action Bar-->
+  <!--Label to indicate number of votes-->
+  <plurals name="discussion_responses_action_bar_vote_text">
+    <item quantity="one">הצבעה {quantity}</item>
+    <item quantity="two">{quantity} הצבעות</item>
+    <item quantity="many">{quantity} הצבעות</item>
+    <item quantity="other">{quantity} הצבעות</item>
+  </plurals>
+  <!--Label to indicate discussion response is not marked as inappropriate-->
+  <string name="discussion_responses_report_label">דווחו</string>
+  <!--Label for discussion response that has been marked as inappropriate-->
+  <string name="discussion_responses_reported_label">בטלו דיווח</string>
+  <!--Title in adding a new comment-->
+  <string name="discussion_add_comment_title">הוסיפו הערה</string>
+  <!--Title when adding a new comment is disabled-->
+  <string name="discussion_add_comment_disabled_title">לא ניתן להוסיף הערות לתגובה זו</string>
+  <!--Title in showing list of comments-->
+  <string name="discussion_comments">הערות</string>
+  <!--Add comment button title in adding a new comment-->
+  <string name="discussion_add_comment_button_label">הוסיפו הערה</string>
+  <!--Add comment button description for accessibility in adding a new comment-->
+  <string name="discussion_add_comment_button_description">הוסף כפתור הערות</string>
+  <!--Add your comment placeholder in adding a new comment-->
+  <!--Title in adding a new response-->
+  <string name="discussion_add_response_title">הוסיפו תגובה</string>
+  <!--Title when adding a new response is disabled-->
+  <string name="discussion_add_response_disabled_title">לא ניתן להוסיף תגובות לפוסט זה</string>
+  <!--Add response button title in adding a new response-->
+  <string name="discussion_add_response_button_label">הוסיפו תגובה</string>
+  <!--Add response button description for accessibility in adding a new response-->
+  <string name="discussion_add_response_button_description">הוסיפו כפתור תגובה</string>
+  <!--Add your response placeholder in adding a new response-->
+  <!--Title placeholder in adding a new post-->
+  <string name="discussion_post_title">כותרת</string>
+  <!--Label for selected topic when creating a post-->
+  <string name="discussion_add_post_topic_selection">נושא: {topic}</string>
+  <!--Add post button title in adding a new discussion-->
+  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">דיון בפוסט</string>
+  <!--Add post button description for accessibility in adding a new discussion-->
+  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">כפתור דיון בפוסט</string>
+  <!--Add post button title in adding a new post-->
+  <string name="discussion_add_question_button_label">שאלה בנוגע לפוסט</string>
+  <!--Add post button content description for accessibility in adding a new post-->
+  <string name="discussion_add_question_button_description">כפתור שאלה בנוגע לפוסט</string>
+  <!--Add your post placeholder in adding a new post-->
+  <!--Add your post placeholder in adding a new post-->
+  <!--Question text in adding a new post-->
+  <string name="discussion_question">שאלה</string>
+  <!--Assessment-->
+  <!--Label showing next unit in a sub-section on assessment navigation bar-->
+  <string name="assessment_next">הבא</string>
+  <!--Label showing previous unit in a sub-section on assessment navigation bar-->
+  <string name="assessment_previous">הקודם</string>
+  <!--Label showing assessment only available on website-->
+  <string name="assessment_not_available">רכיב אינטראקטיבי זה עדיין לא זמין בסלולר.</string>
+  <!--Label showing assessment only available on website-->
+  <string name="assessment_explore_on_web">עיינו בחלקים אחרים של קורס זה או צפו בחלק זה ברשת.</string>
+  <!--Button to show wiew on web for assessment-->
+  <string name="assessment_view_on_web">צפו ברשת</string>
+  <!--Label to show empty assessment-->
+  <string name="assessment_empty">לא קיימים חומרי לימוד בחלק זה.</string>
+  <!--Label to show a course will be starting soon-->
+  <string name="assessment_soon">בקרוב</string>
+  <!--Label to notify user to rotate device for viewing a video in full screen-->
+  <string name="assessment_rotate_for_fullscreen">סובבו את המכשיר שלכם כדי לצפות בקובץ וידאו זה במצב מסך מלא.</string>
+  <!--Label showing only youtube is available-->
+  <string name="assessment_only_on_youtube">ניתן להציג קובץ וידאו זה רק ביוטיוב.</string>
+  <!--Label for button to open on youtube-->
+  <string name="assessment_open_on_youtube">צפו בוידאו ביוטיוב</string>
+  <!--Video List-->
+  <!--Title of video download screen-->
+  <string name="title_download">הורדות</string>
+  <!--Label indicating user has no Internet connection-->
+  <string name="offline_text">אין חיבור רשת</string>
+  <!--Cancel video download-->
+  <string name="cancel_download">בטלו הורדה</string>
+  <!--My Downloads-->
+  <!--Button action label to view an item-->
+  <string name="view_button_text">צפה</string>
+  <!--Error text when downloading an item fails-->
+  <string name="download_failed_text">הורדה נכשלה</string>
+  <!--Alert dialog title to confirm download of a large quantity of data-->
+  <string name="download_exceed_title">הורדה גדולה</string>
+  <!--Message shown a single video download begins-->
+  <string name="msg_started_one_video_download">מוריד סרטון 1</string>
+  <!--When a video download is about to start and we don't know it's file size yet-->
+  <string name="download_pending">הורדת הקובץ ממתינה...</string>
+  <!--Error shown when video download fails-->
+  <string name="msg_video_not_downloaded">לא ניתן להוריד סרטון</string>
+  <!--Error shown when video download fails-->
+  <string name="msg_video_not_available">סרטון זה אינו זמין כעת. \n בדוק מאוחר יותר.</string>
+  <!--Error shown when video has flag to indicate it is not available for mobile app-->
+  <string name="video_only_on_web_label">קובץ הוידאו זמין כעת רק ברשת. הקליקו כדי לצפות ברשת.</string>
+  <!--Message to indicate the it is not available for mobile app-->
+  <string name="video_only_on_web_short">קובץ וידאו זה אינו זמין עדיין בסלולר.</string>
+  <!--Alert dialog title when login fails-->
+  <string name="login_error">שגיאת התחברות</string>
+  <!--Alert dialog title when login fails due to lack of Internet-->
+  <string name="no_connectivity">שגיאת חיבור</string>
+  <!--Bulk Videos Download-->
+  <!--Accessibility label of bulk download switch-->
+  <string name="bulk_download_switch">מתג הורדת קבצי וידאו במקבץ.</string>
+  <!--Title for bulk videos download view when in new or partial videos' download state-->
+  <string name="download_to_device">הורד למכשיר</string>
+  <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
+  <plurals name="download_total">
+    <item quantity="one">{total_videos_count} קובץ וידאו, {total_videos_size} סך הכל</item>
+    <item quantity="two">{total_videos_count} קבצי וידאו, {total_videos_size} סך הכל</item>
+    <item quantity="many">{total_videos_count} קבצי וידאו, {total_videos_size} סך הכל</item>
+    <item quantity="other">{total_videos_count} קבצי וידאו, {total_videos_size} סך הכל</item>
+  </plurals>
+  <!--Title for bulk videos download view when download is starting-->
+  <string name="download_starting">מתחיל בהורדה...</string>
+  <!--Title for bulk videos download view when in downloading state-->
+  <string name="downloading_videos">מוריד קבצי וידאו...</string>
+  <!--Subtitle for bulk videos download view when in downloading state-->
+  <string name="download_remaining">{remaining_videos_count} נותרו, {remaining_videos_size} סך הכל</string>
+  <!--Title for bulk videos download view when in downloaded state-->
+  <string name="download_complete">כל קבצי הוידאו הורדו</string>
+  <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
+  <string name="switch_off_no_downloading">הדלקת המתג תוריד את כל קבצי הוידאו בקורס זה.</string>
+  <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
+  <string name="switch_on_all_downloading">כיבוי המתג יבטל את הורדת כל קבצי הוידאו וימחק את כל הקבצים שכבר הורדו בקורס זה.</string>
+  <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
+  <string name="switch_on_all_downloaded">כיבוי המתג ימחק את כל קבצי הוידאו שכבר הורדו בקורס זה.</string>
+  <!--Accessibility label of full bulk download view when videos are being downloaded-->
+  <string name="view_downloads">הקישו פעמיים כדי לצפות בהורדות המתבצעות כעת.</string>
+  <!--Wifi New Message-->
+  <!--Toggle to allow downloads using cellular data-->
+  <string name="allow">אפשר</string>
+  <!--Toggle to disallow downloads using cellular data-->
+  <string name="do_not_allow">אל תאפשר</string>
+  <!--Player Settings-->
+  <!--Label for closed captions in video player-->
+  <string name="lbl_closed_caption">כתוביות</string>
+  <!--Label for video playback speed in video player-->
+  <!--Label for None captions selected-->
+  <!--Accessibility Label for Video Player-->
+  <string name="video_player">נגן הוידאו</string>
+  <!--Accessibility Label for View on Web button on Video Player top bar-->
+  <string name="video_player_view_on_web">צפו ברשת</string>
+  <!--Accessibility Label for Play button of Video Player-->
+  <string name="video_player_play">נגן</string>
+  <!--Accessibility Label for Pause button of Video Player-->
+  <string name="video_player_next">הבא</string>
+  <!--Accessibility Label for Previous button of Video Player-->
+  <string name="video_player_previous">הקודם</string>
+  <!--Accessibility Label for Pause button of Video Player-->
+  <string name="video_player_pause">עצור</string>
+  <!--Accessibility Label for Rewind button on Video Player bottom bar-->
+  <string name="video_player_rewind">חזור 30 שניות אחורה</string>
+  <!--Accessibility Label for Settings button on Video Player bottom bar-->
+  <string name="video_player_settings">הגדרות</string>
+  <!--Accessibility Label for Entering Fullscreen button on Video Player bottom bar-->
+  <string name="video_player_enter_fullscreen">היכנס למצב מסך מלא</string>
+  <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
+  <string name="video_player_exit_fullscreen">צא ממצב מסך מלא</string>
+  <!--Button label to bring up course finder-->
+  <string name="find_course_text">מחפש אתגרים חדשים?</string>
+  <!--Button label to bring up course finder-->
+  <string name="find_course_btn_text">מצא קורס</string>
+  <!--Message between sign in button and social login buttons-->
+  <string name="or_sign_in_with">או היכנס באמצעות</string>
+  <!--Facebook login method-->
+  <string name="facebook_text">פייסבוק</string>
+  <!--Google login method-->
+  <string name="google_text">גוגל</string>
+  <!--Prompt allowing user to choose email program-->
+  <string name="email_chooser_header">שלח דוא\"ל בעזרת...</string>
+  <!--Error shown when user attempts to send email, but has no email app-->
+  <string name="email_client_not_present">לא מותקנות תוכנות דואר אלקטרוני</string>
+  <!--Search for a course prompt-->
+  <string name="search_for_courses">חפש קורסים</string>
+  <!--Search for a program prompt-->
+  <!--Search for a degree prompt-->
+  <!--Landing Activity text-->
+  <!--Prompt leading user to sign in screen-->
+  <string name="already_have_an_account">כבר יש לך חשבון? התחבר</string>
+  <!--Prompt leading user to create account screen-->
+  <string name="sign_up_and_learn">הירשם והתחל ללמוד</string>
+  <!--In Register screen-->
+  <string name="register_with">הירשם באמצעות</string>
+  <string name="or_register_with_email">או הירשמו באמצעות אימייל</string>
+  <!--New Logistration Launch screen text-->
+  <!--Button leading user to create account screen-->
+  <string name="launch_register">צרו את החשבון שלכם</string>
+  <!--Button leading user to log in screen-->
+  <string name="launch_login">היכנס</string>
+  <!--Introduction text on the launch screen-->
+  <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
+  <string name="launch_search_courses">חפש קורסים</string>
+  <!--Registration Screen-->
+  <!--Button text allowing user to show hidden optional registration fields-->
+  <string name="show_optional_text">הצג שדות רשות</string>
+  <!--Button text allowing user to hide visible optional registration fields-->
+  <string name="hide_optional_text">הסתר שדות אופציונלים</string>
+  <!--Button text allowing user create an account-->
+  <string name="create_account_text">צור את חשבוני</string>
+  <!--Accessible content description of create account button on Registration screen-->
+  <string name="create_account_btn">כפתור צור את החשבון שלי</string>
+  <!--Text shown while waiting for registration request-->
+  <string name="creating_account_text">צור חשבון...</string>
+  <!--Registration screen title-->
+  <string name="register_title">הרשמה</string>
+  <!--Text for successful registration with social token-->
+  <string name="sign_up_with_facebook_ok">נכנסתם בהצלחה באמצעות פייסבוק</string>
+  <string name="sign_up_with_google_ok">נכנסתם בהצלחה באמצעות גוגל</string>
+  <string name="sign_up_with_social_ok">אנחנו רק צריכים עוד קצת מידע לפני שתתחילו ללמוד באמצעות {platform_name}.</string>
+  <!--Continue registration after social login-->
+  <string name="complete_registration">השלימו את ההרשמה שלכם</string>
+  <!--Message shown when enrolling in a course fails-->
+  <string name="enrollment_failure">לא הצלחנו לרשום אותך לקורס זה כעת.</string>
+  <!--Alert dialog button allowing user to repeat their attempted action-->
+  <string name="try_again">נסו שוב</string>
+  <!--Registration error-->
+  <string name="registration_error_title">שגיאת הרשמה</string>
+  <string name="registration_error_message">עדכנו את השדות המודגשים ונסו שוב</string>
+  <!--data charges may apply dialog text-->
+  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
+  <string name="open_external_url_title">עלולות לחול עלויות תקשורת</string>
+  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
+  <string name="open_external_url_desc">קישור זה יפתח בדפדפן הנייד שלך, יתכן שיחולו עלויות תקשורת.</string>
+  <string name="android">אנדרואיד</string>
+  <!--Email subject line when user attempts to submit feedback about the app-->
+  <string name="email_subject">משוב לקוח</string>
+  <!--Email subject line when a user attempts to submit a review using the app review workflow-->
+  <string name="review_email_subject">ביקורת לקוחות</string>
+  <!--Submit Feedback app version text-->
+  <string name="app_version">גרסת אפליקציה:</string>
+  <!--Submit Feedback android version text-->
+  <string name="android_os_version">מערכת הפעלה של אנדרואיד:</string>
+  <!--Submit Feedback android model text-->
+  <string name="android_device_model">דגם מכשיר:</string>
+  <!--Submit Feedback feedback text-->
+  <string name="insert_feedback">פידבק:</string>
+  <!--Notification related-->
+  <!--toggle between subscribe and unsubscribe to course announcement-->
+  <string name="notification_toggle">אפשר הודעות</string>
+  <!--Placeholder title for course content with no title-->
+  <string name="untitled_block">ללא כותרת</string>
+  <!--Title for default channel notifications-->
+  <!--Discussion/Forum-->
+  <string name="forum_no_results_for_search_query">לא נמצאו תוצאות עבור “{search_query}”. נסו מונח חיפוש אחר או בחרו בקטגוריית דיון כדי לעיין בה.</string>
+  <string name="forum_no_results_for_all_posts">לא קיימים פוסטים בדיון בקורס זה.</string>
+  <string name="forum_no_results_for_following">כעת אינכם עוקבים אחר שום פוסט</string>
+  <string name="forum_no_results_for_filtered_following">תוצאות הסינון אינן כוללות שום פוסט שאתם עוקבים אחריו.</string>
+  <string name="forum_no_results_in_category">אין שום פוסט בקטגוריית הדיון הזו.</string>
+  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">נסו להסיר את סינון הפוסטים שלכם.</string>
+  <string name="forum_post_i_am_following">פוסטים שאני עוקב\ת אחריהם</string>
+  <string name="forum_follow">עקוב</string>
+  <string name="forum_unfollow">הסר מעקב</string>
+  <!--User Profiles-->
+  <!--Window title for the user profile screen-->
+  <string name="profile_title">פרופיל</string>
+  <!--The accessibility description for the username section-->
+  <string name="profile_username_description">שם משתמש: {username}</string>
+  <!--The accessibility description for the language section-->
+  <string name="profile_language_description">שפה: {language}</string>
+  <!--The accessibility description for the location section-->
+  <string name="profile_location_description">מיקום: {location}</string>
+  <!--The accessibility description for the "About Me" section-->
+  <string name="profile_about_me_description">אודותי: {about_me}</string>
+  <!--Label for toolbar icon that launches the edit profile screen for the current user-->
+  <string name="profile_toolbar_edit_button">ערוך</string>
+  <!--Shown when viewing your own profile and you are not sharing a full profile-->
+  <string name="profile_sharing_limited_by_you">כעת אתם משתפים פרופיל מוגבל.</string>
+  <!--Shown when viewing another user's profile and that user is not sharing a full profile-->
+  <string name="profile_sharing_limited_by_other_user">אדם זה משתף כעת פרופיל מוגבל.</string>
+  <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
+  <string name="profile_consent_needed_explanation">עליכם להיות בני 13 או יותר כדי לשתף פרופיל מלא.</string>
+  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
+  <string name="profile_consent_needed_edit_button">הגדרות חשבון</string>
+  <!--Shown when viewing your own incomplete profile-->
+  <string name="profile_incomplete_explanation">נראה שהפרופיל שלכם טרם הושלם. בואו נתחיל.</string>
+  <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->
+  <string name="profile_incomplete_edit_button">התחל</string>
+  <!--This text is shown in place of the "About Me" text if the user has not filled in their "About Me"-->
+  <string name="profile_incomplete_about_me">לא סיפקתם מידע \"אודותי\".</string>
+  <!--Window title for edit profile screen-->
+  <string name="edit_user_profile_title">ערוך פרופיל</string>
+  <!--How most profile fields are formatted when viewing the edit screen-->
+  <string name="edit_user_profile_field">{label}: {value}</string>
+  <!--Default placeholder if a profile field is blank-->
+  <string name="edit_user_profile_field_placeholder">בחר</string>
+  <!--Button that saves changes to a profile text field-->
+  <string name="edit_user_profile_textarea_submit_button">שלח</string>
+  <!--An option that will set the user profile's primary language to the language of their device's configured locale-->
+  <string name="edit_user_profile_current_language">שפה נוכחית: {current_language}</string>
+  <!--An option that will set the user profile's location to the country of their device's configured locale-->
+  <string name="edit_user_profile_current_location">מיקום נוכחי: {current_location}</string>
+  <!--Button label that will open gallery or camera for choosing new profile photo-->
+  <string name="edit_user_profile_change_photo">שנה</string>
+  <!--Content Description for change photo button-->
+  <string name="edit_user_profile_change_photo_description">שנה תמונת פרופיל</string>
+  <!--Button that will open a camera for taking a new profile photo-->
+  <string name="edit_user_profile_take_photo">צלם תמונה</string>
+  <!--Button that will open photo gallery for choosing a new profile photo-->
+  <string name="edit_user_profile_choose_photo">בחרו תמונה</string>
+  <!--Button that will open a camera for taking a new profile photo-->
+  <string name="edit_user_profile_remove_photo">הסר תמונה</string>
+  <!--Title when cropping newly selected profile photo-->
+  <string name="edit_user_profile_photo_crop_title">חתוך ושנה גודל</string>
+  <!--Button that will exit the crop tool without saving the image-->
+  <string name="edit_user_profile_photo_crop_cancel">בטל</string>
+  <!--Button that will confirm the crop region and continue to upload the cropped photo-->
+  <string name="edit_user_profile_photo_crop_save">בחר</string>
+  <!--Tab title for section of profile that displays a user's bio-->
+  <string name="profile_tab_bio">אודות</string>
+  <!--Tab title for section of profile that lists a user's accomplishments-->
+  <string name="profile_tab_accomplishment">הישגים</string>
+  <!--Button that will initiate sharing one of a user's accomplishments-->
+  <string name="share_accomplishment_button">שתפו את ההישגים שלכם</string>
+  <!--Text that pre-populates your post/email/SMS when sharing certificate-->
+  <string name="share_accomplishment_message">כעת הרווחתי תג ב-{platform_name}! תעיפו מבט: {badge_url}</string>
+  <!--Question on the app rating dialog-->
+  <string name="rating_dialog_message">כיצד תדרגו את הפליקציה הזו?</string>
+  <!--Dialog title for positive app review-->
+  <string name="rate_app_dialog_title">דרגו את האפליקציה</string>
+  <!--Dialog message for positive app review-->
+  <string name="rate_app_dialog_message">כתבו ביקורת קצרה וספרו לאחרים מה אתם חושבים על האפליקציה של {platform_name}</string>
+  <!--Dialog title for negative app review-->
+  <string name="feedback_dialog_title">לשלוח פידבק?</string>
+  <!--Dialog message for negative app review-->
+  <string name="feedback_dialog_message">עזרו לנו להשתפר!</string>
+  <!--accessibility label for rating bar-->
+  <string name="rating_bar" tools:ignore="MissingTranslation">בקרת דירוג</string>
+  <!--accessibility label for rating selection on rating bar-->
+  <string name="rating_bar_selection">{rating} מתוך {num_of_stars}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <string name="whats_new_title">מאפיינים חדשים בגרסה {version_number}</string>
+</resources>

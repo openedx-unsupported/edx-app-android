@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 type = ANDROID
-lang_map = es_419: es, tr_TR: tr, zh_CN: zh, pt_BR: pt-rBR, fr: fr, de_DE: de-rDE
+lang_map = es_419: es, tr_TR: tr, zh_CN: zh, pt_BR: pt-rBR, fr: fr, de_DE: de-rDE, he: iw
 
 
 [edx-mobile-apps.android-app-strings]
