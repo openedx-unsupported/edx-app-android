@@ -1,10 +1,11 @@
 package org.edx.mobile.tta.ui.mxCalenderView;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -14,7 +15,6 @@ import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
-import org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,15 +41,14 @@ public class CustomCalendarView extends LinearLayout {
     SimpleDateFormat yearFormat = new SimpleDateFormat("YYYY", Locale.ENGLISH);
 
 
-
     public CustomCalendarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
 //        Log.d("CustomCalendarView", "CustomCalendarView: 2");
 //        createEvents(eventsList);
         initializeView();
+//        setCustomAdapter();
         setUpCalendar();
-
 
         previousButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -68,18 +67,18 @@ public class CustomCalendarView extends LinearLayout {
     }
 
 
-    private void initializeView(){
+    private void initializeView() {
 ////        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = LayoutInflater.from(context).inflate(R.layout.mx_custom_calender_view, this,true);
+        View view = LayoutInflater.from(context).inflate(R.layout.mx_custom_calender_view, this, true);
 
-            nextButton = view.findViewById(R.id.ib_next);
-            previousButton = view.findViewById(R.id.ib_prev);
-            currentDate = view.findViewById(R.id.tv_date);
-            calGrid = view.findViewById(R.id.cal_grid);
+        nextButton = view.findViewById(R.id.ib_next);
+        previousButton = view.findViewById(R.id.ib_prev);
+        currentDate = view.findViewById(R.id.tv_date);
+        calGrid = view.findViewById(R.id.cal_grid);
     }
 
 
-    private static void setUpCalendar(){
+    public static void setUpCalendar() {
         String date = simpleDateFormat.format(calendar.getTime());
         currentDate.setText(date);
         dates.clear();
@@ -91,29 +90,32 @@ public class CustomCalendarView extends LinearLayout {
 
         monthCalendar.add(Calendar.DAY_OF_MONTH, -FIRST_DAY_OF_MONTH);
 
-        while (dates.size() < MAX_CALENDAR_DAYS){
+        while (dates.size() < MAX_CALENDAR_DAYS) {
             dates.add(monthCalendar.getTime());
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
         }
-
+        calGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                view.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
+            }
+        });
         adapter = new UnitCalendarViewModel.CustomCalendarAdapter(context, dates, calendar, eventsList);
         calGrid.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
     }
-    public static void createEvents(List<Events> events){
+
+    public static void createEvents(List<Events> events) {
         Events e;
         eventsList.clear();
-        for (int i = 0; i< events.size(); i++){
+        for (int i = 0; i < events.size(); i++) {
             e = new Events(events.get(i).getDATE());
             eventsList.add(e);
         }
         adapter.notifyDataSetChanged();
         setUpCalendar();
-//        Events events = new Events("2019-10-15");
-//        eventsList.add(events);
-//
-//        events = new Events("my bday", "09:30", "2019-10-20","oct","2019");
-//        eventsList.add(events);
     }
+
 }

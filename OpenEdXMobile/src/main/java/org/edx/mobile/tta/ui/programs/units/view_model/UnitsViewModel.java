@@ -308,6 +308,7 @@ public class UnitsViewModel extends BaseViewModel {
                                 unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
                                 if (response.getSuccess()) {
                                     mActivity.showLongSnack("Proposed date set successfully");
+                                    EventBus.getDefault().post(units);
                                 }
                             }
 
@@ -568,6 +569,7 @@ public class UnitsViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
+                eventsArrayList.clear();
                /* if (selectedEvent.get() != null) {
                     if (selectedEvent.get()== String.valueOf(model.getMyDate())) {
                         unitBinding.setUnit(model);

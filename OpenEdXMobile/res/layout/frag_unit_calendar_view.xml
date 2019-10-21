@@ -33,10 +33,20 @@
         android:orientation="vertical">
         <org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/calendar_view">
 
         </org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/circle_all_blue"
+            android:id="@+id/text_date_selected"
+            android:text="@{viewModel.eventDate}"
+            android:padding="@dimen/_10px"
+            android:textColor="@color/gray_4"
+            style="?borderlessButtonStyle" />
+
     </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
@@ -75,7 +85,7 @@
                     android:layout_marginEnd="@dimen/_70px"
                     android:fontFamily="@font/hind_regular"
                     android:gravity="center"
-                    android:text="No unit is available"
+                    android:text="No event found for this date"
                     android:textColor="@color/primary_cyan"
                     android:textSize="12sp" />
 

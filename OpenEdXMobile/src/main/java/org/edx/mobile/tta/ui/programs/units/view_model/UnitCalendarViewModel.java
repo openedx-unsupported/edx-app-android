@@ -84,7 +84,9 @@ public class UnitCalendarViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
-    public static String eventDate;
+    public static String previousDaySelected;
+    public static ObservableField<String> eventDate = new ObservableField<>();
+
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -110,8 +112,10 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
         layoutManager = new LinearLayoutManager(mActivity);
         unitsAdapter = new UnitsAdapter(mActivity);
+        previousDaySelected = "";
 
-//        unitsAdapter.setItems(units);
+        unitsAdapter.setItems(units);
+        unitsAdapter.notifyDataSetChanged();
         unitsAdapter.setItemClickListener((view, item) -> {
 
             switch (view.getId()) {
@@ -304,7 +308,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         }
                         units = data;
                         populateUnits(data);
-//                        unitsAdapter.setItems(data);
+                        unitsAdapter.setItems(data);
+                        unitsAdapter.notifyDataSetChanged();
                         unitsAdapter.setLoadingDone();
                     }
 
@@ -360,10 +365,11 @@ public class UnitCalendarViewModel extends BaseViewModel {
         fetchData();
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(ShowStudentUnitsEvent event) {
+    public void onEventMainThread(List<Unit> unit) {
 //        filters.clear();
-        user = event.getUser();
+        changesMade = true;
+        allLoaded = false;
+        fetchData();
 //        ProgramFilter pf = new ProgramFilter();
 //        pf.setDisplayName(user.username);
 //        pf.setInternalName(user.name);
@@ -406,6 +412,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
 //                unitBinding.tvMyDate.setVisibility(View.GONE);
                 eventsArrayList.clear();
                 if (DateUtil.getDisplayDate(model.getMyDate()).equals(eventDate)){
+
 //                    Events et = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
 //                    eventsArrayList.add(et);
 //                    CustomCalendarView.createEvents(eventsArrayList);
@@ -519,13 +526,20 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 view = inflater.inflate(R.layout.t_row_calender_view, parent, false);
 
             }
-
+            Calendar eventCalendar = Calendar.getInstance();
+            ArrayList<String> arrayList = new ArrayList<>();
 
             TextView day = view.findViewById(R.id.cal_day);
             View event = view.findViewById(R.id.event_id);
             day.setText(String.valueOf(dayNo));
 
-//            day.setTextColor(ContextCompat.getColor(context, R.color.secondary_blue_light));
+//            if (dayNo)
+            if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && currentMonth == eventCalendar.get(Calendar.MONTH) +1
+            &&  displayYear == eventCalendar.get(Calendar.YEAR)) {
+                day.setTextColor(ContextCompat.getColor(context, R.color.white));
+                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
+                day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
+            }
 
             if (displayMonth == currentMonth && displayYear == currentYear){
                 view.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
@@ -534,25 +548,24 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 day.setTextColor(ContextCompat.getColor(context, R.color.gray_3));
             }
 
-            Calendar eventCalendar = Calendar.getInstance();
-            ArrayList<String> arrayList = new ArrayList<>();
-
             for (int i = 0; i < events.size(); i++){
                 eventCalendar.setTime(convertStringToDate(events.get(i).getDATE()));
                 if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH)+1
                         && displayYear == eventCalendar.get(Calendar.YEAR)){
-//                    arrayList.add(events.get(i).getEVENT());
                     event.setVisibility(View.VISIBLE);
                 }
             }
+
             view.setOnClickListener(v -> {
-                eventDate = DateUtil.getDisplayDate(dates.get(position).getTime());
+                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
                 unitsAdapter.setItems(units);
                 unitsAdapter.notifyDataSetChanged();
                 emptyVisible.set(false);
-//                CustomCalendarView.createEvents(eventsArrayList);
+//                CustomCalendarView.setUpCalendar();
+//                day.setBackground(ContextCompat.getDrawable(context,R.drawable.circle_light_blue));
 
             });
+            unitsAdapter.notifyDataSetChanged();
 
             return view;
         }
