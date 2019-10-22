@@ -13,11 +13,10 @@
         style="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/grey_text"
         android:focusable="true"
-        android:paddingStart="@dimen/registration_spinner_horizontal_padding"
-        android:paddingLeft="@dimen/registration_spinner_horizontal_padding"
-        tools:targetApi="17"/>
+        android:paddingStart="@dimen/registration_spinner_horizontal_padding_start"
+        android:paddingEnd="@dimen/registration_spinner_horizontal_padding_end"
+        android:textColorHint="@color/grey_text" />
 
     <TextView
         android:id="@+id/input_spinner_instructions"
