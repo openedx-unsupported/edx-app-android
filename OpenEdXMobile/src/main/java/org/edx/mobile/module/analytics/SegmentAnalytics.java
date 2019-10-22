@@ -131,28 +131,31 @@ public class SegmentAnalytics implements Analytics {
     /**
      * This function is used to track Video Playing
      *
-     * @param videoId     -   Video Id that is being Played
+     * @param videoId     -  Video Id that is being Played
      * @param currentTime -  Video Playing started at
-     * @param unitUrl     -   Page Url for that Video
-     * @param courseId    -     CourseId under which the video is present
+     * @param courseId    -  CourseId under which the video is present
+     * @param unitUrl     -  Page Url for that Video
+     * @param playMedium  -  Player Medium {@link Analytics.Values.GOOGLE_CAST}
      */
     @Override
     public void trackVideoPlaying(String videoId, Double currentTime,
-                                  String courseId, String unitUrl) {
+                                  String courseId, String unitUrl, String playMedium) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PLAYED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-
+        if (!TextUtils.isEmpty(playMedium)) {
+            aEvent.data.put(Keys.PLAY_MEDIUM, playMedium);
+        }
         trackSegmentEvent(Events.PLAYED_VIDEO, aEvent.properties);
     }
 
     /**
      * This function is used to track Video Pause
      *
-     * @param videoId     -   Video Id that is being Played
+     * @param videoId     -  Video Id that is being Played
      * @param currentTime -  Video Playing started at
      * @param courseId    -  CourseId under which the video is present
-     * @param unitUrl     -   Page Url for that Video
+     * @param unitUrl     -  Page Url for that Video
      */
     @Override
     public void trackVideoPause(String videoId,
@@ -842,5 +845,13 @@ public class SegmentAnalytics implements Analytics {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putAll(values);
         trackSegmentEvent(experimentName, aEvent.properties);
+    }
+
+    @Override
+    public void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState, @NonNull String playMedium) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, connectionState);
+        aEvent.data.put(Keys.PLAY_MEDIUM, playMedium);
+        trackSegmentEvent(eventName, aEvent.properties);
     }
 }

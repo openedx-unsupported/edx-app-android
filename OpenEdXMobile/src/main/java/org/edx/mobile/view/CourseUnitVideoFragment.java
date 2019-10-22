@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -43,7 +42,6 @@ import org.edx.mobile.view.adapters.TranscriptAdapter;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -285,6 +283,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     private void startOnlinePlay(DownloadEntry model){
+        model.videoThumbnail = unit.getVideoThumbnail(environment.getConfig().getApiHostURL());
         if ( !isPlayerVisible()) {
             // don't try to showPlayer() if already shown here
             // this will cause player to freeze
@@ -305,16 +304,16 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                     return;
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.debug(ex.toString());
         }
-        try{
+        try {
 
             // reload this model
             environment.getStorage().reloadDownloadEntry(video);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
-            if ( !playerFragment.isResumed()) {
+            if (!playerFragment.isResumed()) {
                 // playback can work only if fragment is resume
                 if (playPending != null) {
                     playHandler.removeCallbacks(playPending);
@@ -332,12 +331,10 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 }
             }
 
-            TranscriptModel transcript = getTranscriptModel(video);
-            String filepath = getVideoPath(video);
+            TranscriptModel transcript = getTranscriptModel();
 
 
-            playerFragment.prepare(filepath, video.lastPlayedOffset,
-                video.getTitle(), transcript, video);
+            playerFragment.prepare(video, transcript);
 
 
             try {
@@ -351,49 +348,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             } catch (Exception e) {
                 logger.error(e);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
-    private String getVideoPath(DownloadEntry video){
-        String filepath = null;
-        if (video.filepath != null && video.filepath.length()>0) {
-            if (video.isDownloaded()) {
-                File f = new File(video.filepath);
-                if (f.exists()) {
-                    // play from local
-                    filepath = video.filepath;
-                    logger.debug("playing from local file");
-                }
-            }
-        } else {
-            DownloadEntry de = (DownloadEntry)DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE )
-                .getIVideoModelByVideoUrl(
-                    video.url, null);
-            if(de!=null){
-                if(de.filepath!=null){
-                    File f = new File(de.filepath);
-                    if (f.exists()) {
-                        // play from local
-                        filepath = de.filepath;
-                        logger.debug("playing from local file for " +
-                            "another Download Entry");
-                    }
-                }
-            }
-        }
-
-        if(TextUtils.isEmpty(filepath)){
-            // not available on local, so play online
-            logger.warn("Local file path not available");
-
-            filepath = video.getBestEncodingUrl(getActivity());
-        }
-        return filepath;
-    }
-
-    private TranscriptModel getTranscriptModel(DownloadEntry video) {
+    private TranscriptModel getTranscriptModel() {
         TranscriptModel transcript = null;
         if (unit != null && unit.getData() != null &&
                 unit.getData().transcripts != null) {
@@ -722,4 +682,15 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             isTranscriptScrolling = false;
         }
     };
+
+    public void updateBottomSectionVisibility(int visibility) {
+        if (transcriptListView != null && transcriptAdapter != null) {
+            if (visibility == View.VISIBLE) {
+                transcriptListView.setVisibility(visibility);
+                messageContainer.setVisibility(visibility);
+            } else if (getActivity() != null) {
+                updateUI(getActivity().getRequestedOrientation());
+            }
+        }
+    }
 }

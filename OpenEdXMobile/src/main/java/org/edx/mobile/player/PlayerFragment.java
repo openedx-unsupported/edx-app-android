@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -15,7 +14,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.TypedValue;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +33,14 @@ import android.widget.TextView;
 
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.inject.Inject;
+import com.joanzapata.iconify.widget.IconImageButton;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.googlecast.GoogleCastDelegate;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -50,11 +51,14 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
+import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.TextUtils;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.Version;
+import org.edx.mobile.util.VideoUtil;
+import org.edx.mobile.view.CourseUnitVideoFragment;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.RatingDialogFragment;
@@ -76,7 +80,8 @@ import subtitleFile.TimedTextObject;
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
 public class PlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
-        AudioManager.OnAudioFocusChangeListener, NetworkObserver {
+        AudioManager.OnAudioFocusChangeListener, NetworkObserver,
+        GoogleCastDelegate.CastSessionListener {
 
     private enum VideoNotPlayMessageType {
         IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB,
@@ -130,9 +135,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private long currentPosition = 0;
     private boolean pauseDueToDialog;
     private boolean closedCaptionsEnabled = false;
+    private long lastSavedPosition;
+
+    private GoogleCastDelegate googleCastDelegate;
+    private RelativeLayout rlRemoteCasting;
+    private IconImageButton remotePlayButton;
+    private TextView tvCastingVideo;
 
     private final transient Handler handler = new Handler() {
-        private long lastSavedPosition;
         @Override
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
@@ -164,6 +174,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     public void setTranscriptCallback(TranscriptListener listener) {
         this.transcriptListener = listener;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        googleCastDelegate = GoogleCastDelegate.getInstance(environment.getAnalyticsRegistry());
     }
 
     @Override
@@ -243,7 +259,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 }
 
             });
-        } catch(Exception ex) {
+            rlRemoteCasting = getView().findViewById(R.id.rl_remote_casting);
+            remotePlayButton = getView().findViewById(R.id.remote_play_button);
+            remotePlayButton.setOnClickListener(view -> playVideoOnRemoteDevice(0, true));
+            tvCastingVideo = getView().findViewById(R.id.tv_casting_video);
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
@@ -313,6 +333,22 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (getUserVisibleHint()) {
             handleOnResume();
         }
+        if (isCastingOnRemoteDevice()) {
+            updateTranscriptVisibility(View.INVISIBLE);
+        }
+        setUpCastSessionListener(this);
+        // Update the google cast session (e.g video is completed)
+        if (googleCastDelegate != null) {
+            googleCastDelegate.onStatusUpdated();
+        }
+    }
+
+    private void setUpCastSessionListener(@Nullable GoogleCastDelegate.CastSessionListener listener) {
+        if (getParentFragment() != null && getParentFragment().getUserVisibleHint() &&
+                getUserVisibleHint() &&
+                googleCastDelegate != null) {
+            googleCastDelegate.setSessionListener(listener);
+        }
     }
 
     @Override
@@ -321,6 +357,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (getUserVisibleHint()) {
             handleOnPause();
         }
+        setUpCastSessionListener(null);
     }
 
     @Override
@@ -332,10 +369,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             } else {
                 handleOnPause();
             }
+            setUpCastSessionListener(isVisibleToUser ? this : null);
         }
     }
 
     public void handleOnResume() {
+        if (isCastingOnRemoteDevice()) {
+            return;
+        }
         setupController();
 
         if (curMessageTypes.isEmpty()) {
@@ -350,6 +391,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (isPrepared) {
             handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
         }
+        rlRemoteCasting.setVisibility(View.GONE);
     }
 
     private void configureAutoHideControls() {
@@ -439,29 +481,23 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         super.onSaveInstanceState(outState);
     }
 
-    public synchronized void prepare(String path, long seekTo, String title,
-                                     TranscriptModel trModel, DownloadEntry video) {
-        playOrPrepare(path, seekTo, title, trModel, video, true);
+    public synchronized void prepare(DownloadEntry video, TranscriptModel trModel) {
+        playOrPrepare(video, trModel, true);
     }
 
-    public synchronized void play(String path, long seekTo, String title,
-                                  TranscriptModel trModel, DownloadEntry video) {
-        playOrPrepare(path, seekTo, title, trModel, video, false);
+    public synchronized void play(DownloadEntry video, TranscriptModel trModel) {
+        playOrPrepare(video, trModel, false);
     }
 
     /**
      * Starts playing given path. Path can be file path or http/https URL.
      *
-     * @param path
-     * @param seekTo
-     * @param title
-     * @param prepareOnly  <code>true</code> player will be prepared but not start to play
+     * @param prepareOnly <code>true</code> player will be prepared but not start to play
      */
-    public synchronized void playOrPrepare(String path, long seekTo, String title,
-                                           TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
+    public synchronized void playOrPrepare(DownloadEntry video, TranscriptModel trModel, boolean prepareOnly) {
         isPrepared = false;
         // block to portrait while preparing
-        if ( !isScreenLandscape()) {
+        if (!isScreenLandscape()) {
             exitFullScreen();
         }
 
@@ -472,12 +508,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             logger.error(e);
         }
 
-        if(video!=null){
+        if (video != null) {
             this.videoEntry = video;
         }
 
-        if (trModel != null)
-        {
+        if (trModel != null) {
             this.transcript = trModel;
             transcriptManager.downloadTranscriptsForVideo(trModel);
             //initializeClosedCaptioning();
@@ -485,9 +520,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         // request focus on audio channel, as we are starting playback
         requestAudioFocus();
-
+        String path = VideoUtil.getVideoPath(getActivity(), videoEntry);
         try {
-            if ( video.isVideoForWebOnly ){
+            if (videoEntry.isVideoForWebOnly) {
                 showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
                 path = "";
             } else {
@@ -503,12 +538,15 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             }
 
             this.transcript = trModel;
-            player.setLMSUrl(video.lmsUrl);
-            player.setVideoTitle(title);
+            player.setLMSUrl(videoEntry.lmsUrl);
+            player.setVideoTitle(videoEntry.title);
 
+            final long seekTo = videoEntry.getLastPlayedOffset();
             logger.debug("playing [seek=" + seekTo + "]: " + path);
-
-            if( prepareOnly)
+            if (googleCastDelegate.isConnected()) {
+                playVideoOnRemoteDevice(lastSavedPosition, true);
+                player.setUri(path, seekTo);
+            } else if (prepareOnly)
                 player.setUri(path, seekTo);
             else
                 player.setUriAndPlay(path, seekTo);
@@ -673,7 +711,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 hideCCPopUp();
                 hideSettingsPopUp();
                 player.hideController();
-                // player got error, 
+                // player got error,
                 // mark player as prepared, because it is not in preparing state anymore
                 isPrepared = true;
 
@@ -731,8 +769,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         allowSensorOrientation();
 
-        if (!isResumed() || !getUserVisibleHint()) {
+        if (!isResumed() || !getUserVisibleHint() || isCastingOnRemoteDevice()) {
             freezePlayer();
+            hideProgress();
             return;
         }
 
@@ -772,7 +811,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
                 environment.getAnalyticsRegistry().trackVideoPlaying(videoEntry.videoId, current_time
-                        , videoEntry.eid, videoEntry.lmsUrl);
+                        , videoEntry.eid, videoEntry.lmsUrl, "");
             }
         }catch(Exception e){
             logger.error(e);
@@ -1146,7 +1185,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             srtList = new LinkedHashMap<>();
             try
             {
-                LinkedHashMap<String, InputStream> localHashMap = transcriptManager
+                final LinkedHashMap<String, InputStream> localHashMap = transcriptManager
                         .fetchTranscriptsForVideo(transcript);
 
                 if (localHashMap != null){
@@ -1187,7 +1226,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 subtitleFetchHandler.removeCallbacks(this.subtitleFetchProcessesor);
                 subtitleFetchHandler = null;
             }
-            LinkedHashMap<String, String> languageList = getLanguageList();
+            langList = LocaleUtils.getLanguageList(transcript);
+            final LinkedHashMap<String, String> languageList = langList;
             if(languageList!=null && languageList.size()>0){
                 subtitleFetchHandler = new Handler();
                 if (subtitleFetchProcessesor != null)
@@ -1473,17 +1513,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         speedDialogFragment.setCancelable(true);
     }
 
-    //Default Language List
-    private LinkedHashMap<String, String> getLanguageList(){
-        if(transcript!=null){
-            langList = transcript.getLanguageList();
-            return langList;
-        }
-        return null;
-    }
-
-    // 
-
     /**
      *This function is used to show Dialog fragment of
      *language list in potrait mode
@@ -1491,8 +1520,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     protected void showCCFragmentPopup() {
         try{
             hideSettingsPopUp();
-
-            ccFragment = CCLanguageDialogFragment.getInstance(getLanguageList(),new IListDialogCallback() {
+            langList = LocaleUtils.getLanguageList(transcript);
+            ccFragment = CCLanguageDialogFragment.getInstance(langList, new IListDialogCallback() {
                 @Override
                 public void onItemClicked(HashMap<String, String> lang) {
                     closedCaptionsEnabled = true;
@@ -1781,6 +1810,59 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      * @param caption The caption to seek to.
      */
     public void seekToCaption(@NonNull Caption caption) {
+        if (isCastingOnRemoteDevice()) {
+            return;
+        }
         player.seekTo(caption.start.getMseconds());
+    }
+
+    public void playVideoOnRemoteDevice(long lastSavedPosition, boolean autoPlay) {
+        if (googleCastDelegate != null && videoEntry != null) {
+            googleCastDelegate.loadRemoteMedia(getActivity(), videoEntry, lastSavedPosition, autoPlay);
+            rlRemoteCasting.setVisibility(View.VISIBLE);
+            remotePlayButton.setVisibility(View.GONE);
+            updateTranscriptVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void updateTranscriptVisibility(int visibility) {
+        final Fragment fragment = getParentFragment();
+        if (fragment instanceof CourseUnitVideoFragment) {
+            ((CourseUnitVideoFragment) fragment).updateBottomSectionVisibility(visibility);
+        }
+    }
+
+    @Override
+    public void onApplicationConnected() {
+        playVideoOnRemoteDevice(lastSavedPosition, true);
+        handleOnPause();
+        getActivity().invalidateOptionsMenu();
+    }
+
+
+    @Override
+    public void onApplicationDisconnected() {
+        getActivity().invalidateOptionsMenu();
+        if (!isPrepared && videoEntry != null) {
+            prepare(videoEntry, transcript);
+        }
+        handleOnResume();
+        updateTranscriptVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onVideoComplete() {
+        remotePlayButton.setVisibility(View.VISIBLE);
+        tvCastingVideo.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onVideoPlaying() {
+        remotePlayButton.setVisibility(View.GONE);
+        tvCastingVideo.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isCastingOnRemoteDevice() {
+        return googleCastDelegate != null && googleCastDelegate.isConnected();
     }
 }

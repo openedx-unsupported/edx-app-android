@@ -48,6 +48,13 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public String lmsUrl;
     public TranscriptModel transcript;
 
+    /**
+     * TODO: Add a new field in the {@link org.edx.mobile.module.db.DbStructure.Table#DOWNLOADS}
+     * database table to store the videoThumbnail along the video info. videoThumbnail is not
+     * available to cast in deep-link case after this TODO this issue will resolved.
+     */
+    public String videoThumbnail;
+
     @Inject
     IEdxEnvironment environment;
 

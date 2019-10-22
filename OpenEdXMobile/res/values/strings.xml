@@ -42,6 +42,15 @@
     <!-- Label for searching subjects -->
     <string name="search_subjects" tools:ignore="MissingTranslation">Search Subject</string>
 
+    <!-- Google Cast -->
+
+    <!-- Description of a button that will cast/un-cast the app to a remote device -->
+    <string name="media_route_menu_title" tools:ignore="MissingTranslation">Play on&#8230;</string>
+    <!-- Google cast Introduction title -->
+    <string name="introducing_cast_text" tools:ignore="MissingTranslation">Introducing Cast</string>
+    <!-- Text to describe that video is casting on the remote device -->
+    <string name="remote_device_casting_message" tools:ignore="MissingTranslation">Video is casting to remote device</string>
+
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share course menu -->

@@ -32,11 +32,12 @@ public interface Analytics {
      *
      * @param videoId     - Video Id that is being Played
      * @param currentTime - Video Playing started at
-     * @param unitUrl     - Page Url for that Video
      * @param courseId    - CourseId under which the video is present
+     * @param unitUrl     - Page Url for that Video
+     * @param playMedium  - Play Medium (e.g {@link Values#GOOGLE_CAST})
      */
     void trackVideoPlaying(String videoId, Double currentTime,
-                           String courseId, String unitUrl);
+                           String courseId, String unitUrl, String playMedium);
 
     /**
      * This function is used to track Video Pause
@@ -410,6 +411,16 @@ public interface Analytics {
      */
     void trackExperimentParams(String experimentName, Map<String, String> values);
 
+    /**
+     * Track the casting device connection.
+     *
+     * @param eventName       Cast Event Name
+     * @param connectionState State of casting device (e.g {@link Values#CAST_CONNECTED})
+     * @param playMedium      Casting device playMedium (e.g {@link Values#GOOGLE_CAST})
+     */
+    void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState,
+                                          @NonNull String playMedium);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -478,6 +489,8 @@ public interface Analytics {
         String EXPERIMENT = "experiment";
         String GROUP = "group";
         String AA_EXPERIMENT = "aa_experiment";
+        // Video Play Medium
+        String PLAY_MEDIUM = "play_medium";
     }
 
     interface Values {
@@ -579,6 +592,13 @@ public interface Analytics {
         // Settings event values
         String DOWNLOAD_TO_SD_CARD_SWITCH_ON = "edx.bi.app.settings.sdcard.toggle.on";
         String DOWNLOAD_TO_SD_CARD_SWITCH_OFF = "edx.bi.app.settings.sdcard.toggle.off";
+        // Cast device connection state
+        String CAST_CONNECTED = "edx.bi.app.cast.connected";
+        String CAST_DISCONNECTED = "edx.bi.app.cast.disconnected";
+        String VIDEO_CASTED = "edx.bi.app.cast.video_casted";
+        // Casting Device Types
+        String GOOGLE_CAST = "google_cast";
+
     }
 
     interface Screens {
@@ -680,6 +700,10 @@ public interface Analytics {
         // Firebase Remote Configs Event name for A/A test
         // Ref: https://openedx.atlassian.net/browse/LEARNER-7394
         String MOBILE_EXPERIMENT_EVALUATED = "Mobile Experiment Evaluated";
+        // Casting Devices Event
+        String CAST_CONNECTED = "Cast: Connected";
+        String CAST_DISCONNECTED = "Cast: Disconnected";
+        String VIDEO_CASTED = "Cast: Video Casted";
     }
 
     /**

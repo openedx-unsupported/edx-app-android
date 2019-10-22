@@ -152,9 +152,9 @@ public class AnalyticsRegistry implements Analytics {
 
     @Override
     public void trackVideoPlaying(String videoId, Double currentTime,
-                                  String courseId, String unitUrl) {
+                                  String courseId, String unitUrl, String playMedium) {
         for (Analytics service : services) {
-            service.trackVideoPlaying(videoId, currentTime, courseId, unitUrl);
+            service.trackVideoPlaying(videoId, currentTime, courseId, unitUrl, playMedium);
         }
     }
 
@@ -423,6 +423,13 @@ public class AnalyticsRegistry implements Analytics {
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         for (Analytics service : services) {
             service.trackExperimentParams(experimentName, values);
+        }
+    }
+
+    @Override
+    public void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState, @NonNull String playMedium) {
+        for (Analytics service : services) {
+            service.trackCastDeviceConnectionChanged(eventName, connectionState, playMedium);
         }
     }
 }

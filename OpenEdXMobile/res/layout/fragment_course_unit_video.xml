@@ -63,5 +63,12 @@
         android:paddingBottom="@dimen/widget_margin_half"
         android:paddingTop="@dimen/widget_margin_half" />
 
+    <fragment
+        android:id="@+id/cast_mini_controller"
+        class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
 </LinearLayout>
 
