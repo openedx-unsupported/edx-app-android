@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Segmented Control Dimensions -->
+    <dimen name="edx_segmented_control_start_corner">0dp</dimen>
+    <dimen name="edx_segmented_control_end_corner">5dp</dimen>
+</resources>

@@ -252,4 +252,8 @@
     <dimen name="social_btn_divider_height">40dp</dimen>
     <dimen name="social_btn_text_size">14sp</dimen>
     <dimen name="social_btn_height">40dp</dimen>
+
+    <!-- Segmented Control Dimensions -->
+    <dimen name="edx_segmented_control_start_corner">5dp</dimen>
+    <dimen name="edx_segmented_control_end_corner">0dp</dimen>
 </resources>

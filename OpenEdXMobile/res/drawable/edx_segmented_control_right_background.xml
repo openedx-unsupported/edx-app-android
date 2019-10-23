@@ -4,42 +4,42 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/edx_brand_gray_back" />
             <stroke android:width="@dimen/edx_line" android:color="@color/black" />
-            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="@dimen/edx_box_radius" android:radius="@dimen/edx_box_radius" android:topLeftRadius="0dp" android:topRightRadius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_segmented_control_end_corner" android:bottomRightRadius="@dimen/edx_segmented_control_start_corner" android:radius="@dimen/edx_segmented_control_start_corner" android:topLeftRadius="@dimen/edx_segmented_control_end_corner" android:topRightRadius="@dimen/edx_segmented_control_start_corner" />
         </shape>
     </item>
     <item android:state_checked="true" android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/edx_brand_gray_back" />
             <stroke android:width="@dimen/edx_hairline" android:color="@color/edx_brand_gray_back" />
-            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="@dimen/edx_box_radius" android:radius="@dimen/edx_box_radius" android:topLeftRadius="0dp" android:topRightRadius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_segmented_control_end_corner" android:bottomRightRadius="@dimen/edx_segmented_control_start_corner" android:radius="@dimen/edx_segmented_control_start_corner" android:topLeftRadius="@dimen/edx_segmented_control_end_corner" android:topRightRadius="@dimen/edx_segmented_control_start_corner" />
         </shape>
     </item>
     <item android:state_checked="true" android:state_focused="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/edx_brand_primary_base" />
             <stroke android:width="@dimen/edx_line" android:color="@color/black" />
-            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="@dimen/edx_box_radius" android:radius="@dimen/edx_box_radius" android:topLeftRadius="0dp" android:topRightRadius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_segmented_control_end_corner" android:bottomRightRadius="@dimen/edx_segmented_control_start_corner" android:radius="@dimen/edx_segmented_control_start_corner" android:topLeftRadius="@dimen/edx_segmented_control_end_corner" android:topRightRadius="@dimen/edx_segmented_control_start_corner" />
         </shape>
     </item>
     <item android:state_checked="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/edx_brand_primary_base" />
             <stroke android:width="@dimen/edx_hairline" android:color="@color/edx_brand_primary_base" />
-            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="@dimen/edx_box_radius" android:radius="@dimen/edx_box_radius" android:topLeftRadius="0dp" android:topRightRadius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_segmented_control_end_corner" android:bottomRightRadius="@dimen/edx_segmented_control_start_corner" android:radius="@dimen/edx_segmented_control_start_corner" android:topLeftRadius="@dimen/edx_segmented_control_end_corner" android:topRightRadius="@dimen/edx_segmented_control_start_corner" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/white" />
             <stroke android:width="@dimen/edx_line" android:color="@color/black" />
-            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="@dimen/edx_box_radius" android:radius="@dimen/edx_box_radius" android:topLeftRadius="0dp" android:topRightRadius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_segmented_control_end_corner" android:bottomRightRadius="@dimen/edx_segmented_control_start_corner" android:radius="@dimen/edx_segmented_control_start_corner" android:topLeftRadius="@dimen/edx_segmented_control_end_corner" android:topRightRadius="@dimen/edx_segmented_control_start_corner" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/white" />
             <stroke android:width="@dimen/edx_hairline" android:color="@color/edx_brand_gray_back" />
-            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="@dimen/edx_box_radius" android:radius="@dimen/edx_box_radius" android:topLeftRadius="0dp" android:topRightRadius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_segmented_control_end_corner" android:bottomRightRadius="@dimen/edx_segmented_control_start_corner" android:radius="@dimen/edx_segmented_control_start_corner" android:topLeftRadius="@dimen/edx_segmented_control_end_corner" android:topRightRadius="@dimen/edx_segmented_control_start_corner" />
         </shape>
     </item>
 </selector>
