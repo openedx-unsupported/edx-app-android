@@ -55,35 +55,30 @@
                         android:layout_weight="0"
                         android:background="@drawable/rectangle_with_top_border"
                         android:gravity="center"
+                        android:layoutDirection="ltr"
                         android:measureWithLargestChild="true"
                         android:orientation="horizontal"
-                        android:paddingEnd="@dimen/course_unit_nav_bar_padding_left"
-                        android:paddingLeft="@dimen/course_unit_nav_bar_padding_left"
-                        android:paddingRight="@dimen/course_unit_nav_bar_padding_right"
                         android:paddingStart="@dimen/course_unit_nav_bar_padding_right"
+                        android:paddingEnd="@dimen/course_unit_nav_bar_padding_left"
                         android:visibility="gone"
-                        tools:targetApi="17"
                         tools:visibility="visible">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            tools:targetApi="17">
+                            android:orientation="vertical">
 
                             <Button
                                 android:id="@+id/goto_prev"
                                 style="@style/edX.Widget.DisableableButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/course_unit_nav_bar_btn_height"
-                                android:text="@string/assessment_previous"
-                                tools:targetApi="17" />
+                                android:text="@string/assessment_previous" />
 
                             <TextView
                                 android:id="@+id/prev_unit_title"
                                 style="@style/section_lbl"
                                 android:visibility="gone" />
-
 
                         </LinearLayout>
 
@@ -96,16 +91,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:orientation="vertical"
-                            tools:targetApi="17">
+                            android:orientation="vertical">
 
                             <Button
                                 android:id="@+id/goto_next"
                                 style="@style/edX.Widget.DisableableButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/course_unit_nav_bar_btn_height"
-                                android:text="@string/assessment_next"
-                                tools:targetApi="17" />
+                                android:text="@string/assessment_next" />
 
                             <TextView
                                 android:id="@+id/next_unit_title"
