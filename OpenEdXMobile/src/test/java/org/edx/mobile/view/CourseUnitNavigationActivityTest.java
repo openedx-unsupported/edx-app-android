@@ -52,6 +52,8 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+@Ignore("Include this test once we have migrated to the androidX")
+// TODO: To be fixed in LEARNER-7466
 public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     /**
      * Method for defining the subclass of {@link CourseUnitNavigationActivity}
