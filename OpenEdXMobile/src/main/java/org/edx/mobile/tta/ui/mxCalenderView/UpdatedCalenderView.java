@@ -13,7 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import org.edx.mobile.R;
+
+import org.humana.mobile.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

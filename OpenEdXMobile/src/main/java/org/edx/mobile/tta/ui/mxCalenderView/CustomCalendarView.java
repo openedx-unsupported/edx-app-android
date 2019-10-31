@@ -13,8 +13,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import org.edx.mobile.R;
 import org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
+import org.humana.mobile.R;
+import org.humana.mobile.tta.ui.mxCalenderView.Events;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

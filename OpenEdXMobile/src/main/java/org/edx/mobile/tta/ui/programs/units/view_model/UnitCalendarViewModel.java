@@ -22,26 +22,28 @@ import android.widget.TextView;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
-import org.edx.mobile.R;
-import org.edx.mobile.databinding.TRowUnitBinding;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.tta.Constants;
-import org.edx.mobile.tta.data.enums.UnitStatusType;
-import org.edx.mobile.tta.data.enums.UserRole;
-import org.edx.mobile.tta.data.local.db.table.Unit;
-import org.edx.mobile.tta.data.model.SuccessResponse;
-import org.edx.mobile.tta.data.model.program.ProgramFilter;
-import org.edx.mobile.tta.data.model.program.ProgramFilterTag;
-import org.edx.mobile.tta.data.model.program.ProgramUser;
-import org.edx.mobile.tta.event.CourseEnrolledEvent;
-import org.edx.mobile.tta.event.program.PeriodSavedEvent;
-import org.edx.mobile.tta.interfaces.OnResponseCallback;
-import org.edx.mobile.tta.ui.base.mvvm.BaseVMActivity;
-import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+
 import org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView;
-import org.edx.mobile.tta.ui.mxCalenderView.Events;
-import org.edx.mobile.util.DateUtil;
+import org.humana.mobile.R;
+import org.humana.mobile.databinding.TRowUnitBinding;
+import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.model.course.CourseComponent;
+import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.enums.UnitStatusType;
+import org.humana.mobile.tta.data.enums.UserRole;
+import org.humana.mobile.tta.data.local.db.table.Unit;
+import org.humana.mobile.tta.data.model.SuccessResponse;
+import org.humana.mobile.tta.data.model.program.ProgramFilter;
+import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
+import org.humana.mobile.tta.data.model.program.ProgramUser;
+import org.humana.mobile.tta.event.CourseEnrolledEvent;
+import org.humana.mobile.tta.event.program.PeriodSavedEvent;
+import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
+import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.humana.mobile.tta.ui.mxCalenderView.Events;
+import org.humana.mobile.util.DateUtil;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -594,19 +596,14 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 for (int i = 0; i < units.size(); i++) {
                     if (DateUtil.getDisplayDate(units.get(i).getMyDate()).equals(eventDate.get())) {
                         filterUnits.add(units.get(i));
-//                        unitsAdapter.setItems(filterUnits);
-//                        unitsAdapter.notifyDataSetChanged();
                         emptyVisible.set(false);
-                    } else {
-                        emptyVisible.set(true);
                     }
+                }
+                if (filterUnits.size()==0){
+                    emptyVisible.set(true);
                 }
                 unitsAdapter.setItems(filterUnits);
                 unitsAdapter.notifyDataSetChanged();
-//                if (filterUnits.size() == 0) {
-//                    emptyVisible.set(true);
-//                }
-
 
                 notifyDataSetChanged();
             });
