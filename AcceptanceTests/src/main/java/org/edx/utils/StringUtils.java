@@ -1,4 +1,4 @@
-package org.edx.utils;
+package org.humana.utils;
 
 public class StringUtils {
 

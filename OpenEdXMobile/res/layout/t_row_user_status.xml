@@ -122,7 +122,7 @@
 
         <variable
             name="unit"
-            type="org.edx.mobile.tta.data.local.db.table.Unit" />
+            type="org.humana.mobile.tta.data.local.db.table.Unit" />
     </data>
 
 </layout>

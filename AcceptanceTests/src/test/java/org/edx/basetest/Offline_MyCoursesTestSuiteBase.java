@@ -1,6 +1,6 @@
-package org.edx.basetest;
+package org.humana.basetest;
 
-import org.edx.elementlocators.IMyCoursesLocators_Offline;
+import org.humana.elementlocators.IMyCoursesLocators_Offline;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;

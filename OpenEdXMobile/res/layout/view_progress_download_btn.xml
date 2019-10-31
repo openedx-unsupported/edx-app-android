@@ -10,7 +10,7 @@
     android:padding="@dimen/x_small_icon_margin"
     tools:targetApi="17">
 
-    <org.edx.mobile.view.custom.IconImageViewXml
+    <org.humana.mobile.view.custom.IconImageViewXml
         android:layout_width="@dimen/fa_x_small"
         android:layout_height="@dimen/fa_x_small"
         android:layout_gravity="center"

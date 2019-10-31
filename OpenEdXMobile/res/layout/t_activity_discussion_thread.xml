@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionThreadViewModel" />
+            type="org.humana.mobile.tta.ui.course.discussion.view_model.DiscussionThreadViewModel" />
     </data>
 
     <LinearLayout

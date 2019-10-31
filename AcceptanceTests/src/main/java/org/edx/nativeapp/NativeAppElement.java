@@ -1,8 +1,8 @@
-package org.edx.nativeapp;
+package org.humana.nativeapp;
 
 import java.util.List;
 
-import org.edx.utils.PropertyLoader;
+import org.humana.utils.PropertyLoader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;

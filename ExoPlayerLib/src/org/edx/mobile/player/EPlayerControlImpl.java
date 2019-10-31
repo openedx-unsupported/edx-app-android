@@ -1,4 +1,4 @@
-package org.edx.mobile.player;
+package org.humana.mobile.player;
 
 /**
  * @author rohan

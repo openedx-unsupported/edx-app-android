@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.edx.mobile"
+    package="org.humana.mobile"
     android:installLocation="auto">
 
     <!-- Required by app for server communication and video download -->
@@ -34,11 +34,11 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Setup for Code Coverage -->
     <instrumentation
-        android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
-        android:targetPackage="org.edx.mobile" />
+        android:name="org.humana.mobile.instrumentation.EdxInstrumentation"
+        android:targetPackage="org.humana.mobile" />
 
     <application
-        android:name=".base.RuntimeApplication"
+        android:name="org.humana.mobile.base.RuntimeApplication"
         android:allowBackup="false"
         android:icon="@mipmap/humana_launcher"
         android:label="@string/app_name"
@@ -47,7 +47,7 @@
         android:theme="@style/AppTheme">
 
 <!--        <activity
-            android:name="org.edx.mobile.view.SplashActivity"
+            android:name="org.humana.mobile.view.SplashActivity"
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoDisplayTheme">
@@ -57,7 +57,7 @@
             </intent-filter>
 
             <intent-filter>
-                <data android:scheme="edx" android:host="open" />
+                <data android:scheme="humana" android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -66,7 +66,7 @@
 
 
         <activity
-            android:name="org.edx.mobile.view.SplashActivity"
+            android:name="org.humana.mobile.view.SplashActivity"
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launch">
@@ -80,200 +80,200 @@
         </activity>
 
         <activity
-            android:name="org.edx.mobile.view.LaunchActivity"
+            android:name="org.humana.mobile.view.LaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launch" />
 
         <activity
-            android:name="org.edx.mobile.view.DiscoveryLaunchActivity"
+            android:name="org.humana.mobile.view.DiscoveryLaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="org.edx.mobile.view.LoginActivity"
+            android:name="org.humana.mobile.view.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.RegisterActivity"
+            android:name="org.humana.mobile.view.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.MainDashboardActivity"
+            android:name="org.humana.mobile.view.MainDashboardActivity"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.AccountActivity"
+            android:name="org.humana.mobile.view.AccountActivity"
             android:label="@string/title_account"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseOutlineActivity"
+            android:name="org.humana.mobile.view.CourseOutlineActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.CourseDiscussionTopicsActivity"
+            android:name="org.humana.mobile.view.CourseDiscussionTopicsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.CourseDiscussionPostsActivity"
+            android:name="org.humana.mobile.view.CourseDiscussionPostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/discussion_title"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.CourseDiscussionCommentsActivity"
+            android:name="org.humana.mobile.view.CourseDiscussionCommentsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.CourseDiscussionResponsesActivity"
+            android:name="org.humana.mobile.view.CourseDiscussionResponsesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.DiscussionAddPostActivity"
+            android:name="org.humana.mobile.view.DiscussionAddPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/start_discussion"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.DiscussionAddResponseActivity"
+            android:name="org.humana.mobile.view.DiscussionAddResponseActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/discussion_add_response_title"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.DiscussionAddCommentActivity"
+            android:name="org.humana.mobile.view.DiscussionAddCommentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/discussion_add_comment_title"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseUnitNavigationActivity"
+            android:name="org.humana.mobile.view.CourseUnitNavigationActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="user"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.DownloadListActivity"
+            android:name="org.humana.mobile.view.DownloadListActivity"
             android:label="@string/title_download"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.WebViewFindCoursesActivity"
+            android:name="org.humana.mobile.view.WebViewFindCoursesActivity"
             android:label="@string/label_discover"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.ViewSubjectsActivity"
+            android:name="org.humana.mobile.view.ViewSubjectsActivity"
             android:label="@string/browse_by_subject"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseInfoActivity"
+            android:name="org.humana.mobile.view.CourseInfoActivity"
             android:label="@string/label_discover"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseDetailActivity"
+            android:name="org.humana.mobile.view.CourseDetailActivity"
             android:label="@string/label_find_courses"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseHandoutActivity"
+            android:name="org.humana.mobile.view.CourseHandoutActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.NativeFindCoursesActivity"
+            android:name="org.humana.mobile.view.NativeFindCoursesActivity"
             android:label="@string/label_find_courses"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.CourseAnnouncementsActivity"
+            android:name="org.humana.mobile.view.CourseAnnouncementsActivity"
             android:label="@string/announcement_title"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CertificateActivity"
+            android:name="org.humana.mobile.view.CertificateActivity"
             android:label="@string/tab_label_certificate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
 
         <activity
-            android:name="org.edx.mobile.view.SettingsActivity"
+            android:name="org.humana.mobile.view.SettingsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".profiles.UserProfileActivity"
+            android:name="org.humana.mobile.profiles.UserProfileActivity"
             android:label="@string/profile_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.EditUserProfileActivity"
+            android:name="org.humana.mobile.view.EditUserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.FormFieldActivity"
+            android:name="org.humana.mobile.view.FormFieldActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".view.CropImageActivity"
+            android:name="org.humana.mobile.view.CropImageActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".whatsnew.WhatsNewActivity"
+            android:name="org.humana.mobile.whatsnew.WhatsNewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".view.CourseTabsDashboardActivity"
+            android:name="org.humana.mobile.view.CourseTabsDashboardActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
 
         <activity
-            android:name=".view.dialog.WebViewActivity"
+            android:name="org.humana.mobile.view.dialog.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="org.edx.mobile.innerlinks" />
+                <data android:scheme="org.humana.mobile.innerlinks" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".view.dialog.AuthenticatedWebViewActivity"
+            android:name="org.humana.mobile.view.dialog.AuthenticatedWebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
-        <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
+        <receiver android:name="org.humana.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
@@ -281,10 +281,10 @@
             </intent-filter>
         </receiver>
 
-        <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
-        <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast">
+        <!-- adb shell am broadcast -a org.humana.mobile.END_EMMA -->
+        <receiver android:name="org.humana.mobile.instrumentation.EndEmmaBroadcast">
             <intent-filter>
-                <action android:name="org.edx.mobile.END_EMMA" />
+                <action android:name="org.humana.mobile.END_EMMA" />
             </intent-filter>
         </receiver>
 
@@ -308,7 +308,7 @@
 
         <!-- TTA activities start -->
 
-        <activity android:name=".tta.ui.splash.SplashActivity"
+        <activity android:name="org.humana.mobile.tta.ui.splash.SplashActivity"
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launch">
@@ -335,7 +335,7 @@
         </activity>
 
         <activity
-            android:name=".tta.ui.logistration.SigninRegisterActivity"
+            android:name="org.humana.mobile.tta.ui.logistration.SigninRegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen"
@@ -343,14 +343,14 @@
         </activity>
 
         <activity
-            android:name=".tta.ui.launch.SwipeLaunchActivity"
+            android:name="org.humana.mobile.tta.ui.launch.SwipeLaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen">
         </activity>
 
         <activity
-            android:name=".tta.ui.reset_password.EnterNumberActivity"
+            android:name="org.humana.mobile.tta.ui.reset_password.EnterNumberActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen"
@@ -358,34 +358,34 @@
         </activity>
 
         <activity
-            android:name=".tta.ui.otp.OtpActivity"
+            android:name="org.humana.mobile.tta.ui.otp.OtpActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen"
             android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:name=".tta.ui.reset_password.ResetPasswordActivity"
+            android:name="org.humana.mobile.tta.ui.reset_password.ResetPasswordActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen"
             android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:name=".tta.ui.landing.LandingActivity"
+            android:name="org.humana.mobile.tta.ui.landing.LandingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <activity
-            android:name=".tta.ui.logistration.UserInfoActivity"
+            android:name="org.humana.mobile.tta.ui.logistration.UserInfoActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen"
             android:windowSoftInputMode="stateHidden | adjustResize" />
 
         <activity
-            android:name=".tta.ui.course.CourseScormViewActivity"
+            android:name="org.humana.mobile.tta.ui.course.CourseScormViewActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:keepScreenOn="true"
             android:label="Scorm"
@@ -394,14 +394,14 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".tta.ui.connect.ConnectDashboardActivity"
+            android:name="org.humana.mobile.tta.ui.connect.ConnectDashboardActivity"
             android:label="@string/app_name"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <activity
-            android:name=".tta.ui.deep_link.DeepLinkActivity"
+            android:name="org.humana.mobile.tta.ui.deep_link.DeepLinkActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen.TaLaunch"
@@ -460,25 +460,25 @@
         </activity>
 
         <activity
-            android:name=".tta.ui.course.discussion.DiscussionThreadActivity"
+            android:name="org.humana.mobile.tta.ui.course.discussion.DiscussionThreadActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <activity
-            android:name=".tta.ui.course.discussion.DiscussionCommentActivity"
+            android:name="org.humana.mobile.tta.ui.course.discussion.DiscussionCommentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <activity
-            android:name=".tta.ui.course.CourseDashboardActivity"
+            android:name="org.humana.mobile.tta.ui.course.CourseDashboardActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
 
         <activity
-            android:name=".tta.ui.profile.OtherProfileActivity"
+            android:name="org.humana.mobile.tta.ui.profile.OtherProfileActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
@@ -487,33 +487,33 @@
 
         <!-- Humana activities start -->
 
-        <activity android:name=".tta.ui.programs.addunits.AddUnitsActivity"
+        <activity android:name="org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
-        <activity android:name=".tta.ui.programs.selectprogram.SelectProgramActivity"
+        <activity android:name="org.humana.mobile.tta.ui.programs.selectprogram.SelectProgramActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
-        <activity android:name=".tta.ui.programs.selectSection.SelectSectionActivity"
+        <activity android:name="org.humana.mobile.tta.ui.programs.selectSection.SelectSectionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
-        <activity android:name=".tta.ui.programs.pendingUnits.PendingUnitsListActivity"
+        <activity android:name="org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
-        <activity android:name=".tta.ui.programs.periodunits.PeriodUnitsActivity"
+        <activity android:name="org.humana.mobile.tta.ui.programs.periodunits.PeriodUnitsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
-        <activity android:name=".tta.ui.programs.userStatus.UserStatusActivity"
+        <activity android:name="org.humana.mobile.tta.ui.programs.userStatus.UserStatusActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
-        <activity android:name=".tta.ui.programs.units.UnitCalendarActivity"
+        <activity android:name="org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
@@ -542,7 +542,7 @@
 
         <!-- otp reading receiver no permission -->
         <receiver
-            android:name=".tta.ui.otp.SmsModuleReceiver"
+            android:name="org.humana.mobile.tta.ui.otp.SmsModuleReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
@@ -559,22 +559,22 @@
                     android:resource="@xml/image_provider"/>
         </provider>
 
-        <service android:name="org.edx.mobile.services.DownloadSpeedService" />
+        <service android:name="org.humana.mobile.services.DownloadSpeedService" />
 
         <!-- Notifications through Firebase Cloud Messaging (FCM) -->
         <!--<service
-            android:name="org.edx.mobile.notifications.services.NotificationService"
+            android:name="org.humana.mobile.notifications.services.NotificationService"
             android:enabled="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>-->
-        <service android:name=".tta.firebase.TaFirebaseMessagingService" >
+        <service android:name="org.humana.mobile.tta.firebase.TaFirebaseMessagingService" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".tta.firebase.TaFirebaseInstanceIDService" >
+        <service android:name="org.humana.mobile.tta.firebase.TaFirebaseInstanceIDService" >
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

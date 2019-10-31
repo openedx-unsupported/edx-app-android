@@ -227,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/replies_frame">
 
-                    <org.edx.mobile.tta.ui.custom.NonScrollRecyclerView
+                    <org.humana.mobile.tta.ui.custom.NonScrollRecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/replies_list"
@@ -237,7 +237,7 @@
                         android:divider="@color/transparent"
                         android:scrollbars="none" />
 
-                    <org.edx.mobile.view.custom.IconProgressBar
+                    <org.humana.mobile.view.custom.IconProgressBar
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/replies_progressbar"

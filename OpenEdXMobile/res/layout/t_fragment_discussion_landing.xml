@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.course.discussion.view_model.DiscussionLandingViewModel" />
+            type="org.humana.mobile.tta.ui.course.discussion.view_model.DiscussionLandingViewModel" />
     </data>
 
     <FrameLayout
@@ -21,7 +21,7 @@
             android:background="@color/app_background"
             app:mx_itemLayout="@layout/t_row_discussion_topic" />
 
-        <org.edx.mobile.view.custom.IconProgressBar
+        <org.humana.mobile.view.custom.IconProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

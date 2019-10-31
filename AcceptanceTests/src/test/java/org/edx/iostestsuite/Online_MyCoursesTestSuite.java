@@ -1,6 +1,6 @@
-package org.edx.iostestsuite;
+package org.humana.iostestsuite;
 
-import org.edx.basetest.MyCoursesTestSuiteBase;
+import org.humana.basetest.MyCoursesTestSuiteBase;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 

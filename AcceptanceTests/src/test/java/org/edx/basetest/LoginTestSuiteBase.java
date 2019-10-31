@@ -1,6 +1,6 @@
-package org.edx.basetest;
+package org.humana.basetest;
 
-import org.edx.elementlocators.ILoginLocators;
+import org.humana.elementlocators.ILoginLocators;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;

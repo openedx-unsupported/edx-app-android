@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel" />
+            type="org.humana.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel" />
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -16,7 +16,7 @@
             android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
-            <org.edx.mobile.tta.ui.custom.DropDownFilterView
+            <org.humana.mobile.tta.ui.custom.DropDownFilterView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_8px"

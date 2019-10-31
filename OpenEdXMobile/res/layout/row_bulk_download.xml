@@ -14,7 +14,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <org.humana.mobile.view.custom.IconImageViewXml
             android:id="@+id/iv_icon"
             android:layout_width="@dimen/fa_large"
             android:layout_height="@dimen/fa_large"

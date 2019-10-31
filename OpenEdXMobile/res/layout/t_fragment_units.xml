@@ -5,7 +5,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel" />
+            type="org.humana.mobile.tta.ui.programs.units.view_model.UnitsViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -86,12 +86,12 @@
             android:visibility="@{viewModel.calVisible ? View.VISIBLE : View.GONE}"
             android:orientation="vertical">
 
-            <org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView
+            <org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/calendar_view">
 
-            </org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView>
+            </org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView>
 
         </LinearLayout>
     </LinearLayout>

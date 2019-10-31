@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.feed.view_model.FeedViewModel" />
+            type="org.humana.mobile.tta.ui.feed.view_model.FeedViewModel" />
     </data>
 
     <LinearLayout

@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyy-MM-dd HH.mm</maven.build.timestamp.format>
 		<timestamp>${maven.build.timestamp}</timestamp>
-		<env>org.edx</env>
+		<env>org.humana</env>
 		<baseUrl>http://${env}</baseUrl>
 		<outputPath>Test-Reports/${env}/${timestamp}</outputPath>
 		<testngXml>android.xml</testngXml>

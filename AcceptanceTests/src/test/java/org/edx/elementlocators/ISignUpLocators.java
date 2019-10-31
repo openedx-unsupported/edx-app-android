@@ -1,4 +1,4 @@
-package org.edx.elementlocators;
+package org.humana.elementlocators;
 
 public interface ISignUpLocators {
 
@@ -27,19 +27,19 @@ public interface ISignUpLocators {
 	// Android locators
 
 	// Landing screen
-	String Android_edXLogoId = "org.edx.mobile:id/edx_logo";
+	String Android_edXLogoId = "org.humana.mobile:id/edx_logo";
 	String Android_signUpButtonName = "Sign up and start learning";
-	String Android_signUpButtonId = "org.edx.mobile:id/sign_up_btn";
+	String Android_signUpButtonId = "org.humana.mobile:id/sign_up_btn";
 	String Android_signInByName = "Already have an account? Sign in";
 
 	// Sign up page
 	String Android_signUpTextByName = "Sign up for edX";
-	String Android_closeBtnById = "org.edx.mobile:id/actionbar_close_btn";
-	String Android_createAccountById = "org.edx.mobile:id/create_account_tv";
+	String Android_closeBtnById = "org.humana.mobile:id/actionbar_close_btn";
+	String Android_createAccountById = "org.humana.mobile:id/create_account_tv";
 	String Android_showOptionalFieldByName = "Show optional fields";
 	String Android_createAccountByName = "Create my account";
-	String Android_txtAgreeToEULAById = "org.edx.mobile:id/by_creating_account_tv";
-	String Android_EULAById = "org.edx.mobile:id/end_user_agreement_tv";
+	String Android_txtAgreeToEULAById = "org.humana.mobile:id/by_creating_account_tv";
+	String Android_EULAById = "org.humana.mobile:id/end_user_agreement_tv";
 	
 	//Offline mode
 	String Android_offlineModeheaderMsg="Connection Error";

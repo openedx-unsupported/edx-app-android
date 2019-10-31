@@ -6,9 +6,9 @@
 
 	<test name="iOS" preserve-order="true">
 		<classes>
-			<class name="org.edx.iostestsuite.Online_LoginTestSuite"></class>
-			<class name="org.edx.iostestsuite.Online_MyCoursesTestSuite"></class>
-			<class name="org.edx.iostestsuite.Online_MyVideosTestSuite"></class>
+			<class name="org.humana.iostestsuite.Online_LoginTestSuite"></class>
+			<class name="org.humana.iostestsuite.Online_MyCoursesTestSuite"></class>
+			<class name="org.humana.iostestsuite.Online_MyVideosTestSuite"></class>
 		</classes>
 
 	</test>

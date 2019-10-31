@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.edx.mobile.view.custom.DisableableViewPager
+<org.humana.mobile.view.custom.DisableableViewPager
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="0px"
     android:layout_weight="1"
     android:importantForAccessibility="no">
-</org.edx.mobile.view.custom.DisableableViewPager>
+</org.humana.mobile.view.custom.DisableableViewPager>

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.edx.elementlocators;
+package org.humana.elementlocators;
 
 /**
  * @author divakarpatil
@@ -128,79 +128,79 @@ public interface IMyCoursesLocators {
 	 */
 
 	// Login Id's
-	String tbEmailId = "org.edx.mobile:id/email_et";
-	String tbPasswordId = "org.edx.mobile:id/password_et";
-	String btnSigninId = "org.edx.mobile:id/login_button_layout";
-	String btnLogOutId = "org.edx.mobile:id/logout_button";
+	String tbEmailId = "org.humana.mobile:id/email_et";
+	String tbPasswordId = "org.humana.mobile:id/password_et";
+	String btnSigninId = "org.humana.mobile:id/login_button_layout";
+	String btnLogOutId = "org.humana.mobile:id/logout_button";
 
 	// Header Id's
 	String btnHeaderId = "android:id/up";
 	String btnHeaderNameId = "android:id/action_bar_title";
 
 	// Find A Course id's
-	String btnFindACourseId = "org.edx.mobile:id/course_btn";
-	String btnDontSeeCoursesId = "org.edx.mobile:id/course_not_listed_tv";
-	String btnCloseId = "org.edx.mobile:id/positiveButton";
+	String btnFindACourseId = "org.humana.mobile:id/course_btn";
+	String btnDontSeeCoursesId = "org.humana.mobile:id/course_not_listed_tv";
+	String btnCloseId = "org.humana.mobile:id/positiveButton";
 	String lnkFindACourseName = "https://www.edx.org/course-search?type=mobile";
 	String txtLookingForChallengeName = "Looking for a new challenge?";
 
 	// Navigation through the course to the video id's
-	String btnCourseId = "org.edx.mobile:id/course_row_layout";
-	String btnSectionSubsectionDownloadId = "org.edx.mobile:id/bulk_download_layout";
-	String btnSectionSubsectionId = "org.edx.mobile:id/chapter_row_layout";
+	String btnCourseId = "org.humana.mobile:id/course_row_layout";
+	String btnSectionSubsectionDownloadId = "org.humana.mobile:id/bulk_download_layout";
+	String btnSectionSubsectionId = "org.humana.mobile:id/chapter_row_layout";
 	String btnCourseWareName = "Courseware";
 	String btnCourseInfoName = "Course Info";
 	String btnAnnouncementsName="Announcements";
 	String btnHandOutsName = "View course handouts";
-	String hlnkViewOnWebId = "org.edx.mobile:id/open_in_browser_btn";
-	String btnVideoId = "org.edx.mobile:id/video_row_layout";
-	String btnVideoDownloadId = "org.edx.mobile:id/video_start_download";
+	String hlnkViewOnWebId = "org.humana.mobile:id/open_in_browser_btn";
+	String btnVideoId = "org.humana.mobile:id/video_row_layout";
+	String btnVideoDownloadId = "org.humana.mobile:id/video_start_download";
 
 	// Download Screen, Download Message Id's
-	String btnDownloadScreenId = "org.edx.mobile:id/down_arrow";
-	String btnDownloadScreenCancelId = "org.edx.mobile:id/close_btn";
-	String dlgLargeDownloadsId = "org.edx.mobile:id/dialog_layout";
-	String lbVideoName = "org.edx.mobile:id/video_title";
-	String lbVideoSize = "org.edx.mobile:id/video_size";
-	String lbVideoLength = "org.edx.mobile:id/video_playing_time";
-	String btnViewId = "org.edx.mobile:id/button_view";
-	String lstDownloadVideosId = "org.edx.mobile:id/downloads_row_layout";
-	String msgDownloadId = "org.edx.mobile:id/flying_message";
-	String downloadProgressWheel = "org.edx.mobile:id/progress_wheel";
+	String btnDownloadScreenId = "org.humana.mobile:id/down_arrow";
+	String btnDownloadScreenCancelId = "org.humana.mobile:id/close_btn";
+	String dlgLargeDownloadsId = "org.humana.mobile:id/dialog_layout";
+	String lbVideoName = "org.humana.mobile:id/video_title";
+	String lbVideoSize = "org.humana.mobile:id/video_size";
+	String lbVideoLength = "org.humana.mobile:id/video_playing_time";
+	String btnViewId = "org.humana.mobile:id/button_view";
+	String lstDownloadVideosId = "org.humana.mobile:id/downloads_row_layout";
+	String msgDownloadId = "org.humana.mobile:id/flying_message";
+	String downloadProgressWheel = "org.humana.mobile:id/progress_wheel";
 
 	// Video player Id's
-	String vpVideoPlayerId = "org.edx.mobile:id/preview";
-	String lbVideoNameVideoPlayerId = "org.edx.mobile:id/video_title";
-	String btnLMS = "org.edx.mobile:id/lms_btn";
-	String btnPlayPause = "org.edx.mobile:id/pause";
-	String btnRewind = "org.edx.mobile:id/rew";
-	String btnSettings = "org.edx.mobile:id/settings";
-	String btnFullScreenId = "org.edx.mobile:id/fullscreen";
-	String popupCC = "org.edx.mobile:id/tv_closedcaption";
-	String popupLanguages = "org.edx.mobile:id/row_cc_lang";
-	String txtSubtitlesId = "org.edx.mobile:id/txtSubtitles_tv";
-	String popupLanguagesCancel = "org.edx.mobile:id/tv_cc_cancel";
+	String vpVideoPlayerId = "org.humana.mobile:id/preview";
+	String lbVideoNameVideoPlayerId = "org.humana.mobile:id/video_title";
+	String btnLMS = "org.humana.mobile:id/lms_btn";
+	String btnPlayPause = "org.humana.mobile:id/pause";
+	String btnRewind = "org.humana.mobile:id/rew";
+	String btnSettings = "org.humana.mobile:id/settings";
+	String btnFullScreenId = "org.humana.mobile:id/fullscreen";
+	String popupCC = "org.humana.mobile:id/tv_closedcaption";
+	String popupLanguages = "org.humana.mobile:id/row_cc_lang";
+	String txtSubtitlesId = "org.humana.mobile:id/txtSubtitles_tv";
+	String popupLanguagesCancel = "org.humana.mobile:id/tv_cc_cancel";
 
 	// No CourseWare available id
-	String lbCourseWareId = "org.edx.mobile:id/no_chapter_tv";
+	String lbCourseWareId = "org.humana.mobile:id/no_chapter_tv";
 	String lbCourseWareName = "No courseware is currently available.";
 
 	// Last Accessed button Id
-	String btnLastAccessedId = "org.edx.mobile:id/last_viewed_tv";
+	String btnLastAccessedId = "org.humana.mobile:id/last_viewed_tv";
 
 	// Left Navigation Panel id's
-	String txtMyCourseId = "org.edx.mobile:id/drawer_option_my_courses";
+	String txtMyCourseId = "org.humana.mobile:id/drawer_option_my_courses";
 	String txtMyVideosName = "My Videos";
-	String txtMySettingsId="org.edx.mobile:id/drawer_option_my_settings";
+	String txtMySettingsId="org.humana.mobile:id/drawer_option_my_settings";
 	String txtCellularDownloadName="ALLOW CELLULAR DOWNLOAD";
 	String txtCellularDownload1Name="Allow your device to download videos over your cellular connection when" 
 +"Wi-Fi is not available. Data charges may apply.";
-	String btnOkPopupId = "org.edx.mobile:id/positiveButton";
-	String btnSettingsId = "org.edx.mobile:id/wifi_setting";
+	String btnOkPopupId = "org.humana.mobile:id/positiveButton";
+	String btnSettingsId = "org.humana.mobile:id/wifi_setting";
 	
 	//Find Courses
 	String txtFindCourseName="Find Courses";
-	String findACoursewebView="org.edx.mobile:id/webview";
+	String findACoursewebView="org.humana.mobile:id/webview";
 	
 
 	/*

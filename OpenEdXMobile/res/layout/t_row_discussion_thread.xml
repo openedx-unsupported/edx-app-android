@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.discussion.DiscussionThread" />
+            type="org.humana.mobile.discussion.DiscussionThread" />
     </data>
 
     <android.support.v7.widget.CardView

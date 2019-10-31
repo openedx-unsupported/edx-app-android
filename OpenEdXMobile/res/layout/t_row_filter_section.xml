@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.data.model.search.FilterSection" />
+            type="org.humana.mobile.tta.data.model.search.FilterSection" />
     </data>
 
     <LinearLayout
@@ -28,7 +28,7 @@
             android:background="@color/gray_1"
             android:layout_marginTop="@dimen/_20px"/>
 
-        <org.edx.mobile.tta.ui.custom.NonScrollListView
+        <org.humana.mobile.tta.ui.custom.NonScrollListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tags_multi_choice_list"

@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.landing.view_model.LandingViewModel" />
+            type="org.humana.mobile.tta.ui.landing.view_model.LandingViewModel" />
     </data>
 
     <LinearLayout

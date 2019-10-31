@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="org.edx.mobile.tta.ui.splash.SplashViewModel"/>
+        <import type="org.humana.mobile.tta.ui.splash.SplashViewModel"/>
     </data>
 
     <RelativeLayout

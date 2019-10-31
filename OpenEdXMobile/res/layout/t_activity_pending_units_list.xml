@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsListViewModel" />
+            type="org.humana.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsListViewModel" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout

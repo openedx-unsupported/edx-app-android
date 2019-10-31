@@ -39,7 +39,7 @@
                 android:textColor="@color/gray_1"
                 android:layout_marginLeft="5dp" />
 
-            <org.edx.mobile.tta.ui.custom.MultiSelectionSpinner
+            <org.humana.mobile.tta.ui.custom.MultiSelectionSpinner
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

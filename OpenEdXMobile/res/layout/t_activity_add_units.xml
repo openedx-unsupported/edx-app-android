@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.addunits.viewmodel.AddUnitsViewModel" />
+            type="org.humana.mobile.tta.ui.programs.addunits.viewmodel.AddUnitsViewModel" />
     </data>
 
     <LinearLayout

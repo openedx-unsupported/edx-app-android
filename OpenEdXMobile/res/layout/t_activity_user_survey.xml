@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:paddingTop="63dp" />
 
-        <org.edx.mobile.view.custom.IconProgressBar
+        <org.humana.mobile.view.custom.IconProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/loading_indicator"

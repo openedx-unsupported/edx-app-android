@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.data.model.agenda.AgendaItem" />
+            type="org.humana.mobile.tta.data.model.agenda.AgendaItem" />
     </data>
 
     <android.support.v7.widget.CardView

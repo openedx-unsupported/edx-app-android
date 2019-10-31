@@ -1,6 +1,6 @@
-package org.edx.androidtestsuite;
+package org.humana.androidtestsuite;
 
-import org.edx.basetest.Offline_FindCourseTestSuiteBase;
+import org.humana.basetest.Offline_FindCourseTestSuiteBase;
 
 public class Offline_FindCourseTestSuite extends Offline_FindCourseTestSuiteBase{
 

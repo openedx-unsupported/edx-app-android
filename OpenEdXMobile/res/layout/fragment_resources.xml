@@ -6,4 +6,4 @@
     android:divider="@drawable/edx_divider"
     android:orientation="vertical"
     android:showDividers="middle|end"
-    tools:context="org.edx.mobile.view.ResourcesFragment"/>
+    tools:context="org.humana.mobile.view.ResourcesFragment"/>

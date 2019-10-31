@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <org.edx.mobile.view.custom.IconImageViewXml
+    <org.humana.mobile.view.custom.IconImageViewXml
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_margin="20dp"
