@@ -1,4 +1,4 @@
-package org.edx.basetest;
+package org.humana.basetest;
 
 import java.sql.Timestamp;
 import java.util.Date;

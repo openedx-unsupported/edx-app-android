@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.edx.elementlocators;
+package org.humana.elementlocators;
 
 /**
  * @author divakarpatil
@@ -65,39 +65,39 @@ public interface ILoginLocators {
 	 */
 	
 	//Landing Screen
-	String ANDROID_ID_btnSIGNINId="org.edx.mobile:id/sign_in_tv";
+	String ANDROID_ID_btnSIGNINId="org.humana.mobile:id/sign_in_tv";
 	
 	String Android_Name_signinText="Sign in to edX";
 	
 	// Login to app id
-	String ANDROID_ID_EMAIL = "org.edx.mobile:id/email_et";
-	String Android_tbPasswordId = "org.edx.mobile:id/password_et";
-	String Android_btnSigninId = "org.edx.mobile:id/login_button_layout";
+	String ANDROID_ID_EMAIL = "org.humana.mobile:id/email_et";
+	String Android_tbPasswordId = "org.humana.mobile:id/password_et";
+	String Android_btnSigninId = "org.humana.mobile:id/login_button_layout";
 
 	// forgot password id
-	String Android_hlnkForgotPasswordId = "org.edx.mobile:id/forgot_password_tv";
-	String Android_tbForgotPasswordId = "org.edx.mobile:id/email_edit";
-	String Android_btnOkPopupId = "org.edx.mobile:id/positiveButton";
-	String Android_btnCancelPopupId = "org.edx.mobile:id/negativeButton";
+	String Android_hlnkForgotPasswordId = "org.humana.mobile:id/forgot_password_tv";
+	String Android_tbForgotPasswordId = "org.humana.mobile:id/email_edit";
+	String Android_btnOkPopupId = "org.humana.mobile:id/positiveButton";
+	String Android_btnCancelPopupId = "org.humana.mobile:id/negativeButton";
 
 	// Logout id
 	String Android_btnHeaderId = "android:id/up";
-	String Android_btnLogOutId = "org.edx.mobile:id/logout_button";
+	String Android_btnLogOutId = "org.humana.mobile:id/logout_button";
 
 	// EULA id
-	String Android_hlnkEULAId = "org.edx.mobile:id/end_user_agreement_tv";
-	String Android_txtEULAHeaderId = "org.edx.mobile:id/tv_dialog_title";
+	String Android_hlnkEULAId = "org.humana.mobile:id/end_user_agreement_tv";
+	String Android_txtEULAHeaderId = "org.humana.mobile:id/tv_dialog_title";
 	String Android_WebViewClassName = "android.webkit.WebView";
 
 	// Need an account id
-	String Android_hlnkNeedAnAccountId = "org.edx.mobile:id/new_user_tv";
-	String Android_lbSignupId = "org.edx.mobile:id/by_signing_up_tv";
-	String Android_lbNewUserId = "org.edx.mobile:id/signup_text";//
+	String Android_hlnkNeedAnAccountId = "org.humana.mobile:id/new_user_tv";
+	String Android_lbSignupId = "org.humana.mobile:id/by_signing_up_tv";
+	String Android_lbNewUserId = "org.humana.mobile:id/signup_text";//
 	String Android_webLinkId = "com.android.chrome:id/url_bar";
 
 	// Facebook and Gmail button id
-	String Android_btnfacebookId = "org.edx.mobile:id/img_facebook";
-	String Android_btnGmailId = "org.edx.mobile:id/img_google";
+	String Android_btnfacebookId = "org.humana.mobile:id/img_facebook";
+	String Android_btnGmailId = "org.humana.mobile:id/img_google";
 
 	/* iOS Locator Ids */
 	// Login id

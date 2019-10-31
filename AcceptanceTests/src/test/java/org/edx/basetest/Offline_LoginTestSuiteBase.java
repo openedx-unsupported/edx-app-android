@@ -1,6 +1,6 @@
-package org.edx.basetest;
+package org.humana.basetest;
 
-import org.edx.elementlocators.ILoginLocators_Offline;
+import org.humana.elementlocators.ILoginLocators_Offline;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
@@ -16,7 +16,7 @@ public abstract class Offline_LoginTestSuiteBase extends CommonFunctionalities
 	}
 
 	/**
-	 * Check for offline error message if user tries to login with edx username
+	 * Check for offline error message if user tries to login with humana username
 	 * and password, facebook button and google button
 	 * @throws InterruptedException 
 	 */

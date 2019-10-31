@@ -19,7 +19,7 @@
             android:text="@string/rating_dialog_message"
             android:textSize="@dimen/edx_large" />
 
-        <org.edx.mobile.view.custom.EdxRatingBar
+        <org.humana.mobile.view.custom.EdxRatingBar
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

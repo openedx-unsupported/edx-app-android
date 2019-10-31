@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.feed.view_model.RecommendedUsersViewModel" />
+            type="org.humana.mobile.tta.ui.feed.view_model.RecommendedUsersViewModel" />
     </data>
 
     <LinearLayout

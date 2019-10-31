@@ -1,11 +1,11 @@
-package org.edx.basetest;
+package org.humana.basetest;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.edx.nativeapp.NativeAppDriver;
-import org.edx.utils.FileGenerator;
-import org.edx.utils.PropertyLoader;
+import org.humana.nativeapp.NativeAppDriver;
+import org.humana.utils.FileGenerator;
+import org.humana.utils.PropertyLoader;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeTest;

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.profile.view_model.AllBadgesViewModel" />
+            type="org.humana.mobile.tta.ui.profile.view_model.AllBadgesViewModel" />
     </data>
 
     <LinearLayout

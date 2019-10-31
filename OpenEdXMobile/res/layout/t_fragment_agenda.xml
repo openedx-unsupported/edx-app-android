@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.agenda.view_model.AgendaViewModel" />
+            type="org.humana.mobile.tta.ui.agenda.view_model.AgendaViewModel" />
     </data>
 
     <ScrollView

@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.connect.view_model.ConnectDashboardViewModel" />
+            type="org.humana.mobile.tta.ui.connect.view_model.ConnectDashboardViewModel" />
     </data>
 
     <RelativeLayout
@@ -128,7 +128,7 @@
 
                     </android.support.constraint.ConstraintLayout>
 
-                    <org.edx.mobile.tta.ui.custom.VideoEnabledWebView
+                    <org.humana.mobile.tta.ui.custom.VideoEnabledWebView
                         android:id="@+id/connect_webview"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
@@ -286,7 +286,7 @@
                                         android:padding="8dp"
                                         android:visibility="@{viewModel.allDownloadOptionVisible ? View.VISIBLE : View.GONE}">
 
-                                        <org.edx.mobile.view.custom.IconProgressBar
+                                        <org.humana.mobile.view.custom.IconProgressBar
                                             android:id="@+id/loading_indicator"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"

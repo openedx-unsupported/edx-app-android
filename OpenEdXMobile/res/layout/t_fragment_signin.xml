@@ -8,7 +8,7 @@
             name="viewModel"
             type="SigninViewModel" />
 
-        <import type="org.edx.mobile.tta.ui.logistration.view_model.SigninViewModel" />
+        <import type="org.humana.mobile.tta.ui.logistration.view_model.SigninViewModel" />
     </data>
 
     <ScrollView

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.course.view_model.CourseMaterialViewModel" />
+            type="org.humana.mobile.tta.ui.course.view_model.CourseMaterialViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -29,7 +29,7 @@
             android:textColor="@color/gray_5"
             android:textSize="14sp" />
 
-        <!--<org.edx.mobile.view.custom.AuthenticatedWebView
+        <!--<org.humana.mobile.view.custom.AuthenticatedWebView
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:id="@+id/description_webview"
@@ -152,7 +152,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:padding="8dp">
 
-                    <org.edx.mobile.view.custom.IconProgressBar
+                    <org.humana.mobile.view.custom.IconProgressBar
                         android:id="@+id/loading_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

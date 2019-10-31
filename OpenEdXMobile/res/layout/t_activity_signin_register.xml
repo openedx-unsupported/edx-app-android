@@ -8,7 +8,7 @@
             name="viewModel"
             type="SigninRegisterViewModel" />
 
-        <import type="org.edx.mobile.tta.ui.logistration.view_model.SigninRegisterViewModel" />
+        <import type="org.humana.mobile.tta.ui.logistration.view_model.SigninRegisterViewModel" />
     </data>
 
     <LinearLayout

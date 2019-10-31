@@ -5,7 +5,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.selectprogram.viewmodel.SelectProgramViewModel2" />
+            type="org.humana.mobile.tta.ui.programs.selectprogram.viewmodel.SelectProgramViewModel2" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

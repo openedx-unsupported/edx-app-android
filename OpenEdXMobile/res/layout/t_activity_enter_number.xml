@@ -8,7 +8,7 @@
             name="viewModel"
             type="EnterNumberViewModel" />
 
-        <import type="org.edx.mobile.tta.ui.reset_password.view_model.EnterNumberViewModel" />
+        <import type="org.humana.mobile.tta.ui.reset_password.view_model.EnterNumberViewModel" />
     </data>
 
     <ScrollView

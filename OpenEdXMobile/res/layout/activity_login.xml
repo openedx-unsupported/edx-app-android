@@ -60,7 +60,7 @@
                     android:paddingLeft="44dp"
                     android:paddingRight="44dp">
 
-                    <org.edx.mobile.view.custom.EdxTextInputLayout
+                    <org.humana.mobile.view.custom.EdxTextInputLayout
                         android:id="@+id/usernameWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -78,9 +78,9 @@
                             android:inputType="textEmailAddress"
                             android:maxLength="100" />
 
-                    </org.edx.mobile.view.custom.EdxTextInputLayout>
+                    </org.humana.mobile.view.custom.EdxTextInputLayout>
 
-                    <org.edx.mobile.view.custom.EdxTextInputLayout
+                    <org.humana.mobile.view.custom.EdxTextInputLayout
                         android:id="@+id/passwordWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                             android:inputType="textPassword"
                             android:maxLength="100" />
 
-                    </org.edx.mobile.view.custom.EdxTextInputLayout>
+                    </org.humana.mobile.view.custom.EdxTextInputLayout>
 
                     <TextView
                         android:visibility="gone"
@@ -138,7 +138,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <org.edx.mobile.view.custom.DividerWithTextView
+                        <org.humana.mobile.view.custom.DividerWithTextView
                             android:id="@+id/text_alternate_sign_in"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

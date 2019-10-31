@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.course.view_model.CourseDashboardViewModel" />
+            type="org.humana.mobile.tta.ui.course.view_model.CourseDashboardViewModel" />
     </data>
 
     <LinearLayout

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
+            type="org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
     </data>
 <LinearLayout android:layout_width="wrap_content"
     android:layout_height="70dp"

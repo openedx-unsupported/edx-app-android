@@ -71,7 +71,7 @@ def getVersionName = { ->
             // This branch/tag contains a semantic version (e.g. "rc/2.6.0" or "release/2.5")
             //for tta we are keeping it as "tta_rc" or "tta_release".
             return s.indexOf("rc/") >= 0 || s.indexOf("release/") >= 0 ||
-                    s.indexOf("tta_rc/") >= 0 || s.indexOf("tta_release/") >= 0
+                    s.indexOf("humana_rc/") >= 0 || s.indexOf("humana_release/") >= 0
         }
         if (hasSemanticVersion(branch)) {
             description = branch
@@ -331,7 +331,7 @@ android {
     flavorDimensions "default"
 
     defaultConfig {
-        applicationId "org.edx.mobile"
+        applicationId "org.humana.mobile"
         // minimum version is Android 4.1
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
@@ -345,17 +345,17 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         // test configuration
-        testApplicationId 'org.edx.mobile.test'
+        testApplicationId 'org.humana.mobile.test'
 
         for (task in project.gradle.startParameter.taskNames) {
             if (task.contains("ScreenshotTest")) {
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("package", "org.edx.mobile.test.screenshot");
+                map.put("package", "org.humana.mobile.test.screenshot");
                 setTestInstrumentationRunnerArguments map
             }
         }
 
-        testInstrumentationRunner "org.edx.mobile.test.EdXTestRunner"
+        testInstrumentationRunner "org.humana.mobile.test.EdXTestRunner"
 
         testHandleProfiling true
         testFunctionalTest true
@@ -501,7 +501,7 @@ android {
             signingConfig signingConfigs.releasekey
             applicationVariants.all { variant ->
                 variant.outputs.all { output ->
-                    project.ext { appName = 'edx' }
+                    project.ext { appName = 'humana' }
                     outputFileName  = "${project.ext.appName}-${variant.buildType.name}-${versionName}.apk"
                 }
             }

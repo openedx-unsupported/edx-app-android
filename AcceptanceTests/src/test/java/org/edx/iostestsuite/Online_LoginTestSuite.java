@@ -1,6 +1,6 @@
-package org.edx.iostestsuite;
+package org.humana.iostestsuite;
 
-import org.edx.basetest.LoginTestSuiteBase;
+import org.humana.basetest.LoginTestSuiteBase;
 import org.testng.annotations.Test;
 
 @Test(groups = "iOS")

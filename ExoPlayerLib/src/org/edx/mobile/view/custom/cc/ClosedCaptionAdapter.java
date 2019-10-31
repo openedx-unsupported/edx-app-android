@@ -1,7 +1,7 @@
-package org.edx.mobile.view.custom.cc;
+package org.humana.mobile.view.custom.cc;
 
-import org.edx.mobile.player.IVideo.IClosedCaption;
-import org.edx.mobile.view.custom.BaseListAdapter;
+import org.humana.mobile.player.IVideo.IClosedCaption;
+import org.humana.mobile.view.custom.BaseListAdapter;
 
 import android.content.Context;
 import android.view.View;

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.logistration.view_model.RegisterViewModel" />
+            type="org.humana.mobile.tta.ui.logistration.view_model.RegisterViewModel" />
     </data>
 
     <ScrollView

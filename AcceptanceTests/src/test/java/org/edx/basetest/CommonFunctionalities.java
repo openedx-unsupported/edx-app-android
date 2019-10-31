@@ -1,6 +1,6 @@
-package org.edx.basetest;
+package org.humana.basetest;
 
-import org.edx.nativeapp.NativeAppDriver;
+import org.humana.nativeapp.NativeAppDriver;
 
 public class CommonFunctionalities extends BaseTest {
 

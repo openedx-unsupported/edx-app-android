@@ -8,7 +8,7 @@
             name="viewModel"
             type="SwipeLaunchViewModel" />
 
-        <import type="org.edx.mobile.tta.ui.launch.view_model.SwipeLaunchViewModel" />
+        <import type="org.humana.mobile.tta.ui.launch.view_model.SwipeLaunchViewModel" />
 
         <import type="android.view.View" />
     </data>

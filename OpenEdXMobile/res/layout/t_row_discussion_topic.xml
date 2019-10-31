@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.discussion.DiscussionTopic" />
+            type="org.humana.mobile.discussion.DiscussionTopic" />
     </data>
 
     <LinearLayout
@@ -32,7 +32,7 @@
             android:layout_marginEnd="@dimen/_20px"
             android:layout_marginTop="@dimen/_10px"/>
 
-        <org.edx.mobile.tta.ui.custom.NonScrollRecyclerView
+        <org.humana.mobile.tta.ui.custom.NonScrollRecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/limited_threads_list"

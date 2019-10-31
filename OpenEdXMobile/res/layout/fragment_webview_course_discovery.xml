@@ -43,7 +43,7 @@
                 <include layout="@layout/edx_divider" />
             </LinearLayout>
 
-            <org.edx.mobile.view.custom.EdxWebView
+            <org.humana.mobile.view.custom.EdxWebView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

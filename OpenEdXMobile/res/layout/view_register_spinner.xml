@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/registration_field_vertical_padding"
     android:orientation="vertical">
 
-    <org.edx.mobile.module.registration.view.RegistrationOptionSpinner
+    <org.humana.mobile.module.registration.view.RegistrationOptionSpinner
         android:id="@+id/input_spinner"
         style="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"

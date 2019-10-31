@@ -8,7 +8,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <org.humana.mobile.view.custom.IconImageViewXml
             android:layout_width="@dimen/large_indicator_icon_width"
             android:layout_height="@dimen/large_indicator_icon_height"
             app:iconColor="@color/edx_brand_gray_back"

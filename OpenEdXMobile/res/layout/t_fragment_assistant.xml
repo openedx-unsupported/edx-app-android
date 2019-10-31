@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.assistant.view_model.AssistantViewModel" />
+            type="org.humana.mobile.tta.ui.assistant.view_model.AssistantViewModel" />
     </data>
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"

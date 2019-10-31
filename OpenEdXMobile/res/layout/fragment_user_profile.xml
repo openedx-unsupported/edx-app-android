@@ -56,7 +56,7 @@
                         android:visibility="gone"
                         tools:visibility="visible">
 
-                        <org.edx.mobile.view.custom.IconImageViewXml
+                        <org.humana.mobile.view.custom.IconImageViewXml
                             android:layout_width="@dimen/edx_x_small"
                             android:layout_height="@dimen/edx_x_small"
                             android:layout_marginEnd="@dimen/x_small_icon_margin"
@@ -83,7 +83,7 @@
                         android:visibility="gone"
                         tools:visibility="visible">
 
-                        <org.edx.mobile.view.custom.IconImageViewXml
+                        <org.humana.mobile.view.custom.IconImageViewXml
                             android:layout_width="@dimen/edx_x_small"
                             android:layout_height="@dimen/edx_x_small"
                             android:layout_marginEnd="@dimen/x_small_icon_margin"
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <org.edx.mobile.view.custom.NonScrollingViewPager
+                <org.humana.mobile.view.custom.NonScrollingViewPager
                     android:id="@+id/profile_section_pager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

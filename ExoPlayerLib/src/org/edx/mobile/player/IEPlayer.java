@@ -1,4 +1,4 @@
-package org.edx.mobile.player;
+package org.humana.mobile.player;
 
 import com.google.android.exoplayer.ExoPlayer;
 

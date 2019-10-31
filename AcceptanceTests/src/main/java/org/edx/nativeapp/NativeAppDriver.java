@@ -1,4 +1,4 @@
-package org.edx.nativeapp;
+package org.humana.nativeapp;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.NetworkConnectionSetting;
@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.edx.Config;
-import org.edx.basetest.UniqueTestId;
-import org.edx.utils.PropertyLoader;
+import org.humana.Config;
+import org.humana.basetest.UniqueTestId;
+import org.humana.utils.PropertyLoader;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;

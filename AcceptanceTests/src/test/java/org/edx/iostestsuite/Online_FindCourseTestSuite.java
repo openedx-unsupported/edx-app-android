@@ -1,6 +1,6 @@
-package org.edx.iostestsuite;
+package org.humana.iostestsuite;
 
-import org.edx.basetest.FindCourseTestSuiteBase;
+import org.humana.basetest.FindCourseTestSuiteBase;
 
 public class Online_FindCourseTestSuite extends FindCourseTestSuiteBase{
 

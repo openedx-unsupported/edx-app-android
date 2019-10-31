@@ -49,7 +49,7 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <org.edx.mobile.view.custom.EdxWebView
+            <org.humana.mobile.view.custom.EdxWebView
                 android:id="@+id/course_detail_course_about_webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package org.edx.main;
+package org.humana.main;
 
 import java.io.File;
 import java.io.IOException;

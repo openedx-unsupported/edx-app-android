@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.edx.elementlocators;
+package org.humana.elementlocators;
 
 /**
  * @author divakarpatil
@@ -25,7 +25,7 @@ public interface IFindCourseLocators {
 	
 	//Android id's
 	
-	String Android_lnpFindCoursesId="org.edx.mobile:id/drawer_option_find_courses";
+	String Android_lnpFindCoursesId="org.humana.mobile:id/drawer_option_find_courses";
 	String Android_FindCoursesName="Find Courses";
 	String Android_HeaderId="android:id/up";
 	String Android_ViewingCoursesId="Viewing 123 courses matching Heading";

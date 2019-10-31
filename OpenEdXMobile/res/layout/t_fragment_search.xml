@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.search.view_model.SearchViewModel" />
+            type="org.humana.mobile.tta.ui.search.view_model.SearchViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -263,7 +263,7 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <org.edx.mobile.tta.ui.custom.NonScrollListView
+                <org.humana.mobile.tta.ui.custom.NonScrollListView
                     array_adapter="@{viewModel.contentListsAdapter}"
                     item_click_listener="@{viewModel.contentListClickListener}"
                     selected_position="@{viewModel.selectedContentListPosition}"

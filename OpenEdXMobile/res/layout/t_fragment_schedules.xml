@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel" />
+            type="org.humana.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout

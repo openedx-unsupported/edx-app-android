@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fillViewport="true"
-    tools:context="org.edx.mobile.view.CourseCombinedInfoFragment">
+    tools:context="org.humana.mobile.view.CourseCombinedInfoFragment">
 
     <FrameLayout
         android:id="@+id/content_error_root"
@@ -21,7 +21,7 @@
 
             <!-- Announcement container is populated with announcements via code found in the CourseCombinedInfoFragment -->
 
-            <org.edx.mobile.view.custom.EdxWebView
+            <org.humana.mobile.view.custom.EdxWebView
                 android:id="@+id/announcement_webview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

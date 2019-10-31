@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.custom.FormEditText" />
+            type="org.humana.mobile.tta.ui.custom.FormEditText" />
     </data>
 
     <LinearLayout
