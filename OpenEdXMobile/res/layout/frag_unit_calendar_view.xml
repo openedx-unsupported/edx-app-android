@@ -52,7 +52,6 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:elevation="5px"
                     android:layout_margin="8dp"
                     android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}"
                     android:orientation="horizontal">
@@ -102,33 +101,33 @@
                     android:visibility="@{viewModel.emptyVisible ? View.GONE : View.VISIBLE}"
                     app:mx_itemLayout="@layout/t_row_unit" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                <!--<LinearLayout-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:visibility="gone">-->
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/t_icon_error" />
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--app:srcCompat="@drawable/t_icon_error" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginStart="@dimen/_70px"
-                        android:layout_marginTop="@dimen/_46px"
-                        android:layout_marginEnd="@dimen/_70px"
-                        android:fontFamily="@font/hind_regular"
-                        android:gravity="center"
-                        android:text="No event found for this date"
-                        android:textColor="@color/primary_cyan"
-                        android:textSize="12sp" />
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:layout_marginStart="@dimen/_70px"-->
+                        <!--android:layout_marginTop="@dimen/_46px"-->
+                        <!--android:layout_marginEnd="@dimen/_70px"-->
+                        <!--android:fontFamily="@font/hind_regular"-->
+                        <!--android:gravity="center"-->
+                        <!--android:text="No event found for this date"-->
+                        <!--android:textColor="@color/primary_cyan"-->
+                        <!--android:textSize="12sp" />-->
 
-                </LinearLayout>
+                <!--</LinearLayout>-->
 
             </FrameLayout>
         </LinearLayout>

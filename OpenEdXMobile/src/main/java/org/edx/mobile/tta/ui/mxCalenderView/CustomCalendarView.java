@@ -27,7 +27,7 @@ public class CustomCalendarView extends LinearLayout {
     ImageButton nextButton, previousButton;
     static TextView currentDate;
     static GridView calGrid;
-    private static final int MAX_CALENDAR_DAYS = 42;
+    private static final int MAX_CALENDAR_DAYS = 43;
     static Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     static Context context;
     static UnitCalendarViewModel.CustomCalendarAdapter adapter;
@@ -86,7 +86,7 @@ public class CustomCalendarView extends LinearLayout {
         Calendar monthCalendar = (Calendar) calendar.clone();
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
 
-        int FIRST_DAY_OF_MONTH = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        int FIRST_DAY_OF_MONTH = calendar.get(Calendar.DAY_OF_WEEK) -1;
 
         monthCalendar.add(Calendar.DAY_OF_MONTH, -FIRST_DAY_OF_MONTH);
 
@@ -95,12 +95,7 @@ public class CustomCalendarView extends LinearLayout {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
         }
-        calGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                view.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
-            }
-        });
+
         adapter = new UnitCalendarViewModel.CustomCalendarAdapter(context, dates, calendar, eventsList);
         calGrid.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -114,8 +109,8 @@ public class CustomCalendarView extends LinearLayout {
             e = new Events(events.get(i).getDATE());
             eventsList.add(e);
         }
-        adapter.notifyDataSetChanged();
         setUpCalendar();
+//        adapter.notifyDataSetChanged();
     }
 
 }
