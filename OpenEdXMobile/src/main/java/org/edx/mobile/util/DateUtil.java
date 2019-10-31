@@ -153,6 +153,18 @@ public class DateUtil {
         return getDisplayTime(new Date(timestamp));
     }
 
+    public static String getCalendarDate(long timestamp){
+        return getDisplayCalendarTime(new Date(timestamp));
+    }
+
+    public static String getDisplayCalendarTime(Date date) {
+
+        Locale locale = new Locale("en");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd\nMMM", locale);
+        return outputFormat.format(date);
+
+    }
+
     public static String getDayMonth(long timestamp){
 
         Locale locale = new Locale("en");

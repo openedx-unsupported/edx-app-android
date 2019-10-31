@@ -2,5 +2,5 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/edx_brand_primary_base" />
     <item android:bottom="@dimen/tab_indicator_unselected_height"
-          android:drawable="@color/tab_bg" />
+          android:drawable="@color/secondary_blue_light" />
 </layer-list>

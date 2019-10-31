@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="4dp"
-        android:background="@color/white"
+        android:background="@color/humana_card_background"
         app:cardElevation="@dimen/_16px"
         android:shadowColor="@color/gray_1"
         android:layout_marginStart="15dp"
@@ -19,7 +19,8 @@
         android:layout_marginTop="@dimen/_14px">
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/humana_card_background">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -2,7 +2,11 @@ package org.edx.mobile.tta.ui.programs.units;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.view.MenuItem;
+import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -19,6 +23,7 @@ public class UnitCalendarActivity extends BaseVMActivity {
     private long periodId;
     private String periodName;
     private EnrolledCoursesResponse course;
+    private BottomSheetBehavior behavior;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +39,7 @@ public class UnitCalendarActivity extends BaseVMActivity {
         binding(R.layout.frag_unit_calendar_view, viewModel);
 
         setSupportActionBar(findViewById(R.id.toolbar));
+
     }
 
     @Override

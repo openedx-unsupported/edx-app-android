@@ -6,6 +6,7 @@ import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +15,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -70,9 +73,11 @@ public class UnitCalendarViewModel extends BaseViewModel {
     public static ObservableBoolean emptyVisible = new ObservableBoolean();
     public static ObservableBoolean calVisible = new ObservableBoolean();
     public static ObservableBoolean frameVisible = new ObservableBoolean();
+    public static ObservableBoolean setSelected = new ObservableBoolean();
     public static List<Events> eventsArrayList = new ArrayList<>();
     public static ObservableField switchText = new ObservableField<>();
     public static ObservableField selectedEvent = new ObservableField<>();
+    public static ObservableField<String> weekNo = new ObservableField<>();
 
 
     private EnrolledCoursesResponse course;
@@ -84,8 +89,9 @@ public class UnitCalendarViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
-    public static String previousDaySelected;
     public static ObservableField<String> eventDate = new ObservableField<>();
+    public static ObservableField<String> dispDate = new ObservableField<>();
+    public static ObservableField<String> SelectedCurrentDate = new ObservableField<>();
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -112,8 +118,10 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
         layoutManager = new LinearLayoutManager(mActivity);
         unitsAdapter = new UnitsAdapter(mActivity);
-        previousDaySelected = "";
+        setSelected.set(false);
 
+
+        eventsArrayList.clear();
         unitsAdapter.setItems(units);
         unitsAdapter.notifyDataSetChanged();
         unitsAdapter.setItemClickListener((view, item) -> {
@@ -194,6 +202,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
         mActivity.showLoading();
         fetchData();
 
+
     }
 
     private void fetchData() {
@@ -264,13 +273,11 @@ public class UnitCalendarViewModel extends BaseViewModel {
                                 mActivity.hideLoading();
                                 unit.setMyDate(data);
                                 unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
-                                eventsArrayList.clear();
-                                Events events = new Events(DateUtil.getDisplayDate(unit.getMyDate()));
-                                eventsArrayList.add(events);
-                                CustomCalendarView.createEvents(eventsArrayList);
+
                                 if (response.getSuccess()) {
                                     mActivity.showLongSnack("Proposed date set successfully");
-                                    EventBus.getDefault().post(units);
+                                    eventsArrayList.clear();
+                                   fetchData();
                                 }
                             }
 
@@ -308,9 +315,15 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         }
                         units = data;
                         populateUnits(data);
-                        unitsAdapter.setItems(data);
-                        unitsAdapter.notifyDataSetChanged();
-                        unitsAdapter.setLoadingDone();
+                        eventsArrayList.clear();
+                        for (int i = 0; i< data.size(); i++){
+                            Events et = new Events(DateUtil.getDisplayDate(data.get(i).getStaffDate()));
+                            eventsArrayList.add(et);
+                        }
+                        CustomCalendarView.createEvents(eventsArrayList);
+//                        unitsAdapter.setItems(data);
+//                        unitsAdapter.notifyDataSetChanged();
+//                        unitsAdapter.setLoadingDone();
                     }
 
                     @Override
@@ -406,17 +419,14 @@ public class UnitCalendarViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
-
                 unitBinding.setUnit(model);
+
+
 //                unitBinding.tvStaffDate.setVisibility(View.GONE);
 //                unitBinding.tvMyDate.setVisibility(View.GONE);
-                eventsArrayList.clear();
-                if (DateUtil.getDisplayDate(model.getMyDate()).equals(eventDate)){
-
-//                    Events et = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-//                    eventsArrayList.add(et);
+                if (DateUtil.getDisplayDate(model.getMyDate()).equals(eventDate.get())){
 //                    CustomCalendarView.createEvents(eventsArrayList);
-                unitBinding.unitCode.setText(model.getCode());
+                     unitBinding.unitCode.setText(model.getCode());
                 if (!TextUtils.isEmpty(model.getPeriodName())) {
                     unitBinding.unitCode.append("    |    " + model.getPeriodName());
                 }
@@ -424,7 +434,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
                 if (model.getMyDate() > 0) {
                     unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-
 
                 } else {
                     unitBinding.tvMyDate.setText(R.string.proposed_date);
@@ -462,12 +471,13 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 } else {
                     unitBinding.statusIcon.setVisibility(View.GONE);
                 }
-                }else{
+                }else {
                     emptyVisible.set(true);
+
+                }
 //                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
 //                    eventsArrayList.add(ev);
 //                    CustomCalendarView.createEvents(eventsArrayList);
-                }
 
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
@@ -492,6 +502,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
         List<Events> events;
         LayoutInflater inflater;
         Context context;
+        public int selectedPosition;
 
 
         public CustomCalendarAdapter(@androidx.annotation.NonNull Context context, List<Date> dates, Calendar currentDate, List<Events> events) {
@@ -512,8 +523,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
         @androidx.annotation.NonNull
         @Override
         public View getView(int position, @androidx.annotation.Nullable View convertView, @androidx.annotation.NonNull ViewGroup parent) {
-            Date monthdate = dates.get(position);
-            View view = convertView;
+                Date monthdate = dates.get(position);
+                View view = convertView;
             Calendar dateCalendar = Calendar.getInstance();
             dateCalendar.setTime(monthdate);
             int dayNo = dateCalendar.get(Calendar.DAY_OF_MONTH);
@@ -527,20 +538,29 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
             }
             Calendar eventCalendar = Calendar.getInstance();
-            ArrayList<String> arrayList = new ArrayList<>();
 
             TextView day = view.findViewById(R.id.cal_day);
             View event = view.findViewById(R.id.event_id);
             day.setText(String.valueOf(dayNo));
+//            if(selectedPosition==position){
+//                day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_light_blue));
+//
+//            }else{
+//                day.setBackground(ContextCompat.getDrawable(context, R.drawable.white_circle));
+//
+//            }
 
-//            if (dayNo)
-            if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && currentMonth == eventCalendar.get(Calendar.MONTH) +1
-            &&  displayYear == eventCalendar.get(Calendar.YEAR)) {
-                day.setTextColor(ContextCompat.getColor(context, R.color.white));
-                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
-                day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
-            }
-
+//            if (!setSelected.get()) {
+                if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && currentMonth == eventCalendar.get(Calendar.MONTH) + 1
+                        && displayYear == eventCalendar.get(Calendar.YEAR)) {
+                    day.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
+                    dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
+                    if (displayMonth == currentMonth && displayYear == currentYear) {
+                        day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
+                    }
+                }
+//            }
             if (displayMonth == currentMonth && displayYear == currentYear){
                 view.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
             }else {
@@ -555,17 +575,49 @@ public class UnitCalendarViewModel extends BaseViewModel {
                     event.setVisibility(View.VISIBLE);
                 }
             }
-
+//            view.setTag(position);
             view.setOnClickListener(v -> {
                 eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
-                unitsAdapter.setItems(units);
+                dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
+//                selectedPosition =(int)v.getTag();
+                setSelected.set(true);
+                List<Unit> filterUnits = new ArrayList<>();
+                for (int i=0; i< units.size(); i++) {
+                    if (DateUtil.getDisplayDate(units.get(i).getMyDate()).equals(eventDate.get())) {
+                        filterUnits.add(units.get(i));
+//                        unitsAdapter.setItems(filterUnits);
+//                        unitsAdapter.notifyDataSetChanged();
+                        emptyVisible.set(false);
+                    }
+                }
+                unitsAdapter.setItems(filterUnits);
                 unitsAdapter.notifyDataSetChanged();
-                emptyVisible.set(false);
-//                CustomCalendarView.setUpCalendar();
-//                day.setBackground(ContextCompat.getDrawable(context,R.drawable.circle_light_blue));
+                if (filterUnits.size() == 0){
+                    emptyVisible.set(true);
+                }
+//                setSelected.set(true);
+//                if (setSelected.get()){
+//                    CustomCalendarView.setUpCalendar();
+//                    day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_light_blue));
+//                }
+                //                CustomCalendarView.setUpCalendar();
 
+//                long weekSelected = dates.get(position).getTime();
+//                Calendar c = Calendar.getInstance();
+//                Date d = new Date();
+//                d.setTime(weekSelected);
+//                c.setTime(d);
+//
+//                int week = c.get(Calendar.WEEK_OF_MONTH);
+//                weekNo.set("week");
+
+                notifyDataSetChanged();
             });
+            unitsAdapter.setItems(units);
             unitsAdapter.notifyDataSetChanged();
+
+
+
 
             return view;
         }
@@ -594,5 +646,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
         }
 
     }
+
+
 
 }

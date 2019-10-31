@@ -42,9 +42,9 @@ public class BasePagerAdapter extends FragmentStatePagerAdapter {
         notifyDataSetChanged();
     }
 
-    public void addFragment(@NonNull Fragment fragment, @NonNull String title) {
-        fragments.add(fragment);
-        titles.add(title);
+    public void addFragment(@NonNull Fragment fragment, @NonNull String title, int position) {
+        fragments.add(position, fragment);
+        titles.add(position, title);
         notifyDataSetChanged();
     }
 

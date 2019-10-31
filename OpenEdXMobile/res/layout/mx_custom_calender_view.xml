@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.edx.mobile.tta.ui.programs.units.view_model.UnitsViewModel" />
+            type="org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray_4"
+            android:background="@color/humana_blue"
             android:orientation="horizontal">
 
             <ImageButton
@@ -59,7 +59,6 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Sun"
-
                 android:textColor="@android:color/black" />
 
             <TextView
@@ -115,7 +114,8 @@
         <GridView
             android:id="@+id/cal_grid"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:stretchMode="columnWidth"
             android:numColumns="7">
 
         </GridView>

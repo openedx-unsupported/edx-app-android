@@ -20,7 +20,7 @@
             style="@style/ta_tab_style"
             app:tabTextColor="@color/gray_5"
             app:tabSelectedTextColor="@color/gray_4"
-            app:tabIndicatorColor="@color/primary_cyan"
+            app:tabIndicatorColor="@color/secondary_red"
             app:tabIndicatorHeight="2dp"
             app:tabMode="scrollable"
             tab_position="@{viewModel.tabPosition}"

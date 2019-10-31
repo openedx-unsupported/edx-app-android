@@ -16,13 +16,13 @@
         android:layout_marginTop="@dimen/_14px"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="@dimen/_30px"
-        android:background="@color/white"
         app:cardCornerRadius="4dp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/humana_card_background"
             android:orientation="vertical">
 
             <TextView
@@ -106,10 +106,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
-                    android:background="@color/status_pending"
+                    android:background="@color/secondary_blue_light"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:padding="5dp"
+                    android:textColor="@color/white"
                     android:text="Add" />
 
                 <TextView

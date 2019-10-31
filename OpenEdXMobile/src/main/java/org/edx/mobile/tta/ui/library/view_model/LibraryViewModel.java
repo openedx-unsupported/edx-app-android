@@ -10,21 +10,20 @@ import android.support.v4.view.ViewPager;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.tta.data.enums.UserRole;
 import org.edx.mobile.tta.data.local.db.table.Category;
-import org.edx.mobile.tta.data.local.db.table.User;
 import org.edx.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.edx.mobile.tta.event.CourseEnrolledEvent;
 import org.edx.mobile.tta.event.program.ShowStudentUnitsEvent;
 import org.edx.mobile.tta.interfaces.OnResponseCallback;
+import org.edx.mobile.tta.ui.base.BasePagerAdapter;
+import org.edx.mobile.tta.ui.base.TaBaseFragment;
+import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.tta.ui.programs.curricullam.CurricullamFragment;
 import org.edx.mobile.tta.ui.programs.discussion.DiscussionFragment;
 import org.edx.mobile.tta.ui.programs.pendingUnits.PendingUsersFragment;
 import org.edx.mobile.tta.ui.programs.schedule.ScheduleFragment;
 import org.edx.mobile.tta.ui.programs.students.StudentsFragment;
 import org.edx.mobile.tta.ui.programs.units.UnitsFragment;
-import org.edx.mobile.tta.ui.base.BasePagerAdapter;
-import org.edx.mobile.tta.ui.base.TaBaseFragment;
-import org.edx.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.edx.mobile.tta.ui.interfaces.SearchPageOpenedListener;
 import org.edx.mobile.view.CourseDiscussionTopicsFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.common.PageViewStateCallback;
@@ -60,7 +59,7 @@ public class LibraryViewModel extends BaseViewModel {
             initialPosition.set(i);
             tabPosition.set(i);
             PageViewStateCallback callback = (PageViewStateCallback) fragments.get(i);
-            if (callback != null){
+            if (callback != null) {
                 callback.onPageShow();
             }
         }
@@ -84,13 +83,13 @@ public class LibraryViewModel extends BaseViewModel {
 
         getEnrolledCourse();
 
-       // populateTabs();
+        // populateTabs();
 
 //        getData();
 
     }
 
-    private void getData(){
+    private void getData() {
         mActivity.showLoading();
 
         mDataManager.getCollectionConfig(new OnResponseCallback<CollectionConfigResponse>() {
@@ -125,37 +124,40 @@ public class LibraryViewModel extends BaseViewModel {
         ArrayList<String> demolist = new ArrayList<String>();
         demolist.add("Schedule");
         demolist.add("Units");
-        if (mDataManager.getLoginPrefs().getRole() != null){
+        if (mDataManager.getLoginPrefs().getRole() != null) {
             if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                 demolist.add("Pending units");
             }
-    }
+        }
         demolist.add("Students");
         demolist.add("Discussion");
         demolist.add("Curriculum");
 
         try {
             ScheduleFragment scheduleFragment = new ScheduleFragment();
-            if (course != null){
+            if (course != null) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
                 scheduleFragment.setArguments(bundle);
             }
-            fragments.add(scheduleFragment);
+            if (!scheduleFragment.isAdded()) {
+                fragments.add(scheduleFragment);
+            }
 
             UnitsFragment unitsFragment = new UnitsFragment();
-            if (course != null){
+            if (course != null) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Router.EXTRA_COURSE_DATA, course);
                 unitsFragment.setArguments(bundle);
             }
-            fragments.add(unitsFragment);
+            if (!unitsFragment.isAdded()) {
+                fragments.add(unitsFragment);
+            }
             if (mDataManager.getLoginPrefs().getRole() != null) {
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                     fragments.add(new PendingUsersFragment());
                 }
             }
-
             fragments.add(new StudentsFragment());
 
             CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();
@@ -167,9 +169,8 @@ public class LibraryViewModel extends BaseViewModel {
                 discussionFragment.setRetainInstance(true);
                 fragments.add(discussionFragment);
             } else {
-                fragments.add(new DiscussionFragment());
+                fragments.add(discussionFragment);
             }
-
             fragments.add(new CurricullamFragment());
             adapter.setFragments(fragments, demolist);
             mActivity.hideLoading();
@@ -178,24 +179,24 @@ public class LibraryViewModel extends BaseViewModel {
         }
 //        initialPosition.set(0);
 
-        if (!categories.isEmpty()){
-            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(0);
-            if (callback != null){
-                callback.onPageShow();
-            }
-        }
+//        if (!categories.isEmpty()) {
+//            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(0);
+//            if (callback != null) {
+//                callback.onPageShow();
+//            }
+//        }
 
     }
 
-    private void getEnrolledCourse(){
+    private void getEnrolledCourse() {
 
         mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
             @Override
             public void onSuccess(List<EnrolledCoursesResponse> data) {
 
                 if (mDataManager.getLoginPrefs().getProgramId() != null) {
-                    for (EnrolledCoursesResponse item: data) {
-                        if(item.getCourse().getId().trim().toLowerCase()
+                    for (EnrolledCoursesResponse item : data) {
+                        if (item.getCourse().getId().trim().toLowerCase()
                                 .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
                             course = item;
                             break;
@@ -232,7 +233,7 @@ public class LibraryViewModel extends BaseViewModel {
     }
 
 
-        public class ListingPagerAdapter extends BasePagerAdapter {
+    public class ListingPagerAdapter extends BasePagerAdapter {
         public ListingPagerAdapter(FragmentManager fm) {
             super(fm);
         }

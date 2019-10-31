@@ -1,97 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<data>
-    <import type="android.view.View" />
-    <variable
-        name="viewModel"
-        type="org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
-</data>
 
-    <LinearLayout
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="top"
-            android:background="@color/white"
-            android:gravity="start|center_vertical"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            app:contentInsetStartWithNavigation="0dp"
-            app:navigationIcon="@drawable/back"
-            app:title="Units"
-            app:titleMarginStart="0dp"
-            app:titleTextAppearance="@style/ta_toolbar_title_style" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/calendar_view">
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
-        </org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/circle_all_blue"
-            android:id="@+id/text_date_selected"
-            android:text="@{viewModel.eventDate}"
-            android:padding="@dimen/_10px"
-            android:textColor="@color/gray_4"
-            style="?borderlessButtonStyle" />
-
-    </LinearLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8px"
-            android:id="@+id/fl_unit">
-
-            <com.maurya.mx.mxlib.view.MxRecyclerView
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:mx_itemLayout="@layout/t_row_unit"
-                infinite_recycler_adapter="@{viewModel.unitsAdapter}"
-                layout_manager="@{viewModel.layoutManager}"
-                android:visibility="@{viewModel.emptyVisible ? View.GONE : View.VISIBLE}"
-                infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+                android:layout_height="50dp"
+                android:layout_gravity="top"
+                android:background="@color/white"
+                android:gravity="start|center_vertical"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:navigationIcon="@drawable/back"
+                app:title="Units"
+                app:titleMarginStart="0dp"
+                app:titleTextAppearance="@style/ta_toolbar_title_style" />
+
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    app:srcCompat="@drawable/t_icon_error" />
+                <org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView
+                    android:id="@+id/calendar_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                </org.edx.mobile.tta.ui.mxCalenderView.CustomCalendarView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/_46px"
-                    android:layout_marginStart="@dimen/_70px"
-                    android:layout_marginEnd="@dimen/_70px"
-                    android:fontFamily="@font/hind_regular"
-                    android:gravity="center"
-                    android:text="No event found for this date"
-                    android:textColor="@color/primary_cyan"
-                    android:textSize="12sp" />
+                    android:elevation="5px"
+                    android:layout_margin="8dp"
+                    android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_date_selected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/circle_light_blue"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="20dp"
+                        android:paddingBottom="2dp"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:lines="3"
+                        android:text="@{viewModel.dispDate}"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="2dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="No event on this date"
+                        android:textColor="@color/black" />
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
-        </FrameLayout>
-    </LinearLayout>
+            <FrameLayout
+                android:id="@+id/fl_unit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8px">
 
+                <com.maurya.mx.mxlib.view.MxRecyclerView
+                    infinite_load_more_listener="@{viewModel.loadMoreListener}"
+                    infinite_recycler_adapter="@{viewModel.unitsAdapter}"
+                    layout_manager="@{viewModel.layoutManager}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{viewModel.emptyVisible ? View.GONE : View.VISIBLE}"
+                    app:mx_itemLayout="@layout/t_row_unit" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/t_icon_error" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="@dimen/_70px"
+                        android:layout_marginTop="@dimen/_46px"
+                        android:layout_marginEnd="@dimen/_70px"
+                        android:fontFamily="@font/hind_regular"
+                        android:gravity="center"
+                        android:text="No event found for this date"
+                        android:textColor="@color/primary_cyan"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

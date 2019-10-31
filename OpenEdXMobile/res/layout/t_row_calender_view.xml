@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="org.edx.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
+    </data>
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="70dp"
     android:orientation="vertical"
+    android:gravity="center"
     android:background="@drawable/rectangle_border_background"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -9,8 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cal_day"
-            android:textSize="15sp"
-            android:padding="5dp"
+            android:textSize="20sp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:fontFamily="@font/hind_medium"
             android:layout_gravity="center"
             android:gravity="center"
@@ -26,3 +34,4 @@
             android:layout_gravity="center"
             android:background="@color/dark_red" />
     </LinearLayout>
+</layout>
