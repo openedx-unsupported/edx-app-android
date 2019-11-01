@@ -84,7 +84,8 @@
     <dimen name="signup_social_title_margin_bottom">6dp</dimen>
     <dimen name="registration_field_vertical_padding">2dp</dimen>
     <dimen name="registration_field_horizontal_padding">2dp</dimen>
-    <dimen name="registration_spinner_horizontal_padding">-10dp</dimen>
+    <dimen name="registration_spinner_horizontal_padding_start">-10dp</dimen>
+    <dimen name="registration_spinner_horizontal_padding_end">24dp</dimen>
     <dimen name="social_auth_bottom_margin">5dp</dimen>
 
     <!-- Switch -->
@@ -251,4 +252,8 @@
     <dimen name="social_btn_divider_height">40dp</dimen>
     <dimen name="social_btn_text_size">14sp</dimen>
     <dimen name="social_btn_height">40dp</dimen>
+
+    <!-- Segmented Control Dimensions -->
+    <dimen name="edx_segmented_control_start_corner">5dp</dimen>
+    <dimen name="edx_segmented_control_end_corner">0dp</dimen>
 </resources>

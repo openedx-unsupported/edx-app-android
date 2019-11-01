@@ -19,9 +19,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/toolbar_background_color"
-        app:tabMaxWidth="0dp"
-        app:tabGravity="fill"
+        android:layoutDirection="ltr"
         android:visibility="gone"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
         tools:visibility="visible" />
 
     <include layout="@layout/toolbar_shadow_view" />

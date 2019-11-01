@@ -1,0 +1,59 @@
+{
+    "fields":[
+    {
+              "name" : "account_privacy",
+              "label" : "לומדים אחרים יכולים לראות את הפרטים הבאים עלי:",
+              "type" : "switch",
+              "data_type" : "boolean",
+              "options" : {
+                "values" : [
+                            { "name" : "פרופיל מלא", "value" : "all_users" },
+                            { "name" : "פרופיל מוגבל",  "value" : "private" }
+                 ]
+              },
+              "instructions" : "פרופיל מוגבל משתף רק את שם המשתמש ותמונת הפרופיל שלכם.",
+              "accessibility_hint" : "הגדירו איזה מידע מוצג לאחרים."
+    },
+    {
+              "name" : "year_of_birth",
+              "label" : "שנת לידה",
+              "type" : "select",
+              "options" : {
+                "range_min" : 1896,
+                "range_max" : 2019,
+                "allows_none" : true,
+                "none_label" : "אין שנת לידה"
+              },
+              "instructions" : "אתם חייבים לציין את שנת הלידה שלכם לפני שתוכלו לחלוק את הפרופיל המלא שלכם.",
+              "sub_instructions" : "פרט זה לא יוצג באופן פומבי"
+    },
+    {
+              "name" : "country",
+              "label" : "מיקום",
+              "type" : "select",
+              "data_type" : "country",
+              "options" : {
+                "reference" : "countries",
+                "allows_none" : true,
+                "none_label" : "אין מיקום"
+              }
+    },
+    {
+              "name" : "language_proficiencies",
+              "label" : "שפה ראשית",
+              "type" : "select",
+              "data_type" : "language",
+              "options" : {
+                "reference" : "languages",
+                "allows_none" : true,
+                "none_label" : "אין שפה ראשית"
+              }
+    },
+    {
+              "name" : "bio",
+              "label" : "אודותי",
+              "type" : "textarea",
+              "placeholder" : "אני מעוניין\\ת ללמוד..."
+    }
+    ]
+}
