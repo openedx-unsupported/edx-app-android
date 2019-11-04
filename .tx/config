@@ -25,18 +25,6 @@ source_file = OpenEdXMobile/res/raw/profiles.json
 source_lang = en
 type = KEYVALUEJSON
 
-[edx-mobile-apps.app-localizable-countries]
-file_filter = OpenEdXMobile/res/raw-<lang>/countries.json
-source_file = OpenEdXMobile/res/raw/countries.json
-source_lang = en
-type = KEYVALUEJSON
-
-[edx-mobile-apps.app-localizable-languages]
-file_filter = OpenEdXMobile/res/raw-<lang>/languages.json
-source_file = OpenEdXMobile/res/raw/languages.json
-source_lang = en
-type = KEYVALUEJSON
-
 [edx-mobile-apps.app-localizable-subjects]
 file_filter = OpenEdXMobile/res/raw-<lang>/subjects.json
 source_file = OpenEdXMobile/res/raw/subjects.json

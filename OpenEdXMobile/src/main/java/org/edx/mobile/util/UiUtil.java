@@ -100,23 +100,6 @@ public class UiUtil {
                 context.getPackageName());
     }
 
-    @RawRes
-    public static int getRawFile(@NonNull Context context, @NonNull String fileName) {
-        return context.getResources().getIdentifier(fileName, "raw", context.getPackageName());
-    }
-
-
-    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
-
-    /**
-     * Generates a unique ID for a view.
-     *
-     * @return View ID.
-     */
-    public static int generateViewId() {
-        return View.generateViewId();
-    }
-
     /**
      * Sets the color scheme of the provided {@link SwipeRefreshLayout}.
      *

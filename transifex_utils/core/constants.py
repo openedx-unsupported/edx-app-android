@@ -16,8 +16,6 @@ languages = {
 
 SUBJECTS_JSON = "subjects.json"
 PROFILES_JSON = "profiles.json"
-COUNTRIES_JSON = "countries.json"
-LANGUAGES_JSON = "languages.json"
 WHATS_NEW_JSON = "whats_new.json"
 
 """List of all the supported transifex file templates."""
@@ -26,8 +24,6 @@ files_templates = {
     "OpenEdXMobile/res/values-<lang>/errors.xml",
     "OpenEdXMobile/res/values-<lang>/labels.xml",
     "OpenEdXMobile/res/raw-<lang>/" + PROFILES_JSON,
-    "OpenEdXMobile/res/raw-<lang>/" + COUNTRIES_JSON,
-    "OpenEdXMobile/res/raw-<lang>/" + LANGUAGES_JSON,
     "OpenEdXMobile/res/raw-<lang>/" + SUBJECTS_JSON,
     "OpenEdXMobile/res/raw-<lang>/" + WHATS_NEW_JSON,
 }
