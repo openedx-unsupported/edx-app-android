@@ -10,7 +10,77 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--android:gravity="center_horizontal">-->
 
+            <!--<ImageView-->
+                <!--android:id="@+id/ib_prev"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginRight="40dp"-->
+                <!--app:srcCompat="@drawable/ic_chevron_left_black_24dp" />-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/date_display"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_toEndOf="@id/ib_prev"-->
+                <!--android:layout_toRightOf="@id/ib_prev"-->
+                <!--android:gravity="center"-->
+                <!--android:orientation="vertical">-->
+                <!--&lt;!&ndash; date title &ndash;&gt;-->
+                <!--<TextView-->
+                    <!--android:id="@+id/date_display_year"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="2018"-->
+                    <!--android:textSize="30sp"-->
+                    <!--android:textStyle="normal" />-->
+                <!--&lt;!&ndash; date title &ndash;&gt;-->
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_date"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="72dp"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="17 Feb"-->
+                    <!--android:textSize="55sp"-->
+                    <!--android:textStyle="bold" />-->
+                <!--&lt;!&ndash; date title &ndash;&gt;-->
+                <!--<TextView-->
+                    <!--android:id="@+id/date_display_day"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="Saturday"-->
+                    <!--android:textSize="20sp" />-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/date_display_today"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:background="@drawable/rounded_rectange"-->
+                    <!--android:padding="5dp"-->
+                    <!--android:text="Go to today"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="11sp" />-->
+            <!--</LinearLayout>-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/ib_next"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginLeft="40dp"-->
+                <!--android:layout_toEndOf="@id/date_display"-->
+                <!--android:layout_toRightOf="@id/date_display"-->
+                <!--app:srcCompat="@drawable/ic_chevron_right_white_24dp" />-->
+        <!--</RelativeLayout>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,14 +122,6 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Sat"
-                android:textColor="@android:color/black" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -67,6 +129,7 @@
                 android:gravity="center"
                 android:text="Sun"
                 android:textColor="@android:color/black" />
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -108,6 +171,13 @@
                 android:text="Fri"
                 android:textColor="@android:color/black" />
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Sat"
+                android:textColor="@android:color/black" />
 
         </LinearLayout>
 

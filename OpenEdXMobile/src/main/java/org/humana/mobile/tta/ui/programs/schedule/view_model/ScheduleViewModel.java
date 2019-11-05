@@ -491,11 +491,11 @@ public class ScheduleViewModel extends BaseViewModel {
                     }
                 });
 
-                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
-                    scheduleBinding.txtCompleted.setVisibility(View.VISIBLE);
-                }else{
-                    scheduleBinding.txtCompleted.setVisibility(View.GONE);
-                }
+//                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
+//                    scheduleBinding.txtCompleted.setVisibility(View.VISIBLE);
+//                }else{
+//                    scheduleBinding.txtCompleted.setVisibility(View.GONE);
+//                }
 
                 scheduleBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){

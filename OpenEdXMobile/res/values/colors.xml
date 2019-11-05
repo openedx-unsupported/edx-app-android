@@ -135,5 +135,6 @@
     <!--calendar View-->
 
     <color name="humana_card_background">#DDF2FC</color>
+    <color name="humana_light_blue">#CBE5FC</color>
     <color name="humana_blue">#29B7F8</color>
 </resources>

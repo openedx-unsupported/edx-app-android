@@ -1,5 +1,6 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -10,11 +11,18 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -38,6 +46,8 @@ import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
+import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
+import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.text.ParseException;
@@ -309,7 +319,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         populateUnits(data);
                         eventsArrayList.clear();
                         for (int i = 0; i < data.size(); i++) {
-                            Events et = new Events(DateUtil.getDisplayDate(data.get(i).getStaffDate()));
+                            Events et = new Events(DateUtil.getDisplayDate(data.get(i).getStaffDate()),
+                                    data.get(i).getTitle());
                             eventsArrayList.add(et);
                         }
                         CustomCalendarView.createEvents(eventsArrayList);
@@ -488,6 +499,101 @@ public class UnitCalendarViewModel extends BaseViewModel {
     }
 
 
+
+//    public class CustomCalendarView extends LinearLayout {
+//        ImageButton nextButton, previousButton;
+//        TextView currentDate;
+//        GridView calGrid;
+//        private static final int MAX_CALENDAR_DAYS = 42;
+//        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+//        Context context;
+//        UnitCalendarViewModel.CustomCalendarAdapter adapter;
+//
+//
+//        List<Date> dates = new ArrayList<>();
+//        List<Events> eventsList = new ArrayList<>();
+//
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM/YYYY", Locale.ENGLISH);
+//        SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
+//        SimpleDateFormat yearFormat = new SimpleDateFormat("YYYY", Locale.ENGLISH);
+//
+//
+//        public CustomCalendarView(Context context) {
+//            super(context);
+//            this.context = context;
+////        Log.d("CustomCalendarView", "CustomCalendarView: 2");
+////        createEvents(eventsList);
+//            initializeView();
+////        setCustomAdapter();
+//            setUpCalendar();
+//
+//            previousButton.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    calendar.add(Calendar.MONTH, -1);
+//                    setUpCalendar();
+//                }
+//            });
+//            nextButton.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    calendar.add(Calendar.MONTH, 1);
+//                    setUpCalendar();
+//                }
+//            });
+//        }
+//
+//
+//        private void initializeView() {
+//////        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            View view = LayoutInflater.from(context).inflate(R.layout.mx_custom_calender_view, this, true);
+//
+//            nextButton = view.findViewById(R.id.ib_next);
+//            previousButton = view.findViewById(R.id.ib_prev);
+//            currentDate = view.findViewById(R.id.tv_date);
+//            calGrid = view.findViewById(R.id.cal_grid);
+//        }
+//
+//
+//        public void setUpCalendar() {
+//            String date = simpleDateFormat.format(calendar.getTime());
+//            currentDate.setText(date);
+//            dates.clear();
+//
+//            Calendar monthCalendar = (Calendar) calendar.clone();
+//            monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
+//
+//            int FIRST_DAY_OF_MONTH = monthCalendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)  -1;
+//
+//            monthCalendar.add(Calendar.DAY_OF_MONTH, -FIRST_DAY_OF_MONTH);
+//
+//            while (dates.size() < MAX_CALENDAR_DAYS) {
+//                dates.add(monthCalendar.getTime());
+//                monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
+//
+//            }
+//
+//            adapter = new CustomCalendarAdapter(context, dates, calendar, eventsList);
+//            calGrid.setAdapter(adapter);
+//            adapter.notifyDataSetChanged();
+//
+//        }
+//
+//        public void createEvents(List<Events> events) {
+//            Events e;
+//            eventsList.clear();
+//            for (int i = 0; i < events.size(); i++) {
+//                e = new Events(events.get(i).getDATE(), events.get(i).getEventText());
+//                eventsList.add(e);
+//            }
+//            setUpCalendar();
+////        adapter.notifyDataSetChanged();
+//        }
+//
+//    }
+
+
+
     public static class CustomCalendarAdapter extends ArrayAdapter {
 
         List<Date> dates;
@@ -528,29 +634,36 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
 
             if (view == null) {
-                view = inflater.inflate(R.layout.t_row_calender_view, parent, false);
-
+                boolean tabletSize = context.getResources().getBoolean(R.bool.isTablet);
+                if (tabletSize) {
+                    view = inflater.inflate(R.layout.t_row_cal_tabview, parent, false);
+                }else {
+                    view = inflater.inflate(R.layout.t_row_calender_view, parent, false);
+                }
             }
             Calendar eventCalendar = Calendar.getInstance();
 
             TextView day = view.findViewById(R.id.cal_day);
+            TextView eventText = view.findViewById(R.id.day_event);
             View event = view.findViewById(R.id.event_id);
             day.setText(String.valueOf(dayNo));
 
 
+
+
             if (setSelected.get()) {
 
-                if (selectedPosition == position) {
+                if (selectedPosition == position && displayMonth == currentMonth) {
                     day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_light_blue));
                 } else {
                     day.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
                 }
             } else {
                 if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && currentMonth == eventCalendar.get(Calendar.MONTH) + 1
-                        && displayYear == eventCalendar.get(Calendar.YEAR)) {
+                        && displayYear == eventCalendar.get(Calendar.YEAR) && displayMonth== currentMonth) {
                     eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
                     dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
-                    if (displayMonth == currentMonth && displayYear == currentYear) {
+                    if (displayYear == currentYear) {
                         day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
                         day.setTextColor(ContextCompat.getColor(context, R.color.white));
                     }
@@ -578,32 +691,35 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 eventCalendar.setTime(convertStringToDate(events.get(i).getDATE()));
                 if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1
                         && displayYear == eventCalendar.get(Calendar.YEAR)) {
-                    event.setVisibility(View.VISIBLE);
+//                    event.setVisibility(View.VISIBLE);
+                    eventText.setText(events.get(i).getEventText());
+                    eventText.setVisibility(View.VISIBLE);
                 }
             }
             view.setTag(position);
             view.setOnClickListener(v -> {
-                selectedPosition = (int) v.getTag();
-                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
-                dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
-                setSelected.set(true);
-                List<Unit> filterUnits = new ArrayList<>();
-                for (int i = 0; i < units.size(); i++) {
-                    if (DateUtil.getDisplayDate(units.get(i).getMyDate()).equals(eventDate.get())) {
-                        filterUnits.add(units.get(i));
-//                        unitsAdapter.setItems(filterUnits);
-//                        unitsAdapter.notifyDataSetChanged();
-                        emptyVisible.set(false);
-                    }
-                }
-                unitsAdapter.setItems(filterUnits);
-                unitsAdapter.notifyDataSetChanged();
-                if (filterUnits.size() == 0) {
-                    emptyVisible.set(true);
-                }
-
-
-                notifyDataSetChanged();
+                ActivityUtil.gotoPage(context, ActivityCalendarBottomSheet.class);
+//                selectedPosition = (int) v.getTag();
+//                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
+//                dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
+//                setSelected.set(true);
+//                List<Unit> filterUnits = new ArrayList<>();
+//                for (int i = 0; i < units.size(); i++) {
+//                    if (DateUtil.getDisplayDate(units.get(i).getMyDate()).equals(eventDate.get())) {
+//                        filterUnits.add(units.get(i));
+////                        unitsAdapter.setItems(filterUnits);
+////                        unitsAdapter.notifyDataSetChanged();
+//                        emptyVisible.set(false);
+//                    }
+//                }
+//                unitsAdapter.setItems(filterUnits);
+//                unitsAdapter.notifyDataSetChanged();
+//                if (filterUnits.size() == 0) {
+//                    emptyVisible.set(true);
+//                }
+//
+//
+//                notifyDataSetChanged();
             });
 
 

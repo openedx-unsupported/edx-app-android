@@ -5,24 +5,26 @@
             name="viewModel"
             type="org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
     </data>
-<LinearLayout android:layout_width="wrap_content"
-    android:layout_height="70dp"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@drawable/rectangle_border_background"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/rectangle_border_background"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
         <TextView
-            android:layout_width="@dimen/_40px"
-            android:layout_height="@dimen/_40px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/cal_day"
-            android:textSize="13sp"
+            android:textSize="25sp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:fontFamily="@font/hind_medium"
-            android:layout_gravity="top|center"
+            android:layout_gravity="center|top"
             android:gravity="center"
             android:textColor="@android:color/black" />
 
-    <TextView
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/day_event"
@@ -32,10 +34,7 @@
         android:fontFamily="@font/hind_medium"
         android:layout_gravity="center"
         android:gravity="center"
-        android:lines="1"
-        android:visibility="invisible"
-        android:background="@color/humana_card_background"
-        android:textColor="@color/gray_5" />
+        android:textColor="@android:color/black" />
         <View
             android:layout_width="wrap_content"
             android:layout_height="2dp"
