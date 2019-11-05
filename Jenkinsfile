@@ -11,6 +11,8 @@ pipeline {
             APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable'
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
+            APK = "$APK_PATH/*.apk"
+            TEST_BUNDLE = "$TEST_PROJECT_REPO_NAME/test_bundle.zip"
     }       
 
     stages {
@@ -68,7 +70,7 @@ pipeline {
 
         stage('setup virtual env and trigger run on aws device farm') {
             steps {
-                sh 'bash ./resources/setup_virtual_env.sh'
+                sh 'source ./resources/setup_virtual_env.sh'
             }
         }
     }

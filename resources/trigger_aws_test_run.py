@@ -4,6 +4,7 @@
 This module will handle test run on AWS Device Farm
 """
 
+import sys
 import boto3
 import requests
 
@@ -17,9 +18,11 @@ CUSTOM_SPECS_UPLOAD_TYPE = 'APPIUM_PYTHON_TEST_SPEC'
 RUN_TYPE = 'APPIUM_PYTHON'
 RUN_NAME = 'edX test run'
 
-AUT_NAME = 'edx.apk'
-PACKAGE_NAME = 'test_bundle.zip'
+AUT_NAME = sys.argv[1]
+PACKAGE_NAME = sys.argv[2]
 CUSTOM_SPECS_NAME = 'edx.yml'
+
+print('{} & {}'.format(AUT_NAME, PACKAGE_NAME))
 
 device_farm = boto3.client('devicefarm', region_name=REGION)
 

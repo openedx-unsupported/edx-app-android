@@ -42,7 +42,7 @@ virtualenv -p python3 ./virtual_env
 install_requirement_txt(){
 print_message "installing requirements"
 pip install -r ./resources/requirements.txt
-sleep 5
+sleep 10
 }
 
 switch_to_virtual_env(){
@@ -53,4 +53,4 @@ source "./virtual_env/bin/activate"
 check_and_install_virtualenv
 create_or_switch_to_virtual_environment
 print_message "calling AWS Test run"
-python ./resources/trigger_aws_test_run.py
+python ./resources/trigger_aws_test_run.py $APK $TEST_BUNDLE
