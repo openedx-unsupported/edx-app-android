@@ -31,6 +31,17 @@ public class Period implements Parcelable {
 
     private String username;
 
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    @SerializedName("desc")
+    private String desc;
+
     public Period() {
     }
 
@@ -43,6 +54,7 @@ public class Period implements Parcelable {
         totalCount = in.readLong();
         username = in.readString();
         language = in.readString();
+        desc = in.readString();
     }
 
     public static final Creator<Period> CREATOR = new Creator<Period>() {
@@ -137,6 +149,7 @@ public class Period implements Parcelable {
         dest.writeLong(totalCount);
         dest.writeString(username);
         dest.writeString(language);
+        dest.writeString(desc);
     }
 
     @Override

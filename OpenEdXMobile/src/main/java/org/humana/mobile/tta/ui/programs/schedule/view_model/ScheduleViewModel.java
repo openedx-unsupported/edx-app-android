@@ -75,6 +75,7 @@ public class ScheduleViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private int take, skip;
+    private boolean isSelected;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -94,6 +95,7 @@ public class ScheduleViewModel extends BaseViewModel {
         periodList = new ArrayList<>();
         tags = new ArrayList<>();
         mActivity.showLoading();
+        isSelected = false;
 
         emptyVisible.set(false);
         filtersAdapter = new FiltersAdapter(mActivity);
@@ -126,7 +128,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
         mActivity.showLoading();
         getFilters();
-//        fetchData();
+        fetchData();
 //        toolTiptext.set("test");
 //        toolTipGravity.set(Gravity.TOP);
 //        toolTipPosition.set(0);
@@ -237,12 +239,13 @@ public class ScheduleViewModel extends BaseViewModel {
                         sessionTags.clear();
                         if (filter.getInternalName().toLowerCase().contains("session_id")) {
                             sessionTags.clear();
+                            isSelected = filter.getSelected();
                             sessionTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-                                    true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
+                                    isSelected, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
 
                             for (ProgramFilterTag tag : filter.getTags()) {
                                 sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                        false, R.color.white, R.drawable.t_background_tag_filled));
+                                        isSelected, R.color.white, R.drawable.t_background_tag_filled));
 
                                 try {
                                     if (tag.getSelected()) {

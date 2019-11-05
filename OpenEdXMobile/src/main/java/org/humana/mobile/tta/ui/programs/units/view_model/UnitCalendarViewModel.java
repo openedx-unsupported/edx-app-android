@@ -698,7 +698,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
             }
             view.setTag(position);
             view.setOnClickListener(v -> {
-                ActivityUtil.gotoPage(context, ActivityCalendarBottomSheet.class);
+//                ActivityUtil.gotoPage(context, ActivityCalendarBottomSheet.class);
 //                selectedPosition = (int) v.getTag();
 //                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
 //                dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
@@ -717,8 +717,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
 //                if (filterUnits.size() == 0) {
 //                    emptyVisible.set(true);
 //                }
-//
-//
 //                notifyDataSetChanged();
             });
 

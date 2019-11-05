@@ -558,6 +558,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                 unitBinding.setUnit(model);
 
                 unitBinding.unitCode.setText(model.getCode());
+                unitBinding.unitTitle.setText(model.getTitle()) ;
                 unitBinding.layoutCheckbox.setVisibility(View.VISIBLE);
                 if (selected.contains(model)){
                     unitBinding.checkbox.setChecked(true);

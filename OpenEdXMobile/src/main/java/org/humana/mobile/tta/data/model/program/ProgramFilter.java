@@ -14,6 +14,12 @@ public class ProgramFilter implements Comparable<ProgramFilter> {
     @SerializedName("internal_name")
     private String internalName;
 
+
+
+
+    @SerializedName("isSelected")
+    private boolean isSelected;
+
     @SerializedName("show_in")
     private List<String> showIn;
 
@@ -72,5 +78,13 @@ public class ProgramFilter implements Comparable<ProgramFilter> {
     @Override
     public int compareTo(ProgramFilter o) {
         return Long.compare(order, o.order);
+    }
+
+    public boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
