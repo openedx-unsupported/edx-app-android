@@ -5,6 +5,7 @@ import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -698,7 +699,9 @@ public class UnitCalendarViewModel extends BaseViewModel {
             }
             view.setTag(position);
             view.setOnClickListener(v -> {
-//                ActivityUtil.gotoPage(context, ActivityCalendarBottomSheet.class);
+                Bundle b = new Bundle();
+                b.putString("selectedDate", DateUtil.getDisplayDate(dates.get(position).getTime()));
+                ActivityUtil.gotoPage(context, ActivityCalendarBottomSheet.class, b);
 //                selectedPosition = (int) v.getTag();
 //                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
 //                dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));

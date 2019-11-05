@@ -186,6 +186,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:stretchMode="columnWidth"
+            android:background="@drawable/rectangle_border_background"
             android:numColumns="7">
 
         </GridView>
