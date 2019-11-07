@@ -173,12 +173,17 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
         });
 
-        if (mDataManager.getLoginPrefs().getRole() != null &&
-                mDataManager.getLoginPrefs().getRole().equalsIgnoreCase(UserRole.Instructor.name())) {
+        if (emptyVisible.get()){
             addUnitsVisible.set(true);
-        } else {
+        }else {
             addUnitsVisible.set(false);
         }
+//        if (mDataManager.getLoginPrefs().getRole() != null &&
+//                mDataManager.getLoginPrefs().getRole().equalsIgnoreCase(UserRole.Instructor.name())) {
+//            addUnitsVisible.set(true);
+//        } else {
+//            addUnitsVisible.set(false);
+//        }
 
         mActivity.showLoading();
         fetchFilters();
@@ -338,7 +343,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(),"", mDataManager.getLoginPrefs().getRole(),
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),"",
                 periodId, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
@@ -384,8 +389,10 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private void toggleEmptyVisibility() {
         if (units == null || units.isEmpty()) {
             emptyVisible.set(true);
+            addUnitsVisible.set(true);
         } else {
             emptyVisible.set(false);
+            addUnitsVisible.set(false);
         }
     }
 

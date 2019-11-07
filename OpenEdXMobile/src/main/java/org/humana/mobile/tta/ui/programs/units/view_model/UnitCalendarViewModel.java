@@ -308,7 +308,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), "", mDataManager.getLoginPrefs().getRole(), 0L, take, skip,
+                mDataManager.getLoginPrefs().getSectionId(),  mDataManager.getLoginPrefs().getRole(), "",0L, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -646,6 +646,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
             TextView day = view.findViewById(R.id.cal_day);
             TextView eventText = view.findViewById(R.id.day_event);
+            TextView eventText1 = view.findViewById(R.id.day_event1);
+            TextView eventText2 = view.findViewById(R.id.day_event2);
             View event = view.findViewById(R.id.event_id);
             day.setText(String.valueOf(dayNo));
 
@@ -690,12 +692,29 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
             for (int i = 0; i < events.size(); i++) {
                 eventCalendar.setTime(convertStringToDate(events.get(i).getDATE()));
-                if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1
-                        && displayYear == eventCalendar.get(Calendar.YEAR)) {
+
+            }
+            if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1
+                    && displayYear == eventCalendar.get(Calendar.YEAR)) {
 //                    event.setVisibility(View.VISIBLE);
-                    eventText.setText(events.get(i).getEventText());
+                if (events.size()<2) {
+                    eventText.setText(events.get(0).getEventText());
                     eventText.setVisibility(View.VISIBLE);
+                }else if (events.size()< 3) {
+                    eventText.setText(events.get(0).getEventText());
+                    eventText.setVisibility(View.VISIBLE);
+
+                    eventText1.setText(events.get(1).getEventText());
+                    eventText1.setVisibility(View.VISIBLE);
+                }else if (events.size()<=3) {
+                    eventText.setText(events.get(0).getEventText());
+                    eventText.setVisibility(View.VISIBLE);
+                    eventText1.setText(events.get(1).getEventText());
+                    eventText1.setVisibility(View.VISIBLE);
+                    eventText1.setText(events.get(2).getEventText());
+                    eventText1.setVisibility(View.VISIBLE);
                 }
+
             }
             view.setTag(position);
             view.setOnClickListener(v -> {

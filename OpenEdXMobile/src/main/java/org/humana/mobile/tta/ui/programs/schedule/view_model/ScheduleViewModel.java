@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -495,6 +496,13 @@ public class ScheduleViewModel extends BaseViewModel {
                         listener.onItemClick(v, model);
                     }
                 });
+
+//                scheduleBinding.tvOptions.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        scheduleBinding.tvOptions.setEllipsize(TextUtils.TruncateAt.valueOf(null));
+//                    }
+//                });
 
 //                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
 //                    scheduleBinding.txtCompleted.setVisibility(View.VISIBLE);
