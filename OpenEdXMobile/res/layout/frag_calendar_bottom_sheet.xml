@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+       <import type="android.view.View" />
         <variable
             name="viewModel"
             type="org.humana.mobile.tta.ui.programs.units.view_model.CalendarBottomSheetViewModel" />
@@ -26,6 +27,40 @@
         app:title="Calender View"
         app:titleMarginStart="0dp"
         app:titleTextAppearance="@style/ta_toolbar_title_style" />
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:visibility="@{viewModel.emptyVisible? View.VISIBLE : View.GONE}"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_date_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_light_blue"
+                android:paddingLeft="20dp"
+                android:paddingTop="2dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="2dp"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:text="@{viewModel.dispDate}"
+                android:lines="3"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="2dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="2dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="No event on this date"
+                android:textColor="@color/black" />
+        </android.support.v7.widget.CardView>
 
     <FrameLayout
     android:id="@+id/fl_unit"
@@ -40,33 +75,6 @@
         android:layout_height="match_parent"
         app:mx_itemLayout="@layout/t_row_unit" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/t_icon_error" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="@dimen/_70px"
-            android:layout_marginTop="@dimen/_46px"
-            android:layout_marginEnd="@dimen/_70px"
-            android:fontFamily="@font/hind_regular"
-            android:gravity="center"
-            android:text="No event found for this date"
-            android:textColor="@color/primary_cyan"
-            android:textSize="12sp" />
-
-    </LinearLayout>
 
 </FrameLayout>
     </LinearLayout>

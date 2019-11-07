@@ -33,6 +33,7 @@ public class ActivityCalendarBottomSheet extends BaseVMActivity {
     private String periodName;
     private EnrolledCoursesResponse course;
     private BottomSheetBehavior behavior;
+    private String selectedDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,8 +44,10 @@ public class ActivityCalendarBottomSheet extends BaseVMActivity {
         } else if (savedInstanceState != null){
             getBundledData(savedInstanceState);
         }
+        savedInstanceState = getIntent().getExtras();
+        selectedDate = savedInstanceState.getString("selectedDate");
 
-        viewModel = new CalendarBottomSheetViewModel(this, course);
+        viewModel = new CalendarBottomSheetViewModel(this, course, selectedDate);
         binding(R.layout.frag_calendar_bottom_sheet, viewModel);
 
         setSupportActionBar(findViewById(R.id.toolbar));

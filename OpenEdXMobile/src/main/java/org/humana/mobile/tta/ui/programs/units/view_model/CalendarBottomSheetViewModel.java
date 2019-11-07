@@ -70,6 +70,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     public static List<Events> eventsArrayList = new ArrayList<>();
     public static ObservableField switchText = new ObservableField<>();
     public static ObservableField selectedEvent = new ObservableField<>();
+    public ObservableField<String> dispDate = new ObservableField<>();
     public BottomSheetBehavior sheetBehavior;
 
 
@@ -107,6 +108,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         changesMade = true;
         calVisible.set(false);
         frameVisible.set(true);
+        dispDate.set("");
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
@@ -390,15 +392,17 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), "", mDataManager.getLoginPrefs().getRole(), 0L, take, skip,
+                mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(), mDataManager.getLoginPrefs().getUsername(), 0L, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
                         mActivity.hideLoading();
+                        units = data;
                         if (data.size() < take) {
                             allLoaded = true;
                         }
                         populateUnits(data);
+
                         unitsAdapter.setLoadingDone();
                     }
 
@@ -616,7 +620,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         }
                     }
                 }else {*/
-                if (selectedDate == DateUtil.getDisplayDate(model.getMyDate())) {
+                if (selectedDate.equals(DateUtil.getDisplayDate(model.getMyDate()))) {
                     unitBinding.setUnit(model);
 
                     unitBinding.unitCode.setText(model.getCode());
@@ -679,6 +683,9 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             listener.onItemClick(v, model);
                         }
                     });
+                }else {
+                    dispDate.set(selectedDate);
+                    emptyVisible.set(true);
                 }
             }
         }

@@ -128,7 +128,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
         mActivity.showLoading();
         getFilters();
-        fetchData();
+//        fetchData();
 //        toolTiptext.set("test");
 //        toolTipGravity.set(Gravity.TOP);
 //        toolTipPosition.set(0);
@@ -237,9 +237,9 @@ public class ScheduleViewModel extends BaseViewModel {
 
                     for (ProgramFilter filter : data) {
                         sessionTags.clear();
+                        isSelected = filter.getSelected();
                         if (filter.getInternalName().toLowerCase().contains("session_id")) {
                             sessionTags.clear();
-                            isSelected = filter.getSelected();
                             sessionTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
                                     isSelected, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
 
@@ -284,6 +284,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
 
     private void getPeriods() {
+        periodList.clear();
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
                 , take, skip, new OnResponseCallback<List<Period>>() {
@@ -293,6 +294,7 @@ public class ScheduleViewModel extends BaseViewModel {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
+//                        periodList = data;
                         populatePeriods(data);
                         periodAdapter.setLoadingDone();
                     }
