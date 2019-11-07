@@ -21,7 +21,7 @@ public abstract class CourseUnitFragment extends BaseFragment {
     protected HasComponent hasComponentCallback;
 
     @Inject
-    IEdxEnvironment environment;
+    protected IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -638,7 +638,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
                 environment.getAnalyticsRegistry().trackVideoPause(videoEntry.videoId, current_time,
-                        videoEntry.eid, videoEntry.lmsUrl);
+                        videoEntry.eid, videoEntry.lmsUrl, "");
             }
         }catch(Exception e){
             logger.error(e);
@@ -910,7 +910,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             }
             environment.getAnalyticsRegistry().trackVideoOrientation(videoEntry.videoId,
                     player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                    isFullScreen, videoEntry.eid, videoEntry.lmsUrl);
+                    isFullScreen, videoEntry.eid, videoEntry.lmsUrl, "");
         } else {
             logger.debug("Player not prepared ?? full screen will NOT work!");
         }

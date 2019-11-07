@@ -43,7 +43,7 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoPause(String videoId, Double currentTime, String courseId, String unitUrl) {
+    public void trackVideoPause(String videoId, Double currentTime, String courseId, String unitUrl, String playMedium) {
 
     }
 
@@ -120,7 +120,7 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoOrientation(String videoId, Double currentTime, boolean isLandscape, String courseId, String unitUrl) {
+    public void trackVideoOrientation(String videoId, Double currentTime, boolean isLandscape, String courseId, String unitUrl, String playMedium) {
 
     }
 

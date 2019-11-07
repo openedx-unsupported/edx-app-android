@@ -19,8 +19,10 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.player.TranscriptManager;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.VideoUtil;
 
@@ -336,10 +338,16 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onPlaying() {
+            environment.getAnalyticsRegistry().trackVideoPlaying(videoModel.videoId,
+                    youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
+                    videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
         }
 
         @Override
         public void onPaused() {
+            environment.getAnalyticsRegistry().trackVideoPause(videoModel.videoId,
+                    youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
+                    videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
         }
 
         @Override
@@ -379,6 +387,11 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 } else {
                     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 }
+            }
+            if (videoModel != null) {
+                environment.getAnalyticsRegistry().trackVideoOrientation(videoModel.videoId,
+                        youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
+                        fullScreen, videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
             }
         }
     }

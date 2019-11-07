@@ -96,10 +96,13 @@ public class FirebaseAnalytics implements Analytics {
 
     @Override
     public void trackVideoPause(String videoId,
-                                Double currentTime, String courseId, String unitUrl) {
+                                Double currentTime, String courseId, String unitUrl, String playMedium) {
         final FirebaseEvent event = new FirebaseEvent(Events.PAUSED_VIDEO,
                 videoId, Values.VIDEO_PAUSED, currentTime);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
+        if (!TextUtils.isEmpty(playMedium)) {
+            event.putString(Keys.PLAY_MEDIUM, playMedium);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
@@ -206,11 +209,14 @@ public class FirebaseAnalytics implements Analytics {
 
     @Override
     public void trackVideoOrientation(String videoId, Double currentTime,
-                                      boolean isLandscape, String courseId, String unitUrl) {
+                                      boolean isLandscape, String courseId, String unitUrl, String playMedium) {
         final FirebaseEvent event = new FirebaseEvent(Events.SCREEN_TOGGLED, videoId,
                 Values.FULLSREEN_TOGGLED, currentTime);
         event.putBoolean(Keys.FULLSCREEN, isLandscape);
         event.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
+        if (!TextUtils.isEmpty(playMedium)) {
+            event.putString(Keys.PLAY_MEDIUM, playMedium);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
@@ -598,7 +604,9 @@ public class FirebaseAnalytics implements Analytics {
     @Override
     public void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState, @NonNull String playMedium) {
         final FirebaseEvent event = new FirebaseEvent(eventName, connectionState);
-        event.putString(Keys.PLAY_MEDIUM, playMedium);
+        if (!TextUtils.isEmpty(playMedium)) {
+            event.putString(Keys.PLAY_MEDIUM, playMedium);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

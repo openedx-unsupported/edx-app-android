@@ -46,9 +46,10 @@ public interface Analytics {
      * @param currentTime - Video Playing started at
      * @param courseId    - CourseId under which the video is present
      * @param unitUrl     - Page Url for that Video
+     * @param playMedium  - Play Medium (e.g {@link Values#YOUTUBE})
      */
     void trackVideoPause(String videoId, Double currentTime,
-                         String courseId, String unitUrl);
+                         String courseId, String unitUrl, String playMedium);
 
     /**
      * This function is used to track Video Stop
@@ -190,9 +191,10 @@ public interface Analytics {
      * @param isLandscape -  true / false based on orientation
      * @param courseId
      * @param unitUrl
+     * @param playMedium  - Play Medium (e.g {@link Values#YOUTUBE})
      */
     void trackVideoOrientation(String videoId, Double currentTime,
-                               boolean isLandscape, String courseId, String unitUrl);
+                               boolean isLandscape, String courseId, String unitUrl, String playMedium);
 
     /**
      * Tracks search of courses in the app.
@@ -598,6 +600,8 @@ public interface Analytics {
         String VIDEO_CASTED = "edx.bi.app.cast.video_casted";
         // Casting Device Types
         String GOOGLE_CAST = "google_cast";
+        // YouTube Player Type
+        String YOUTUBE = "youtube";
 
     }
 
