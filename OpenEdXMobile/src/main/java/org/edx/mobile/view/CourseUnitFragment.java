@@ -33,4 +33,8 @@ public abstract class CourseUnitFragment extends BaseFragment {
     public void setHasComponentCallback(HasComponent callback) {
         hasComponentCallback = callback;
     }
+
+    public boolean hasCastSupportedVideoContent(){
+        return false;
+    }
 }

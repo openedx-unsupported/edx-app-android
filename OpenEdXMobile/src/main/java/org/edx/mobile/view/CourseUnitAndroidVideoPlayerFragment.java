@@ -334,4 +334,9 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     public void seekToCaption(Caption caption) {
         playerFragment.seekToCaption(caption);
     }
+
+    @Override
+    public boolean hasCastSupportedVideoContent() {
+        return true;
+    }
 }

@@ -84,6 +84,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                     final CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.instantiateItem(pager, position);
                     initialPage.setUserVisibleHint(true);
                 }
+                // refresh the menu items to update the current state of google cast button
+                invalidateOptionsMenu();
             }
 
             @Override
@@ -97,7 +99,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 }
             }
         });
-
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
         mPreviousBtn.setOnClickListener(view -> navigatePreviousComponent());
@@ -267,6 +268,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public boolean showGoogleCastButton() {
-        return true;
+        if (pager != null && pagerAdapter != null) {
+            return ((CourseUnitFragment) pagerAdapter.instantiateItem(pager, pager.getCurrentItem())).hasCastSupportedVideoContent();
+        }
+        return super.showGoogleCastButton();
     }
 }

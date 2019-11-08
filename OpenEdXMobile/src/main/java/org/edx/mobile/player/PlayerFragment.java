@@ -1842,12 +1842,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     @Override
     public void onApplicationDisconnected() {
-        getActivity().invalidateOptionsMenu();
-        if (!isPrepared && videoEntry != null) {
-            prepare(videoEntry, transcript);
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+            if (!isPrepared && videoEntry != null) {
+                prepare(videoEntry, transcript);
+            }
+            handleOnResume();
+            updateTranscriptVisibility(View.VISIBLE);
         }
-        handleOnResume();
-        updateTranscriptVisibility(View.VISIBLE);
     }
 
     @Override
