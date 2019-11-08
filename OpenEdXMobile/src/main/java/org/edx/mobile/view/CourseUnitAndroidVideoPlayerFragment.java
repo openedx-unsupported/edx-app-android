@@ -339,4 +339,9 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     public boolean hasCastSupportedVideoContent() {
         return true;
     }
+
+    @Override
+    public boolean showMiniController() {
+        return true;
+    }
 }

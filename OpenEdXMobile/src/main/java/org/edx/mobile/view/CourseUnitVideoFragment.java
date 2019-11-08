@@ -95,7 +95,11 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
         View v = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
         messageContainer = v.findViewById(R.id.message_container);
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
-
+        if (showMiniController()) {
+            v.findViewById(R.id.fl_mini_controller).setVisibility(View.VISIBLE);
+        } else {
+            v.findViewById(R.id.fl_mini_controller).setVisibility(View.GONE);
+        }
         return v;
     }
 
@@ -353,5 +357,9 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
                 updateUI(getActivity().getRequestedOrientation());
             }
         }
+    }
+
+    public boolean showMiniController() {
+        return false;
     }
 }

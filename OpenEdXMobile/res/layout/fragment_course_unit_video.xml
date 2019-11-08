@@ -63,12 +63,19 @@
         android:paddingBottom="@dimen/widget_margin_half"
         android:paddingTop="@dimen/widget_margin_half" />
 
-    <fragment
-        android:id="@+id/cast_mini_controller"
-        class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
+    <FrameLayout
+        android:id="@+id/fl_mini_controller"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <fragment
+            android:id="@+id/cast_mini_controller"
+            class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>
 
