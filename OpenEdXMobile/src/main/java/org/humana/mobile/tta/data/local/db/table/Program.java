@@ -15,6 +15,8 @@ public class Program {
 
     private String username;
 
+    private String image;
+
 
 
     private String parent_id;
@@ -50,5 +52,13 @@ public class Program {
 
     public void setParent_id(String parent_id) {
         this.parent_id = parent_id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

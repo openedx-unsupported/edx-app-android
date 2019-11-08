@@ -491,7 +491,8 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
-                unitBinding.unitCode.setText(model.getCode());
+                unitBinding.unitCode.setText(String.format("%s | %s", model.getTitle(),model.getCode()));
+                unitBinding.unitTitle.setText(model.getPeriodName());
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {

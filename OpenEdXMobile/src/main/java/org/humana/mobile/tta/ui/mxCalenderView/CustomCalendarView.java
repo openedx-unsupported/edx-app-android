@@ -1,14 +1,11 @@
 package org.humana.mobile.tta.ui.mxCalenderView;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,14 +27,14 @@ public class CustomCalendarView extends LinearLayout {
     static GridView calGrid;
     private static final int MAX_CALENDAR_DAYS = 42;
     static Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-    Context context;
+    static Context context;
     static UnitCalendarViewModel.CustomCalendarAdapter adapter;
 
 
     static List<Date> dates = new ArrayList<>();
     static List<Events> eventsList = new ArrayList<>();
 
-    static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM/YYYY", Locale.ENGLISH);
+    static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM, YYYY", Locale.ENGLISH);
     SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
     SimpleDateFormat yearFormat = new SimpleDateFormat("YYYY", Locale.ENGLISH);
 
@@ -45,10 +42,7 @@ public class CustomCalendarView extends LinearLayout {
     public CustomCalendarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-//        Log.d("CustomCalendarView", "CustomCalendarView: 2");
-//        createEvents(eventsList);
         initializeView();
-//        setCustomAdapter();
         setUpCalendar();
 
         previousButton.setOnClickListener(new OnClickListener() {
@@ -67,36 +61,10 @@ public class CustomCalendarView extends LinearLayout {
         });
 
     }
-//    public CustomCalendarView(Context context) {
-//        super(context);
-//        this.context = context;
-////        Log.d("CustomCalendarView", "CustomCalendarView: 2");
-////        createEvents(eventsList);
-//        initializeView();
-////        setCustomAdapter();
-//        setUpCalendar();
-//
-//        previousButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                calendar.add(Calendar.MONTH, -1);
-//                setUpCalendar();
-//            }
-//        });
-//        nextButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                calendar.add(Calendar.MONTH, 1);
-//                setUpCalendar();
-//            }
-//        });
-//
-//    }
 
 
 
     private void initializeView() {
-////        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = LayoutInflater.from(context).inflate(R.layout.mx_custom_calender_view, this, true);
 
         nextButton = view.findViewById(R.id.ib_next);
@@ -114,7 +82,7 @@ public class CustomCalendarView extends LinearLayout {
         Calendar monthCalendar = (Calendar) calendar.clone();
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
 
-        int FIRST_DAY_OF_MONTH = monthCalendar.get(Calendar.DAY_OF_WEEK)  -1;
+        int FIRST_DAY_OF_MONTH = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
 
         monthCalendar.add(Calendar.DAY_OF_MONTH, -FIRST_DAY_OF_MONTH);
 
@@ -123,12 +91,7 @@ public class CustomCalendarView extends LinearLayout {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
         }
-
-
-        adapter = new UnitCalendarViewModel.CustomCalendarAdapter(context, dates, calendar, eventsList);
-        calGrid.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
+        setupAdapter();
     }
 
     public static void createEvents(List<Events> events) {
@@ -138,7 +101,13 @@ public class CustomCalendarView extends LinearLayout {
             e = new Events(events.get(i).getDATE(), events.get(i).getEventText());
             eventsList.add(e);
         }
-        adapter.notifyDataSetChanged();
+        setupAdapter();
     }
 
+
+    public static void setupAdapter() {
+        adapter = new UnitCalendarViewModel.CustomCalendarAdapter(context, dates, calendar, eventsList);
+        calGrid.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 }

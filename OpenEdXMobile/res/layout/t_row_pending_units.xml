@@ -18,13 +18,51 @@
                 android:fontFamily="@font/hind_medium"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_10px"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/text_desc"
+                android:layout_width="match_parent"
+                android:textColor="@color/gray_5"
+                android:fontFamily="@font/hind_medium"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10px"
                 android:textSize="@dimen/_12px_sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="@dimen/_10px"
+                    android:textSize="@dimen/_12px_sp"
+                    android:textColor="@color/gray_5"
+                    android:id="@+id/text_submission_date"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:padding="@dimen/_10px"
+                    android:textSize="@dimen/_12px_sp"
+                    android:textColor="@color/gray_5"
+                    android:id="@+id/text_date"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:padding="@dimen/_10px"
+                    android:textSize="@dimen/_12px_sp"
+                    android:textColor="@color/gray_5"
+                    android:id="@+id/text_proposed_date"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_8px"
-                android:layout_gravity="end"
+                android:layout_gravity="center"
                 android:id="@+id/ll_approval"
                 android:orientation="horizontal">
 

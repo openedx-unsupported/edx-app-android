@@ -5,6 +5,6 @@
     <corners
         android:bottomLeftRadius="12dp"
         android:bottomRightRadius="12dp" />
-    <solid android:color="@color/secondary_blue_light" />
+    <solid android:color="@color/humana" />
 
 </shape>

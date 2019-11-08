@@ -1,6 +1,5 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
-import android.app.Activity;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -36,14 +35,10 @@ import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
-import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
-import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
-import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -93,12 +88,13 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         return true;
     };
 
-    public CalendarBottomSheetViewModel(BaseVMActivity activity, EnrolledCoursesResponse course, String selectedDate) {
+    public CalendarBottomSheetViewModel(BaseVMActivity activity, EnrolledCoursesResponse course, Long selectedDate) {
         super(activity);
 
         this.course = course;
         this.units = units;
-        this.selectedDate = selectedDate;
+        this.selectedDate = DateUtil.getDisplayDate(selectedDate);
+        dispDate.set(DateUtil.getCalendarDate(selectedDate));
 //        units = new ArrayList<>();
         tags = new ArrayList<>();
         filters = new ArrayList<>();
@@ -108,13 +104,12 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         changesMade = true;
         calVisible.set(false);
         frameVisible.set(true);
-        dispDate.set("");
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
         switchText.set("Calendar View");
 
-        unitsAdapter.setItems(units);
+//        unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
 
             switch (view.getId()) {
@@ -282,7 +277,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
-        calVisible.set(false);
 //        onEventMainThread(units);
 
     }
@@ -300,7 +294,14 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             public void onSuccess(SuccessResponse response) {
                                 mActivity.hideLoading();
                                 unit.setMyDate(data);
-                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                                unitsAdapter.remove(unit);
+                                unitsAdapter.notifyDataSetChanged();
+                                units.remove(unit);
+                                if (units.size()==0){
+                                    emptyVisible.set(true);
+                                }else {
+                                    emptyVisible.set(false);
+                                }
                                 if (response.getSuccess()) {
                                     mActivity.showLongSnack("Proposed date set successfully");
                                     EventBus.getDefault().post(units);
@@ -392,17 +393,26 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(), "", 0L, take, skip,
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "", 0L, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
                         mActivity.hideLoading();
-                        units = data;
                         if (data.size() < take) {
                             allLoaded = true;
                         }
-                        populateUnits(data);
-
+                        units = new ArrayList<>();
+                        for (int i = 0; i < data.size(); i++) {
+                            if (DateUtil.getDisplayDate(data.get(i).getMyDate()).equals(selectedDate)) {
+                                units.add(data.get(i));
+                                populateUnits(units);
+                                unitsAdapter.setItems(units);
+                                emptyVisible.set(false);
+                            }
+                        }
+                        if (units.size()==0){
+                            emptyVisible.set(true);
+                        }
                         unitsAdapter.setLoadingDone();
                     }
 
@@ -426,6 +436,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                 newItemsAdded = true;
                 n++;
             }
+
         }
 
         if (newItemsAdded) {
@@ -565,65 +576,12 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         @Override
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
-                TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 eventsArrayList.clear();
-               /* if (selectedEvent.get() != null) {
-                    if (selectedEvent.get()== String.valueOf(model.getMyDate())) {
-                        unitBinding.setUnit(model);
-
-                        unitBinding.unitCode.setText(model.getCode());
-                        if (!TextUtils.isEmpty(model.getPeriodName())) {
-                            unitBinding.unitCode.append("    |    " + model.getPeriodName());
-                        }
-                        unitBinding.layoutCheckbox.setVisibility(View.GONE);
-
-                        if (model.getMyDate() > 0) {
-                            unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                            Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                            eventsArrayList.add(e);
-                        } else {
-                            unitBinding.tvMyDate.setText(R.string.proposed_date);
-                        }
-
-                        String role = mDataManager.getLoginPrefs().getRole();
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-                            if (model.getStaffDate() > 0) {
-                                unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                                Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                                eventsArrayList.add(e);
-                            } else {
-                                unitBinding.tvStaffDate.setVisibility(View.GONE);
-                            }
-                        }
-
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                                !TextUtils.isEmpty(model.getStatus())) {
-                            try {
-                                switch (UnitStatusType.valueOf(model.getStatus())) {
-                                    case Completed:
-                                        unitBinding.statusIcon.setImageDrawable(
-                                                ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
-                                        unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                        break;
-                                    case InProgress:
-                                        unitBinding.statusIcon.setImageDrawable(
-                                                ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
-                                        unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                        break;
-                                }
-                            } catch (IllegalArgumentException e) {
-                                unitBinding.statusIcon.setVisibility(View.GONE);
-                            }
-                        } else {
-                            unitBinding.statusIcon.setVisibility(View.GONE);
-                        }
-                    }
-                }else {*/
                 if (selectedDate.equals(DateUtil.getDisplayDate(model.getMyDate()))) {
+                    TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                     unitBinding.setUnit(model);
-
                     unitBinding.unitCode.setText(model.getCode());
+                    unitBinding.unitTitle.setText(model.getTitle());
                     if (!TextUtils.isEmpty(model.getPeriodName())) {
                         unitBinding.unitCode.append("    |    " + model.getPeriodName());
                     }
@@ -683,21 +641,21 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             listener.onItemClick(v, model);
                         }
                     });
-                }else {
-                    dispDate.set(selectedDate);
+                } else {
+//                    dispDate.set(selectedDate);
                     emptyVisible.set(true);
                 }
             }
         }
     }
 
-    public void expandBottomSheet(){
+    public void expandBottomSheet() {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-        else {
+        } else {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
     }
+
 
 }

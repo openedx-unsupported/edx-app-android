@@ -206,19 +206,20 @@ public class ScheduleViewModel extends BaseViewModel {
                     allFilters = data;
                     filtersVisible.set(true);
                     filtersAdapter.setItems(data);
+                    boolean langSelected;
                     if (mDataManager.getLoginPrefs().getRole() != null) {
                         if (!mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
 
                             for (ProgramFilter filter : data) {
-
+                                    langSelected = filter.getSelected();
                                 if (filter.getInternalName().toLowerCase().contains("lang")) {
                                     langTags.clear();
                                     langTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-                                            true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
+                                            langSelected, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
 
                                     for (ProgramFilterTag tag : filter.getTags()) {
                                         langTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                                false, R.color.white, R.drawable.t_background_tag_filled));
+                                                langSelected, R.color.white, R.drawable.t_background_tag_filled));
 
 
                                     }
@@ -442,11 +443,11 @@ public class ScheduleViewModel extends BaseViewModel {
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 String selectedTag="";
                 items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
-                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow
+                        true, R.color.humana, R.drawable.t_background_tag_hollow
                 ));
                 for (ProgramFilterTag tag : model.getTags()) {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
+                            tag.getSelected(), R.color.black, R.drawable.t_background_tag_filled
                     ));
                     if (tag.getSelected()){
                         selectedTag = tag.getDisplayName();

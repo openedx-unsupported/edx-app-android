@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
@@ -142,12 +143,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 
                             }
                         });
-//                Bundle b = new Bundle();
-//                b.putCharSequence("program", programId);
-//                b.putBoolean("prevVisible",prevVisible);
-//                Constants.isSinglePrg = false;
-//                ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
-//                mActivity.finish();
+
             }
 
         });
@@ -177,8 +173,6 @@ public class SelectProgramViewModel2 extends BaseViewModel {
     @Override
     public void onResume() {
         super.onResume();
-
-//        fetchPrograms();
     }
 
     private void populatePrograms(List<Program> data) {
@@ -234,6 +228,12 @@ public class SelectProgramViewModel2 extends BaseViewModel {
             if (binding instanceof TRowSelectProgSectionBinding) {
                 TRowSelectProgSectionBinding itemBinding = (TRowSelectProgSectionBinding) binding;
                 itemBinding.textPrograms.setText(model.getTitle());
+
+
+                Glide.with(mActivity)
+                        .load(model.getImage())
+                        .placeholder(ContextCompat.getDrawable(mActivity, R.drawable.circle_all_blue))
+                        .into(itemBinding.image);
 
                 itemBinding.llProg.setOnClickListener(v -> {
                     if (listener != null) {

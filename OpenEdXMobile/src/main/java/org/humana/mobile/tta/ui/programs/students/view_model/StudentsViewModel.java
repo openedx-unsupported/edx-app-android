@@ -238,8 +238,8 @@ public class StudentsViewModel extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
-                itemBinding.txtCompleted.setText(String.valueOf(model.completedUnits));
-                itemBinding.txtPending.setText(String.valueOf(model.completedHours));
+                itemBinding.txtCompleted.setText(String.format("%s hrs", String.valueOf(model.completedHours)));
+                itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.pendingCount)));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null){
                     Glide.with(mActivity).load(
@@ -248,6 +248,14 @@ public class StudentsViewModel extends BaseViewModel {
                             .centerCrop()
                             .placeholder(R.drawable.profile)
                             .into(itemBinding.userImage);
+                }
+                if (model.qualification != null) {
+                    itemBinding.textDegree.setText(model.qualification);
+                }
+                boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
+                if (!tabletSize){
+                    itemBinding.txtCompleted.setCompoundDrawables(null,null,null,null);
+                    itemBinding.txtPending.setCompoundDrawables(null, null,null,null);
                 }
 
                 if(!mDataManager.getLoginPrefs().getRole().equals("Instructor")){

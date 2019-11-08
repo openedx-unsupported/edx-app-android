@@ -21,6 +21,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +194,9 @@ public class PendingUnitsListViewModel extends BaseViewModel {
             if (binding instanceof TRowPendingUnitsBinding) {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
                 itemBinding.textUnitName.setText(model.getTitle());
+                itemBinding.textSubmissionDate.setText("Submitted On : ");
+                itemBinding.textDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                itemBinding.textProposedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
                     itemBinding.llApproval.setVisibility(View.GONE);
                 }else {

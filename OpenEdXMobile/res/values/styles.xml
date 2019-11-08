@@ -3,12 +3,12 @@
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/secondary_blue_light</item>
-        <item name="colorPrimaryDark">@color/humana_blue</item>
-        <item name="colorAccent">@color/secondary_red</item>
+        <item name="colorPrimary">@color/humana</item>
+        <item name="colorPrimaryDark">@color/humana_light_blue</item>
+        <item name="colorAccent">@color/material_red_500</item>
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
-        <item name="actionModeBackground">@color/secondary_blue_light</item>
-        <item name="actionMenuTextColor">@color/secondary_red</item>
+        <item name="actionModeBackground">@color/humana</item>
+        <item name="actionMenuTextColor">@color/material_red_500</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
         <item name="actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
         <item name="windowActionModeOverlay">true</item>

@@ -14,9 +14,9 @@
         android:background="@color/humana_card_background"
         app:cardElevation="@dimen/_16px"
         android:shadowColor="@color/gray_1"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="@dimen/_14px">
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,22 +31,6 @@
                 android:layout_marginTop="@dimen/_12px"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/user_name"
-                android:textSize="12sp"
-                android:textColor="@color/gray_5"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:gravity="center"
-                android:fontFamily="@font/hind_medium"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:singleLine="true"
-                android:ellipsize="marquee" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,11 +46,11 @@
                         android:id="@+id/txt_pending"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:background="@color/secondary_blue_light"
+                        android:layout_weight="1"
                         android:gravity="center"
                         android:padding="12dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
+                        android:drawableLeft="@drawable/check"
                         android:fontFamily="@font/hind_medium" />
 
                     <TextView
@@ -74,13 +58,76 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/status_completed"
                         android:gravity="center"
                         android:padding="12dp"
+                        android:textColor="@color/gray_5"
+                        android:drawableLeft="@drawable/ic_access_time_red_24dp"
                         android:fontFamily="@font/hind_medium" />
 
                 </LinearLayout>
 
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_name"
+                android:textSize="20sp"
+                android:textColor="@color/gray_5"
+                android:gravity="center"
+                android:fontFamily="@font/hind_bold"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="true"
+                android:ellipsize="marquee" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_degree"
+                android:textSize="14sp"
+                android:textColor="@color/gray_5"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="Associate Professor"
+                android:fontFamily="@font/hind_semibold"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="true"
+                android:ellipsize="marquee" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="@dimen/_10px"
+                    android:id="@+id/img_insta"
+                    android:src="@drawable/ic_insta" />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="@dimen/_10px"
+                    android:id="@+id/img_twitter"
+                    android:src="@drawable/ic_twitter" />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="@dimen/_10px"
+                    android:src="@drawable/ic_facebook_img"
+                    android:layout_margin="5dp"
+                    android:tint="@color/com_facebook_blue"/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="@dimen/_10px"
+                    android:id="@+id/img_web"
+                    android:src="@drawable/internet_web_browser"/>
             </LinearLayout>
 
             <!--<Button-->

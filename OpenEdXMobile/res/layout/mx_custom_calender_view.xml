@@ -84,7 +84,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/humana_blue"
+            android:background="@color/humana_light_blue"
             android:orientation="horizontal">
 
             <ImageButton
@@ -118,7 +118,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cyan_text_navigation_20"
+            android:background="@color/humana"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp">
