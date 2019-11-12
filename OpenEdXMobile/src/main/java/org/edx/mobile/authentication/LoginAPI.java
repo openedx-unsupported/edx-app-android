@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -13,6 +14,7 @@ import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -21,8 +23,11 @@ import org.edx.mobile.util.observer.BasicObservable;
 import org.edx.mobile.util.observer.Observable;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -178,15 +183,34 @@ public class LoginAPI {
         for (String key : parameters.keySet()) {
             parameterMap.put(key, parameters.getString(key));
         }
-        Response<ResponseBody> response = loginService.register(parameterMap).execute();
+        final Response<ResponseBody> response = loginService.register(parameterMap).execute();
         if (!response.isSuccessful()) {
             final int errorCode = response.code();
             final String errorBody = response.errorBody().string();
             if ((errorCode == HttpStatus.BAD_REQUEST || errorCode == HttpStatus.CONFLICT) && !android.text.TextUtils.isEmpty(errorBody)) {
                 try {
-                    final FormFieldMessageBody body = gson.fromJson(errorBody, FormFieldMessageBody.class);
-                    if (body != null && body.size() > 0) {
-                        throw new RegistrationException(body);
+                    final Type objectMapType = new TypeToken<HashMap<String, Object>>() {
+                    }.getType();
+                    final Type fieldErrorListType = new TypeToken<List<RegisterResponseFieldError>>() {
+                    }.getType();
+                    final HashMap<String, Object> body = gson.fromJson(errorBody, objectMapType);
+                    final FormFieldMessageBody errorResponse = new FormFieldMessageBody();
+                    for (String key : body.keySet()) {
+                        final Object fieldError = body.get(key);
+                        if (fieldError instanceof Collection<?>) {
+                            /*
+                            The conversion of the errorBody from JSON String to Map<String, Object>
+                            malformed the JSON properties of key & value pairs inside it i.e.
+                            removed the quotations encapsulating the key & value pairs.
+
+                            Following code line is required to transform them back into valid JSON.
+                            */
+                            final String fieldErrorJson = gson.toJson(fieldError);
+                            errorResponse.put(key, gson.fromJson(fieldErrorJson, fieldErrorListType));
+                        }
+                    }
+                    if (errorResponse.size() > 0) {
+                        throw new RegistrationException(errorResponse);
                     }
                 } catch (JsonSyntaxException ex) {
                     // Looks like the response does not contain form validation errors.
