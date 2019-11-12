@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -83,7 +84,14 @@ public class StudentsViewModel extends BaseViewModel {
     @Override
     public void onResume() {
         super.onResume();
-        layoutManager = new GridLayoutManager(mActivity, 2);
+        boolean tabsize = getActivity().getResources().getBoolean(R.bool.isTablet);
+        if (tabsize){
+            layoutManager = new GridLayoutManager(mActivity, 2);
+    }else
+    {
+        layoutManager = new LinearLayoutManager(mActivity);
+    }
+
         changesMade = true;
 //        fetchData();
     }
@@ -249,14 +257,14 @@ public class StudentsViewModel extends BaseViewModel {
                             .placeholder(R.drawable.profile)
                             .into(itemBinding.userImage);
                 }
-                if (model.qualification != null) {
-                    itemBinding.textDegree.setText(model.qualification);
+                if (model.education != null) {
+                    itemBinding.textDegree.setText(model.education);
                 }
-                boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
-                if (!tabletSize){
-                    itemBinding.txtCompleted.setCompoundDrawables(null,null,null,null);
-                    itemBinding.txtPending.setCompoundDrawables(null, null,null,null);
-                }
+//                boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
+//                if (!tabletSize){
+//                    itemBinding.txtCompleted.setCompoundDrawables(null,null,null,null);
+//                    itemBinding.txtPending.setCompoundDrawables(null, null,null,null);
+//                }
 
                 if(!mDataManager.getLoginPrefs().getRole().equals("Instructor")){
                     itemBinding.llStatus.setVisibility(View.GONE);

@@ -10,11 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -41,19 +37,13 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
 import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
@@ -392,7 +382,7 @@ public class UnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),"", 0L, take, skip,
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "", 0L, take, skip,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -463,7 +453,7 @@ public class UnitsViewModel extends BaseViewModel {
 //        filters.clear();
         changesMade = true;
         allLoaded = false;
-            fetchData();
+        fetchData();
 //        ProgramFilter pf = new ProgramFilter();
 //        pf.setDisplayName(user.username);
 //        pf.setInternalName(user.name);
@@ -564,111 +554,61 @@ public class UnitsViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
-                eventsArrayList.clear();
-               /* if (selectedEvent.get() != null) {
-                    if (selectedEvent.get()== String.valueOf(model.getMyDate())) {
-                        unitBinding.setUnit(model);
+                unitBinding.setUnit(model);
 
-                        unitBinding.unitCode.setText(model.getCode());
-                        if (!TextUtils.isEmpty(model.getPeriodName())) {
-                            unitBinding.unitCode.append("    |    " + model.getPeriodName());
-                        }
-                        unitBinding.layoutCheckbox.setVisibility(View.GONE);
-
-                        if (model.getMyDate() > 0) {
-                            unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                            Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                            eventsArrayList.add(e);
-                        } else {
-                            unitBinding.tvMyDate.setText(R.string.proposed_date);
-                        }
-
-                        String role = mDataManager.getLoginPrefs().getRole();
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-                            if (model.getStaffDate() > 0) {
-                                unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                                Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-                                eventsArrayList.add(e);
-                            } else {
-                                unitBinding.tvStaffDate.setVisibility(View.GONE);
-                            }
-                        }
-
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                                !TextUtils.isEmpty(model.getStatus())) {
-                            try {
-                                switch (UnitStatusType.valueOf(model.getStatus())) {
-                                    case Completed:
-                                        unitBinding.statusIcon.setImageDrawable(
-                                                ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
-                                        unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                        break;
-                                    case InProgress:
-                                        unitBinding.statusIcon.setImageDrawable(
-                                                ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
-                                        unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                        break;
-                                }
-                            } catch (IllegalArgumentException e) {
-                                unitBinding.statusIcon.setVisibility(View.GONE);
-                            }
-                        } else {
-                            unitBinding.statusIcon.setVisibility(View.GONE);
-                        }
+                unitBinding.unitCode.setText(model.getTitle());
+                unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
+                        + model.getUnitHour() + " hrs");
+                if (!model.getStatus().isEmpty()) {
+                    if (model.getStaffDate()>0) {
+                        unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                        unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
                     }
-                }else {*/
-                    unitBinding.setUnit(model);
+                }else {
+                    unitBinding.tvStaffDate.setVisibility(View.GONE);
+                }
+                unitBinding.tvDescription.setText(model.getDesc());
+                unitBinding.layoutCheckbox.setVisibility(View.GONE);
 
-                    unitBinding.unitCode.setText(model.getCode());
-                    unitBinding.unitTitle.setText(model.getTitle());
-                    if (!TextUtils.isEmpty(model.getPeriodName())) {
-                        unitBinding.unitCode.append("    |    " + model.getPeriodName());
-                    }
-                    unitBinding.layoutCheckbox.setVisibility(View.GONE);
+                if (model.getMyDate() > 0) {
+                    unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                } else {
+                    unitBinding.tvMyDate.setText(R.string.proposed_date);
+                }
 
-                    if (model.getMyDate() > 0) {
-                        unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                        Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()), model.getTitle());
-                        eventsArrayList.add(e);
+                String role = mDataManager.getLoginPrefs().getRole();
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
+                    if (model.getStaffDate() > 0) {
+                        unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                        unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
                     } else {
-                        unitBinding.tvMyDate.setText(R.string.proposed_date);
+                        unitBinding.tvSubmittedDate.setVisibility(View.GONE);
                     }
+                }
 
-                    String role = mDataManager.getLoginPrefs().getRole();
-                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-                        if (model.getStaffDate() > 0) {
-                            unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                            Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()), model.getTitle());
-                            eventsArrayList.add(e);
-                        } else {
-                            unitBinding.tvStaffDate.setVisibility(View.GONE);
+                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
+                        !TextUtils.isEmpty(model.getStatus())) {
+                    try {
+                        switch (UnitStatusType.valueOf(model.getStatus())) {
+                            case Completed:
+                                unitBinding.card.setBackgroundColor(
+                                        ContextCompat.getColor(getContext(), R.color.secondary_green));
+                                break;
+                            case InProgress:
+                                unitBinding.card.setBackgroundColor(
+                                        ContextCompat.getColor(getContext(), R.color.humana_card_background));
+                                break;
+                            case Pending:
+                                unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
+                                        R.color.material_red_500));
+                                break;
                         }
-                    }
-
-                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                            !TextUtils.isEmpty(model.getStatus())) {
-                        try {
-                            switch (UnitStatusType.valueOf(model.getStatus())) {
-                                case Completed:
-                                    unitBinding.statusIcon.setImageDrawable(
-                                            ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
-                                    unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                    break;
-                                case InProgress:
-                                    unitBinding.statusIcon.setImageDrawable(
-                                            ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
-                                    unitBinding.statusIcon.setVisibility(View.VISIBLE);
-                                    break;
-                            }
-                        } catch (IllegalArgumentException e) {
-                            unitBinding.statusIcon.setVisibility(View.GONE);
-                        }
-                    } else {
+                    } catch (IllegalArgumentException e) {
                         unitBinding.statusIcon.setVisibility(View.GONE);
                     }
-//                }
+                } else {
+                    unitBinding.statusIcon.setVisibility(View.GONE);
+                }
 
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
@@ -682,6 +622,7 @@ public class UnitsViewModel extends BaseViewModel {
                     }
                 });
             }
+
         }
     }
 

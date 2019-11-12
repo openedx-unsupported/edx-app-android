@@ -25,6 +25,36 @@ public class Unit {
 
     private String sectionId;
 
+    public int getUnitHour() {
+        return unitHour;
+    }
+
+    public void setUnitHour(int unitHour) {
+        this.unitHour = unitHour;
+    }
+
+    private int unitHour;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private String type;
+
+    public long getStatusDate() {
+        return statusDate;
+    }
+
+    public void setStatusDate(long statusDate) {
+        this.statusDate = statusDate;
+    }
+
+    private long statusDate;
+
     @SerializedName("period_id")
     private long periodId;
 
@@ -38,6 +68,16 @@ public class Unit {
 
     @SerializedName("staff_date")
     private long staffDate;
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    private String desc;
 
     @NonNull
     public String getId() {

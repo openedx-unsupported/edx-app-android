@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.CardView
@@ -14,6 +15,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/card"
             android:background="@color/humana_card_background">
 
             <FrameLayout
@@ -50,7 +52,7 @@
                 android:layout_marginEnd="@dimen/_20px"
                 android:fontFamily="@font/hind_medium"
                 android:textColor="@color/gray_5"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 app:layout_constraintEnd_toStartOf="@id/status_icon"
                 app:layout_constraintStart_toEndOf="@id/layout_checkbox"
                 app:layout_constraintTop_toBottomOf="@id/unit_title"/>
@@ -61,7 +63,7 @@
                 android:layout_marginStart="@dimen/_20px"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="@dimen/_20px"
-                android:fontFamily="@font/hind_medium"
+                android:fontFamily="@font/hind_bold"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/status_icon"
@@ -69,20 +71,22 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-
-
             <TextView
+                android:id="@+id/tv_staff_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_staff_date"
+                android:layout_marginStart="@dimen/_20px"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/hind_medium"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
-                android:fontFamily="@font/hind_medium"
-                app:layout_constraintTop_toBottomOf="@id/unit_code"
+                android:gravity="center"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/tv_submitted_date"
+                app:layout_constraintHorizontal_bias="0.016"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="@dimen/_20px"
-                android:visibility="gone"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_description" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -91,22 +95,52 @@
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
                 android:fontFamily="@font/hind_medium"
-                app:layout_constraintTop_toBottomOf="@id/unit_code"
+                app:layout_constraintTop_toBottomOf="@id/tv_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="@dimen/_20px"
+                android:layout_marginEnd="2dp"
                 android:layout_marginBottom="@dimen/_10px"
-                android:drawableEnd="@drawable/t_icon_calendar"
+                android:drawableStart="@drawable/t_icon_calendar"
                 android:drawablePadding="6dp"
                 android:padding="6dp"
                 android:text="@string/proposed_date"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:elevation="2dp"
-                android:background="@color/white"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
+                style="?borderlessButtonStyle"
                 android:clickable="true"
                 android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20px"
+                android:layout_marginEnd="8dp"
+                android:lines="2"
+                android:ellipsize="end"
+                android:textColor="@color/gray_5"
+                android:textSize="12sp"
+                android:fontFamily="@font/hind_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/unit_code" />
+
+            <TextView
+                android:id="@+id/tv_submitted_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:textColor="@color/gray_5"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:drawableStart="@drawable/t_icon_calendar"
+                app:layout_constraintEnd_toStartOf="@+id/tv_my_date"
+                app:layout_constraintTop_toBottomOf="@id/tv_description" />
 
             <!--<View-->
                 <!--android:id="@+id/bottom_line"-->

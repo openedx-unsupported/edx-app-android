@@ -10,7 +10,7 @@ public class ProgramUser {
 
     public String name;
 
-    public String qualification;
+    public String education;
 
     @SerializedName("profile_image")
     public ProfileImage profileImage;

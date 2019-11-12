@@ -265,6 +265,7 @@ public class ScheduleViewModel extends BaseViewModel {
 
                     }
 
+
                 } else {
                     filtersVisible.set(false);
                     fabVisible.set(false);

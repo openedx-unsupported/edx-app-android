@@ -557,8 +557,8 @@ public class AddUnitsViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
-                unitBinding.unitCode.setText(model.getCode());
-                unitBinding.unitTitle.setText(model.getTitle()) ;
+//                unitBinding.unitCode.setText(model.getCode());
+//                unitBinding.unitTitle.setText(model.getTitle()) ;
                 unitBinding.layoutCheckbox.setVisibility(View.VISIBLE);
                 if (selected.contains(model)){
                     unitBinding.checkbox.setChecked(true);
@@ -574,6 +574,25 @@ public class AddUnitsViewModel extends BaseViewModel {
                     unitBinding.tvMyDate.setVisibility(View.GONE);
                 }
 
+
+
+
+                unitBinding.unitCode.setText(model.getTitle());
+                unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
+                        + model.getUnitHour() + " hrs");
+                try {
+                    if (!model.getStatus().isEmpty() || model.getStatus() != null) {
+                        if (model.getStaffDate() > 0) {
+                            unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        unitBinding.tvStaffDate.setVisibility(View.GONE);
+                    }
+                    unitBinding.tvDescription.setText(model.getDesc());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 unitBinding.layoutCheckbox.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
