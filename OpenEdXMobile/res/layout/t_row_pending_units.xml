@@ -4,11 +4,13 @@
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/humana_card_background"
         android:layout_margin="@dimen/_10px">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/humana_card_background"
             android:orientation="vertical">
 
             <TextView
@@ -34,7 +36,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:padding="@dimen/_10px"
                     android:textSize="@dimen/_12px_sp"
                     android:textColor="@color/gray_5"
@@ -42,7 +44,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:padding="@dimen/_10px"
                     android:textSize="@dimen/_12px_sp"
                     android:textColor="@color/gray_5"
@@ -76,9 +78,9 @@
                     android:padding="@dimen/_8px"
                     android:layout_margin="@dimen/_10px"
                     android:textSize="@dimen/_12px_sp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/hind_medium"
-                    android:background="@color/secondary_green"
+                    android:background="@drawable/red_rect_rounded_corner"
                     android:text="Approve" />
 
                 <Button
@@ -89,12 +91,12 @@
                     android:layout_weight="1"
                     android:padding="@dimen/_8px"
                     android:textSize="@dimen/_12px_sp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_margin="@dimen/_10px"
                     android:fontFamily="@font/hind_medium"
-                    android:background="@color/material_red_500"
+                    android:background="@drawable/red_rect_rounded_corner"
                     android:gravity="center"
-                    android:text="Reject" />
+                    android:text="Return" />
             </LinearLayout>
 
         </LinearLayout>

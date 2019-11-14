@@ -17,9 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_12px"
-            android:text="Select Program"
+            android:text="Programs"
+            android:fontFamily="@font/hind_bold"
             android:textColor="@color/black"
-            android:textSize="@dimen/_16px_sp" />
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20sp" />
 
         <FrameLayout
             android:layout_width="match_parent"

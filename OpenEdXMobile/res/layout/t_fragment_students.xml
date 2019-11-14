@@ -27,22 +27,34 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                app:mx_itemLayout="@layout/t_row_filter_drop_down"
+                app:mx_itemLayout="@layout/t_row_student_tab_view"
                 app:mx_itemLimit="100"
                 app:mx_moreButtonVisible="false"
                 app:mx_titleVisible="false" />
+
         </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <com.maurya.mx.mxlib.view.MxRecyclerView
+                infinite_recycler_adapter="@{viewModel.gridUsersAdapter}"
+                layout_manager="@{viewModel.linearLayoutManager}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="12dp"
+                android:visibility="@{viewModel.isTabView ? View.GONE : View.VISIBLE}"
+                android:paddingEnd="12dp"
+                app:mx_itemLayout="@layout/t_row_students_grid" />
+
             <com.maurya.mx.mxlib.view.MxRecyclerView
                 infinite_recycler_adapter="@{viewModel.usersAdapter}"
                 layout_manager="@{viewModel.layoutManager}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="12dp"
+                android:visibility="@{viewModel.isTabView ? View.VISIBLE : View.GONE}"
                 android:paddingEnd="12dp"
-                app:mx_itemLayout="@layout/t_row_students_grid" />
+                app:mx_itemLayout="@layout/t_row_student_tab_view" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

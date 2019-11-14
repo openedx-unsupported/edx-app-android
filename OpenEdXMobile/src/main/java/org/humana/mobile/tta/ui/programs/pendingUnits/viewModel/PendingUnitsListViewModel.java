@@ -1,5 +1,6 @@
 package org.humana.mobile.tta.ui.programs.pendingUnits.viewModel;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -10,17 +11,25 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
+import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowPendingUnitsBinding;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
+import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -41,6 +50,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
 
     public UnitsAdapter unitsAdapter;
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public float rating = 0;
 
     public PendingUnitsListViewModel(BaseVMActivity activity) {
         super(activity);
@@ -113,10 +123,10 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 });
     }
 
-    public void approveUnits(String unitId) {
+    public void approveUnits(String unitId, String remarks, int rating) {
 
         mDataManager.approveUnit(unitId,
-                userName.get(), new OnResponseCallback<SuccessResponse>() {
+                userName.get(), remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         mActivity.hideLoading();
@@ -134,9 +144,9 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 });
     }
 
-    public void rejectUnits(String unitId) {
+    public void rejectUnits(String unitId, String remarks, int rating) {
         mDataManager.rejectUnit(unitId,
-                userName.get(), new OnResponseCallback<SuccessResponse>() {
+                userName.get(), remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         mActivity.hideLoading();
@@ -193,25 +203,83 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowPendingUnitsBinding) {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
-                itemBinding.textUnitName.setText(model.getTitle());
-                itemBinding.textSubmissionDate.setText("Submitted On : ");
-                itemBinding.textDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                itemBinding.textProposedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                itemBinding.textUnitName.setText(model.getCode() + "  |  " + model.getType() + " | "
+                        + model.getUnitHour() + " hrs");
+                itemBinding.textSubmissionDate.setVisibility(View.GONE);
+                if (!DateUtil.getDisplayDate(model.getMyDate()).equals("01 Jan 1970")) {
+                    itemBinding.textDate.setText("Submitted On : " + DateUtil.getDisplayDate(model.getMyDate()));
+                }if(!DateUtil.getDisplayDate(model.getStaffDate()).equals("01 Jan 1970")) {
+                    itemBinding.textProposedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                }
+                itemBinding.textDesc.setText(model.getDesc());
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
                     itemBinding.llApproval.setVisibility(View.GONE);
                 }else {
                     itemBinding.llApproval.setVisibility(View.VISIBLE);
                 }
                 itemBinding.btnApprove.setOnClickListener(v -> {
-                        approveUnits(model.getUnit_id());
+                        approveReturn(model.getUnit_id());
                 });
 
                 itemBinding.btnReject.setOnClickListener(v -> {
-                    rejectUnits(model.getUnit_id());
+                    approveReturn(model.getUnit_id());
                 });
 
 
             }
         }
+    }
+
+    public void approveReturn(String unitId){
+        final Dialog dialog = new Dialog(mActivity);
+        dialog.setContentView(R.layout.dialog_approve_return_unit);
+        Button btnApprove = (Button) dialog.findViewById(R.id.btn_approve);
+        Button btnReturn = (Button) dialog.findViewById(R.id.btn_return);
+        EditText etRemarks = dialog.findViewById(R.id.et_remarks);
+        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+//        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+
+
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar rb, float rating, boolean fromUser) {
+                rating = rb.getRating();
+                if (rating==1){
+                    Toast.makeText(mActivity, "poor", Toast.LENGTH_SHORT).show();
+                }else if (rating==2){
+                    Toast.makeText(mActivity, "fair", Toast.LENGTH_SHORT).show();
+                }else if (rating==3){
+                    Toast.makeText(mActivity, "good", Toast.LENGTH_SHORT).show();
+                }else if (rating==4){
+                    Toast.makeText(mActivity, "very good", Toast.LENGTH_SHORT).show();
+                }else if (rating==5){
+                    Toast.makeText(mActivity, "excellent", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        // if button is clicked, close the custom dialog
+
+        btnApprove.setOnClickListener(v -> {
+            String remarks = etRemarks.getText().toString();
+            dialog.dismiss();
+            approveUnits(unitId, remarks, (int) rating);
+        });
+
+        btnReturn.setOnClickListener(v -> {
+            String remarks = etRemarks.getText().toString();
+            dialog.dismiss();
+            rejectUnits(unitId,remarks, (int) rating);
+        });
+        dialog.setCancelable(true);
+        dialog.show();
     }
 }

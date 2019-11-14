@@ -49,6 +49,8 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:ellipsize="end"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:lines="1"
         android:visibility="invisible"
         android:background="@color/humana_card_background"
@@ -63,6 +65,9 @@
         android:fontFamily="@font/hind_medium"
         android:layout_gravity="center"
         android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:lines="1"
         android:ellipsize="end"
         android:visibility="invisible"
@@ -78,5 +83,6 @@
             android:visibility="invisible"
             android:layout_gravity="center"
             android:background="@color/dark_red" />
+
     </LinearLayout>
 </layout>

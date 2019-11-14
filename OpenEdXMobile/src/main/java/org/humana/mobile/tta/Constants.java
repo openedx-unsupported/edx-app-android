@@ -72,6 +72,12 @@ public class Constants {
     public static final String KEY_PROPOSED_DATE_ADDED = "proposed_date_added";
     public static final String KEY_STUDENT_NAME = "student_name";
     public static final String KEY_STUDENT_USERNAME = "student_username";
+    public static final String KEY_APPROVE_REMARKS = "remarks";
+    public static final String KEY_RETURN_REMARKS = "remarks";
+    public static final String KEY_RETURN_RATING = "rating";
+    public static final String KEY_APPROVE_RATING = "rating";
+    public static final String KEY_EVENT_CAL_DATE = "eventMonthYear";
+    public static final String KEY_EVENT_COUNT = "count";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

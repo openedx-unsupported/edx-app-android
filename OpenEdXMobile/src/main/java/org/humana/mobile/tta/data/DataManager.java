@@ -53,6 +53,7 @@ import org.humana.mobile.tta.data.local.db.LocalDataSource;
 import org.humana.mobile.tta.data.local.db.TADatabase;
 import org.humana.mobile.tta.data.local.db.operation.GetCourseContentsOperation;
 import org.humana.mobile.tta.data.local.db.operation.GetWPContentsOperation;
+import org.humana.mobile.tta.data.local.db.table.CalendarEvents;
 import org.humana.mobile.tta.data.local.db.table.Category;
 import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.Content;
@@ -104,6 +105,7 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.scorm.ScormBlockModel;
 import org.humana.mobile.tta.scorm.ScormStartResponse;
 import org.humana.mobile.tta.task.GetEnrolledCourseTask;
+import org.humana.mobile.tta.task.GetEventCalenderTask;
 import org.humana.mobile.tta.task.GetVersionUpdatedTask;
 import org.humana.mobile.tta.task.agenda.GetMyAgendaContentTask;
 import org.humana.mobile.tta.task.agenda.GetMyAgendaCountTask;
@@ -3265,6 +3267,37 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
+    public void getEventCalendar(String programId, String sectionId, String role, int take, int skip,
+            int count,long eventCalendarDate, OnResponseCallback<List<CalendarEvents>> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetEventCalenderTask(context, programId, sectionId, role, eventCalendarDate, count, take, skip) {
+                @Override
+                protected void onSuccess(List<CalendarEvents> statuses) throws Exception {
+                    super.onSuccess(statuses);
+                    if (statuses != null) {
+
+                        new Thread() {
+                            @Override
+                            public void run() {
+
+                            }
+                        }.start();
+
+                        callback.onSuccess(statuses);
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                }
+            }.execute();
+
+        }
+
+    }
+
     public void getUnitStatusFromLocal(String courseId, OnResponseCallback<List<UnitStatus>> callback, Exception e) {
 
         new AsyncTask<Void, Void, List<UnitStatus>>() {
@@ -3697,11 +3730,11 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
-                         String role,String student_username, long periodId, int take, int skip, OnResponseCallback<List<Unit>> callback){
+                         String role,String student_username, long periodId, int take, int skip, long eventMonthYear, OnResponseCallback<List<Unit>> callback){
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip,student_username){
+            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip,student_username, eventMonthYear){
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
@@ -4019,11 +4052,11 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void approveUnit(String unitId, String username, OnResponseCallback<SuccessResponse> callback) {
+    public void approveUnit(String unitId, String username,String remarks, int rating, OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new ApproveUnitTask(context, unitId, username) {
+            new ApproveUnitTask(context, unitId, username, remarks, rating) {
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);
@@ -4046,11 +4079,11 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
-    public void rejectUnit(String unitId, String username, OnResponseCallback<SuccessResponse> callback) {
+    public void rejectUnit(String unitId, String username, String remarks, int rating, OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new RejectUnitTask(context, unitId, username) {
+            new RejectUnitTask(context, unitId, username, remarks, rating) {
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);

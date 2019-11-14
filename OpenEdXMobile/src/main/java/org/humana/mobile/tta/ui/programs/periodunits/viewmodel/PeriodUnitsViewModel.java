@@ -344,7 +344,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),"",
-                periodId, take, skip,
+                periodId, take, skip,0L,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -491,8 +491,20 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
-                unitBinding.unitCode.setText(String.format("%s | %s", model.getTitle(),model.getCode()));
-                unitBinding.unitTitle.setText(model.getPeriodName());
+                unitBinding.unitCode.setText(model.getTitle());
+                unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
+                        + model.getUnitHour() + " hrs");
+                if (!model.getStatus().isEmpty()) {
+                    if (model.getStaffDate()>0) {
+                        if (!DateUtil.getDisplayDate(model.getStatusDate()).equals("01 Jan 1970")) {
+                            unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }else {
+                    unitBinding.tvStaffDate.setVisibility(View.GONE);
+                }
+                unitBinding.tvDescription.setText(model.getDesc());
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {
@@ -501,36 +513,32 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                     unitBinding.tvMyDate.setText(R.string.proposed_date);
                 }
 
-                if (model.getStaffDate() > 0) {
-                    unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                    unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                } else {
-                    unitBinding.tvStaffDate.setVisibility(View.GONE);
-                }
 
                 String role = mDataManager.getLoginPrefs().getRole();
-                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-                    if (model.getStaffDate() > 0) {
-                        unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                        unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                    } else {
-                        unitBinding.tvStaffDate.setVisibility(View.GONE);
-                    }
-                }
+//                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
+//                    if (model.getStaffDate() > 0) {
+//                        unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+//                        unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+//                    } else {
+//                        unitBinding.tvStaffDate.setVisibility(View.GONE);
+//                    }
+//                }
 
                 if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
                         !TextUtils.isEmpty(model.getStatus())) {
                     try {
                         switch (UnitStatusType.valueOf(model.getStatus())) {
                             case Completed:
-                                unitBinding.statusIcon.setImageDrawable(
-                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
-                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                unitBinding.card.setBackgroundColor(
+                                        ContextCompat.getColor(getContext(), R.color.secondary_green));
                                 break;
                             case InProgress:
-                                unitBinding.statusIcon.setImageDrawable(
-                                        ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
-                                unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                unitBinding.card.setBackgroundColor(
+                                        ContextCompat.getColor(getContext(), R.color.humana_card_background));
+                                break;
+                            case Pending:
+                                unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
+                                        R.color.material_red_500));
                                 break;
                         }
                     } catch (IllegalArgumentException e) {

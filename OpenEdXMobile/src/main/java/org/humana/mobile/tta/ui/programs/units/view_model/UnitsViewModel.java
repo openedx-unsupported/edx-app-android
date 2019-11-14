@@ -1,6 +1,7 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
@@ -382,7 +383,7 @@ public class UnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "", 0L, take, skip,
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "", 0L, take, skip,0L,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -568,6 +569,15 @@ public class UnitsViewModel extends BaseViewModel {
                     unitBinding.tvStaffDate.setVisibility(View.GONE);
                 }
                 unitBinding.tvDescription.setText(model.getDesc());
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                    if (model.getComment() != null) {
+                        unitBinding.tvComment.setText(model.getComment());
+                    } else {
+                        unitBinding.tvComment.setVisibility(View.GONE);
+                    }
+                }else {
+                    unitBinding.tvComment.setVisibility(View.GONE);
+                }
                 unitBinding.layoutCheckbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {

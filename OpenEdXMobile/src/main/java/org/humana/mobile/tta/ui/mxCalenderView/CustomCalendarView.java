@@ -12,7 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import org.humana.mobile.R;
+import org.humana.mobile.tta.data.local.db.table.CalendarEvents;
 import org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
+import org.humana.mobile.util.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class CustomCalendarView extends LinearLayout {
     private static final int MAX_CALENDAR_DAYS = 42;
     static Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     static Context context;
-    static UnitCalendarViewModel.CustomCalendarAdapter adapter;
+    public static UnitCalendarViewModel.CustomCalendarAdapter adapter;
 
 
     static List<Date> dates = new ArrayList<>();
@@ -98,7 +100,7 @@ public class CustomCalendarView extends LinearLayout {
         Events e;
         eventsList.clear();
         for (int i = 0; i < events.size(); i++) {
-            e = new Events(events.get(i).getDATE(), events.get(i).getEventText());
+            e = new Events(events.get(i).getDATE(), events.get(i).getTitle());
             eventsList.add(e);
         }
         setupAdapter();

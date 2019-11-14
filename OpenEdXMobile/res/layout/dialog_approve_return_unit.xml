@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/humana_card_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Ratings"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/gray_5"
+            android:fontFamily="@font/hind_bold"/>
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:id="@+id/ratingBar"
+            android:layout_gravity="center"
+            android:stepSize="1"
+            android:layout_margin="8dp" />
+
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/red_rect_rounded_corner"
+        android:hint="Remarks"
+        android:padding="8dp"
+        android:textSize="14sp"
+        android:id="@+id/et_remarks"
+        android:fontFamily="@font/hind_medium"
+        android:layout_margin="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Approve"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:padding="@dimen/_12px"
+            android:textSize="14dp"
+            android:id="@+id/btn_approve"
+            android:background="@drawable/red_rect_rounded_corner"
+            android:textColor="@color/gray_5"
+            android:fontFamily="@font/hind_bold"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Return"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:id="@+id/btn_return"
+            android:layout_gravity="center"
+            android:background="@drawable/red_rect_rounded_corner"
+            android:textSize="14sp"
+            android:padding="@dimen/_12px"
+            android:textColor="@color/gray_5"
+            android:fontFamily="@font/hind_bold"/>
+
+    </LinearLayout>
+
+</LinearLayout>

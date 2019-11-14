@@ -1,40 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/ll_prog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_margin="@dimen/_10px"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="@dimen/_6px">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10px"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="3dp"
-            app:cardElevation="@dimen/_6px"
-            android:id="@+id/ll_prog">
         <LinearLayout
+            android:id="@+id/ll_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_8px"
-            android:layout_margin="@dimen/_8px"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/image" />
+            android:orientation="vertical">
 
-            <TextView
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:visibility="visible" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                android:paddingLeft="5dp"
-                android:gravity="start|center"
-                android:id="@+id/text_programs" />
+                android:background="@color/humana_card_background"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/text_programs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/hind_bold"
+                    android:gravity="start|center"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/humana_light_blue" />
+
+                <TextView
+                    android:id="@+id/text_course"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center"
+                    android:fontFamily="@font/hind_light"
+                    android:gravity="start|center"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/humana_light_blue" />
+                <Button
+                    android:id="@+id/btn_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="center"
+                    android:minWidth="100dp"
+                    android:background="@drawable/red_rect_rounded_corner"
+                    android:padding="5dp"
+                    android:text="View"
+                    android:textColor="@color/white" />
+            </LinearLayout>
         </LinearLayout>
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
 
 </layout>

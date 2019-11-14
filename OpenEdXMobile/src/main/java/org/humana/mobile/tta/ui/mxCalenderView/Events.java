@@ -3,19 +3,19 @@ package org.humana.mobile.tta.ui.mxCalenderView;
 public class Events  {
 
     private String DATE;
-    private String eventText;
+    private String title;
 
-    public String getEventText() {
-        return eventText;
+    public String getTitle() {
+        return title;
     }
 
-    public void setEventText(String eventText) {
-        this.eventText = eventText;
+    public void setTitle(String eventText) {
+        this.title = eventText;
     }
 
     public Events(String DATE, String eventText) {
         this.DATE = DATE;
-        this.eventText = eventText;
+        this.title = eventText;
 
     }
 

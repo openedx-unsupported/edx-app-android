@@ -25,6 +25,16 @@ public class Unit {
 
     private String sectionId;
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    private String comment;
+
     public int getUnitHour() {
         return unitHour;
     }

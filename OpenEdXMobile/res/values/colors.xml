@@ -104,7 +104,7 @@
     
     <color name="app_background">#FCFCFD</color>
     <color name="launch_background">#EDF8FA</color>
-    <color name="material_red_500">#EC5957</color>
+    <color name="material_red_500">#ff5e5b</color>
 
     <color name="transparent">#00FFFFFF</color>
     <!--  TTA color palette end  -->
@@ -134,7 +134,7 @@
         <color name="defaultColor">#2962FF</color>
     <!--calendar View-->
 
-    <color name="humana_card_background">#EFF6FE</color>
-    <color name="humana_light_blue">#65AEFB</color>
+    <color name="humana_card_background">#f1f9ff</color>
+    <color name="humana_light_blue">#2699fb</color>
     <color name="humana">#BFDFFD</color>
 </resources>

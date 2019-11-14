@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -50,10 +51,16 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         mActivity.showLoading();
         programId = mDataManager.getLoginPrefs().getProgramId();
         programs = new ArrayList<>();
-        layoutManager = new LinearLayoutManager(mActivity);
         programsAdapter = new ProgramsAdapter(mActivity);
         programsAdapter.setItems(programs);
         selectPrograms = new ArrayList<>();
+
+        boolean tabview = mActivity.getResources().getBoolean(R.bool.isTablet);
+        if (tabview){
+            layoutManager = new GridLayoutManager(mActivity, 2);
+        }else {
+            layoutManager = new LinearLayoutManager(mActivity);
+        }
 
         fetchPrograms();
 
@@ -62,12 +69,12 @@ public class SelectProgramViewModel2 extends BaseViewModel {
             if (selectPrograms.size() > 0) {
                 if (view == itemView) {
                     selectPrograms.clear();
-                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+//                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
                 } else {
                     selectPrograms.clear();
                     selectPrograms.add(item);
-                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
-                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+//                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+//                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     itemView = view;
                     programId = item.getId();
                     mDataManager.getLoginPrefs().setProgramId(programId);
@@ -109,7 +116,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 selectPrograms.add(item);
                 itemView = view;
                 programId = item.getId();
-                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+//                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                 mDataManager.getLoginPrefs().setProgramId(programId);
                 mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
                 mDataManager.getLoginPrefs().setParentId(item.getParent_id());
@@ -227,15 +234,23 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<Program> listener) {
             if (binding instanceof TRowSelectProgSectionBinding) {
                 TRowSelectProgSectionBinding itemBinding = (TRowSelectProgSectionBinding) binding;
+
+                String str = model.getId();
+                String[] parts = str.split("[+]");
+                String part1 = parts[0];
+                String part2 = parts[1];
+                String part3 = parts[2];
+
                 itemBinding.textPrograms.setText(model.getTitle());
+                itemBinding.textCourse.setText(part2+" | " + part3);
 
 
                 Glide.with(mActivity)
                         .load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL() + model.getImage())
-                        .placeholder(ContextCompat.getDrawable(mActivity, R.drawable.circle_all_blue))
+                        .placeholder(ContextCompat.getDrawable(mActivity, R.drawable.placeholder_course_card_image))
                         .into(itemBinding.image);
 
-                itemBinding.llProg.setOnClickListener(v -> {
+                itemBinding.btnView.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }
@@ -244,7 +259,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 if (isPrev.get()) {
                     if (model.getId().equals(mDataManager.getLoginPrefs().getProgramId())) {
                         itemView = itemBinding.llProg;
-                        itemBinding.llProg.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+//                        itemBinding.btnView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     }
                 }
 

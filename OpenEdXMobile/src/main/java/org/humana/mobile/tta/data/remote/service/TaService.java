@@ -7,6 +7,7 @@ import org.humana.mobile.http.constants.ApiConstants;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.local.db.table.CalendarEvents;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
 import org.humana.mobile.tta.data.local.db.table.Feed;
@@ -217,6 +218,9 @@ public interface TaService {
 
     @POST(ApiConstants.URL_MX_GET_ALL_UNITS)
     Call<List<Unit>> getAllUnits(@Body Map<String, Object> parameters);
+
+    @POST(ApiConstants.URL_MX_GET_CALENDAR_EVENT)
+    Call<List<CalendarEvents>> getCalendarEvents(@Body Map<String, Object> parameters);
 
     @GET(ApiConstants.URL_MX_GET_USERS)
     Call<List<ProgramUser>> getUsers(@Query(Constants.KEY_PROGRAM_ID) String programId,

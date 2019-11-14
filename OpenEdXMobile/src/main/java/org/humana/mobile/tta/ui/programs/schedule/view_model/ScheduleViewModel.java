@@ -32,6 +32,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
+import org.humana.mobile.tta.event.UserFollowingChangedEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
@@ -450,11 +451,7 @@ public class ScheduleViewModel extends BaseViewModel {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
                             tag.getSelected(), R.color.black, R.drawable.t_background_tag_filled
                     ));
-                    if (tag.getSelected()){
-                        selectedTag = tag.getDisplayName();
-//                        changesMade = true;
-//                        fetchData();
-                    }
+
                 }
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
@@ -498,6 +495,11 @@ public class ScheduleViewModel extends BaseViewModel {
                         listener.onItemClick(v, model);
                     }
                 });
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                    scheduleBinding.txtTotal.setText(model.getCompletedCount() + "/" + model.getTotalCount() + " units " );
+                }else {
+                    scheduleBinding.txtTotal.setText(model.getTotalCount() + " units ");
+                }
 
 //                scheduleBinding.tvOptions.setOnClickListener(new View.OnClickListener() {
 //                    @Override

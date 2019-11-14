@@ -28,9 +28,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minWidth="60dp"
                 android:layout_gravity="end"
                 android:textColor="@color/gray_5"
                 android:layout_marginEnd="@dimen/_10px"
+                android:gravity="center"
                 android:layout_marginTop="@dimen/_10px"
                 android:fontFamily="@font/hind_semibold"
                 android:padding="5dp"
@@ -129,8 +131,8 @@
                     android:gravity="center|start"
                     android:textColor="@color/gray_5"
                     android:textSize="14sp"
-                    android:padding="5dp"
-                    android:text="@{String.valueOf(period.totalCount) + ` units`}" />
+                    android:paddingStart="15dp"
+                     />
                 <Button
                     android:id="@+id/textview_add"
                     android:layout_width="0dp"

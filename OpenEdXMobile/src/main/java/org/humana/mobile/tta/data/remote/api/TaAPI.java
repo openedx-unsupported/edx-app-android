@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.local.db.table.CalendarEvents;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
 import org.humana.mobile.tta.data.local.db.table.Feed;
@@ -281,7 +282,7 @@ public class TaAPI {
     }
 
     public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId,String role,
-                                     String student_username, long period_id, int take, int skip){
+                                     String student_username, long period_id, int take, int skip,Long eventMonthYear){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);
@@ -291,6 +292,7 @@ public class TaAPI {
         parameters.put(Constants.KEY_ROLE, role);
         parameters.put(Constants.KEY_PERIOD_ID, period_id);
         parameters.put(Constants.KEY_STUDENT_USERNAME, student_username);
+        parameters.put(Constants.KEY_EVENT_CAL_DATE, eventMonthYear);
 
         return taService.getUnits(parameters);
     }
@@ -320,6 +322,18 @@ public class TaAPI {
         parameters.put(Constants.KEY_PERIOD_ID, periodId);
 
         return taService.getAllUnits(parameters);
+    }
+
+    public Call<List<CalendarEvents>> getCalenderEvents(String programId, String sectionId, String role, long eventCalendarDate, int count, int take, int skip){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_TAKE, take);
+        parameters.put(Constants.KEY_SKIP, skip);
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_ROLE, role);
+        parameters.put(Constants.KEY_EVENT_CAL_DATE, eventCalendarDate);
+        parameters.put(Constants.KEY_EVENT_COUNT, count);
+        return taService.getCalendarEvents(parameters);
     }
 
     public Call<List<ProgramUser>> getUsers(String programId, String sectionId, int take, int skip){
@@ -365,17 +379,21 @@ public class TaAPI {
         return taService.savePeriod(parameters);
     }
 
-    public Call<SuccessResponse> approveUnit(String unitId, String username){
+    public Call<SuccessResponse> approveUnit(String unitId, String username, String remarks, int rating){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_UNIT_ID, unitId);
         parameters.put(Constants.KEY_USERNAME, username);
+        parameters.put(Constants.KEY_APPROVE_REMARKS, remarks);
+        parameters.put(Constants.KEY_APPROVE_RATING, String.valueOf(rating));
         return taService.approveUnit(parameters);
     }
 
-    public Call<SuccessResponse> rejectUnit(String unitId, String username){
+    public Call<SuccessResponse> rejectUnit(String unitId, String username, String remarks, int rating){
         Map<String, String> parameters=new HashMap<>();
         parameters.put(Constants.KEY_UNIT_ID, unitId);
         parameters.put(Constants.KEY_USERNAME, username);
+        parameters.put(Constants.KEY_RETURN_REMARKS, remarks);
+        parameters.put(Constants.KEY_RETURN_RATING, String.valueOf(rating));
         return taService.rejectUnit(parameters);
     }
 

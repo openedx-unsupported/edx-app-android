@@ -53,7 +53,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private static final int DEFAULT_SKIP = 0;
 
     public UnitsAdapter unitsAdapter;
-    public FiltersAdapter filtersAdapter;
     public RecyclerView.LayoutManager layoutManager;
     public ProgramUser user;
     private int filterSize = 0;
@@ -79,6 +78,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
     private String selectedDate;
+    private long eventMonthYear;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -94,6 +94,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         this.course = course;
         this.units = units;
         this.selectedDate = DateUtil.getDisplayDate(selectedDate);
+        this.eventMonthYear =selectedDate;
         dispDate.set(DateUtil.getCalendarDate(selectedDate));
 //        units = new ArrayList<>();
         tags = new ArrayList<>();
@@ -106,7 +107,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         frameVisible.set(true);
 
         unitsAdapter = new UnitsAdapter(mActivity);
-        filtersAdapter = new FiltersAdapter(mActivity);
         switchText.set("Calendar View");
 
 //        unitsAdapter.setItems(units);
@@ -323,30 +323,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         });
     }
 
-    private void fetchFilters() {
 
-        mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
-                new OnResponseCallback<List<ProgramFilter>>() {
-                    @Override
-                    public void onSuccess(List<ProgramFilter> data) {
-                        if (!data.isEmpty()) {
-                            allFilters = data;
-                            filterSize = allFilters.size();
-                            filtersVisible.set(true);
-                            filtersAdapter.setItems(allFilters);
-                        } else {
-                            filtersVisible.set(false);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        filtersVisible.set(false);
-                    }
-                });
-
-    }
 
     private void fetchData() {
 
@@ -394,6 +371,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "", 0L, take, skip,
+                eventMonthYear,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -401,16 +379,18 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
+//                        unitsAdapter.setItems(data);
                         units = new ArrayList<>();
                         for (int i = 0; i < data.size(); i++) {
                             if (DateUtil.getDisplayDate(data.get(i).getMyDate()).equals(selectedDate)) {
                                 units.add(data.get(i));
-                                populateUnits(units);
+//                                populateUnits(units);
                                 unitsAdapter.setItems(units);
                                 emptyVisible.set(false);
                             }
                         }
-                        if (units.size()==0){
+//                        populateUnits(data);
+                        if (data.size()==0){
                             emptyVisible.set(true);
                         }
                         unitsAdapter.setLoadingDone();
@@ -477,15 +457,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         changesMade = true;
         allLoaded = false;
         fetchData();
-//        ProgramFilter pf = new ProgramFilter();
-//        pf.setDisplayName(user.username);
-//        pf.setInternalName(user.name);
-//        pf.setId(user.name);
-//        pf.setOrder(user.completedHours);
-//        pf.setShowIn(new ArrayList<String>());
-//        pf.setTags(tags);
-//        allFilters.add(pf);
-//        filtersAdapter.notifyItemChanged(3, 4);
+
 
 
     }
@@ -503,70 +475,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
-    public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
-        /**
-         * Base constructor.
-         * Allocate adapter-related objects here if needed.
-         *
-         * @param context Context needed to retrieve LayoutInflater
-         */
-        public FiltersAdapter(Context context) {
-            super(context);
-        }
-
-        @Override
-        public int getItemLayout(int position) {
-
-            if (user == null) {
-                return R.layout.t_row_filter_drop_down;
-            } else {
-                return R.layout.t_row_text;
-            }
-        }
-
-        public int getItemCount() {
-            if (user != null) {
-                return filterSize + 1;
-            } else {
-                return filterSize;
-            }
-        }
-
-        @Override
-        public void onBind(@NonNull ViewDataBinding binding, @NonNull ProgramFilter model, @Nullable OnRecyclerItemClickListener<ProgramFilter> listener) {
-            if (binding instanceof TRowFilterDropDownBinding) {
-                TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
-
-                List<DropDownFilterView.FilterItem> items = new ArrayList<>();
-                items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
-                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow
-                ));
-                for (ProgramFilterTag tag : model.getTags()) {
-                    items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            false, R.color.white, R.drawable.t_background_tag_filled
-                    ));
-                }
-                dropDownBinding.filterDropDown.setFilterItems(items);
-
-                dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-                    if (prev != null && prev.getItem() != null) {
-                        tags.remove((ProgramFilterTag) prev.getItem());
-                    }
-                    if (item.getItem() != null) {
-                        tags.add((ProgramFilterTag) item.getItem());
-                    }
-
-                    changesMade = true;
-                    allLoaded = false;
-                    mActivity.showLoading();
-                    fetchData();
-                });
-            } else if (binding instanceof TRowTextBinding) {
-                TRowTextBinding textBinding = (TRowTextBinding) binding;
-                textBinding.text.setText(user.name);
-            }
-        }
-    }
 
     public class UnitsAdapter extends MxInfiniteAdapter<Unit> {
         public UnitsAdapter(Context context) {
@@ -576,21 +484,39 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         @Override
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
-                eventsArrayList.clear();
-                if (selectedDate.equals(DateUtil.getDisplayDate(model.getMyDate()))) {
+
+
+
+//                unitBinding.tvStaffDate.setVisibility(View.GONE);
+//                unitBinding.tvMyDate.setVisibility(View.GONE);
+                if (DateUtil.getDisplayDate(model.getMyDate()).equals(selectedDate)) {
+//                    CustomCalendarView.createEvents(eventsArrayList);
                     TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                     unitBinding.setUnit(model);
-                    unitBinding.unitCode.setText(model.getCode());
-                    unitBinding.unitTitle.setText(model.getTitle());
-                    if (!TextUtils.isEmpty(model.getPeriodName())) {
-                        unitBinding.unitCode.append("    |    " + model.getPeriodName());
+                    emptyVisible.set(false);
+                    unitBinding.unitCode.setText(model.getTitle());
+                    unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
+                            + model.getUnitHour() + " hrs");
+                    if (!model.getStatus().isEmpty()) {
+                        if (model.getStaffDate()>0) {
+                            unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                        }
+                    }else {
+                        unitBinding.tvStaffDate.setVisibility(View.GONE);
                     }
-                    unitBinding.layoutCheckbox.setVisibility(View.GONE);
-
+                    unitBinding.tvDescription.setText(model.getDesc());
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                        if (model.getComment() != null) {
+                            unitBinding.tvComment.setText(model.getComment());
+                        } else {
+                            unitBinding.tvComment.setVisibility(View.GONE);
+                        }
+                    }else {
+                        unitBinding.tvComment.setVisibility(View.GONE);
+                    }
                     if (model.getMyDate() > 0) {
                         unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                        Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()), model.getTitle());
-                        eventsArrayList.add(e);
                     } else {
                         unitBinding.tvMyDate.setText(R.string.proposed_date);
                     }
@@ -598,28 +524,27 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                     String role = mDataManager.getLoginPrefs().getRole();
                     if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
                         if (model.getStaffDate() > 0) {
-                            unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                            Events e = new Events(DateUtil.getDisplayDate(model.getStaffDate()), model.getTitle());
-                            eventsArrayList.add(e);
+                            unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                            unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
                         } else {
-                            unitBinding.tvStaffDate.setVisibility(View.GONE);
+                            unitBinding.tvSubmittedDate.setVisibility(View.GONE);
                         }
                     }
-
                     if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
                             !TextUtils.isEmpty(model.getStatus())) {
                         try {
                             switch (UnitStatusType.valueOf(model.getStatus())) {
                                 case Completed:
-                                    unitBinding.statusIcon.setImageDrawable(
-                                            ContextCompat.getDrawable(getContext(), R.drawable.t_icon_done));
-                                    unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                    unitBinding.card.setBackgroundColor(
+                                            ContextCompat.getColor(getContext(), R.color.secondary_green));
                                     break;
                                 case InProgress:
-                                    unitBinding.statusIcon.setImageDrawable(
-                                            ContextCompat.getDrawable(getContext(), R.drawable.t_icon_refresh));
-                                    unitBinding.statusIcon.setVisibility(View.VISIBLE);
+                                    unitBinding.card.setBackgroundColor(
+                                            ContextCompat.getColor(getContext(), R.color.humana_card_background));
+                                    break;
+                                case Pending:
+                                    unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
+                                            R.color.material_red_500));
                                     break;
                             }
                         } catch (IllegalArgumentException e) {
@@ -628,34 +553,27 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                     } else {
                         unitBinding.statusIcon.setVisibility(View.GONE);
                     }
-//                }
 
-                    unitBinding.tvMyDate.setOnClickListener(v -> {
-                        if (listener != null) {
-                            listener.onItemClick(v, model);
-                        }
-                    });
+//                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
+//                    eventsArrayList.add(ev);
+//                    CustomCalendarView.createEvents(eventsArrayList);
 
-                    unitBinding.getRoot().setOnClickListener(v -> {
-                        if (listener != null) {
-                            listener.onItemClick(v, model);
-                        }
-                    });
+                unitBinding.tvMyDate.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                unitBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
                 } else {
-//                    dispDate.set(selectedDate);
                     emptyVisible.set(true);
                 }
             }
         }
     }
-
-    public void expandBottomSheet() {
-        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        } else {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-    }
-
 
 }

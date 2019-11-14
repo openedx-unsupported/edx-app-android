@@ -18,6 +18,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
+import org.humana.mobile.databinding.TRowStudentTabViewBinding;
 import org.humana.mobile.databinding.TRowStudentsGridBinding;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
@@ -40,6 +41,7 @@ import de.greenrobot.event.EventBus;
 public class StudentsViewModel extends BaseViewModel {
 
     public RecyclerView.LayoutManager layoutManager;
+    public RecyclerView.LayoutManager linearLayoutManager;
     public List<ProgramUser> users;
 
     public List<ProgramFilter> allFilters;
@@ -48,6 +50,7 @@ public class StudentsViewModel extends BaseViewModel {
 
     public FiltersAdapter filtersAdapter;
     public UsersAdapter usersAdapter;
+    public GridUsersAdapter gridUsersAdapter;
 
     private static final int TAKE = 10;
     private static final int SKIP = 0;
@@ -58,17 +61,24 @@ public class StudentsViewModel extends BaseViewModel {
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableBoolean isTabView = new ObservableBoolean();
 
 
     public StudentsViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
         usersAdapter = new UsersAdapter(mActivity);
+        gridUsersAdapter = new GridUsersAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
         users = new ArrayList<>();
         filters = new ArrayList<>();
         usersAdapter.setItems(users);
+        gridUsersAdapter.setItems(users);
         usersAdapter.setItemClickListener((view, item) -> {
+            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+
+        });
+        gridUsersAdapter.setItemClickListener((view, item) -> {
             mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
 
         });
@@ -85,12 +95,13 @@ public class StudentsViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         boolean tabsize = getActivity().getResources().getBoolean(R.bool.isTablet);
-        if (tabsize){
+        if (tabsize) {
             layoutManager = new GridLayoutManager(mActivity, 2);
-    }else
-    {
-        layoutManager = new LinearLayoutManager(mActivity);
-    }
+            isTabView.set(true);
+        } else {
+            linearLayoutManager = new GridLayoutManager(mActivity, 1);
+            isTabView.set(false);
+        }
 
         changesMade = true;
 //        fetchData();
@@ -109,6 +120,7 @@ public class StudentsViewModel extends BaseViewModel {
                         }
                         populateStudents(data);
                         usersAdapter.setLoadingDone();
+                        gridUsersAdapter.setLoadingDone();
                     }
 
                     @Override
@@ -116,6 +128,7 @@ public class StudentsViewModel extends BaseViewModel {
                         mActivity.hideLoading();
                         allLoaded = true;
                         usersAdapter.setLoadingDone();
+                        gridUsersAdapter.setLoadingDone();
                         toggleEmptyVisibility();
                     }
                 });
@@ -136,6 +149,7 @@ public class StudentsViewModel extends BaseViewModel {
         if (changesMade) {
             skip = 0;
             usersAdapter.reset(true);
+            gridUsersAdapter.reset(true);
 //            setFilters();
         }
 
@@ -179,33 +193,33 @@ public class StudentsViewModel extends BaseViewModel {
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.schedule.name(),
                 new OnResponseCallback<List<ProgramFilter>>() {
-            @Override
-            public void onSuccess(List<ProgramFilter> data) {
-                List<ProgramFilter> removables = new ArrayList<>();
-                for (ProgramFilter filter : data) {
-                    if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                            !filter.getShowIn().contains("students")) {
-                        removables.add(filter);
+                    @Override
+                    public void onSuccess(List<ProgramFilter> data) {
+                        List<ProgramFilter> removables = new ArrayList<>();
+                        for (ProgramFilter filter : data) {
+                            if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
+                                    !filter.getShowIn().contains("students")) {
+                                removables.add(filter);
+                            }
+                        }
+                        for (ProgramFilter filter : removables) {
+                            data.remove(filter);
+                        }
+
+                        if (!data.isEmpty()) {
+                            allFilters = data;
+                            filtersVisible.set(true);
+                            filtersAdapter.setItems(data);
+                        } else {
+                            filtersVisible.set(false);
+                        }
                     }
-                }
-                for (ProgramFilter filter : removables) {
-                    data.remove(filter);
-                }
 
-                if (!data.isEmpty()) {
-                    allFilters = data;
-                    filtersVisible.set(true);
-                    filtersAdapter.setItems(data);
-                } else {
-                    filtersVisible.set(false);
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                filtersVisible.set(false);
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        filtersVisible.set(false);
+                    }
+                });
 
     }
 
@@ -222,6 +236,7 @@ public class StudentsViewModel extends BaseViewModel {
 
         if (newItemsAdded) {
             usersAdapter.notifyItemRangeInserted(users.size() - n, n);
+            gridUsersAdapter.notifyItemRangeInserted(users.size() - n, n);
         }
 
         toggleEmptyVisibility();
@@ -244,12 +259,84 @@ public class StudentsViewModel extends BaseViewModel {
         @Override
         public void onBind(@NonNull ViewDataBinding binding, @NonNull ProgramUser model,
                            @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
+
+
+                if (binding instanceof TRowStudentTabViewBinding) {
+                    TRowStudentTabViewBinding itemBinding = (TRowStudentTabViewBinding) binding;
+                    itemBinding.txtCompleted.setText(String.format("%s hrs", String.valueOf(model.completedHours)));
+                    itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.pendingCount)));
+                    itemBinding.userName.setText(model.name);
+                    if (model.profileImage != null) {
+                        Glide.with(mActivity).load(
+                                mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
+                                        model.profileImage.getImageUrlFull())
+                                .centerCrop()
+                                .placeholder(R.drawable.profile)
+                                .into(itemBinding.userImage);
+                    }
+                    if (model.education != null) {
+                        itemBinding.textDegree.setText(model.education);
+                    }
+//                boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
+//                if (!tabletSize){
+//                    itemBinding.txtCompleted.setCompoundDrawables(null,null,null,null);
+//                    itemBinding.txtPending.setCompoundDrawables(null, null,null,null);
+//                }
+
+                    if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
+                        itemBinding.llStatus.setVisibility(View.GONE);
+                    }
+
+                    itemBinding.txtCompleted.setOnClickListener(v -> {
+                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                            Bundle b = new Bundle();
+                            b.putString(Router.EXTRA_USERNAME, model.username);
+                            ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+
+//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
+                        } else {
+                            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
+                        }
+                    });
+                    itemBinding.txtPending.setOnClickListener(v -> {
+                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                            Bundle b = new Bundle();
+                            b.putString(Router.EXTRA_USERNAME, model.username);
+                            ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+
+//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
+                        } else {
+                            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
+                        }
+                    });
+
+                    itemBinding.getRoot().setOnClickListener(v -> {
+                        if (listener != null) {
+                            listener.onItemClick(v, model);
+                        }
+                    });
+                }
+
+
+        }
+    }
+    public class GridUsersAdapter extends MxInfiniteAdapter<ProgramUser> {
+
+        public GridUsersAdapter(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onBind(@NonNull ViewDataBinding binding, @NonNull ProgramUser model,
+                           @Nullable OnRecyclerItemClickListener<ProgramUser> listener) {
+
+
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
                 itemBinding.txtCompleted.setText(String.format("%s hrs", String.valueOf(model.completedHours)));
                 itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.pendingCount)));
                 itemBinding.userName.setText(model.name);
-                if (model.profileImage != null){
+                if (model.profileImage != null) {
                     Glide.with(mActivity).load(
                             mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
                                     model.profileImage.getImageUrlFull())
@@ -266,43 +353,43 @@ public class StudentsViewModel extends BaseViewModel {
 //                    itemBinding.txtPending.setCompoundDrawables(null, null,null,null);
 //                }
 
-                if(!mDataManager.getLoginPrefs().getRole().equals("Instructor")){
+                if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
                     itemBinding.llStatus.setVisibility(View.GONE);
                 }
 
                 itemBinding.txtCompleted.setOnClickListener(v -> {
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, model.username);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
 
 //                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
-                    }else {
+                    } else {
                         mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
                     }
                 });
                 itemBinding.txtPending.setOnClickListener(v -> {
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, model.username);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
 
 //                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
-                    }else {
+                    } else {
                         mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
                     }
                 });
 
                 itemBinding.getRoot().setOnClickListener(v -> {
-                    if (listener != null){
+                    if (listener != null) {
                         listener.onItemClick(v, model);
                     }
                 });
-
             }
+
+
         }
     }
-
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
         public FiltersAdapter(Context context) {
             super(context);
@@ -349,6 +436,7 @@ public class StudentsViewModel extends BaseViewModel {
     public void unRegisterEventBus() {
         EventBus.getDefault().unregister(this);
     }
+
     public void onEventMainThread(ProgramUser event) {
         ProgramUser period = new ProgramUser();
 
@@ -357,6 +445,12 @@ public class StudentsViewModel extends BaseViewModel {
             ProgramUser p = users.get(position);
             p.pendingCount = period.pendingCount + event.pendingCount;
             usersAdapter.notifyItemChanged(position);
+        }
+        int position2 = gridUsersAdapter.getItemPosition(period);
+        if (position >= 0) {
+            ProgramUser p = users.get(position);
+            p.pendingCount = period.pendingCount + event.pendingCount;
+            gridUsersAdapter.notifyItemChanged(position);
         }
     }
 }
