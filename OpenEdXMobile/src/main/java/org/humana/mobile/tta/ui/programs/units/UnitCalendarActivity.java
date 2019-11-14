@@ -1,5 +1,6 @@
 package org.humana.mobile.tta.ui.programs.units;
 
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -8,9 +9,11 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 
 import org.humana.mobile.R;
+import org.humana.mobile.databinding.FragUnitCalendarViewBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
+import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
 import org.humana.mobile.view.Router;
 
@@ -34,10 +37,16 @@ public class UnitCalendarActivity extends BaseVMActivity {
         }
 
         viewModel = new UnitCalendarViewModel(this, course);
-        binding(R.layout.frag_unit_calendar_view, viewModel);
-
+        ViewDataBinding viewDataBinding= binding(R.layout.frag_unit_calendar_view, viewModel);
+        FragUnitCalendarViewBinding binding= (FragUnitCalendarViewBinding) viewDataBinding;
         setSupportActionBar(findViewById(R.id.toolbar));
-
+        binding.calendarView.setCalendarListener(new CustomCalendarView.CalendarListener() {
+            @Override
+            public void onAction(long date) {
+                viewModel.eventDisplayDate = date;
+                viewModel.fetchUnits();
+            }
+        });
     }
 
     @Override

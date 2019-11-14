@@ -298,7 +298,7 @@ public class ScheduleViewModel extends BaseViewModel {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
-//                        periodList = data;
+                        periodList = data;
                         populatePeriods(data);
                         periodAdapter.setLoadingDone();
                     }
@@ -496,9 +496,9 @@ public class ScheduleViewModel extends BaseViewModel {
                     }
                 });
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                    scheduleBinding.txtTotal.setText(model.getCompletedCount() + "/" + model.getTotalCount() + " units " );
+                    scheduleBinding.txtTotal.setText(model.getCompletedCount() + "/" + model.getTotalCount() + " Units " );
                 }else {
-                    scheduleBinding.txtTotal.setText(model.getTotalCount() + " units ");
+                    scheduleBinding.txtTotal.setText(model.getTotalCount() + " Units ");
                 }
 
 //                scheduleBinding.tvOptions.setOnClickListener(new View.OnClickListener() {

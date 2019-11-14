@@ -242,7 +242,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 String part3 = parts[2];
 
                 itemBinding.textPrograms.setText(model.getTitle());
-                itemBinding.textCourse.setText(part2+" | " + part3);
+                itemBinding.textCourse.setText("Program No : "+part2+" | " + part3);
 
 
                 Glide.with(mActivity)

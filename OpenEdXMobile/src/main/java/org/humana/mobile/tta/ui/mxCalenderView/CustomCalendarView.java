@@ -23,11 +23,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
+
 public class CustomCalendarView extends LinearLayout {
+    public interface CalendarListener{
+        void onAction(long date);
+    }
+    private CalendarListener mListener;
     ImageButton nextButton, previousButton;
     static TextView currentDate;
     static GridView calGrid;
     private static final int MAX_CALENDAR_DAYS = 42;
+    private static Long eventDay;
     static Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     static Context context;
     public static UnitCalendarViewModel.CustomCalendarAdapter adapter;
@@ -51,19 +58,25 @@ public class CustomCalendarView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 calendar.add(Calendar.MONTH, -1);
+//                eventDay = calendar.getTimeInMillis();
                 setUpCalendar();
+
             }
         });
         nextButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 calendar.add(Calendar.MONTH, 1);
+//                eventDay = calendar.getTimeInMillis();
+
                 setUpCalendar();
             }
         });
 
     }
-
+public  void setCalendarListener(CalendarListener listener){
+    this.mListener=listener;
+}
 
 
     private void initializeView() {
@@ -78,6 +91,7 @@ public class CustomCalendarView extends LinearLayout {
 
     public void setUpCalendar() {
         String date = simpleDateFormat.format(calendar.getTime());
+        eventDay = calendar.getTimeInMillis();
         currentDate.setText(date);
         dates.clear();
 
@@ -93,10 +107,14 @@ public class CustomCalendarView extends LinearLayout {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
         }
+        if(mListener!=null)
+            mListener.onAction(eventDay);
+
         setupAdapter();
     }
 
-    public static void createEvents(List<Events> events) {
+    public static void createEvents(List<Events> events, Long eDay) {
+        eventDay = eDay;
         Events e;
         eventsList.clear();
         for (int i = 0; i < events.size(); i++) {
@@ -108,6 +126,7 @@ public class CustomCalendarView extends LinearLayout {
 
 
     public static void setupAdapter() {
+//        EventBus.getDefault().post(eventDay);
         adapter = new UnitCalendarViewModel.CustomCalendarAdapter(context, dates, calendar, eventsList);
         calGrid.setAdapter(adapter);
         adapter.notifyDataSetChanged();

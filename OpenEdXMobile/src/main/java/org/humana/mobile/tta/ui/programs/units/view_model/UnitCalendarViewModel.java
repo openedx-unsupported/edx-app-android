@@ -302,11 +302,11 @@ public class UnitCalendarViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
-        fetchData();
+        fetchUnits();
 
     }
 
-    private void fetchUnits() {
+    public void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(),  mDataManager.getLoginPrefs().getRole(), "",
@@ -326,7 +326,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
                                     data.get(i).getTitle());
                             eventsArrayList.add(et);
                         }
-                        CustomCalendarView.createEvents(eventsArrayList);
+                        CustomCalendarView.createEvents(eventsArrayList, eventDisplayDate);
 //                        unitsAdapter.setItems(data);
 //                        unitsAdapter.notifyDataSetChanged();
 //                        unitsAdapter.setLoadingDone();
@@ -353,7 +353,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         mActivity.hideLoading();
 
                         for (int i = 0 ; i<data.size(); i++){
-                            CustomCalendarView.createEvents(eventsArrayList);
+                            CustomCalendarView.createEvents(eventsArrayList, eventDisplayDate);
                         }
                     }
 
@@ -419,8 +419,10 @@ public class UnitCalendarViewModel extends BaseViewModel {
                     units.get(i).getTitle());
             eventsArrayList.add(et);
         }
-        CustomCalendarView.createEvents(eventsArrayList);
+        CustomCalendarView.createEvents(eventsArrayList, eventDisplayDate);
     }
+
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseEnrolledEvent event) {
@@ -435,7 +437,14 @@ public class UnitCalendarViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
-
+    public void onEventMainThread(Long eventDate) {
+//        filters.clear();
+//        changesMade = true;
+//        allLoaded = false;
+//        fetchData();
+//        eventDisplayDate = eventDate;
+//        fetchUnits();
+    }
     public class UnitsAdapter extends MxInfiniteAdapter<Unit> {
         public UnitsAdapter(Context context) {
             super(context);
@@ -553,8 +562,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
             this.currentDate = currentDate;
             this.events = events;
             inflater = LayoutInflater.from(context);
-            eventDisplayDate = currentDate.getTimeInMillis();
-
         }
 
 //        @androidx.annotation.Nullable
@@ -576,7 +583,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
             int displayYear = dateCalendar.get(Calendar.YEAR);
             int currentMonth = currentDate.get(Calendar.MONTH) + 1;
             int currentYear = currentDate.get(Calendar.YEAR);
-            eventDisplayDate = dateCalendar.getTimeInMillis();
 
 
             if (view == null) {

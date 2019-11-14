@@ -49,6 +49,7 @@
                     android:fontFamily="@font/hind_light"
                     android:gravity="start|center"
                     android:paddingLeft="5dp"
+                    android:layout_marginLeft="5dp"
                     android:textColor="@color/humana_light_blue" />
                 <Button
                     android:id="@+id/btn_view"
