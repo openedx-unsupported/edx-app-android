@@ -25,17 +25,17 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.FormOption;
 import org.edx.mobile.user.FormOptions;
-import org.edx.mobile.user.GetFormOptionsTask;
+import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -46,6 +46,9 @@ public class FormFieldSelectFragment extends BaseFragment {
 
     @InjectView(android.R.id.list)
     private ListView listView;
+
+    private static final String COUNTRIES = "countries";
+    private static final String LANGUAGES = "languages";
 
     @Nullable
     @Override
@@ -61,15 +64,13 @@ public class FormFieldSelectFragment extends BaseFragment {
         final FormOptions formOptions = formField.getOptions();
         final ArrayAdapter<FormOption> adapter = new ArrayAdapter<>(getActivity(), R.layout.edx_selectable_list_item, options);
         if (formOptions.getReference() != null) {
-            new GetFormOptionsTask(getActivity(), formOptions.getReference()) {
-                @Override
-                protected void onSuccess(List<FormOption> formOptions) throws Exception {
-                    options.addAll(formOptions);
-                    adapter.notifyDataSetChanged();
-                    selectCurrentOption();
-                }
-            }.execute();
-
+            if (COUNTRIES.equals(formOptions.getReference())) {
+                options.addAll(LocaleUtils.getCountries());
+            } else if (LANGUAGES.equals(formOptions.getReference())) {
+                options.addAll(LocaleUtils.getLanguages());
+            }
+            adapter.notifyDataSetChanged();
+            selectCurrentOption();
         } else if (formOptions.getRangeMin() != null && formOptions.getRangeMax() != null) {
             for (int i = formOptions.getRangeMax(); i >= formOptions.getRangeMin(); --i) {
                 options.add(new FormOption(String.valueOf(i), String.valueOf(i)));
