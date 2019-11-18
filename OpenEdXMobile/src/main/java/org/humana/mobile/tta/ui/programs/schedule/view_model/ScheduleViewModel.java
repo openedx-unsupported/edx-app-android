@@ -288,7 +288,6 @@ public class ScheduleViewModel extends BaseViewModel {
 
 
     private void getPeriods() {
-        periodList.clear();
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
                 , take, skip, new OnResponseCallback<List<Period>>() {
@@ -298,7 +297,7 @@ public class ScheduleViewModel extends BaseViewModel {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
-                        periodList = data;
+                        changesMade = false;
                         populatePeriods(data);
                         periodAdapter.setLoadingDone();
                     }

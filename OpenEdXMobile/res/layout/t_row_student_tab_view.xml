@@ -16,7 +16,7 @@
         android:shadowColor="@color/gray_1"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,28 +107,27 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:padding="@dimen/_10px"
                     android:id="@+id/img_insta"
-                    android:src="@drawable/ic_insta" />
+                    android:layout_margin="10dp"
+                    android:src="@drawable/linkdin_icon" />
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:padding="@dimen/_10px"
                     android:id="@+id/img_twitter"
+                    android:layout_margin="10dp"
                     android:src="@drawable/ic_twitter" />
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:padding="@dimen/_10px"
-                    android:src="@drawable/ic_facebook_img"
-                    android:layout_margin="5dp"
-                    android:tint="@color/com_facebook_blue"/>
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:padding="@dimen/_10px"
-                    android:id="@+id/img_web"
-                    android:src="@drawable/internet_web_browser"/>
+                    android:layout_margin="10dp"
+                    android:id="@+id/img_facebook"
+                    android:src="@drawable/facebook_icon" />
+                <!--<ImageView-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:padding="@dimen/_10px"-->
+                    <!--android:id="@+id/img_web"-->
+                    <!--android:src="@drawable/internet_web_browser"/>-->
             </LinearLayout>
 
             <!--<Button-->

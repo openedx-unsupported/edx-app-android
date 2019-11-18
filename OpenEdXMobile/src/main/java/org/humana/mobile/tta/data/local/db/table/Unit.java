@@ -25,6 +25,17 @@ public class Unit {
 
     private String sectionId;
 
+    public long getCommonDate() {
+        return commonDate;
+    }
+
+    public void setCommonDate(long commonDate) {
+        this.commonDate = commonDate;
+    }
+
+    @SerializedName("commonDate")
+    private long commonDate;
+
     public String getComment() {
         return comment;
     }
@@ -43,6 +54,7 @@ public class Unit {
         this.unitHour = unitHour;
     }
 
+    @SerializedName("unitHour")
     private int unitHour;
 
     public String getType() {
@@ -63,6 +75,7 @@ public class Unit {
         this.statusDate = statusDate;
     }
 
+    @SerializedName("statusDate")
     private long statusDate;
 
     @SerializedName("period_id")

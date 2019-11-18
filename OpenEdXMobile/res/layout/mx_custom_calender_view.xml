@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="viewModel"
             type="org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel" />
     </data>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -181,6 +184,10 @@
 
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fl_bottom_sheet">
         <GridView
             android:id="@+id/cal_grid"
             android:layout_width="match_parent"
@@ -190,6 +197,7 @@
             android:numColumns="7">
 
         </GridView>
-
+        </FrameLayout>
     </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
 </layout>

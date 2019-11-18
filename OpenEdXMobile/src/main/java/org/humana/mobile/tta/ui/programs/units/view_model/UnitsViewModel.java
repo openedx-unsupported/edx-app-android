@@ -560,25 +560,26 @@ public class UnitsViewModel extends BaseViewModel {
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                         + model.getUnitHour() + " hrs");
-                if (!model.getStatus().isEmpty()) {
-                    if (model.getStaffDate()>0) {
-                        unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                if (!model.getStatus().equals("")) {
+                    if (model.getStatusDate()>0) {
+                        unitBinding.tvStaffDate.setText(model.getStatus() + ": " + DateUtil.getDisplayDate(model.getStatusDate()));
                         unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
                     }
                 }else {
-                    unitBinding.tvStaffDate.setVisibility(View.GONE);
+                    unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                 }
                 unitBinding.tvDescription.setText(model.getDesc());
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                    if (model.getComment() != null) {
-                        unitBinding.tvComment.setText(model.getComment());
-                    } else {
+                    if (!model.getStatus().equals("")) {
+                        unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                    }
+                    else {
                         unitBinding.tvComment.setVisibility(View.GONE);
                     }
                 }else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                 }
-                unitBinding.layoutCheckbox.setVisibility(View.GONE);
+                unitBinding.checkbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {
                     unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
@@ -592,8 +593,11 @@ public class UnitsViewModel extends BaseViewModel {
                         unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
                         unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
                     } else {
-                        unitBinding.tvSubmittedDate.setVisibility(View.GONE);
+                        unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                     }
+                }else {
+                    unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+
                 }
 
                 if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&

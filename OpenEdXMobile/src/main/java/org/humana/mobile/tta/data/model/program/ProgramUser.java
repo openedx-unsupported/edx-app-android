@@ -4,12 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 import org.humana.mobile.user.ProfileImage;
 
+import java.util.List;
+
 public class ProgramUser {
 
     public String username;
 
     public String name;
 
+    @SerializedName("education")
     public String education;
 
     @SerializedName("profile_image")
@@ -23,5 +26,8 @@ public class ProgramUser {
 
     @SerializedName("pending_count")
     public long pendingCount;
+
+
+    public List<SocialProfile> social_profile;
 
 }

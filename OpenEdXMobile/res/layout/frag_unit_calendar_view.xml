@@ -37,9 +37,11 @@
                 app:titleTextAppearance="@style/ta_toolbar_title_style" />
 
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+                android:id="@+id/fl_bottom_sheet"
                 android:orientation="vertical">
 
                 <org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView
@@ -84,52 +86,10 @@
                         android:textColor="@color/black" />
                 </android.support.v7.widget.CardView>
 
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/fl_unit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8px">
-
-                <com.maurya.mx.mxlib.view.MxRecyclerView
-                    infinite_load_more_listener="@{viewModel.loadMoreListener}"
-                    infinite_recycler_adapter="@{viewModel.unitsAdapter}"
-                    layout_manager="@{viewModel.layoutManager}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="@{viewModel.emptyVisible ? View.GONE : View.VISIBLE}"
-                    app:mx_itemLayout="@layout/t_row_unit" />
-
-                <!--<LinearLayout-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:visibility="gone">-->
-
-                    <!--<ImageView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--app:srcCompat="@drawable/t_icon_error" />-->
-
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--android:layout_marginStart="@dimen/_70px"-->
-                        <!--android:layout_marginTop="@dimen/_46px"-->
-                        <!--android:layout_marginEnd="@dimen/_70px"-->
-                        <!--android:fontFamily="@font/hind_regular"-->
-                        <!--android:gravity="center"-->
-                        <!--android:text="No event found for this date"-->
-                        <!--android:textColor="@color/primary_cyan"-->
-                        <!--android:textSize="12sp" />-->
-
-                <!--</LinearLayout>-->
 
             </FrameLayout>
+
         </LinearLayout>
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>

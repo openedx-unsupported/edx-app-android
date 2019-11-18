@@ -30,6 +30,8 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
+import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitWebviewActivity;
+import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -224,6 +226,13 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 itemBinding.btnReject.setOnClickListener(v -> {
                     approveReturn(model.getUnit_id());
                 });
+                itemBinding.llCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ActivityUtil.gotoPage(mActivity, PendingUnitWebviewActivity.class);
+                    }
+                });
+
 
 
             }

@@ -241,6 +241,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                                 unit.setMyDate(data);
                                 unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
                                 mActivity.showLongSnack("Proposed date set successfully");
+
                             }
 
                             @Override
@@ -494,24 +495,47 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                         + model.getUnitHour() + " hrs");
-                if (!model.getStatus().isEmpty()) {
-                    if (model.getStaffDate()>0) {
+                if (!model.getStatus().equals("")) {
+                    if (model.getStatusDate()>0) {
                         if (!DateUtil.getDisplayDate(model.getStatusDate()).equals("01 Jan 1970")) {
-                            unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                            unitBinding.tvStaffDate.setText(model.getStatus() + ": " + DateUtil.getDisplayDate(model.getStatusDate()));
                             unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
                         }
                     }
                 }else {
-                    unitBinding.tvStaffDate.setVisibility(View.GONE);
+                    unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
+                }
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                    if (model.getStaffDate() > 0) {
+                        if (!DateUtil.getDisplayDate(model.getStaffDate()).equals("01 Jan 1970")) {
+                            unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                            unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
+                        } else {
+                            unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                }else {
+                    unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+                }
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                    if (!model.getStatus().equals("")) {
+                        unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                    }
+                    else {
+                        unitBinding.tvComment.setVisibility(View.GONE);
+                    }
+                }else {
+                    unitBinding.tvComment.setVisibility(View.GONE);
                 }
                 unitBinding.tvDescription.setText(model.getDesc());
-                unitBinding.layoutCheckbox.setVisibility(View.GONE);
+                unitBinding.checkbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {
                     unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                 } else {
                     unitBinding.tvMyDate.setText(R.string.proposed_date);
                 }
+                unitBinding.tvMyDate.setVisibility(View.VISIBLE);
 
 
                 String role = mDataManager.getLoginPrefs().getRole();

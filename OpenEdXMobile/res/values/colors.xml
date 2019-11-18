@@ -137,4 +137,9 @@
     <color name="humana_card_background">#f1f9ff</color>
     <color name="humana_light_blue">#2699fb</color>
     <color name="humana">#BFDFFD</color>
+    <color name="humana_rectangle">#bfdfff</color>
+    <color name="humana_course">#33FFAC</color>
+    <color name="humana_experience">#EF98FC</color>
+    <color name="humana_study">#FAD884</color>
+
 </resources>

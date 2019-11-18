@@ -89,7 +89,7 @@
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 app:srcCompat="@drawable/ic_add"
                 android:onClick="@{()->viewModel.addUnits()}"
-                android:visibility="@{viewModel.addUnitsVisible ? View.VISIBLE : View.GONE}"/>
+                android:visibility="visible"/>
 
         </FrameLayout>
 

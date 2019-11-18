@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.ui.base.TaBaseActivity;
+import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 
 /**
@@ -13,6 +14,7 @@ import org.humana.mobile.tta.ui.base.TaBaseFragment;
 public class BaseViewModel {
     protected TaBaseActivity mActivity;
     protected TaBaseFragment mFragment;
+    protected TaBaseBottomsheetFragment mBottomSheetFragment;
     protected DataManager mDataManager;
 
     public BaseViewModel(BaseVMActivity activity) {
@@ -24,6 +26,12 @@ public class BaseViewModel {
     public BaseViewModel(Context context, TaBaseFragment fragment) {
         mActivity = (TaBaseActivity) context;
         mFragment = fragment;
+        mDataManager = DataManager.getInstance(context);
+    }
+
+    public BaseViewModel(Context context, TaBaseBottomsheetFragment fragment) {
+        mActivity = (TaBaseActivity) context;
+        mBottomSheetFragment = fragment;
         mDataManager = DataManager.getInstance(context);
     }
 

@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/launch_content"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@{viewModel.image}" />
 
         <LinearLayout

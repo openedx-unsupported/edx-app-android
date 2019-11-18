@@ -1,9 +1,12 @@
 package org.humana.mobile.tta.ui.mxCalenderView;
 
 import android.content.Context;
+import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -12,9 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import org.humana.mobile.R;
-import org.humana.mobile.tta.data.local.db.table.CalendarEvents;
+import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
 import org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
-import org.humana.mobile.util.DateUtil;
+import org.humana.mobile.tta.utils.ActivityUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,12 +26,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.greenrobot.event.EventBus;
-
 public class CustomCalendarView extends LinearLayout {
-    public interface CalendarListener{
+
+    public interface CalendarListener {
         void onAction(long date);
     }
+
     private CalendarListener mListener;
     ImageButton nextButton, previousButton;
     static TextView currentDate;
@@ -74,9 +77,10 @@ public class CustomCalendarView extends LinearLayout {
         });
 
     }
-public  void setCalendarListener(CalendarListener listener){
-    this.mListener=listener;
-}
+
+    public void setCalendarListener(CalendarListener listener) {
+        this.mListener = listener;
+    }
 
 
     private void initializeView() {
@@ -86,6 +90,19 @@ public  void setCalendarListener(CalendarListener listener){
         previousButton = view.findViewById(R.id.ib_prev);
         currentDate = view.findViewById(R.id.tv_date);
         calGrid = view.findViewById(R.id.cal_grid);
+
+        calGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AppCompatActivity activity = (AppCompatActivity) context;
+                eventDay = dates.get(position).getTime();
+                ActivityCalendarBottomSheet bottomSheetDialogFragment = new ActivityCalendarBottomSheet(eventDay);
+                bottomSheetDialogFragment.show(activity.getSupportFragmentManager(),
+                        "units");
+//                ActivityUtil.addFragmentToActivity(activity.getSupportFragmentManager(),
+//                        new ActivityCalendarBottomSheet(eventDay),R.id.fl_bottom_sheet);
+            }
+        });
     }
 
 
@@ -107,8 +124,9 @@ public  void setCalendarListener(CalendarListener listener){
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
         }
-        if(mListener!=null)
+        if (mListener != null) {
             mListener.onAction(eventDay);
+        }
 
         setupAdapter();
     }
@@ -118,7 +136,7 @@ public  void setCalendarListener(CalendarListener listener){
         Events e;
         eventsList.clear();
         for (int i = 0; i < events.size(); i++) {
-            e = new Events(events.get(i).getDATE(), events.get(i).getTitle());
+            e = new Events(events.get(i).getDATE(), events.get(i).getTitle(), events.get(i).getType());
             eventsList.add(e);
         }
         setupAdapter();
@@ -131,4 +149,6 @@ public  void setCalendarListener(CalendarListener listener){
         calGrid.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
+
+
 }

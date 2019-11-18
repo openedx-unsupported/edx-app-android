@@ -22,6 +22,7 @@ import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
+import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
@@ -125,7 +126,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                         if (removed.contains(item)){
                             removed.remove(item);
                             proposedDateModified.remove(item.getId());
-                            item.setMyDate(0);
+//                            item.setMyDate(0);
                         }else {
                             removed.add(item);
                         }
@@ -133,7 +134,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                         if (added.contains(item)){
                             added.remove(item);
                             proposedDateAdded.remove(item.getId());
-                            item.setMyDate(0);
+//                            item.setMyDate(0);
                         }else {
                             added.add(item);
                         }
@@ -296,22 +297,22 @@ public class AddUnitsViewModel extends BaseViewModel {
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.addunits.name(),
                 new OnResponseCallback<List<ProgramFilter>>() {
-            @Override
-            public void onSuccess(List<ProgramFilter> data) {
-                if (!data.isEmpty()) {
-                    allFilters = data;
-                    filtersVisible.set(true);
-                    filtersAdapter.setItems(data);
-                } else {
-                    filtersVisible.set(false);
-                }
-            }
+                    @Override
+                    public void onSuccess(List<ProgramFilter> data) {
+                        if (!data.isEmpty()) {
+                            allFilters = data;
+                            filtersVisible.set(true);
+                            filtersAdapter.setItems(data);
+                        } else {
+                            filtersVisible.set(false);
+                        }
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                filtersVisible.set(false);
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        filtersVisible.set(false);
+                    }
+                });
 
     }
 
@@ -483,21 +484,21 @@ public class AddUnitsViewModel extends BaseViewModel {
 
         mDataManager.savePeriod(periodId, addedIds, removedIds, proposedDateModified, proposedDateAdded,
                 new OnResponseCallback<SuccessResponse>() {
-            @Override
-            public void onSuccess(SuccessResponse data) {
-                mActivity.hideLoading();
-                mActivity.showLongToast("Period saved successfully");
-                EventBus.getDefault().post(
-                        new PeriodSavedEvent(periodId, added.size() - removed.size()));
-                mActivity.onBackPressed();
-            }
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+                        mActivity.hideLoading();
+                        mActivity.showLongToast("Period saved successfully");
+                        EventBus.getDefault().post(
+                                new PeriodSavedEvent(periodId, added.size() - removed.size()));
+                        mActivity.onBackPressed();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                mActivity.hideLoading();
-                mActivity.showLongSnack(e.getLocalizedMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+                        mActivity.showLongSnack(e.getLocalizedMessage());
+                    }
+                });
 
     }
 
@@ -559,7 +560,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
 //                unitBinding.unitCode.setText(model.getCode());
 //                unitBinding.unitTitle.setText(model.getTitle()) ;
-                unitBinding.layoutCheckbox.setVisibility(View.VISIBLE);
+                unitBinding.checkbox.setVisibility(View.VISIBLE);
                 if (selected.contains(model)){
                     unitBinding.checkbox.setChecked(true);
 
@@ -571,7 +572,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                     unitBinding.tvMyDate.setVisibility(View.VISIBLE);
                 } else {
                     unitBinding.checkbox.setChecked(false);
-                    unitBinding.tvMyDate.setVisibility(View.GONE);
+                    unitBinding.tvMyDate.setVisibility(View.INVISIBLE);
                 }
 
 
@@ -581,19 +582,44 @@ public class AddUnitsViewModel extends BaseViewModel {
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                         + model.getUnitHour() + " hrs");
                 try {
-                    if (!model.getStatus().isEmpty() || model.getStatus() != null) {
+                    if (!model.getStatus().equals("") || model.getStatus() != null) {
                         if (model.getStaffDate() > 0) {
-                            unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
-                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                            if ( DateUtil.getDisplayDate(model.getStatusDate()).equals("")) {
+                                unitBinding.tvStaffDate.setText(model.getStatus() + " : "
+                                        + DateUtil.getDisplayDate(model.getStatusDate()));
+                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                            }unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                         }
                     } else {
-                        unitBinding.tvStaffDate.setVisibility(View.GONE);
+                        unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                     }
                     unitBinding.tvDescription.setText(model.getDesc());
+                    String role = mDataManager.getLoginPrefs().getRole();
+                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
+                        if (model.getStaffDate() > 0) {
+                            unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                            unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
+                        } else {
+                            unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+                        }
+                    }else {
+                        unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+
+                    }
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                        if (!model.getStatus().equals("")) {
+                            unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                        }
+                        else {
+                            unitBinding.tvComment.setVisibility(View.GONE);
+                        }
+                    }else {
+                        unitBinding.tvComment.setVisibility(View.GONE);
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                unitBinding.layoutCheckbox.setOnClickListener(v -> {
+                unitBinding.checkbox.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }

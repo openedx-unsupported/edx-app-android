@@ -10,7 +10,139 @@
         android:layout_marginTop="@dimen/_14px"
         android:layout_marginEnd="8dp"
         app:cardCornerRadius="4dp"
+        android:background="@color/humana_card_background"
         app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/humana_card_background"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/unit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/hind_bold"
+                    android:textColor="@color/gray_5"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/unit_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/_20px"
+                android:fontFamily="@font/hind_medium"
+                android:textColor="@color/gray_5"
+                android:textSize="15sp"/>
+
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/hind_medium"
+                android:lines="2"
+                android:textColor="@color/gray_5"
+                android:textSize="12sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_staff_date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:fontFamily="@font/hind_bold"
+                    android:gravity="start|center"
+                    android:drawablePadding="2dp"
+                    android:lines="2"
+                    android:textColor="@color/gray_5"
+                    android:textSize="12sp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/tv_submitted_date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:drawableStart="@drawable/ic_access_time_black_24dp"
+                    android:fontFamily="@font/hind_medium"
+                    android:padding="2dp"
+                    android:textColor="@color/gray_5"
+                    android:textSize="12sp"
+                    android:gravity="start|center"
+                    android:drawablePadding="2dp"
+                    android:textStyle="bold"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/tv_my_date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="0.8"
+                    android:clickable="true"
+                    android:drawableStart="@drawable/ic_access_time_black_24dp"
+                    android:focusable="true"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="start|center"
+                    android:text="@string/proposed_date"
+                    android:textColor="@color/gray_5"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:drawablePadding="2dp"
+                    android:visibility="visible"
+                    android:padding="2dp"
+                   />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/hind_medium"
+                android:textSize="12sp"
+                android:lines="2"
+                android:textColor="@color/gray_5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_submitted_date" />
+
+        </LinearLayout>
+
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -18,21 +150,7 @@
             android:id="@+id/card"
             android:background="@color/humana_card_background">
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/layout_checkbox"
-                app:layout_constraintStart_toStartOf="parent"
-                android:padding="16dp"
-                android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
-
-            </FrameLayout>
 
             <ImageView
                 android:id="@+id/status_icon"
@@ -43,117 +161,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <TextView
-                android:id="@+id/unit_code"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="@dimen/_20px"
-                android:fontFamily="@font/hind_medium"
-                android:textColor="@color/gray_5"
-                android:textSize="15sp"
-                app:layout_constraintEnd_toStartOf="@id/status_icon"
-                app:layout_constraintStart_toEndOf="@id/layout_checkbox"
-                app:layout_constraintTop_toBottomOf="@id/unit_title"/>
-            <TextView
-                android:id="@+id/unit_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="@dimen/_20px"
-                android:fontFamily="@font/hind_bold"
-                android:textColor="@color/gray_5"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@id/status_icon"
-                app:layout_constraintStart_toEndOf="@id/layout_checkbox"
-                app:layout_constraintTop_toTopOf="parent" />
 
 
-            <TextView
-                android:id="@+id/tv_staff_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/hind_medium"
-                android:textColor="@color/gray_5"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:visibility="visible"
-                app:layout_constraintEnd_toStartOf="@+id/tv_submitted_date"
-                app:layout_constraintHorizontal_bias="0.016"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_comment" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_my_date"
-                android:textColor="@color/gray_5"
-                android:textSize="12sp"
-                android:fontFamily="@font/hind_medium"
-                app:layout_constraintTop_toBottomOf="@id/tv_comment"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="@dimen/_10px"
-                android:drawableStart="@drawable/t_icon_calendar"
-                android:drawablePadding="6dp"
-                android:padding="6dp"
-                android:text="@string/proposed_date"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:elevation="2dp"
-                style="?borderlessButtonStyle"
-                android:clickable="true"
-                android:focusable="true" />
 
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20px"
-                android:layout_marginEnd="8dp"
-                android:lines="2"
-                android:ellipsize="end"
-                android:textColor="@color/gray_5"
-                android:textSize="12sp"
-                android:fontFamily="@font/hind_medium"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/unit_code" />
 
-            <TextView
-                android:id="@+id/tv_submitted_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="4dp"
-                android:fontFamily="@font/hind_medium"
-                android:gravity="center"
-                android:textColor="@color/gray_5"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                android:drawableStart="@drawable/t_icon_calendar"
-                app:layout_constraintEnd_toStartOf="@+id/tv_my_date"
-                app:layout_constraintTop_toBottomOf="@id/tv_comment" />
 
-            <TextView
-                android:id="@+id/tv_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:fontFamily="@font/hind_medium"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tv_staff_date"
-                app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+
+
+
 
             <!--<View-->
                 <!--android:id="@+id/bottom_line"-->

@@ -1,5 +1,6 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -13,18 +14,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
-import org.humana.mobile.databinding.TRowFilterDropDownBinding;
-import org.humana.mobile.databinding.TRowTextBinding;
 import org.humana.mobile.databinding.TRowUnitBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
-import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UnitStatusType;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Unit;
@@ -35,9 +32,9 @@ import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
-import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
+import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.humana.mobile.tta.ui.custom.DropDownFilterView;
+import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
 import org.humana.mobile.util.DateUtil;
 
@@ -81,15 +78,15 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private long eventMonthYear;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
-        if (allLoaded)
+//        if (allLoaded)
             return false;
-        this.skip++;
-        fetchData();
-        return true;
+//        this.skip++;
+////        fetchData();
+//        return true;
     };
+    public CalendarBottomSheetViewModel(Context context, TaBaseBottomsheetFragment fragment, EnrolledCoursesResponse course, Long selectedDate) {
+        super(context, fragment);
 
-    public CalendarBottomSheetViewModel(BaseVMActivity activity, EnrolledCoursesResponse course, Long selectedDate) {
-        super(activity);
 
         this.course = course;
         this.units = units;
@@ -107,7 +104,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         frameVisible.set(true);
 
         unitsAdapter = new UnitsAdapter(mActivity);
-        switchText.set("Calendar View");
+//        switchText.set("Calendar View");
 
 //        unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
@@ -229,6 +226,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         fetchData();
     }
 
+
     private void getBlockComponent(Unit unit) {
 
         mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
@@ -293,19 +291,41 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             @Override
                             public void onSuccess(SuccessResponse response) {
                                 mActivity.hideLoading();
+//                                Events event = new Events(DateUtil.getDisplayDate(unit.getMyDate()), unit.getTitle(), unit.getType());
+//                                eventsArrayList.remove(event);
+
                                 unit.setMyDate(data);
                                 unitsAdapter.remove(unit);
                                 unitsAdapter.notifyDataSetChanged();
-                                units.remove(unit);
+                                eventMonthYear = data;
+//                                selectedDate = DateUtil.getDisplayDate(data);
+
+
+//                                Events event1 = new Events(DateUtil.getDisplayDate(data), unit.getTitle(), unit.getType());
+//                                eventsArrayList.add(event1);
+
+//                                units.remove(unit);
                                 if (units.size()==0){
                                     emptyVisible.set(true);
                                 }else {
                                     emptyVisible.set(false);
                                 }
-                                if (response.getSuccess()) {
+//                                selectedDate = DateUtil.getDisplayDate(data);
+//                                if (response.getSuccess()) {
+//                                    eventsArrayList.clear();
+//                                    for (int i = 0; i < units.size(); i++) {
+//                                        if (units.get(i).getMyDate() > 0) {
+//                                            Events et = new Events(DateUtil.getDisplayDate(units.get(i).getMyDate()),
+//                                                    units.get(i).getTitle());
+//                                            eventsArrayList.add(et);
+//                                        }
+//                                    }
                                     mActivity.showLongSnack("Proposed date set successfully");
-                                    EventBus.getDefault().post(units);
-                                }
+                                mActivity.hideLoading();
+//                                EventBus.getDefault().post(units);
+//                                CustomCalendarView.createEvents(eventsArrayList, eventMonthYear);
+                                fetchUnits();
+//                                }
                             }
 
                             @Override
@@ -370,7 +390,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "", 0L, take, skip,
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
+                0L, take, skip,
                 eventMonthYear,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
@@ -381,19 +402,56 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         }
 //                        unitsAdapter.setItems(data);
                         units = new ArrayList<>();
-                        for (int i = 0; i < data.size(); i++) {
-                            if (DateUtil.getDisplayDate(data.get(i).getMyDate()).equals(selectedDate)) {
-                                units.add(data.get(i));
+                        eventsArrayList.clear();
+                        String role = mDataManager.getLoginPrefs().getRole();
+                        if (role.equals(UserRole.Student.name())) {
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getCommonDate() > 0) {
+                                    if (DateUtil.getDisplayDate(data.get(i).getCommonDate()).equals(selectedDate)) {
+                                        units.add(data.get(i));
 //                                populateUnits(units);
-                                unitsAdapter.setItems(units);
-                                emptyVisible.set(false);
+                                    }
+                                }
+                            }
+                        }else {
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getMyDate() > 0) {
+                                    if (DateUtil.getDisplayDate(data.get(i).getMyDate()).equals(selectedDate)) {
+                                        units.add(data.get(i));
+//                                populateUnits(units);
+                                    }
+                                }
                             }
                         }
+
+                        if (role.equals(UserRole.Instructor.name())) {
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getMyDate() > 0) {
+                                    Events et = new Events(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                            data.get(i).getTitle(), data.get(i).getType());
+                                    eventsArrayList.add(et);
+                                }
+                            }
+                        }else {
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getCommonDate() > 0) {
+                                    Events et = new Events(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                            data.get(i).getTitle(), data.get(i).getType());
+                                    eventsArrayList.add(et);
+                                }
+                            }
+                        }
+//
+                        CustomCalendarView.createEvents(eventsArrayList, eventMonthYear);
+
 //                        populateUnits(data);
-                        if (data.size()==0){
+                        if (units.size()==0){
                             emptyVisible.set(true);
                         }
+                        unitsAdapter.setItems(units);
+                        unitsAdapter.notifyDataSetChanged();
                         unitsAdapter.setLoadingDone();
+                        mActivity.hideLoading();
                     }
 
                     @Override
@@ -447,7 +505,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     public void onEventMainThread(PeriodSavedEvent event) {
         changesMade = true;
         allLoaded = false;
-        fetchData();
+//        fetchData();
     }
 
 
@@ -456,10 +514,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 //        filters.clear();
         changesMade = true;
         allLoaded = false;
-        fetchData();
-
-
-
+//        fetchData();
     }
 
     @SuppressWarnings("unused")
@@ -486,91 +541,181 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
             if (binding instanceof TRowUnitBinding) {
 
 
-
 //                unitBinding.tvStaffDate.setVisibility(View.GONE);
 //                unitBinding.tvMyDate.setVisibility(View.GONE);
-                if (DateUtil.getDisplayDate(model.getMyDate()).equals(selectedDate)) {
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                    if (DateUtil.getDisplayDate(model.getCommonDate()).equals(selectedDate)) {
 //                    CustomCalendarView.createEvents(eventsArrayList);
-                    TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
-                    unitBinding.setUnit(model);
-                    emptyVisible.set(false);
-                    unitBinding.unitCode.setText(model.getTitle());
-                    unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                            + model.getUnitHour() + " hrs");
-                    if (!model.getStatus().isEmpty()) {
-                        if (model.getStaffDate()>0) {
-                            unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
-                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                        TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
+                        unitBinding.setUnit(model);
+                        emptyVisible.set(false);
+                        unitBinding.unitCode.setText(model.getTitle());
+                        unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
+                                + model.getUnitHour() + " hrs");
+                        if (!model.getStatus().isEmpty()) {
+                            if (model.getStaffDate() > 0) {
+                                unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                         }
-                    }else {
-                        unitBinding.tvStaffDate.setVisibility(View.GONE);
-                    }
-                    unitBinding.tvDescription.setText(model.getDesc());
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                        if (model.getComment() != null) {
-                            unitBinding.tvComment.setText(model.getComment());
+                        unitBinding.tvDescription.setText(model.getDesc());
+                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                            if (model.getComment() != null) {
+                                unitBinding.tvComment.setText(model.getComment());
+                            } else {
+                                unitBinding.tvComment.setVisibility(View.GONE);
+                            }
                         } else {
                             unitBinding.tvComment.setVisibility(View.GONE);
                         }
-                    }else {
-                        unitBinding.tvComment.setVisibility(View.GONE);
-                    }
-                    if (model.getMyDate() > 0) {
-                        unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
-                    } else {
-                        unitBinding.tvMyDate.setText(R.string.proposed_date);
-                    }
-
-                    String role = mDataManager.getLoginPrefs().getRole();
-                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-                        if (model.getStaffDate() > 0) {
-                            unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-                            unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
+                        if (model.getMyDate() > 0) {
+                            unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                         } else {
-                            unitBinding.tvSubmittedDate.setVisibility(View.GONE);
+                            unitBinding.tvMyDate.setText(R.string.proposed_date);
                         }
-                    }
-                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                            !TextUtils.isEmpty(model.getStatus())) {
-                        try {
-                            switch (UnitStatusType.valueOf(model.getStatus())) {
-                                case Completed:
-                                    unitBinding.card.setBackgroundColor(
-                                            ContextCompat.getColor(getContext(), R.color.secondary_green));
-                                    break;
-                                case InProgress:
-                                    unitBinding.card.setBackgroundColor(
-                                            ContextCompat.getColor(getContext(), R.color.humana_card_background));
-                                    break;
-                                case Pending:
-                                    unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
-                                            R.color.material_red_500));
-                                    break;
+
+                        String role = mDataManager.getLoginPrefs().getRole();
+                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
+                            if (model.getStaffDate() > 0) {
+                                unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                                unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
+                            } else {
+                                unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                             }
-                        } catch (IllegalArgumentException e) {
+                        } else {
+                            unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+                        }
+                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
+                                !TextUtils.isEmpty(model.getStatus())) {
+                            try {
+                                switch (UnitStatusType.valueOf(model.getStatus())) {
+                                    case Completed:
+                                        unitBinding.card.setBackgroundColor(
+                                                ContextCompat.getColor(getContext(), R.color.secondary_green));
+                                        break;
+                                    case InProgress:
+                                        unitBinding.card.setBackgroundColor(
+                                                ContextCompat.getColor(getContext(), R.color.humana_card_background));
+                                        break;
+                                    case Pending:
+                                        unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
+                                                R.color.material_red_500));
+                                        break;
+                                }
+                            } catch (IllegalArgumentException e) {
+                                unitBinding.statusIcon.setVisibility(View.GONE);
+                            }
+                        } else {
                             unitBinding.statusIcon.setVisibility(View.GONE);
                         }
-                    } else {
-                        unitBinding.statusIcon.setVisibility(View.GONE);
-                    }
 
 //                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
 //                    eventsArrayList.add(ev);
 //                    CustomCalendarView.createEvents(eventsArrayList);
 
-                unitBinding.tvMyDate.setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onItemClick(v, model);
-                    }
-                });
+                        unitBinding.tvMyDate.setOnClickListener(v -> {
+                            if (listener != null) {
+                                listener.onItemClick(v, model);
+                            }
+                        });
 
-                unitBinding.getRoot().setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onItemClick(v, model);
+                        unitBinding.getRoot().setOnClickListener(v -> {
+                            if (listener != null) {
+                                listener.onItemClick(v, model);
+                            }
+                        });
+                    } else {
+                        emptyVisible.set(true);
                     }
-                });
-                } else {
-                    emptyVisible.set(true);
+                }
+                else {
+                    if (DateUtil.getDisplayDate(model.getMyDate()).equals(selectedDate)) {
+//                    CustomCalendarView.createEvents(eventsArrayList);
+                        TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
+                        unitBinding.setUnit(model);
+                        emptyVisible.set(false);
+                        unitBinding.unitCode.setText(model.getTitle());
+                        unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
+                                + model.getUnitHour() + " hrs");
+                        if (!model.getStatus().isEmpty()) {
+                            if (model.getStaffDate() > 0) {
+                                unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
+                        }
+                        unitBinding.tvDescription.setText(model.getDesc());
+                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                            if (model.getComment() != null) {
+                                unitBinding.tvComment.setText(model.getComment());
+                            } else {
+                                unitBinding.tvComment.setVisibility(View.GONE);
+                            }
+                        } else {
+                            unitBinding.tvComment.setVisibility(View.GONE);
+                        }
+                        if (model.getMyDate() > 0) {
+                            unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
+                        } else {
+                            unitBinding.tvMyDate.setText(R.string.proposed_date);
+                        }
+
+                        String role = mDataManager.getLoginPrefs().getRole();
+                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
+                            if (model.getStaffDate() > 0) {
+                                unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
+                                unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
+                            } else {
+                                unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+                            }
+                        } else {
+                            unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
+                        }
+                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
+                                !TextUtils.isEmpty(model.getStatus())) {
+                            try {
+                                switch (UnitStatusType.valueOf(model.getStatus())) {
+                                    case Completed:
+                                        unitBinding.card.setBackgroundColor(
+                                                ContextCompat.getColor(getContext(), R.color.secondary_green));
+                                        break;
+                                    case InProgress:
+                                        unitBinding.card.setBackgroundColor(
+                                                ContextCompat.getColor(getContext(), R.color.humana_card_background));
+                                        break;
+                                    case Pending:
+                                        unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
+                                                R.color.material_red_500));
+                                        break;
+                                }
+                            } catch (IllegalArgumentException e) {
+                                unitBinding.statusIcon.setVisibility(View.GONE);
+                            }
+                        } else {
+                            unitBinding.statusIcon.setVisibility(View.GONE);
+                        }
+
+//                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
+//                    eventsArrayList.add(ev);
+//                    CustomCalendarView.createEvents(eventsArrayList);
+
+                        unitBinding.tvMyDate.setOnClickListener(v -> {
+                            if (listener != null) {
+                                listener.onItemClick(v, model);
+                            }
+                        });
+
+                        unitBinding.getRoot().setOnClickListener(v -> {
+                            if (listener != null) {
+                                listener.onItemClick(v, model);
+                            }
+                        });
+                    } else {
+                        emptyVisible.set(true);
+                    }
                 }
             }
         }

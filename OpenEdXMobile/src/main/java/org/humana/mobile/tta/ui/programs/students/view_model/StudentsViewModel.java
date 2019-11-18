@@ -1,17 +1,23 @@
 package org.humana.mobile.tta.ui.programs.students.view_model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -89,6 +95,8 @@ public class StudentsViewModel extends BaseViewModel {
         mActivity.showLoading();
 //        getFilters();
         fetchData();
+
+
     }
 
     @Override
@@ -283,7 +291,7 @@ public class StudentsViewModel extends BaseViewModel {
 //                    itemBinding.txtPending.setCompoundDrawables(null, null,null,null);
 //                }
 
-                    if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
+                    if (!mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         itemBinding.llStatus.setVisibility(View.GONE);
                     }
 
@@ -309,6 +317,50 @@ public class StudentsViewModel extends BaseViewModel {
                             mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
                         }
                     });
+
+//                    itemBinding.imgInsta.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            if (model.social_profile.size()>0) {
+//                                for (int i=0; i<model.social_profile.size(); i++) {
+//                                    if (model.social_profile.get(i).platform.equals("linkedin")) {
+//                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                                Uri.parse(model.social_profile.get(i).social_link));
+//                                        mActivity.startActivity(browserIntent);
+//                                    }
+//                                }
+//                            }
+//
+//                        }
+//                    }); itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            if (model.social_profile.size()>0) {
+//                                for (int i=0; i<model.social_profile.size(); i++) {
+//                                    if (model.social_profile.get(i).platform.equals("twitter")) {
+//                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                                Uri.parse(model.social_profile.get(i).social_link));
+//                                        mActivity.startActivity(browserIntent);
+//                                    }
+//                                }
+//                            }
+//
+//                        }
+//                    }); itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            if (model.social_profile.size()>0) {
+//                                for (int i=0; i<model.social_profile.size(); i++) {
+//                                    if (model.social_profile.get(i).platform.equals("facebook")) {
+//                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                                Uri.parse(model.social_profile.get(i).social_link));
+//                                        mActivity.startActivity(browserIntent);
+//                                    }
+//                                }
+//                            }
+//
+//                        }
+//                    });
 
                     itemBinding.getRoot().setOnClickListener(v -> {
                         if (listener != null) {
@@ -337,12 +389,27 @@ public class StudentsViewModel extends BaseViewModel {
                 itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.pendingCount)));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null) {
+//                    Glide.with(mActivity).load(
+//                            mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
+//                                    model.profileImage.getImageUrlFull())
+//                            .placeholder(R.drawable.profile)
+//                            .into(itemBinding.userImage);
+
+
                     Glide.with(mActivity).load(
                             mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
-                                    model.profileImage.getImageUrlFull())
+                                    model.profileImage.getImageUrlFull()).asBitmap().centerCrop()
+                            .placeholder(R.drawable.profile_photo_placeholder)
                             .centerCrop()
-                            .placeholder(R.drawable.profile)
-                            .into(itemBinding.userImage);
+                            .into(new BitmapImageViewTarget(itemBinding.userImage) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(mActivity.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            itemBinding.userImage.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
                 }
                 if (model.education != null) {
                     itemBinding.textDegree.setText(model.education);
@@ -379,6 +446,53 @@ public class StudentsViewModel extends BaseViewModel {
                         mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
                     }
                 });
+
+
+//                itemBinding.imgInsta.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        if (model.social_profile.size()>0) {
+//                            for (int i=0; i<model.social_profile.size(); i++) {
+//                                if (model.social_profile.get(i).platform.equals("linkedin")) {
+//                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                            Uri.parse(model.social_profile.get(i).social_link));
+//                                    mActivity.startActivity(browserIntent);
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                }); itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        if (model.social_profile.size()>0 && model.social_profile != null) {
+//                            for (int i=0; i<model.social_profile.size(); i++) {
+//                                if (model.social_profile.get(i).platform.equals("twitter")) {
+//                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                            Uri.parse(model.social_profile.get(i).social_link));
+//                                    mActivity.startActivity(browserIntent);
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                }); itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (model.social_profile.size()>0 && model.social_profile != null) {
+//                            for (int i=0; i<model.social_profile.size(); i++) {
+//                                if (model.social_profile.get(i).platform.equals("facebook")) {
+//                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                            Uri.parse(model.social_profile.get(i).social_link));
+//                                    mActivity.startActivity(browserIntent);
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                });
 
                 itemBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
