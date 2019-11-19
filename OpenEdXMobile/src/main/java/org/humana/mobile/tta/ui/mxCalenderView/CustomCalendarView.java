@@ -29,7 +29,7 @@ import java.util.Locale;
 public class CustomCalendarView extends LinearLayout {
 
     public interface CalendarListener {
-        void onAction(long date);
+        void onAction(long date, long startDateTime, long endDateTime);
     }
 
     private CalendarListener mListener;
@@ -37,7 +37,7 @@ public class CustomCalendarView extends LinearLayout {
     static TextView currentDate;
     static GridView calGrid;
     private static final int MAX_CALENDAR_DAYS = 42;
-    private static Long eventDay;
+    private static Long eventDay, startDateTime, endDateTime;
     static Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     static Context context;
     public static UnitCalendarViewModel.CustomCalendarAdapter adapter;
@@ -115,6 +115,7 @@ public class CustomCalendarView extends LinearLayout {
         Calendar monthCalendar = (Calendar) calendar.clone();
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
 
+
         int FIRST_DAY_OF_MONTH = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
 
         monthCalendar.add(Calendar.DAY_OF_MONTH, -FIRST_DAY_OF_MONTH);
@@ -124,8 +125,10 @@ public class CustomCalendarView extends LinearLayout {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
         }
+        startDateTime = dates.get(0).getTime();
+        endDateTime = dates.get(41).getTime();
         if (mListener != null) {
-            mListener.onAction(eventDay);
+            mListener.onAction(eventDay, startDateTime, endDateTime);
         }
 
         setupAdapter();

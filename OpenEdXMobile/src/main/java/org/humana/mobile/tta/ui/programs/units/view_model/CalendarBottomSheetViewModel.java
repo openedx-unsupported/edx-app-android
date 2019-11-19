@@ -75,7 +75,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
     private String selectedDate;
-    private long eventMonthYear;
+    private long startDateTime, endDateTime, eventMonthYear;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
 //        if (allLoaded)
@@ -84,7 +84,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 ////        fetchData();
 //        return true;
     };
-    public CalendarBottomSheetViewModel(Context context, TaBaseBottomsheetFragment fragment, EnrolledCoursesResponse course, Long selectedDate) {
+    public CalendarBottomSheetViewModel(Context context, TaBaseBottomsheetFragment fragment, EnrolledCoursesResponse course,
+                                        Long selectedDate) {
         super(context, fragment);
 
 
@@ -297,7 +298,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 unit.setMyDate(data);
                                 unitsAdapter.remove(unit);
                                 unitsAdapter.notifyDataSetChanged();
-                                eventMonthYear = data;
+//                                eventMonthYear = data;
 //                                selectedDate = DateUtil.getDisplayDate(data);
 
 
@@ -392,7 +393,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
                 0L, take, skip,
-                eventMonthYear,
+                startDateTime, endDateTime,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {

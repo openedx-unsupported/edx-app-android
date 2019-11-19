@@ -78,6 +78,8 @@ public class Constants {
     public static final String KEY_APPROVE_RATING = "rating";
     public static final String KEY_EVENT_CAL_DATE = "eventMonthYear";
     public static final String KEY_EVENT_COUNT = "count";
+    public static final String KEY_START_DATE = "startDateTime";
+    public static final String KEY_END_DATE = "endDateTime";
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";

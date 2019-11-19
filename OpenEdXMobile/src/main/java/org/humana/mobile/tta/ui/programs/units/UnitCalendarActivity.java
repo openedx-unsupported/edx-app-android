@@ -47,9 +47,11 @@ public class UnitCalendarActivity extends BaseVMActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         binding.calendarView.setCalendarListener(new CustomCalendarView.CalendarListener() {
             @Override
-            public void onAction(long date) {
+            public void onAction(long date, long startDatetime, long endDateTime) {
 
                 viewModel.eventDisplayDate = date;
+                viewModel.startDateTime = startDatetime;
+                viewModel.endDateTime = endDateTime;
                 viewModel.fetchUnits();
 //                if (behavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
 //                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);

@@ -372,7 +372,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
             mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),"",
-                    periodId ,take, skip,0L,
+                    periodId ,take, skip,0L,0L,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {

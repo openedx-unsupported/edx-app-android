@@ -282,7 +282,8 @@ public class TaAPI {
     }
 
     public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId,String role,
-                                     String student_username, long period_id, int take, int skip,Long eventMonthYear){
+                                     String student_username, long period_id, int take, int skip,Long startDateTime,
+                                     Long endDateTime){
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(Constants.KEY_TAKE, take);
         parameters.put(Constants.KEY_SKIP, skip);
@@ -292,7 +293,8 @@ public class TaAPI {
         parameters.put(Constants.KEY_ROLE, role);
         parameters.put(Constants.KEY_PERIOD_ID, period_id);
         parameters.put(Constants.KEY_STUDENT_USERNAME, student_username);
-        parameters.put(Constants.KEY_EVENT_CAL_DATE, eventMonthYear);
+        parameters.put(Constants.KEY_START_DATE, startDateTime);
+        parameters.put(Constants.KEY_END_DATE, endDateTime);
 
         return taService.getUnits(parameters);
     }

@@ -61,7 +61,7 @@ import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 
 public class UnitCalendarViewModel extends BaseViewModel {
-    private static final int DEFAULT_TAKE = 10;
+    private static final int DEFAULT_TAKE = 0;
     private static final int DEFAULT_SKIP = 0;
     static BottomSheetBehavior sheetBehavior;
 
@@ -94,6 +94,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
     public static ObservableField<String> dispDate = new ObservableField<>();
 
     public static long eventDisplayDate = 0L;
+    public static long startDateTime, endDateTime;
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -312,7 +313,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
         mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(),  mDataManager.getLoginPrefs().getRole(), "",
-                0L, take, skip, eventDisplayDate,
+                0L, take, skip, startDateTime,endDateTime,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -596,6 +597,9 @@ public class UnitCalendarViewModel extends BaseViewModel {
             int displayYear = dateCalendar.get(Calendar.YEAR);
             int currentMonth = currentDate.get(Calendar.MONTH) + 1;
             int currentYear = currentDate.get(Calendar.YEAR);
+
+                startDateTime = dates.get(0).getTime();
+             endDateTime = dates.get(41).getTime();
 
 
             if (view == null) {
