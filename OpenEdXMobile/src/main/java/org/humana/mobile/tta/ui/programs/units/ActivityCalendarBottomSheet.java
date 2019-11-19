@@ -44,13 +44,15 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
     private String periodName;
     private EnrolledCoursesResponse course;
     private BottomSheetBehavior behavior;
-    private Long selectedDate;
+    private Long selectedDate, startDateTime, endDateTime;
     FragCalendarBottomSheetBinding binding;
     private int sheetState;
 
     @SuppressLint("ValidFragment")
-    public ActivityCalendarBottomSheet(Long selectedDate) {
+    public ActivityCalendarBottomSheet(Long selectedDate, Long startDateTime, Long endDateTime) {
         this.selectedDate = selectedDate;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     public ActivityCalendarBottomSheet() {
@@ -72,7 +74,7 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
         }
         savedInstanceState = getActivity().getIntent().getExtras();
 //        selectedDate = savedInstanceState.getLong("selectedDate", 0L);
-        viewModel = new CalendarBottomSheetViewModel(getActivity(),this, course,selectedDate);
+        viewModel = new CalendarBottomSheetViewModel(getActivity(),this, course,selectedDate,startDateTime, endDateTime);
         viewModel.registerEventBus();
     }
 

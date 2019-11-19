@@ -46,7 +46,7 @@ import okhttp3.ResponseBody;
 
 public class CalendarBottomSheetViewModel extends BaseViewModel {
 
-    private static final int DEFAULT_TAKE = 10;
+    private static final int DEFAULT_TAKE = 0;
     private static final int DEFAULT_SKIP = 0;
 
     public UnitsAdapter unitsAdapter;
@@ -85,7 +85,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 //        return true;
     };
     public CalendarBottomSheetViewModel(Context context, TaBaseBottomsheetFragment fragment, EnrolledCoursesResponse course,
-                                        Long selectedDate) {
+                                        Long selectedDate, Long startDateTime, Long endDateTime) {
         super(context, fragment);
 
 
@@ -93,6 +93,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         this.units = units;
         this.selectedDate = DateUtil.getDisplayDate(selectedDate);
         this.eventMonthYear =selectedDate;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         dispDate.set(DateUtil.getCalendarDate(selectedDate));
 //        units = new ArrayList<>();
         tags = new ArrayList<>();
@@ -401,7 +403,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
-//                        unitsAdapter.setItems(data);
                         units = new ArrayList<>();
                         eventsArrayList.clear();
                         String role = mDataManager.getLoginPrefs().getRole();
@@ -410,6 +411,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 if (data.get(i).getCommonDate() > 0) {
                                     if (DateUtil.getDisplayDate(data.get(i).getCommonDate()).equals(selectedDate)) {
                                         units.add(data.get(i));
+//                                        Unit unit = data.get(i);
+//                                        units.add(unit);
 //                                populateUnits(units);
                                     }
                                 }
@@ -419,11 +422,16 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 if (data.get(i).getMyDate() > 0) {
                                     if (DateUtil.getDisplayDate(data.get(i).getMyDate()).equals(selectedDate)) {
                                         units.add(data.get(i));
+//                                        units =data;
 //                                populateUnits(units);
                                     }
                                 }
                             }
                         }
+
+                        unitsAdapter.setItems(units);
+                        unitsAdapter.notifyDataSetChanged();
+                        unitsAdapter.setLoadingDone();
 
                         if (role.equals(UserRole.Instructor.name())) {
                             for (int i = 0; i < data.size(); i++) {
@@ -449,9 +457,9 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         if (units.size()==0){
                             emptyVisible.set(true);
                         }
-                        unitsAdapter.setItems(units);
-                        unitsAdapter.notifyDataSetChanged();
-                        unitsAdapter.setLoadingDone();
+//                        unitsAdapter.setItems(units);
+//                        unitsAdapter.notifyDataSetChanged();
+//                        unitsAdapter.setLoadingDone();
                         mActivity.hideLoading();
                     }
 

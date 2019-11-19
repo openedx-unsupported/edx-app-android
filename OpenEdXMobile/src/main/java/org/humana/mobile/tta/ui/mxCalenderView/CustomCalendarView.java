@@ -96,7 +96,9 @@ public class CustomCalendarView extends LinearLayout {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AppCompatActivity activity = (AppCompatActivity) context;
                 eventDay = dates.get(position).getTime();
-                ActivityCalendarBottomSheet bottomSheetDialogFragment = new ActivityCalendarBottomSheet(eventDay);
+                startDateTime = dates.get(0).getTime();
+                endDateTime = dates.get(41).getTime();
+                ActivityCalendarBottomSheet bottomSheetDialogFragment = new ActivityCalendarBottomSheet(eventDay, startDateTime, endDateTime);
                 bottomSheetDialogFragment.show(activity.getSupportFragmentManager(),
                         "units");
 //                ActivityUtil.addFragmentToActivity(activity.getSupportFragmentManager(),

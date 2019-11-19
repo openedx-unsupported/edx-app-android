@@ -520,6 +520,11 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (!model.getStatus().equals("")) {
                         unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                        if(model.getStatus().equals("Submitted")){
+                            unitBinding.tvComment.setVisibility(View.GONE);
+                        }else {
+                            unitBinding.tvComment.setVisibility(View.VISIBLE);
+                        }
                     }
                     else {
                         unitBinding.tvComment.setVisibility(View.GONE);

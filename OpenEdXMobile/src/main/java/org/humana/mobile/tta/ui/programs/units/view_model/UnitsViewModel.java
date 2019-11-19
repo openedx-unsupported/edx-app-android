@@ -573,6 +573,11 @@ public class UnitsViewModel extends BaseViewModel {
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (!model.getStatus().equals("")) {
                         unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                        if(model.getStatus().equals("Submitted")){
+                            unitBinding.tvComment.setVisibility(View.GONE);
+                        }else {
+                            unitBinding.tvComment.setVisibility(View.VISIBLE);
+                        }
                     }
                     else {
                         unitBinding.tvComment.setVisibility(View.GONE);
@@ -580,6 +585,13 @@ public class UnitsViewModel extends BaseViewModel {
                 }else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                 }
+//                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
+//                    if (model.getStatus().equals("Submitted")){
+//                        unitBinding.tvComment.setVisibility(View.GONE);
+//                    }else {
+//                        unitBinding.tvComment.setVisibility(View.VISIBLE);
+//                    }
+//                }
                 unitBinding.checkbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {
