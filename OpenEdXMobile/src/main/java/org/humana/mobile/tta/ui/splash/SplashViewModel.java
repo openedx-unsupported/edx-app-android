@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import org.humana.mobile.base.MainApplication;
 import org.humana.mobile.core.IEdxEnvironment;
+import org.humana.mobile.http.constants.ApiConstants;
 import org.humana.mobile.tta.data.constants.Constants;
 import org.humana.mobile.tta.data.enums.SurveyType;
 import org.humana.mobile.tta.data.local.db.table.Program;
@@ -96,6 +97,7 @@ public class SplashViewModel extends BaseViewModel {
                             mActivity.finish();
                         }
                         if (data.size() == 1) {
+                            org.humana.mobile.tta.Constants.PROGRAM_ID = data.get(0).getId();
                             mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                             mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
                             Constants.isSinglePrg = true;

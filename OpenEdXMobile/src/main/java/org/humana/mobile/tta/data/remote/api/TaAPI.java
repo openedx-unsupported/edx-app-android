@@ -357,6 +357,13 @@ public class TaAPI {
         return taService.getPendingUnits(parameters);
     }
 
+    public Call<SuccessResponse> setSpecificSession(String role, String username, String url,String instructor_cookie){
+        Map<String, Object> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_ROLE, role);
+        parameters.put(Constants.KEY_USER_NAME, username);
+        return taService.setSpecificSession(parameters, url,instructor_cookie);
+    }
+
     public Call<CourseComponent> getCourseComponentUnits(String unit_id){
         return taService.getCourseComponentUnits(unit_id);
     }

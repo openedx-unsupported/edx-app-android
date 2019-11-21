@@ -121,7 +121,7 @@
                     android:layout_height="30dp"
                     android:layout_margin="10dp"
                     android:id="@+id/img_facebook"
-                    android:src="@drawable/facebook_icon" />
+                    android:src="@drawable/facebook_flag_icon" />
                 <!--<ImageView-->
                     <!--android:layout_width="30dp"-->
                     <!--android:layout_height="30dp"-->

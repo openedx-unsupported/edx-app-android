@@ -18,6 +18,7 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowSelectProgSectionBinding;
+import org.humana.mobile.http.constants.ApiConstants;
 import org.humana.mobile.tta.data.constants.Constants;
 import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
@@ -77,6 +78,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 //                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     itemView = view;
                     programId = item.getId();
+                    org.humana.mobile.tta.Constants.PROGRAM_ID = programId;
                     mDataManager.getLoginPrefs().setProgramId(programId);
                     mDataManager.getLoginPrefs().setParentId(item.getParent_id());
                     mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());

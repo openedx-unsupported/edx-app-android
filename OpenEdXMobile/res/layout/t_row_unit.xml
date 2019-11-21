@@ -10,8 +10,10 @@
         android:layout_marginTop="@dimen/_14px"
         android:layout_marginEnd="8dp"
         app:cardCornerRadius="4dp"
-        android:background="@color/humana_card_background"
-        app:cardUseCompatPadding="true">
+        android:id="@+id/cv_unit"
+        android:padding="2dp"
+        app:cardUseCompatPadding="true"
+        android:background="@color/humana_card_background">
 
         <LinearLayout
             android:layout_width="match_parent"

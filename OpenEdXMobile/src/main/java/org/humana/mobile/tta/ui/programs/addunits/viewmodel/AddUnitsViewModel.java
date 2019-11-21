@@ -576,14 +576,12 @@ public class AddUnitsViewModel extends BaseViewModel {
                 }
 
 
-
-
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                         + model.getUnitHour() + " hrs");
                 try {
                     if (!model.getStatus().equals("") || model.getStatus() != null) {
-                        if (model.getStaffDate() > 0) {
+                        if (model.getStatusDate() > 0) {
                             if ( DateUtil.getDisplayDate(model.getStatusDate()).equals("")) {
                                 unitBinding.tvStaffDate.setText(model.getStatus() + " : "
                                         + DateUtil.getDisplayDate(model.getStatusDate()));
@@ -604,7 +602,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                         }
                     }else {
                         unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
-
                     }
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                         if (!model.getStatus().equals("")) {

@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="350dp"
+    android:elevation="5dp"
+    android:background="@color/humana_card_background">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="300dp"
     android:background="@color/humana_card_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="Ratings"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textSize="15sp"
-            android:textColor="@color/gray_5"
-            android:fontFamily="@font/hind_bold"/>
 
         <RatingBar
             android:layout_width="wrap_content"
@@ -28,7 +26,23 @@
             android:id="@+id/ratingBar"
             android:layout_gravity="center"
             android:stepSize="1"
-            android:layout_margin="8dp" />
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+            style="@style/Widget.AppCompat.RatingBar"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Ratings"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:id="@+id/tv_ratings"
+            android:visibility="invisible"
+            android:textColor="@color/gray_5"
+            android:fontFamily="@font/hind_bold"/>
 
     </LinearLayout>
 
@@ -36,23 +50,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/red_rect_rounded_corner"
+        android:minHeight="200dp"
         android:hint="Remarks"
         android:padding="8dp"
         android:textSize="14sp"
         android:id="@+id/et_remarks"
+        android:gravity="start"
         android:fontFamily="@font/hind_medium"
-        android:layout_margin="8dp"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="15dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:gravity="center"
+        android:padding="15dp"
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="8dp"
+            android:layout_weight="1"
             android:text="Approve"
             android:gravity="center"
             android:layout_gravity="center"
@@ -60,12 +81,13 @@
             android:textSize="14dp"
             android:id="@+id/btn_approve"
             android:background="@drawable/red_rect_rounded_corner"
-            android:textColor="@color/gray_5"
+            android:textColor="@color/white"
             android:fontFamily="@font/hind_bold"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="Return"
             android:layout_margin="8dp"
             android:gravity="center"
@@ -74,9 +96,10 @@
             android:background="@drawable/red_rect_rounded_corner"
             android:textSize="14sp"
             android:padding="@dimen/_12px"
-            android:textColor="@color/gray_5"
+            android:textColor="@color/white"
             android:fontFamily="@font/hind_bold"/>
 
     </LinearLayout>
 
 </LinearLayout>
+</android.support.v7.widget.CardView>

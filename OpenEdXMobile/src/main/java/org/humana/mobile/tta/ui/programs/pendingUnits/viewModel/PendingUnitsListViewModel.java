@@ -22,20 +22,24 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowPendingUnitsBinding;
+import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.model.course.CourseComponent;
+import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
-import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
+import org.humana.mobile.tta.event.CourseEnrolledEvent;
+import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitWebviewActivity;
-import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import okhttp3.ResponseBody;
 
 public class PendingUnitsListViewModel extends BaseViewModel {
 
@@ -54,8 +58,14 @@ public class PendingUnitsListViewModel extends BaseViewModel {
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public float rating = 0;
 
-    public PendingUnitsListViewModel(BaseVMActivity activity) {
+    private EnrolledCoursesResponse course;
+    private EnrolledCoursesResponse parentCourse;
+    private String blockid;
+
+
+    public PendingUnitsListViewModel(BaseVMActivity activity, EnrolledCoursesResponse course) {
         super(activity);
+        this.course = course;
 
         Bundle bundle = mActivity.getIntent().getExtras();
         assert bundle != null;
@@ -70,16 +80,182 @@ public class PendingUnitsListViewModel extends BaseViewModel {
 
         mActivity.showLoading();
         unitsAdapter.setItems(unitsList);
+//        Constants.UNIT_ID = "";
+//        Constants.USERNAME = "";
         fetchData();
 
 
 
-//        unitsAdapter.setItemClickListener((view, item) -> {
-//            if(item != null){
-//                String unitId = item.getCourseId();
-//                approveUnits(unitId);
-//            }
-//        });
+        unitsAdapter.setItemClickListener((view, item) -> {
+            switch (view.getId()) {
+                case R.id.tv_my_date:
+                    showDatePicker(item);
+                    break;
+                default:
+                    mActivity.showLoading();
+                    boolean ssp = unitsList.contains(item);
+                    EnrolledCoursesResponse c;
+                    if (ssp) {
+                        c = course;
+                    } else {
+                        c = parentCourse;
+                    }
+
+                    if (c == null) {
+
+                        String courseId;
+                        if (ssp) {
+                            courseId = mDataManager.getLoginPrefs().getProgramId();
+                        } else {
+                            courseId = mDataManager.getLoginPrefs().getParentId();
+                        }
+                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                            @Override
+                            public void onSuccess(ResponseBody responseBody) {
+
+                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                    @Override
+                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                        if (courseId != null) {
+                                            for (EnrolledCoursesResponse response : data) {
+                                                if (response.getCourse().getId().trim().toLowerCase()
+                                                        .equals(courseId.trim().toLowerCase())) {
+                                                    if (ssp) {
+                                                        PendingUnitsListViewModel.this.course = response;
+                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                    } else {
+                                                        PendingUnitsListViewModel.this.parentCourse = response;
+                                                    }
+                                                    getBlockComponent(item);
+                                                    break;
+                                                }
+                                            }
+                                            mActivity.hideLoading();
+                                        } else {
+                                            mActivity.hideLoading();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        mActivity.hideLoading();
+                                        mActivity.showLongSnack("enroll org failure");
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack("enroll failure");
+                            }
+                        });
+
+                    } else {
+                        getBlockComponent(item);
+                    }
+
+            }
+        });
+    }
+
+    private void enrollCourse(Unit item){
+        boolean ssp = unitsList.contains(item);
+        EnrolledCoursesResponse c;
+        if (ssp) {
+            c = course;
+        } else {
+            c = parentCourse;
+        }
+
+        if (c == null) {
+
+            String courseId;
+            if (ssp) {
+                courseId = mDataManager.getLoginPrefs().getProgramId();
+            } else {
+                courseId = mDataManager.getLoginPrefs().getParentId();
+            }
+            mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                @Override
+                public void onSuccess(ResponseBody responseBody) {
+
+                    mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                        @Override
+                        public void onSuccess(List<EnrolledCoursesResponse> data) {
+                            if (courseId != null) {
+                                for (EnrolledCoursesResponse response : data) {
+                                    if (response.getCourse().getId().trim().toLowerCase()
+                                            .equals(courseId.trim().toLowerCase())) {
+                                        if (ssp) {
+                                            PendingUnitsListViewModel.this.course = response;
+                                            EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                        } else {
+                                            PendingUnitsListViewModel.this.parentCourse = response;
+                                        }
+                                        getBlockComponent(item);
+                                        break;
+                                    }
+                                }
+                                mActivity.hideLoading();
+                            } else {
+                                mActivity.hideLoading();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            mActivity.hideLoading();
+                            mActivity.showLongSnack("enroll org failure");
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    mActivity.hideLoading();
+                    mActivity.showLongSnack("enroll failure");
+                }
+            });
+
+        } else {
+            getBlockComponent(item);
+        }
+    }
+
+    private void showDatePicker(Unit unit) {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+            @Override
+            public void onSuccess(Long data) {
+                mActivity.showLoading();
+                mDataManager.setProposedDate(mDataManager.getLoginPrefs().getProgramId(),
+                        mDataManager.getLoginPrefs().getSectionId(), data, unit.getPeriodId(), unit.getId(),
+                        new OnResponseCallback<SuccessResponse>() {
+                            @Override
+                            public void onSuccess(SuccessResponse response) {
+                                mActivity.hideLoading();
+                                unit.setMyDate(data);
+                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                                if (response.getSuccess()) {
+                                    mActivity.showLongSnack("Proposed date set successfully");
+                                    EventBus.getDefault().post(unitsList);
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                mActivity.hideLoading();
+                                mActivity.showLongSnack(e.getLocalizedMessage());
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -121,6 +297,35 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                         allLoaded = true;
                         unitsAdapter.setLoadingDone();
                         toggleEmptyVisibility();
+                    }
+                });
+    }
+
+    public void getUserUnitResponse() {
+//        String role;
+//        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+//            role= "student";
+//        }else {
+//            role = "staff";
+//        }
+
+        mDataManager.setSpecificSession("student",
+                userName.get(), "mx_humana_lms/api/" +
+                        mDataManager.getLoginPrefs().getProgramId()+"/masquerade","",
+                new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse response) {
+                        if (response.getSuccess()){
+//                            Bundle bundle = new Bundle();
+//                            bundle.putString("BlockId", blockid);
+//                            ActivityUtil.gotoPage(getActivity(), PendingUnitWebviewActivity.class,bundle);
+//                            enrollCourse(item);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.showShortSnack("course enroll error");
                     }
                 });
     }
@@ -185,6 +390,57 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         toggleEmptyVisibility();
     }
 
+    private void getBlockComponent(Unit unit) {
+
+        mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
+                new OnResponseCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody responseBody) {
+                        mDataManager.getBlockComponent(unit.getUnit_id(), mDataManager.getLoginPrefs().getProgramId(),
+                                new OnResponseCallback<CourseComponent>() {
+                                    @Override
+                                    public void onSuccess(CourseComponent data) {
+                                        mActivity.hideLoading();
+                                        Constants.UNIT_ID = unit.getUnit_id();
+                                        Constants.USERNAME = userName.get();
+
+//                                        blockid = data.getBlockId();
+//                                        getUserUnitResponse();
+                                        if (PendingUnitsListViewModel.this.course == null) {
+                                            mActivity.showLongSnack("You're not enrolled in the program");
+                                            return;
+                                        }
+
+                                        if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+                                            mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
+                                                    mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                                    PendingUnitsListViewModel.this.course, data.getChildren().get(0).getId(),
+                                                    null, false);
+                                        } else {
+                                            mActivity.showLongSnack("This unit is empty");
+                                        }
+
+
+//                                        getUserUnitResponse();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        mActivity.hideLoading();
+                                        mActivity.showLongSnack(e.getLocalizedMessage());
+                                    }
+                                });
+                    }
+
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.showLongSnack("error during unit enroll");
+                    }
+                });
+
+    }
+
     private void toggleEmptyVisibility() {
         if (unitsList == null || unitsList.isEmpty()) {
             emptyVisible.set(true);
@@ -192,7 +448,45 @@ public class PendingUnitsListViewModel extends BaseViewModel {
             emptyVisible.set(false);
         }
     }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PeriodSavedEvent event) {
+        changesMade = true;
+        allLoaded = false;
+        fetchData();
+    }
 
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(List<Unit> unit) {
+//        filters.clear();
+        changesMade = true;
+        allLoaded = false;
+        fetchData();
+//        ProgramFilter pf = new ProgramFilter();
+//        pf.setDisplayName(user.username);
+//        pf.setInternalName(user.name);
+//        pf.setId(user.name);
+//        pf.setOrder(user.completedHours);
+//        pf.setShowIn(new ArrayList<String>());
+//        pf.setTags(tags);
+//        allFilters.add(pf);
+//        filtersAdapter.notifyItemChanged(3, 4);
+
+
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CourseEnrolledEvent event) {
+        this.course = event.getCourse();
+    }
+
+    public void registerEventBus() {
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus() {
+        EventBus.getDefault().unregister(this);
+    }
 
     public class UnitsAdapter extends MxInfiniteAdapter<Unit> {
 
@@ -207,6 +501,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
                 itemBinding.textUnitName.setText(model.getCode() + "  |  " + model.getType() + " | "
                         + model.getUnitHour() + " hrs");
+                itemBinding.textPeriodName.setText(model.getTitle());
                 itemBinding.textSubmissionDate.setVisibility(View.GONE);
                 if (!DateUtil.getDisplayDate(model.getMyDate()).equals("01 Jan 1970")) {
                     itemBinding.textDate.setText("Submitted On : " + DateUtil.getDisplayDate(model.getMyDate()));
@@ -220,18 +515,33 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                     itemBinding.llApproval.setVisibility(View.VISIBLE);
                 }
                 itemBinding.btnApprove.setOnClickListener(v -> {
-                        approveReturn(model.getUnit_id());
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+//                        approveReturn(model.getUnit_id());
                 });
 
                 itemBinding.btnReject.setOnClickListener(v -> {
-                    approveReturn(model.getUnit_id());
-                });
-                itemBinding.llCard.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityUtil.gotoPage(mActivity, PendingUnitWebviewActivity.class);
+//                    approveReturn(model.getUnit_id());
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
                     }
                 });
+
+                itemBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (listener != null) {
+                            listener.onItemClick(v, model);
+                        }
+                    }
+                });
+//                itemBinding.llCard.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        ActivityUtil.gotoPage(mActivity, PendingUnitWebviewActivity.class);
+//                    }
+//                });
 
 
 
@@ -290,5 +600,17 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         });
         dialog.setCancelable(true);
         dialog.show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        changesMade = true;
+        fetchData();
+        Constants.UNIT_ID = "";
+        Constants.USERNAME = "";
+//        if (!Constants.UNIT_ID.equals("") || Constants.UNIT_ID !=null){
+//            fetchData();
+//        }
     }
 }

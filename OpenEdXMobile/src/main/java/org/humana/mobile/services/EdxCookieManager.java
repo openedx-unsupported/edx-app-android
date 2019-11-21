@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import org.humana.mobile.authentication.LoginService;
 import org.humana.mobile.event.SessionIdRefreshEvent;
 import org.humana.mobile.logger.Logger;
+import org.humana.mobile.util.BrowserUtil;
 import org.humana.mobile.util.Config;
 
 import java.util.concurrent.TimeUnit;
@@ -77,6 +78,20 @@ public class EdxCookieManager {
                             call.request().url(), response.headers())) {
                         cookieManager.setCookie(config.getApiHostURL(), cookie.toString());
                     }
+                    //For locally saving cookie for student specific view
+                    //saveCookie(response);
+                    if(response!=null) {
+                        String[] arr;
+                        for (String header : response.headers().toMultimap().get("Set-Cookie")) {
+                            if (header.contains("sessionid=")) {
+                                arr = header.split(";");
+                                BrowserUtil.loginPrefs.setLoginUserCookie(arr[0]);
+                                break;
+                            }
+                        }
+                    }
+
+
                     authSessionCookieExpiration = System.currentTimeMillis() + FRESHNESS_INTERVAL;
                     EventBus.getDefault().post(new SessionIdRefreshEvent(true));
                     loginCall = null;
@@ -95,4 +110,18 @@ public class EdxCookieManager {
     public boolean isSessionCookieMissingOrExpired() {
         return authSessionCookieExpiration < System.currentTimeMillis();
     }
+
+   /* private void  saveCookie(Response<RequestBody> response)
+    {
+        if(response!=null) {
+            String[] arr;
+            for (String header : response.headers().toMultimap().get("Set-Cookie")) {
+                if (header.contains("sessionid=")) {
+                    arr = header.split(";");
+                    BrowserUtil.loginPrefs.setLoginUserCookie(arr[0]);
+                    break;
+                }
+            }
+        }
+    }*/
 }

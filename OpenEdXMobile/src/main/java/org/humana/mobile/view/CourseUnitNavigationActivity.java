@@ -1,17 +1,22 @@
 package org.humana.mobile.view;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.humana.mobile.R;
 import org.humana.mobile.logger.Logger;
@@ -20,6 +25,10 @@ import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.module.analytics.Analytics;
 import org.humana.mobile.services.LastAccessManager;
 import org.humana.mobile.services.ViewPagerDownloadManager;
+import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.DataManager;
+import org.humana.mobile.tta.data.model.SuccessResponse;
+import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.humana.mobile.view.common.PageViewStateCallback;
 import org.humana.mobile.view.custom.DisableableViewPager;
@@ -46,6 +55,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
 
+    private FloatingActionButton mfabDialog;
+    DataManager mDataManager;
+
     @InjectView(R.id.goto_next)
     private Button mNextBtn;
     @InjectView(R.id.goto_prev)
@@ -54,6 +66,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private TextView mNextUnitLbl;
     @InjectView(R.id.prev_unit_title)
     private TextView mPreviousUnitLbl;
+
+    private float unitRating;
 
     @Inject
     LastAccessManager lastAccessManager;
@@ -72,6 +86,21 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 environment.getConfig(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
 
+        mfabDialog = findViewById(R.id.fab);
+        mDataManager = DataManager.getInstance(CourseUnitNavigationActivity.this);
+
+        if (!Constants.UNIT_ID.equals(""))
+        {
+            mfabDialog.setVisibility(View.VISIBLE);
+        }
+
+
+        mfabDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                approveReturn(Constants.UNIT_ID);
+            }
+        });
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -283,5 +312,113 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     @Override
     protected void onOffline() {
+    }
+
+
+    public void approveReturn(String unitId) {
+        final Dialog dialog = new Dialog(CourseUnitNavigationActivity.this);
+        dialog.setContentView(R.layout.dialog_approve_return_unit);
+        Button btnApprove = (Button) dialog.findViewById(R.id.btn_approve);
+        Button btnReturn = (Button) dialog.findViewById(R.id.btn_return);
+        EditText etRemarks = dialog.findViewById(R.id.et_remarks);
+        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+        TextView mtv_rating = dialog.findViewById(R.id.tv_ratings);
+//        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar rb, float rating, boolean fromUser) {
+                unitRating = rb.getRating();
+                mtv_rating.setVisibility(View.VISIBLE);
+                if (unitRating == 1) {
+                    mtv_rating.setText("Poor");
+//                    Toast.makeText(getActivity(), "poor", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 2) {
+                    mtv_rating.setText("Fair");
+//                    Toast.makeText(getActivity(), "fair", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 3) {
+                    mtv_rating.setText("Good");
+//                    Toast.makeText(getActivity(), "good", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 4) {
+                    mtv_rating.setText("Very Good");
+//                    Toast.makeText(getActivity(), "very good", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 5) {
+                    mtv_rating.setText("Excellent");
+//                    Toast.makeText(getActivity(), "excellent", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnApprove.setOnClickListener(v -> {
+            String remarks = etRemarks.getText().toString();
+            approveUnits(unitId, remarks, (int) unitRating);
+            dialog.dismiss();
+        });
+
+        btnReturn.setOnClickListener(v -> {
+            String remarks = etRemarks.getText().toString();
+
+            rejectUnits(unitId,remarks, (int) unitRating);
+            dialog.dismiss();
+        });
+        dialog.setCancelable(true);
+        dialog.show();
+
+    }
+    //
+    public void approveUnits(String unitId, String remarks, int rating) {
+
+        mDataManager.approveUnit(unitId,
+                Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+
+//                        Intent in = new Intent(getActivity(), PendingUnitsListActivity.class);
+//                        startActivity(in);
+                        finish();
+                        Toast.makeText(CourseUnitNavigationActivity.this,"Unit Approved", Toast.LENGTH_SHORT).show();
+//                        mActivity.hideLoading();
+//                        changesMade = true;
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+//                        mActivity.hideLoading();
+//                        allLoaded = true;
+//                        unitsAdapter.setLoadingDone();
+//                        toggleEmptyVisibility();
+                    }
+                });
+    }
+
+    public void rejectUnits(String unitId, String remarks, int rating) {
+        mDataManager.rejectUnit(unitId,
+                Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+                        Toast.makeText(CourseUnitNavigationActivity.this,"Unit Returned", Toast.LENGTH_SHORT).show();
+//                        Intent in = new Intent(getActivity(), PendingUnitsListActivity.class);
+//                        startActivity(in);
+                        finish();
+//                        mActivity.hideLoading();
+//                        changesMade = true;
+//                        fetchData();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+//                        mActivity.hideLoading();
+//                        allLoaded = true;
+//                        unitsAdapter.setLoadingDone();
+//                        toggleEmptyVisibility();
+                    }
+                });
     }
 }

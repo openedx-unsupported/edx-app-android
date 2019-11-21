@@ -23,6 +23,14 @@
                 android:padding="@dimen/_10px"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/text_period_name"
+                android:layout_width="match_parent"
+                android:textColor="@color/black"
+                android:fontFamily="@font/hind_medium"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10px"
+                android:textSize="14sp"/>
+            <TextView
                 android:id="@+id/text_desc"
                 android:layout_width="match_parent"
                 android:textColor="@color/gray_5"
@@ -79,7 +87,7 @@
                     android:padding="@dimen/_8px"
                     android:layout_margin="@dimen/_10px"
                     android:textSize="@dimen/_12px_sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:fontFamily="@font/hind_medium"
                     android:background="@drawable/red_rect_rounded_corner"
                     android:text="Approve" />
@@ -92,7 +100,7 @@
                     android:layout_weight="1"
                     android:padding="@dimen/_8px"
                     android:textSize="@dimen/_12px_sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:layout_margin="@dimen/_10px"
                     android:fontFamily="@font/hind_medium"
                     android:background="@drawable/red_rect_rounded_corner"

@@ -599,4 +599,13 @@ public class LoginPrefs {
     public void setParentId(String parentId){
         pref.put(PrefManager.Key.parentId, parentId);
     }
+
+
+    public String getLoginUserCookie(){
+        return pref.getString(PrefManager.Key.LOGINUSERCOOKIE);
+    }
+
+    public void setLoginUserCookie(String login_user_cookie){
+        pref.put(PrefManager.Key.LOGINUSERCOOKIE, login_user_cookie);
+    }
 }

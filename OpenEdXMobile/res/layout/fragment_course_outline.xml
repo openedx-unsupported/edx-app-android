@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,4 +30,73 @@
     <include layout="@layout/content_error" />
 
     <include layout="@layout/loading_indicator" />
+<!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:weightSum="2"-->
+    <!--android:visibility="gone"-->
+    <!--android:id="@+id/ll_approval"-->
+    <!--android:layout_margin="5dp"-->
+    <!--android:layout_height="@dimen/_80px">-->
+   <!--<Button-->
+       <!--android:layout_width="0dp"-->
+       <!--android:layout_weight="1"-->
+       <!--android:text="Return"-->
+       <!--android:textColor="@color/white"-->
+       <!--android:fontFamily="@font/hind_medium"-->
+       <!--android:background="@color/humana_light_blue"-->
+       <!--android:layout_marginRight="5dp"-->
+       <!--android:id="@+id/btn_return"-->
+       <!--android:layout_height="match_parent" />-->
+    <!--<Button-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="Approve"-->
+        <!--android:id="@+id/btn_approve"-->
+        <!--android:fontFamily="@font/hind_medium"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:background="@color/humana_light_blue"-->
+        <!--android:layout_height="match_parent" />-->
+<!--</LinearLayout>-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ll_approval"
+        android:visibility="gone"
+        android:layout_gravity="bottom|end">
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:id="@+id/btn_approve"
+        app:fabSize="mini"
+        android:visibility="gone"
+        android:src="@drawable/check"/>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        app:fabSize="mini"
+        android:id="@+id/btn_return"
+        android:visibility="gone"
+        android:src="@drawable/ic_close"/>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:id="@+id/fab"
+            android:layout_margin="20dp"
+            android:visibility="visible"
+            app:fabSize="normal"
+            android:tint="@color/white"
+            android:src="@drawable/t_icon_check_white"/>
+
+    </LinearLayout>
 </FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

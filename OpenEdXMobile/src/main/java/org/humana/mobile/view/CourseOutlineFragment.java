@@ -2,12 +2,15 @@ package org.humana.mobile.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -21,8 +24,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
@@ -56,6 +66,13 @@ import org.humana.mobile.module.storage.IStorage;
 import org.humana.mobile.services.CourseManager;
 import org.humana.mobile.services.LastAccessManager;
 import org.humana.mobile.services.VideoDownloadHelper;
+import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.DataManager;
+import org.humana.mobile.tta.data.model.SuccessResponse;
+import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity;
+import org.humana.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsListViewModel;
+import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.PermissionsUtil;
 import org.humana.mobile.util.UiUtil;
@@ -75,6 +92,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
     private static final int SNACKBAR_SHOWTIME_MS = 5000;
+    private DataManager mDataManager;
 
     private CourseOutlineAdapter adapter;
     private ListView listView;
@@ -89,6 +107,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private DownloadEntry downloadEntry;
     private List<? extends HasDownloadEntry> downloadEntries;
     private SwipeRefreshLayout swipeContainer;
+    public FloatingActionButton  mfab;
+    public float unitRating = 0;
+
+    public ObservableField<String> userName = new ObservableField<String>();
 
     private Call<CourseStructureV1Model> getHierarchyCall;
 
@@ -111,6 +133,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private View loadingIndicator;
 
+    private String unidId;
+    private LinearLayout linearLayout;
+
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
                                        @Nullable String lastAccessedId, boolean isVideosMode) {
@@ -127,22 +152,38 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDataManager = DataManager.getInstance(getActivity().getApplicationContext());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final Bundle bundle;
-        {
-            if (savedInstanceState != null) {
-                bundle = savedInstanceState;
-            } else {
-                bundle = getArguments();
-            }
-        }
-
         final View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView) view.findViewById(R.id.outline_list);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
+        linearLayout = view.findViewById(R.id.ll_approval);
+        mfab = view.findViewById(R.id.fab);
+
+
+        final Bundle bundle;
+        {
+            if (savedInstanceState != null) {
+                bundle = savedInstanceState;
+
+            } else {
+                bundle = getArguments();
+            }
+        }
+
+        if (!Constants.UNIT_ID.equals("")){
+            linearLayout.setVisibility(View.VISIBLE);
+        }
+
+
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -154,10 +195,23 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
         });
         UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
-        
+
         restore(bundle);
         initListView(view);
         fetchCourseComponent();
+
+//        getUserUnitResponse();
+
+        mfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                approveReturn(Constants.UNIT_ID);
+//                mbtn_approve.setVisibility(View.VISIBLE);
+//                mbtn_return.setVisibility(View.VISIBLE);
+            }
+        });
+
+
 
         return view;
     }
@@ -753,5 +807,138 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             getHierarchyCall.cancel();
             getHierarchyCall = null;
         }
+    }
+
+
+    public void approveReturn(String unitId) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_approve_return_unit);
+        Button btnApprove = (Button) dialog.findViewById(R.id.btn_approve);
+        Button btnReturn = (Button) dialog.findViewById(R.id.btn_return);
+        EditText etRemarks = dialog.findViewById(R.id.et_remarks);
+        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+        TextView mtv_rating = dialog.findViewById(R.id.tv_ratings);
+//        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar rb, float rating, boolean fromUser) {
+                unitRating = rb.getRating();
+                mtv_rating.setVisibility(View.VISIBLE);
+                if (unitRating == 1) {
+                    mtv_rating.setText("Poor");
+//                    Toast.makeText(getActivity(), "poor", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 2) {
+                    mtv_rating.setText("Fair");
+//                    Toast.makeText(getActivity(), "fair", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 3) {
+                    mtv_rating.setText("Good");
+//                    Toast.makeText(getActivity(), "good", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 4) {
+                    mtv_rating.setText("Very Good");
+//                    Toast.makeText(getActivity(), "very good", Toast.LENGTH_SHORT).show();
+                } else if (unitRating == 5) {
+                    mtv_rating.setText("Excellent");
+//                    Toast.makeText(getActivity(), "excellent", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnApprove.setOnClickListener(v -> {
+            String remarks = etRemarks.getText().toString();
+            approveUnits(unitId, remarks, (int) unitRating);
+            dialog.dismiss();
+        });
+
+        btnReturn.setOnClickListener(v -> {
+            String remarks = etRemarks.getText().toString();
+
+            rejectUnits(unitId,remarks, (int) unitRating);
+            dialog.dismiss();
+        });
+        dialog.setCancelable(true);
+        dialog.show();
+
+    }
+//
+    public void approveUnits(String unitId, String remarks, int rating) {
+
+        mDataManager.approveUnit(unitId,
+                Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+
+//                        Intent in = new Intent(getActivity(), PendingUnitsListActivity.class);
+//                        startActivity(in);
+                        getActivity().finish();
+                        Toast.makeText(getActivity(),"Unit Approved", Toast.LENGTH_SHORT).show();
+//                        mActivity.hideLoading();
+//                        changesMade = true;
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+//                        mActivity.hideLoading();
+//                        allLoaded = true;
+//                        unitsAdapter.setLoadingDone();
+//                        toggleEmptyVisibility();
+                    }
+                });
+    }
+
+    public void rejectUnits(String unitId, String remarks, int rating) {
+        mDataManager.rejectUnit(unitId,
+                Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+                        Toast.makeText(getActivity(),"Unit Returned", Toast.LENGTH_SHORT).show();
+//                        Intent in = new Intent(getActivity(), PendingUnitsListActivity.class);
+//                        startActivity(in);
+                        getActivity().finish();
+//                        mActivity.hideLoading();
+//                        changesMade = true;
+//                        fetchData();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+//                        mActivity.hideLoading();
+//                        allLoaded = true;
+//                        unitsAdapter.setLoadingDone();
+//                        toggleEmptyVisibility();
+                    }
+                });
+    }
+    public void getUserUnitResponse() {
+//        String role;
+//        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+//            role= mDataManager.getLoginPrefs().getRole();
+//        }else {
+//            role = "staff";
+//        }
+
+
+        mDataManager.setSpecificSession("student",
+                "Student", "mx_humana_lms/api/" +
+                        mDataManager.getLoginPrefs().getProgramId()+"/masquerade",environment.getLoginPrefs().getLoginUserCookie(),
+                new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse response) {
+                        if (response.getSuccess()){
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                });
     }
 }

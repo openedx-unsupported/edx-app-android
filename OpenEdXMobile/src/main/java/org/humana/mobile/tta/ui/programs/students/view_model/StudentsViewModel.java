@@ -2,6 +2,8 @@ package org.humana.mobile.tta.ui.programs.students.view_model;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
@@ -272,7 +274,7 @@ public class StudentsViewModel extends BaseViewModel {
                 if (binding instanceof TRowStudentTabViewBinding) {
                     TRowStudentTabViewBinding itemBinding = (TRowStudentTabViewBinding) binding;
                     itemBinding.txtCompleted.setText(String.format("%s hrs", String.valueOf(model.completedHours)));
-                    itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.pendingCount)));
+                    itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.completedUnits)));
                     itemBinding.userName.setText(model.name);
                     if (model.profileImage != null) {
                         Glide.with(mActivity).load(
@@ -318,49 +320,49 @@ public class StudentsViewModel extends BaseViewModel {
                         }
                     });
 
-//                    itemBinding.imgInsta.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            if (model.social_profile.size()>0) {
-//                                for (int i=0; i<model.social_profile.size(); i++) {
-//                                    if (model.social_profile.get(i).platform.equals("linkedin")) {
-//                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-//                                                Uri.parse(model.social_profile.get(i).social_link));
-//                                        mActivity.startActivity(browserIntent);
-//                                    }
-//                                }
-//                            }
-//
-//                        }
-//                    }); itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            if (model.social_profile.size()>0) {
-//                                for (int i=0; i<model.social_profile.size(); i++) {
-//                                    if (model.social_profile.get(i).platform.equals("twitter")) {
-//                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-//                                                Uri.parse(model.social_profile.get(i).social_link));
-//                                        mActivity.startActivity(browserIntent);
-//                                    }
-//                                }
-//                            }
-//
-//                        }
-//                    }); itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            if (model.social_profile.size()>0) {
-//                                for (int i=0; i<model.social_profile.size(); i++) {
-//                                    if (model.social_profile.get(i).platform.equals("facebook")) {
-//                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-//                                                Uri.parse(model.social_profile.get(i).social_link));
-//                                        mActivity.startActivity(browserIntent);
-//                                    }
-//                                }
-//                            }
-//
-//                        }
-//                    });
+                    itemBinding.imgInsta.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (model.social_profile.size()>0) {
+                                for (int i=0; i<model.social_profile.size(); i++) {
+                                    if (model.social_profile.get(i).platform.equals("linkedin")) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(model.social_profile.get(i).social_link));
+                                        mActivity.startActivity(browserIntent);
+                                    }
+                                }
+                            }
+
+                        }
+                    }); itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (model.social_profile.size()>0) {
+                                for (int i=0; i<model.social_profile.size(); i++) {
+                                    if (model.social_profile.get(i).platform.equals("twitter")) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(model.social_profile.get(i).social_link));
+                                        mActivity.startActivity(browserIntent);
+                                    }
+                                }
+                            }
+
+                        }
+                    }); itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (model.social_profile.size()>0) {
+                                for (int i=0; i<model.social_profile.size(); i++) {
+                                    if (model.social_profile.get(i).platform.equals("facebook")) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(model.social_profile.get(i).social_link));
+                                        mActivity.startActivity(browserIntent);
+                                    }
+                                }
+                            }
+
+                        }
+                    });
 
                     itemBinding.getRoot().setOnClickListener(v -> {
                         if (listener != null) {
@@ -386,7 +388,7 @@ public class StudentsViewModel extends BaseViewModel {
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
                 itemBinding.txtCompleted.setText(String.format("%s hrs", String.valueOf(model.completedHours)));
-                itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.pendingCount)));
+                itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.completedUnits)));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null) {
 //                    Glide.with(mActivity).load(
@@ -448,51 +450,52 @@ public class StudentsViewModel extends BaseViewModel {
                 });
 
 
-//                itemBinding.imgInsta.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        if (model.social_profile.size()>0) {
-//                            for (int i=0; i<model.social_profile.size(); i++) {
-//                                if (model.social_profile.get(i).platform.equals("linkedin")) {
-//                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-//                                            Uri.parse(model.social_profile.get(i).social_link));
-//                                    mActivity.startActivity(browserIntent);
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                }); itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        if (model.social_profile.size()>0 && model.social_profile != null) {
-//                            for (int i=0; i<model.social_profile.size(); i++) {
-//                                if (model.social_profile.get(i).platform.equals("twitter")) {
-//                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-//                                            Uri.parse(model.social_profile.get(i).social_link));
-//                                    mActivity.startActivity(browserIntent);
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                }); itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (model.social_profile.size()>0 && model.social_profile != null) {
-//                            for (int i=0; i<model.social_profile.size(); i++) {
-//                                if (model.social_profile.get(i).platform.equals("facebook")) {
-//                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-//                                            Uri.parse(model.social_profile.get(i).social_link));
-//                                    mActivity.startActivity(browserIntent);
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                });
+                itemBinding.imgInsta.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (model.social_profile.size()>0) {
+                            for (int i=0; i<model.social_profile.size(); i++) {
+                                if (model.social_profile.get(i).platform.equals("linkedin")) {
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(model.social_profile.get(i).social_link));
+                                    mActivity.startActivity(browserIntent);
+                                }
+                            }
+                        }
+
+                    }
+                }); itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (model.social_profile.size()>0 && model.social_profile != null) {
+                            for (int i=0; i<model.social_profile.size(); i++) {
+                                if (model.social_profile.get(i).platform.equals("twitter")) {
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(model.social_profile.get(i).social_link));
+                                    mActivity.startActivity(browserIntent);
+                                }
+                            }
+                        }
+
+                    }
+                }); itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (model.social_profile.size()>0 && model.social_profile != null) {
+                            for (int i=0; i<model.social_profile.size(); i++) {
+                                if (model.social_profile.get(i).platform.equals("facebook")) {
+
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(model.social_profile.get(i).social_link));
+                                    mActivity.startActivity(browserIntent);
+                                }
+                            }
+                        }
+
+                    }
+                });
 
                 itemBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
@@ -504,6 +507,20 @@ public class StudentsViewModel extends BaseViewModel {
 
         }
     }
+
+    public static Intent newFacebookIntent(PackageManager pm, String url) {
+        Uri uri = Uri.parse(url);
+        try {
+            ApplicationInfo applicationInfo = pm.getApplicationInfo("org.humana.mobile", 0);
+            if (applicationInfo.enabled) {
+                // http://stackoverflow.com/a/24547437/1048340
+                uri = Uri.parse("fb://facewebmodal/f?href=" + url);
+            }
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return new Intent(Intent.ACTION_VIEW, uri);
+    }
+
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
         public FiltersAdapter(Context context) {
             super(context);

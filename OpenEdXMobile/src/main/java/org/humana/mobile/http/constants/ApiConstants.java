@@ -5,6 +5,7 @@ import android.support.annotation.StringDef;
 
 import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.prefs.PrefManager;
+import org.humana.mobile.tta.data.constants.Constants;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,6 +15,7 @@ public class ApiConstants {
     public static final String USER_NAME = "username";
     public static final String GROUP_ID = "groupId";
     public static final String ORG_CODE = "org";
+
 
     public static final String URL_MY_USER_INFO ="api/mobile/v0.5/my_user_info";
 
@@ -181,6 +183,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_PENDING_UNITS = "mx_humana_lms/api/v1/getPendingUnits";
 
+    public static final String URL_MX_GET_PENDING_USER_UNITS = "mx_humana_lms/api/";
+
     public static final String URL_MX_GET_CALENDAR_EVENT = "mx_humana_lms/api/v1/getEventCalender";
 
 
@@ -189,6 +193,8 @@ public class ApiConstants {
     public static final String TOKEN_TYPE_ACCESS = "access_token";
 
     public static final String TOKEN_TYPE_REFRESH = "refresh_token";
+
+
 
     @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
     @Retention(RetentionPolicy.SOURCE)

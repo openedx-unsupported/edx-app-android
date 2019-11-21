@@ -347,6 +347,8 @@ public class PrefManager {
         //MX Ankit: To store app update
         public static final String IS_UPDATE_SEEN_DATE = "update_seen";
         public static final String LATEST_APP_INFO_JSON = "latest_app_info_json";
+
+        public static final String LOGINUSERCOOKIE = "login_user_cookie";
     }
 
     public static final class Value {

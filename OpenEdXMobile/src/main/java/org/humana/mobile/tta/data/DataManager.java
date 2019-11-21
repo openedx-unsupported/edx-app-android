@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import org.humana.mobile.module.db.impl.DbHelper;
 import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.registration.model.RegistrationOption;
 import org.humana.mobile.services.CourseManager;
+import org.humana.mobile.services.EdxCookieManager;
 import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.task.Task;
 import org.humana.mobile.tta.Constants;
@@ -164,6 +166,7 @@ import org.humana.mobile.tta.task.program.CreatePeriodTask;
 import org.humana.mobile.tta.task.program.GetAllUnitsTask;
 import org.humana.mobile.tta.task.program.GetCourseComponentTask;
 import org.humana.mobile.tta.task.program.GetPendingUnitsTask;
+import org.humana.mobile.tta.task.program.SetSpecificSessionTask;
 import org.humana.mobile.tta.task.program.GetPendingUsersTask;
 import org.humana.mobile.tta.task.program.GetPeriodsTask;
 import org.humana.mobile.tta.task.program.GetProgramFiltersTask;
@@ -1649,6 +1652,7 @@ public class DataManager extends BaseRoboInjector {
             public void onSuccess(Comment result) {
                 callback.onSuccess(result);
             }
+
             @Override
             public void onFailure(HttpServerErrorResponse errorResponse) {
                 callback.onFailure(new TaException(errorResponse.getMessage()));
@@ -3268,7 +3272,7 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getEventCalendar(String programId, String sectionId, String role, int take, int skip,
-            int count,long eventCalendarDate, OnResponseCallback<List<CalendarEvents>> callback) {
+                                 int count, long eventCalendarDate, OnResponseCallback<List<CalendarEvents>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
@@ -3510,19 +3514,19 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetProgramsTask(context){
+            new GetProgramsTask(context) {
                 @Override
                 protected void onSuccess(List<Program> programs) throws Exception {
                     super.onSuccess(programs);
-                    if (programs == null || programs.isEmpty()){
+                    if (programs == null || programs.isEmpty()) {
                         callback.onFailure(new TaException("No programs available"));
                         return;
                     }
 
-                    for (Program program: programs){
+                    for (Program program : programs) {
                         program.setUsername(loginPrefs.getUsername());
                     }
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             mLocalDataSource.insertPrograms(programs);
@@ -3575,19 +3579,19 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetSectionsTask(context, programId){
+            new GetSectionsTask(context, programId) {
                 @Override
                 protected void onSuccess(List<Section> sections) throws Exception {
                     super.onSuccess(sections);
-                    if (sections == null || sections.isEmpty()){
+                    if (sections == null || sections.isEmpty()) {
                         callback.onFailure(new TaException("No sections available"));
                         return;
                     }
 
-                    for (Section section: sections){
+                    for (Section section : sections) {
                         section.setUsername(loginPrefs.getUsername());
                     }
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             mLocalDataSource.insertSections(sections);
@@ -3641,25 +3645,25 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetProgramFiltersTask(context, program_id, show_in, section_id){
+            new GetProgramFiltersTask(context, program_id, show_in, section_id) {
                 @Override
                 protected void onSuccess(List<ProgramFilter> programFilters) throws Exception {
                     super.onSuccess(programFilters);
-                    if (programFilters == null || programFilters.isEmpty()){
+                    if (programFilters == null || programFilters.isEmpty()) {
                         callback.onFailure(new TaException("Filters are not available"));
                         return;
                     }
 
                     List<ProgramFilter> removables = new ArrayList<>();
-                    for (ProgramFilter filter: programFilters){
-                        if (filter.getTags() == null || filter.getTags().isEmpty()){
+                    for (ProgramFilter filter : programFilters) {
+                        if (filter.getTags() == null || filter.getTags().isEmpty()) {
                             removables.add(filter);
                         } else {
                             Collections.sort(filter.getTags());
                         }
                     }
 
-                    for (ProgramFilter filter: removables){
+                    for (ProgramFilter filter : removables) {
                         programFilters.remove(filter);
                     }
 
@@ -3695,19 +3699,19 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetPeriodsTask(context, filters, programId, sectionId, role, take, skip){
+            new GetPeriodsTask(context, filters, programId, sectionId, role, take, skip) {
                 @Override
                 protected void onSuccess(List<Period> periods) throws Exception {
                     super.onSuccess(periods);
-                    if (periods == null || periods.isEmpty()){
+                    if (periods == null || periods.isEmpty()) {
                         callback.onFailure(new TaException("No periods are created"));
                         return;
                     }
 
-                    for (Period period: periods){
+                    for (Period period : periods) {
                         period.setUsername(loginPrefs.getUsername());
                     }
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             mLocalDataSource.insertPeriods(periods);
@@ -3730,25 +3734,25 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
-                         String role,String student_username, long periodId, int take, int skip, long startDateTime,long endDateTime, OnResponseCallback<List<Unit>> callback){
+                         String role, String student_username, long periodId, int take, int skip, long startDateTime, long endDateTime, OnResponseCallback<List<Unit>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip,student_username, startDateTime,
-                    endDateTime){
+            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip, student_username, startDateTime,
+                    endDateTime) {
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
-                    if (units == null || units.isEmpty()){
+                    if (units == null || units.isEmpty()) {
                         callback.onFailure(new TaException("No units are available"));
                         return;
                     }
 
-                    for (Unit unit: units){
+                    for (Unit unit : units) {
                         unit.setProgramId(programId);
                         unit.setSectionId(sectionId);
                     }
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             mLocalDataSource.insertUnits(units);
@@ -3769,25 +3773,26 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+
     public void getUserStatus(List<ProgramFilter> filters, String programId, String sectionId,
-                              String role, String studentName, int take, int skip, OnResponseCallback<List<Unit>> callback){
+                              String role, String studentName, int take, int skip, OnResponseCallback<List<Unit>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUserStatusTask(context, filters, programId, sectionId, role, studentName, take, skip){
+            new GetUserStatusTask(context, filters, programId, sectionId, role, studentName, take, skip) {
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
-                    if (units == null || units.isEmpty()){
+                    if (units == null || units.isEmpty()) {
                         callback.onFailure(new TaException("No units are available"));
                         return;
                     }
 
-                    for (Unit unit: units){
+                    for (Unit unit : units) {
                         unit.setProgramId(programId);
                         unit.setSectionId(sectionId);
                     }
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             mLocalDataSource.insertUnits(units);
@@ -3814,20 +3819,20 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetAllUnitsTask(context, filters, programId, sectionId, searchText, periodId, take, skip){
+            new GetAllUnitsTask(context, filters, programId, sectionId, searchText, periodId, take, skip) {
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
                     super.onSuccess(units);
-                    if (units == null || units.isEmpty()){
+                    if (units == null || units.isEmpty()) {
                         callback.onFailure(new TaException("No units are available"));
                         return;
                     }
 
-                    for (Unit unit: units){
+                    for (Unit unit : units) {
                         unit.setProgramId(programId);
                         unit.setSectionId(sectionId);
                     }
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             mLocalDataSource.insertUnits(units);
@@ -3913,11 +3918,11 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUsersTask(context, programId, sectionId, take, skip){
+            new GetUsersTask(context, programId, sectionId, take, skip) {
                 @Override
                 protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
                     super.onSuccess(programUsers);
-                    if (programUsers == null || programUsers.isEmpty()){
+                    if (programUsers == null || programUsers.isEmpty()) {
                         callback.onFailure(new TaException("No users are available"));
                         return;
                     }
@@ -3942,11 +3947,11 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetPendingUsersTask(context, programId, sectionId, take, skip){
+            new GetPendingUsersTask(context, programId, sectionId, take, skip) {
                 @Override
                 protected void onSuccess(List<ProgramUser> programUsers) throws Exception {
                     super.onSuccess(programUsers);
-                    if (programUsers == null || programUsers.isEmpty()){
+                    if (programUsers == null || programUsers.isEmpty()) {
                         callback.onFailure(new TaException("No users are available with units pending for approval"));
                         return;
                     }
@@ -3995,15 +4000,37 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
+    public void setSpecificSession(String role, String username, String url, String instructor_cookie, OnResponseCallback<SuccessResponse> callback) {
+        if (NetworkUtil.isConnected(context)) {
+
+            new SetSpecificSessionTask(context, role, username, url, instructor_cookie) {
+                @Override
+                protected void onSuccess(SuccessResponse response) throws Exception {
+                    super.onSuccess(response);
+
+                    callback.onSuccess(response);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+    }
+
     public void createPeriod(String programId, String sectionId, String lang,
                              OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
-            new CreatePeriodTask(context, programId, sectionId, lang){
+            new CreatePeriodTask(context, programId, sectionId, lang) {
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);
-                    if (successResponse == null){
+                    if (successResponse == null) {
                         callback.onFailure(new TaException("Unable to create periods"));
                         return;
                     }
@@ -4029,11 +4056,11 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new SavePeriodTask(context, periodId, addedIds, removedIds, proposedDateModified, proposedDateAdded){
+            new SavePeriodTask(context, periodId, addedIds, removedIds, proposedDateModified, proposedDateAdded) {
                 @Override
                 protected void onSuccess(SuccessResponse successResponse) throws Exception {
                     super.onSuccess(successResponse);
-                    if (successResponse == null){
+                    if (successResponse == null) {
                         callback.onFailure(new TaException("Unable to save period"));
                         return;
                     }
@@ -4053,7 +4080,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void approveUnit(String unitId, String username,String remarks, int rating, OnResponseCallback<SuccessResponse> callback) {
+    public void approveUnit(String unitId, String username, String remarks, int rating, OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
@@ -4080,6 +4107,7 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+
     public void rejectUnit(String unitId, String username, String remarks, int rating, OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
@@ -4217,15 +4245,15 @@ public class DataManager extends BaseRoboInjector {
         return v_name;
     }
 
-    public void getBlockComponent(String blockId, String courseId, OnResponseCallback<CourseComponent> callback){
+    public void getBlockComponent(String blockId, String courseId, OnResponseCallback<CourseComponent> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new GetBlockComponentFromServerTask(context, blockId, courseId){
+            new GetBlockComponentFromServerTask(context, blockId, courseId) {
                 @Override
                 protected void onSuccess(CourseComponent courseComponent) throws Exception {
                     super.onSuccess(courseComponent);
-                    if (courseComponent != null){
+                    if (courseComponent != null) {
                         courseManager.addBlockComponentInAppLevelCache(courseComponent, courseId);
                         callback.onSuccess(courseComponent);
                     } else {
@@ -4247,19 +4275,19 @@ public class DataManager extends BaseRoboInjector {
     }
 
     private void getBlockComponentFromLocal(String blockId, String courseId,
-                                           OnResponseCallback<CourseComponent> callback, Exception e){
+                                            OnResponseCallback<CourseComponent> callback, Exception e) {
 
         CourseComponent component = courseManager.getBlockComponent(blockId, courseId);
-        if (component != null){
+        if (component != null) {
             callback.onSuccess(component);
             return;
         }
 
-        new GetBlockComponentFromCacheTask(context, blockId, courseId){
+        new GetBlockComponentFromCacheTask(context, blockId, courseId) {
             @Override
             protected void onSuccess(CourseComponent courseComponent) throws Exception {
                 super.onSuccess(courseComponent);
-                if (courseComponent != null){
+                if (courseComponent != null) {
                     callback.onSuccess(courseComponent);
                 } else {
                     callback.onFailure(e);
@@ -4286,6 +4314,7 @@ public class DataManager extends BaseRoboInjector {
                 super.onResponse(responseBody);
                 callback.onSuccess(responseBody);
             }
+
             @Override
             protected void onFailure(@NonNull Throwable error) {
                 super.onFailure(error);
@@ -4296,15 +4325,15 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void setProposedDate(String programId, String sectionId, long proposedDate, long periodId, String unitId,
-                                OnResponseCallback<SuccessResponse> callback){
+                                OnResponseCallback<SuccessResponse> callback) {
 
-        if (NetworkUtil.isConnected(context)){
+        if (NetworkUtil.isConnected(context)) {
 
-            new SetProposedDateTask(context, programId, sectionId, periodId, proposedDate, unitId){
+            new SetProposedDateTask(context, programId, sectionId, periodId, proposedDate, unitId) {
                 @Override
                 protected void onSuccess(SuccessResponse response) throws Exception {
                     super.onSuccess(response);
-                    if (response != null && response.getSuccess()){
+                    if (response != null && response.getSuccess()) {
                         callback.onSuccess(response);
                     } else {
                         callback.onFailure(new TaException("Error occurred. Unable to set proposed date"));
@@ -4323,5 +4352,8 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
+    public String getLoginUserCookie() {
+        return edxEnvironment.getLoginPrefs().getLoginUserCookie();
+    }
 }
 
