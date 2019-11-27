@@ -215,8 +215,8 @@ dependencies {
     implementation 'com.newrelic.agent.android:android-agent:5.4.1'
 
     //Include DI framework
-    implementation 'org.roboguice:roboguice:3.0.1'
-    compileOnly 'org.roboguice:roboblender:3.0.1'
+//    implementation 'org.roboguice:roboguice:3.0.1'
+//    compileOnly 'org.roboguice:roboblender:3.0.1'
 
     // test project configuration
     testImplementation 'junit:junit:4.12'
