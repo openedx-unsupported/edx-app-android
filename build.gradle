@@ -17,7 +17,7 @@ buildscript {
         mavenCentral()  //  This is the Maven Central repo
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:${GRADLE_PLUGIN_VERSION}"
+        classpath "com.android.tools.build:gradle:3.3.2"
         classpath 'com.google.gms:google-services:4.2.0'
         // Add the dependency for the Performance Monitoring plugin
         classpath 'com.google.firebase:perf-plugin:1.2.1'  // Performance Monitoring plugin
