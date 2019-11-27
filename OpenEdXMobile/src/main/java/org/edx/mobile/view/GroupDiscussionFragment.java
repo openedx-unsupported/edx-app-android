@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;

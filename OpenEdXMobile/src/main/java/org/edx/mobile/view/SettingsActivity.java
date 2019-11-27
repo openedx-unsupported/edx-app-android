@@ -1,7 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;

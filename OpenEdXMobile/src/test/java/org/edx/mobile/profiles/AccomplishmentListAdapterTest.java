@@ -1,7 +1,7 @@
 package org.edx.mobile.profiles;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;

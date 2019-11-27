@@ -2,7 +2,7 @@ package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.core.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;

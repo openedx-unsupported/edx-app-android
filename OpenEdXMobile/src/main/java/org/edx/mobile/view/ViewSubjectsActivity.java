@@ -2,7 +2,7 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.logger.Logger;

@@ -3,7 +3,7 @@ package org.edx.mobile.model;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.joanzapata.iconify.Icon;
 

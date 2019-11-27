@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.Button;
 import android.widget.RatingBar;

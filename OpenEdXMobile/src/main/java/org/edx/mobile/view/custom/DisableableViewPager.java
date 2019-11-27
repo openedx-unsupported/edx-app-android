@@ -2,7 +2,8 @@ package org.edx.mobile.view.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.core.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
+
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 

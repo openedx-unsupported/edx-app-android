@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import androidx.annotation.NonNull;
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
 public class PermissionsUtil {

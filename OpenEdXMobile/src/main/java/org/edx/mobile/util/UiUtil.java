@@ -8,10 +8,10 @@ import android.os.Build;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RawRes;
-import androidx.core.app.Fragment;
-import androidx.core.app.FragmentManager;
-import androidx.core.widget.SwipeRefreshLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,7 +111,7 @@ public class UiUtil {
     /**
      * Restarts the fragment without destroying the fragment instance.
      *
-     * @param The fragment to restart.
+     * @param fragment The fragment to restart.
      */
     public static void restartFragment(@Nullable Fragment fragment) {
         if (fragment != null) {

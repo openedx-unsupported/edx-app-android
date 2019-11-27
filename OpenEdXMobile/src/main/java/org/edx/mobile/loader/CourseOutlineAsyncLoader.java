@@ -1,8 +1,9 @@
 package org.edx.mobile.loader;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
-import androidx.core.content.AsyncTaskLoader;
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.google.inject.Inject;
 
@@ -55,7 +56,8 @@ public class CourseOutlineAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<Co
     /**
      * Handles a request to completely reset the Loader.
      */
-    @Override protected void onReset() {
+    @Override
+    protected void onReset() {
         super.onReset();
 
         // Ensure the loader is stopped.
@@ -65,7 +67,8 @@ public class CourseOutlineAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<Co
     /**
      * Handles a request to stop the Loader.
      */
-    @Override protected void onStopLoading() {
+    @Override
+    protected void onStopLoading() {
         // Attempt to cancel the current load task if possible.
         cancelLoad();
     }

@@ -1,7 +1,7 @@
 package org.edx.mobile.util;
 
 import android.content.Intent;
-import androidx.core.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.widget.Toast;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;

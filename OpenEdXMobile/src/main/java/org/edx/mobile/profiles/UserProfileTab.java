@@ -2,7 +2,7 @@ package org.edx.mobile.profiles;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public class UserProfileTab {
     private final

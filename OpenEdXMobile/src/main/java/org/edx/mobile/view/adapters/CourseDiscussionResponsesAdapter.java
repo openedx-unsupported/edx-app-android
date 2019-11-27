@@ -3,7 +3,7 @@ package org.edx.mobile.view.adapters;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.core.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;

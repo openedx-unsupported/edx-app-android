@@ -1,7 +1,8 @@
 package org.edx.mobile.loader;
 
 import android.content.Context;
-import androidx.core.content.AsyncTaskLoader;
+
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.google.inject.Inject;
 

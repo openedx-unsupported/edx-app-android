@@ -17,7 +17,7 @@ import org.edx.mobile.view.dialog.AlertDialogFragment;
  */
 public class DialogErrorNotification extends ErrorNotification {
     /**
-     * Reference of the {@link androidx.core.app.Fragment} we will be displaying this error on.
+     * Reference of the {@link androidx.fragment.app.Fragment} we will be displaying this error on.
      */
     @NonNull
     private final BaseFragment baseFragment;
@@ -25,8 +25,8 @@ public class DialogErrorNotification extends ErrorNotification {
     /**
      * Construct a new instance of the notification.
      *
-     * @param baseFragment Reference of the {@link androidx.core.app.Fragment} to use for
-     *                     displaying the {@link androidx.core.app.DialogFragment}.
+     * @param baseFragment Reference of the {@link androidx.fragment.app.Fragment} to use for
+     *                     displaying the {@link androidx.fragment.app.DialogFragment}.
      */
     public DialogErrorNotification(@NonNull final BaseFragment baseFragment) {
         this.baseFragment = baseFragment;

@@ -3,8 +3,8 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import androidx.core.app.DialogFragment;
-import androidx.core.app.FragmentActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.inject.Inject;
 

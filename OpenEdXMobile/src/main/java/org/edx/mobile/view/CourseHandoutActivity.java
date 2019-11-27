@@ -1,6 +1,6 @@
 package org.edx.mobile.view;
 
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;

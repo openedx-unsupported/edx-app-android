@@ -2,8 +2,8 @@ package org.edx.mobile.util.links;
 
 import android.os.Handler;
 import androidx.annotation.NonNull;
-import androidx.core.app.DialogFragment;
-import androidx.core.app.FragmentActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;

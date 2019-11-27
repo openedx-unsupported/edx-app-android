@@ -1,9 +1,10 @@
 package org.edx.mobile.view.custom;
 
 import android.content.Context;
-import androidx.core.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.viewpager.widget.ViewPager;
 
 // Just like a ViewPager only it doesn't scroll side to side
 // Per http://stackoverflow.com/questions/7814017/is-it-possible-to-disable-scrolling-on-a-viewpager

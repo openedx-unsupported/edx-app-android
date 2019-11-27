@@ -2,9 +2,10 @@ package org.edx.mobile.view;
 
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.core.app.LoaderManager;
-import androidx.core.content.Loader;
-import androidx.core.widget.SwipeRefreshLayout;
+
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
