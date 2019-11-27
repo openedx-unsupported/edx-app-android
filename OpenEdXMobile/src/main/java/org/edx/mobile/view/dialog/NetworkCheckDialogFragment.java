@@ -1,7 +1,7 @@
 package org.edx.mobile.view.dialog;
 
 import org.edx.mobile.R;
-import android.support.v4.app.DialogFragment;
+import androidx.core.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

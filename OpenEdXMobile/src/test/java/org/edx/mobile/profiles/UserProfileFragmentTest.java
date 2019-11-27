@@ -1,6 +1,6 @@
 package org.edx.mobile.profiles;
 
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 

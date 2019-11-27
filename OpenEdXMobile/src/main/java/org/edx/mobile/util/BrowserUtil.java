@@ -3,7 +3,7 @@ package org.edx.mobile.util;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
+import androidx.core.app.FragmentActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 

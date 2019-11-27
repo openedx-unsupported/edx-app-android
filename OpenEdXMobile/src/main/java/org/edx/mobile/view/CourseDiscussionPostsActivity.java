@@ -1,7 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.core.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ImageSpan;

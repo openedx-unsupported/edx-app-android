@@ -1,7 +1,7 @@
 package org.edx.mobile.services;
 
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.core.app.DialogFragment;
+import androidx.core.app.FragmentActivity;
 import android.text.TextUtils;
 
 import com.google.inject.Inject;

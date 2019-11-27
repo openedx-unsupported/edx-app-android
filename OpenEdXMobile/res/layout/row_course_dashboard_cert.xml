@@ -43,7 +43,7 @@
                 android:textColor="@color/edx_brand_gray_base"
                 android:textSize="@dimen/edx_xx_small" />
 
-            <android.support.v4.widget.Space
+            <androidx.core.widget.Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />

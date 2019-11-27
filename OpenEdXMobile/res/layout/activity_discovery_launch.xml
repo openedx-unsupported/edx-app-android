@@ -44,7 +44,7 @@
                 app:theme="@style/search_view_theme" />
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.core.widget.Space
             android:id="@+id/space"
             android:layout_width="0dp"
             android:layout_height="0dp"

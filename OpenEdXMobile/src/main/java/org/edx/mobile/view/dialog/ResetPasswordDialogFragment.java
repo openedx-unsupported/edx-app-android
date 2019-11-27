@@ -2,8 +2,8 @@ package org.edx.mobile.view.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
+
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +16,6 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.databinding.ResetPasswordDialogBinding;
-import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.interfaces.OnActivityResultListener;
 import org.edx.mobile.model.api.ResetPasswordResponse;

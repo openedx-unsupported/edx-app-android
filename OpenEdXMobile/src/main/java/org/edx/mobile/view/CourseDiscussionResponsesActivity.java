@@ -1,6 +1,6 @@
 package org.edx.mobile.view;
 
-import android.support.v4.app.Fragment;
+import androidx.core.app.Fragment;
 
 import com.google.inject.Inject;
 

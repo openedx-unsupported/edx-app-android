@@ -127,12 +127,12 @@ dependencies {
     // with module updates.
     implementation project (':android-iconify-fontawesome')
 
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
-    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY_VERSION}"
-    implementation "com.android.support:cardview-v7:${SUPPORT_LIBRARY_VERSION}"
-    implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
+    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "com.google.android.material:material:1.0.0"
     // For the optional Nullable annotation
-    implementation "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}"
+    implementation "androidx.annotation:annotation:1.0.0"
 
     // NOTE: Always update the version of google-services and firebase libraries using the ones
     // provided in this link: https://developers.google.com/android/guides/releases
@@ -159,7 +159,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.9.2'
 
     // Google cast sdk
-    implementation "com.android.support:mediarouter-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "androidx.mediarouter:mediarouter:1.0.0"
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
     implementation 'com.facebook.android:facebook-login:5.9.0'
@@ -180,9 +180,9 @@ dependencies {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation ('com.github.bumptech.glide:okhttp3-integration:1.4.0'){
         exclude group: 'glide-parent'
     }
@@ -242,10 +242,10 @@ dependencies {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker:1.4'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-dx:1.4'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-mockito:1.4'

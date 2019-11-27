@@ -9,9 +9,9 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RawRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.core.app.Fragment;
+import androidx.core.app.FragmentManager;
+import androidx.core.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,6 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**

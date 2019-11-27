@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.core.app.DialogFragment;
+import androidx.core.app.Fragment;
 
 /**
  * {@link android.app.Activity#onActivityResult(int, int, Intent)} is a protected function in the

@@ -3,15 +3,13 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.core.app.DialogFragment;
+import androidx.core.app.FragmentActivity;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.core.EdxEnvironment;
-import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
