@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.telephony.TelephonyManager;
 
 import org.edx.mobile.R;

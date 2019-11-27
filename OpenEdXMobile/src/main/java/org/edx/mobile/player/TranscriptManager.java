@@ -3,9 +3,9 @@ package org.edx.mobile.player;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

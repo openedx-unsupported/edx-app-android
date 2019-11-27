@@ -2,9 +2,9 @@ package com.joanzapata.iconify.internal;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconFontDescriptor;

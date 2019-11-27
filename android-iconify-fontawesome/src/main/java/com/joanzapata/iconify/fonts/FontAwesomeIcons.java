@@ -1,6 +1,6 @@
 package com.joanzapata.iconify.fonts;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.joanzapata.iconify.Icon;
 

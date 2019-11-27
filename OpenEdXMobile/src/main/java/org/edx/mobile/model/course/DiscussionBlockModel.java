@@ -1,6 +1,6 @@
 package org.edx.mobile.model.course;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class DiscussionBlockModel extends CourseComponent {
     private DiscussionData data;

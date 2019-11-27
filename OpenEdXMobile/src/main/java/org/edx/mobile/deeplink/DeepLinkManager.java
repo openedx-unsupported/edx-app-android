@@ -1,7 +1,7 @@
 package org.edx.mobile.deeplink;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;

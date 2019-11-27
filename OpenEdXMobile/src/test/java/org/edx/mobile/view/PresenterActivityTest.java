@@ -2,7 +2,7 @@
 package org.edx.mobile.view;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.test.GenericSuperclassUtils;

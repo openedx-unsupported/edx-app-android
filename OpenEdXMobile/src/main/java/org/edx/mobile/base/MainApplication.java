@@ -8,8 +8,8 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.multidex.MultiDexApplication;
+import androidx.annotation.NonNull;
+import androidx.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;

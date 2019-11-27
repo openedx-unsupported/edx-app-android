@@ -1,6 +1,6 @@
 package org.edx.mobile.event;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * An event fired on application start in case the app updated to a newer version.

@@ -10,7 +10,7 @@
         android:orientation="vertical"
         android:padding="@dimen/edx_margin">
 
-        <android.support.v7.widget.SearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/sv_search_subjects"
             style="@style/launch_search_bar"
             android:layout_marginBottom="@dimen/widget_margin"

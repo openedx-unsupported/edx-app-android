@@ -3,7 +3,7 @@ package org.edx.mobile.http.serialization;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

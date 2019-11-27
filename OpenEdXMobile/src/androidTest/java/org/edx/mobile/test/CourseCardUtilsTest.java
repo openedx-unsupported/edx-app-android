@@ -1,7 +1,7 @@
 package org.edx.mobile.test;
 
 import android.content.Context;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.api.StartType;

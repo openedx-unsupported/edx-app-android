@@ -1,6 +1,6 @@
 package org.edx.mobile.event;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.user.Account;
 

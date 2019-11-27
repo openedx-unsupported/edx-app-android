@@ -1,6 +1,6 @@
 package org.edx.mobile.model.course;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;

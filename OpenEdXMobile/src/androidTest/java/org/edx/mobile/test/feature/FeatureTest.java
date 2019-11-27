@@ -1,6 +1,6 @@
 package org.edx.mobile.test.feature;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.EdxEnvironment;

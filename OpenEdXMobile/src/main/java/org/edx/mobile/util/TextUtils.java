@@ -1,8 +1,8 @@
 package org.edx.mobile.util;
 
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;

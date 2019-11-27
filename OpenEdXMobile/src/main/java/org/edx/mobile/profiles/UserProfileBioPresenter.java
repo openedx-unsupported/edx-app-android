@@ -1,6 +1,6 @@
 package org.edx.mobile.profiles;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.util.observer.CachingObservable;
 import org.edx.mobile.util.observer.Func1;

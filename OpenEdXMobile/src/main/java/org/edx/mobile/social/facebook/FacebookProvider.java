@@ -1,7 +1,7 @@
 package org.edx.mobile.social.facebook;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.facebook.AccessToken;
 import com.google.inject.Singleton;

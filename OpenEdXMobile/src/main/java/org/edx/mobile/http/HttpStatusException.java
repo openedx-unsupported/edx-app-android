@@ -1,6 +1,6 @@
 package org.edx.mobile.http;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import okhttp3.Response;
 

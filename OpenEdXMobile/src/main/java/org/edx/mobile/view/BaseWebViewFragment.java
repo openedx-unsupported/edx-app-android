@@ -3,7 +3,7 @@ package org.edx.mobile.view;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;

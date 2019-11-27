@@ -2,7 +2,7 @@ package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;

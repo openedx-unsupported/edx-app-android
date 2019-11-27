@@ -1,6 +1,6 @@
 package org.edx.mobile.view;
 
-import android.support.v4.view.ViewPager;
+import androidx.core.view.ViewPager;
 import android.view.View;
 
 import org.edx.mobile.R;
