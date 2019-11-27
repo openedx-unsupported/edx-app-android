@@ -1,7 +1,7 @@
 package org.edx.mobile.view.view_holders;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.core.widget.TextViewCompat;
 import android.view.View;
 import android.view.ViewGroup;

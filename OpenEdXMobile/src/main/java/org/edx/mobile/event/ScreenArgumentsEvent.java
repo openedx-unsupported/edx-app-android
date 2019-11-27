@@ -1,7 +1,7 @@
 package org.edx.mobile.event;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Event fired to pass the arguments ({@link Bundle Bundle}) to a Fragment inside a ViewPager

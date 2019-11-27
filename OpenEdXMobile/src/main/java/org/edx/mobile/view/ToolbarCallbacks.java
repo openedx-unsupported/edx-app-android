@@ -1,7 +1,7 @@
 package org.edx.mobile.view;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import android.widget.ImageView;
 import android.widget.TextView;
 

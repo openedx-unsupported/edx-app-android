@@ -1,6 +1,6 @@
 package org.edx.mobile.model.api;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.course.BlockType;

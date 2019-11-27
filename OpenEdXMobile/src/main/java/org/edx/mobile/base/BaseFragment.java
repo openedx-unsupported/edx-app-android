@@ -3,8 +3,8 @@ package org.edx.mobile.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NewRelicEvent;

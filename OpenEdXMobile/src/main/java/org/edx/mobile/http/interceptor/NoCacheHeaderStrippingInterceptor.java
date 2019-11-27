@@ -1,6 +1,6 @@
 package org.edx.mobile.http.interceptor;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;

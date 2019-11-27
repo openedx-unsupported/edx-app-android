@@ -1,8 +1,8 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.Fragment;
 import androidx.core.widget.SwipeRefreshLayout;
 import android.text.TextUtils;

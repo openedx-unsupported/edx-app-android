@@ -3,7 +3,7 @@ package org.edx.mobile.view.view_holders;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.core.widget.TextViewCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 

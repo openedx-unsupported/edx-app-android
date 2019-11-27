@@ -1,7 +1,7 @@
 package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.core.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;

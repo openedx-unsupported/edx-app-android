@@ -1,6 +1,6 @@
 package org.edx.mobile.test;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.view.Presenter;
 import org.junit.After;

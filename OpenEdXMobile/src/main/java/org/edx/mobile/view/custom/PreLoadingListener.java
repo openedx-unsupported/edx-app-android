@@ -1,6 +1,6 @@
 package org.edx.mobile.view.custom;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Provides valuable loading information of pages inside a ViewPager to optimize its pre-loading

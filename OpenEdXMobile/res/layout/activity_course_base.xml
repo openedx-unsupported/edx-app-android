@@ -11,7 +11,7 @@
     TODO: Convert this whole layout into a fragment's layout as part of LEARNER-5278.
     -->
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -121,5 +121,5 @@
 
             </FrameLayout>
         </LinearLayout>
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.core.widget.DrawerLayout>

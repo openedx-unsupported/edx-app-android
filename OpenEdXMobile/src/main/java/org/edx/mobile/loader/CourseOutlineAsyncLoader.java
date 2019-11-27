@@ -1,7 +1,7 @@
 package org.edx.mobile.loader;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.core.content.AsyncTaskLoader;
 
 import com.google.inject.Inject;

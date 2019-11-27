@@ -1,6 +1,6 @@
 package org.edx.mobile.util.observer;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class Observables {
     public static<A, B> Observable<B> map(Observable<A> observable, final Func1<A, B> func) {

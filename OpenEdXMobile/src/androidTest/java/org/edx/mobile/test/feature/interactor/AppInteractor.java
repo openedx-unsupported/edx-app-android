@@ -2,7 +2,7 @@ package org.edx.mobile.test.feature.interactor;
 
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 
 public class AppInteractor {
     public AppLaunchInteractor launchApp() {

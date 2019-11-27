@@ -1,6 +1,6 @@
 package org.edx.mobile.test;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.util.observer.MainThreadObservable;
 import org.junit.Before;

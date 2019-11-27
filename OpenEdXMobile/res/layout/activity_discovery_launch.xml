@@ -37,7 +37,7 @@
                 android:textColor="@color/edx_brand_primary_base"
                 android:textSize="@dimen/edx_xx_large" />
 
-            <android.support.v7.widget.SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/sv_search_courses"
                 style="@style/launch_search_bar"
                 android:layout_marginTop="@dimen/widget_margin_quadruple"

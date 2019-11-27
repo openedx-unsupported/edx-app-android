@@ -30,7 +30,7 @@
                 android:text="@string/discussion_posts_refine"
                 android:textColor="@color/edx_brand_gray_accent" />
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/discussion_posts_filter_spinner"
                 style="?attr/popupSpinnerStyle"
                 android:layout_width="0dp"
@@ -41,7 +41,7 @@
                 tools:listitem="@layout/row_discussion_thread_dropdown"
                 tools:targetApi="17" />
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/discussion_posts_sort_spinner"
                 style="?attr/popupSpinnerStyle"
                 android:layout_width="0dp"

@@ -1,6 +1,6 @@
 package org.edx.mobile.test.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 

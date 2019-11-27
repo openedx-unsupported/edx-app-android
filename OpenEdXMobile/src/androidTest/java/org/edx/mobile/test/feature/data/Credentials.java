@@ -1,6 +1,6 @@
 package org.edx.mobile.test.feature.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;

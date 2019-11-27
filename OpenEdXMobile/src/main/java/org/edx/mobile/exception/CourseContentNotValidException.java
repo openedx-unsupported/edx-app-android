@@ -1,6 +1,6 @@
 package org.edx.mobile.exception;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Signals that the course content returned from server is not valid. Example issues in the course's

@@ -1,7 +1,7 @@
 package org.edx.mobile.test;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.util.observer.BasicObservable;
 import org.edx.mobile.util.observer.Func1;

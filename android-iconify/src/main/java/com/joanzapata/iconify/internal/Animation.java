@@ -1,7 +1,7 @@
 package com.joanzapata.iconify.internal;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.Nullable;
+import androidx.annotation.CheckResult;
+import androidx.annotation.Nullable;
 
 public enum Animation {
     SPIN("spin"), PULSE("pulse"), NONE(null);

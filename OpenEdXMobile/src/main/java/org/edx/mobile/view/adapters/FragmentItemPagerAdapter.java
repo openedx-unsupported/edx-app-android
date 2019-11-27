@@ -1,6 +1,6 @@
 package org.edx.mobile.view.adapters;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.core.app.Fragment;
 import androidx.core.app.FragmentManager;
 import androidx.core.app.FragmentStatePagerAdapter;

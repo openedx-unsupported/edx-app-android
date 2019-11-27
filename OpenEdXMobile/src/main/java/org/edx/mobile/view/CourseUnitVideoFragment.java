@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.core.app.FragmentManager;
 import androidx.core.app.FragmentTransaction;
 import android.util.DisplayMetrics;

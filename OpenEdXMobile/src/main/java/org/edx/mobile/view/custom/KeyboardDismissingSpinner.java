@@ -1,7 +1,7 @@
 package org.edx.mobile.view.custom;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 
 import org.edx.mobile.util.SoftKeyboardUtil;

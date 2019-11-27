@@ -1,7 +1,7 @@
 package org.edx.mobile.core;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;

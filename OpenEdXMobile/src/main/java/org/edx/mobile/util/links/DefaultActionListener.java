@@ -1,7 +1,7 @@
 package org.edx.mobile.util.links;
 
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.core.app.DialogFragment;
 import androidx.core.app.FragmentActivity;
 import android.text.TextUtils;

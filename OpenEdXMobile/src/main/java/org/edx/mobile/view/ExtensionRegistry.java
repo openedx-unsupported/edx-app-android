@@ -1,6 +1,6 @@
 package org.edx.mobile.view;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.HashMap;

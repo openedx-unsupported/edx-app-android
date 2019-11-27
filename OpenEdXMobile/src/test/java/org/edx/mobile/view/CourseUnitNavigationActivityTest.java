@@ -7,7 +7,7 @@ import androidx.core.app.Fragment;
 import androidx.core.app.FragmentManager;
 import androidx.core.view.PagerAdapter;
 import androidx.core.view.ViewPager;
-import android.support.v7.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 import android.view.View;
 import android.widget.TextView;
 

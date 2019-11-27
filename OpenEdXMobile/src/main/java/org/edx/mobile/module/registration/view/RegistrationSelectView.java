@@ -1,6 +1,6 @@
 package org.edx.mobile.module.registration.view;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;

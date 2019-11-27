@@ -2,8 +2,8 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.widget.TextViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;

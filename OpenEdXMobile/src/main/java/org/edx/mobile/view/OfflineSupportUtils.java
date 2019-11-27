@@ -2,7 +2,7 @@ package org.edx.mobile.view;
 
 
 import android.app.Activity;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.base.RoboAppCompatActivity;
 import org.edx.mobile.interfaces.SnackbarStatusListener;
