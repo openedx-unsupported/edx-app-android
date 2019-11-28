@@ -3,8 +3,6 @@ package org.edx.mobile.profiles;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.apache.commons.lang.StringUtils;
-
 public class UserProfileBioModel {
     @Nullable
     public final String bioText;
@@ -30,6 +28,6 @@ public class UserProfileBioModel {
             return false;
         }
         UserProfileBioModel model = (UserProfileBioModel)object;
-        return contentType.equals(model.contentType) && StringUtils.equals(model.bioText, bioText);
+        return contentType.equals(model.contentType) && model.bioText != null && model.bioText.equals(bioText);
     }
 }
