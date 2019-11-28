@@ -124,11 +124,10 @@ public class ImageUtils {
 
     public static void setRoundedCornerImage(@NonNull ImageView imageView,
                                              @DrawableRes int drawableRes) {
-        final Context context = imageView.getContext();
+        /*final Context context = imageView.getContext();
         final float cornerRadius = context.getResources().getDimension(R.dimen.subject_item_corner_radius);
         Glide.with(context)
-                .load(drawableRes)
-                .asBitmap()
+                .load(drawableRes).
                 .into(new BitmapImageViewTarget(imageView) {
                     @Override
                     protected void setResource(Bitmap resource) {
@@ -137,6 +136,6 @@ public class ImageUtils {
                         circularBitmapDrawable.setCornerRadius(cornerRadius); // radius for corners
                         view.setImageDrawable(circularBitmapDrawable);
                     }
-                });
+                });*/
     }
 }

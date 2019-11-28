@@ -2,6 +2,7 @@ package org.edx.mobile.module.db.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -230,8 +231,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         if (callback != null) {
             return null;
         } else {
-            return ArrayUtils.toPrimitive(
-                    downloadingList.toArray(new Long[downloadingList.size()]));
+            return ArrayUtils.toPrimitive(downloadingList.toArray(new Long[0]));
         }
     }
 
@@ -286,7 +286,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         if (callback != null) {
             return null;
         } else {
-            return ArrayUtils.toPrimitive(downloadedList.toArray(new Long[downloadedList.size()]));
+            return ArrayUtils.toPrimitive(downloadedList.toArray(new Long[0]));
         }
     }
 
