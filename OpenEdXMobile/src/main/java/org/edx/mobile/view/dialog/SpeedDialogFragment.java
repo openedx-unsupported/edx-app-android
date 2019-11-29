@@ -1,13 +1,14 @@
 package org.edx.mobile.view.dialog;
 
-import android.app.DialogFragment;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.inject.Inject;
 
