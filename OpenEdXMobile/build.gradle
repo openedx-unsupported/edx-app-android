@@ -111,7 +111,7 @@ def getVersionCode = { ->
     }
 }
 
-task(version) << {
+task(version) doLast {
     println String.format('%s (%s)', getVersionName(), getVersionCode())
 }
 
@@ -499,7 +499,7 @@ android {
 android.applicationVariants.all { variant ->
     def variantName = variant.name.capitalize()
     def taskName = "applyConfig" + variantName
-    def configureTask = project.task(taskName) << {
+    def configureTask = project.task(taskName) doLast {
         def helper = new AndroidHelper()
         helper.saveProcessedConfig(project, config)
     }
