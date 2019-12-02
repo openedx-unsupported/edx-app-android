@@ -25,7 +25,9 @@ CUSTOM_SPECS_NAME = 'edx.yml'
 print('{} & {}'.format(AUT_NAME, PACKAGE_NAME))
 
 device_farm = boto3.client('devicefarm', region_name=REGION)
-
+print('-------------------')
+print(device_farm.list_projects())
+print('-------------------')
 
 def aws_job():
     """
