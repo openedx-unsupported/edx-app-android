@@ -133,4 +133,5 @@
     <string name="material_calendar_friday">F</string>
     <string name="material_calendar_saturday">S</string>
     <string name="material_calendar_sunday">S</string>
+    <string name="point_txt">Points</string>
 </resources>

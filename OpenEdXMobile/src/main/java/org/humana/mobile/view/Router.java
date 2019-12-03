@@ -28,6 +28,7 @@ import org.humana.mobile.module.notification.NotificationDelegate;
 import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.storage.IStorage;
 import org.humana.mobile.profiles.UserProfileActivity;
+import org.humana.mobile.tta.ui.course.CourseScormViewActivity;
 import org.humana.mobile.tta.ui.survey.UserSurveyActivity;
 import org.humana.mobile.util.Config;
 import org.humana.mobile.util.EmailUtil;
@@ -177,6 +178,27 @@ public class Router {
         fragment.startActivityForResult(courseDetail, requestCode);
     }
 
+    public void showCourseContainerOutline(Fragment fragment, int requestCode,
+                                           EnrolledCoursesResponse model, String courseComponentId, String lastAccessedId) {
+        Intent courseDetail = createCourseOutlineIntent(fragment.getActivity(), model, courseComponentId, lastAccessedId);
+        //TODO - what's the most suitable FLAG?
+        // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        fragment.startActivityForResult(courseDetail, requestCode);
+    }
+
+    public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
+                                     String courseComponentId) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+
+        Intent courseDetail = new Intent(fragment.getActivity(), CourseUnitNavigationActivity.class);
+        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        fragment.startActivityForResult(courseDetail, requestCode);
+    }
+
+
     private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
                                              String courseComponentId, String lastAccessedId,
                                              boolean isVideosMode) {
@@ -190,6 +212,25 @@ public class Router {
         intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
         return intent;
+    }
+
+    private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
+                                             String courseComponentId, String lastAccessedId) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+
+        Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
+        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
+        courseDetail.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
+
+        return courseDetail;
+    }
+
+    @NonNull
+    public Intent getScromActivity(Activity sourceActivity, Context ctx, String folderPath, String course_name,String course_id,String unit_id) {
+        sourceActivity.startActivity(CourseScormViewActivity.getLaunchIntent(ctx,folderPath,course_name,course_id,unit_id));
+        return CourseScormViewActivity.getLaunchIntent(ctx,folderPath,course_name,course_id,unit_id);
     }
 
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,

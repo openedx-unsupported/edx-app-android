@@ -178,6 +178,7 @@ import org.humana.mobile.tta.task.program.GetUsersTask;
 import org.humana.mobile.tta.task.program.RejectUnitTask;
 import org.humana.mobile.tta.task.program.SavePeriodTask;
 import org.humana.mobile.tta.task.program.SetProposedDateTask;
+import org.humana.mobile.tta.task.program.UpdatePeriodTask;
 import org.humana.mobile.tta.task.search.GetSearchFilterTask;
 import org.humana.mobile.tta.task.search.SearchTask;
 import org.humana.mobile.tta.utils.RxUtil;
@@ -1299,6 +1300,15 @@ public class DataManager extends BaseRoboInjector {
         de.url = scorm.getDownloadUrl();
         de.title = scorm.getParent().getDisplayName();
         de.content_id = contentId;
+        downloadManager.downloadVideo(de, activity, callback);
+    }
+
+    public void downloadSingle(ScormBlockModel scorm,
+                               FragmentActivity activity,
+                               VideoDownloadHelper.DownloadManagerCallback callback){
+        DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
+        de.url = scorm.getDownloadUrl();
+        de.title = scorm.getParent().getDisplayName();
         downloadManager.downloadVideo(de, activity, callback);
     }
 
@@ -3640,12 +3650,12 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getProgramFilters(String program_id, String section_id, String show_in,
+    public void getProgramFilters(String program_id, String section_id, String show_in, List<ProgramFilter> filters,
                                   OnResponseCallback<List<ProgramFilter>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetProgramFiltersTask(context, program_id, show_in, section_id) {
+            new GetProgramFiltersTask(context, program_id, show_in, section_id, filters) {
                 @Override
                 protected void onSuccess(List<ProgramFilter> programFilters) throws Exception {
                     super.onSuccess(programFilters);
@@ -3733,12 +3743,43 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getUnits(List<ProgramFilter> filters, String programId, String sectionId,
+    public void updatePeriods(String programId, String sectionId,
+                           String periodId, String periodName, long startDate, long endDate,
+                              OnResponseCallback<SuccessResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new UpdatePeriodTask(context,programId, sectionId,periodId,periodName,startDate,endDate) {
+                @Override
+                protected void onSuccess(SuccessResponse response) throws Exception {
+                    super.onSuccess(response);
+
+                    if (response != null && response.getSuccess()) {
+                        callback.onSuccess(response);
+                    } else {
+                        callback.onFailure(new TaException("Error occurred. Unable to set date"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+
+    public void getUnits(List<ProgramFilter> filters, String searchText, String programId, String sectionId,
                          String role, String student_username, long periodId, int take, int skip, long startDateTime, long endDateTime, OnResponseCallback<List<Unit>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters, programId, sectionId, role, periodId, take, skip, student_username, startDateTime,
+            new GetUnitsTask(context, filters,searchText, programId, sectionId, role, periodId, take, skip, student_username, startDateTime,
                     endDateTime) {
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {

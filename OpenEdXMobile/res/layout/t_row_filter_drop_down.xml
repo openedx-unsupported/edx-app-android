@@ -5,6 +5,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/filter_drop_down"
+        android:textColor="@color/gray_5"
         android:layout_marginStart="@dimen/_6px"
         android:layout_marginEnd="@dimen/_6px" />
 

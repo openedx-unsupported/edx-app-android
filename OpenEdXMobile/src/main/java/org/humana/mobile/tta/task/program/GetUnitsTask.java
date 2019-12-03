@@ -14,14 +14,14 @@ import java.util.List;
 public class GetUnitsTask extends Task<List<Unit>> {
 
     private List<ProgramFilter> filters;
-    private String programId, sectionId, role,student_username;
+    private String programId, sectionId, role,student_username, searchText;
     private int take, skip;
     private long period_id, startDateTime, endDateTime;
 
     @Inject
     private TaAPI taAPI;
 
-    public GetUnitsTask(Context context, List<ProgramFilter> filters, String programId, String sectionId,
+    public GetUnitsTask(Context context, List<ProgramFilter> filters,String searchText, String programId, String sectionId,
                         String role,long period_id, int take, int skip, String student_username,Long startDateTime,
                         Long endDateTime) {
         super(context);
@@ -35,11 +35,13 @@ public class GetUnitsTask extends Task<List<Unit>> {
         this.student_username = student_username;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+        this.searchText = searchText;
     }
 
     @Override
     public List<Unit> call() throws Exception {
-        return taAPI.getUnits(filters, programId, sectionId, role,student_username,period_id, take, skip, startDateTime, endDateTime).execute().body();
+        return taAPI.getUnits(filters,searchText,
+                programId, sectionId, role,student_username,period_id, take, skip, startDateTime, endDateTime).execute().body();
     }
 
 }

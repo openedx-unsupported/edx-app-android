@@ -81,6 +81,10 @@ public class Constants {
     public static final String KEY_EVENT_COUNT = "count";
     public static final String KEY_START_DATE = "startDateTime";
     public static final String KEY_END_DATE = "endDateTime";
+    public static final String KEY_PERIOD_START_DATE = "startDate";
+    public static final String KEY_PERIOD_END_DATE = "endDate";
+
+
 
     public static final String OTP_SOURCE_REGISTER = "register";
     public static final String OTP_SOURCE_RESET_PASSWORD = "reset_password";
@@ -96,6 +100,6 @@ public class Constants {
     public static final String VERSION_NAME = "version_name";
     public static final String VERSION_CODE = "version_code";
     public static String PROGRAM_ID;
-    public static String UNIT_ID;
-    public static String USERNAME;
+    public static String UNIT_ID="";
+    public static String USERNAME="";
 }

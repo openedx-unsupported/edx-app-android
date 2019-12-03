@@ -187,6 +187,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_CALENDAR_EVENT = "mx_humana_lms/api/v1/getEventCalender";
 
+    public static final String URL_MX_GET_UPDATE_PERIOD= "mx_humana_lms/api/v1/updatePeriods";
+
 
     //Humana end
 

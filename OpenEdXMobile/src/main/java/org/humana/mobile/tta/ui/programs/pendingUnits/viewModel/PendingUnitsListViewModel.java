@@ -500,7 +500,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
             if (binding instanceof TRowPendingUnitsBinding) {
                 TRowPendingUnitsBinding itemBinding = (TRowPendingUnitsBinding) binding;
                 itemBinding.textUnitName.setText(model.getCode() + "  |  " + model.getType() + " | "
-                        + model.getUnitHour() + " hrs");
+                        + model.getUnitHour() + " "+mActivity.getResources().getString(R.string.point_txt));
                 itemBinding.textPeriodName.setText(model.getTitle());
                 itemBinding.textSubmissionDate.setVisibility(View.GONE);
                 if (!DateUtil.getDisplayDate(model.getMyDate()).equals("01 Jan 1970")) {

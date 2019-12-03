@@ -930,6 +930,7 @@
 
     <string name="com.crashlytics.android.build_id" translatable="false">RANDOM_UUID</string>
     <string name="proposed_date">Change date</string>
+    <string name="point_txt">Points</string>
 
     <!-- TTA strings end -->
 
@@ -968,4 +969,6 @@
         <item>@string/material_calendar_friday</item>
         <item>@string/material_calendar_saturday</item>
     </array>
+
+
 </resources>

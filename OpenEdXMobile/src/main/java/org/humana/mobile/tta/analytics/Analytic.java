@@ -54,6 +54,23 @@ public class Analytic {
         }
     }
 
+    public void addMxAnalytics_db(String user_name, String metadata, Action action, String page, Source source)
+    {
+        //save analytics to  local db first
+        //download entry to db
+        AnalyticModel model= new AnalyticModel();
+        model.user_id=user_name;
+        model.action=String.valueOf(action);
+        model.metadata=metadata;
+        model.page=page;
+        model.source=String.valueOf(source);
+
+        model.setEvent_date();
+        model.setStatus(0);
+
+        environment.getStorage().addAnalytic(model);
+    }
+
     public void addMxAnalytics_db(String metadata, Action action, String page, Source source, String actionId, String nav) {
         String username = loginPrefs.getUsername();
 

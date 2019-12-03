@@ -13,7 +13,57 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:animateLayoutChanges="true">
+        <LinearLayout
+            android:id="@+id/searchview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_14px"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_24px"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:padding="10dp"
+                android:drawablePadding="5dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                onSearchInSoftKeyboard="@{()->viewModel.fetchData()}"
+                android:drawableLeft="@drawable/t_icon_search_blue"
+                text_changed_listener="@{viewModel.watcher}"
+                android:layout_marginEnd="@dimen/_24px"/>
+            <ImageView
+                android:id="@+id/assistant_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:padding="8dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_20dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                android:onClick="@{()->viewModel.fetchUnits()}"
+                android:contentDescription="assistant button"
+                android:src="@drawable/t_icon_search_blue" />
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:tint="@color/material_red_500"
+                android:src="@drawable/t_icon_calendar"
+                android:onClick="@{()-> viewModel.changeToCalenderView()}"
+                android:id="@+id/switch_unit"/>
+
+        </LinearLayout>
         <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,15 +75,7 @@
             finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="30dp"
-            android:tint="@color/material_red_500"
-            android:src="@drawable/t_icon_calendar"
-            android:onClick="@{()-> viewModel.changeToCalenderView()}"
-            android:id="@+id/switch_unit"/>
+
 
         <FrameLayout
             android:layout_width="match_parent"

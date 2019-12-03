@@ -39,4 +39,5 @@ public class CourseOutlineActivity extends BaseSingleFragmentActivity {
         fragment.setArguments(getIntent().getExtras());
         return fragment;
     }
+
 }

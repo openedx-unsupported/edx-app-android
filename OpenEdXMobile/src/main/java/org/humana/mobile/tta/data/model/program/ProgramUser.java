@@ -27,6 +27,11 @@ public class ProgramUser {
     @SerializedName("pending_count")
     public long pendingCount;
 
+    @SerializedName("current_units")
+    public long currentUnits;
+
+    @SerializedName("current_hours")
+    public long current_hours;
 
     public List<SocialProfile> social_profile;
 

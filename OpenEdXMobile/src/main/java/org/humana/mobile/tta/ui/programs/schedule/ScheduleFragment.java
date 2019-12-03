@@ -13,8 +13,9 @@ import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.programs.schedule.view_model.ScheduleViewModel;
 import org.humana.mobile.view.Router;
+import org.humana.mobile.view.common.PageViewStateCallback;
 
-public class ScheduleFragment extends TaBaseFragment {
+public class ScheduleFragment extends TaBaseFragment implements PageViewStateCallback {
     public ScheduleViewModel viewModel;
 
     private EnrolledCoursesResponse course;
@@ -61,5 +62,11 @@ public class ScheduleFragment extends TaBaseFragment {
     public void onDestroy() {
         super.onDestroy();
         viewModel.unRegisterEventBus();
+    }
+
+    @Override
+    public void onPageShow() {
+        viewModel.setSessionFilter();
+
     }
 }

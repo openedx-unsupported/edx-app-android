@@ -201,7 +201,7 @@ public class StudentsViewModel extends BaseViewModel {
     public void getFilters() {
 
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.schedule.name(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.schedule.name(),filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
@@ -286,7 +286,12 @@ public class StudentsViewModel extends BaseViewModel {
                     }
                     if (model.education != null) {
                         itemBinding.textDegree.setText(model.education);
+                    }else {
+                        itemBinding.textDegree.setVisibility(View.GONE);
                     }
+
+                    itemBinding.txtCurrentCompleted.setText(String.format("%s hrs", String.valueOf(model.current_hours)));
+                    itemBinding.txtCurrentPending.setText(String.format("%s units", String.valueOf(model.currentUnits)));
 //                boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
 //                if (!tabletSize){
 //                    itemBinding.txtCompleted.setCompoundDrawables(null,null,null,null);
@@ -334,7 +339,8 @@ public class StudentsViewModel extends BaseViewModel {
                             }
 
                         }
-                    }); itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
+                    });
+                    itemBinding.imgTwitter.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (model.social_profile.size()>0) {
@@ -348,7 +354,8 @@ public class StudentsViewModel extends BaseViewModel {
                             }
 
                         }
-                    }); itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
+                    });
+                    itemBinding.imgFacebook.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (model.social_profile.size()>0) {
@@ -387,7 +394,7 @@ public class StudentsViewModel extends BaseViewModel {
 
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
-                itemBinding.txtCompleted.setText(String.format("%s hrs", String.valueOf(model.completedHours)));
+                itemBinding.txtCompleted.setText(String.format("%s "+ mActivity.getResources().getString(R.string.point_txt), String.valueOf(model.completedHours)));
                 itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.completedUnits)));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null) {
@@ -415,6 +422,8 @@ public class StudentsViewModel extends BaseViewModel {
                 }
                 if (model.education != null) {
                     itemBinding.textDegree.setText(model.education);
+                }else {
+                    itemBinding.textDegree.setVisibility(View.GONE);
                 }
 //                boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
 //                if (!tabletSize){
@@ -425,6 +434,9 @@ public class StudentsViewModel extends BaseViewModel {
                 if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
                     itemBinding.llStatus.setVisibility(View.GONE);
                 }
+                itemBinding.txtCurrentCompleted.setText(String.format("%s hrs", String.valueOf(model.current_hours)));
+                itemBinding.txtCurrentPending.setText(String.format("%s units", String.valueOf(model.currentUnits)));
+
 
                 itemBinding.txtCompleted.setOnClickListener(v -> {
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
@@ -578,10 +590,10 @@ public class StudentsViewModel extends BaseViewModel {
             usersAdapter.notifyItemChanged(position);
         }
         int position2 = gridUsersAdapter.getItemPosition(period);
-        if (position >= 0) {
-            ProgramUser p = users.get(position);
+        if (position2 >= 0) {
+            ProgramUser p = users.get(position2);
             p.pendingCount = period.pendingCount + event.pendingCount;
-            gridUsersAdapter.notifyItemChanged(position);
+            gridUsersAdapter.notifyItemChanged(position2);
         }
     }
 }

@@ -151,6 +151,10 @@ public class DateUtil {
         return getDisplayTime(new Date(timestamp));
     }
 
+    public static String getDisplayDateInMill(long timestamp){
+        return getDisplayTime(new Date(timestamp * 1000));
+    }
+
     public static String getCalendarDate(long timestamp){
         return getDisplayCalendarTime(new Date(timestamp));
     }

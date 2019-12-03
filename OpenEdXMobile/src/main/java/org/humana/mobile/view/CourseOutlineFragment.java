@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -18,6 +19,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,12 +56,14 @@ import org.humana.mobile.loader.CourseOutlineAsyncLoader;
 import org.humana.mobile.logger.Logger;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.BlockPath;
+import org.humana.mobile.model.course.BlockType;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.model.course.CourseStructureV1Model;
 import org.humana.mobile.model.course.HasDownloadEntry;
 import org.humana.mobile.model.course.VideoBlockModel;
 import org.humana.mobile.model.db.DownloadEntry;
 import org.humana.mobile.module.analytics.Analytics;
+import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.storage.DownloadCompletedEvent;
 import org.humana.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.humana.mobile.module.storage.IStorage;
@@ -67,18 +71,25 @@ import org.humana.mobile.services.CourseManager;
 import org.humana.mobile.services.LastAccessManager;
 import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.analytics.Analytic;
+import org.humana.mobile.tta.analytics.analytics_enums.Action;
+import org.humana.mobile.tta.analytics.analytics_enums.Source;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.scorm.ScormBlockModel;
+import org.humana.mobile.tta.scorm.ScormManager;
 import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity;
 import org.humana.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsListViewModel;
 import org.humana.mobile.tta.utils.ActivityUtil;
+import org.humana.mobile.tta.utils.MXPDFManager;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.PermissionsUtil;
 import org.humana.mobile.util.UiUtil;
 import org.humana.mobile.view.adapters.CourseOutlineAdapter;
 import org.humana.mobile.view.common.TaskProgressCallback;
 
+import java.io.File;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -135,6 +146,18 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private String unidId;
     private LinearLayout linearLayout;
+
+    @Inject
+    Analytic aHelper;
+
+    @Inject
+    public LoginPrefs loginPrefs;
+
+    @Inject
+    @NonNull
+    ScormManager scormManager;
+
+    private int requestCode;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
@@ -211,6 +234,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
         });
 
+        askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
 
 
         return view;
@@ -338,7 +363,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         return courseComponent;
     }
 
-    private void initListView(@NonNull View view) {
+    private void initListView(@NonNull View v) {
         initAdapter();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -347,17 +372,180 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 if (deleteMode != null) {
                     deleteMode.finish();
                 }
+//                listView.clearChoices();
+//                final CourseComponent component = adapter.getItem(position).component;
+//                if (component.isContainer()) {
+//                    environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
+//                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId(), null, isVideoMode);
+//                } else {
+//                    environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
+//                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId(), isVideoMode);
+//                }
+
                 listView.clearChoices();
-                final CourseComponent component = adapter.getItem(position).component;
-                if (component.isContainer()) {
+                CourseOutlineAdapter.SectionRow row = adapter.getItem(position);
+                CourseComponent comp = row.component;
+
+                if (comp == null)
+                    return;
+
+                if(comp.getRoot().getChildren().size()==1) {
+                    if (comp.getChildren().size() > 0) {
+                        comp = (CourseComponent) comp.getChildren().get(0);
+                    }
+                }
+                else
+                {
+                    if(adapter.selectedUnit==null)
+                        adapter.selectedUnit=comp;
+                }
+
+                if (comp.isContainer()) {
+                    Log.i("gfs", "container: " + comp.getId());
                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId(), null, isVideoMode);
-                } else {
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), null);
+
+                    // for analytics update
+                    aHelper.addMxAnalytics_db(loginPrefs.getUsername(),
+                            adapter.selectedUnit.getDisplayName(), Action.ViewUnit,
+                            adapter.selectedUnit.getRoot().getDisplayName(), Source.Mobile);
+
+                }
+                else
+                {
+
+                    if (comp.getType()== BlockType.SCORM || comp.getType()==BlockType.PDF)
+                    {
+                        adapter.selectedUnit = comp;
+
+                        ////ToDo need to optimise here Arjun
+
+                        if(comp.getType()==BlockType.PDF )//&& scormManager.hasPdf(comp.getId())
+                        {
+                            //anlaytic hit for scrom view
+                            aHelper.addMxAnalytics_db(loginPrefs.getUsername()
+                                    ,adapter.selectedUnit.getDisplayName() , Action.ViewUnit,
+                                    adapter.selectedUnit.getRoot().getDisplayName() , Source.Mobile);
+
+                            ScormBlockModel model =comp.getScorms().get(0);
+                            switch (mDataManager.getScormStatus(model)){
+                                case not_downloaded:
+                                    mDataManager.downloadSingle(model, getActivity(),
+                                            new VideoDownloadHelper.DownloadManagerCallback() {
+                                                @Override
+                                                public void onDownloadStarted(Long result) {
+                                                    Log.d("--> Download State", "onDownloadStarted");
+                                                    adapter.notifyDataSetChanged();
+
+                                                }
+
+                                                @Override
+                                                public void onDownloadFailedToStart() {
+                                                    Log.d("--> Download State", "onDownloadFailedToStart");
+                                                }
+
+                                                @Override
+                                                public void showProgressDialog(int numDownloads) {
+                                                    adapter.notifyDataSetChanged();
+                                                    Log.d("--> Download State", "showProgressDialog");
+//                        progressDialog.setProgress(numDownloads);
+                                                }
+
+                                                @Override
+                                                public void updateListUI() {
+                                                    Log.d("--> Download State", "updateListUI");
+
+                                                }
+
+                                                @Override
+                                                public boolean showInfoMessage(String message) {
+                                                    Log.d("--> Download State", "showInfoMessage");
+                                                    return false;
+                                                }
+                                            });
+                                    break;
+                                case downloading:
+                                    break;
+                                    case downloaded:
+
+                                    break;
+
+                                case watched:
+                                    break;
+                                case watching:
+                                    break;
+                            }
+
+
+                        }
+                        else if(comp.getType()==BlockType.SCORM && scormManager.has(comp.getId()))
+                        {
+                            //anlaytic hit for scrom view
+                            aHelper.addMxAnalytics_db(loginPrefs.getUsername()
+                                    ,adapter.selectedUnit.getDisplayName() , Action.ViewUnit,
+                                    adapter.selectedUnit.getRoot().getDisplayName() , Source.Mobile);
+
+                            adapter.doShow(scormManager.get(comp.getId()),adapter.selectedUnit);
+                        }
+                        else
+                        {
+                            if (!NetworkUtil.isConnected(getActivity()))
+                            {
+                                Toast.makeText(getActivity(), "Please connect to internet. And try again.", Toast.LENGTH_SHORT).show();
+//                                adapter.reloadData();
+                                return;
+                            }
+//
+//                            CourseOutlineAdapter.ViewHolder viewHolder = (CourseOutlineAdapter.ViewHolder) view.getItemViewHolder();
+//                            adapter.doDownload(comp, viewHolder);
+                        }
+                        return;
+
+/*
+                        if (scormManager.has(comp.getId())) {
+                            //anlaytic hit for scrom view
+                                aHelper.updateAnalytics(getActivity(), aHelper.getAnalyticParams(loginPrefs.getUsername()
+                                        ,adapter.selectedUnit.getDisplayName() , Action.ViewUnit,
+                                        adapter.selectedUnit.getRoot().getDisplayName() , Source.Mobile));
+
+                            if(comp.getType()==BlockType.PDF && scormManager.hasPdf(comp.getId()))
+                            {
+                                pdfManager manager=new pdfManager();
+                                manager.viewPDF(getActivity(),scormManager.getPdf(comp.getId()));
+                            }
+
+                            else if(comp.getType()== BlockType.SCORM)
+                            {
+                                adapter.doShow(scormManager.get(comp.getId()));
+                            }
+                        } else {
+                            CourseOutlineAdapter.ViewHolder viewHolder = (CourseOutlineAdapter.ViewHolder) view.getItemViewHolder();
+                            adapter.doDownload(comp, viewHolder);
+                        }
+                        return;*/
+                    }
+
+                    // Log.i("gfs", "Unit Detail: " + comp.getId());
                     environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, component.getId(), isVideoMode);
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
+
+                    // for analytics update
+                    if (comp.getType()==BlockType.PROBLEM) {
+                        aHelper.addMxAnalytics_db(loginPrefs.getUsername(),
+                                comp.getDisplayName(), Action.ViewQuestion,
+                                comp.getRoot().getDisplayName(), Source.Mobile);
+                    }
+                    else
+                    {
+                        aHelper.addMxAnalytics_db(loginPrefs.getUsername()
+                                ,comp.getDisplayName() , Action.ViewUnit,
+                                comp.getRoot().getDisplayName() , Source.Mobile);
+                    }
                 }
             }
+
         });
+
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -376,7 +564,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private void initAdapter() {
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseOutlineAdapter(getActivity(), this, courseData, environment,
+            adapter = new CourseOutlineAdapter(getActivity(), scormManager,this, courseData, environment,
                     new CourseOutlineAdapter.DownloadListener() {
                         @Override
                         public void download(List<? extends HasDownloadEntry> models) {
@@ -400,6 +588,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                         }
                     }, isVideoMode, isOnCourseOutline);
         }
+
     }
 
     @Override
@@ -539,6 +728,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             listView.requestLayout();
         }
     };
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
 
     /**
      * Load data to the adapter
@@ -681,11 +877,19 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
         adapter.notifyDataSetChanged();
+        if (e.getEntry().isDownloaded()){
+            adapter.notifyItem(e.getEntry());
+            Log.d("onEventMainThread", "file Downloaded");
+        }
+        //progress bar hide
+        //show delete button on unit
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadedVideoDeletedEvent e) {
         adapter.notifyDataSetChanged();
+        //show download button on unit
+        //progress bar hide
     }
 
     @SuppressWarnings("unused")
@@ -941,4 +1145,30 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     }
                 });
     }
+
+
+    public void askForPermissions(String[] permissions, int requestCode) {
+        this.requestCode = requestCode;
+        if (getActivity() != null) {
+            if (permissionListener != null && getGrantedPermissionsCount(permissions) == permissions.length) {
+                permissionListener.onPermissionGranted(permissions, requestCode);
+            } else {
+                PermissionsUtil.requestPermissions(requestCode, permissions, this);
+            }
+        }
+    }
+
+
+
+    public int getGrantedPermissionsCount(String[] permissions) {
+        int grantedPermissionsCount = 0;
+        for (String permission : permissions) {
+            if (PermissionsUtil.checkPermissions(permission, getActivity())) {
+                grantedPermissionsCount++;
+            }
+        }
+
+        return grantedPermissionsCount;
+    }
+
 }

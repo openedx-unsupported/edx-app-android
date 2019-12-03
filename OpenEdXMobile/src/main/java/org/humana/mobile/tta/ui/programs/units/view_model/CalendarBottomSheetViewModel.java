@@ -392,7 +392,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
     private void fetchUnits() {
 
-        mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
+        mDataManager.getUnits(filters, "",mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
                 0L, take, skip,
                 startDateTime, endDateTime,
@@ -560,7 +560,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         emptyVisible.set(false);
                         unitBinding.unitCode.setText(model.getTitle());
                         unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                                + model.getUnitHour() + " hrs");
+                                + model.getUnitHour() +" "+ mActivity.getResources().getString(R.string.point_txt));
                         if (!model.getStatus().isEmpty()) {
                             if (model.getStaffDate() > 0) {
                                 unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
@@ -647,7 +647,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         emptyVisible.set(false);
                         unitBinding.unitCode.setText(model.getTitle());
                         unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                                + model.getUnitHour() + " hrs");
+                                + model.getUnitHour() + " "+mActivity.getResources().getString(R.string.point_txt));
                         if (!model.getStatus().isEmpty()) {
                             if (model.getStaffDate() > 0) {
                                 unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));

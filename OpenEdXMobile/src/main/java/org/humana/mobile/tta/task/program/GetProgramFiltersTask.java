@@ -19,15 +19,19 @@ public class GetProgramFiltersTask extends Task<List<ProgramFilter>> {
 
     private String section_id;
 
-    public GetProgramFiltersTask(Context context, String program_id, String show_in, String section_id) {
+    private List<ProgramFilter> filters;
+
+    public GetProgramFiltersTask(Context context, String program_id, String show_in, String section_id,
+                                 List<ProgramFilter> filters) {
         super(context);
         this.program_id = program_id;
         this.section_id = section_id;
         this.show_in = show_in;
+        this.filters = filters;
     }
 
     @Override
     public List<ProgramFilter> call() throws Exception {
-        return taAPI.getProgramFilters(program_id, section_id, show_in).execute().body();
+        return taAPI.getProgramFilters(program_id, section_id, show_in, filters).execute().body();
     }
 }

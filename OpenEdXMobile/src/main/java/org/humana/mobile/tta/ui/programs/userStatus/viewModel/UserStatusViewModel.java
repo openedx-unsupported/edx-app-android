@@ -303,7 +303,7 @@ public class UserStatusViewModel extends BaseViewModel {
     private void fetchFilters() {
         statusTags = new ArrayList<>();
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.student_status.name(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.student_status.name(),filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
@@ -354,7 +354,7 @@ public class UserStatusViewModel extends BaseViewModel {
         allFilters.clear();
         filtersAdapter.clear();
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
@@ -419,7 +419,7 @@ public class UserStatusViewModel extends BaseViewModel {
 
     private void fetchUnits() {
 
-        mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
+        mDataManager.getUnits(filters,"", mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), studentName,0, take, skip,
                 0L,0L,
                 new OnResponseCallback<List<Unit>>() {

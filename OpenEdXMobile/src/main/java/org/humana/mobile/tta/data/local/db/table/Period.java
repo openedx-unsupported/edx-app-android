@@ -42,6 +42,13 @@ public class Period implements Parcelable {
     @SerializedName("desc")
     private String desc;
 
+
+    @SerializedName("startDate")
+    private long startDate;
+
+    @SerializedName("endDate")
+    private long endDate;
+
     public Period() {
     }
 
@@ -55,6 +62,8 @@ public class Period implements Parcelable {
         username = in.readString();
         language = in.readString();
         desc = in.readString();
+        startDate = in.readLong();
+        endDate = in.readLong();
     }
 
     public static final Creator<Period> CREATOR = new Creator<Period>() {
@@ -134,6 +143,22 @@ public class Period implements Parcelable {
     }
 
 
+    public long getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+    }
+
+    public long getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -150,6 +175,8 @@ public class Period implements Parcelable {
         dest.writeString(username);
         dest.writeString(language);
         dest.writeString(desc);
+        dest.writeLong(startDate);
+        dest.writeLong(endDate);
     }
 
     @Override

@@ -13,9 +13,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +40,7 @@ import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.custom.FormEditText;
 import org.humana.mobile.tta.ui.custom.NonScrollListView;
 import org.humana.mobile.tta.utils.BottomNavigationViewHelper;
+import org.humana.mobile.tta.utils.OnSearchInSoftKeyboardListener;
 import org.humana.mobile.util.SoftKeyboardUtil;
 
 import java.lang.reflect.Constructor;
@@ -243,7 +246,6 @@ public class BindingAdapters {
     public static void addTextChangedListener(EditText view, TextWatcher watcher) {
         view.addTextChangedListener(watcher);
     }
-
     @BindingAdapter({"view_enabled"})
     public static void enableView(View view, boolean b) {
         view.setEnabled(b);
@@ -537,5 +539,23 @@ public class BindingAdapters {
                                 .show();
                     }
         });
+    }
+
+
+    @BindingAdapter("onSearchInSoftKeyboard") // I like it to match the listener method name
+    public static void setOnOkInSoftKeyboardListener(TextView view,
+                                                     final OnSearchInSoftKeyboardListener listener) {
+        if (listener == null) {
+            view.setOnEditorActionListener(null);
+        } else {
+            view.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    listener.onSearchInSoftKeyboard();
+                    return true;
+                }
+            });
+
+        }
     }
 }

@@ -265,8 +265,13 @@ public class TaAPI {
         return taService.getSections(programId);
     }
 
-    public Call<List<ProgramFilter>> getProgramFilters(String programId, String sectionId, String showIn ){
-        return taService.getProgramFilters(programId, sectionId, showIn);
+    public Call<List<ProgramFilter>> getProgramFilters(String programId, String sectionId, String showIn, List<ProgramFilter> filters ){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_SHOW_IN, showIn);
+        parameters.put(Constants.KEY_FILTERS, filters);
+        return taService.getProgramFilters(parameters);
     }
 
     public Call<List<Period>> getPeriods(List<ProgramFilter> filters, String programId, String sectionId, String role, int take, int skip){
@@ -277,11 +282,20 @@ public class TaAPI {
         parameters.put(Constants.KEY_SECTION_ID, sectionId);
         parameters.put(Constants.KEY_ROLE, role);
         parameters.put(Constants.KEY_FILTERS, filters);
-
         return taService.getPeriods(parameters);
     }
+    public Call<SuccessResponse> updatePeriods(String programId, String sectionId, String periodId, String periodName, long startDate, long endDate){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.KEY_PROGRAM_ID, programId);
+        parameters.put(Constants.KEY_SECTION_ID, sectionId);
+        parameters.put(Constants.KEY_PERIOD_START_DATE, startDate);
+        parameters.put(Constants.KEY_PERIOD_END_DATE, endDate);
+        parameters.put(Constants.KEY_PERIOD_ID, periodId);
+        parameters.put(Constants.KEY_PERIOD_NAME, periodName);
+        return taService.updatePeriod(parameters);
+    }
 
-    public Call<List<Unit>> getUnits(List<ProgramFilter> filters, String programId, String sectionId,String role,
+    public Call<List<Unit>> getUnits(List<ProgramFilter> filters,String searchText, String programId, String sectionId,String role,
                                      String student_username, long period_id, int take, int skip,Long startDateTime,
                                      Long endDateTime){
         Map<String, Object> parameters = new HashMap<>();
@@ -295,6 +309,7 @@ public class TaAPI {
         parameters.put(Constants.KEY_STUDENT_USERNAME, student_username);
         parameters.put(Constants.KEY_START_DATE, startDateTime);
         parameters.put(Constants.KEY_END_DATE, endDateTime);
+        parameters.put(Constants.KEY_SEARCH_TEXT, searchText);
 
         return taService.getUnits(parameters);
     }

@@ -150,7 +150,7 @@ public class PendingUsersViewModel extends BaseViewModel {
     public void getFilters() {
 
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {

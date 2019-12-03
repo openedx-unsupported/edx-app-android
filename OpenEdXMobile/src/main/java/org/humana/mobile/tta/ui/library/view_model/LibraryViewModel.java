@@ -61,6 +61,8 @@ public class LibraryViewModel extends BaseViewModel {
             if (callback != null) {
                 callback.onPageShow();
             }
+
+
         }
 
         @Override

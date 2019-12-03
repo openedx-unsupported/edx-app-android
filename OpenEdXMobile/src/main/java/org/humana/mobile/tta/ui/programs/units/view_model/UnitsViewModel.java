@@ -1,16 +1,19 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -27,6 +30,7 @@ import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UnitStatusType;
 import org.humana.mobile.tta.data.enums.UserRole;
+import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
@@ -45,6 +49,7 @@ import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
@@ -67,7 +72,9 @@ public class UnitsViewModel extends BaseViewModel {
     public static List<Events> eventsArrayList = new ArrayList<>();
     public static ObservableField switchText = new ObservableField<>();
     public static ObservableField selectedEvent = new ObservableField<>();
+    public List<ProgramFilterTag> selectedTags = new ArrayList<>();
 
+    public ObservableField<String> searchText = new ObservableField<>("");
 
     private EnrolledCoursesResponse course;
     private List<Unit> units;
@@ -79,6 +86,19 @@ public class UnitsViewModel extends BaseViewModel {
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
 
+    public ObservableBoolean filterSelected = new ObservableBoolean();
+    public ObservableBoolean contentListSelected = new ObservableBoolean();
+    public ObservableInt selectedContentListPosition = new ObservableInt(0);
+    public ObservableField<String> contentListText = new ObservableField<>();
+    public String selectedSession;
+
+
+    private boolean isAllLoaded = false;
+    private ContentList selectedContentList;
+    private boolean isSelected = false;
+    private List<DropDownFilterView.FilterItem> sessionTags;
+
+
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
             return false;
@@ -86,6 +106,7 @@ public class UnitsViewModel extends BaseViewModel {
         fetchData();
         return true;
     };
+
 
     public UnitsViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
         super(context, fragment);
@@ -101,10 +122,11 @@ public class UnitsViewModel extends BaseViewModel {
         calVisible.set(false);
         frameVisible.set(true);
 
+
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
         switchText.set("Calendar View");
-
+        selectedSession = "";
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
 
@@ -285,7 +307,8 @@ public class UnitsViewModel extends BaseViewModel {
             public void onSuccess(Long data) {
                 mActivity.showLoading();
                 mDataManager.setProposedDate(mDataManager.getLoginPrefs().getProgramId(),
-                        mDataManager.getLoginPrefs().getSectionId(), data, unit.getPeriodId(), unit.getId(),
+                        mDataManager.getLoginPrefs().getSectionId(), data,
+                        unit.getPeriodId(), unit.getId(),
                         new OnResponseCallback<SuccessResponse>() {
                             @Override
                             public void onSuccess(SuccessResponse response) {
@@ -313,10 +336,11 @@ public class UnitsViewModel extends BaseViewModel {
         });
     }
 
-    private void fetchFilters() {
+    public void fetchFilters() {
+        sessionTags = new ArrayList<>();
 
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
@@ -325,6 +349,48 @@ public class UnitsViewModel extends BaseViewModel {
                             filterSize = allFilters.size();
                             filtersVisible.set(true);
                             filtersAdapter.setItems(allFilters);
+
+
+                         /*   for (ProgramFilter filter : data) {
+                                sessionTags.clear();
+                                isSelected = filter.getSelected();
+                                if (filter.getInternalName().toLowerCase().contains("session_id")) {
+                                    sessionTags.clear();
+                                    sessionTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
+                                            isSelected, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
+
+                                    for (ProgramFilterTag tag : filter.getTags()) {
+                                        if (mDataManager.getLoginPrefs().getSessionFilter()!=null) {
+                                            if (mDataManager.getLoginPrefs().getSessionFilter().equals(tag.getDisplayName())) {
+                                                isSelected = true;
+                                                sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                                        isSelected, R.color.white, R.drawable.t_background_tag_filled));
+
+                                            } else {
+                                                sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                                        false, R.color.white, R.drawable.t_background_tag_filled));
+                                            }
+                                        }else {
+                                            sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                                    isSelected, R.color.white, R.drawable.t_background_tag_filled));
+                                        }
+
+                                        try {
+                                            if (tag.getSelected()) {
+                                                tags.clear();
+                                                tags.add(tag);
+                                                changesMade = true;
+                                                allLoaded = false;
+                                                fetchData();
+                                            }
+                                        }catch(Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                            }*/
+
                         } else {
                             filtersVisible.set(false);
                         }
@@ -338,7 +404,7 @@ public class UnitsViewModel extends BaseViewModel {
 
     }
 
-    private void fetchData() {
+    public void fetchData() {
 
         if (changesMade) {
             changesMade = false;
@@ -380,11 +446,31 @@ public class UnitsViewModel extends BaseViewModel {
         }
     }
 
-    private void fetchUnits() {
-
-        mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
+    public void fetchUnits() {
+//        if (mDataManager.getLoginPrefs().getstoreSelectedTags() != null) {
+//            filters.clear();
+//            tags.clear();
+//            for (int i = 0; i < mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().size(); i++) {
+//                ProgramFilterTag pt = new ProgramFilterTag();
+//                pt.setSelected(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getSelected());
+//                pt.setDisplayName(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getDisplayName());
+//                pt.setId(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getId());
+//                pt.setInternalName(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getInternalName());
+//                pt.setOrder(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getOrder());
+//                tags.add(pt);
+//            }
+//            ProgramFilter pf = new ProgramFilter();
+//            pf.setDisplayName(mDataManager.getLoginPrefs().getstoreSelectedTags().getDisplayName());
+//            pf.setInternalName(mDataManager.getLoginPrefs().getstoreSelectedTags().getInternalName());
+//            pf.setId(mDataManager.getLoginPrefs().getstoreSelectedTags().getId());
+//            pf.setOrder(mDataManager.getLoginPrefs().getstoreSelectedTags().getOrder());
+//            pf.setShowIn(mDataManager.getLoginPrefs().getstoreSelectedTags().getShowIn());
+//            pf.setTags(tags);
+//            filters.add(pf);
+//        }
+        mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
-                "", 0L, take, skip,0L, 0L,
+                "", 0L, take, skip, 0L, 0L,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -455,19 +541,31 @@ public class UnitsViewModel extends BaseViewModel {
 //        filters.clear();
         changesMade = true;
         allLoaded = false;
+//        fetchFilters();
         fetchData();
-//        ProgramFilter pf = new ProgramFilter();
-//        pf.setDisplayName(user.username);
-//        pf.setInternalName(user.name);
-//        pf.setId(user.name);
-//        pf.setOrder(user.completedHours);
-//        pf.setShowIn(new ArrayList<String>());
-//        pf.setTags(tags);
-//        allFilters.add(pf);
-//        filtersAdapter.notifyItemChanged(3, 4);
 
 
     }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(String sessiontype) {
+        if (!org.humana.mobile.tta.data.constants.Constants.selectedSession.equals("")) {
+            org.humana.mobile.tta.data.constants.Constants.selectedSession = sessiontype;
+            fetchFilters();
+            fetchData();
+            changesMade = true;
+            allLoaded = false;
+
+        }
+    }
+//    @SuppressWarnings("unused")
+//    public void onEventFilterThread(List<ProgramFilter> filters) {
+//        if (!org.humana.mobile.tta.data.constants.Constants.selectedSession.equals("")) {
+//            filters.clear();
+//            fetchFilters();
+//        }
+//    }
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseEnrolledEvent event) {
@@ -516,16 +614,47 @@ public class UnitsViewModel extends BaseViewModel {
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
+                int langPos=0;
+                int sessionPos=0;
+
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
+                String selectedTag = "";
                 items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
                         true, R.color.primary_cyan, R.drawable.t_background_tag_hollow
                 ));
+
                 for (ProgramFilterTag tag : model.getTags()) {
-                    items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            false, R.color.white, R.drawable.t_background_tag_filled
-                    ));
+                        items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
+                        ));
+                }
+
+                for (int i=0; i<items.size();i++){
+                    if (mDataManager.getLoginPrefs().getSessionFilter()!=null) {
+                        if (mDataManager.getLoginPrefs().getSessionFilter().equals(items.get(i).getName())) {
+                            sessionPos = i;
+                        }
+                    }
+                }
+                for (int i=0; i<items.size();i++){
+                    if (mDataManager.getLoginPrefs().getLangTag()!=null) {
+                        if (mDataManager.getLoginPrefs().getLangTag().equals(items.get(i).getName())) {
+                            langPos = i;
+                        }
+                    }
                 }
                 dropDownBinding.filterDropDown.setFilterItems(items);
+
+
+                if (model.getInternalName().toLowerCase().contains("session_id")) {
+                    dropDownBinding.filterDropDown.setSelection(sessionPos);
+                    dropDownBinding.filterDropDown.notifyDataSetChanged();
+                }
+
+                if (model.getInternalName().toLowerCase().contains("language_id")) {
+                    dropDownBinding.filterDropDown.setSelection(langPos);
+                    dropDownBinding.filterDropDown.notifyDataSetChanged();
+                }
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
                     if (prev != null && prev.getItem() != null) {
@@ -533,14 +662,38 @@ public class UnitsViewModel extends BaseViewModel {
                     }
                     if (item.getItem() != null) {
                         tags.add((ProgramFilterTag) item.getItem());
+                        selectedTags.add((ProgramFilterTag) item.getItem());
                     }
 
+                    if (!Objects.requireNonNull(mDataManager.getLoginPrefs().getProgramFilters()).contains(model)) {
+                        mDataManager.getLoginPrefs().storeProgramFilter(model);
+                    }
+                    if (!Objects.equals(mDataManager.getLoginPrefs().getStoreSessionFilterTag(), item.getItem())) {
+                        mDataManager.getLoginPrefs().storeSessionFilterTag((ProgramFilterTag) item.getItem());
+                    }
+                    if (model.getInternalName().toLowerCase().contains("session_id")){
+                        mDataManager.getLoginPrefs().setSessionFilter(item.getName());
+                    }
+
+                    if (model.getInternalName().toLowerCase().contains("language_id")){
+                        mDataManager.getLoginPrefs().setLangTag(item.getName());
+                    }
+
+                    if (mDataManager.getLoginPrefs().getTags()!=null) {
+                        mDataManager.getLoginPrefs().clearTags();
+                        mDataManager.getLoginPrefs().storeTags(selectedTags);
+                    }else{
+                        mDataManager.getLoginPrefs().clearTags();
+                        mDataManager.getLoginPrefs().storeTags(selectedTags);
+                    }
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
+                    fetchFilters();
                     fetchData();
                 });
-            } else if (binding instanceof TRowTextBinding) {
+
+        } else if (binding instanceof TRowTextBinding) {
                 TRowTextBinding textBinding = (TRowTextBinding) binding;
                 textBinding.text.setText(user.name);
             }
@@ -560,29 +713,28 @@ public class UnitsViewModel extends BaseViewModel {
 
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                        + model.getUnitHour() + " hrs");
+                        + model.getUnitHour() + " " + mActivity.getResources().getString(R.string.point_txt));
                 if (!model.getStatus().equals("")) {
-                    if (model.getStatusDate()>0) {
+                    if (model.getStatusDate() > 0) {
                         unitBinding.tvStaffDate.setText(model.getStatus() + ": " + DateUtil.getDisplayDate(model.getStatusDate()));
                         unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
                     }
-                }else {
+                } else {
                     unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                 }
                 unitBinding.tvDescription.setText(model.getDesc());
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (!model.getStatus().equals("")) {
                         unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
-                        if(model.getStatus().equals("Submitted")){
+                        if (model.getStatus().equals("Submitted")) {
                             unitBinding.tvComment.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             unitBinding.tvComment.setVisibility(View.VISIBLE);
                         }
-                    }
-                    else {
+                    } else {
                         unitBinding.tvComment.setVisibility(View.GONE);
                     }
-                }else {
+                } else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                 }
 //                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
@@ -608,7 +760,7 @@ public class UnitsViewModel extends BaseViewModel {
                     } else {
                         unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                     }
-                }else {
+                } else {
                     unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
 
                 }
@@ -654,25 +806,40 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     public void changeToCalenderView() {
-//        if (frameVisible.get()) {
-//            frameVisible.set(false);
-//            calVisible.set(true);
-//            filtersVisible.set(false);
-//            switchText.set("Grid View");
-//        } else {
-//            frameVisible.set(true);
-//            calVisible.set(false);
-//            filtersVisible.set(true);
-//            switchText.set("Calender View");
-//        }
-//        CustomCalendarView customCalendarView = new CustomCalendarView(mActivity);
-//        customCalendarView.createEvents(eventsArrayList);
         ActivityUtil.gotoPage(mActivity, UnitCalendarActivity.class);
-
-//    FragmentTransaction fragmentTransaction = mFragment.getFragmentManager().beginTransaction();
-//    fragmentTransaction.replace(R.id.fl_unit, new UnitCalenderFragment());
-//    fragmentTransaction.commit();
     }
 
+
+    public TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            searchText.set(s.toString());
+
+        }
+    };
+
+    public void setSessionFilter() {
+        if (mDataManager.getLoginPrefs().getProgramFilters() != null) {
+//            changesMade = true;
+//            allLoaded = false;
+            mActivity.showLoading();
+            tags.clear();
+            tags = mDataManager.getLoginPrefs().getTags() ;
+            fetchFilters();
+            fetchUnits();
+        }
+
+
+    }
 
 }

@@ -28,22 +28,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="60dp"
                 android:layout_gravity="end"
-                android:textColor="@color/gray_5"
-                android:layout_marginEnd="@dimen/_10px"
-                android:gravity="center"
                 android:layout_marginTop="@dimen/_10px"
+                android:layout_marginEnd="@dimen/_10px"
+                android:background="@drawable/humana_rounded_rectangle"
                 android:fontFamily="@font/hind_semibold"
+                android:gravity="center"
+                android:minWidth="60dp"
                 android:padding="5dp"
                 android:text="@{period.language}"
-                android:background="@drawable/humana_rounded_rectangle" />
+                android:textColor="@color/gray_5" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center|top"
                 android:layout_weight="1"
+                android:gravity="center|top"
                 android:orientation="vertical">
 
                 <TextView
@@ -54,8 +54,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="4dp"
                     android:fontFamily="@font/hind_medium"
-                    android:text="@{period.title}"
                     android:gravity="top|center"
+                    android:text="@{period.title}"
                     android:textColor="@color/gray_5"
                     android:textSize="16sp" />
 
@@ -82,12 +82,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/gray_4"
-                    android:textSize="@dimen/_12px_sp"
-                    android:text="@{period.desc}"
                     android:ellipsize="end"
+                    android:gravity="center"
                     android:lines="3"
-                    android:gravity="center" />
+                    android:text="@{period.desc}"
+                    android:textColor="@color/gray_4"
+                    android:textSize="@dimen/_12px_sp" />
 
             </LinearLayout>
 
@@ -104,6 +104,47 @@
                 android:textColor="@color/gray_5"
                 android:textSize="14sp" />
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/map_pin_a"/>
+                <TextView
+                    android:id="@+id/txt_start_date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:drawablePadding="2dp"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="start|center"
+                    android:padding="2dp"
+                    android:textColor="@color/gray_5"
+                    android:textSize="12sp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/map_pin_b"/>
+                <TextView
+                    android:id="@+id/txt_end_date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:drawablePadding="2dp"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="start|center"
+                    android:padding="2dp"
+                    android:textColor="@color/gray_5"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,9 +160,9 @@
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:visibility="gone"
                     android:text="@{String.valueOf(period.completedCount)}"
-                    />
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/txt_total"
                     android:layout_width="0dp"
@@ -129,22 +170,22 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/hind_semibold"
                     android:gravity="center|start"
-                    android:textColor="@color/gray_5"
-                    android:textSize="14sp"
                     android:paddingStart="15dp"
-                     />
+                    android:textColor="@color/gray_5"
+                    android:textSize="14sp" />
+
                 <Button
                     android:id="@+id/textview_add"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
                     android:layout_weight="0.6"
+                    android:background="@drawable/blue_roundedbg"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/blue_roundedbg"
-                    android:layout_margin="5dp"
-                    android:textColor="@color/white"
-                    android:text="ADD" />
+                    android:text="ADD"
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 

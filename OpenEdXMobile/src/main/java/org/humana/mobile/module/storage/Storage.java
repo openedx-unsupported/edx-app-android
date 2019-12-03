@@ -460,7 +460,7 @@ public class Storage implements IStorage {
                     }
                     e.downloadedOn = System.currentTimeMillis();
                     // update file duration
-                    if(e.duration==0){
+                    /*if(e.duration==0){
                         try {
                             MediaMetadataRetriever r = new MediaMetadataRetriever();
                             FileInputStream in = new FileInputStream(new File(e.filepath));
@@ -474,7 +474,7 @@ public class Storage implements IStorage {
                         } catch (Exception ex) {
                             logger.error(ex);
                         }
-                    }
+                    }*/
                     db.updateDownloadCompleteInfoByDmId(dmId, e, null);
                     callback.sendResult(e);
                     if (e.filepath.endsWith(".zip")) {

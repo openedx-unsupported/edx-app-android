@@ -204,13 +204,14 @@ public interface TaService {
     @GET(ApiConstants.URL_MX_GET_SECTIONS)
     Call<List<Section>> getSections(@Query(Constants.KEY_PROGRAM_ID) String programId);
 
-    @GET(ApiConstants.URL_MX_GET_PROGRAM_FILTERS)
-    Call<List<ProgramFilter>> getProgramFilters(@Query(Constants.KEY_PROGRAM_ID) String programId,
-                                                @Query(Constants.KEY_SECTION_ID) String sectionId,
-                                                @Query(Constants.KEY_SHOW_IN) String showIn);
+    @POST(ApiConstants.URL_MX_GET_PROGRAM_FILTERS)
+    Call<List<ProgramFilter>> getProgramFilters(@Body Map<String, Object> parameters);
 
     @POST(ApiConstants.URL_MX_GET_PERIODS)
     Call<List<Period>> getPeriods(@Body Map<String, Object> parameters);
+
+    @POST(ApiConstants.URL_MX_GET_UPDATE_PERIOD)
+    Call<SuccessResponse> updatePeriod(@Body Map<String, Object> parameters);
 
     @POST(ApiConstants.URL_MX_GET_UNITS)
     Call<List<Unit>> getUnits(@Body Map<String, Object> parameters);

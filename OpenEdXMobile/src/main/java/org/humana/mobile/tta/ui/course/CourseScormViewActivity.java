@@ -1,5 +1,6 @@
 package org.humana.mobile.tta.ui.course;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -51,6 +52,20 @@ public class CourseScormViewActivity extends BaseVMActivity {
 
     private Tincan tincan;
     private Resume resume_info;
+
+    private final static String FOLDER_PATH = "FOLDER_PATH";
+    private static String unit_url;
+    private static String course_name;
+    private static String course_id;
+
+    public static Intent getLaunchIntent(Context context, String folder, String mCourse_name, String mCourse_id, String mUnit_url) {
+        Intent intent = new Intent(context, CourseScormViewActivity.class);
+        intent.putExtra(FOLDER_PATH, folder);
+        course_name = mCourse_name;
+        course_id=mCourse_id;
+        unit_url =mUnit_url;
+        return intent;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

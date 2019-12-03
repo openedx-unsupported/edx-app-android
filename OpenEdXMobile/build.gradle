@@ -240,6 +240,10 @@ dependencies {
     //New Relic Integration
     implementation 'com.newrelic.agent.android:android-agent:5.4.1'
 
+
+    implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.1'
+    implementation 'com.borax12.materialdaterangepicker:library:2.0'
+
     //Include DI framework
     implementation 'org.roboguice:roboguice:3.0.1'
     compileOnly 'org.roboguice:roboblender:3.0.1'
@@ -284,6 +288,8 @@ dependencies {
     implementation('ai.api:libai:1.6.12'){
         exclude module: 'log4j-core'
     }
+
+
 }
 
 configurations {

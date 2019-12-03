@@ -295,7 +295,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     private void fetchFilters() {
 
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.addunits.name(),
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.addunits.name(),filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
@@ -370,7 +370,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
         if (isUnitModePeriod) {
 
-            mDataManager.getUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
+            mDataManager.getUnits(filters, "",mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),"",
                     periodId ,take, skip,0L,0L,
                     new OnResponseCallback<List<Unit>>() {
@@ -578,7 +578,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                        + model.getUnitHour() + " hrs");
+                        + model.getUnitHour() + " "+ mActivity.getResources().getString(R.string.point_txt));
                 try {
                     if (!model.getStatus().equals("") || model.getStatus() != null) {
                         if (model.getStatusDate() > 0) {

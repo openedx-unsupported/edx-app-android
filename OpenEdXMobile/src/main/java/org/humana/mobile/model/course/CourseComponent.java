@@ -43,6 +43,8 @@ public class CourseComponent implements IBlock, IPathNode {
     //TTA Chirag: Estimated duration
     private String duration;
 
+    private BlockModel blockModel;
+
     public CourseComponent(){}
 
     /**
@@ -51,6 +53,7 @@ public class CourseComponent implements IBlock, IPathNode {
      * @param parent  is null if and only if this is the root
      */
     public CourseComponent(BlockModel blockModel, CourseComponent parent){
+        this.blockModel = blockModel;
         this.id = blockModel.id;
         this.blockId = blockModel.blockId;
         this.type = blockModel.type;
@@ -181,6 +184,14 @@ public class CourseComponent implements IBlock, IPathNode {
 
     public boolean isContainer(){
         return type != null ? type.isContainer() : (children != null && children.size() > 0);
+    }
+
+    public BlockModel getBlockModel() {
+        return blockModel;
+    }
+
+    public void setBlockModel(BlockModel blockModel) {
+        this.blockModel = blockModel;
     }
 
     /**
@@ -458,7 +469,7 @@ public class CourseComponent implements IBlock, IPathNode {
 
     public List<ScormBlockModel> getScorms(){
         List<CourseComponent> videos = new ArrayList<>();
-        fetchAllLeafComponents(videos, EnumSet.of(BlockType.SCORM));
+        fetchAllLeafComponents(videos, EnumSet.of(BlockType.PDF));
         // Confirm that these are actually VideoBlockModel instances.
         // This is necessary because if for some reason the data is null,
         // then the block is represented as an HtmlBlockModel, even if

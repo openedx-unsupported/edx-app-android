@@ -349,6 +349,14 @@ public class PrefManager {
         public static final String LATEST_APP_INFO_JSON = "latest_app_info_json";
 
         public static final String LOGINUSERCOOKIE = "login_user_cookie";
+        public static final String TYPEFILTER = "type_filter";
+        public static final String LangFILTER = "Lang_filter";
+        public static final String SESSION_FILTER = "session_filter";
+        public static final String Lang_FILTER = "Lang_filter";
+        public static final String SESSION_FILTER_TAG = "session_filter_tag";
+        public static final String PROGRAM_FILTER = "program_filter";
+        public static final String Lang_FILTER_TAG = "Lang_filter_tag";
+        public static final String TAG_LIST = "tag_list";
     }
 
     public static final class Value {

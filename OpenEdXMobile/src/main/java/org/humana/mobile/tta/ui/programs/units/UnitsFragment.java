@@ -14,8 +14,9 @@ import org.humana.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.library.LibraryFragment;
 import org.humana.mobile.view.Router;
+import org.humana.mobile.view.common.PageViewStateCallback;
 
-public class UnitsFragment extends TaBaseFragment {
+public class UnitsFragment extends TaBaseFragment implements PageViewStateCallback {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
 
     private UnitsViewModel viewModel;
@@ -65,5 +66,10 @@ public class UnitsFragment extends TaBaseFragment {
     public void onDestroy() {
         super.onDestroy();
         viewModel.unRegisterEventBus();
+    }
+
+    @Override
+    public void onPageShow() {
+       viewModel.setSessionFilter();
     }
 }
