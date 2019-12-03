@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!--Divider between current time and total time. For example  "2:33/5:10"-->
+  <string name="lbl_slash">/</string>
+  <!--Button allowing user to open a web page corresponding to the current screen in a web browser-->
+  <string name="lbl_view_on_web">XEM TRÊN WEB</string>
+  <!--Label indicating that the only course content visible in the app is videos-->
+  <string name="lbl_showing_only_videos">Chỉ hiển thị video</string>
+  <!--A button's label that reloads the content on screen-->
+  <string name="lbl_reload" tools:ignore="MissingTranslation">Tải lại</string>
+  <!--Dialog Fragment Labels-->
+  <!--Alert dialog cancel button-->
+  <string name="label_cancel">Hủy</string>
+  <!--Alert dialog No button-->
+  <string name="label_no">Không</string>
+  <!--Alert dialog download button-->
+  <string name="label_download">Tải xuống</string>
+  <!--Alert dialog yes confirmation button-->
+  <string name="label_yes">Có</string>
+  <!--Alert dialog delete confirmation button-->
+  <string name="label_delete">Xóa</string>
+  <!--Alert dialog okay button-->
+  <string name="label_ok">OK</string>
+  <!--Alert dialog close button-->
+  <string name="label_close">Đóng</string>
+  <!--Alert dialog continue confirmation button-->
+  <string name="label_continue">Tiếp tục</string>
+  <!--Alert dialog submit button-->
+  <string name="label_submit">Gửi</string>
+  <!--Alert dialog send feedback button-->
+  <string name="label_send_feedback">Gửi phản hồi</string>
+  <!--Alert dialog maybe later button-->
+  <string name="label_maybe_later">Để sau</string>
+  <!--Alert dialog rate the app button-->
+  <string name="label_rate_the_app">Đánh giá ứng dụng</string>
+  <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
+  <string name="label_update">Cập nhật</string>
+  <!--Done button label-->
+  <string name="label_done" tools:ignore="MissingTranslation">Xong</string>
+  <!--Undo button label-->
+  <string name="label_undo" tools:ignore="MissingTranslation">Quay lại</string>
+  <!--Label denoting an error-->
+  <string name="label_error" tools:ignore="MissingTranslation">Lỗi</string>
+</resources>

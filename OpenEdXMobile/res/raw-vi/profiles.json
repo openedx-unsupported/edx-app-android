@@ -1,0 +1,59 @@
+{
+    "fields":[
+    {
+              "name" : "account_privacy",
+              "label" : "Những học viên khác có thể thấy:",
+              "type" : "switch",
+              "data_type" : "boolean",
+              "options" : {
+                "values" : [
+                            { "name" : "Hồ sơ đầy đủ", "value" : "all_users" },
+                            { "name" : "Hồ sơ giới hạn",  "value" : "private" }
+                 ]
+              },
+              "instructions" : "Hồ sơ giới hạn chỉ chia sẻ tên người dùng và ảnh bìa của bạn.",
+              "accessibility_hint" : "Thay đổi thông tin có thể chia sẻ với người khác."
+    },
+    {
+              "name" : "year_of_birth",
+              "label" : "Năm sinh",
+              "type" : "select",
+              "options" : {
+                "range_min" : 1896,
+                "range_max" : 2019,
+                "allows_none" : true,
+                "none_label" : "Chưa có năm sinh"
+              },
+              "instructions" : "Bạn phải cập nhật năm sinh trước khi chia sẻ toàn bộ hồ sơ cá nhân.",
+              "sub_instructions" : "Mục này sẽ không hiển thị công khai"
+    },
+    {
+              "name" : "country",
+              "label" : "Vị trí",
+              "type" : "select",
+              "data_type" : "country",
+              "options" : {
+                "reference" : "countries",
+                "allows_none" : true,
+                "none_label" : "Chưa có vị trí"
+              }
+    },
+    {
+              "name" : "language_proficiencies",
+              "label" : "Ngôn ngữ chính",
+              "type" : "select",
+              "data_type" : "language",
+              "options" : {
+                "reference" : "languages",
+                "allows_none" : true,
+                "none_label" : "Chưa có ngôn ngữ chính"
+              }
+    },
+    {
+              "name" : "bio",
+              "label" : "Về tôi",
+              "type" : "textarea",
+              "placeholder" : "Tôi muốn học..."
+    }
+    ]
+}
