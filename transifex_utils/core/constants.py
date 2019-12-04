@@ -12,6 +12,7 @@ languages = {
     'fr': 'fr',
     'de_DE': 'de-rDE',
     'he': 'iw',
+    'ja_JP': 'ja-rJP'
 }
 
 SUBJECTS_JSON = "subjects.json"
