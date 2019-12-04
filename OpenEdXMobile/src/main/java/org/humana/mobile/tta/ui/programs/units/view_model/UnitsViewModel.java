@@ -558,13 +558,6 @@ public class UnitsViewModel extends BaseViewModel {
 
         }
     }
-//    @SuppressWarnings("unused")
-//    public void onEventFilterThread(List<ProgramFilter> filters) {
-//        if (!org.humana.mobile.tta.data.constants.Constants.selectedSession.equals("")) {
-//            filters.clear();
-//            fetchFilters();
-//        }
-//    }
 
 
     @SuppressWarnings("unused")
@@ -681,10 +674,10 @@ public class UnitsViewModel extends BaseViewModel {
 
                     if (mDataManager.getLoginPrefs().getTags()!=null) {
                         mDataManager.getLoginPrefs().clearTags();
-                        mDataManager.getLoginPrefs().storeTags(selectedTags);
+                        mDataManager.getLoginPrefs().storeTags(tags);
                     }else{
                         mDataManager.getLoginPrefs().clearTags();
-                        mDataManager.getLoginPrefs().storeTags(selectedTags);
+                        mDataManager.getLoginPrefs().storeTags(tags);
                     }
                     changesMade = true;
                     allLoaded = false;

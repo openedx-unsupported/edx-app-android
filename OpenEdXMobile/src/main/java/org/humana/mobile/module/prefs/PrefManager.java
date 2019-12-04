@@ -357,6 +357,7 @@ public class PrefManager {
         public static final String PROGRAM_FILTER = "program_filter";
         public static final String Lang_FILTER_TAG = "Lang_filter_tag";
         public static final String TAG_LIST = "tag_list";
+        public static final String PERIOD_FILTER = "period_filter";
     }
 
     public static final class Value {

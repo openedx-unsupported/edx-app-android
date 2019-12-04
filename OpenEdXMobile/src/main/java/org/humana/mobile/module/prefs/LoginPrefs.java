@@ -664,11 +664,11 @@ public class LoginPrefs {
     }
 
     public void setSessionFilter(String type) {
-        pref.put(PrefManager.Key.TYPEFILTER, type);
+        pref.put(PrefManager.Key.SESSION_FILTER, type);
     }
 
     public String getSessionFilter() {
-       return pref.getString(PrefManager.Key.TYPEFILTER);
+       return pref.getString(PrefManager.Key.SESSION_FILTER);
     }
 //    public void storeSessionFilter(@NonNull ProgramFilter filter) {
 //        pref.put(PrefManager.Key.SESSION_FILTER, gson.toJson(filter));
@@ -744,5 +744,20 @@ public class LoginPrefs {
     public void clearTags() {
         editor.remove("PrefManager.Key.TAG_LIST");
         pref.put(PrefManager.Key.TAG_LIST, gson.toJson(null));
+    }
+
+    public void setTypeFilter(String type) {
+        pref.put(PrefManager.Key.TYPEFILTER, type);
+    }
+
+    public String getTypeFilter() {
+        return pref.getString(PrefManager.Key.TYPEFILTER);
+    }
+    public void setPeriodFilter(String type) {
+        pref.put(PrefManager.Key.PERIOD_FILTER, type);
+    }
+
+    public String getPeriodFilter() {
+        return pref.getString(PrefManager.Key.PERIOD_FILTER);
     }
 }

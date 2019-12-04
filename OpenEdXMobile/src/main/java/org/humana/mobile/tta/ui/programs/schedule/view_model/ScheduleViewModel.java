@@ -37,7 +37,6 @@ import org.humana.mobile.tta.data.local.db.table.Period;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
-import org.humana.mobile.tta.data.model.program.SelectedProgramFilters;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
@@ -96,7 +95,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     private boolean isSelected;
 
     public List<ProgramFilterTag> selectedTags = new ArrayList<>();
-
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -515,8 +513,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
-                int langPos=0;
-                int sessionPos=0;
+                int langPos = 0;
+                int sessionPos = 0;
 
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 String selectedTag = "";
@@ -530,15 +528,15 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     ));
                 }
 
-                for (int i=0; i<items.size();i++){
-                    if (mDataManager.getLoginPrefs().getSessionFilter()!=null) {
+                for (int i = 0; i < items.size(); i++) {
+                    if (mDataManager.getLoginPrefs().getSessionFilter() != null) {
                         if (mDataManager.getLoginPrefs().getSessionFilter().equals(items.get(i).getName())) {
                             sessionPos = i;
                         }
                     }
                 }
-                for (int i=0; i<items.size();i++){
-                    if (mDataManager.getLoginPrefs().getLangTag()!=null) {
+                for (int i = 0; i < items.size(); i++) {
+                    if (mDataManager.getLoginPrefs().getLangTag() != null) {
                         if (mDataManager.getLoginPrefs().getLangTag().equals(items.get(i).getName())) {
                             langPos = i;
                         }
@@ -573,20 +571,20 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     if (!Objects.equals(mDataManager.getLoginPrefs().getStoreSessionFilterTag(), item.getItem())) {
                         mDataManager.getLoginPrefs().storeSessionFilterTag((ProgramFilterTag) item.getItem());
                     }
-                    if (model.getInternalName().toLowerCase().contains("session_id")){
+                    if (model.getInternalName().toLowerCase().contains("session_id")) {
                         mDataManager.getLoginPrefs().setSessionFilter(item.getName());
                     }
 
-                    if (model.getInternalName().toLowerCase().contains("language_id")){
+                    if (model.getInternalName().toLowerCase().contains("language_id")) {
                         mDataManager.getLoginPrefs().setLangTag(item.getName());
                     }
 
-                    if (mDataManager.getLoginPrefs().getTags()!=null) {
+                    if (mDataManager.getLoginPrefs().getTags() != null) {
                         mDataManager.getLoginPrefs().clearTags();
-                        mDataManager.getLoginPrefs().storeTags(selectedTags);
-                    }else{
+                        mDataManager.getLoginPrefs().storeTags(tags);
+                    } else {
                         mDataManager.getLoginPrefs().clearTags();
-                        mDataManager.getLoginPrefs().storeTags(selectedTags);
+                        mDataManager.getLoginPrefs().storeTags(tags);
                     }
                     changesMade = true;
                     allLoaded = false;
@@ -787,7 +785,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(periodItem.get()));
 
                         if (response.getSuccess()) {
-                            mActivity.showLongSnack("Start date set successfully");
+                            mActivity.showLongSnack("Date set successfully");
 //                                    eventsArrayList.clear();
                             fetchData();
                         }
@@ -807,7 +805,16 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 //            allLoaded = false;
             mActivity.showLoading();
             tags.clear();
-            tags = mDataManager.getLoginPrefs().getTags();
+            for (int i =0 ; i<mDataManager.getLoginPrefs().getTags().size(); i++) {
+                ProgramFilterTag tag = new ProgramFilterTag();
+                tag.setInternalName(mDataManager.getLoginPrefs().getTags().get(i).getInternalName());
+                tag.setOrder(mDataManager.getLoginPrefs().getTags().get(i).getOrder());
+                tag.setId(mDataManager.getLoginPrefs().getTags().get(i).getId());
+                tag.setDisplayName(mDataManager.getLoginPrefs().getTags().get(i).getDisplayName());
+                tag.setSelected(mDataManager.getLoginPrefs().getTags().get(i).getSelected());
+                tags.add(tag);
+            }
+            setFilters();
             getFilters();
             getPeriods();
         }

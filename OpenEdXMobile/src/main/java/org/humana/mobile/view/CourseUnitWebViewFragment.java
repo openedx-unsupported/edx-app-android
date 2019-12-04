@@ -133,7 +133,11 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         if (hasComponentCallback != null) {
             final CourseComponent component = hasComponentCallback.getComponent();
             if (component != null && component.equals(unit)) {
-                authWebView.loadUrl(false, unit.getBlockUrl());
+//                authWebView.loadUrl(false, unit.getBlockUrl());
+                // ToDo hardcoded here for testing
+                String blockId = unit.getId();
+                String urlToload = environment.getConfig().getApiHostURL()+"/mx_humana_lms/xblock/"+blockId;
+                authWebView.loadUrl(false, urlToload);
             }
         }
     }

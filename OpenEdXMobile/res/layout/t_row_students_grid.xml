@@ -50,68 +50,6 @@
                     android:paddingEnd="8dp"
                     android:singleLine="true"
                     android:ellipsize="marquee" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:id="@+id/ll_status"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txt_pending"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:drawableLeft="@drawable/check"
-                        android:drawablePadding="5dp"
-                        android:fontFamily="@font/hind_medium"
-                        android:gravity="start|center"
-                        android:padding="5dp"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/txt_completed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start|center"
-                        android:drawablePadding="5dp"
-                        android:padding="5dp"
-                        android:textColor="@color/gray_5"
-                        android:drawableLeft="@drawable/ic_access_time_red_24dp"
-                        android:fontFamily="@font/hind_medium" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:id="@+id/ll_current_status"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txt_current_pending"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:drawableLeft="@drawable/check"
-                        android:drawablePadding="5dp"
-                        android:fontFamily="@font/hind_medium"
-                        android:gravity="start|center"
-                        android:padding="5dp"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/txt_current_completed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start|center"
-                        android:drawablePadding="5dp"
-                        android:padding="5dp"
-                        android:textColor="@color/gray_5"
-                        android:drawableLeft="@drawable/ic_access_time_red_24dp"
-                        android:fontFamily="@font/hind_medium" />
-
-                </LinearLayout>
-
 
                 <TextView
                     android:layout_width="match_parent"
@@ -126,6 +64,43 @@
                     android:paddingEnd="8dp"
                     android:singleLine="true"
                     android:ellipsize="marquee" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:id="@+id/ll_status"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_pending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawableLeft="@drawable/check"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="@font/hind_medium"
+                        android:gravity="start|center"
+                        android:padding="5dp"
+                        android:drawableTint="@color/secondary_green"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/txt_completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center"
+                        android:drawablePadding="5dp"
+                        android:padding="5dp"
+                        android:textColor="@color/gray_5"
+                        android:drawableTint="@color/secondary_green"
+                        android:drawableLeft="@drawable/ic_access_time_red_24dp"
+                        android:fontFamily="@font/hind_medium" />
+
+                </LinearLayout>
+
+
+
+
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -163,6 +138,38 @@
                         <!--android:id="@+id/img_web"-->
                         <!--android:src="@drawable/internet_web_browser"/>-->
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:id="@+id/ll_current_status"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_current_pending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawableLeft="@drawable/check"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="@font/hind_medium"
+                        android:gravity="start|center"
+                        android:padding="5dp"
+                        android:drawableTint="@color/pending_orange"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/txt_current_completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center"
+                        android:drawablePadding="5dp"
+                        android:padding="5dp"
+                        android:drawableTint="@color/pending_orange"
+                        android:textColor="@color/gray_5"
+                        android:drawableLeft="@drawable/ic_access_time_red_24dp"
+                        android:fontFamily="@font/hind_medium" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -182,6 +189,7 @@
                 <!--android:enabled="true"/>-->
 
         </LinearLayout>
+
 
     </android.support.v7.widget.CardView>
 
