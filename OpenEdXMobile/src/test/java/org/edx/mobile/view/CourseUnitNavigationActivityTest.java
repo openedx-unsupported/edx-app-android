@@ -15,7 +15,6 @@ import com.google.gson.JsonObject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
@@ -407,7 +406,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 .thenReturn(Mockito.mock(VideoInfo.class));
         when(youtubeVideosModel.getData()).thenReturn(videoData2);
         unitList.add(youtubeVideosModel);
-        if (config.getEmbeddedYoutubeConfig().isYoutubeEnabled()) {
+        if (config.getYoutubeInAppPlayerConfig().isYoutubeEnabled()) {
             classesList.add(CourseUnitYoutubeVideoFragment.class);
         } else {
             classesList.add(CourseUnitOnlyOnYoutubeFragment.class);

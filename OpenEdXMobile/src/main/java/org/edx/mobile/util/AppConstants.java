@@ -24,7 +24,6 @@ public enum AppConstants {
     public static final String VIDEO_FORMAT_MP4 = ".mp4";
     public static final String APP_URI_SCHEME = "org.edx.mobile.innerlinks://";
 
-    public static final String YOUTUBE_APP_URI_PLAY_STORE = "market://details?id=com.google.android.youtube";
     public static final String BROWSER_PLAYSTORE_YOUTUBE_URI = "https://play.google.com/store/apps/details?id=com.google.android.youtube";
     public static final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
 

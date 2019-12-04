@@ -164,7 +164,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         try {
             if (getUserVisibleHint() && youTubePlayerFragment != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
                 loadTranscriptsData();
-                String apiKey = environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
+                String apiKey = environment.getConfig().getYoutubeInAppPlayerConfig().getYoutubePlayerApiKey();
                 if (apiKey == null || apiKey.isEmpty()) {
                     return;
                 }

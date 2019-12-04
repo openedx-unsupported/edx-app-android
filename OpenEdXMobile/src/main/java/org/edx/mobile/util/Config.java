@@ -593,19 +593,19 @@ public class Config {
         }
     }
 
-    public static class EmbeddedYoutubeConfig {
+    public static class YoutubeInAppPlayerConfig {
         @SerializedName("ENABLED")
         private boolean enabled;
 
-        @SerializedName("YOUTUBE_API_KEY")
-        private String youtubeApiKey;
+        @SerializedName("YOUTUBE_PLAYER_API_KEY")
+        private String youtubePlayerApiKey;
 
         public boolean isYoutubeEnabled() {
             return enabled;
         }
 
-        public String getYoutubeApiKey() {
-            return youtubeApiKey;
+        public String getYoutubePlayerApiKey() {
+            return youtubePlayerApiKey;
         }
     }
 
@@ -873,7 +873,7 @@ public class Config {
     }
 
     @NonNull
-    public EmbeddedYoutubeConfig getEmbeddedYoutubeConfig() {
-        return getObjectOrNewInstance(YOUTUBE_VIDEO, EmbeddedYoutubeConfig.class);
+    public YoutubeInAppPlayerConfig getYoutubeInAppPlayerConfig() {
+        return getObjectOrNewInstance(YOUTUBE_VIDEO, YoutubeInAppPlayerConfig.class);
     }
 }

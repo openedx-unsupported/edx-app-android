@@ -114,7 +114,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
     }
 
     private JsonElement getYoutubeMockConfig() {
-        final String serializedData = "{\"ENABLED\":\"True\", \"YOUTUBE_API_KEY\":\"TEST_YOUTUBE_API_KEY\"}";
+        final String serializedData = "{\"ENABLED\":\"True\", \"YOUTUBE_PLAYER_API_KEY\":\"TEST_YOUTUBE_API_KEY\"}";
         return new JsonParser().parse(serializedData);
     }
 
