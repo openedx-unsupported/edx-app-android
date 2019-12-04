@@ -598,6 +598,7 @@ public interface Analytics {
         String CAST_CONNECTED = "edx.bi.app.cast.connected";
         String CAST_DISCONNECTED = "edx.bi.app.cast.disconnected";
         String VIDEO_CASTED = "edx.bi.app.cast.video_casted";
+        // -- Play mediums --
         // Casting Device Types
         String GOOGLE_CAST = "google_cast";
         // YouTube Player Type
