@@ -358,10 +358,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="assessment_only_on_youtube">Este vídeo solo puede reproducirse en Youtube. </string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">Ver video en YouTube</string>
-  <!-- Label showing that you need to update youtube in order to watch the video -->
-  <string name="assessment_needed_updating_youtube">Este vídeo requiere que actualices la aplicación de YouTube.</string>
-  <!-- Label for button to update youtube -->
-  <string name="assessment_update_youtube">Actualizar YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">Descargas</string>

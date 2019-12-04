@@ -351,10 +351,6 @@
   <string name="assessment_only_on_youtube">Cette vidéo ne peut être vue que sur Youtube</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">Voir sur Youtube</string>
-  <!-- Label showing that you need to update youtube in order to watch the video -->
-  <string name="assessment_needed_updating_youtube">Cette vidéo nécessite la mise à jour de l\'application YouTube.</string>
-  <!-- Label for button to update youtube -->
-  <string name="assessment_update_youtube">Mettre à jour YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">Téléchargements</string>
