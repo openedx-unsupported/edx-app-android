@@ -13,6 +13,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -41,11 +42,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private YouTubePlayer youTubePlayer;
     private Handler subtitleDisplayHandler = new Handler();
-    private Handler transcriptsHandler = new Handler();
     private Handler initializeHandler = new Handler();
+    private Handler subtitleFetchHandler = new Handler();
+
     private TimedTextObject subtitlesObj;
-    private LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
+    @Inject
+    private TranscriptManager transcriptManager;
     /**
      * isInForeground is set on false when the app comes to background from foreground
      * so this allow to play a video when the app comes to foreground from background
@@ -77,6 +80,43 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             }
         }
         subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
+    };
+    private TranscriptModel transcript;
+    /**
+     * This runnable is used the fetch the Subtitle in TimedTextObject
+     */
+    private Runnable subtitleFetchProcessor = new Runnable() {
+        public void run() {
+            LinkedHashMap<String, TimedTextObject> srtList = new LinkedHashMap<>();
+            try {
+                final LinkedHashMap<String, InputStream> localHashMap = transcriptManager
+                        .fetchTranscriptsForVideo(transcript);
+
+                if (localHashMap != null) {
+                    for (String thisKey : localHashMap.keySet()) {
+                        InputStream localInputStream = localHashMap.get(thisKey);
+                        if (localInputStream != null) {
+                            TimedTextObject localTimedTextObject =
+                                    new FormatSRT().parseFile("temp.srt", localInputStream);
+                            srtList.put(thisKey, localTimedTextObject);
+                            localInputStream.close();
+                        }
+                    }
+
+                    if (srtList.size() == 0) {
+                        subtitleFetchHandler.postDelayed(subtitleFetchProcessor, 100);
+                    } else {
+                        setSubtitlesObj(srtList);
+                        initTranscripts();
+                    }
+                } else {
+                    subtitleFetchHandler.postDelayed(subtitleFetchProcessor, 1000);
+                }
+            } catch (Exception localException) {
+                logger.error(localException);
+            }
+
+        }
     };
 
     /**
@@ -114,17 +154,16 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             initializeHandler.postDelayed(this::initializeYoutubePlayer, 1000);
         } else {
             releaseYoutubePlayer();
-            transcriptsHandler.removeCallbacksAndMessages(null);
             subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
             initializeHandler.removeCallbacks(null);
+            subtitleFetchHandler.removeCallbacks(null);
         }
     }
 
     public void initializeYoutubePlayer() {
         try {
             if (getUserVisibleHint() && youTubePlayerFragment != null && NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
-
-                initTranscripts();
+                loadTranscriptsData();
                 String apiKey = environment.getConfig().getEmbeddedYoutubeConfig().getYoutubeApiKey();
                 if (apiKey == null || apiKey.isEmpty()) {
                     return;
@@ -173,6 +212,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     @Override
     public void onDestroy() {
         super.onDestroy();
+        subtitleFetchHandler.removeCallbacks(subtitleFetchProcessor);
         subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
     }
 
@@ -204,9 +244,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 youTubePlayer.setFullscreen(true);
             }
         }
-        subtitleDisplayHandler = new Handler();
-        subtitleDisplayHandler.postDelayed(subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
-
     }
 
     @Override
@@ -216,33 +253,12 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
     private void loadTranscriptsData() {
         final TranscriptManager transcriptManager = new TranscriptManager(getContext());
-        final TranscriptModel transcript = getTranscriptModel();
+        transcript = getTranscriptModel();
         transcriptManager.downloadTranscriptsForVideo(transcript);
-
-        try {
-            final LinkedHashMap<String, InputStream> localHashMap = transcriptManager
-                    .fetchTranscriptsForVideo(transcript);
-            if (localHashMap != null) {
-                for (String thisKey : localHashMap.keySet()) {
-                    final InputStream localInputStream = localHashMap.get(thisKey);
-                    if (localInputStream != null) {
-                        final TimedTextObject localTimedTextObject =
-                                new FormatSRT().parseFile("temp.srt", localInputStream);
-                        srtList.put(thisKey, localTimedTextObject);
-                        localInputStream.close();
-                    }
-                }
-                if (!srtList.entrySet().isEmpty()) {
-                    setSubtitlesObj();
-                }
-            }
-
-        } catch (Exception localException) {
-            logger.error(localException);
-        }
+        subtitleFetchHandler.post(subtitleFetchProcessor);
     }
 
-    private void setSubtitlesObj() {
+    private void setSubtitlesObj(LinkedHashMap<String, TimedTextObject> srtList) {
         String key = Locale.getDefault().getLanguage();
         // Android return iw in case of Hebrew
         if (key.equals("iw")) {
@@ -258,8 +274,6 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     }
 
     private void initTranscripts() {
-        loadTranscriptsData();
-
         if (subtitlesObj != null) {
             initTranscriptListView();
             updateTranscript(subtitlesObj);
@@ -338,6 +352,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onPlaying() {
+            subtitleDisplayHandler.post(subtitlesProcessorRunnable);
             environment.getAnalyticsRegistry().trackVideoPlaying(videoModel.videoId,
                     youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
                     videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
@@ -345,6 +360,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
 
         @Override
         public void onPaused() {
+            subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
             environment.getAnalyticsRegistry().trackVideoPause(videoModel.videoId,
                     youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
                     videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
