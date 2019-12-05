@@ -1,7 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
 
 public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
 
@@ -36,15 +35,12 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
             ((TextView) view.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
             view.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
             view.findViewById(R.id.update_youtube_button).setOnClickListener(v -> {
-                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI));
-                startActivity(intent);
+                BrowserUtil.open(getActivity(), AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI);
             });
         }
 
         view.findViewById(R.id.view_on_youtube_button).setOnClickListener(v -> {
-            final Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(((VideoBlockModel) unit).getData().encodedVideos.youtube.url));
-            startActivity(intent);
+            BrowserUtil.open(getActivity(), ((VideoBlockModel) unit).getData().encodedVideos.youtube.url);
         });
 
         return view;
