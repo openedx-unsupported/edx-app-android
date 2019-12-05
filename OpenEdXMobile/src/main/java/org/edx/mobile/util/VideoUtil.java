@@ -169,7 +169,7 @@ public class VideoUtil {
             /*
              * Youtube documentation says the following "Users need to run version 4.2.16 of the
              * mobile YouTube app (or higher) to use the API."
-             * but the feature has been tested over the version v10.02.3 and this has not worked,
+             * but the feature has been tested over the version v10.18.55 and this has not worked,
              * so the target version has been set in the minor version where it works that is
              * v12.01.54
              * Ref:
