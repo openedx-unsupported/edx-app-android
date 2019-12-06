@@ -540,12 +540,12 @@ public class CourseAPI {
             else if (BlockType.PDF == block.type)//block.data instanceof ScormData
             {
                 ScormData scormData= new ScormData();
-                scormData.scormData="http://tutorial.math.lamar.edu/pdf/Trig_Cheat_Sheet.pdf";
+//                scormData.scormData="http://tutorial.math.lamar.edu/pdf/Trig_Cheat_Sheet.pdf";
                 ///TODO :need to work on Arjun
-//                PDFBlockModel pdfBlockModel=new PDFBlockModel(block, parent);
-//                pdfBlockModel.setData(scormData);
-                ScormBlockModel sbm=new ScormBlockModel(block, parent);
-                sbm.setData(scormData);
+                PDFBlockModel pdfBlockModel=new PDFBlockModel(block, parent);
+                pdfBlockModel.setData(scormData);
+//                ScormBlockModel sbm=new ScormBlockModel(block, parent);
+//                sbm.setData(scormData);
             } else { //everything else.. we fallback to html component
                 new HtmlBlockModel(block, parent);
             }

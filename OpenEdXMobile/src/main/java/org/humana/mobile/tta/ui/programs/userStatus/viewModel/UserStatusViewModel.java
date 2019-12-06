@@ -515,6 +515,7 @@ public class UserStatusViewModel extends BaseViewModel {
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
+                int periodPos =0;
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
                         true, R.color.primary_cyan, R.drawable.t_background_tag_hollow
@@ -524,7 +525,26 @@ public class UserStatusViewModel extends BaseViewModel {
                             tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
                 }
+
+                for (int i = 0; i < items.size(); i++) {
+                    if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle() != null) {
+                        if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle().equals(items.get(i).getName())) {
+                            periodPos = i;
+                            tags.add((ProgramFilterTag) items.get(i).getItem());
+                            fetchUnits();
+                        }
+                    }
+                }
                 dropDownBinding.filterDropDown.setFilterItems(items);
+                dropDownBinding.filterDropDown.setSelection(periodPos);
+
+//                if (model.getInternalName().equals("period_id")){
+//                    if (mDataManager.getLoginPrefs().getCurrrentPeriod()!=0){
+//                        for (int i=0; i<= items.size();i++){
+//                        }
+//                        dropDownBinding.filterDropDown.setSelection();
+//                    }
+//                }
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
                     if (prev != null && prev.getItem() != null) {
@@ -580,6 +600,8 @@ public class UserStatusViewModel extends BaseViewModel {
                 } else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                 }
+
+
 //                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
 //                    if (model.getStatus().equals("Submitted")){
 //                        unitBinding.tvComment.setVisibility(View.GONE);

@@ -469,7 +469,7 @@ public class CourseComponent implements IBlock, IPathNode {
 
     public List<ScormBlockModel> getScorms(){
         List<CourseComponent> videos = new ArrayList<>();
-        fetchAllLeafComponents(videos, EnumSet.of(BlockType.PDF));
+        fetchAllLeafComponents(videos, EnumSet.of(BlockType.SCORM));
         // Confirm that these are actually VideoBlockModel instances.
         // This is necessary because if for some reason the data is null,
         // then the block is represented as an HtmlBlockModel, even if

@@ -5,7 +5,6 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -607,8 +606,10 @@ public class UnitsViewModel extends BaseViewModel {
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
-                int langPos=0;
-                int sessionPos=0;
+                int langPos = 0;
+                int sessionPos = 0;
+                int typePos = 0;
+                int periodPos = 0;
 
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 String selectedTag = "";
@@ -617,22 +618,36 @@ public class UnitsViewModel extends BaseViewModel {
                 ));
 
                 for (ProgramFilterTag tag : model.getTags()) {
-                        items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
-                        ));
+                    items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                            tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
+                    ));
                 }
 
-                for (int i=0; i<items.size();i++){
-                    if (mDataManager.getLoginPrefs().getSessionFilter()!=null) {
+                for (int i = 0; i < items.size(); i++) {
+                    if (mDataManager.getLoginPrefs().getSessionFilter() != null) {
                         if (mDataManager.getLoginPrefs().getSessionFilter().equals(items.get(i).getName())) {
                             sessionPos = i;
                         }
                     }
                 }
-                for (int i=0; i<items.size();i++){
-                    if (mDataManager.getLoginPrefs().getLangTag()!=null) {
+                for (int i = 0; i < items.size(); i++) {
+                    if (mDataManager.getLoginPrefs().getLangTag() != null) {
                         if (mDataManager.getLoginPrefs().getLangTag().equals(items.get(i).getName())) {
                             langPos = i;
+                        }
+                    }
+                }
+                for (int i = 0; i < items.size(); i++) {
+                            if (mDataManager.getLoginPrefs().getTypeFilter() != null) {
+                                if (mDataManager.getLoginPrefs().getTypeFilter().equals(items.get(i).getName())) {
+                                    typePos = i;
+                        }
+                    }
+                }
+                for (int i = 0; i < items.size(); i++) {
+                            if (mDataManager.getLoginPrefs().getPeriodFilter() != null) {
+                                if (mDataManager.getLoginPrefs().getPeriodFilter().equals(items.get(i).getName())) {
+                                    periodPos = i;
                         }
                     }
                 }
@@ -648,6 +663,15 @@ public class UnitsViewModel extends BaseViewModel {
                     dropDownBinding.filterDropDown.setSelection(langPos);
                     dropDownBinding.filterDropDown.notifyDataSetChanged();
                 }
+                if (model.getInternalName().toLowerCase().contains("type")) {
+                    dropDownBinding.filterDropDown.setSelection(typePos);
+                    dropDownBinding.filterDropDown.notifyDataSetChanged();
+                }
+                if (model.getInternalName().toLowerCase().contains("period_id")) {
+                    dropDownBinding.filterDropDown.setSelection(periodPos);
+                    dropDownBinding.filterDropDown.notifyDataSetChanged();
+                }
+
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
                     if (prev != null && prev.getItem() != null) {
@@ -655,7 +679,7 @@ public class UnitsViewModel extends BaseViewModel {
                     }
                     if (item.getItem() != null) {
                         tags.add((ProgramFilterTag) item.getItem());
-                        selectedTags.add((ProgramFilterTag) item.getItem());
+//                        selectedTags.add((ProgramFilterTag) item.getItem());
                     }
 
                     if (!Objects.requireNonNull(mDataManager.getLoginPrefs().getProgramFilters()).contains(model)) {
@@ -664,18 +688,25 @@ public class UnitsViewModel extends BaseViewModel {
                     if (!Objects.equals(mDataManager.getLoginPrefs().getStoreSessionFilterTag(), item.getItem())) {
                         mDataManager.getLoginPrefs().storeSessionFilterTag((ProgramFilterTag) item.getItem());
                     }
-                    if (model.getInternalName().toLowerCase().contains("session_id")){
+                    if (model.getInternalName().toLowerCase().contains("session_id")) {
                         mDataManager.getLoginPrefs().setSessionFilter(item.getName());
                     }
 
-                    if (model.getInternalName().toLowerCase().contains("language_id")){
+                    if (model.getInternalName().toLowerCase().contains("language_id")) {
                         mDataManager.getLoginPrefs().setLangTag(item.getName());
                     }
 
-                    if (mDataManager.getLoginPrefs().getTags()!=null) {
+                    if (model.getInternalName().toLowerCase().contains("type")) {
+                        mDataManager.getLoginPrefs().setTypeFilter(item.getName());
+                    }
+                    if (model.getInternalName().toLowerCase().contains("period_id")) {
+                        mDataManager.getLoginPrefs().setPeriodFilter(item.getName());
+                    }
+
+                    if (mDataManager.getLoginPrefs().getTags() != null) {
                         mDataManager.getLoginPrefs().clearTags();
                         mDataManager.getLoginPrefs().storeTags(tags);
-                    }else{
+                    } else {
                         mDataManager.getLoginPrefs().clearTags();
                         mDataManager.getLoginPrefs().storeTags(tags);
                     }
@@ -686,7 +717,7 @@ public class UnitsViewModel extends BaseViewModel {
                     fetchData();
                 });
 
-        } else if (binding instanceof TRowTextBinding) {
+            } else if (binding instanceof TRowTextBinding) {
                 TRowTextBinding textBinding = (TRowTextBinding) binding;
                 textBinding.text.setText(user.name);
             }
@@ -822,12 +853,12 @@ public class UnitsViewModel extends BaseViewModel {
     };
 
     public void setSessionFilter() {
-        if (mDataManager.getLoginPrefs().getProgramFilters() != null) {
+        if (mDataManager.getLoginPrefs().getTags() != null) {
 //            changesMade = true;
 //            allLoaded = false;
             mActivity.showLoading();
             tags.clear();
-            tags = mDataManager.getLoginPrefs().getTags() ;
+            tags = mDataManager.getLoginPrefs().getTags();
             fetchFilters();
             fetchUnits();
         }

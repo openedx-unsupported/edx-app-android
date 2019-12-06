@@ -13,6 +13,7 @@
         app:cardCornerRadius="4dp"
         android:background="@color/humana_card_background"
         app:cardElevation="@dimen/_16px"
+        android:id="@+id/user_card"
         android:shadowColor="@color/gray_1"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"

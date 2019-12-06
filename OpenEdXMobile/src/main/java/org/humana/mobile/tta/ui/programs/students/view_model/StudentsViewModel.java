@@ -83,11 +83,48 @@ public class StudentsViewModel extends BaseViewModel {
         usersAdapter.setItems(users);
         gridUsersAdapter.setItems(users);
         usersAdapter.setItemClickListener((view, item) -> {
-            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+            switch (view.getId()) {
+                case R.id.ll_current_status:
+                    mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
+                    break;
+
+                case R.id.ll_status:
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, item.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+                    } else {
+                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+                    }
+                    break;
+
+                default:
+                    mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+                    break;
+
+            }
 
         });
         gridUsersAdapter.setItemClickListener((view, item) -> {
-            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+            switch (view.getId()){
+                case R.id.ll_current_status:
+                    mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
+                    mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.current_period_title);
+                    break;
+
+                case R.id.ll_status:
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, item.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+                    } else {
+                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+                    }
+                    break;
+                    default:
+                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+                        break;
+            }
 
         });
 
@@ -97,7 +134,6 @@ public class StudentsViewModel extends BaseViewModel {
         mActivity.showLoading();
 //        getFilters();
         fetchData();
-
 
     }
 
@@ -167,71 +203,6 @@ public class StudentsViewModel extends BaseViewModel {
 
     }
 
-    private void setFilters() {
-        filters = new ArrayList<>();
-
-        filters.clear();
-
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
-            return;
-        }
-
-        for (ProgramFilter filter : allFilters) {
-
-            List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag : filter.getTags()) {
-                if (tags.contains(tag)) {
-                    selectedTags.add(tag);
-                }
-            }
-
-            if (!selectedTags.isEmpty()) {
-                ProgramFilter pf = new ProgramFilter();
-                pf.setDisplayName(filter.getDisplayName());
-                pf.setInternalName(filter.getInternalName());
-                pf.setId(filter.getId());
-                pf.setOrder(filter.getOrder());
-                pf.setShowIn(filter.getShowIn());
-                pf.setTags(selectedTags);
-                filters.add(pf);
-            }
-        }
-    }
-
-    public void getFilters() {
-
-        mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.schedule.name(),filters,
-                new OnResponseCallback<List<ProgramFilter>>() {
-                    @Override
-                    public void onSuccess(List<ProgramFilter> data) {
-                        List<ProgramFilter> removables = new ArrayList<>();
-                        for (ProgramFilter filter : data) {
-                            if (filter.getShowIn() == null || filter.getShowIn().isEmpty() ||
-                                    !filter.getShowIn().contains("students")) {
-                                removables.add(filter);
-                            }
-                        }
-                        for (ProgramFilter filter : removables) {
-                            data.remove(filter);
-                        }
-
-                        if (!data.isEmpty()) {
-                            allFilters = data;
-                            filtersVisible.set(true);
-                            filtersAdapter.setItems(data);
-                        } else {
-                            filtersVisible.set(false);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        filtersVisible.set(false);
-                    }
-                });
-
-    }
 
     private void populateStudents(List<ProgramUser> data) {
         boolean newItemsAdded = false;
@@ -292,6 +263,9 @@ public class StudentsViewModel extends BaseViewModel {
 
                     itemBinding.txtCurrentCompleted.setText(String.format("%s hrs", String.valueOf(model.current_hours)));
                     itemBinding.txtCurrentPending.setText(String.format("%s units", String.valueOf(model.currentUnits)));
+
+
+
 //                boolean tabletSize = mActivity.getResources().getBoolean(R.bool.isTablet);
 //                if (!tabletSize){
 //                    itemBinding.txtCompleted.setCompoundDrawables(null,null,null,null);
@@ -303,26 +277,15 @@ public class StudentsViewModel extends BaseViewModel {
                     }
 
                     itemBinding.txtCompleted.setOnClickListener(v -> {
-                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
-                            Bundle b = new Bundle();
-                            b.putString(Router.EXTRA_USERNAME, model.username);
-                            ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
-
-//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
-                        } else {
-                            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
-                        }
-                    });
-                    itemBinding.txtPending.setOnClickListener(v -> {
-                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
-                            Bundle b = new Bundle();
-                            b.putString(Router.EXTRA_USERNAME, model.username);
-                            ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
-
-//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
-                        } else {
-                            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
-                        }
+//                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+//                            Bundle b = new Bundle();
+//                            b.putString(Router.EXTRA_USERNAME, model.username);
+//                            ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+//
+////                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
+//                        } else {
+//                            mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
+//                        }
                     });
 
                     itemBinding.imgInsta.setOnClickListener(new View.OnClickListener() {
@@ -372,6 +335,22 @@ public class StudentsViewModel extends BaseViewModel {
                     });
 
                     itemBinding.getRoot().setOnClickListener(v -> {
+                        if (listener != null) {
+                            listener.onItemClick(v, model);
+                        }
+                    });
+
+                    itemBinding.llStatus.setOnClickListener(v -> {
+                        if (listener != null) {
+                            listener.onItemClick(v, model);
+                        }
+                    });
+                    itemBinding.userCard.setOnClickListener(v -> {
+                        if (listener != null) {
+                            listener.onItemClick(v, model);
+                        }
+                    });
+                    itemBinding.llCurrentStatus.setOnClickListener(v -> {
                         if (listener != null) {
                             listener.onItemClick(v, model);
                         }
@@ -439,26 +418,7 @@ public class StudentsViewModel extends BaseViewModel {
 
 
                 itemBinding.txtCompleted.setOnClickListener(v -> {
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
-                        Bundle b = new Bundle();
-                        b.putString(Router.EXTRA_USERNAME, model.username);
-                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
 
-//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
-                    } else {
-                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
-                    }
-                });
-                itemBinding.txtPending.setOnClickListener(v -> {
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
-                        Bundle b = new Bundle();
-                        b.putString(Router.EXTRA_USERNAME, model.username);
-                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
-
-//                EventBus.getDefault().post(new ShowStudentUnitsEvent(item));
-                    } else {
-                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, model.username);
-                    }
                 });
 
 
@@ -510,6 +470,23 @@ public class StudentsViewModel extends BaseViewModel {
                 });
 
                 itemBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                itemBinding.llStatus.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+                itemBinding.userCard.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+
+                itemBinding.llCurrentStatus.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }

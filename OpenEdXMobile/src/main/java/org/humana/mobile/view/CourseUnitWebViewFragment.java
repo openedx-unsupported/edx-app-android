@@ -16,8 +16,13 @@ import org.humana.mobile.logger.Logger;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.model.course.HtmlBlockModel;
 import org.humana.mobile.services.ViewPagerDownloadManager;
+import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.view.custom.AuthenticatedWebView;
 import org.humana.mobile.view.custom.URLInterceptorWebViewClient;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import roboguice.inject.InjectView;
 
@@ -30,6 +35,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @InjectView(R.id.swipe_container)
     protected SwipeRefreshLayout swipeContainer;
 
+    private DataManager mdataManager;
+
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
         Bundle args = new Bundle();
@@ -41,6 +48,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mdataManager = DataManager.getInstance(getActivity());
         return inflater.inflate(R.layout.fragment_authenticated_webview, container, false);
     }
 
@@ -136,8 +144,21 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 //                authWebView.loadUrl(false, unit.getBlockUrl());
                 // ToDo hardcoded here for testing
                 String blockId = unit.getId();
-                String urlToload = environment.getConfig().getApiHostURL()+"/mx_humana_lms/xblock/"+blockId;
-                authWebView.loadUrl(false, urlToload);
+                String role = mdataManager.getLoginPrefs().getRole();
+                String program_id = encode(mdataManager.getLoginPrefs().getProgramId());
+
+
+
+                String urlToloadStudent = environment.getConfig().getApiHostURL() + "/mx_humana_lms/xblock/"
+                        + blockId + "/?program_id=" + program_id + "&role=" + role + "&username=" + Constants.USERNAME;
+
+                String urlToload = environment.getConfig().getApiHostURL() + "/mx_humana_lms/xblock/"
+                        + blockId;
+                if (Constants.USERNAME.equals("")) {
+                    authWebView.loadUrl(false, urlToload);
+                } else {
+                    authWebView.loadUrl(false, urlToloadStudent);
+                }
             }
         }
     }
@@ -159,4 +180,22 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         super.onDestroyView();
         authWebView.onDestroyView();
     }
+
+    public static String encode(String url) {
+
+        try {
+
+            String encodeURL = URLEncoder.encode(url, "UTF-8");
+
+            return encodeURL;
+
+        } catch (UnsupportedEncodingException e) {
+
+            return "Issue while encoding" + e.getMessage();
+
+        }
+
+    }
+
 }
+

@@ -760,4 +760,31 @@ public class LoginPrefs {
     public String getPeriodFilter() {
         return pref.getString(PrefManager.Key.PERIOD_FILTER);
     }
+
+    public void clearAllFilters(){
+        pref.put(PrefManager.Key.SESSION_FILTER, null);
+        pref.put(PrefManager.Key.SESSION_FILTER_TAG, null);
+        pref.put(PrefManager.Key.SESSION_FILTER_TAG, null);
+        pref.put(PrefManager.Key.PROGRAM_FILTER, null);
+        pref.put(PrefManager.Key.Lang_FILTER_TAG, null);
+        pref.put(PrefManager.Key.TYPEFILTER, null);
+        pref.put(PrefManager.Key.PERIOD_FILTER, null);
+        pref.put(PrefManager.Key.TAG_LIST, gson.toJson(null));
+    }
+
+    public void setCurrrentPeriod(long periodId) {
+        pref.put(PrefManager.Key.CURRENT_PERIOD_ID, periodId);
+    }
+
+    public long getCurrrentPeriod() {
+        return pref.getLong(PrefManager.Key.CURRENT_PERIOD_ID);
+    }
+
+    public void setCurrrentPeriodTitle(String periodId) {
+        pref.put(PrefManager.Key.CURRENT_PERIOD_TITLE, periodId);
+    }
+
+    public String getCurrrentPeriodTitle() {
+        return pref.getString(PrefManager.Key.CURRENT_PERIOD_TITLE);
+    }
 }
