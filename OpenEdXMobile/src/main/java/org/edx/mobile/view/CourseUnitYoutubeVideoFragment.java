@@ -166,6 +166,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 loadTranscriptsData();
                 String apiKey = environment.getConfig().getYoutubeInAppPlayerConfig().getYoutubePlayerApiKey();
                 if (apiKey == null || apiKey.isEmpty()) {
+                    logger.error(new Throwable("YOUTUBE_PLAYER_API_KEY is missing or empty"));
                     return;
                 }
                 youTubePlayerFragment.initialize(apiKey, this);
