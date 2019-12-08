@@ -94,6 +94,7 @@ import org.humana.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.humana.mobile.tta.data.model.profile.UserAddressResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
+import org.humana.mobile.tta.data.model.program.SelectedFilter;
 import org.humana.mobile.tta.data.model.search.FilterSection;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
 import org.humana.mobile.tta.data.pref.AppPref;
@@ -1305,7 +1306,7 @@ public class DataManager extends BaseRoboInjector {
 
     public void downloadSingle(ScormBlockModel scorm,
                                FragmentActivity activity,
-                               VideoDownloadHelper.DownloadManagerCallback callback){
+                               VideoDownloadHelper.DownloadManagerCallback callback) {
         DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
         de.url = scorm.getDownloadUrl();
         de.title = scorm.getParent().getDisplayName();
@@ -3744,12 +3745,12 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void updatePeriods(String programId, String sectionId,
-                           String periodId, String periodName, long startDate, long endDate,
+                              String periodId, String periodName, long startDate, long endDate,
                               OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new UpdatePeriodTask(context,programId, sectionId,periodId,periodName,startDate,endDate) {
+            new UpdatePeriodTask(context, programId, sectionId, periodId, periodName, startDate, endDate) {
                 @Override
                 protected void onSuccess(SuccessResponse response) throws Exception {
                     super.onSuccess(response);
@@ -3779,7 +3780,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetUnitsTask(context, filters,searchText, programId, sectionId, role, periodId, take, skip, student_username, startDateTime,
+            new GetUnitsTask(context, filters, searchText, programId, sectionId, role, periodId, take, skip, student_username, startDateTime,
                     endDateTime) {
                 @Override
                 protected void onSuccess(List<Unit> units) throws Exception {
@@ -4365,8 +4366,8 @@ public class DataManager extends BaseRoboInjector {
         });
     }
 
-    public void setProposedDate(String programId, String sectionId, long proposedDate, long periodId, String unitId,
-                                OnResponseCallback<SuccessResponse> callback) {
+    public void setProposedDate(String programId, String sectionId, long proposedDate, long periodId,
+                                String unitId, OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
@@ -4393,8 +4394,37 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public String getLoginUserCookie() {
-        return edxEnvironment.getLoginPrefs().getLoginUserCookie();
+    public void updateSelectedFilters(SelectedFilter selectedFilter) {
+        List<SelectedFilter> sel_cachefilter = getSelectedFilters();
+
+        if (sel_cachefilter == null) {
+            sel_cachefilter = new ArrayList<>();
+            sel_cachefilter.add(selectedFilter);
+        } else {
+            int index=0;
+            boolean isExist = false;
+            for (SelectedFilter filter:sel_cachefilter){
+                if (filter.getInternal_name().equalsIgnoreCase(selectedFilter.getInternal_name())){
+                    sel_cachefilter.set(index,selectedFilter);
+                    isExist=true;
+                    break;
+                }
+                index++;
+            }
+            if (!isExist){
+                sel_cachefilter.add(selectedFilter);
+            }
+            loginPrefs.setCachedFilter(sel_cachefilter);
+        }
+    }
+
+
+    public List<SelectedFilter> getSelectedFilters() {
+        List<SelectedFilter> sel_filter = new ArrayList<>();
+        if (loginPrefs.getCachedFilter() != null)
+            sel_filter = loginPrefs.getCachedFilter();
+
+        return sel_filter;
     }
 }
 

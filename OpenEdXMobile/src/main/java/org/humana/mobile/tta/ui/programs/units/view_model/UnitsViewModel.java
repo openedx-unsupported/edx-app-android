@@ -56,6 +56,7 @@ import okhttp3.ResponseBody;
 
 public class UnitsViewModel extends BaseViewModel {
 
+    //region
     private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_SKIP = 0;
 
@@ -95,6 +96,7 @@ public class UnitsViewModel extends BaseViewModel {
     private boolean isSelected = false;
     private List<DropDownFilterView.FilterItem> sessionTags;
 
+    //endregion
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -120,8 +122,7 @@ public class UnitsViewModel extends BaseViewModel {
         frameVisible.set(true);
 
         selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getLoginPrefs().getCachedFilter();
-
+        selectedFilter=mDataManager.getSelectedFilters();
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
@@ -339,7 +340,7 @@ public class UnitsViewModel extends BaseViewModel {
     public void fetchFilters() {
         sessionTags = new ArrayList<>();
         selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getLoginPrefs().getCachedFilter();
+        selectedFilter=mDataManager.getSelectedFilters();
 
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(), filters,
@@ -414,36 +415,34 @@ public class UnitsViewModel extends BaseViewModel {
             unitsAdapter.reset(true);
             setUnitFilters();
         }
-
         fetchUnits();
-
     }
 
     private void setUnitFilters() {
         filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
+        if (selectedFilter.isEmpty() || allFilters == null || allFilters.isEmpty()) {
             return;
         }
 
+        List<ProgramFilterTag> selectedTags = new ArrayList<>();
         for (ProgramFilter filter : allFilters) {
+            for (SelectedFilter selected : selectedFilter){
+                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                    for (ProgramFilterTag tag : filter.getTags()){
+                        if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())){
+                            selectedTags.add(tag);
+                            ProgramFilter pf = new ProgramFilter();
+                            pf.setDisplayName(filter.getDisplayName());
+                            pf.setInternalName(filter.getInternalName());
+                            pf.setId(filter.getId());
+                            pf.setOrder(filter.getOrder());
+                            pf.setShowIn(filter.getShowIn());
+                            pf.setTags(selectedTags);
+                            filters.add(pf);
+                        }
+                    }
 
-            List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag : filter.getTags()) {
-                if (tags.contains(tag)) {
-                    selectedTags.add(tag);
                 }
-            }
-
-            if (!selectedTags.isEmpty()) {
-                ProgramFilter pf = new ProgramFilter();
-                pf.setDisplayName(filter.getDisplayName());
-                pf.setInternalName(filter.getInternalName());
-                pf.setId(filter.getId());
-                pf.setOrder(filter.getOrder());
-                pf.setShowIn(filter.getShowIn());
-                pf.setTags(selectedTags);
-
-                filters.add(pf);
             }
         }
     }
@@ -630,31 +629,28 @@ public class UnitsViewModel extends BaseViewModel {
                         if (model.getInternalName().equals(item.getInternal_name())) {
                             dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
                         }
-
                     }
                 }
 
-
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-                    if (prev != null && prev.getItem() != null) {
-                        tags.remove((ProgramFilterTag) prev.getItem());
-                    }
-                    if (item.getItem() != null) {
-                        tags.add((ProgramFilterTag) item.getItem());
-//                        selectedTags.add((ProgramFilterTag) item.getItem());
-                    }
+//                    if (prev != null && prev.getItem() != null) {
+//                        tags.remove((ProgramFilterTag) prev.getItem());
+//                    }
+//                    if (item.getItem() != null) {
+//                        tags.add((ProgramFilterTag) item.getItem());
+////                        selectedTags.add((ProgramFilterTag) item.getItem());
+//                    }
 
-                    List<SelectedFilter> selectedTages = new ArrayList<>();
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
                     sf.setDisplay_name(model.getDisplayName());
                     sf.setSelected_tag(item.getName());
-                    selectedTages.add(sf);
-                    mDataManager.getLoginPrefs().setCachedFilter(selectedTages);
+                    mDataManager.updateSelectedFilters(sf);
 
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
+                    selectedFilter = mDataManager.getSelectedFilters();
                     fetchFilters();
                     fetchData();
                 });
@@ -795,12 +791,11 @@ public class UnitsViewModel extends BaseViewModel {
     };
 
     public void setSessionFilter() {
-        if (mDataManager.getLoginPrefs().getCachedFilter()!=null){
-            selectedFilter.clear();
-            selectedFilter = (mDataManager.getLoginPrefs().getCachedFilter());
-        }
-
-
+        selectedFilter = mDataManager.getSelectedFilters();
+        changesMade = true;
+        allLoaded = false;
+        mActivity.showLoading();
+        fetchFilters();
+        fetchData();
     }
-
 }

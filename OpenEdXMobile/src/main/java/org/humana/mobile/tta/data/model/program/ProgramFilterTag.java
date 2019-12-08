@@ -2,6 +2,8 @@ package org.humana.mobile.tta.data.model.program;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class ProgramFilterTag implements Comparable<ProgramFilterTag> {
 
     private long id;
@@ -62,5 +64,18 @@ public class ProgramFilterTag implements Comparable<ProgramFilterTag> {
 
     public void setSelected(Boolean selected) {
         isSelected = selected;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProgramFilterTag that = (ProgramFilterTag) o;
+        return internalName.equals(that.internalName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(internalName);
     }
 }

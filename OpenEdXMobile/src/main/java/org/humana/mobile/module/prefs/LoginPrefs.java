@@ -41,7 +41,7 @@ public class LoginPrefs {
         if (json == null) {
             return null;
         }
-        Type type = new TypeToken<List<ProgramFilterTag>>() {
+        Type type = new TypeToken<List<SelectedFilter>>() {
         }.getType();
 
         return gson.fromJson(json, type);
