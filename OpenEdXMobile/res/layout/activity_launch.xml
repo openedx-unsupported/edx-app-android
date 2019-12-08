@@ -6,7 +6,7 @@
         android:id="@+id/rl_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:background="@drawable/launch_background_humana"
+        tools:background="@drawable/humana_landing"
         android:splitMotionEvents="false">
 
         <ImageView
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/edx_brand_button"
+                android:background="@color/humana_light_blue"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/already_have_an_account"

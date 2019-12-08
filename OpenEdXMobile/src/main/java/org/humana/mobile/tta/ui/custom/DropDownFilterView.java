@@ -121,10 +121,11 @@ public class DropDownFilterView extends FrameLayout
         FilterItem item = getSelectedFilter(s);
         if (item == null)
             return;
-        appCompatSpinner.setBackgroundResource(item.selectedBackground);
-        appCompatSpinner.setOnItemSelectedListener(null);
-        appCompatSpinner.setSelection(filterItems.indexOf(item), false);
-        appCompatSpinner.setOnItemSelectedListener(this);
+        setSelection(filterItems.indexOf(item));
+//        appCompatSpinner.setBackgroundResource(item.selectedBackground);
+//        appCompatSpinner.setOnItemSelectedListener(null);
+//        appCompatSpinner.setSelection(filterItems.indexOf(item), false);
+//        appCompatSpinner.setOnItemSelectedListener(this);
     }
 
     public void setSelection(int position) {
@@ -194,9 +195,11 @@ public class DropDownFilterView extends FrameLayout
     }
 
     private FilterItem getSelectedFilter(String filterName) {
-        for (int i = 0; i < filterItems.size(); i++)
-            if (filterItems.get(i).getName().trim().equalsIgnoreCase(filterName.trim()))
-                return filterItems.get(i);
+        for (FilterItem item:filterItems){
+            if (item.getName().trim().equalsIgnoreCase(filterName.trim()))
+                return item;
+        }
+
         return null;
     }
 

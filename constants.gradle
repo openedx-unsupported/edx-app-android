@@ -4,7 +4,7 @@ project.ext {
     SUPPORT_LIBRARY_VERSION = "27.1.1"
     COMPILE_SDK_VERSION = 28
     // API Level that the application will target
-    TARGET_SDK_VERSION = 26
+    TARGET_SDK_VERSION = 28
     // Minimum API Level required for the application to run
     MIN_SDK_VERSION = 19
 

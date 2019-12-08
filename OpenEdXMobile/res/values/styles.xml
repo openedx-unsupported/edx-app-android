@@ -54,7 +54,7 @@
     </style>
 
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@drawable/launch_background_humana</item>
+        <item name="android:windowBackground">@drawable/humana_landing</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -376,7 +376,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/edx_button_height</item>
         <item name="android:layout_marginTop">@dimen/edx_margin</item>
-        <item name="android:background">@drawable/edx_brand_single_state_button</item>
+        <item name="android:background">@color/humana_light_blue</item>
     </style>
 
     <style name="edX.Widget.SignInButton" parent="regular_white_text">

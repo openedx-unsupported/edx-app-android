@@ -18,12 +18,14 @@ import org.humana.mobile.tta.data.model.UpdateResponse;
 import org.humana.mobile.tta.data.model.authentication.FieldInfo;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
+import org.humana.mobile.tta.data.model.program.SelectedFilter;
 import org.humana.mobile.tta.data.model.program.SelectedProgramFilters;
 import org.humana.mobile.tta.wordpress_client.model.WPProfileModel;
 import org.humana.mobile.tta.wordpress_client.model.WpAuthResponse;
 import org.humana.mobile.user.ProfileImage;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +34,23 @@ import javax.inject.Singleton;
 
 @Singleton
 public class LoginPrefs {
+
+    public List<SelectedFilter> getCachedFilter() {
+
+        final String json = pref.getString(PrefManager.Key.TAG_LIST);
+        if (json == null) {
+            return null;
+        }
+        Type type = new TypeToken<List<ProgramFilterTag>>() {
+        }.getType();
+
+        return gson.fromJson(json, type);
+    }
+
+    public void setCachedFilter(List<SelectedFilter> selectedFilters)  {
+        pref.put(PrefManager.Key.TAG_LIST, gson.toJson(selectedFilters));
+        //sselectedFilters
+    }
 
     public enum AuthBackend {
         PASSWORD,

@@ -35,6 +35,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
+import org.humana.mobile.tta.data.model.program.SelectedFilter;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
@@ -58,6 +59,7 @@ public class UnitsViewModel extends BaseViewModel {
     private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_SKIP = 0;
 
+    private List<SelectedFilter> selectedFilter;
     public UnitsAdapter unitsAdapter;
     public FiltersAdapter filtersAdapter;
     public RecyclerView.LayoutManager layoutManager;
@@ -85,10 +87,6 @@ public class UnitsViewModel extends BaseViewModel {
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
 
-    public ObservableBoolean filterSelected = new ObservableBoolean();
-    public ObservableBoolean contentListSelected = new ObservableBoolean();
-    public ObservableInt selectedContentListPosition = new ObservableInt(0);
-    public ObservableField<String> contentListText = new ObservableField<>();
     public String selectedSession;
 
 
@@ -120,6 +118,9 @@ public class UnitsViewModel extends BaseViewModel {
         changesMade = true;
         calVisible.set(false);
         frameVisible.set(true);
+
+        selectedFilter=new ArrayList<>();
+        selectedFilter=mDataManager.getLoginPrefs().getCachedFilter();
 
 
         unitsAdapter = new UnitsAdapter(mActivity);
@@ -337,6 +338,8 @@ public class UnitsViewModel extends BaseViewModel {
 
     public void fetchFilters() {
         sessionTags = new ArrayList<>();
+        selectedFilter=new ArrayList<>();
+        selectedFilter=mDataManager.getLoginPrefs().getCachedFilter();
 
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(), filters,
@@ -606,10 +609,6 @@ public class UnitsViewModel extends BaseViewModel {
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
-                int langPos = 0;
-                int sessionPos = 0;
-                int typePos = 0;
-                int periodPos = 0;
 
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 String selectedTag = "";
@@ -623,53 +622,16 @@ public class UnitsViewModel extends BaseViewModel {
                     ));
                 }
 
-                for (int i = 0; i < items.size(); i++) {
-                    if (mDataManager.getLoginPrefs().getSessionFilter() != null) {
-                        if (mDataManager.getLoginPrefs().getSessionFilter().equals(items.get(i).getName())) {
-                            sessionPos = i;
-                        }
-                    }
-                }
-                for (int i = 0; i < items.size(); i++) {
-                    if (mDataManager.getLoginPrefs().getLangTag() != null) {
-                        if (mDataManager.getLoginPrefs().getLangTag().equals(items.get(i).getName())) {
-                            langPos = i;
-                        }
-                    }
-                }
-                for (int i = 0; i < items.size(); i++) {
-                            if (mDataManager.getLoginPrefs().getTypeFilter() != null) {
-                                if (mDataManager.getLoginPrefs().getTypeFilter().equals(items.get(i).getName())) {
-                                    typePos = i;
-                        }
-                    }
-                }
-                for (int i = 0; i < items.size(); i++) {
-                            if (mDataManager.getLoginPrefs().getPeriodFilter() != null) {
-                                if (mDataManager.getLoginPrefs().getPeriodFilter().equals(items.get(i).getName())) {
-                                    periodPos = i;
-                        }
-                    }
-                }
+
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
+                if (selectedFilter !=null) {
+                    for (SelectedFilter item : selectedFilter) {
+                        if (model.getInternalName().equals(item.getInternal_name())) {
+                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                        }
 
-                if (model.getInternalName().toLowerCase().contains("session_id")) {
-                    dropDownBinding.filterDropDown.setSelection(sessionPos);
-                    dropDownBinding.filterDropDown.notifyDataSetChanged();
-                }
-
-                if (model.getInternalName().toLowerCase().contains("language_id")) {
-                    dropDownBinding.filterDropDown.setSelection(langPos);
-                    dropDownBinding.filterDropDown.notifyDataSetChanged();
-                }
-                if (model.getInternalName().toLowerCase().contains("type")) {
-                    dropDownBinding.filterDropDown.setSelection(typePos);
-                    dropDownBinding.filterDropDown.notifyDataSetChanged();
-                }
-                if (model.getInternalName().toLowerCase().contains("period_id")) {
-                    dropDownBinding.filterDropDown.setSelection(periodPos);
-                    dropDownBinding.filterDropDown.notifyDataSetChanged();
+                    }
                 }
 
 
@@ -682,34 +644,14 @@ public class UnitsViewModel extends BaseViewModel {
 //                        selectedTags.add((ProgramFilterTag) item.getItem());
                     }
 
-                    if (!Objects.requireNonNull(mDataManager.getLoginPrefs().getProgramFilters()).contains(model)) {
-                        mDataManager.getLoginPrefs().storeProgramFilter(model);
-                    }
-                    if (!Objects.equals(mDataManager.getLoginPrefs().getStoreSessionFilterTag(), item.getItem())) {
-                        mDataManager.getLoginPrefs().storeSessionFilterTag((ProgramFilterTag) item.getItem());
-                    }
-                    if (model.getInternalName().toLowerCase().contains("session_id")) {
-                        mDataManager.getLoginPrefs().setSessionFilter(item.getName());
-                    }
+                    List<SelectedFilter> selectedTages = new ArrayList<>();
+                    SelectedFilter sf = new SelectedFilter();
+                    sf.setInternal_name(model.getInternalName());
+                    sf.setDisplay_name(model.getDisplayName());
+                    sf.setSelected_tag(item.getName());
+                    selectedTages.add(sf);
+                    mDataManager.getLoginPrefs().setCachedFilter(selectedTages);
 
-                    if (model.getInternalName().toLowerCase().contains("language_id")) {
-                        mDataManager.getLoginPrefs().setLangTag(item.getName());
-                    }
-
-                    if (model.getInternalName().toLowerCase().contains("type")) {
-                        mDataManager.getLoginPrefs().setTypeFilter(item.getName());
-                    }
-                    if (model.getInternalName().toLowerCase().contains("period_id")) {
-                        mDataManager.getLoginPrefs().setPeriodFilter(item.getName());
-                    }
-
-                    if (mDataManager.getLoginPrefs().getTags() != null) {
-                        mDataManager.getLoginPrefs().clearTags();
-                        mDataManager.getLoginPrefs().storeTags(tags);
-                    } else {
-                        mDataManager.getLoginPrefs().clearTags();
-                        mDataManager.getLoginPrefs().storeTags(tags);
-                    }
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
@@ -853,14 +795,9 @@ public class UnitsViewModel extends BaseViewModel {
     };
 
     public void setSessionFilter() {
-        if (mDataManager.getLoginPrefs().getTags() != null) {
-//            changesMade = true;
-//            allLoaded = false;
-            mActivity.showLoading();
-            tags.clear();
-            tags = mDataManager.getLoginPrefs().getTags();
-            fetchFilters();
-            fetchUnits();
+        if (mDataManager.getLoginPrefs().getCachedFilter()!=null){
+            selectedFilter.clear();
+            selectedFilter = (mDataManager.getLoginPrefs().getCachedFilter());
         }
 
 
