@@ -122,7 +122,8 @@ public class UnitsViewModel extends BaseViewModel {
         frameVisible.set(true);
 
         selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getSelectedFilters();
+        selectedFilter=mDataManager.getLoginPrefs().getCachedFilter();
+
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);

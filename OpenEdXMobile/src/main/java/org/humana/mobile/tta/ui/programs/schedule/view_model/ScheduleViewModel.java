@@ -140,14 +140,19 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 case R.id.txt_start_date:
 //                    showStartDatePicker(item);
 //                    openDateRangePicker(item);
-                    periodItem.set(item);
-                    rangePicker(item);
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        periodItem.set(item);
+                        rangePicker(item);
+                    }
                     break;
 
                 case R.id.txt_end_date:
 //                    showEndDatePicker(item);
 //                    openDateRangePicker(item);
-                    periodItem.set(item);
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        periodItem.set(item);
+                        rangePicker(item);
+                    }
                     break;
 
                 default:
