@@ -530,6 +530,7 @@ public class UserStatusViewModel extends BaseViewModel {
                     if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle() != null) {
                         if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle().equals(items.get(i).getName())) {
                             periodPos = i;
+                            tags.clear();
                             tags.add((ProgramFilterTag) items.get(i).getItem());
                             fetchUnits();
                         }

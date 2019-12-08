@@ -625,14 +625,14 @@ public class UnitsViewModel extends BaseViewModel {
 
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
-                if (selectedFilter !=null) {
-                    for (SelectedFilter item : selectedFilter) {
-                        if (model.getInternalName().equals(item.getInternal_name())) {
-                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
-                        }
-
-                    }
-                }
+//                if (selectedFilter !=null) {
+//                    for (SelectedFilter item : selectedFilter) {
+//                        if (model.getInternalName().equals(item.getInternal_name())) {
+//                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+//                        }
+//
+//                    }
+//                }
 
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
@@ -795,10 +795,10 @@ public class UnitsViewModel extends BaseViewModel {
     };
 
     public void setSessionFilter() {
-        if (mDataManager.getLoginPrefs().getCachedFilter()!=null){
-            selectedFilter.clear();
-            selectedFilter = (mDataManager.getLoginPrefs().getCachedFilter());
-        }
+//        if (mDataManager.getLoginPrefs().getCachedFilter()!=null){
+//            selectedFilter.clear();
+//            selectedFilter = (mDataManager.getLoginPrefs().getCachedFilter());
+//        }
 
 
     }

@@ -86,6 +86,14 @@ public class StudentsViewModel extends BaseViewModel {
             switch (view.getId()) {
                 case R.id.ll_current_status:
                     mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
+                    mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.current_period_title);
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, item.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+                    } else {
+                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+                    }
                     break;
 
                 case R.id.ll_status:
@@ -110,6 +118,13 @@ public class StudentsViewModel extends BaseViewModel {
                 case R.id.ll_current_status:
                     mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
                     mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.current_period_title);
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, item.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+                    } else {
+                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+                    }
                     break;
 
                 case R.id.ll_status:
@@ -261,7 +276,7 @@ public class StudentsViewModel extends BaseViewModel {
                         itemBinding.textDegree.setVisibility(View.GONE);
                     }
 
-                    itemBinding.txtCurrentCompleted.setText(String.format("%s hrs", String.valueOf(model.current_hours)));
+                    itemBinding.txtCurrentCompleted.setText(String.format("%s "+mActivity.getResources().getString(R.string.point_txt), String.valueOf(model.current_hours)));
                     itemBinding.txtCurrentPending.setText(String.format("%s units", String.valueOf(model.currentUnits)));
 
 
@@ -413,7 +428,8 @@ public class StudentsViewModel extends BaseViewModel {
                 if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
                     itemBinding.llStatus.setVisibility(View.GONE);
                 }
-                itemBinding.txtCurrentCompleted.setText(String.format("%s hrs", String.valueOf(model.current_hours)));
+                itemBinding.txtCurrentCompleted.setText(String.format("%s "+mActivity.getResources().getString(R.string.point_txt),
+                        String.valueOf(model.current_hours)));
                 itemBinding.txtCurrentPending.setText(String.format("%s units", String.valueOf(model.currentUnits)));
 
 
