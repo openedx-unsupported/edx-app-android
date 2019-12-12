@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!--An error occurred but we don't know why-->
+  <string name="error_unknown">خطأ غير معروف، الرجاء المحاولة لاحقاً.</string>
+  <!--Course related error messages-->
+  <!--Error shown when a course's content is invalid or not in the format that we expect-->
+  <string name="course_error_content_invalid">تعذّر تحميل محتوى المساق. الرجاء المحاولة لاحقًا.</string>
+  <!--Title of alert shown when course enrollment request fails-->
+  <string name="enrollment_error_title" tools:ignore="MissingTranslation">خطأ أثناء التسجيل</string>
+  <!--Error message shown in alert when course enrollment request fails-->
+  <string name="enrollment_error_message" tools:ignore="MissingTranslation">تعذر تسجيلك فى هذا المساق حاليا باستخدام تطبيق  {platform_name}. الرجاء المحاولة مجددًا باستخدام متصفحك. </string>
+  <!--Error message shown when a course section is not available on mobile-->
+  <!--Network error messages-->
+  <!--Error shown when  user attempts an action but needs an internet connection-->
+  <string name="network_not_connected">أنت غير متصل بالإنترنت.</string>
+  <!--Concise error shown when user attempts an action but needs an internet connection-->
+  <string name="network_not_connected_short">ﻻ يمكن الوصول للشبكة</string>
+  <!--Alert dialog title shown when a network request fails-->
+  <string name="reset_no_network_title">خطأ في الاتصال</string>
+  <!--Alert dialog content shown when a network request fails because the user has no internet connection-->
+  <string name="reset_no_network_message">أنت غير متصلِ بالإنترنت. رجاء تأكد من اتصالك به.</string>
+  <!--An error ocurred due to some kind of network failure-->
+  <string name="network_connected_error">خطأ في الاتصال.الرجاء تفقد حالة اتصالك بالانترنت</string>
+  <!--Title of prompt indicating issue loading a video-->
+  <string name="network_error_header">خطأ أثناء تحميل الفيديو</string>
+  <!--Content of prompt indicating issue loading a video-->
+  <string name="network_error_message">رجاء تأكد من اتصالك بالإنترنت.</string>
+  <!--The server we are trying to use is not available right now-->
+  <string name="network_service_unavailable">الخدمة غير متوفرة.الرجاء المحاولة لاحقاً</string>
+  <!--Login error messages-->
+  <!--Error shown during login when user attempts login without entering a username or e-mail-->
+  <string name="error_enter_email">أدخل بريدك الإلكتروني، أو اسم المستخدم وحاول مرة أخرى.</string>
+  <!--Error shown during login when user enters an invalid email address-->
+  <string name="error_invalid_email">تأكد من إدخال بريدك الإلكتروني بالشكل الصحيح، وحاول مرة أخرى.</string>
+  <!--Error shown during login when user attempts login without entering a password-->
+  <string name="error_enter_password">قم بإدخال كلمة السر وحاول مرة أخرى.</string>
+  <!--Title of alert shown during login when user attempts login via Facebook without having linked their account-->
+  <string name="error_account_not_linked_title_fb">حساب الفيسبوك ليس مرتبط بحساب  {platform_name} </string>
+  <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
+  <string name="error_account_not_linked_desc_fb">تأكد من أن حساب الفيسبوك الخاص بك مرتبط  مع حسابك  {platform_name} في  {platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
+  <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">هذا الحساب على منصة الفيسبوك غير مرتبط بأي حساب {platform_name}؛ رجاء بادر إلى التسجيل.</string>
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">حساب قوقل غير مرتبط بحساب  {platform_name}</string>
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">تأكد من أن حساب قوقل الخاص بك مرتبط مع حسابك  {platform_name} في {platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_google_2" tools:ignore="MissingTranslation">هذا الحساب على جوجل غير مرتبط بأي حساب {platform_name}؛ رجاء بادر إلى التسجيل.</string>
+  <!--Download error messages-->
+  <!--Label shown on video list item whose download failed-->
+  <string name="error_download_failed">فشل التحميل</string>
+  <!--Confirmation message shown when attempting to download a large quantity of video data-->
+  <string name="file_size_exceeded">حجم التحميل يتجاوز المساحة المتبقية على جهازك.</string>
+  <!--Confirmation message shown when attempting to download a large quantity of video data-->
+  <!--Message shown when user attempts to download a video over cellular data,
+    but has chosen to only allow video downloads over wifi-->
+  <string name="wifi_off_message">إعدادات التنزيل الخاصة بك تسمح بتنزيل الملفات من خلال الـ Wi-Fi فقط.
+رجاء اتصل بالإنترنت من خلال الـ Wi-Fi أو قم بتغيير إعداداتك.</string>
+  <!--New version available-->
+  <!--Snackbar notification shown when the current version of the app is unsupported-->
+  <string name="app_version_unsupported">النسخة التي لديك من التطبيق لم تعُد مدعومة.</string>
+  <!--Snackbar notification shown when the current version of the app is deprecated-->
+  <!--Snackbar notification shown when the current version of the app is outdated-->
+  <string name="app_version_outdated">نسخة جديدة من التطبيق متوفرة حالياً.</string>
+  <!--Toast notification for when the user presses the update action button from the Snackbar
+         notifications while no supported app store or browser is installed on the device with which
+         the app could be updated-->
+  <string name="app_version_upgrade_app_store_unavailable" tools:ignore="MissingTranslation">لم يتم العثور على متجر تطبيقات مدعوم على الجهاز.</string>
+  <!--Registration Error Messages-->
+  <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
+  <string name="error_enter_field">رجاء أدخل  %1$s.</string>
+  <!--Error prompt shown during registration to indicate a field missing a selection. Argument is a field name-->
+  <string name="error_select_field">رجاء قم باختيار  %1$s.</string>
+  <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
+  <string name="error_min_length"> %1$s يجب أن يتكون من %2$d أحرف الأقل.</string>
+  <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
+  <string name="error_max_length"> %1$s يجب أن يتكون من %2$d أحرف الأقل.</string>
+  <!--Error message shown when a course hasn't started yet-->
+  <string name="course_not_started" tools:ignore="MissingTranslation">هذا المساق لم يبدأ بعد</string>
+  <!--Error message shown when a user's access has expired for a course-->
+  <string name="course_access_expired" tools:ignore="MissingTranslation">لم تعد مخولاً للوصول إلى هذا المساق</string>
+  <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
+  <string name="action_not_completed" tools:ignore="MissingTranslation">لم يتم إتمام الأمر الخاص بك</string>
+  <!--Error dialog message shown when the user try to log in in app with un-supported version-->
+  <string name="app_version_unsupported_login_msg" tools:ignore="MissingTranslation">النسخة التي لديك من التطبيق لم تعُد مدعومة. أحصل على أحدث نسخة لتسجل الدخول.</string>
+  <!--Error dialog message shown when the user try to register in app with un-supported version-->
+  <string name="app_version_unsupported_register_msg" tools:ignore="MissingTranslation">النسخة التي لديك من التطبيق لم تعُد مدعومة. أحصل على أحدث نسخة للتسجيل.</string>
+  <!--Permission Error Messages-->
+  <!--Error message shown when a permission is not granted-->
+  <string name="permission_not_granted" tools:ignore="MissingTranslation">لا تمتلك الصلاحيات اللازمة</string>
+</resources>
