@@ -1,6 +1,5 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
-import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -180,52 +179,12 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                     } else {
                         getBlockComponent(item);
                     }
-                   /* mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
-                            new OnResponseCallback<ResponseBody>() {
-                                @Override
-                                public void onSuccess(ResponseBody responseBody) {
-                                    mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
-                                            new OnResponseCallback<CourseComponent>() {
-                                                @Override
-                                                public void onSuccess(CourseComponent data) {
-                                                    mActivity.hideLoading();
 
-                                                    if (UnitsViewModel.this.course == null) {
-                                                        mActivity.showLongSnack("You're not enrolled in the program");
-                                                        return;
-                                                    }
-
-                                                    if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                                        mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
-                                                                mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                                                UnitsViewModel.this.course, data.getChildren().get(0).getId(),
-                                                                null, false);
-                                                    } else {
-                                                        mActivity.showLongSnack("This unit is empty");
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Exception e) {
-                                                    mActivity.hideLoading();
-                                                    mActivity.showLongSnack(e.getLocalizedMessage());
-                                                }
-                                            });
-                                }
-
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    mActivity.showLongSnack("error during unit enroll");
-                                }
-                            });
-*/
             }
 
         });
 
         mActivity.showLoading();
-//        fetchFilters();
         fetchData();
     }
 
@@ -707,9 +666,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             unitBinding.statusIcon.setVisibility(View.GONE);
                         }
 
-//                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-//                    eventsArrayList.add(ev);
-//                    CustomCalendarView.createEvents(eventsArrayList);
 
                         unitBinding.tvMyDate.setOnClickListener(v -> {
                             if (listener != null) {
@@ -729,5 +685,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
             }
         }
     }
+
 
 }

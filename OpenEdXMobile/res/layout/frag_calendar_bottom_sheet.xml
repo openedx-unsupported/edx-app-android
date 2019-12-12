@@ -7,6 +7,16 @@
             name="viewModel"
             type="org.humana.mobile.tta.ui.programs.units.view_model.CalendarBottomSheetViewModel" />
     </data>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:src="@drawable/ic_add"
+        android:id="@+id/fab_add"
+        android:layout_margin="8dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -72,4 +82,5 @@
 
 </FrameLayout>
     </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
     </layout>

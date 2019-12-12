@@ -223,6 +223,7 @@ public class Router {
         Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
         courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetail.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
+        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, false);
 
         return courseDetail;
     }
@@ -314,7 +315,7 @@ public class Router {
      */
     public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
         loginPrefs.clear();
-
+        loginPrefs.clearCachedFilter();
         EventBus.getDefault().post(new LogoutEvent());
 
         analyticsRegistry.trackUserLogout();
@@ -433,6 +434,7 @@ public class Router {
     public void resetAuthForChangePassword(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
         loginAPI.logOut();
         loginPrefs.clear();
+        loginPrefs.clearCachedFilter();
 
         EventBus.getDefault().post(new LogoutEvent());
 

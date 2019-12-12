@@ -124,8 +124,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         skip = SKIP;
         allLoaded = false;
         changesMade = true;
-
-        selectedFilter = new ArrayList<>();
         selectedFilter = mDataManager.getSelectedFilters();
         periodAdapter.setItems(periodList);
         periodAdapter.setItemClickListener((view, item) -> {
@@ -166,7 +164,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
         mActivity.showLoading();
         getFilters();
-        fetchData();
 //        toolTiptext.set("test");
 //        toolTipGravity.set(Gravity.TOP);
 //        toolTipPosition.set(0);
@@ -182,36 +179,57 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             periodAdapter.reset(true);
             setFilters();
         }
-
         getPeriods();
+
+
 
     }
 
+
     private void setFilters() {
         filters.clear();
-        if (selectedFilter.isEmpty() || allFilters == null || allFilters.isEmpty()) {
+        if (allFilters == null || allFilters.isEmpty()) {
             return;
         }
-        List<ProgramFilterTag> selectedTags = new ArrayList<>();
-        for (ProgramFilter filter : allFilters) {
-            for (SelectedFilter selected : selectedFilter) {
-                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
-                    for (ProgramFilterTag tag : filter.getTags()) {
-                        if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                            selectedTags.add(tag);
-                            ProgramFilter pf = new ProgramFilter();
-                            pf.setDisplayName(filter.getDisplayName());
-                            pf.setInternalName(filter.getInternalName());
-                            pf.setId(filter.getId());
-                            pf.setOrder(filter.getOrder());
-                            pf.setShowIn(filter.getShowIn());
-                            pf.setTags(selectedTags);
-                            filters.add(pf);
-                        }
+        if (selectedFilter.isEmpty()){
+            for (ProgramFilter filter : allFilters){
+                for (ProgramFilterTag tag : filter.getTags()){
+                    if (tag.getSelected()) {
+                        SelectedFilter sf = new SelectedFilter();
+                        sf.setInternal_name(filter.getInternalName());
+                        sf.setDisplay_name(filter.getDisplayName());
+                        sf.setSelected_tag(tag.getDisplayName());
+                        mDataManager.updateSelectedFilters(sf);
+                        selectedFilter = mDataManager.getSelectedFilters();
+                        break;
                     }
-
                 }
             }
+
+        }
+        for (SelectedFilter selected : selectedFilter) {
+            for (ProgramFilter filter : allFilters) {
+                List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                    for (ProgramFilterTag tag : filter.getTags()) {
+                        if (selected.getSelected_tag() != null) {
+                            if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                selectedTags.add(tag);
+                                ProgramFilter pf = new ProgramFilter();
+                                pf.setDisplayName(filter.getDisplayName());
+                                pf.setInternalName(filter.getInternalName());
+                                pf.setId(filter.getId());
+                                pf.setOrder(filter.getOrder());
+                                pf.setShowIn(filter.getShowIn());
+                                pf.setTags(selectedTags);
+                                filters.add(pf);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -243,7 +261,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
-                            boolean langSelected;
+                            changesMade=true;
+                            fetchData();
+//                            boolean langSelected;
 //                            if (mDataManager.getLoginPrefs().getRole() != null) {
 //                                if (!mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
 //
@@ -335,21 +355,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
     private void getPeriods() {
-//        if (mDataManager.getLoginPrefs().getStoreSessionFilter()!=null){
-//            filters.clear();
-//
-//            tags.clear();
-//            tags.add(mDataManager.getLoginPrefs().getStoreSessionFilterTag());
-//            ProgramFilter pf = new ProgramFilter();
-//            pf.setDisplayName(mDataManager.getLoginPrefs().getStoreSessionFilter().getDisplayName());
-//            pf.setInternalName(mDataManager.getLoginPrefs().getStoreSessionFilter().getInternalName());
-//            pf.setId(mDataManager.getLoginPrefs().getStoreSessionFilter().getId());
-//            pf.setOrder(mDataManager.getLoginPrefs().getStoreSessionFilter().getOrder());
-//            pf.setShowIn(mDataManager.getLoginPrefs().getStoreSessionFilter().getShowIn());
-//            pf.setTags(tags);
-//            filters.add(pf);
-//
-//        }
+
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
                 , take, skip, new OnResponseCallback<List<Period>>() {
@@ -412,10 +418,10 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 //            org.humana.mobile.tta.data.constants.Constants.selectedSession = tag.getDisplayName();
             allFilters.clear();
             allLoaded = false;
-            getFilters();
             changesMade = true;
-            allLoaded = false;
-            fetchData();
+            getFilters();
+
+//            fetchData();
         }
     }
 
@@ -583,7 +589,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     mActivity.showLoading();
                     selectedFilter = mDataManager.getSelectedFilters();
                     getFilters();
-                    fetchData();
+//                    fetchData();
                 });
 
             }
@@ -760,7 +766,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
         Date d1 = null;
         try {
-            d1 = formatDate.parse(String.valueOf(dayOfMonthEnd + " " + (monthOfYearEnd + 1) + " " + yearEnd));
+            d1 = formatDate.parse(dayOfMonthEnd + " " + (monthOfYearEnd + 1) + " " + yearEnd);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -798,25 +804,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         allLoaded = false;
         mActivity.showLoading();
         getFilters();
-        fetchData();
-//        if (mDataManager.getLoginPrefs().getstoreProgramFilter() != null) {
-////            changesMade = true;
-////            allLoaded = false;
-//            mActivity.showLoading();
-//            tags.clear();
-//            for (int i =0 ; i<mDataManager.getLoginPrefs().getTags().size(); i++) {
-//                ProgramFilterTag tag = new ProgramFilterTag();
-//                tag.setInternalName(mDataManager.getLoginPrefs().getTags().get(i).getInternalName());
-//                tag.setOrder(mDataManager.getLoginPrefs().getTags().get(i).getOrder());
-//                tag.setId(mDataManager.getLoginPrefs().getTags().get(i).getId());
-//                tag.setDisplayName(mDataManager.getLoginPrefs().getTags().get(i).getDisplayName());
-//                tag.setSelected(mDataManager.getLoginPrefs().getTags().get(i).getSelected());
-//                tags.add(tag);
-//            }
-//            setFilters();
-//            getFilters();
-//            getPeriods();
-//        }
+//        fetchData();
+
     }
 
 }

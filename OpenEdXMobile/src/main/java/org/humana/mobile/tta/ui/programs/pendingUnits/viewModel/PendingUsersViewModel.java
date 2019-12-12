@@ -251,7 +251,7 @@ public class PendingUsersViewModel extends BaseViewModel {
                     itemBinding.textCount.setVisibility(View.GONE);
                 } else itemBinding.textCount.setVisibility(View.VISIBLE);
                 itemBinding.userName.setText(model.username);
-                itemBinding.textCount.setText(String.format("Pending : %d", model.pendingCount));
+                itemBinding.textCount.setText(String.format("Pending Units: %d", model.pendingCount));
 
                 if (model.profileImage != null) {
                     Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +

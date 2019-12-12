@@ -1,6 +1,5 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
-import android.app.Activity;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -8,7 +7,6 @@ import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -662,8 +660,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 eventText.setText(mevents.get(0).getTitle());
                 if (mevents.get(0).getType().matches("Course")){
                     eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-//                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-//                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
+
                 }
                 else if (mevents.get(0).getType().matches("Experience")){
                     eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
@@ -672,76 +669,40 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 }
                 else if (mevents.get(0).getType().matches("Study Task")){
                     eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
-//                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-//                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
+
                 }
             }
             if (mevents.size()>1){
                 eventText1.setVisibility(View.VISIBLE);
                 eventText1.setText(mevents.get(1).getTitle());
                 if (mevents.get(1).getType().equals("Course")){
-//                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
                     eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-//                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
                 }
                  if (mevents.get(1).getType().equals("Experience")){
-//                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
                     eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
-//                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
                 }
                  if (mevents.get(1).getType().equals("Study Task")){
-//                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
                     eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
-//                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
                 }
             }
             if (mevents.size()>2){
                 eventText2.setVisibility(View.VISIBLE);
                 eventText2.setText(mevents.get(2).getTitle());
                 if (mevents.get(2).getType().equals("Course")){
-//                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-//                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
+
                     eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
                 }
                  if (mevents.get(2).getType().equals("Experience")){
-//                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
-//                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
+
                     eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
                 }
                  if (mevents.get(2).getType().equals("Study Task")){
-//                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
-//                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
+                     eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
                 }
             }
 
 
-
             view.setTag(position);
-//            view.setOnClickListener(v -> {
-//                AppCompatActivity activity = (AppCompatActivity) context;
-//                eventDisplayDate = dates.get(position).getTime();
-//                ActivityCalendarBottomSheet bottomSheetDialogFragment = new ActivityCalendarBottomSheet(eventDisplayDate);
-//                bottomSheetDialogFragment.show(activity.getSupportFragmentManager(),
-//                        "units");;
-//                AppCompatActivity activity = (AppCompatActivity) context;
-//                View dialogView = activity.getLayoutInflater().inflate(R.layout.frag_calendar_bottom_sheet, null);
-//                BottomSheetDialog dialog = new BottomSheetDialog(activity);
-//                dialog.setContentView(dialogView);
-//                dialog.show();
-
-
-
-
-//                Activity activity = (Activity) context;
-//
-//                Bundle b = new Bundle();
-//                b.putLong("selectedDate", dates.get(position).getTime());
-//                ActivityUtil.gotoPage(context, ActivityCalendarBottomSheet.class, b);
-//                activity.overridePendingTransition( R.anim.slide_in_up, R.anim.slide_in_out );
-//            });
-
-
             return view;
         }
 
@@ -785,8 +746,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
         public int getPosition(@androidx.annotation.Nullable Object item) {
             return dates.indexOf(item);
         }
-
-
 
     }
     

@@ -52,6 +52,10 @@ public class LoginPrefs {
         //sselectedFilters
     }
 
+    public void clearCachedFilter(){
+        pref.put(PrefManager.Key.TAG_LIST, gson.toJson(null));
+    }
+
     public enum AuthBackend {
         PASSWORD,
         FACEBOOK,

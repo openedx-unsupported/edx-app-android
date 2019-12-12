@@ -164,26 +164,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
-
-
-
-
-
-
-
-            <!--<View-->
-                <!--android:id="@+id/bottom_line"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:layout_marginStart="@dimen/_20px"-->
-                <!--android:layout_marginEnd="@dimen/_20px"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:background="@color/gray_1"-->
-                <!--app:layout_constraintTop_toBottomOf="@id/tv_my_date" />-->
-
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>

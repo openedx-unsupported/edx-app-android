@@ -200,53 +200,12 @@ public class UnitsViewModel extends BaseViewModel {
                     } else {
                         getBlockComponent(item);
                     }
-                   /* mDataManager.enrolInCourse(mDataManager.getLoginPrefs().getProgramId(),
-                            new OnResponseCallback<ResponseBody>() {
-                                @Override
-                                public void onSuccess(ResponseBody responseBody) {
-                                    mDataManager.getBlockComponent(item.getId(), mDataManager.getLoginPrefs().getProgramId(),
-                                            new OnResponseCallback<CourseComponent>() {
-                                                @Override
-                                                public void onSuccess(CourseComponent data) {
-                                                    mActivity.hideLoading();
 
-                                                    if (UnitsViewModel.this.course == null) {
-                                                        mActivity.showLongSnack("You're not enrolled in the program");
-                                                        return;
-                                                    }
-
-                                                    if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-                                                        mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
-                                                                mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                                                                UnitsViewModel.this.course, data.getChildren().get(0).getId(),
-                                                                null, false);
-                                                    } else {
-                                                        mActivity.showLongSnack("This unit is empty");
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Exception e) {
-                                                    mActivity.hideLoading();
-                                                    mActivity.showLongSnack(e.getLocalizedMessage());
-                                                }
-                                            });
-                                }
-
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    mActivity.showLongSnack("error during unit enroll");
-                                }
-                            });
-*/
             }
 
         });
-
         mActivity.showLoading();
         fetchFilters();
-        fetchData();
     }
 
     private void getBlockComponent(Unit unit) {
@@ -353,47 +312,8 @@ public class UnitsViewModel extends BaseViewModel {
                             filterSize = allFilters.size();
                             filtersVisible.set(true);
                             filtersAdapter.setItems(allFilters);
-
-
-                         /*   for (ProgramFilter filter : data) {
-                                sessionTags.clear();
-                                isSelected = filter.getSelected();
-                                if (filter.getInternalName().toLowerCase().contains("session_id")) {
-                                    sessionTags.clear();
-                                    sessionTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-                                            isSelected, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
-
-                                    for (ProgramFilterTag tag : filter.getTags()) {
-                                        if (mDataManager.getLoginPrefs().getSessionFilter()!=null) {
-                                            if (mDataManager.getLoginPrefs().getSessionFilter().equals(tag.getDisplayName())) {
-                                                isSelected = true;
-                                                sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                                        isSelected, R.color.white, R.drawable.t_background_tag_filled));
-
-                                            } else {
-                                                sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                                        false, R.color.white, R.drawable.t_background_tag_filled));
-                                            }
-                                        }else {
-                                            sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                                    isSelected, R.color.white, R.drawable.t_background_tag_filled));
-                                        }
-
-                                        try {
-                                            if (tag.getSelected()) {
-                                                tags.clear();
-                                                tags.add(tag);
-                                                changesMade = true;
-                                                allLoaded = false;
-                                                fetchData();
-                                            }
-                                        }catch(Exception e){
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-
-                            }*/
+                            changesMade=true;
+                            fetchData();
 
                         } else {
                             filtersVisible.set(false);
@@ -417,59 +337,59 @@ public class UnitsViewModel extends BaseViewModel {
             setUnitFilters();
         }
         fetchUnits();
+
     }
 
     private void setUnitFilters() {
         filters.clear();
-        if (selectedFilter.isEmpty() || allFilters == null || allFilters.isEmpty()) {
+        if (allFilters == null || allFilters.isEmpty()) {
             return;
         }
-
-        List<ProgramFilterTag> selectedTags = new ArrayList<>();
-        for (ProgramFilter filter : allFilters) {
-            for (SelectedFilter selected : selectedFilter){
-                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
-                    for (ProgramFilterTag tag : filter.getTags()){
-                        if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())){
-                            selectedTags.add(tag);
-                            ProgramFilter pf = new ProgramFilter();
-                            pf.setDisplayName(filter.getDisplayName());
-                            pf.setInternalName(filter.getInternalName());
-                            pf.setId(filter.getId());
-                            pf.setOrder(filter.getOrder());
-                            pf.setShowIn(filter.getShowIn());
-                            pf.setTags(selectedTags);
-                            filters.add(pf);
-                        }
+        if (selectedFilter.isEmpty()){
+            for (ProgramFilter filter : allFilters){
+                for (ProgramFilterTag tag : filter.getTags()){
+                    if (tag.getSelected()) {
+                        SelectedFilter sf = new SelectedFilter();
+                        sf.setInternal_name(filter.getInternalName());
+                        sf.setDisplay_name(filter.getDisplayName());
+                        sf.setSelected_tag(tag.getDisplayName());
+                        mDataManager.updateSelectedFilters(sf);
+                        selectedFilter = mDataManager.getSelectedFilters();
+                        break;
                     }
-
                 }
             }
+
+        }
+
+        for (SelectedFilter selected : selectedFilter) {
+            for (ProgramFilter filter : allFilters) {
+                List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                    for (ProgramFilterTag tag : filter.getTags()) {
+                        if (selected.getSelected_tag() != null) {
+                            if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                selectedTags.add(tag);
+                                ProgramFilter pf = new ProgramFilter();
+                                pf.setDisplayName(filter.getDisplayName());
+                                pf.setInternalName(filter.getInternalName());
+                                pf.setId(filter.getId());
+                                pf.setOrder(filter.getOrder());
+                                pf.setShowIn(filter.getShowIn());
+                                pf.setTags(selectedTags);
+                                filters.add(pf);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
     public void fetchUnits() {
-//        if (mDataManager.getLoginPrefs().getstoreSelectedTags() != null) {
-//            filters.clear();
-//            tags.clear();
-//            for (int i = 0; i < mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().size(); i++) {
-//                ProgramFilterTag pt = new ProgramFilterTag();
-//                pt.setSelected(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getSelected());
-//                pt.setDisplayName(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getDisplayName());
-//                pt.setId(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getId());
-//                pt.setInternalName(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getInternalName());
-//                pt.setOrder(mDataManager.getLoginPrefs().getstoreSelectedTags().getTags().get(i).getOrder());
-//                tags.add(pt);
-//            }
-//            ProgramFilter pf = new ProgramFilter();
-//            pf.setDisplayName(mDataManager.getLoginPrefs().getstoreSelectedTags().getDisplayName());
-//            pf.setInternalName(mDataManager.getLoginPrefs().getstoreSelectedTags().getInternalName());
-//            pf.setId(mDataManager.getLoginPrefs().getstoreSelectedTags().getId());
-//            pf.setOrder(mDataManager.getLoginPrefs().getstoreSelectedTags().getOrder());
-//            pf.setShowIn(mDataManager.getLoginPrefs().getstoreSelectedTags().getShowIn());
-//            pf.setTags(tags);
-//            filters.add(pf);
-//        }
+
         mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
                 "", 0L, take, skip, 0L, 0L,
@@ -553,11 +473,9 @@ public class UnitsViewModel extends BaseViewModel {
     public void onEventMainThread(String sessiontype) {
         if (!org.humana.mobile.tta.data.constants.Constants.selectedSession.equals("")) {
             org.humana.mobile.tta.data.constants.Constants.selectedSession = sessiontype;
-            fetchFilters();
-            fetchData();
             changesMade = true;
             allLoaded = false;
-
+            fetchFilters();
         }
     }
 
@@ -634,14 +552,6 @@ public class UnitsViewModel extends BaseViewModel {
                 }
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-//                    if (prev != null && prev.getItem() != null) {
-//                        tags.remove((ProgramFilterTag) prev.getItem());
-//                    }
-//                    if (item.getItem() != null) {
-//                        tags.add((ProgramFilterTag) item.getItem());
-////                        selectedTags.add((ProgramFilterTag) item.getItem());
-//                    }
-
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
                     sf.setDisplay_name(model.getDisplayName());
@@ -653,7 +563,6 @@ public class UnitsViewModel extends BaseViewModel {
                     mActivity.showLoading();
                     selectedFilter = mDataManager.getSelectedFilters();
                     fetchFilters();
-                    fetchData();
                 });
 
             } else if (binding instanceof TRowTextBinding) {
@@ -700,13 +609,7 @@ public class UnitsViewModel extends BaseViewModel {
                 } else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                 }
-//                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
-//                    if (model.getStatus().equals("Submitted")){
-//                        unitBinding.tvComment.setVisibility(View.GONE);
-//                    }else {
-//                        unitBinding.tvComment.setVisibility(View.VISIBLE);
-//                    }
-//                }
+
                 unitBinding.checkbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {
@@ -797,6 +700,6 @@ public class UnitsViewModel extends BaseViewModel {
         allLoaded = false;
         mActivity.showLoading();
         fetchFilters();
-        fetchData();
+//        fetchData();
     }
 }

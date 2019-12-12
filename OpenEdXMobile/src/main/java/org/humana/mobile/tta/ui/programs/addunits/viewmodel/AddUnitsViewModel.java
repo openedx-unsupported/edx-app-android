@@ -558,8 +558,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
-//                unitBinding.unitCode.setText(model.getCode());
-//                unitBinding.unitTitle.setText(model.getTitle()) ;
                 unitBinding.checkbox.setVisibility(View.VISIBLE);
                 if (selected.contains(model)){
                     unitBinding.checkbox.setChecked(true);
@@ -574,7 +572,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                     unitBinding.checkbox.setChecked(false);
                     unitBinding.tvMyDate.setVisibility(View.INVISIBLE);
                 }
-
 
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "

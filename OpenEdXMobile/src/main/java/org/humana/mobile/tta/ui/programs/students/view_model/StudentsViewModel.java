@@ -57,7 +57,7 @@ public class StudentsViewModel extends BaseViewModel {
     public List<ProgramFilterTag> tags;
 
     public FiltersAdapter filtersAdapter;
-    public UsersAdapter usersAdapter;
+//    public UsersAdapter usersAdapter;
     public GridUsersAdapter gridUsersAdapter;
 
     private static final int TAKE = 10;
@@ -75,14 +75,14 @@ public class StudentsViewModel extends BaseViewModel {
     public StudentsViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
 
-        usersAdapter = new UsersAdapter(mActivity);
+//        usersAdapter = new UsersAdapter(mActivity);
         gridUsersAdapter = new GridUsersAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
         users = new ArrayList<>();
         filters = new ArrayList<>();
-        usersAdapter.setItems(users);
+//        usersAdapter.setItems(users);
         gridUsersAdapter.setItems(users);
-        usersAdapter.setItemClickListener((view, item) -> {
+        /*usersAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.ll_current_status:
                     mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
@@ -112,7 +112,7 @@ public class StudentsViewModel extends BaseViewModel {
 
             }
 
-        });
+        });*/
         gridUsersAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()){
                 case R.id.ll_current_status:
@@ -180,7 +180,7 @@ public class StudentsViewModel extends BaseViewModel {
                             allLoaded = true;
                         }
                         populateStudents(data);
-                        usersAdapter.setLoadingDone();
+//                        usersAdapter.setLoadingDone();
                         gridUsersAdapter.setLoadingDone();
                     }
 
@@ -188,7 +188,7 @@ public class StudentsViewModel extends BaseViewModel {
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
                         allLoaded = true;
-                        usersAdapter.setLoadingDone();
+//                        usersAdapter.setLoadingDone();
                         gridUsersAdapter.setLoadingDone();
                         toggleEmptyVisibility();
                     }
@@ -209,7 +209,7 @@ public class StudentsViewModel extends BaseViewModel {
 
         if (changesMade) {
             skip = 0;
-            usersAdapter.reset(true);
+//            usersAdapter.reset(true);
             gridUsersAdapter.reset(true);
 //            setFilters();
         }
@@ -231,7 +231,7 @@ public class StudentsViewModel extends BaseViewModel {
         }
 
         if (newItemsAdded) {
-            usersAdapter.notifyItemRangeInserted(users.size() - n, n);
+//            usersAdapter.notifyItemRangeInserted(users.size() - n, n);
             gridUsersAdapter.notifyItemRangeInserted(users.size() - n, n);
         }
 
@@ -246,7 +246,7 @@ public class StudentsViewModel extends BaseViewModel {
         }
     }
 
-    public class UsersAdapter extends MxInfiniteAdapter<ProgramUser> {
+    /*public class UsersAdapter extends MxInfiniteAdapter<ProgramUser> {
 
         public UsersAdapter(Context context) {
             super(context);
@@ -374,7 +374,7 @@ public class StudentsViewModel extends BaseViewModel {
 
 
         }
-    }
+    }*/
     public class GridUsersAdapter extends MxInfiniteAdapter<ProgramUser> {
 
         public GridUsersAdapter(Context context) {
@@ -392,11 +392,7 @@ public class StudentsViewModel extends BaseViewModel {
                 itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.completedUnits)));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null) {
-//                    Glide.with(mActivity).load(
-//                            mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
-//                                    model.profileImage.getImageUrlFull())
-//                            .placeholder(R.drawable.profile)
-//                            .into(itemBinding.userImage);
+
 
 
                     Glide.with(mActivity).load(
@@ -576,12 +572,12 @@ public class StudentsViewModel extends BaseViewModel {
     public void onEventMainThread(ProgramUser event) {
         ProgramUser period = new ProgramUser();
 
-        int position = usersAdapter.getItemPosition(period);
+       /* int position = usersAdapter.getItemPosition(period);
         if (position >= 0) {
             ProgramUser p = users.get(position);
             p.pendingCount = period.pendingCount + event.pendingCount;
             usersAdapter.notifyItemChanged(position);
-        }
+        }*/
         int position2 = gridUsersAdapter.getItemPosition(period);
         if (position2 >= 0) {
             ProgramUser p = users.get(position2);
