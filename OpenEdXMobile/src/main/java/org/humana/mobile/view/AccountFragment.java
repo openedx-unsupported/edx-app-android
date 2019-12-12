@@ -1,12 +1,19 @@
 package org.humana.mobile.view;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -21,6 +28,7 @@ import org.humana.mobile.tta.data.constants.Constants;
 import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.ui.feed.NotificationsFragment;
 import org.humana.mobile.tta.ui.landing.LandingActivity;
 import org.humana.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
 import org.humana.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
@@ -44,12 +52,21 @@ public class AccountFragment extends BaseFragment {
 
     private DataManager mDataManager;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
         mDataManager = DataManager.getInstance(getActivity());
 
+
+
+        binding.showNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNotifications();
+            }
+        });
         if (config.isUserProfilesEnabled()) {
             binding.profileBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -168,5 +185,15 @@ public class AccountFragment extends BaseFragment {
 
             }
         });
+    }
+    public void showNotifications() {
+        ActivityUtil.replaceFragmentInActivity(
+                getActivity().getSupportFragmentManager(),
+                new NotificationsFragment(),
+                R.id.dashboard_fragment,
+                NotificationsFragment.TAG,
+                true,
+                null
+        );
     }
 }
