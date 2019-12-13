@@ -18,7 +18,7 @@
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
     <!-- Invitation Only button text-->
-    <string name="invitation_only_button_text">Invitation only</string>
+    <string name="invitation_only_button_text" tools:ignore="MissingTranslation">Invitation only</string>
     <!-- Effort field name -->
     <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
@@ -113,9 +113,9 @@
     <!-- Label for End User License Agreement -->
     <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} End User License Agreement</string>
     <!-- Label for Terms of Service and Honor Code -->
-    <string name="tos_and_honor_code">{platform_name} Terms of Service and Honor Code</string>
+    <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name} Terms of Service and Honor Code</string>
     <!-- Label for Privacy Policy -->
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy" tools:ignore="MissingTranslation">Privacy Policy</string>
 
     <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
@@ -125,17 +125,17 @@
 
     <!-- Navigation Drawer Labels -->
     <!-- Button text to show user current downloads screen -->
-    <string name="label_current_downloads">View current downloads</string>
+    <string name="label_current_downloads" tools:ignore="MissingTranslation">View current downloads</string>
     <!-- Content description for edit profile button -->
     <string name="open_profile_button">Open your profile</string>
     <!-- Title of user's course list screen -->
-    <string name="label_my_courses">Courses</string>
+    <string name="label_my_courses" tools:ignore="MissingTranslation">Courses</string>
     <!-- Title of user's program list screen -->
     <string name="label_my_programs" tools:ignore="MissingTranslation">Programs</string>
     <!-- Title of native Find Courses Screen -->
     <string name="label_find_courses">Find Courses</string>
     <!-- Title of webview based Find Courses Screen -->
-    <string name="label_discover">Discover</string>
+    <string name="label_discover" tools:ignore="MissingTranslation">Discover</string>
     <!-- Title of Degrees tab on Discovery screen -->
     <string name="label_degrees" tools:ignore="MissingTranslation">Degrees</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
@@ -153,9 +153,9 @@
     <!-- Settings screen version -->
     <string name="label_version">App Version</string>
     <!-- Button text to show user Settings screen -->
-    <string name="label_settings">Settings</string>
+    <string name="label_settings" tools:ignore="MissingTranslation">Settings</string>
     <!-- Title of Account screen -->
-    <string name="title_account">Account</string>
+    <string name="title_account" tools:ignore="MissingTranslation">Account</string>
 
     <!-- Help Dialog Place Holder messages -->
     <!-- Reset password alert dialog title -->
@@ -187,7 +187,7 @@
     <!-- Title of privacy policy users must accept to use the app -->
     <string name="privacy_policy_title" translatable="false">@string/privacy_policy</string>
     <!-- Title of terms of service & honor code users must accept to use the app -->
-    <string name="terms_of_service_title">Terms of Service</string>
+    <string name="terms_of_service_title" tools:ignore="MissingTranslation">Terms of Service</string>
 
     <!-- My Courses -->
     <!-- Row of course on dashboard screen -->
@@ -196,9 +196,9 @@
     <!-- NOTE: TODO - not final one -->
     <string name="courseware_subtitle">Access videos and assignments</string>
     <!-- Row title of videos on dashboard screen -->
-    <string name="videos_title">Videos</string>
+    <string name="videos_title" tools:ignore="MissingTranslation">Videos</string>
     <!-- Row subtitle of videos on dashboard screen -->
-    <string name="videos_subtitle">Watch course videos</string>
+    <string name="videos_subtitle" tools:ignore="MissingTranslation">Watch course videos</string>
     <!-- Row of Discussion on dashboard screen -->
     <string name="discussion_title">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
@@ -212,24 +212,24 @@
     <!-- Row of announcement on dashboard screen -->
     <string name="announcement_title">Announcements</string>
     <!-- Title text for the important dates section on the course dashboard  -->
-    <string name="course_dates_title">Important Dates</string>
+    <string name="course_dates_title" tools:ignore="MissingTranslation">Important Dates</string>
     <!-- Title text for the additional resources section on the tabular course dashboard  -->
-    <string name="resources_title">Resources</string>
+    <string name="resources_title" tools:ignore="MissingTranslation">Resources</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
     <!-- Subtitle text describing the important dates section on the course dashboard -->
-    <string name="course_dates_subtitle">Keep track of deadlines and stay on track</string>
+    <string name="course_dates_subtitle" tools:ignore="MissingTranslation">Keep track of deadlines and stay on track</string>
     <!-- Accessible content description of course name label field -->
     <string name="course_name">Course Name</string>
     <!-- Label indicating new course content has been downloaded -->
     <string name="new_course_content">New Course Content</string>
     <!-- Label for date when course starts -->
-    <string name="label_starting">Starting {date}</string>
+    <string name="label_starting" tools:ignore="MissingTranslation">Starting {date}</string>
     <!-- Label for course that has ended -->
-    <string name="label_ended">Ended {date}</string>
+    <string name="label_ended" tools:ignore="MissingTranslation">Ended {date}</string>
     <!-- Label for date when course is ending -->
-    <string name="label_ending">Ending {date}</string>
+    <string name="label_ending" tools:ignore="MissingTranslation">Ending {date}</string>
 
     <!-- Label for date when course is expiring in a specific time frame like in 2 days -->
     <string name="label_expires" tools:ignore="MissingTranslation">Course access expires {date}</string>
@@ -250,7 +250,7 @@
     <!-- Label shown when no courseware content is available -->
     <string name="no_chapter_text">No course content is currently available.</string>
     <!-- Label shown when no mobile-friendly videos are available in a course -->
-    <string name="no_videos_text">This course does not include any videos.</string>
+    <string name="no_videos_text" tools:ignore="MissingTranslation">This course does not include any videos.</string>
     <!-- Label shown when user is enrolled in no courses -->
     <string name="no_courses_to_display">It looks like you are not enrolled in any courses yet.</string>
     <!-- Label shown when no announcements are available for a course -->
@@ -258,13 +258,13 @@
     <!-- Label shown when no handouts are available for a course -->
     <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
     <!-- Label shown when no important dates are available for a course -->
-    <string name="no_course_dates_to_display">Course dates are not currently available.</string>
+    <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
-    <string name="delete_videos_title">Delete Videos</string>
+    <string name="delete_videos_title" tools:ignore="MissingTranslation">Delete Videos</string>
     <!-- Label for a course item's due date for same day -->
-    <string name="due_date_today">due today at {due_date}</string>
+    <string name="due_date_today" tools:ignore="MissingTranslation">due today at {due_date}</string>
     <!-- Label for a course item's due date -->
-    <string name="due_date_past_future">due {due_date}</string>
+    <string name="due_date_past_future" tools:ignore="MissingTranslation">due {due_date}</string>
     <!-- Upgrade banner's description which appears on course outline screen. -->
     <string name="upgrade_banner_description" tools:ignore="MissingTranslation">Complete assessments on the go toward a certificate!</string>
     <!-- Title upgrade to verified today course outline footer -->
@@ -460,30 +460,30 @@
 
     <!-- Bulk Videos Download -->
     <!-- Accessibility label of bulk download switch -->
-    <string name="bulk_download_switch">Bulk videos download switch.</string>
+    <string name="bulk_download_switch" tools:ignore="MissingTranslation">Bulk videos download switch.</string>
     <!-- Title for bulk videos download view when in new or partial videos' download state -->
-    <string name="download_to_device">Download to Device</string>
+    <string name="download_to_device" tools:ignore="MissingTranslation">Download to Device</string>
     <!-- Subtitle for bulk videos download view when in new or partial videos' download state -->
     <plurals name="download_total">
         <item quantity="one">{total_videos_count} Video, {total_videos_size} total</item>
         <item quantity="other">{total_videos_count} Videos, {total_videos_size} total</item>
     </plurals>
     <!-- Title for bulk videos download view when download is starting -->
-    <string name="download_starting">Starting Download…</string>
+    <string name="download_starting" tools:ignore="MissingTranslation">Starting Download…</string>
     <!-- Title for bulk videos download view when in downloading state -->
-    <string name="downloading_videos">Downloading Videos…</string>
+    <string name="downloading_videos" tools:ignore="MissingTranslation">Downloading Videos…</string>
     <!-- Subtitle for bulk videos download view when in downloading state -->
-    <string name="download_remaining">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
+    <string name="download_remaining" tools:ignore="MissingTranslation">{remaining_videos_count} Remaining, {remaining_videos_size} total</string>
     <!-- Title for bulk videos download view when in downloaded state -->
-    <string name="download_complete">All Videos Downloaded</string>
+    <string name="download_complete" tools:ignore="MissingTranslation">All Videos Downloaded</string>
     <!-- Accessibility label of bulk download switch, when its state is OFF and no download is happening -->
-    <string name="switch_off_no_downloading">Toggling the switch on, will download all videos of this course.</string>
+    <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">Toggling the switch on, will download all videos of this course.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos are downloading -->
-    <string name="switch_on_all_downloading">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
+    <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">Toggling the switch off, will cancel downloading of all videos and will delete all downloaded videos of this course.</string>
     <!-- Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded -->
-    <string name="switch_on_all_downloaded">Toggling the switch off, will delete all downloaded videos of this course.</string>
+    <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">Toggling the switch off, will delete all downloaded videos of this course.</string>
     <!-- Accessibility label of full bulk download view when videos are being downloaded -->
-    <string name="view_downloads">Double tap to view current downloads.</string>
+    <string name="view_downloads" tools:ignore="MissingTranslation">Double tap to view current downloads.</string>
 
     <!-- Wifi New Message -->
     <!-- Toggle to allow downloads using cellular data -->
@@ -534,7 +534,7 @@
     <!-- Error shown when user attempts to send email, but has no email app -->
     <string name="email_client_not_present">No e-mail clients installed</string>
     <!-- Search for a course prompt -->
-    <string name="search_for_courses">Search for courses</string>
+    <string name="search_for_courses" tools:ignore="MissingTranslation">Search for courses</string>
     <!-- Search for a program prompt -->
     <string name="search_for_programs" tools:ignore="MissingTranslation">Search for programs</string>
     <!-- Search for a degree prompt -->
@@ -551,13 +551,13 @@
 
     <!-- New Logistration Launch screen text -->
     <!-- Button leading user to create account screen -->
-    <string name="launch_register">Create your Account</string>
+    <string name="launch_register" tools:ignore="MissingTranslation">Create your Account</string>
     <!-- Button leading user to log in screen -->
-    <string name="launch_login">Log In</string>
+    <string name="launch_login" tools:ignore="MissingTranslation">Log In</string>
     <!-- Introduction text on the launch screen -->
     <string name="launch_text" tools:ignore="MissingTranslation">Courses from the world’s best universities in your pocket.</string>
     <!-- Search view leading user to Find Courses screen from the launch screen upon searching some text -->
-    <string name="launch_search_courses">Search Courses</string>
+    <string name="launch_search_courses" tools:ignore="MissingTranslation">Search Courses</string>
 
     <!-- Registration Screen -->
     <!-- Button text allowing user to show hidden optional registration fields -->
