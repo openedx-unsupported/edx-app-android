@@ -330,47 +330,6 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 });
     }
 
-    public void approveUnits(String unitId, String remarks, int rating) {
-
-        mDataManager.approveUnit(unitId,
-                userName.get(), remarks, rating, new OnResponseCallback<SuccessResponse>() {
-                    @Override
-                    public void onSuccess(SuccessResponse data) {
-                        mActivity.hideLoading();
-                        changesMade = true;
-                        fetchData();
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        allLoaded = true;
-                        unitsAdapter.setLoadingDone();
-                        toggleEmptyVisibility();
-                    }
-                });
-    }
-
-    public void rejectUnits(String unitId, String remarks, int rating) {
-        mDataManager.rejectUnit(unitId,
-                userName.get(), remarks, rating, new OnResponseCallback<SuccessResponse>() {
-                    @Override
-                    public void onSuccess(SuccessResponse data) {
-                        mActivity.hideLoading();
-                        changesMade = true;
-                        fetchData();
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        allLoaded = true;
-                        unitsAdapter.setLoadingDone();
-                        toggleEmptyVisibility();
-                    }
-                });
-    }
-
     private void populateUnits(List<Unit> data) {
         boolean newItemsAdded = false;
         int n = 0;
@@ -404,6 +363,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                                         Constants.UNIT_ID = unit.getUnit_id();
                                         Constants.USERNAME = userName.get();
 
+
 //                                        blockid = data.getBlockId();
 //                                        getUserUnitResponse();
                                         if (PendingUnitsListViewModel.this.course == null) {
@@ -415,7 +375,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                                             mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
                                                     mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                                                     PendingUnitsListViewModel.this.course, data.getChildren().get(0).getId(),
-                                                    null, false);
+                                                    null, false, unit);
                                         } else {
                                             mActivity.showLongSnack("This unit is empty");
                                         }
@@ -528,6 +488,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                     }
                 });
 
+
                 itemBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -536,71 +497,11 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                         }
                     }
                 });
-//                itemBinding.llCard.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        ActivityUtil.gotoPage(mActivity, PendingUnitWebviewActivity.class);
-//                    }
-//                });
-
-
 
             }
         }
     }
 
-    public void approveReturn(String unitId){
-        final Dialog dialog = new Dialog(mActivity);
-        dialog.setContentView(R.layout.dialog_approve_return_unit);
-        Button btnApprove = (Button) dialog.findViewById(R.id.btn_approve);
-        Button btnReturn = (Button) dialog.findViewById(R.id.btn_return);
-        EditText etRemarks = dialog.findViewById(R.id.et_remarks);
-        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
-//        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        dialog.show();
-        dialog.getWindow().setAttributes(lp);
-
-
-
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar rb, float rating, boolean fromUser) {
-                rating = rb.getRating();
-                if (rating==1){
-                    Toast.makeText(mActivity, "poor", Toast.LENGTH_SHORT).show();
-                }else if (rating==2){
-                    Toast.makeText(mActivity, "fair", Toast.LENGTH_SHORT).show();
-                }else if (rating==3){
-                    Toast.makeText(mActivity, "good", Toast.LENGTH_SHORT).show();
-                }else if (rating==4){
-                    Toast.makeText(mActivity, "very good", Toast.LENGTH_SHORT).show();
-                }else if (rating==5){
-                    Toast.makeText(mActivity, "excellent", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
-        // if button is clicked, close the custom dialog
-
-        btnApprove.setOnClickListener(v -> {
-            String remarks = etRemarks.getText().toString();
-            dialog.dismiss();
-            approveUnits(unitId, remarks, (int) rating);
-        });
-
-        btnReturn.setOnClickListener(v -> {
-            String remarks = etRemarks.getText().toString();
-            dialog.dismiss();
-            rejectUnits(unitId,remarks, (int) rating);
-        });
-        dialog.setCancelable(true);
-        dialog.show();
-    }
 
     @Override
     public void onResume() {
@@ -609,8 +510,6 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         fetchData();
         Constants.UNIT_ID = "";
         Constants.USERNAME = "";
-//        if (!Constants.UNIT_ID.equals("") || Constants.UNIT_ID !=null){
-//            fetchData();
-//        }
     }
+
 }

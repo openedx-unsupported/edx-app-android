@@ -28,6 +28,7 @@ import org.humana.mobile.module.notification.NotificationDelegate;
 import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.storage.IStorage;
 import org.humana.mobile.profiles.UserProfileActivity;
+import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.ui.course.CourseScormViewActivity;
 import org.humana.mobile.tta.ui.survey.UserSurveyActivity;
 import org.humana.mobile.util.Config;
@@ -57,6 +58,10 @@ public class Router {
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
     public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
     public static final String EXTRA_USERNAME = "username";
+    public static final String EXTRA_Unit_id = "unitId";
+    public static final String EXTRA_Unit_TYPE = "unitType";
+    public static final String EXTRA_TITLE = "unitTitle";
+    public static final String EXTRA_UNIT_DESC = "unitDesc";
 
     @Inject
     Config config;
@@ -167,7 +172,15 @@ public class Router {
         // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivityForResult(courseDetail, requestCode);
     }
-
+    public void showCourseContainerOutline(Activity activity, int requestCode,
+                                           EnrolledCoursesResponse model, String courseComponentId,
+                                           String lastAccessedId, boolean isVideosMode, Unit unit) {
+        Intent courseDetail = createCourseOutlineIntent(activity, model, courseComponentId,
+                lastAccessedId, isVideosMode, unit);
+        //TODO - what's the most suitable FLAG?
+        // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivityForResult(courseDetail, requestCode);
+    }
     public void showCourseContainerOutline(Fragment fragment, int requestCode,
                                            EnrolledCoursesResponse model, String courseComponentId,
                                            String lastAccessedId, boolean isVideosMode) {
@@ -211,6 +224,23 @@ public class Router {
         intent.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
         intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
+        return intent;
+    }
+    private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
+                                             String courseComponentId, String lastAccessedId,
+                                             boolean isVideosMode, Unit unit) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+
+        final Intent intent = new Intent(activity, CourseOutlineActivity.class);
+        intent.putExtra(EXTRA_BUNDLE, courseBundle);
+        intent.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
+        intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
+        intent.putExtra(EXTRA_Unit_id, unit.getUnit_id());
+        intent.putExtra(EXTRA_TITLE, unit.getTitle());
+        intent.putExtra(EXTRA_Unit_TYPE, unit.getType());
+        intent.putExtra(EXTRA_UNIT_DESC, unit.getDesc());
         return intent;
     }
 

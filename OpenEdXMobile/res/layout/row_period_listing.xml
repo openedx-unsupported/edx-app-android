@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.humana.mobile.tta.ui.programs.units.view_model.PeriodListingViewModel" />
+    </data>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/humana_card_background"
+        android:layout_margin="8dp"
+        android:padding="5dp"
+        android:id="@+id/ll_period"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/hind_medium"
+            android:gravity="start|center"
+            android:id="@+id/text_title"
+            android:textSize="14sp"
+            android:textColor="@color/gray_5"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:fontFamily="@font/hind_medium"
+            android:src="@drawable/sp_chevron_end"
+            android:id="@+id/img_title"
+            android:layout_gravity="center"
+            android:textColor="@color/gray_5"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+</layout>

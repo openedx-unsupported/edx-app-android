@@ -10,13 +10,16 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:src="@drawable/ic_add"
         android:id="@+id/fab_add"
+        android:onClick="@{()->viewModel.navigateToPeriodListing()}"
         android:layout_margin="8dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@color/humana_card_background"
-            android:visibility="@{viewModel.emptyVisible? View.VISIBLE : View.GONE}"
+            android:visibility="visible"
             android:orientation="horizontal">
 
             <TextView

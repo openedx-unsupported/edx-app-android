@@ -43,6 +43,7 @@ import org.humana.mobile.tta.data.remote.service.TaService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
@@ -225,8 +226,8 @@ public class TaAPI {
         return taService.updateNotifications(parameters);
     }
 
-    public Call<List<Notification>> getNotifications(int take, int skip){
-        return taService.getNotifications(take, skip);
+    public Call<List<Notification>> getNotifications(int take, int skip, String courseId){
+        return taService.getNotifications(take, skip, courseId);
     }
 
     public Call<List<Feed>> getFeeds(int take, int skip){
@@ -434,5 +435,19 @@ public class TaAPI {
         parameters.put(Constants.KEY_PERIOD_ID, periodId);
         parameters.put(Constants.KEY_PROPOSED_DATE, proposedDate);
         return taService.setProposedDate(parameters);
+    }
+
+    public Call<SuccessResponse> sendNotification(String title, String type, String desc, String action,
+                                   String action_parent_id, String action_id) {
+
+        Map<String, Object> parameters=new HashMap<>();
+        parameters.put(Constants.KEY_TITLE, title);
+        parameters.put(Constants.KEY_TYPE, type);
+        parameters.put(Constants.KEY_DESC, desc);
+        parameters.put(Constants.KEY_ACTION, action);
+        parameters.put(Constants.KEY_ACTION_ID, action_id);
+        parameters.put(Constants.KEY_ACTION_PARENT_ID, action_parent_id);
+        return taService.setProposedDate(parameters);
+
     }
 }

@@ -232,5 +232,6 @@ public class ApiConstants {
     }
 
     public static final String URL_MX_GET_APP_UPDATE = "api/appupdate/v1/getappupdate/";
+    public static final String URL_MX_SAVE_HUMANA_TOKEN = "";
 
 }

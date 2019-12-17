@@ -152,6 +152,7 @@ import org.humana.mobile.tta.task.library.GetCollectionItemsTask;
 import org.humana.mobile.tta.task.library.GetConfigModifiedDateTask;
 import org.humana.mobile.tta.task.notification.CreateNotificationsTask;
 import org.humana.mobile.tta.task.notification.GetNotificationsTask;
+import org.humana.mobile.tta.task.notification.SendNotificationTask;
 import org.humana.mobile.tta.task.notification.UpdateNotificationsTask;
 import org.humana.mobile.tta.task.profile.ChangePasswordTask;
 import org.humana.mobile.tta.task.profile.GetAccountTask;
@@ -2746,7 +2747,7 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
-    public void getNotifications(int take, int skip, OnResponseCallback<List<Notification>> callback) {
+   /* public void getNotifications(int take, int skip, OnResponseCallback<List<Notification>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
@@ -2784,6 +2785,70 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             getNotificationsFromLocal(take, skip, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }*/
+
+    public void getNotifications(int take, int skip, String course_id, OnResponseCallback<List<Notification>> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetNotificationsTask(context, take, skip, course_id) {
+                @Override
+                protected void onSuccess(List<Notification> notifications) throws Exception {
+                    super.onSuccess(notifications);
+
+                    if (notifications != null) {
+
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                mLocalDataSource.insertNotifications(notifications);
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
+                            }
+                        }.execute();
+
+                    } else {
+                        getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
+                    }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    getNotificationsFromLocal(take, skip, callback, ex);
+                }
+            }.execute();
+
+        } else {
+            getNotificationsFromLocal(take, skip, callback, new TaException(context.getString(R.string.no_connection_exception)));
+        }
+
+    }
+
+    public void sendNotifications(String title, String type, String desc, String action,
+                                  String action_id, String action_parent_id, List<String> respondent,
+                                  OnResponseCallback<SuccessResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new SendNotificationTask(context, title, type, desc, action, action_id, action_parent_id) {
+                @Override
+                protected void onSuccess(SuccessResponse response) throws Exception {
+                    super.onSuccess(response);
+
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                }
+            }.execute();
+
         }
 
     }

@@ -1,19 +1,12 @@
 package org.humana.mobile.view;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -58,7 +51,6 @@ public class AccountFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
         mDataManager = DataManager.getInstance(getActivity());
-
 
 
         binding.showNotifications.setOnClickListener(new View.OnClickListener() {
@@ -148,8 +140,6 @@ public class AccountFragment extends BaseFragment {
         });
 
 
-
-
         binding.tvVersionNo.setText(String.format("%s %s %s", getString(R.string.label_version),
                 BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));
 
@@ -165,8 +155,6 @@ public class AccountFragment extends BaseFragment {
                     mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
 
                     Constants.isSingleRow = true;
-
-
                     Snackbar.make(binding.clMain, "Single program and section exists for this user",
                             Snackbar.LENGTH_LONG).show();
 //                    ActivityUtil.gotoPage(getActivity(), LandingActivity.class,

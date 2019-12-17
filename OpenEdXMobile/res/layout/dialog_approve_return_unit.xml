@@ -19,17 +19,12 @@
         android:orientation="vertical">
 
 
-        <RatingBar
-            android:layout_width="wrap_content"
+        <org.humana.mobile.tta.ui.custom.DropDownFilterView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:numStars="5"
-            android:id="@+id/ratingBar"
+            android:id="@+id/filter_view"
             android:layout_gravity="center"
-            android:stepSize="1"
-            android:scaleX="0.5"
-            android:scaleY="0.5"
-            style="@style/Widget.AppCompat.RatingBar"
-            android:layout_marginTop="8dp" />
+            android:layout_margin="8dp" />
 
         <TextView
             android:layout_width="wrap_content"

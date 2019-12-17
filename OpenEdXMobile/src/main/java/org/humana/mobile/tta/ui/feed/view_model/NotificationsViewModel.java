@@ -111,7 +111,8 @@ public class NotificationsViewModel extends BaseViewModel {
 
     private void fetchNotifications() {
 
-        mDataManager.getNotifications(take, skip, new OnResponseCallback<List<Notification>>() {
+        mDataManager.getNotifications(take, skip, mDataManager.getLoginPrefs().getProgramId(),
+                new OnResponseCallback<List<Notification>>() {
             @Override
             public void onSuccess(List<Notification> data) {
                 mActivity.hideLoading();

@@ -79,6 +79,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.scorm.ScormBlockModel;
 import org.humana.mobile.tta.scorm.ScormManager;
+import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity;
 import org.humana.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsListViewModel;
 import org.humana.mobile.tta.utils.ActivityUtil;
@@ -90,6 +91,7 @@ import org.humana.mobile.view.adapters.CourseOutlineAdapter;
 import org.humana.mobile.view.common.TaskProgressCallback;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -144,7 +146,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private View loadingIndicator;
 
-    private String unidId;
+    private String unidId, unitType, unitTitle, unitDesc;
     private LinearLayout linearLayout;
 
     @Inject
@@ -158,6 +160,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     ScormManager scormManager;
 
     private int requestCode;
+
+    private List<String> respondentList;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
@@ -190,12 +194,17 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         linearLayout = view.findViewById(R.id.ll_approval);
         mfab = view.findViewById(R.id.fab);
+        respondentList = new ArrayList<>();
 
 
         final Bundle bundle;
         {
             if (savedInstanceState != null) {
                 bundle = savedInstanceState;
+                unidId = bundle.getString(Router.EXTRA_Unit_id);
+                unitType = bundle.getString(Router.EXTRA_Unit_TYPE);
+                unitTitle = bundle.getString(Router.EXTRA_TITLE);
+                unitDesc = bundle.getString(Router.EXTRA_UNIT_DESC);
 
             } else {
                 bundle = getArguments();
@@ -228,9 +237,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                approveReturn(Constants.UNIT_ID);
-//                mbtn_approve.setVisibility(View.VISIBLE);
-//                mbtn_return.setVisibility(View.VISIBLE);
+                approveReturn(unidId,unitType,unitTitle, unitDesc);
             }
         });
 
@@ -1014,13 +1021,14 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
 
-    public void approveReturn(String unitId) {
+    public void approveReturn(String unitId, String type, String title, String desc) {
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.dialog_approve_return_unit);
         Button btnApprove = (Button) dialog.findViewById(R.id.btn_approve);
         Button btnReturn = (Button) dialog.findViewById(R.id.btn_return);
         EditText etRemarks = dialog.findViewById(R.id.et_remarks);
-        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+        DropDownFilterView filterView = dialog.findViewById(R.id.filter_view);
+//        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
         TextView mtv_rating = dialog.findViewById(R.id.tv_ratings);
 //        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -1030,105 +1038,94 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         dialog.show();
         dialog.getWindow().setAttributes(lp);
 
+        List<DropDownFilterView.FilterItem> items = new ArrayList<>();
 
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar rb, float rating, boolean fromUser) {
-                unitRating = rb.getRating();
-                mtv_rating.setVisibility(View.VISIBLE);
-                if (unitRating == 1) {
-                    mtv_rating.setText("Poor");
-//                    Toast.makeText(getActivity(), "poor", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 2) {
-                    mtv_rating.setText("Fair");
-//                    Toast.makeText(getActivity(), "fair", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 3) {
-                    mtv_rating.setText("Good");
-//                    Toast.makeText(getActivity(), "good", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 4) {
-                    mtv_rating.setText("Very Good");
-//                    Toast.makeText(getActivity(), "very good", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 5) {
-                    mtv_rating.setText("Excellent");
-//                    Toast.makeText(getActivity(), "excellent", Toast.LENGTH_SHORT).show();
-                }
+        List<String> filterItems = new ArrayList<>();
+        filterItems.add("Poor");
+        filterItems.add("Fair");
+        filterItems.add("Good");
+        filterItems.add("Very Good");
+        filterItems.add("Excellent");
+        items.add(new DropDownFilterView.FilterItem("Ratings", filterItems,
+                false, R.color.primary_cyan, R.drawable.t_background_tag_hollow
+        ));
+        filterView.setFilterItems(items);
+        filterView.setOnFilterItemListener((v, item, position, prev) -> {
+            switch (item.getName()) {
+                case "Poor":
+                    unitRating = 1;
+                    break;
+                case "Fair":
+                    unitRating = 2;
+                    break;
+                case "Good":
+                    unitRating = 3;
+                    break;
+                case "Very Good":
+                    unitRating = 4;
+                    break;
+                case "Excellent":
+                    unitRating = 5;
+                    break;
             }
         });
-
         btnApprove.setOnClickListener(v -> {
             String remarks = etRemarks.getText().toString();
-            approveUnits(unitId, remarks, (int) unitRating);
+            approveUnits(unitId, remarks, (int) unitRating, type, title,desc);
             dialog.dismiss();
         });
 
         btnReturn.setOnClickListener(v -> {
             String remarks = etRemarks.getText().toString();
 
-            rejectUnits(unitId,remarks, (int) unitRating);
+            rejectUnits(unitId, remarks, (int) unitRating, type, title, desc);
             dialog.dismiss();
         });
         dialog.setCancelable(true);
         dialog.show();
 
     }
-//
-    public void approveUnits(String unitId, String remarks, int rating) {
+
+
+    public void approveUnits(String unitId, String remarks, int rating, String unitType, String unitTitle, String desc) {
 
         mDataManager.approveUnit(unitId,
                 Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
-
-//                        Intent in = new Intent(getActivity(), PendingUnitsListActivity.class);
-//                        startActivity(in);
-                        getActivity().finish();
                         Toast.makeText(getActivity(),"Unit Approved", Toast.LENGTH_SHORT).show();
-//                        mActivity.hideLoading();
-//                        changesMade = true;
+                        sendNotifications(unitTitle, unitType ,desc, "AprroveUnit",unitId,
+                                mDataManager.getLoginPrefs().getProgramId());
+                        getActivity().finish();
+
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-//                        mActivity.hideLoading();
-//                        allLoaded = true;
-//                        unitsAdapter.setLoadingDone();
-//                        toggleEmptyVisibility();
+
                     }
                 });
     }
 
-    public void rejectUnits(String unitId, String remarks, int rating) {
+    public void rejectUnits(String unitId, String remarks, int rating, String unitType, String unitTitle, String unitDesc) {
         mDataManager.rejectUnit(unitId,
                 Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         Toast.makeText(getActivity(),"Unit Returned", Toast.LENGTH_SHORT).show();
-//                        Intent in = new Intent(getActivity(), PendingUnitsListActivity.class);
-//                        startActivity(in);
+                        sendNotifications(unitTitle,unitType ,unitDesc, "ReturnUnit",unitId,
+                                mDataManager.getLoginPrefs().getProgramId());
+
                         getActivity().finish();
-//                        mActivity.hideLoading();
-//                        changesMade = true;
-//                        fetchData();
+
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-//                        mActivity.hideLoading();
-//                        allLoaded = true;
-//                        unitsAdapter.setLoadingDone();
-//                        toggleEmptyVisibility();
                     }
                 });
     }
-    public void getUserUnitResponse() {
-//        String role;
-//        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-//            role= mDataManager.getLoginPrefs().getRole();
-//        }else {
-//            role = "staff";
-//        }
-
-
+    /*public void getUserUnitResponse() {
         mDataManager.setSpecificSession("student",
                 "Student", "mx_humana_lms/api/" +
                         mDataManager.getLoginPrefs().getProgramId()+"/masquerade",environment.getLoginPrefs().getLoginUserCookie(),
@@ -1144,7 +1141,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     public void onFailure(Exception e) {
                     }
                 });
-    }
+    }*/
 
 
     public void askForPermissions(String[] permissions, int requestCode) {
@@ -1158,8 +1155,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
     }
 
-
-
     public int getGrantedPermissionsCount(String[] permissions) {
         int grantedPermissionsCount = 0;
         for (String permission : permissions) {
@@ -1169,6 +1164,30 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
 
         return grantedPermissionsCount;
+    }
+
+
+    // Notifications for firebase
+
+    private void sendNotifications(String title, String type, String desc, String action,
+                                   String action_id, String action_parent_id) {
+
+        mDataManager.sendNotifications(title, type, desc, action, action_id, action_parent_id,
+                respondentList,
+                new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse response) {
+                        if (response.getSuccess()){
+//                            Toast.makeText(getActivity(),"Notification sent..", Toast.LENGTH_SHORT).show();
+                            Log.d("Notification", "Notification sent..");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("Notification Failure..", e.getMessage());
+                    }
+                });
     }
 
 }

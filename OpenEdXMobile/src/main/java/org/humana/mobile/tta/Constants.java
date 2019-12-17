@@ -1,5 +1,7 @@
 package org.humana.mobile.tta;
 
+import org.humana.mobile.tta.data.local.db.table.Unit;
+
 public class Constants {
 
     //Database
@@ -83,6 +85,11 @@ public class Constants {
     public static final String KEY_END_DATE = "endDateTime";
     public static final String KEY_PERIOD_START_DATE = "startDate";
     public static final String KEY_PERIOD_END_DATE = "endDate";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_DESC = "desc";
+    public static final String KEY_ACTION = "action";
+    public static final String KEY_ACTION_ID = "action_id";
+    public static final String KEY_ACTION_PARENT_ID = "action_parent_id";
 
 
 

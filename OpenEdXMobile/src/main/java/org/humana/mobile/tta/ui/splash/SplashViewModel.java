@@ -3,6 +3,9 @@ package org.humana.mobile.tta.ui.splash;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.humana.mobile.base.MainApplication;
 import org.humana.mobile.core.IEdxEnvironment;
@@ -11,6 +14,7 @@ import org.humana.mobile.tta.data.constants.Constants;
 import org.humana.mobile.tta.data.enums.SurveyType;
 import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
+import org.humana.mobile.tta.firebase.FirebaseHelper;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -24,6 +28,7 @@ import org.humana.mobile.tta.wordpress_client.util.ConnectCookieHelper;
 import java.util.List;
 
 import static org.humana.mobile.util.BrowserUtil.appPref;
+import static org.humana.mobile.util.BrowserUtil.loginPrefs;
 
 public class SplashViewModel extends BaseViewModel {
 
@@ -79,6 +84,9 @@ public class SplashViewModel extends BaseViewModel {
         } else {
             environment.getRouter().showLaunchScreen(SplashActivity.this);
         }*/
+
+ // Firebase send token
+        getFirebaseToken();
 
 
             if (appPref.isFirstLaunch()) {
@@ -169,5 +177,27 @@ public class SplashViewModel extends BaseViewModel {
         }
         mDataManager.checkSurvey(mActivity, SurveyType.Login);
     }
+    private void sendRegistrationToServer(String token) {
+        // Add custom implementation, as needed.
+        //update Firebase token , we will update it on sign-in or registration too
 
+        Log.d("firebaseToken",token);
+        if(loginPrefs==null || loginPrefs.getUsername()==null || loginPrefs.getUsername().equals("") ||mActivity.getApplicationContext()==null)
+            return;
+
+        FirebaseHelper fireBaseHelper=new FirebaseHelper();
+        try
+        {
+            fireBaseHelper.updateFirebasetokenToServer(mActivity.getApplicationContext(),fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
+        }
+        catch (Exception ex)
+        {
+            Log.d("ManpraxFirebase","MyFirebaseInstanceIDService class ID update crash");
+        }
+    }
+
+    private void getFirebaseToken(){
+        String token = FirebaseInstanceId.getInstance().getToken();
+        sendRegistrationToServer(token);
+    }
 }

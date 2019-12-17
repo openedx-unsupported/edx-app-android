@@ -35,6 +35,8 @@ import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
+import org.humana.mobile.tta.ui.programs.units.PeriodListingActivity;
+import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -686,5 +688,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         }
     }
 
-
+    public void navigateToPeriodListing(){
+        ActivityUtil.gotoPage(mActivity, PeriodListingActivity.class);
+    }
 }

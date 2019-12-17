@@ -163,8 +163,10 @@ public interface LoginService {
     @POST(ApiConstants.URL_MX_UPDATE_PROFILE)
     Call<UpdateMyProfileResponse> mxUpdateProfile(@FieldMap Map<String, String> parameters);
 
+
+    //    @POST(ApiConstants.URL_MX_FIREBASE_TOKEN_UPDATE)
     @FormUrlEncoded
-    @POST(ApiConstants.URL_MX_FIREBASE_TOKEN_UPDATE)
+    @POST(ApiConstants.URL_MX_SAVE_HUMANA_TOKEN)
     Call<FirebaseUpdateTokenResponse> updateFirebaseToken(@FieldMap Map<String, String> parameters);
 
     @GET(ApiConstants.URL_MX_CUSTOM_FIELD_ATTRIBUTES)
