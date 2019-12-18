@@ -301,7 +301,33 @@ public class UnitsViewModel extends BaseViewModel {
         sessionTags = new ArrayList<>();
         selectedFilter=new ArrayList<>();
         selectedFilter=mDataManager.getSelectedFilters();
+        if (selectedFilter.size()!=0) {
+            filters.clear();
+            for (SelectedFilter selected : selectedFilter) {
+                for (ProgramFilter filter : allFilters) {
+                    List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                    if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                        for (ProgramFilterTag tag : filter.getTags()) {
+                            if (selected.getSelected_tag() != null) {
+                                if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
 
+            }
+        }
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -313,7 +339,7 @@ public class UnitsViewModel extends BaseViewModel {
                             filtersVisible.set(true);
                             filtersAdapter.setItems(allFilters);
                             changesMade=true;
-                            fetchData();
+                            fetchUnits();
 
                         } else {
                             filtersVisible.set(false);
@@ -359,33 +385,34 @@ public class UnitsViewModel extends BaseViewModel {
                     }
                 }
             }
-
-        }
-
-        for (SelectedFilter selected : selectedFilter) {
-            for (ProgramFilter filter : allFilters) {
-                List<ProgramFilterTag> selectedTags = new ArrayList<>();
-                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
-                    for (ProgramFilterTag tag : filter.getTags()) {
-                        if (selected.getSelected_tag() != null) {
-                            if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                selectedTags.add(tag);
-                                ProgramFilter pf = new ProgramFilter();
-                                pf.setDisplayName(filter.getDisplayName());
-                                pf.setInternalName(filter.getInternalName());
-                                pf.setId(filter.getId());
-                                pf.setOrder(filter.getOrder());
-                                pf.setShowIn(filter.getShowIn());
-                                pf.setTags(selectedTags);
-                                filters.add(pf);
-                                break;
+            for (SelectedFilter selected : selectedFilter) {
+                for (ProgramFilter filter : allFilters) {
+                    List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                    if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                        for (ProgramFilterTag tag : filter.getTags()) {
+                            if (selected.getSelected_tag() != null) {
+                                if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+
             }
 
         }
+
+
     }
 
     public void fetchUnits() {
@@ -536,7 +563,7 @@ public class UnitsViewModel extends BaseViewModel {
 
                 for (ProgramFilterTag tag : model.getTags()) {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
+                            false, R.color.white, R.drawable.t_background_tag_filled
                     ));
                 }
 
@@ -552,6 +579,14 @@ public class UnitsViewModel extends BaseViewModel {
                 }
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
+//                    if (prev != null && prev.getItem() != null) {
+//                        tags.remove((ProgramFilterTag) prev.getItem());
+//                    }else {
+//                        tags.add((ProgramFilterTag) item.getItem());
+//                    }
+//                    if (position == 0){
+//                        filters.clear();
+//                    }
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
                     sf.setDisplay_name(model.getDisplayName());

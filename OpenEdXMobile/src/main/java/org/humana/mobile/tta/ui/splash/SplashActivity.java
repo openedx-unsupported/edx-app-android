@@ -20,7 +20,7 @@ public class SplashActivity extends BaseVMActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseApp.initializeApp(this);
+//        FirebaseApp.initializeApp(this);
         viewModel = new SplashViewModel(this);
         binding(R.layout.t_activity_splash, viewModel);
         logD("TTA Nav ======> " + BreadcrumbUtil.setBreadcrumb(RANK, Nav.appopen.name()));

@@ -43,6 +43,7 @@ public class PeriodListingViewModel extends BaseViewModel {
         layoutManager = new LinearLayoutManager(mActivity);
         take =10;
         skip = 0;
+        filters = new ArrayList<>();
 
         periods = new ArrayList<>();
         periodAdapter = new PeriodAdapter(mActivity);
@@ -70,7 +71,8 @@ public class PeriodListingViewModel extends BaseViewModel {
                     @Override
                     public void onSuccess(List<Period> data) {
                         mActivity.hideLoading();
-                        populatePeriods(data);
+//                        populatePeriods(data);
+                        periodAdapter.setItems(data);
                         periodAdapter.setLoadingDone();
                     }
 
@@ -119,9 +121,7 @@ public class PeriodListingViewModel extends BaseViewModel {
                            @Nullable OnRecyclerItemClickListener<Period> listener) {
             if (binding instanceof RowPeriodListingBinding) {
                 RowPeriodListingBinding scheduleBinding = (RowPeriodListingBinding) binding;
-
-                scheduleBinding.textTitle.setText(model.getTitle());
-
+                scheduleBinding.setPeriod(model);
 
                 scheduleBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {

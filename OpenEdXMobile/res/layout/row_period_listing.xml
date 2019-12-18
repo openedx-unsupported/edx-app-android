@@ -4,13 +4,13 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewModel"
-            type="org.humana.mobile.tta.ui.programs.units.view_model.PeriodListingViewModel" />
+            name="period"
+            type="org.humana.mobile.tta.data.local.db.table.Period" />
     </data>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -30,6 +30,7 @@
             android:gravity="start|center"
             android:id="@+id/text_title"
             android:textSize="14sp"
+            android:text="@{period.title}"
             android:textColor="@color/gray_5"/>
         <ImageView
             android:layout_width="0dp"

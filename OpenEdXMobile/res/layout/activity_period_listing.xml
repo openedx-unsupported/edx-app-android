@@ -13,6 +13,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="top"
+        android:background="@color/white"
+        android:gravity="start|center_vertical"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/back"
+        app:title="Units"
+        app:titleMarginStart="0dp"
+        app:titleTextAppearance="@style/ta_toolbar_title_style" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
