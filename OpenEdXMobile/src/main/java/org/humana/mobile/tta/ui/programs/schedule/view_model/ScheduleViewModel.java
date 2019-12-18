@@ -118,6 +118,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         isSelected = false;
 
         emptyVisible.set(false);
+
         filtersAdapter = new FiltersAdapter(mActivity);
         periodAdapter = new PeriodAdapter(mActivity);
         take = TAKE;
@@ -126,6 +127,10 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         changesMade = true;
         selectedFilter = mDataManager.getSelectedFilters();
         periodAdapter.setItems(periodList);
+        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+            fabVisible.set(true);
+        }
+
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.textview_add:
@@ -336,7 +341,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                         } else {
                             filtersVisible.set(false);
-                            fabVisible.set(false);
+                            if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                                fabVisible.set(true);
+                            }
                         }
 
 //                fetchData();
