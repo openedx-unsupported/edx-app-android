@@ -568,4 +568,4 @@ android.applicationVariants.all { variant ->
     }
 }
 
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'

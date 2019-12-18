@@ -577,14 +577,14 @@
 
         <service android:name="org.humana.mobile.services.DownloadSpeedService" />
 
-        <!-- Notifications through Firebase Cloud Messaging (FCM) -->
-        <!--<service
+         <!--Notifications through Firebase Cloud Messaging (FCM) -->
+        <service
             android:name="org.humana.mobile.notifications.services.NotificationService"
             android:enabled="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
-        </service>-->
+        </service>
         <service android:name="org.humana.mobile.tta.firebase.TaFirebaseMessagingService" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
