@@ -188,7 +188,8 @@ public class SplashViewModel extends BaseViewModel {
         FirebaseHelper fireBaseHelper=new FirebaseHelper();
         try
         {
-            fireBaseHelper.updateFirebasetokenToServer(mActivity.getApplicationContext(),fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
+            fireBaseHelper.updateFirebasetokenToServer(mActivity.getApplicationContext(),
+                    fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
         }
         catch (Exception ex)
         {
@@ -198,6 +199,8 @@ public class SplashViewModel extends BaseViewModel {
 
     private void getFirebaseToken(){
         String token = FirebaseInstanceId.getInstance().getToken();
-        sendRegistrationToServer(token);
+        if (token!=null) {
+            sendRegistrationToServer(token);
+        }
     }
 }
