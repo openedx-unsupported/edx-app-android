@@ -28,7 +28,7 @@ import java.util.List;
 public class PeriodListingViewModel extends BaseViewModel {
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public PeriodAdapter periodAdapter;
-    private LinearLayoutManager layoutManager;
+    public LinearLayoutManager layoutManager;
 
     private List<Period> periods;
     public List<ProgramFilter> filters;
