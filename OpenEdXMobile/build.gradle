@@ -122,17 +122,17 @@ task(version) << {
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
 
-    implementation project (':android-iconify')
+    implementation project(':android-iconify')
     // Note that we have the Font Awesome TTF file
     // in the local assets as well, to enable the
     // graphical layout editor to render it. Since
     // that is what will be compiled in the APK now,
     // we need to ensure that it's updated along
     // with module updates.
-    implementation project (':android-iconify-fontawesome')
+    implementation project(':android-iconify-fontawesome')
 
     // Mx module for listing
-    implementation project (':mxlib')
+    implementation project(':mxlib')
 
     //MVVM ::Start Arjun
     implementation "com.android.support:support-vector-drawable:${supportLibraryVersion}"
@@ -190,17 +190,17 @@ dependencies {
      * latest version as a result of dynamic version
      * definitions in the transitive dependencies.
      */
-    implementation ('com.squareup.retrofit2:retrofit:2.1.0') {
+    implementation('com.squareup.retrofit2:retrofit:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    implementation ('com.squareup.retrofit2:converter-gson:2.1.0') {
+    implementation('com.squareup.retrofit2:converter-gson:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
-    implementation ('com.github.bumptech.glide:okhttp3-integration:1.4.0'){
+    implementation('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
         exclude group: 'glide-parent'
     }
     implementation 'de.hdodenhof:circleimageview:2.2.0'
@@ -222,7 +222,7 @@ dependencies {
     implementation 'com.annimon:stream:1.2.1'
 
     // A utility library for Android to save objects in a Bundle without any boilerplate
-    implementation ('com.evernote:android-state:1.4.1') {
+    implementation('com.evernote:android-state:1.4.1') {
         exclude group: 'androidx.core'
     }
     annotationProcessor 'com.evernote:android-state-processor:1.4.1'
@@ -233,7 +233,7 @@ dependencies {
     // Branch SDK
     // Check this link for guide to updating Branch integration:
     // https://github.com/BranchMetrics/android-branch-deep-linking
-    implementation ('io.branch.sdk.android:library:2.19.2') {
+    implementation('io.branch.sdk.android:library:2.19.2') {
         exclude module: 'answers-shim'
     }
 
@@ -250,7 +250,7 @@ dependencies {
 
     // test project configuration
     testImplementation 'junit:junit:4.12'
-    testImplementation ("org.mockito:mockito-core:1.10.19"){
+    testImplementation("org.mockito:mockito-core:1.10.19") {
         exclude group: 'org.hamcrest'
     }
     testImplementation 'commons-lang:commons-lang:2.6'
@@ -258,17 +258,17 @@ dependencies {
     testImplementation "org.robolectric:shadows-supportv4:3.8"
     testImplementation "org.robolectric:shadows-multidex:3.8"
     testImplementation 'org.assertj:assertj-core:2.5.0'
-    testImplementation ('com.squareup.assertj:assertj-android:1.1.1') {
+    testImplementation('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testImplementation ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
+    testImplementation('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testImplementation ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
+    testImplementation('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
         exclude group: 'com.android.support'
     }
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.0.1'
-    testImplementation ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
+    testImplementation('com.squareup.retrofit2:retrofit-mock:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
@@ -279,13 +279,13 @@ dependencies {
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker:1.4'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-dx:1.4'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
-    androidTestImplementation ('org.mockito:mockito-core:1.10.19'){
+    androidTestImplementation('org.mockito:mockito-core:1.10.19') {
         exclude group: 'org.hamcrest'
     }
     //added for assistant integration vai dialogflow
     implementation 'ai.api:sdk:2.0.7@aar'
     annotationProcessor 'ai.api:libai:1.6.12'
-    implementation('ai.api:libai:1.6.12'){
+    implementation('ai.api:libai:1.6.12') {
         exclude module: 'log4j-core'
     }
 
@@ -300,7 +300,7 @@ configurations {
 def config = new TaskHelper().loadConfig(project)
 def firebase = config.get('FIREBASE')
 def firebaseEnabled = firebase?.get('ENABLED')
-if (firebaseEnabled?: false) {
+if (firebaseEnabled ?: false) {
 //    apply plugin: 'com.google.gms.google-services'
 }
 
@@ -417,13 +417,13 @@ android {
             if (null == facebookAppId) {
                 throw new GradleException("You must set FACEBOOK_APP_ID if FACEBOOK is enabled")
             }
-            fbLoginProtocolScheme = "fb"+facebookAppId
+            fbLoginProtocolScheme = "fb" + facebookAppId
         }
 
-        manifestPlaceholders = [supportsRtl:"false",
-                                firebaseEnabled: firebaseEnabled?: false,
-                                branchKey: branchKey,
-                                facebookAppId: facebookAppId,
+        manifestPlaceholders = [supportsRtl          : "false",
+                                firebaseEnabled      : firebaseEnabled ?: false,
+                                branchKey            : branchKey,
+                                facebookAppId        : facebookAppId,
                                 fbLoginProtocolScheme: fbLoginProtocolScheme]
 
         javaCompileOptions {
@@ -494,12 +494,14 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
-            pseudoLocalesEnabled true // Set device language to "en_XA" to test glyphs, or "ar_XB" to test RTL support
-            manifestPlaceholders = [ supportsRtl:"true"]
+            pseudoLocalesEnabled true
+            // Set device language to "en_XA" to test glyphs, or "ar_XB" to test RTL support
+            manifestPlaceholders = [supportsRtl: "true"]
         }
         debuggable.initWith(buildTypes.debug)
         debuggable {
-            testCoverageEnabled = false // Set to "false" to work around debugger issue: https://code.google.com/p/android/issues/detail?id=123771
+            testCoverageEnabled = false
+            // Set to "false" to work around debugger issue: https://code.google.com/p/android/issues/detail?id=123771
             matchingFallbacks = ["debug"]
         }
 
@@ -508,7 +510,7 @@ android {
             applicationVariants.all { variant ->
                 variant.outputs.all { output ->
                     project.ext { appName = 'humana' }
-                    outputFileName  = "${project.ext.appName}-${variant.buildType.name}-${versionName}.apk"
+                    outputFileName = "${project.ext.appName}-${variant.buildType.name}-${versionName}.apk"
                 }
             }
         }
@@ -544,9 +546,9 @@ android {
 
     }
     testOptions {
-         unitTests.all {
-             maxHeapSize '1g'
-         }
+        unitTests.all {
+            maxHeapSize '1g'
+        }
     }
 }
 
@@ -561,7 +563,7 @@ android.applicationVariants.all { variant ->
     def generateTask = project.tasks.getByName("generate" + variantName + "Resources")
     generateTask.dependsOn(configureTask)
 
-    tasks.all {task ->
+    tasks.all { task ->
         if (task.name.startsWith("test")) {
             task.mustRunAfter(configureTask)
         }
