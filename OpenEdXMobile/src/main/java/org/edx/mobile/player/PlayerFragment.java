@@ -22,7 +22,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
-import android.view.accessibility.CaptioningManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,17 +63,13 @@ import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.RatingDialogFragment;
 import org.edx.mobile.view.dialog.SpeedDialogFragment;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 import subtitleFile.Caption;
-import subtitleFile.FormatSRT;
 import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
@@ -115,16 +110,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private View.OnClickListener prevListner;
     private AudioManager audioManager;
     private boolean playOnFocusGain = false;
-    private Handler subtitleDisplayHandler = new Handler();
-    private Handler subtitleFetchHandler = new Handler();
     private CCLanguageDialogFragment ccFragment;
     private SpeedDialogFragment speedDialogFragment;
     private PopupWindow settingPopup;
-    private LinkedHashMap<String, TimedTextObject> srtList;
     private LinkedHashMap<String, String> langList;
     private TimedTextObject subtitlesObj;
-    @Inject
-    private TranscriptManager transcriptManager;
     private TranscriptModel transcript;
     private DownloadEntry videoEntry;
     private Object touchExplorationStateChangeListener;
@@ -514,9 +504,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         if (trModel != null) {
             this.transcript = trModel;
-            transcriptManager.downloadTranscriptsForVideo(trModel);
-            //initializeClosedCaptioning();
         }
+        this.langList = LocaleUtils.getLanguageList(transcript);
         // request focus on audio channel, as we are starting playback
         requestAudioFocus();
         String path = VideoUtil.getVideoPath(getActivity(), videoEntry);
@@ -536,7 +525,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 }
             }
 
-            this.transcript = trModel;
             player.setLMSUrl(videoEntry.lmsUrl);
             player.setVideoTitle(videoEntry.title);
 
@@ -776,7 +764,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         // clear errors
         clearAllErrors();
-        initializeClosedCaptioning();
         handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
         environment.getAnalyticsRegistry().trackVideoLoading(videoEntry.videoId, videoEntry.eid,
                 videoEntry.lmsUrl);
@@ -800,9 +787,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         clearAllErrors();
         player.setPlaybackSpeed(loginPrefs.getDefaultPlaybackSpeed());
-        if(langList!=null){
-            displaySrtData();
-        }else{
+        if (subtitlesObj != null) {
+            showClosedCaptionData(subtitlesObj);
+        } else {
             initializeClosedCaptioning();
         }
 
@@ -1135,110 +1122,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     /**
-     * This runnable handles the displaying of
-     * Subtitles on the screen per 100 mili seconds
-     */
-    private Runnable SUBTITLES_PROCESSOR_RUNNABLE = new Runnable() {
-        @Override
-        public void run() {
-            //This has been reset so that previous cc will not be displayed
-            resetClosedCaptioning();
-            if (player != null && (player.isPlaying() || player.isPaused())) {
-                long currentPos = player.getCurrentPosition();
-                if (subtitlesObj != null) {
-                    Collection<Caption> subtitles = subtitlesObj.captions.values();
-                    int currentSubtitleIndex = 0;
-                    for (Caption subtitle : subtitles) {
-                        int startMillis = subtitle.start.getMseconds();
-                        int endMillis = subtitle.end.getMseconds();
-                        if (currentPos >= startMillis && currentPos <= endMillis) {
-                            setClosedCaptionData(closedCaptionsEnabled ? subtitle : null);
-                            if (transcriptListener != null) {
-                                transcriptListener.updateSelection(currentSubtitleIndex);
-                            }
-                            break;
-                        } else if (currentPos > endMillis) {
-                            setClosedCaptionData(null);
-                        }
-                        currentSubtitleIndex++;
-                    }
-                } else {
-                    setClosedCaptionData(null);
-                }
-            }
-            subtitleDisplayHandler.postDelayed(this, SUBTITLES_DISPLAY_DELAY_MS);
-        }
-    };
-
-    /**
-     * This runnable is used the fetch the Subtitle in TimedTextObject
-     */
-    private Runnable subtitleFetchProcessesor = new Runnable()
-    {
-        public void run()
-        {
-            if(srtList!=null){
-                srtList = null;
-            }
-
-            srtList = new LinkedHashMap<>();
-            try
-            {
-                final LinkedHashMap<String, InputStream> localHashMap = transcriptManager
-                        .fetchTranscriptsForVideo(transcript);
-
-                if (localHashMap != null){
-                    for(String thisKey : localHashMap.keySet()){
-                        InputStream localInputStream = localHashMap.get(thisKey);
-                        if (localInputStream != null)
-                        {
-                            TimedTextObject localTimedTextObject =
-                                    new FormatSRT().parseFile("temp.srt", localInputStream);
-                            srtList.put(thisKey, localTimedTextObject);
-                            localInputStream.close();
-                        }
-                    }
-
-                    if ((srtList == null) || (srtList.size() == 0)) {
-                        subtitleFetchHandler.postDelayed(subtitleFetchProcessesor, 100);
-                    }else{
-                        displaySrtData();
-                    }
-                }else{
-                    subtitleFetchHandler.postDelayed(subtitleFetchProcessesor, DELAY_TIME_MS);
-                }
-            }catch (Exception localException) {
-                logger.error(localException);
-            }
-
-        }
-    };
-
-    /**
-     * Handler initialized for fetching Subtitles
-     */
-    private void fetchSubtitlesTask(){
-        try
-        {
-            if (this.subtitleFetchHandler != null)
-            {
-                subtitleFetchHandler.removeCallbacks(this.subtitleFetchProcessesor);
-                subtitleFetchHandler = null;
-            }
-            langList = LocaleUtils.getLanguageList(transcript);
-            final LinkedHashMap<String, String> languageList = langList;
-            if(languageList!=null && languageList.size()>0){
-                subtitleFetchHandler = new Handler();
-                if (subtitleFetchProcessesor != null)
-                    subtitleFetchHandler.post(this.subtitleFetchProcessesor);
-            }
-        } catch (Exception localException) {
-            logger.error(localException);
-        }
-    }
-
-
-    /**
      * This function sets the closed caption data on the TextView
      */
     private void setClosedCaptionData(Caption text){
@@ -1327,12 +1210,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * Initialiaze and reset Closed Captioning handlers
      */
-    private void initializeClosedCaptioning(){
-        try{
+    private void initializeClosedCaptioning() {
+        try {
             removeSubtitleCallBack();
             hideClosedCaptioning();
-            fetchSubtitlesTask();
-        }catch(Exception e){
+            if (transcriptListener != null) {
+                transcriptListener.downloadTranscript();
+            }
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -1341,20 +1226,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      * This removes the callbacks and resets the handlers
      */
     private void removeSubtitleCallBack() {
-
-        if (subtitleDisplayHandler != null)
-        {
-            subtitleDisplayHandler.removeCallbacks(SUBTITLES_PROCESSOR_RUNNABLE);
-            subtitleDisplayHandler = null;
-            hideClosedCaptioning();
-            subtitlesObj = null;
-            srtList = null;
+        if(transcriptListener!=null){
+            transcriptListener.updateTranscriptCallbackStatus(false);
         }
-        if (subtitleFetchHandler != null)
-        {
-            subtitleFetchHandler.removeCallbacks(subtitleFetchProcessesor);
-            subtitleFetchHandler = null;
-        }
+        hideClosedCaptioning();
+        subtitlesObj = null;
     }
 
     @Override
@@ -1534,7 +1410,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
                                 languageSubtitle, videoEntry.eid, videoEntry.lmsUrl);
                     }
-                    displaySrtData();
+                    if (transcriptListener != null) {
+                        transcriptListener.downloadTranscript();
+                    }
                     if (player != null) {
                         player.getController().setSettingsBtnDrawable(false);
                         player.getController().setAutoHide(true);
@@ -1596,66 +1474,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private void hideCCPopUp() {
         if (ccFragment != null && ccFragment.isVisible()) {
             ccFragment.dismiss();
-        }
-    }
-
-    /**
-     * This function is used to display CC data when a transcript is selected
-     */
-    private void displaySrtData() {
-        if (subtitleDisplayHandler != null) {
-            subtitleDisplayHandler.removeCallbacks(SUBTITLES_PROCESSOR_RUNNABLE);
-        }
-        resetClosedCaptioning();
-        if (srtList != null && srtList.size() > 0) {
-            String languageSubtitle = getSubtitleLanguage();
-
-            // Check if captioning is enabled in accessibility settings and set the captioning language implicitly
-            if (languageSubtitle == null) {
-                final CaptioningManager cManager = (CaptioningManager) getContext().getSystemService(Context.CAPTIONING_SERVICE);
-                if (cManager.isEnabled()) {
-                    final String defaultCcLanguage;
-                    {
-                        final Locale cManagerLocale = cManager.getLocale();
-                        if (cManagerLocale != null) {
-                            defaultCcLanguage = cManagerLocale.getLanguage();
-                        } else {
-                            defaultCcLanguage = Locale.getDefault().getLanguage();
-                        }
-                    }
-                    if (srtList.containsKey(defaultCcLanguage)) {
-                        languageSubtitle = defaultCcLanguage;
-                        setSubtitleLanguage(languageSubtitle);
-                    }
-                }
-            }
-
-            if (languageSubtitle != null) {
-                subtitlesObj = srtList.get(languageSubtitle);
-                if (subtitlesObj != null) {
-                    closedCaptionsEnabled = true;
-                    if (player != null) {
-                        environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
-                                player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
-                                videoEntry.eid, videoEntry.lmsUrl);
-                    }
-                }
-            }
-
-            if (transcriptListener != null) {
-                if (subtitlesObj == null) {
-                    subtitlesObj = srtList.entrySet().iterator().next().getValue();
-                }
-                transcriptListener.updateTranscript(subtitlesObj);
-            }
-
-            // Run the subtitle handler if any among transcripts or closed captions is enabled
-            if (subtitlesObj != null || transcriptListener != null) {
-                if (subtitleDisplayHandler == null) {
-                    subtitleDisplayHandler = new Handler();
-                }
-                subtitleDisplayHandler.post(SUBTITLES_PROCESSOR_RUNNABLE);
-            }
         }
     }
 
@@ -1864,5 +1682,46 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     public boolean isCastingOnRemoteDevice() {
         return googleCastDelegate != null && googleCastDelegate.isConnected();
+    }
+
+    /**
+     * This Method used to get the current position of the player
+    * */
+    public long getCurrentPosition() {
+        return player != null ? player.getCurrentPosition() : 0;
+    }
+
+    /**
+     * This method is used to check either player is initialized, and can process subtitles on the basis of
+     * current status of player
+     */
+    public boolean canProcessSubtitles() {
+        return player != null && (player.isPlaying() || player.isPaused());
+    }
+
+    /**
+     * This method is used to update the CC data when a transcript is selected
+     */
+    public void updateClosedCaptionData(Caption subtitle) {
+        setClosedCaptionData(closedCaptionsEnabled ? subtitle : null);
+    }
+
+    /**
+     * This method is used to display CC data when a transcript is selected
+     */
+    public void showClosedCaptionData(TimedTextObject subtitles) {
+        this.subtitlesObj = subtitles;
+        resetClosedCaptioning();
+        if (subtitlesObj != null) {
+            closedCaptionsEnabled = true;
+            if (player != null) {
+                environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
+                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                        videoEntry.eid, videoEntry.lmsUrl);
+            }
+        }
+        if(transcriptListener!=null){
+            transcriptListener.updateTranscriptCallbackStatus(true);
+        }
     }
 }

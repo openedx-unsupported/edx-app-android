@@ -20,6 +20,7 @@ import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 import subtitleFile.Caption;
+import subtitleFile.TimedTextObject;
 
 /**
  * This class is responsible to display the video content through the native android player, also
@@ -287,6 +288,36 @@ public class CourseUnitVideoPlayerFragment extends BaseCourseUnitVideoFragment {
 
     private boolean isPlayerVisible() {
         return getActivity() != null;
+    }
+
+    @Override
+    protected boolean canProcessSubtitles() {
+        if (playerFragment != null) {
+            return playerFragment.canProcessSubtitles();
+        }
+        return false;
+    }
+
+    @Override
+    protected long getPlayerCurrentPosition() {
+        if (playerFragment != null) {
+            return playerFragment.getCurrentPosition();
+        }
+        return 0;
+    }
+
+    @Override
+    protected void updateClosedCaptionData(Caption caption) {
+        if (playerFragment != null) {
+            playerFragment.updateClosedCaptionData(caption);
+        }
+    }
+
+    @Override
+    protected void showClosedCaptionData(TimedTextObject subtitles) {
+        if (playerFragment != null) {
+            playerFragment.showClosedCaptionData(subtitles);
+        }
     }
 
     @Override

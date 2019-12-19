@@ -1,8 +1,14 @@
 package org.edx.mobile.util;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.view.accessibility.CaptioningManager;
 
+import org.edx.mobile.R;
+import org.edx.mobile.annotation.Nullable;
 import org.edx.mobile.model.api.TranscriptModel;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.FormOption;
 
 import java.text.Collator;
@@ -132,5 +138,56 @@ public class LocaleUtils {
             return transcript.getLanguageList();
         }
         return null;
+    }
+
+    /**
+     * Utility method that return the Current language code of the device
+     *
+     * @param context - current {@link Context}of the application
+     * @return current language code
+     */
+    public static String getCurrentDeviceLanguage(Context context) {
+        final CaptioningManager captionManager = (CaptioningManager) context.getSystemService(Context.CAPTIONING_SERVICE);
+        String languageCode = null;
+        // Check if captioning is enabled in accessibility settings
+        if (captionManager.isEnabled()) {
+            final Locale cManagerLocale = captionManager.getLocale();
+            if (cManagerLocale != null) {
+                languageCode = cManagerLocale.getLanguage();
+            }
+        }
+        if (TextUtils.isEmpty(languageCode)) {
+            languageCode = Locale.getDefault().getLanguage();
+        }
+        // Android return iw in case of Hebrew
+        if ("iw".equals(languageCode)) {
+            languageCode = "he";
+        }
+        return languageCode;
+    }
+
+    /**
+     * Utility method to extract the download url from the {@link TranscriptModel} based
+     * the last select transcript language / current device language.
+     *
+     * @param context    - current application {@link Context}
+     * @param transcript - {@link TranscriptModel} transcript model contains transcript info
+     * @return downloadable transcript url that can be null is transcripts are not available
+     */
+    @Nullable
+    public static String getTranscriptURL(@NonNull Context context,
+                                          @NonNull TranscriptModel transcript) {
+        String subtitleLanguage = new LoginPrefs(context).getSubtitleLanguage();
+        if (subtitleLanguage == null ||
+                subtitleLanguage.equals(context.getString(R.string.lbl_cc_none))) {
+            subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(context);
+        }
+        String transcriptUrl = null;
+        if (transcript.containsKey(subtitleLanguage)) {
+            transcriptUrl = transcript.get(subtitleLanguage);
+        } else if (transcript.entrySet().size() > 0) {
+            transcriptUrl = transcript.entrySet().iterator().next().getValue();
+        }
+        return transcriptUrl;
     }
 }

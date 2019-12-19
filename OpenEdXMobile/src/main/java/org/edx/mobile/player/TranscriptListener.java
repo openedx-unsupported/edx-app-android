@@ -21,4 +21,16 @@ public interface TranscriptListener {
      * @param subtitleIndex The selected transcript item's index.
      */
     void updateSelection(int subtitleIndex);
+
+    /**
+     * Callback to download the transcript for the video
+     */
+    void downloadTranscript();
+
+    /**
+     * Callback to attach/remove the transcript display callback
+     *
+     * @param attach true when need to attach the callback to update the transcript otherwise false
+     */
+    void updateTranscriptCallbackStatus(boolean attach);
 }
