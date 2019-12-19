@@ -36,21 +36,24 @@ pip3 install virtualenv
 
 create_virtual_environment(){
 print_message "creating virtual environment"
-virtualenv -p python3 ./virtual_env
+virtualenv -p /usr/bin/python3.6 ./virtual_env
 }
 
 install_requirement_txt(){
 print_message "installing requirements"
 pip install -r ./resources/requirements.txt
-sleep 5
+sleep 20
 }
 
 switch_to_virtual_env(){
-print_message "switching to virtual environment"
+print_message "switching to virtual environment with following python version"
 source "./virtual_env/bin/activate"
+python --version
 }
 
 check_and_install_virtualenv
 create_or_switch_to_virtual_environment
+print_message "setup AWS"
+python ./resources/setup_aws.py
 print_message "calling AWS Test run"
 python ./resources/trigger_aws_test_run.py
