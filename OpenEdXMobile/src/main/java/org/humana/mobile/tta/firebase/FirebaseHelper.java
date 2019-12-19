@@ -21,7 +21,7 @@ public class FirebaseHelper {
         //String device_info="API Level:"+ Build.VERSION.RELEASE+"  Device:"+Build.DEVICE+"  Model no:"+Build.MODEL+"  Product:"+Build.PRODUCT;
 
         parameters.putString("user_id",user_id);
-        parameters.putString("token_id",myFirebaseInstanceIDService.getFireBaseToken());
+        parameters.putString("token",myFirebaseInstanceIDService.getFireBaseToken());
         //parameters.putString("device_info",device_info);
 
         return parameters;

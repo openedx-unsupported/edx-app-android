@@ -2,11 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="org.humana.mobile.tta.ui.programs.selectprogram.viewmodel.SelectProgramViewModel" />
-    </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

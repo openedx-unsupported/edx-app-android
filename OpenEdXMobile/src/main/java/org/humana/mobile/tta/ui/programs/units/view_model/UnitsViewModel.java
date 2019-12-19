@@ -300,34 +300,6 @@ public class UnitsViewModel extends BaseViewModel {
     public void fetchFilters() {
         sessionTags = new ArrayList<>();
         selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getSelectedFilters();
-        if (selectedFilter.size()!=0) {
-            filters.clear();
-            for (SelectedFilter selected : selectedFilter) {
-                for (ProgramFilter filter : allFilters) {
-                    List<ProgramFilterTag> selectedTags = new ArrayList<>();
-                    if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
-                        for (ProgramFilterTag tag : filter.getTags()) {
-                            if (selected.getSelected_tag() != null) {
-                                if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                    selectedTags.add(tag);
-                                    ProgramFilter pf = new ProgramFilter();
-                                    pf.setDisplayName(filter.getDisplayName());
-                                    pf.setInternalName(filter.getInternalName());
-                                    pf.setId(filter.getId());
-                                    pf.setOrder(filter.getOrder());
-                                    pf.setShowIn(filter.getShowIn());
-                                    pf.setTags(selectedTags);
-                                    filters.add(pf);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -339,7 +311,7 @@ public class UnitsViewModel extends BaseViewModel {
                             filtersVisible.set(true);
                             filtersAdapter.setItems(allFilters);
                             changesMade=true;
-                            fetchUnits();
+                            fetchData();
 
                         } else {
                             filtersVisible.set(false);

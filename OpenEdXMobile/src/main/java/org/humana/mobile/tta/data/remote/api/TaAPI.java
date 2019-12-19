@@ -438,7 +438,7 @@ public class TaAPI {
     }
 
     public Call<SuccessResponse> sendNotification(String title, String type, String desc, String action,
-                                   String action_parent_id, String action_id) {
+                                   String action_parent_id, String action_id, String respondent) {
 
         Map<String, Object> parameters=new HashMap<>();
         parameters.put(Constants.KEY_TITLE, title);
@@ -447,7 +447,8 @@ public class TaAPI {
         parameters.put(Constants.KEY_ACTION, action);
         parameters.put(Constants.KEY_ACTION_ID, action_id);
         parameters.put(Constants.KEY_ACTION_PARENT_ID, action_parent_id);
-        return taService.setProposedDate(parameters);
+        parameters.put(Constants.KEY_RESPONDENT, action_parent_id);
+        return taService.sendNotification(parameters);
 
     }
 }

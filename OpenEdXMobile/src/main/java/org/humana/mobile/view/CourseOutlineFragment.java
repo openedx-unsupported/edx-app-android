@@ -161,7 +161,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private int requestCode;
 
-    private List<String> respondentList;
+    private String respondentList;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
@@ -194,7 +194,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         linearLayout = view.findViewById(R.id.ll_approval);
         mfab = view.findViewById(R.id.fab);
-        respondentList = new ArrayList<>();
+
 
 
         final Bundle bundle;
@@ -1095,7 +1095,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     public void onSuccess(SuccessResponse data) {
                         Toast.makeText(getActivity(),"Unit Approved", Toast.LENGTH_SHORT).show();
                         sendNotifications(unitTitle, unitType ,desc, "AprroveUnit",unitId,
-                                mDataManager.getLoginPrefs().getProgramId());
+                                mDataManager.getLoginPrefs().getProgramId(), userName.get());
                         getActivity().finish();
 
                     }
@@ -1114,7 +1114,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     public void onSuccess(SuccessResponse data) {
                         Toast.makeText(getActivity(),"Unit Returned", Toast.LENGTH_SHORT).show();
                         sendNotifications(unitTitle,unitType ,unitDesc, "ReturnUnit",unitId,
-                                mDataManager.getLoginPrefs().getProgramId());
+                                mDataManager.getLoginPrefs().getProgramId(),userName.get());
 
                         getActivity().finish();
 
@@ -1170,7 +1170,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     // Notifications for firebase
 
     private void sendNotifications(String title, String type, String desc, String action,
-                                   String action_id, String action_parent_id) {
+                                   String action_id, String action_parent_id, String respondent) {
 
         mDataManager.sendNotifications(title, type, desc, action, action_id, action_parent_id,
                 respondentList,

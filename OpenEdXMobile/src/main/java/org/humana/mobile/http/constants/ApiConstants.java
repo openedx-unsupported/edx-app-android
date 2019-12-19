@@ -211,6 +211,10 @@ public class ApiConstants {
 
     public static final String URL_MX_SET_PROPOSED_DATE = "mx_humana_lms/api/v1/setProposedDate";
 
+    public static final String URL_MX_SEND_NOTIFICATION = "mx_humana_lms/api/v1/send_notification";
+
+    public static final String URL_MX_GET_NOTIFICATION = "/mx_humana_lms/api/v1/get_notifications";
+
 
     public static final int STANDARD_PAGE_SIZE = 20;
 
@@ -232,6 +236,6 @@ public class ApiConstants {
     }
 
     public static final String URL_MX_GET_APP_UPDATE = "api/appupdate/v1/getappupdate/";
-    public static final String URL_MX_SAVE_HUMANA_TOKEN = "mx_humana/api/v1/save_token";
+    public static final String URL_MX_SAVE_HUMANA_TOKEN = "/mx_humana_lms/api/v1/save_token";
 
 }

@@ -17,14 +17,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/humana_card_background">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/_20px"
-                    android:layout_marginBottom="@dimen/_8px"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/humana_logo"/>
+
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -33,9 +26,8 @@
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
                     android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_marginTop="10dp"
-                    android:foregroundGravity="center"
+                    android:foregroundGravity="bottom"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:tint="@color/material_red_500"

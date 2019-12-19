@@ -172,7 +172,8 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_UPDATE_NOTIFICATIONS)
     Call<CountResponse> updateNotifications(@Body Map<String, Object> parameters);
 
-    @GET(ApiConstants.URL_MX_CREATE_GET_NOTIFICATIONS)
+//    @GET(ApiConstants.URL_MX_CREATE_GET_NOTIFICATIONS)
+    @GET(ApiConstants.URL_MX_GET_NOTIFICATION)
     Call<List<Notification>> getNotifications(@Query(Constants.KEY_TAKE) int take,
                                               @Query(Constants.KEY_SKIP) int skip,
                                               @Query(Constants.KEY_COURSE_ID) String CourseId);
@@ -272,6 +273,6 @@ public interface TaService {
     @POST(ApiConstants.URL_MX_SET_PROPOSED_DATE)
     Call<SuccessResponse> setProposedDate(@Body Map<String, Object> parameters);
 
-    @POST(ApiConstants.URL_MX_SET_PROPOSED_DATE)
+    @POST(ApiConstants.URL_MX_SEND_NOTIFICATION)
     Call<SuccessResponse> sendNotification(@Body Map<String, Object> parameters);
 }

@@ -114,6 +114,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         filters = new ArrayList<>();
         periodList = new ArrayList<>();
         tags = new ArrayList<>();
+//        allFilters = new ArrayList<>();
         mActivity.showLoading();
         isSelected = false;
 
@@ -255,35 +256,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     public void getFilters() {
         langTags = new ArrayList<>();
         sessionTags = new ArrayList<>();
-        selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getSelectedFilters();
-        if (selectedFilter.size()!=0) {
-            filters.clear();
-            for (SelectedFilter selected : selectedFilter) {
-                for (ProgramFilter filter : allFilters) {
-                    List<ProgramFilterTag> selectedTags = new ArrayList<>();
-                    if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
-                        for (ProgramFilterTag tag : filter.getTags()) {
-                            if (selected.getSelected_tag() != null) {
-                                if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                    selectedTags.add(tag);
-                                    ProgramFilter pf = new ProgramFilter();
-                                    pf.setDisplayName(filter.getDisplayName());
-                                    pf.setInternalName(filter.getInternalName());
-                                    pf.setId(filter.getId());
-                                    pf.setOrder(filter.getOrder());
-                                    pf.setShowIn(filter.getShowIn());
-                                    pf.setTags(selectedTags);
-                                    filters.add(pf);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.schedule.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -295,77 +267,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
                             changesMade=true;
-                            getPeriods();
-//                            boolean langSelected;
-//                            if (mDataManager.getLoginPrefs().getRole() != null) {
-//                                if (!mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-//
-//                                    for (ProgramFilter filter : data) {
-//                                        langSelected = filter.getSelected();
-//                                        if (filter.getInternalName().toLowerCase().contains("lang")) {
-//                                            langTags.clear();
-////                                            langTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-////                                                    langSelected, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
-//
-//                                            for (ProgramFilterTag tag : filter.getTags()) {
-//                                                langTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-//                                                        langSelected, R.color.white, R.drawable.t_background_tag_filled));
-//
-//                                            }
-//                                        }
-//
-//                                    }
-//                                    for (ProgramFilter filter : data) {
-//                                        sessionTags.clear();
-//                                        isSelected = filter.getSelected();
-//                                        if (filter.getInternalName().toLowerCase().contains("session_id")) {
-//                                            sessionTags.clear();
-//                                            sessionTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-//                                                    isSelected, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
-
-//                                            for (ProgramFilterTag tag : filter.getTags()) {
-//                                                if (mDataManager.getLoginPrefs().getSessionFilter()!=null) {
-//                                                    if (mDataManager.getLoginPrefs().getSessionFilter().equals(tag.getDisplayName())) {
-//                                                        isSelected = true;
-//                                                        sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-//                                                                isSelected, R.color.white, R.drawable.t_background_tag_filled));
-//
-//                                                    } else {
-//                                                        sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-//                                                                false, R.color.white, R.drawable.t_background_tag_filled));
-//                                                    }
-//                                                }else {
-//                                                    sessionTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-//                                                            isSelected, R.color.white, R.drawable.t_background_tag_filled));
-//                                                }
-
-//                                                try {
-//                                                    if (tag.getSelected()) {
-//                                                        tags.clear();
-//                                                        tags.add(tag);
-//                                                        changesMade = true;
-//                                                        allLoaded = false;
-//                                                        fetchData();
-//                                                    }
-//                                                }catch(Exception e){
-//                                                    e.printStackTrace();
-//                                                }
-//                                            }
-//                                        }
-//
-//                                    }
-
-//
-//                                    if (langTags.isEmpty()) {
-//                                        fabVisible.set(false);
-//                                    } else {
-//                                        fabVisible.set(true);
-//                                    }
-//                                } else {
-//                                    fabVisible.set(false);
-//                                }
-//                            }
-
+                            fetchData();
 
                         } else {
                             filtersVisible.set(false);
@@ -400,8 +302,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             allLoaded = true;
                         }
                         changesMade = false;
-//                        populatePeriods(data);
-                        periodAdapter.setItems(data);
+                        emptyVisible.set(false);
+                        populatePeriods(data);
+//                        periodAdapter.setItems(data);
                         periodAdapter.setLoadingDone();
                     }
 
@@ -428,7 +331,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         }
         if (newItemsAdded) {
             periodAdapter.notifyItemRangeInserted(periodList.size() - n, n);
-//            periodAdapter.notifyDataSetChanged();
         }
 
         toggleEmptyVisibility();
@@ -455,8 +357,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             allLoaded = false;
             changesMade = true;
             getFilters();
-
-//            fetchData();
         }
     }
 
@@ -574,32 +474,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     ));
                 }
 
-//                for (int i = 0; i < items.size(); i++) {
-//                    if (mDataManager.getLoginPrefs().getSessionFilter() != null) {
-//                        if (mDataManager.getLoginPrefs().getSessionFilter().equals(items.get(i).getName())) {
-//                            sessionPos = i;
-//                        }
-//                    }
-//                }
-//                for (int i = 0; i < items.size(); i++) {
-//                    if (mDataManager.getLoginPrefs().getLangTag() != null) {
-//                        if (mDataManager.getLoginPrefs().getLangTag().equals(items.get(i).getName())) {
-//                            langPos = i;
-//                        }
-//                    }
-//                }
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
-
-//                if (model.getInternalName().toLowerCase().contains("session_id")) {
-//                    dropDownBinding.filterDropDown.setSelection(sessionPos);
-//                    dropDownBinding.filterDropDown.notifyDataSetChanged();
-//                }
-//
-//                if (model.getInternalName().toLowerCase().contains("language_id")) {
-//                    dropDownBinding.filterDropDown.setSelection(langPos);
-//                    dropDownBinding.filterDropDown.notifyDataSetChanged();
-//                }
                 if (selectedFilter != null) {
                     for (SelectedFilter item : selectedFilter) {
                         if (model.getInternalName().equals(item.getInternal_name())) {
