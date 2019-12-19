@@ -1,6 +1,6 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
@@ -16,7 +16,7 @@ public class AccountActivity extends BaseSingleFragmentActivity {
     @Inject
     private Config config;
 
-    public static Intent newIntent(Activity activity) {
+    public static Intent newIntent(Context activity) {
         return new Intent(activity, AccountActivity.class);
     }
 

@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.deeplink.DeepLinkManager;
+import org.edx.mobile.deeplink.BranchLinkManager;
+import org.edx.mobile.deeplink.PushLinkManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
-import org.json.JSONException;
 
 import io.branch.referral.Branch;
 
@@ -22,9 +22,6 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
-            finish();
-        }
 
         /*
         Recommended solution to avoid opening of multiple tasks of our app's launcher activity.
@@ -53,15 +50,20 @@ public class SplashActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
+
+        // Checking push notification case in onStart() to make sure it will call in all cases
+        // when this launcher activity will be started. For more details study onCreate() function.
+        PushLinkManager.INSTANCE.checkAndReactIfFCMNotificationReceived(this, getIntent().getExtras());
+
         if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
             Branch.getInstance().initSession((referringParams, error) -> {
                 if (error == null) {
                     // params are the deep linked params associated with the link that the user
                     // clicked -> was re-directed to this app params will be empty if no data found
-                    if (referringParams.optBoolean(DeepLinkManager.KEY_CLICKED_BRANCH_LINK)) {
+                    if (referringParams.optBoolean(BranchLinkManager.KEY_CLICKED_BRANCH_LINK)) {
                         try {
-                            DeepLinkManager.parseAndReact(SplashActivity.this, referringParams);
-                        } catch (JSONException e) {
+                            BranchLinkManager.INSTANCE.checkAndReactIfReceivedLink(this, referringParams);
+                        } catch (Exception e) {
                             logger.error(e, true);
                         }
                     }
@@ -73,9 +75,8 @@ public class SplashActivity extends Activity {
                     }
                 }
             }, this.getIntent().getData(), this);
-
-            finish();
         }
+        finish();
     }
 
     @Override

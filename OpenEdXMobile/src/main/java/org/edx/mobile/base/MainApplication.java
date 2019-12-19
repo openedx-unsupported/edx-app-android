@@ -144,9 +144,9 @@ public abstract class MainApplication extends MultiDexApplication {
             // Firebase notification needs to initialize the FirebaseApp before
             // subscribe/unsubscribe to/from the topics
             FirebaseApp.initializeApp(this);
-            if (config.getFirebaseConfig().areNotificationsEnabled()) {
+            if (config.areFirebasePushNotificationsEnabled()) {
                 NotificationUtil.subscribeToTopics(config);
-            } else if (!config.getFirebaseConfig().areNotificationsEnabled()) {
+            } else if (!config.areFirebasePushNotificationsEnabled()) {
                 NotificationUtil.unsubscribeFromTopics(config);
             }
         }
