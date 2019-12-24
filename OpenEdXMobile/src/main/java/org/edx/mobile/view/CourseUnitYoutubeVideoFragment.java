@@ -5,8 +5,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -176,40 +174,19 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
         } catch (NullPointerException localException) {
             logger.error(localException);
         }
-
-    }
-
-    @Override
-    protected void updateUIForOrientation() {
-        final int orientation = getResources().getConfiguration().orientation;
-        final LinearLayout playerContainer = getView().findViewById(R.id.player_container);
-        if (playerContainer != null) {
-            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                float screenHeight = displayMetrics.heightPixels;
-                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
-                if (youTubePlayer != null) {
-                    youTubePlayer.setFullscreen(true);
-                }
-            } else {
-                float screenWidth = displayMetrics.widthPixels;
-                float ideaHeight = screenWidth * 9 / 16;
-                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
-                if (youTubePlayer != null) {
-                    youTubePlayer.setFullscreen(false);
-                }
-            }
-            playerContainer.requestLayout();
-        }
-        updateUI(orientation);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         isInForeground = false;
+    }
+
+    @Override
+    protected void setFullScreen(boolean fullscreen) {
+        if (youTubePlayer != null) {
+            youTubePlayer.setFullscreen(fullscreen);
+        }
     }
 
     @Override

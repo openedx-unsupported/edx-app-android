@@ -3,11 +3,13 @@ package org.edx.mobile.view;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
@@ -37,7 +39,6 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
         implements IPlayerEventCallback, TranscriptListener {
 
     protected abstract void seekToCaption(Caption caption);
-    protected abstract void updateUIForOrientation();
 
     protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
@@ -114,6 +115,35 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
         updateUIForOrientation();
     }
 
+    private void updateUIForOrientation() {
+        final LinearLayout playerContainer = getView().findViewById(R.id.player_container);
+        final int orientation = getResources().getConfiguration().orientation;
+        if (playerContainer != null) {
+            final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                float screenHeight = displayMetrics.heightPixels;
+                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
+                setFullScreen(true);
+            } else {
+                float screenWidth = displayMetrics.widthPixels;
+                float ideaHeight = screenWidth * 9 / 16;
+                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
+                setFullScreen(false);
+            }
+            playerContainer.requestLayout();
+        }
+        updateUI(orientation);
+    }
+
+    /**
+     * Method to set up the full screen mode of the media player
+     *
+     * @param fullscreen true if need to enable full screen, otherwise false
+     */
+    protected void setFullScreen(boolean fullscreen) {
+    }
 
     public void markPlaying() {
         environment.getStorage().markVideoPlaying(videoModel, watchedStateCallback);

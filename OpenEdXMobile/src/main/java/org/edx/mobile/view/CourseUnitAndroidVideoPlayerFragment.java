@@ -325,28 +325,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     }
 
     @Override
-    protected void updateUIForOrientation() {
-        //TODO - should we use load different layout file?
-        final LinearLayout playerContainer = (LinearLayout) getView().findViewById(R.id.player_container);
-        final int orientation = getResources().getConfiguration().orientation;
-        if (playerContainer != null) {
-            final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                float screenHeight = displayMetrics.heightPixels;
-                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
-            } else {
-                float screenWidth = displayMetrics.widthPixels;
-                float ideaHeight = screenWidth * 9 / 16;
-                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
-            }
-            playerContainer.requestLayout();
-        }
-        updateUI(orientation);
-    }
-
-    @Override
     public void seekToCaption(Caption caption) {
         playerFragment.seekToCaption(caption);
     }
