@@ -167,12 +167,13 @@ public class VideoUtil {
         try {
             final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(YOUTUBE_PACKAGE_NAME, 0);
             /*
-             * Youtube documentation says the following "Users need to run version 4.2.16 of the
-             * mobile YouTube app (or higher) to use the API."
-             * but the feature has been tested over the version v10.18.55 and this has not worked,
-             * so the target version has been set in the minor version where it works that is
-             * v12.01.54
-             * Ref:
+             * Youtube documentation says "Users need to run version 4.2.16 of the mobile YouTube
+             * app (or higher) to use the API."
+             * But the sdk is not working even for youtube app version 10.18.55,
+             * With testing on different versions it has been figured out that the version of
+             * youtube app should be greater than or equal to 12.0.0
+             *
+             * Available Refs:
              * - https://developers.google.com/youtube/android/player/
              * - https://stackoverflow.com/a/37553255
              *

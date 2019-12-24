@@ -34,7 +34,12 @@ public abstract class CourseUnitFragment extends BaseFragment {
         hasComponentCallback = callback;
     }
 
-    public boolean hasCastSupportedVideoContent(){
+    /**
+     * This method contains the status that screen has the Casting supported video content or not.
+     *
+     * @return true if screen has casting supported video content, else false
+     */
+    public boolean hasCastSupportedVideoContent() {
         return false;
     }
 }

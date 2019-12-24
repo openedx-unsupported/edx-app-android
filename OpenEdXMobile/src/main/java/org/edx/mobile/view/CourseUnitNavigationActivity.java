@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import roboguice.inject.InjectView;
 
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements
-        CourseUnitVideoFragment.HasComponent, PreLoadingListener {
+        BaseCourseUnitVideoFragment.HasComponent, PreLoadingListener {
     protected Logger logger = new Logger(getClass().getSimpleName());
 
     private DisableableViewPager pager;

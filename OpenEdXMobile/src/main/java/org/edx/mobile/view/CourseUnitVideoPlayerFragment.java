@@ -1,14 +1,11 @@
 package org.edx.mobile.view;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.edx.mobile.R;
@@ -20,35 +17,23 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.util.MediaConsentUtils;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 import subtitleFile.Caption;
 
-public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragment {
+/**
+ * This class is responsible to display the video content through the native android player, also
+ * maintain the view of the player controllers.
+ */
+public class CourseUnitVideoPlayerFragment extends BaseCourseUnitVideoFragment {
 
     protected final static String HAS_NEXT_UNIT_ID = "has_next_unit";
     protected final static String HAS_PREV_UNIT_ID = "has_prev_unit";
-    private final static int MSG_UPDATE_PROGRESS = 1022;
 
     private final Handler playHandler = new Handler();
     protected boolean hasNextUnit;
     protected boolean hasPreviousUnit;
     private PlayerFragment playerFragment;
-    private boolean myVideosFlag = false;
-    private boolean isActivityStarted;
-    private final Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (NetworkUtil.isConnected(getActivity())) {
-
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
-                    }
-                }
-            }
-        }
-    };
     private String chapterName;
     private LectureModel lecture;
     private EnrolledCoursesResponse enrollment;
@@ -57,8 +42,8 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     /**
      * Create a new instance of fragment
      */
-    public static CourseUnitAndroidVideoPlayerFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
-        final CourseUnitAndroidVideoPlayerFragment fragment = new CourseUnitAndroidVideoPlayerFragment();
+    public static CourseUnitVideoPlayerFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
+        final CourseUnitVideoPlayerFragment fragment = new CourseUnitVideoPlayerFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
         args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
@@ -80,11 +65,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
 
         final Intent extraIntent = getActivity().getIntent();
         if (extraIntent != null) {
-            if (extraIntent.hasExtra(Router.EXTRA_FROM_MY_VIDEOS)) {
-                myVideosFlag = extraIntent.getBooleanExtra(
-                        Router.EXTRA_FROM_MY_VIDEOS, false);
-            }
-
             // read incoming chapter name
             if (chapterName == null) {
                 chapterName = extraIntent.getStringExtra("chapter");
@@ -118,7 +98,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
                 playerFragment.setTranscriptCallback(this);
             }
 
-            final CourseUnitVideoFragment.HasComponent hasComponent = (CourseUnitVideoFragment.HasComponent) getActivity();
+            final BaseCourseUnitVideoFragment.HasComponent hasComponent = (BaseCourseUnitVideoFragment.HasComponent) getActivity();
             if (hasComponent != null) {
                 View.OnClickListener next = null;
                 View.OnClickListener prev = null;
@@ -296,8 +276,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     @Override
     public void onStop() {
         super.onStop();
-        isActivityStarted = false;
-
         try {
             if (playerFragment != null) {
                 playerFragment.onStop();
@@ -305,19 +283,6 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
         } catch (Exception ex) {
             logger.error(ex);
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        isActivityStarted = true;
-        if (!myVideosFlag) {
-            handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
-        }
-    }
-
-    public boolean isActivityStarted() {
-        return isActivityStarted;
     }
 
     private boolean isPlayerVisible() {
@@ -335,7 +300,7 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
     }
 
     @Override
-    public boolean showMiniController() {
+    public boolean showCastMiniController() {
         return true;
     }
 }

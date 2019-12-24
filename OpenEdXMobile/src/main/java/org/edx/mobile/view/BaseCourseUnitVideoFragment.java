@@ -35,12 +35,20 @@ import java.util.Map;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
-public abstract class CourseUnitVideoFragment extends CourseUnitFragment
+/**
+ * This class is represent base view & functionality of the player screen for the video content
+ * including UI update, download, display and maintain the transcripts based on player position.
+ */
+public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         implements IPlayerEventCallback, TranscriptListener {
-
+    /**
+     * This method use to seek the player to the particular position based on the given caption
+     *
+     * @param caption contains the {@link Caption} info
+     */
     protected abstract void seekToCaption(Caption caption);
 
-    protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
+    protected final static Logger logger = new Logger(BaseCourseUnitVideoFragment.class.getName());
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
     protected DownloadEntry videoModel;
 
@@ -80,7 +88,7 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
         View v = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
         messageContainer = v.findViewById(R.id.message_container);
         transcriptListView = (ListView) v.findViewById(R.id.transcript_listview);
-        if (showMiniController()) {
+        if (showCastMiniController()) {
             v.findViewById(R.id.fl_mini_controller).setVisibility(View.VISIBLE);
         } else {
             v.findViewById(R.id.fl_mini_controller).setVisibility(View.GONE);
@@ -373,7 +381,7 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
-    public boolean showMiniController() {
+    public boolean showCastMiniController() {
         return false;
     }
 }

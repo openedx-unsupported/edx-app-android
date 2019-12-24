@@ -15,14 +15,14 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.CourseBaseActivity;
-import org.edx.mobile.view.CourseUnitAndroidVideoPlayerFragment;
+import org.edx.mobile.view.CourseUnitVideoPlayerFragment;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
 import org.edx.mobile.view.CourseUnitFragment;
 import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment;
 import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
-import org.edx.mobile.view.CourseUnitYoutubeVideoFragment;
+import org.edx.mobile.view.CourseUnitYoutubePlayerFragment;
 
 import java.util.List;
 
@@ -85,9 +85,9 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         else if (isCourseUnitVideo(minifiedUnit)) {
             final VideoBlockModel videoBlockModel = (VideoBlockModel) minifiedUnit;
             videoBlockModel.setVideoThumbnail(courseData.getCourse().getCourse_image());
-            unitFragment = CourseUnitAndroidVideoPlayerFragment.newInstance(videoBlockModel, (pos < unitList.size()), (pos > 0));
+            unitFragment = CourseUnitVideoPlayerFragment.newInstance(videoBlockModel, (pos < unitList.size()), (pos > 0));
         } else if (isYoutubeVideo && config.getYoutubeInAppPlayerConfig().isYoutubeEnabled() && VideoUtil.isYoutubeAPISupported(((CourseBaseActivity) callback).getApplicationContext())) {
-            unitFragment = CourseUnitYoutubeVideoFragment.newInstance((VideoBlockModel) minifiedUnit);
+            unitFragment = CourseUnitYoutubePlayerFragment.newInstance((VideoBlockModel) minifiedUnit);
         } else if (isYoutubeVideo) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);
         } else if (config.isDiscussionsEnabled() && minifiedUnit instanceof DiscussionBlockModel) {

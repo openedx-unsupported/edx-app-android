@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -30,11 +31,12 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import subtitleFile.Caption;
 import subtitleFile.FormatSRT;
 import subtitleFile.TimedTextObject;
 
-public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment implements YouTubePlayer.OnInitializedListener {
+public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment implements YouTubePlayer.OnInitializedListener {
 
     private static final int SUBTITLES_DISPLAY_DELAY_MS = 50;
 
@@ -120,8 +122,8 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     /**
      * Create a new instance of fragment
      */
-    public static CourseUnitYoutubeVideoFragment newInstance(VideoBlockModel unit) {
-        final CourseUnitYoutubeVideoFragment fragment = new CourseUnitYoutubeVideoFragment();
+    public static CourseUnitYoutubePlayerFragment newInstance(VideoBlockModel unit) {
+        final CourseUnitYoutubePlayerFragment fragment = new CourseUnitYoutubePlayerFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
         fragment.setArguments(args);
@@ -152,11 +154,15 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
              * after a second and if the view is visible to the user.
              */
             initializeHandler.postDelayed(this::initializeYoutubePlayer, 1000);
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().register(this);
+            }
         } else {
             releaseYoutubePlayer();
             subtitleDisplayHandler.removeCallbacks(subtitlesProcessorRunnable);
             initializeHandler.removeCallbacks(null);
             subtitleFetchHandler.removeCallbacks(null);
+            EventBus.getDefault().unregister(this);
         }
     }
 
@@ -166,7 +172,7 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
                 loadTranscriptsData();
                 String apiKey = environment.getConfig().getYoutubeInAppPlayerConfig().getApiKey();
                 if (apiKey == null || apiKey.isEmpty()) {
-                    logger.error(new Throwable("YOUTUBE_IN_APP_PLAYER:API_KEY is missing or empty"));
+                    logger.error(new Throwable("YOUTUBE_VIDEO:API_KEY is missing or empty"));
                     return;
                 }
                 youTubePlayerFragment.initialize(apiKey, this);
@@ -282,6 +288,13 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
             e.videoId = unit.getId();
             addVideoDatatoDb(e);
             videoModel = e;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(NetworkConnectivityChangeEvent event) {
+        if (getActivity() != null && NetworkUtil.isConnected(getActivity())) {
+            initializeYoutubePlayer();
         }
     }
 

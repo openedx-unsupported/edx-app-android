@@ -67,7 +67,7 @@ public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitAndroidVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
+        BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertTrue(fragment.getRetainInstance());
 
@@ -84,7 +84,7 @@ public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
      * @param orientation The orientation change to test
      */
     private void testOrientationChange(
-            CourseUnitVideoFragment fragment, int orientation) {
+            BaseCourseUnitVideoFragment fragment, int orientation) {
         Resources resources = fragment.getResources();
         Configuration config = resources.getConfiguration();
         assertNotEquals(orientation, config.orientation);
@@ -115,7 +115,7 @@ public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
      */
     @Test
     public void orientationChangeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitAndroidVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
+        BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);

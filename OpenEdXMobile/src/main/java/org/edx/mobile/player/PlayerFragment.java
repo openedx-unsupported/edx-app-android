@@ -58,7 +58,7 @@ import org.edx.mobile.util.TextUtils;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.Version;
 import org.edx.mobile.util.VideoUtil;
-import org.edx.mobile.view.CourseUnitVideoFragment;
+import org.edx.mobile.view.BaseCourseUnitVideoFragment;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.RatingDialogFragment;
@@ -1827,8 +1827,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     private void updateTranscriptVisibility(int visibility) {
         final Fragment fragment = getParentFragment();
-        if (fragment instanceof CourseUnitVideoFragment) {
-            ((CourseUnitVideoFragment) fragment).updateBottomSectionVisibility(visibility);
+        if (fragment instanceof BaseCourseUnitVideoFragment) {
+            ((BaseCourseUnitVideoFragment) fragment).updateBottomSectionVisibility(visibility);
         }
     }
 

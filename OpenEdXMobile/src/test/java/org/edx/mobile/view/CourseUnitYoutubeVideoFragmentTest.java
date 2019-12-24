@@ -57,7 +57,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
     }
 
     private void testOrientationChange(
-            CourseUnitYoutubeVideoFragment fragment, int orientation) {
+            CourseUnitYoutubePlayerFragment fragment, int orientation) {
         final Resources resources = fragment.getResources();
         final Configuration config = resources.getConfiguration();
         assertNotEquals(orientation, config.orientation);
@@ -84,7 +84,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
      */
     @Test
     public void orientationChangeTest() {
-        final CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
+        final CourseUnitYoutubePlayerFragment fragment = CourseUnitYoutubePlayerFragment.newInstance(getVideoUnit());
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);
@@ -95,7 +95,7 @@ public class CourseUnitYoutubeVideoFragmentTest extends UiTest {
 
     @Test
     public void initializeTest() {
-        final CourseUnitYoutubeVideoFragment fragment = CourseUnitYoutubeVideoFragment.newInstance(getVideoUnit(), false, false);
+        final CourseUnitYoutubePlayerFragment fragment = CourseUnitYoutubePlayerFragment.newInstance(getVideoUnit());
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertTrue(fragment.getRetainInstance());
 
