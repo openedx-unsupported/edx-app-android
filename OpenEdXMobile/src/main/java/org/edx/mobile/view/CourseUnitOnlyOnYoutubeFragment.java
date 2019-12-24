@@ -31,12 +31,15 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
+        TextView tvYouTubeMessage = view.findViewById(R.id.only_youtube_available_message);
         if (environment.getConfig().getYoutubeInAppPlayerConfig().isYoutubeEnabled()) {
-            ((TextView) view.findViewById(R.id.only_youtube_available_message)).setText(R.string.assessment_needed_updating_youtube);
+            tvYouTubeMessage.setText(R.string.assessment_needed_updating_youtube);
             view.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
             view.findViewById(R.id.update_youtube_button).setOnClickListener(v -> {
                 BrowserUtil.open(getActivity(), AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI);
             });
+        } else {
+            tvYouTubeMessage.setText(R.string.assessment_only_on_youtube);
         }
 
         view.findViewById(R.id.view_on_youtube_button).setOnClickListener(v -> {
