@@ -200,10 +200,12 @@ public class Router {
     }
 
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
-                                     String courseComponentId) {
+                                     String courseComponentId, String type, String title) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+        courseBundle.putString(EXTRA_Unit_TYPE, type);
+        courseBundle.putString(EXTRA_TITLE, title);
 
         Intent courseDetail = new Intent(fragment.getActivity(), CourseUnitNavigationActivity.class);
         courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);

@@ -9,11 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.inject.Inject;
 
 import org.humana.mobile.BuildConfig;
@@ -51,8 +49,6 @@ import org.humana.mobile.view.dialog.ResetPasswordDialogFragment;
 import org.humana.mobile.view.login.LoginPresenter;
 
 import java.util.List;
-
-import static org.humana.mobile.util.BrowserUtil.loginPrefs;
 
 public class LoginActivity
         extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface>
@@ -296,7 +292,7 @@ public class LoginActivity
 
     public void onUserLoginSuccess(ProfileModel profile) {
         setResult(RESULT_OK);
-        getFirebaseToken();
+        FirebaseHelper.updateFirebasetokenToServer(this);
         /*if (!environment.getConfig().isRegistrationEnabled()) {
             environment.getRouter().showMainDashboard(this);
         }*/
@@ -308,12 +304,11 @@ public class LoginActivity
             mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
                 @Override
                 public void onSuccess(List<Program> data) {
-                    if (data.size() == 0){
+                    if (data.size() == 0) {
                         ActivityUtil.gotoPage(LoginActivity.this, LandingActivity.class,
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         finish();
-                    }
-                    else if (data.size() == 1) {
+                    } else if (data.size() == 1) {
                         mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
                         mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
                         mDataManager.getLoginPrefs().setParentId(data.get(0).getParent_id());
@@ -432,30 +427,5 @@ public class LoginActivity
 
         return true;
     }
-    private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
-        //update Firebase token , we will update it on sign-in or registration too
-
-        Log.d("firebaseToken",token);
-        if(loginPrefs==null || loginPrefs.getUsername()==null || loginPrefs.getUsername().equals("") ||this.getApplicationContext()==null)
-            return;
-
-        FirebaseHelper fireBaseHelper=new FirebaseHelper();
-        try
-        {
-            fireBaseHelper.updateFirebasetokenToServer(this.getApplicationContext(),
-                    fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
-        }
-        catch (Exception ex)
-        {
-            Log.d("ManpraxFirebase","MyFirebaseInstanceIDService class ID update crash");
-        }
-    }
-
-    private void getFirebaseToken(){
-        String token = FirebaseInstanceId.getInstance().getToken();
-        if (token!=null) {
-            sendRegistrationToServer(token);
-        }
-    }
 }
+

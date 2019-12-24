@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -17,6 +18,7 @@ import org.humana.mobile.R;
 import org.humana.mobile.base.MainApplication;
 import org.humana.mobile.core.IEdxEnvironment;
 import org.humana.mobile.logger.Logger;
+import org.humana.mobile.tta.firebase.FirebaseHelper;
 import org.humana.mobile.view.SplashActivity;
 
 
@@ -36,6 +38,7 @@ public class NotificationService extends FirebaseMessagingService {
     public void onNewToken(String s) {
         logger.debug("Refreshed FCM token: " + s);
         super.onNewToken(s);
+
     }
 
     @Override
@@ -107,4 +110,5 @@ public class NotificationService extends FirebaseMessagingService {
             return;
         }
     }
+
 }

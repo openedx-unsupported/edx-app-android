@@ -38,7 +38,7 @@
             android:layout_height="match_parent">
             <com.maurya.mx.mxlib.view.MxRecyclerView
                 infinite_recycler_adapter="@{viewModel.gridUsersAdapter}"
-                layout_manager="@{viewModel.linearLayoutManager}"
+                layout_manager="@{viewModel.layoutManager}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="12dp"

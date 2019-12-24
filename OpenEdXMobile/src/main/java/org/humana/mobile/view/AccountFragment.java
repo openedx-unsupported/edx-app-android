@@ -93,21 +93,9 @@ public class AccountFragment extends BaseFragment {
             }
         });
 
-//        binding.activateTutorialBtn.setOnClickListener(v -> {
-//
-//        });
 
         binding.changeProgBtn.setOnClickListener(v -> {
-//            if (!Constants.isSinglePrg) {
-//                ActivityUtil.gotoPage(getActivity(), SelectProgramActivity.class);
-//                Constants.isSinglePrg = false;
-//            }
-//            else if (!Constants.isSingleRow){
-//                ActivityUtil.gotoPage(getActivity(), SelectSectionActivity.class);
-//                Constants.isSingleRow = false;
-//            } else {
-//                Toast.makeText(getActivity(),"Only single program & section exist", Toast.LENGTH_SHORT).show();
-//            }
+
             mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
                 @Override
                 public void onSuccess(List<Program> data) {

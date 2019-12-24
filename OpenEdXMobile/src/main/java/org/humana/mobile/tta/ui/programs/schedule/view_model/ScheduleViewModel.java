@@ -8,6 +8,7 @@ import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
 
@@ -131,6 +133,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
             fabVisible.set(true);
         }
+
 
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
@@ -261,13 +264,38 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
-
+                        langTags = new ArrayList<>();
                         if (!data.isEmpty()) {
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
                             changesMade=true;
                             fetchData();
+
+                            if (mDataManager.getLoginPrefs().getRole() != null) {
+                                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+
+                                    for (ProgramFilter filter : data) {
+
+                                        if (filter.getInternalName().toLowerCase().contains("lang")) {
+                                            langTags.clear();
+                                            langTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
+                                                    true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
+
+                                            for (ProgramFilterTag tag : filter.getTags()) {
+                                                langTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                                        false, R.color.white, R.drawable.t_background_tag_filled));
+
+
+                                            }
+                                        }
+
+                                    }
+
+                                } else {
+                                    fabVisible.set(false);
+                                }
+                            }
 
                         } else {
                             filtersVisible.set(false);

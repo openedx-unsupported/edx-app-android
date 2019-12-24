@@ -13,13 +13,13 @@ import java.util.List;
 
 public class SendNotificationTask extends Task<SuccessResponse> {
 
-    private String title,type, desc, action, action_parent_id, action_id, respondent;
+    private String title,type, desc, action, action_parent_id, action_id, respondent, unique_id;
 
     @Inject
     private TaAPI taAPI;
 
     public SendNotificationTask(Context context, String title, String type, String desc, String action,
-                                String action_id, String action_parent_id, String respondent) {
+                                String action_id, String action_parent_id, String respondent, String unique_id) {
         super(context);
 
         this.title = title;
@@ -29,10 +29,11 @@ public class SendNotificationTask extends Task<SuccessResponse> {
         this.action_id = action_id;
         this.action_parent_id = action_parent_id;
         this.respondent = respondent;
+        this.unique_id = unique_id;
     }
 
     @Override
     public SuccessResponse call() throws Exception {
-        return taAPI.sendNotification(title, type, desc, action, action_parent_id, action_id, respondent).execute().body();
+        return taAPI.sendNotification(title, type, desc, action, action_parent_id, action_id, respondent, unique_id).execute().body();
     }
 }

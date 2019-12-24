@@ -16,7 +16,7 @@ public class CourseOutlineActivity extends BaseSingleFragmentActivity {
     @InjectExtra(value = Router.EXTRA_COURSE_COMPONENT_ID, optional = true)
     private String courseComponentId = null;
 
-    @InjectExtra(value = Router.EXTRA_Unit_id, optional = true)
+  /*  @InjectExtra(value = Router.EXTRA_Unit_id, optional = true)
     private String unitId = null;
 
     @InjectExtra(value = Router.EXTRA_Unit_TYPE, optional = true)
@@ -26,7 +26,7 @@ public class CourseOutlineActivity extends BaseSingleFragmentActivity {
     private String unitTitle = null;
 
     @InjectExtra(value = Router.EXTRA_UNIT_DESC, optional = true)
-    private String unitDesc = null;
+    private String unitDesc = null;*/
 
     @InjectExtra(Router.EXTRA_IS_VIDEOS_MODE)
     private boolean isVideoMode = false;

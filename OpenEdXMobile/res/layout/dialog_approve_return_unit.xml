@@ -16,14 +16,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical">
 
 
         <org.humana.mobile.tta.ui.custom.DropDownFilterView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/filter_view"
             android:layout_gravity="center"
+            android:foregroundGravity="center"
             android:layout_margin="8dp" />
 
         <TextView
@@ -35,7 +37,7 @@
             android:layout_gravity="center"
             android:textSize="15sp"
             android:id="@+id/tv_ratings"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:textColor="@color/gray_5"
             android:fontFamily="@font/hind_bold"/>
 
@@ -44,8 +46,9 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/red_rect_rounded_corner"
+        android:background="@drawable/humana_rounded_rectangle"
         android:minHeight="200dp"
+        android:maxHeight="200dp"
         android:hint="Remarks"
         android:padding="8dp"
         android:textSize="14sp"

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -93,6 +94,7 @@ import org.humana.mobile.view.common.TaskProgressCallback;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -237,7 +239,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                approveReturn(unidId,unitType,unitTitle, unitDesc);
+                approveReturn(Constants.UNIT_ID,unitType,unitTitle, unitDesc);
             }
         });
 
@@ -534,7 +536,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
                     // Log.i("gfs", "Unit Detail: " + comp.getId());
                     environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), unitType, unitTitle);
 
                     // for analytics update
                     if (comp.getType()==BlockType.PROBLEM) {
@@ -1041,14 +1043,17 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         List<DropDownFilterView.FilterItem> items = new ArrayList<>();
 
         List<String> filterItems = new ArrayList<>();
+        filterItems.add("Ratings");
         filterItems.add("Poor");
         filterItems.add("Fair");
         filterItems.add("Good");
         filterItems.add("Very Good");
         filterItems.add("Excellent");
-        items.add(new DropDownFilterView.FilterItem("Ratings", filterItems,
-                false, R.color.primary_cyan, R.drawable.t_background_tag_hollow
-        ));
+        for (String filterItem : filterItems) {
+            items.add(new DropDownFilterView.FilterItem(filterItem, filterItem,
+                    false, R.color.primary_cyan, R.drawable.t_background_tag_filled
+            ));
+        }
         filterView.setFilterItems(items);
         filterView.setOnFilterItemListener((v, item, position, prev) -> {
             switch (item.getName()) {
@@ -1125,7 +1130,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     }
                 });
     }
-    /*public void getUserUnitResponse() {
+   /* public void getUserUnitResponse() {
         mDataManager.setSpecificSession("student",
                 "Student", "mx_humana_lms/api/" +
                         mDataManager.getLoginPrefs().getProgramId()+"/masquerade",environment.getLoginPrefs().getLoginUserCookie(),
@@ -1171,9 +1176,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private void sendNotifications(String title, String type, String desc, String action,
                                    String action_id, String action_parent_id, String respondent) {
+        String unique_id = Settings.Secure.getString(getActivity().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         mDataManager.sendNotifications(title, type, desc, action, action_id, action_parent_id,
-                respondentList,
+                respondent,unique_id,
                 new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse response) {

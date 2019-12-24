@@ -3,68 +3,48 @@ package org.humana.mobile.tta.firebase;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.util.List;
+import static org.humana.mobile.util.BrowserUtil.loginPrefs;
 
-import static org.humana.mobile.util.BrowserUtil.config;
+public  class FirebaseHelper {
 
-public class FirebaseHelper {
-    public static final String NOTIFICATION_TOPIC_RELEASE = "release_notification_android";
+    public static void updateFirebasetokenToServer(Context context) {
 
-    private  TaFirebaseInstanceIDService myFirebaseInstanceIDService=new TaFirebaseInstanceIDService();
-    private Bundle parameters = new Bundle();
-
-    public Bundle getFireBaseParams(String user_id) {
-
-        //String device_info="API Level:"+ Build.VERSION.RELEASE+"  Device:"+Build.DEVICE+"  Model no:"+Build.MODEL+"  Product:"+Build.PRODUCT;
-
-        parameters.putString("user_id",user_id);
-        parameters.putString("token",myFirebaseInstanceIDService.getFireBaseToken());
-        //parameters.putString("device_info",device_info);
-
-        return parameters;
-    }
-
-    public void updateFirebasetokenToServer(Context context, Bundle parameters) {
-
-        if(myFirebaseInstanceIDService.getFireBaseToken()==null)
+        if(loginPrefs==null || loginPrefs.getUsername()==null || loginPrefs.getUsername().equals(""))
             return;
 
-        FirebaseTokenUpdateTask firebasetokn_update_task = new FirebaseTokenUpdateTask(context,parameters) {
-            @Override
-            public void onSuccess(@NonNull FirebaseUpdateTokenResponse result) {
-            }
-            @Override
-            public void onException(Exception ex) {
-            }
-        };
-        firebasetokn_update_task.execute();
-    }
+        try {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+                String mToken = instanceIdResult.getToken();
+                if (mToken == null)
+                    return;
 
-    public static void subscribeToTopics(@NonNull List<String> topics){
-        for (String topic: topics){
-            subscribeToTopic(topic);
+                Log.d("FA Token","FirebaseHelper Token--->"+ mToken);
+
+                Bundle parameters = new Bundle();
+                parameters.putString("user_id", loginPrefs.getUsername());
+                parameters.putString("token", mToken);
+
+                FirebaseTokenUpdateTask firebasetokn_update_task = new FirebaseTokenUpdateTask(context, parameters) {
+                    @Override
+                    public void onSuccess(@NonNull FirebaseUpdateTokenResponse result) {
+                        Log.d("FA Token ","FirebaseHelper Token sync success--->"+ mToken);
+                    }
+
+                    @Override
+                    public void onException(Exception ex) {
+                        Log.d("FA Token","FirebaseHelper Token sync fail--->"+ mToken);
+                    }
+                };
+                firebasetokn_update_task.execute();
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.e("FirebaseHelper ex", ex.getMessage());
         }
     }
-
-    public static void subscribeToTopic(String topic) {
-        if (config.areFirebasePushNotificationsEnabled()) {
-            FirebaseMessaging.getInstance().subscribeToTopic(topic);
-        }
-    }
-
-    public static void unsubscribeFromTopics(@NonNull List<String> topics){
-        for (String topic: topics){
-            unsubscribeFromTopic(topic);
-        }
-    }
-
-    public static void unsubscribeFromTopic(String topic) {
-        if (config.getFirebaseConfig().isEnabled()) {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
-        }
-    }
-
 }

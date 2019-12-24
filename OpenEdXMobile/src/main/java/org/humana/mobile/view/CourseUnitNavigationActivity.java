@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.humana.mobile.view.common.PageViewStateCallback;
 import org.humana.mobile.view.custom.DisableableViewPager;
@@ -54,6 +57,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
+    public final String EXTRA_Unit_TYPE = "unitType";
+    public  final String EXTRA_TITLE = "unitTitle";
 
     private FloatingActionButton mfabDialog;
     DataManager mDataManager;
@@ -68,6 +73,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private TextView mPreviousUnitLbl;
 
     private float unitRating;
+    private String unitType, unitTitle;
 
     @Inject
     LastAccessManager lastAccessManager;
@@ -89,6 +95,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         mfabDialog = findViewById(R.id.fab);
         mDataManager = DataManager.getInstance(CourseUnitNavigationActivity.this);
 
+
+        savedInstanceState = getIntent().getExtras();
+        unitType = savedInstanceState.getString(EXTRA_Unit_TYPE, "");
+        unitTitle = savedInstanceState.getString(EXTRA_TITLE,"");
+
+
         if (!Constants.UNIT_ID.equals(""))
         {
             mfabDialog.setVisibility(View.VISIBLE);
@@ -98,7 +110,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         mfabDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                approveReturn(Constants.UNIT_ID);
+                approveReturn(Constants.UNIT_ID, unitType, unitTitle, "");
             }
         });
 
@@ -315,13 +327,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
 
-    public void approveReturn(String unitId) {
+    public void approveReturn(String unitId, String type, String title, String desc) {
         final Dialog dialog = new Dialog(CourseUnitNavigationActivity.this);
         dialog.setContentView(R.layout.dialog_approve_return_unit);
         Button btnApprove = (Button) dialog.findViewById(R.id.btn_approve);
         Button btnReturn = (Button) dialog.findViewById(R.id.btn_return);
         EditText etRemarks = dialog.findViewById(R.id.et_remarks);
-        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+        DropDownFilterView filterView = dialog.findViewById(R.id.filter_view);
+//        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
         TextView mtv_rating = dialog.findViewById(R.id.tv_ratings);
 //        EditText dialogText =  dialog.findViewById(R.id.et_period_name);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -331,56 +344,131 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         dialog.show();
         dialog.getWindow().setAttributes(lp);
 
+        List<DropDownFilterView.FilterItem> items = new ArrayList<>();
 
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar rb, float rating, boolean fromUser) {
-                unitRating = rb.getRating();
-                mtv_rating.setVisibility(View.VISIBLE);
-                if (unitRating == 1) {
-                    mtv_rating.setText("Poor");
-//                    Toast.makeText(getActivity(), "poor", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 2) {
-                    mtv_rating.setText("Fair");
-//                    Toast.makeText(getActivity(), "fair", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 3) {
-                    mtv_rating.setText("Good");
-//                    Toast.makeText(getActivity(), "good", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 4) {
-                    mtv_rating.setText("Very Good");
-//                    Toast.makeText(getActivity(), "very good", Toast.LENGTH_SHORT).show();
-                } else if (unitRating == 5) {
-                    mtv_rating.setText("Excellent");
-//                    Toast.makeText(getActivity(), "excellent", Toast.LENGTH_SHORT).show();
-                }
+        List<String> filterItems = new ArrayList<>();
+        filterItems.add("Ratings");
+        filterItems.add("Poor");
+        filterItems.add("Fair");
+        filterItems.add("Good");
+        filterItems.add("Very Good");
+        filterItems.add("Excellent");
+        for (String filterItem : filterItems) {
+            items.add(new DropDownFilterView.FilterItem(filterItem, filterItem,
+                    false, R.color.primary_cyan, R.drawable.t_background_tag_hollow
+            ));
+        }
+        filterView.setFilterItems(items);
+        filterView.setOnFilterItemListener((v, item, position, prev) -> {
+            switch (item.getName()) {
+                case "Poor":
+                    unitRating = 1;
+                    break;
+                case "Fair":
+                    unitRating = 2;
+                    break;
+                case "Good":
+                    unitRating = 3;
+                    break;
+                case "Very Good":
+                    unitRating = 4;
+                    break;
+                case "Excellent":
+                    unitRating = 5;
+                    break;
             }
         });
-
         btnApprove.setOnClickListener(v -> {
             String remarks = etRemarks.getText().toString();
-            approveUnits(unitId, remarks, (int) unitRating);
+            approveUnits(unitId, remarks, (int) unitRating, type, title,desc);
             dialog.dismiss();
         });
 
         btnReturn.setOnClickListener(v -> {
             String remarks = etRemarks.getText().toString();
 
-            rejectUnits(unitId,remarks, (int) unitRating);
+            rejectUnits(unitId, remarks, (int) unitRating, type, title, desc);
             dialog.dismiss();
         });
         dialog.setCancelable(true);
         dialog.show();
 
     }
-    //
-    public void approveUnits(String unitId, String remarks, int rating) {
+
+
+    public void approveUnits(String unitId, String remarks, int rating, String unitType, String unitTitle, String desc) {
+
+        mDataManager.approveUnit(unitId,
+                Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+                        Toast.makeText(CourseUnitNavigationActivity.this,"Unit Approved", Toast.LENGTH_SHORT).show();
+                        sendNotifications(unitTitle, unitType ,desc, "AprroveUnit",unitId,
+                                mDataManager.getLoginPrefs().getProgramId(), Constants.USERNAME);
+                        CourseUnitNavigationActivity.this.finish();
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                });
+    }
+
+    public void rejectUnits(String unitId, String remarks, int rating, String unitType, String unitTitle, String unitDesc) {
+        mDataManager.rejectUnit(unitId,
+                Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse data) {
+                        Toast.makeText(CourseUnitNavigationActivity.this,"Unit Returned", Toast.LENGTH_SHORT).show();
+                        sendNotifications(unitTitle,unitType ,unitDesc, "ReturnUnit",unitId,
+                                mDataManager.getLoginPrefs().getProgramId(),Constants.USERNAME);
+
+                        CourseUnitNavigationActivity.this.finish();
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                });
+    }
+
+    private void sendNotifications(String title, String type, String desc, String action,
+                                   String action_id, String action_parent_id, String respondent) {
+        String unique_id = Settings.Secure.getString(CourseUnitNavigationActivity.this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+        mDataManager.sendNotifications(title, type, desc, action, action_id, action_parent_id,
+                respondent,unique_id,
+                new OnResponseCallback<SuccessResponse>() {
+                    @Override
+                    public void onSuccess(SuccessResponse response) {
+                        if (response.getSuccess()){
+//                            Toast.makeText(CourseUnitNavigationActivity.this,"Notification sent..", Toast.LENGTH_SHORT).show();
+                            Log.d("Notification", "Notification sent..");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("Notification Failure..", e.getMessage());
+                    }
+                });
+    }
+
+}
+
+//
+  /*  public void approveUnits(String unitId, String remarks, int rating) {
 
         mDataManager.approveUnit(unitId,
                 Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
 
-//                        Intent in = new Intent(getActivity(), PendingUnitsListActivity.class);
+//                        Intent in = new Intent(CourseUnitNavigationActivity.this, PendingUnitsListActivity.class);
 //                        startActivity(in);
                         finish();
                         Toast.makeText(CourseUnitNavigationActivity.this,"Unit Approved", Toast.LENGTH_SHORT).show();
@@ -420,5 +508,4 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 //                        toggleEmptyVisibility();
                     }
                 });
-    }
-}
+    }*/

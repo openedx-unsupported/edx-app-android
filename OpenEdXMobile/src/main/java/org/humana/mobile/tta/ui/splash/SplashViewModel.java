@@ -86,8 +86,8 @@ public class SplashViewModel extends BaseViewModel {
         }*/
 
  // Firebase send token
-        getFirebaseToken();
 
+            FirebaseHelper.updateFirebasetokenToServer(mActivity);
 
             if (appPref.isFirstLaunch()) {
                 ActivityUtil.gotoPage(mActivity, SwipeLaunchActivity.class);
@@ -176,31 +176,5 @@ public class SplashViewModel extends BaseViewModel {
             mDataManager.setConnectCookies();
         }
         mDataManager.checkSurvey(mActivity, SurveyType.Login);
-    }
-    private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
-        //update Firebase token , we will update it on sign-in or registration too
-
-        Log.d("firebaseToken",token);
-        if(loginPrefs==null || loginPrefs.getUsername()==null || loginPrefs.getUsername().equals("") ||mActivity.getApplicationContext()==null)
-            return;
-
-        FirebaseHelper fireBaseHelper=new FirebaseHelper();
-        try
-        {
-            fireBaseHelper.updateFirebasetokenToServer(mActivity.getApplicationContext(),
-                    fireBaseHelper.getFireBaseParams(loginPrefs.getUsername()));
-        }
-        catch (Exception ex)
-        {
-            Log.d("ManpraxFirebase","MyFirebaseInstanceIDService class ID update crash");
-        }
-    }
-
-    private void getFirebaseToken(){
-        String token = FirebaseInstanceId.getInstance().getToken();
-        if (token!=null) {
-            sendRegistrationToServer(token);
-        }
     }
 }

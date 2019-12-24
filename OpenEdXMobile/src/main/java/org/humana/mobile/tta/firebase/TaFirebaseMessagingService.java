@@ -3,7 +3,13 @@ package org.humana.mobile.tta.firebase;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -93,7 +99,22 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private Intent getNavigationIntent(String type,String path)
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
+
+            if(!task.isSuccessful())
+                return;
+
+            Log.d("Firebase Token","TaFirebaseMessagingService Token-->" +
+                    ""+task.getResult().getToken());
+
+            FirebaseHelper.updateFirebasetokenToServer(getApplicationContext());
+        });
+    }
+
+    private Intent getNavigationIntent(String type, String path)
     {
         Intent navigationIntent=new Intent();
 

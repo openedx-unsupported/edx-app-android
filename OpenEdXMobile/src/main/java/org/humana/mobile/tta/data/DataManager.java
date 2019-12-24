@@ -2833,11 +2833,12 @@ public class DataManager extends BaseRoboInjector {
 
     public void sendNotifications(String title, String type, String desc, String action,
                                   String action_id, String action_parent_id, String respondent,
+                                  String unique_id,
                                   OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new SendNotificationTask(context, title, type, desc, action, action_id, action_parent_id,respondent) {
+            new SendNotificationTask(context, title, type, desc, action, action_id, action_parent_id,respondent, unique_id) {
                 @Override
                 protected void onSuccess(SuccessResponse response) throws Exception {
                     super.onSuccess(response);
