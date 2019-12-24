@@ -122,9 +122,11 @@ public class CourseUnitYoutubeVideoFragment extends CourseUnitVideoFragment impl
     /**
      * Create a new instance of fragment
      */
-    public static CourseUnitYoutubeVideoFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
+    public static CourseUnitYoutubeVideoFragment newInstance(VideoBlockModel unit) {
         final CourseUnitYoutubeVideoFragment fragment = new CourseUnitYoutubeVideoFragment();
-        fragment.setArguments(getCourseUnitBundle(unit, hasNextUnit, hasPreviousUnit));
+        Bundle args = new Bundle();
+        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        fragment.setArguments(args);
         return fragment;
     }
 

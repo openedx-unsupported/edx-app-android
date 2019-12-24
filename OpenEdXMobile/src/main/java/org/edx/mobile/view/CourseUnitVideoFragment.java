@@ -40,20 +40,14 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
     protected abstract void updateUIForOrientation();
 
     protected final static Logger logger = new Logger(CourseUnitVideoFragment.class.getName());
-    protected final static String HAS_NEXT_UNIT_ID = "has_next_unit";
-    protected final static String HAS_PREV_UNIT_ID = "has_prev_unit";
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
     protected DownloadEntry videoModel;
 
-    VideoBlockModel unit;
+    protected VideoBlockModel unit;
     protected ListView transcriptListView;
     protected TranscriptAdapter transcriptAdapter;
 
     private View messageContainer;
-
-    protected boolean hasNextUnit;
-
-    protected boolean hasPreviousUnit;
 
     // Defines if the user is scrolling the transcript listview
     protected boolean isTranscriptScrolling = false;
@@ -64,14 +58,6 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
     private CourseAPI courseApi;
     private ViewTreeObserver.OnGlobalLayoutListener transcriptListLayoutListener;
 
-    public static Bundle getCourseUnitBundle(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
-        Bundle args = new Bundle();
-        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
-        args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
-        args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
-        return args;
-    }
-
     /**
      * When creating, retrieve this instance's number from its arguments.
      */
@@ -81,8 +67,6 @@ public abstract class CourseUnitVideoFragment extends CourseUnitFragment
         setRetainInstance(true);
         unit = getArguments() == null ? null :
                 (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
-        hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
-        hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
 
     /**

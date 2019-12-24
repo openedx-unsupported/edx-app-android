@@ -27,8 +27,13 @@ import subtitleFile.Caption;
 
 public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragment {
 
+    protected final static String HAS_NEXT_UNIT_ID = "has_next_unit";
+    protected final static String HAS_PREV_UNIT_ID = "has_prev_unit";
     private final static int MSG_UPDATE_PROGRESS = 1022;
+
     private final Handler playHandler = new Handler();
+    protected boolean hasNextUnit;
+    protected boolean hasPreviousUnit;
     private PlayerFragment playerFragment;
     private boolean myVideosFlag = false;
     private boolean isActivityStarted;
@@ -54,8 +59,19 @@ public class CourseUnitAndroidVideoPlayerFragment extends CourseUnitVideoFragmen
      */
     public static CourseUnitAndroidVideoPlayerFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
         final CourseUnitAndroidVideoPlayerFragment fragment = new CourseUnitAndroidVideoPlayerFragment();
-        fragment.setArguments(getCourseUnitBundle(unit, hasNextUnit, hasPreviousUnit));
+        Bundle args = new Bundle();
+        args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
+        args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
+        fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
+        hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
 
     @Override
