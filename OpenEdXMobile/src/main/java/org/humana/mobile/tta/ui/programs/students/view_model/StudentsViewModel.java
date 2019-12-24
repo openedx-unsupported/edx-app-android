@@ -160,7 +160,7 @@ public class StudentsViewModel extends BaseViewModel {
             layoutManager = new GridLayoutManager(mActivity, 2);
             isTabView.set(true);
         } else {
-            linearLayoutManager = new GridLayoutManager(mActivity, 1);
+            layoutManager = new GridLayoutManager(mActivity, 1);
             isTabView.set(false);
         }
 
