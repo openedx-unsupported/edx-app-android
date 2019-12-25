@@ -517,7 +517,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             transcriptManager.downloadTranscriptsForVideo(trModel);
             //initializeClosedCaptioning();
         }
-
         // request focus on audio channel, as we are starting playback
         requestAudioFocus();
         String path = VideoUtil.getVideoPath(getActivity(), videoEntry);
@@ -1838,7 +1837,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         handleOnPause();
         getActivity().invalidateOptionsMenu();
     }
-
 
     @Override
     public void onApplicationDisconnected() {

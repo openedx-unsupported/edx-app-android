@@ -78,6 +78,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 /*
                  * The method setUserVisibleHint is not called the first time the viewpager loads
                  * so it's necessary to call it literally  in order to run the logic inside it
+                 *
+                 * Choice this method instated of 'onPageSelected', because `onPageSelected` is not
+                 * getting called when pager opens page of position 0.
                  */
                 if (firstPageLoad) {
                     firstPageLoad = false;
