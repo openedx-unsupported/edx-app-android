@@ -1,7 +1,8 @@
 package org.edx.mobile.view;
 
-import androidx.core.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 import org.edx.mobile.R;
 import org.edx.mobile.deeplink.Screen;

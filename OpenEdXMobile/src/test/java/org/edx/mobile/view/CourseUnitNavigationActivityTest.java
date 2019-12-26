@@ -3,13 +3,14 @@ package org.edx.mobile.view;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.view.PagerAdapter;
-import androidx.core.view.ViewPager;
-import androidx.appcompat.app.ActionBar;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.gson.JsonObject;
 
