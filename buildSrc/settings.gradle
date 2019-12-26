@@ -10,13 +10,13 @@ buildscript {
     }
 }
 
-def edXAppPluginSetup(url) {
+def edXAppPluginSetup(url, ref) {
     def buildSrc = new File(rootProject.projectDir, 'plugins')
     buildSrc.mkdirs()
     def dest = new File(buildSrc, "edx-app-gradle-plugin")
 
     if(!dest.exists()) {
-        Grgit.clone(dir: dest, uri: url)
+        Grgit.clone(dir: dest, uri: url, refToCheckout : ref)
     }
 
     def grgit = Grgit.open(dir : dest)
@@ -26,9 +26,11 @@ def edXAppPluginSetup(url) {
     catch(GrgitException e) {
         println("Could not fetch latest version of app gradle plugin. This is probably due to lack of an internet connection. Skipping")
     }
+    grgit.checkout(branch : ref)
 }
 
-edXAppPluginSetup('https://github.com/edx/edx-app-gradle-plugin/tree/khalid/gradle_5_updations')
+edXAppPluginSetup('https://github.com/edx/edx-app-gradle-plugin', '4c8c1e55bf2f124a6c89d9c8b4edbe0bd256f1a2')
 
 include "plugins"
 project(':plugins').projectDir = file('plugins/edx-app-gradle-plugin')
+
