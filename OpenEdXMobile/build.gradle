@@ -225,7 +225,7 @@ dependencies {
     }
     testImplementation 'commons-lang:commons-lang:2.6'
     testImplementation "org.robolectric:robolectric:4.3.1"
-    testImplementation "org.robolectric:shadows-supportv4:3.8"
+    testImplementation "com.github.nimbl3:robolectric.shadows-supportv4:4.1-SNAPSHOT"
     testImplementation "org.robolectric:shadows-multidex:3.8"
     testImplementation 'org.assertj:assertj-core:2.5.0'
     testImplementation ('com.squareup.assertj:assertj-android:1.1.1') {
