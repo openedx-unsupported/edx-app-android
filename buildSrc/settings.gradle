@@ -28,7 +28,7 @@ def edXAppPluginSetup(url) {
     }
 }
 
-edXAppPluginSetup('https://github.com/edx/edx-app-gradle-plugin')
+edXAppPluginSetup('https://github.com/edx/edx-app-gradle-plugin/tree/khalid/gradle_5_updations')
 
 include "plugins"
 project(':plugins').projectDir = file('plugins/edx-app-gradle-plugin')
