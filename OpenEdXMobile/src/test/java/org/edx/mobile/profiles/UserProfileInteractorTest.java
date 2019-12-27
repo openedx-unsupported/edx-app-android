@@ -15,6 +15,7 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.observer.Observer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@Ignore
 public class UserProfileInteractorTest extends BaseTest {
 
     @Mock
