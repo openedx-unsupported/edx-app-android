@@ -220,14 +220,20 @@ dependencies {
 
     // test project configuration
     testImplementation 'junit:junit:4.12'
-    testImplementation ("org.mockito:mockito-core:1.10.19"){
+    testImplementation ("org.mockito:mockito-core:2.19.0"){
         exclude group: 'org.hamcrest'
     }
     testImplementation 'commons-lang:commons-lang:2.6'
     testImplementation "org.robolectric:robolectric:4.3.1"
     testImplementation "com.github.nimbl3:robolectric.shadows-supportv4:4.1-SNAPSHOT"
-    testImplementation "org.robolectric:shadows-multidex:3.8"
+    testImplementation "org.robolectric:shadows-multidex:4.0.1"
     testImplementation 'org.assertj:assertj-core:2.5.0'
+    /**
+     * AssertJ has been deprecated and doesn't support AndroidX classes.
+     * Ref: https://github.com/square/assertj-android
+     * Instead of AssertJ we should move towards Truth library that they recommend instead.
+     * Ref: https://truth.dev/comparison.html
+     */
     testImplementation ('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support'
     }
@@ -242,14 +248,15 @@ dependencies {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
+    androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker:1.4'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-dx:1.4'
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
-    androidTestImplementation ('org.mockito:mockito-core:1.10.19'){
+    androidTestImplementation ('org.mockito:mockito-core:2.19.0'){
         exclude group: 'org.hamcrest'
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
