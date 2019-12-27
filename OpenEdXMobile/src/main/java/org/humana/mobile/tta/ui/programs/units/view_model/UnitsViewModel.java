@@ -122,7 +122,7 @@ public class UnitsViewModel extends BaseViewModel {
         frameVisible.set(true);
 
         selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getLoginPrefs().getCachedFilter();
+        selectedFilter=mDataManager.getSelectedFilters();;
 
 
         unitsAdapter = new UnitsAdapter(mActivity);
@@ -299,7 +299,6 @@ public class UnitsViewModel extends BaseViewModel {
 
     public void fetchFilters() {
         sessionTags = new ArrayList<>();
-        selectedFilter=new ArrayList<>();
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -309,7 +308,7 @@ public class UnitsViewModel extends BaseViewModel {
                             allFilters = data;
                             filterSize = allFilters.size();
                             filtersVisible.set(true);
-                            filtersAdapter.setItems(allFilters);
+                            filtersAdapter.setItems(data);
                             changesMade=true;
                             fetchData();
 
@@ -707,6 +706,5 @@ public class UnitsViewModel extends BaseViewModel {
         allLoaded = false;
         mActivity.showLoading();
         fetchFilters();
-//        fetchData();
     }
 }

@@ -1,11 +1,15 @@
 package org.humana.mobile.view;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -84,6 +88,7 @@ import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity;
 import org.humana.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsListViewModel;
 import org.humana.mobile.tta.utils.ActivityUtil;
+import org.humana.mobile.tta.utils.AppUtil;
 import org.humana.mobile.tta.utils.MXPDFManager;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.PermissionsUtil;
@@ -92,6 +97,7 @@ import org.humana.mobile.view.adapters.CourseOutlineAdapter;
 import org.humana.mobile.view.common.TaskProgressCallback;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -1092,15 +1098,16 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
 
-    public void approveUnits(String unitId, String remarks, int rating, String unitType, String unitTitle, String desc) {
-
+    public void approveUnits(String unitId, String remarks, int rating, String unitType, String unitTitle,
+                             String desc) {
         mDataManager.approveUnit(unitId,
                 Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         Toast.makeText(getActivity(),"Unit Approved", Toast.LENGTH_SHORT).show();
                         sendNotifications(unitTitle, unitType ,desc, "AprroveUnit",unitId,
-                                mDataManager.getLoginPrefs().getProgramId(), userName.get());
+                                mDataManager.getLoginPrefs().getProgramId(), userName.get(),
+                                AppUtil.generateDeviceIdentifier(getActivity()));
                         getActivity().finish();
 
                     }
@@ -1112,14 +1119,16 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 });
     }
 
-    public void rejectUnits(String unitId, String remarks, int rating, String unitType, String unitTitle, String unitDesc) {
+    public void rejectUnits(String unitId, String remarks, int rating, String unitType, String unitTitle,
+                            String unitDesc) {
         mDataManager.rejectUnit(unitId,
                 Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         Toast.makeText(getActivity(),"Unit Returned", Toast.LENGTH_SHORT).show();
                         sendNotifications(unitTitle,unitType ,unitDesc, "ReturnUnit",unitId,
-                                mDataManager.getLoginPrefs().getProgramId(),userName.get());
+                                mDataManager.getLoginPrefs().getProgramId(),userName.get(),
+                                AppUtil.generateDeviceIdentifier(getActivity()));
 
                         getActivity().finish();
 
@@ -1175,10 +1184,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     // Notifications for firebase
 
     private void sendNotifications(String title, String type, String desc, String action,
-                                   String action_id, String action_parent_id, String respondent) {
-        String unique_id = Settings.Secure.getString(getActivity().getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-
+                                   String action_id, String action_parent_id, String respondent, String unique_id) {
         mDataManager.sendNotifications(title, type, desc, action, action_id, action_parent_id,
                 respondent,unique_id,
                 new OnResponseCallback<SuccessResponse>() {

@@ -2,13 +2,16 @@ package org.humana.mobile.tta.ui.programs.schedule.view_model;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.database.Cursor;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -18,6 +21,8 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
 import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
@@ -31,6 +36,7 @@ import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
 import org.humana.mobile.databinding.TRowScheduleBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
@@ -58,9 +64,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog.OnDateSetListener {
 
@@ -110,6 +117,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     };
     private String lang;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public ScheduleViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
         super(context, fragment);
         this.course = course;
@@ -138,6 +146,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.textview_add:
+//                    downloadFile(item);
                     Bundle parameters = new Bundle();
                     parameters.putString(Constants.KEY_PERIOD_NAME, item.getTitle());
                     parameters.putLong(Constants.KEY_PERIOD_ID, item.getId());
@@ -145,8 +154,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
                     break;
                 case R.id.txt_start_date:
-//                    showStartDatePicker(item);
-//                    openDateRangePicker(item);
+
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
                         rangePicker(item);
@@ -743,8 +751,31 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         allLoaded = false;
         mActivity.showLoading();
         getFilters();
-//        fetchData();
-
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void downloadFile(Period period){
+
+//        askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+        Uri uri = Uri.parse("http://tutorial.math.lamar.edu/pdf/Trig_Cheat_Sheet.pdf");
+
+        mDataManager.downloadFile(uri);
+
+        DownloadManager downloadManager = (DownloadManager) mActivity.getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Query ImageDownloadQuery = new DownloadManager.Query();
+        Cursor cursor = downloadManager.query(ImageDownloadQuery);
+        if(cursor.moveToFirst()){
+            mDataManager.downloadStatus(cursor, period.getId());
+        }
+    }
+//    protected void askForPermission(String[] permissions, int requestCode) {
+//        if (getActivity() != null) {
+//            if (mActivity.getGrantedPermissionsCount(permissions) == permissions.length) {
+//                permissionListener.onPermissionGranted(permissions, requestCode);
+//            } else {
+//                PermissionsUtil.requestPermissions(requestCode, permissions, mActivity);
+//            }
+//        }
+//    }
 }

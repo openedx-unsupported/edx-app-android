@@ -1,20 +1,25 @@
 package org.humana.mobile.tta.data;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import org.humana.mobile.R;
 import org.humana.mobile.authentication.AuthResponse;
@@ -40,7 +45,6 @@ import org.humana.mobile.module.db.impl.DbHelper;
 import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.registration.model.RegistrationOption;
 import org.humana.mobile.services.CourseManager;
-import org.humana.mobile.services.EdxCookieManager;
 import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.task.Task;
 import org.humana.mobile.tta.Constants;
@@ -162,13 +166,12 @@ import org.humana.mobile.tta.task.profile.GetUserAddressTask;
 import org.humana.mobile.tta.task.profile.SubmitFeedbackTask;
 import org.humana.mobile.tta.task.profile.UpdateMyProfileTask;
 import org.humana.mobile.tta.task.program.ApproveUnitTask;
-import org.humana.mobile.tta.task.program.GetBlockComponentFromCacheTask;
-import org.humana.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.humana.mobile.tta.task.program.CreatePeriodTask;
 import org.humana.mobile.tta.task.program.GetAllUnitsTask;
+import org.humana.mobile.tta.task.program.GetBlockComponentFromCacheTask;
+import org.humana.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.humana.mobile.tta.task.program.GetCourseComponentTask;
 import org.humana.mobile.tta.task.program.GetPendingUnitsTask;
-import org.humana.mobile.tta.task.program.SetSpecificSessionTask;
 import org.humana.mobile.tta.task.program.GetPendingUsersTask;
 import org.humana.mobile.tta.task.program.GetPeriodsTask;
 import org.humana.mobile.tta.task.program.GetProgramFiltersTask;
@@ -180,6 +183,7 @@ import org.humana.mobile.tta.task.program.GetUsersTask;
 import org.humana.mobile.tta.task.program.RejectUnitTask;
 import org.humana.mobile.tta.task.program.SavePeriodTask;
 import org.humana.mobile.tta.task.program.SetProposedDateTask;
+import org.humana.mobile.tta.task.program.SetSpecificSessionTask;
 import org.humana.mobile.tta.task.program.UpdatePeriodTask;
 import org.humana.mobile.tta.task.search.GetSearchFilterTask;
 import org.humana.mobile.tta.task.search.SearchTask;
@@ -218,6 +222,7 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
 import static org.humana.mobile.tta.Constants.TA_DATABASE;
 
 /**
@@ -1294,6 +1299,7 @@ public class DataManager extends BaseRoboInjector {
         return courseComponent;
     }
 
+
     public void downloadSingle(ScormBlockModel scorm,
                                long contentId,
                                FragmentActivity activity,
@@ -1339,6 +1345,7 @@ public class DataManager extends BaseRoboInjector {
         return getDownloadStatus(entry);
 
     }
+
 
     private ScormStatus getDownloadStatus(DownloadEntry entry) {
         if (entry == null || entry.downloaded.equals(DownloadEntry.DownloadedState.ONLINE)) {
@@ -2838,7 +2845,7 @@ public class DataManager extends BaseRoboInjector {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new SendNotificationTask(context, title, type, desc, action, action_id, action_parent_id,respondent, unique_id) {
+            new SendNotificationTask(context, title, type, desc, action, action_id, action_parent_id, respondent, unique_id) {
                 @Override
                 protected void onSuccess(SuccessResponse response) throws Exception {
                     super.onSuccess(response);
@@ -4467,17 +4474,17 @@ public class DataManager extends BaseRoboInjector {
             sel_cachefilter = new ArrayList<>();
             sel_cachefilter.add(selectedFilter);
         } else {
-            int index=0;
+            int index = 0;
             boolean isExist = false;
-            for (SelectedFilter filter:sel_cachefilter){
-                if (filter.getInternal_name().equalsIgnoreCase(selectedFilter.getInternal_name())){
-                    sel_cachefilter.set(index,selectedFilter);
-                    isExist=true;
+            for (SelectedFilter filter : sel_cachefilter) {
+                if (filter.getInternal_name().equalsIgnoreCase(selectedFilter.getInternal_name())) {
+                    sel_cachefilter.set(index, selectedFilter);
+                    isExist = true;
                     break;
                 }
                 index++;
             }
-            if (!isExist){
+            if (!isExist) {
                 sel_cachefilter.add(selectedFilter);
             }
             loginPrefs.setCachedFilter(sel_cachefilter);
@@ -4491,6 +4498,143 @@ public class DataManager extends BaseRoboInjector {
             sel_filter = loginPrefs.getCachedFilter();
 
         return sel_filter;
+    }
+
+
+//    public void downloadFile(Context context, String url, String title, long id) {
+//        Uri Download_Uri = Uri.parse(url);
+//        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+//
+//        //Restrict the types of networks over which this download may proceed.
+//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+//        //Set whether this download may proceed over a roaming connection.
+//        request.setAllowedOverRoaming(false);
+//        //Set the title of this download, to be displayed in notifications (if enabled).
+//        request.setTitle("Downloading");
+//        //Set a description of this download, to be displayed in notifications (if enabled)
+//        request.setDescription("Downloading File");
+//        //Set the local destination for the downloaded file to a path within the application's external files directory
+//        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + "_" + id);
+//        request.allowScanningByMediaScanner();
+//
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//        //Enqueue a new download and same the referenceId
+//        ((DownloadManager) context.getSystemService(DOWNLOAD_SERVICE)).enqueue(request);
+//    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public long downloadFile(Uri uri) {
+
+        long downloadReference;
+        DownloadManager downloadManager;
+
+        // Create request for android download manager
+        downloadManager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        //Setting title of request
+        request.setTitle("Data Download");
+
+        //Setting description of request
+        request.setDescription("Android Data download using DownloadManager.");
+
+        //Set the local destination for the downloaded file to a path
+        //within the application's external files directory
+        request.setDestinationInExternalFilesDir(context,
+                Environment.DIRECTORY_DOWNLOADS, "AndroidTutorialPoint.pdf");
+
+
+        //Enqueue download and save into referenceId
+        downloadReference = downloadManager.enqueue(request);
+        return downloadReference;
+    }
+
+
+    public void downloadStatus(Cursor cursor, long DownloadId) {
+
+        //column for download  status
+        int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+        int status = cursor.getInt(columnIndex);
+        //column for reason code if the download failed or paused
+        int columnReason = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+        int reason = cursor.getInt(columnReason);
+        //get the download filename
+        int filenameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE);
+        String filename = cursor.getString(filenameIndex);
+
+        String statusText = "";
+        String reasonText = "";
+
+        switch (status) {
+            case DownloadManager.STATUS_FAILED:
+                statusText = "STATUS_FAILED";
+                Log.d("STATUS_FAILED",statusText);
+                switch (reason) {
+                    case DownloadManager.ERROR_CANNOT_RESUME:
+                        reasonText = "ERROR_CANNOT_RESUME";
+                        break;
+                    case DownloadManager.ERROR_DEVICE_NOT_FOUND:
+                        reasonText = "ERROR_DEVICE_NOT_FOUND";
+                        break;
+                    case DownloadManager.ERROR_FILE_ALREADY_EXISTS:
+                        reasonText = "ERROR_FILE_ALREADY_EXISTS";
+                        break;
+                    case DownloadManager.ERROR_FILE_ERROR:
+                        reasonText = "ERROR_FILE_ERROR";
+                        break;
+                    case DownloadManager.ERROR_HTTP_DATA_ERROR:
+                        reasonText = "ERROR_HTTP_DATA_ERROR";
+                        break;
+                    case DownloadManager.ERROR_INSUFFICIENT_SPACE:
+                        reasonText = "ERROR_INSUFFICIENT_SPACE";
+                        break;
+                    case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
+                        reasonText = "ERROR_TOO_MANY_REDIRECTS";
+                        break;
+                    case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+                        reasonText = "ERROR_UNHANDLED_HTTP_CODE";
+                        break;
+                    case DownloadManager.ERROR_UNKNOWN:
+                        reasonText = "ERROR_UNKNOWN";
+                        break;
+                }
+                break;
+            case DownloadManager.STATUS_PAUSED:
+                statusText = "STATUS_PAUSED";
+                Log.d("STATUS_PAUSED",statusText);
+                switch (reason) {
+                    case DownloadManager.PAUSED_QUEUED_FOR_WIFI:
+                        reasonText = "PAUSED_QUEUED_FOR_WIFI";
+                        break;
+                    case DownloadManager.PAUSED_UNKNOWN:
+                        reasonText = "PAUSED_UNKNOWN";
+                        break;
+                    case DownloadManager.PAUSED_WAITING_FOR_NETWORK:
+                        reasonText = "PAUSED_WAITING_FOR_NETWORK";
+                        break;
+                    case DownloadManager.PAUSED_WAITING_TO_RETRY:
+                        reasonText = "PAUSED_WAITING_TO_RETRY";
+                        break;
+                }
+                break;
+            case DownloadManager.STATUS_PENDING:
+                statusText = "STATUS_PENDING";
+                Log.d("STATUS_PENDING",statusText);
+                break;
+            case DownloadManager.STATUS_RUNNING:
+                statusText = "STATUS_RUNNING";
+                Log.d("STATUS_RUNNING",statusText);
+
+                break;
+            case DownloadManager.STATUS_SUCCESSFUL:
+                statusText = "STATUS_SUCCESSFUL";
+                Log.d("STATUS_SUCCESSFUL",statusText);
+
+                reasonText = "Filename:\n" + filename;
+                break;
+        }
+
     }
 }
 

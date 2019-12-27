@@ -13,32 +13,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:animateLayoutChanges="true"
-            android:orientation="horizontal"
-            android:visibility="@{viewModel.filtersVisible ? View.VISIBLE : View.GONE}">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:animateLayoutChanges="true"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:visibility="@{viewModel.filtersVisible ? View.VISIBLE : View.GONE}">-->
 
-            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                app:mx_itemLayout="@layout/t_row_student_tab_view"
-                app:mx_itemLimit="100"
-                app:mx_moreButtonVisible="false"
-                app:mx_titleVisible="false" />
+            <!--<com.maurya.mx.mxlib.view.MxFiniteRecyclerView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--app:mx_itemLayout="@layout/t_row_student_tab_view"-->
+                <!--app:mx_itemLimit="100"-->
+                <!--app:mx_moreButtonVisible="false"-->
+                <!--app:mx_titleVisible="false" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.maurya.mx.mxlib.view.MxRecyclerView
                 infinite_recycler_adapter="@{viewModel.gridUsersAdapter}"
                 layout_manager="@{viewModel.layoutManager}"
+                infinite_load_more_listener="@{viewModel.loadMoreListener}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="12dp"
