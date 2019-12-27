@@ -1,12 +1,13 @@
 package org.edx.mobile.view;
 
 import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.test.BaseTestCase;
@@ -19,7 +20,7 @@ import org.robolectric.shadows.ShadowWebView;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.assertj.android.appcompat.v7.api.Assertions.assertThat;
+import static junit.framework.Assert.assertTrue;
 
 public class WebViewActivityTest extends BaseTestCase {
 
@@ -60,9 +61,9 @@ public class WebViewActivityTest extends BaseTestCase {
         assertEquals(shadowWebView.getLastLoadedUrl(), url);
         final ActionBar actionBar = activity.getSupportActionBar();
         assertNotNull(actionBar);
-        assertThat(actionBar).isShowing();
+        assertTrue(actionBar.isShowing());
         if (!TextUtils.isEmpty(title)) {
-            assertThat(actionBar).hasTitle(title);
+            assertEquals(title, actionBar.getTitle());
         }
         /*
         Robolectric is not providing the correct default title which is why this code has
