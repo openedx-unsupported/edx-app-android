@@ -1,6 +1,7 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
@@ -36,7 +37,6 @@ import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
 import org.humana.mobile.tta.ui.programs.units.PeriodListingActivity;
-import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -76,7 +76,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
     private String selectedDate;
-    private long startDateTime, endDateTime, eventMonthYear;
+    private long startDateTime, endDateTime, selectedDateLng;
+    private final String SELECTED_DATE= "selected_date";
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
 //        if (allLoaded)
@@ -93,7 +94,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         this.course = course;
         this.units = units;
         this.selectedDate = DateUtil.getDisplayDate(selectedDate);
-        this.eventMonthYear =selectedDate;
+        this.selectedDateLng =selectedDate;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         dispDate.set(DateUtil.getCalendarDate(selectedDate));
@@ -239,7 +240,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
-//        onEventMainThread(units);
+        onEventMainThread(units);
 
     }
 
@@ -255,41 +256,21 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             @Override
                             public void onSuccess(SuccessResponse response) {
                                 mActivity.hideLoading();
-//                                Events event = new Events(DateUtil.getDisplayDate(unit.getMyDate()), unit.getTitle(), unit.getType());
-//                                eventsArrayList.remove(event);
 
                                 unit.setMyDate(data);
                                 unitsAdapter.remove(unit);
                                 unitsAdapter.notifyDataSetChanged();
-//                                eventMonthYear = data;
-//                                selectedDate = DateUtil.getDisplayDate(data);
 
-
-//                                Events event1 = new Events(DateUtil.getDisplayDate(data), unit.getTitle(), unit.getType());
-//                                eventsArrayList.add(event1);
-
-//                                units.remove(unit);
                                 if (units.size()==0){
                                     emptyVisible.set(true);
                                 }else {
                                     emptyVisible.set(false);
                                 }
-//                                selectedDate = DateUtil.getDisplayDate(data);
-//                                if (response.getSuccess()) {
-//                                    eventsArrayList.clear();
-//                                    for (int i = 0; i < units.size(); i++) {
-//                                        if (units.get(i).getMyDate() > 0) {
-//                                            Events et = new Events(DateUtil.getDisplayDate(units.get(i).getMyDate()),
-//                                                    units.get(i).getTitle());
-//                                            eventsArrayList.add(et);
-//                                        }
-//                                    }
+
                                     mActivity.showLongSnack("Proposed date set successfully");
                                 mActivity.hideLoading();
-//                                EventBus.getDefault().post(units);
-//                                CustomCalendarView.createEvents(eventsArrayList, eventMonthYear);
+
                                 fetchUnits();
-//                                }
                             }
 
                             @Override
@@ -372,9 +353,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 if (data.get(i).getCommonDate() > 0) {
                                     if (DateUtil.getDisplayDate(data.get(i).getCommonDate()).equals(selectedDate)) {
                                         units.add(data.get(i));
-//                                        Unit unit = data.get(i);
-//                                        units.add(unit);
-//                                populateUnits(units);
+
                                     }
                                 }
                             }
@@ -412,7 +391,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             }
                         }
 //
-                        CustomCalendarView.createEvents(eventsArrayList, eventMonthYear);
+                        CustomCalendarView.createEvents(eventsArrayList, selectedDateLng);
 
 //                        populateUnits(data);
                         if (units.size()==0){
@@ -475,7 +454,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     public void onEventMainThread(PeriodSavedEvent event) {
         changesMade = true;
         allLoaded = false;
-//        fetchData();
+        fetchData();
     }
 
 
@@ -484,7 +463,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 //        filters.clear();
         changesMade = true;
         allLoaded = false;
-//        fetchData();
+        fetchData();
     }
 
     @SuppressWarnings("unused")
@@ -580,6 +559,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         } else {
                             unitBinding.statusIcon.setVisibility(View.GONE);
                         }
+
 
 //                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
 //                    eventsArrayList.add(ev);
@@ -689,6 +669,10 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     }
 
     public void navigateToPeriodListing(){
-        ActivityUtil.gotoPage(mActivity, PeriodListingActivity.class);
+        Intent intent = new Intent(mActivity, PeriodListingActivity.class);
+        intent.putExtra(SELECTED_DATE, selectedDateLng);
+        mActivity.startActivity(intent);
+//        ActivityUtil.gotoPage(mActivity, PeriodListingActivity.class, );
     }
+
 }

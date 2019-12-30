@@ -71,5 +71,6 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
     @Override
     public void onPageShow() {
        viewModel.setSessionFilter();
+
     }
 }

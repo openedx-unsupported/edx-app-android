@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@color/humana_card_background"
         android:layout_margin="8dp"
         android:padding="5dp"
@@ -29,13 +29,13 @@
             android:fontFamily="@font/hind_medium"
             android:gravity="start|center"
             android:id="@+id/text_title"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:text="@{period.title}"
             android:textColor="@color/gray_5"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
+            android:layout_weight="0.1"
             android:fontFamily="@font/hind_medium"
             android:src="@drawable/sp_chevron_end"
             android:id="@+id/img_title"

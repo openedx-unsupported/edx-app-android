@@ -87,8 +87,6 @@
             android:contentDescription="@string/submit"
             android:onClick="@{() -> viewModel.addPeriod()}"
             android:src="@android:drawable/ic_input_add"
-            tool_tip="@{viewModel.toolTiptext}"
-            tool_tip_gravity="@{viewModel.toolTipGravity}"
             android:tint="@color/white" />
 
     </android.support.design.widget.CoordinatorLayout>

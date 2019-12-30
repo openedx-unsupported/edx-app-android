@@ -310,6 +310,7 @@ public class UnitsViewModel extends BaseViewModel {
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
                             changesMade=true;
+                            Constants.PROG_FILTER = filters;
                             fetchData();
 
                         } else {
@@ -326,7 +327,7 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     public void fetchData() {
-
+        mActivity.showLoading();
         if (changesMade) {
             changesMade = false;
             skip = 0;
@@ -387,27 +388,27 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     public void fetchUnits() {
-
+        mActivity.showLoading();
         mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
                 "", 0L, take, skip, 0L, 0L,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
-                        mActivity.hideLoading();
                         if (data.size() < take) {
                             allLoaded = true;
                         }
                         populateUnits(data);
                         unitsAdapter.setLoadingDone();
+                        mActivity.hideLoading();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        mActivity.hideLoading();
                         allLoaded = true;
                         unitsAdapter.setLoadingDone();
                         toggleEmptyVisibility();
+                        mActivity.hideLoading();
                     }
                 });
 
@@ -702,6 +703,7 @@ public class UnitsViewModel extends BaseViewModel {
 
     public void setSessionFilter() {
         selectedFilter = mDataManager.getSelectedFilters();
+        filters = Constants.PROG_FILTER;
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();

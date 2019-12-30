@@ -86,10 +86,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableBoolean fabVisible = new ObservableBoolean();
 
-    public ObservableInt initialPosition = new ObservableInt();
-    public ObservableInt toolTipPosition = new ObservableInt();
-    public ObservableInt toolTipGravity = new ObservableInt();
-    public ObservableField<String> toolTiptext = new ObservableField<>();
     public ObservableField<Long> startDate = new ObservableField<>();
     public ObservableField<Long> endDate = new ObservableField<>();
     public ObservableField<Period> periodItem = new ObservableField<>();
@@ -181,15 +177,13 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
         mActivity.showLoading();
         getFilters();
-//        toolTiptext.set("test");
-//        toolTipGravity.set(Gravity.TOP);
-//        toolTipPosition.set(0);
+
 
     }
 
 
     public void fetchData() {
-
+        mActivity.showLoading();
         if (changesMade) {
             changesMade = false;
             skip = 0;
@@ -197,8 +191,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             setFilters();
         }
         getPeriods();
-
-
 
     }
 
@@ -272,12 +264,14 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
+                        mActivity.showLoading();
                         langTags = new ArrayList<>();
                         if (!data.isEmpty()) {
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
                             changesMade=true;
+                            Constants.PROG_FILTER = filters;
                             fetchData();
 
                             if (mDataManager.getLoginPrefs().getRole() != null) {
@@ -312,7 +306,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             }
                         }
 
-
                     }
 
                     @Override
@@ -327,21 +320,19 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
     private void getPeriods() {
-
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
                 , take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
-                        mActivity.hideLoading();
                         if (data.size() < take) {
                             allLoaded = true;
                         }
                         changesMade = false;
                         emptyVisible.set(false);
                         populatePeriods(data);
-//                        periodAdapter.setItems(data);
                         periodAdapter.setLoadingDone();
+//                        mActivity.hideLoading();
                     }
 
                     @Override
@@ -368,7 +359,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         if (newItemsAdded) {
             periodAdapter.notifyItemRangeInserted(periodList.size() - n, n);
         }
-
+        mActivity.hideLoading();
         toggleEmptyVisibility();
     }
 

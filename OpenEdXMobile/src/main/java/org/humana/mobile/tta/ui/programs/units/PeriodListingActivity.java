@@ -23,7 +23,8 @@ public class PeriodListingActivity extends BaseVMActivity {
     private EnrolledCoursesResponse course;
     private BottomSheetBehavior behavior;
     private FrameLayout bottom_sheet;
-
+    private final String SELECTED_DATE= "selected_date";
+    private Long date;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,8 +35,9 @@ public class PeriodListingActivity extends BaseVMActivity {
         } else if (savedInstanceState != null){
             getBundledData(savedInstanceState);
         }
-
-        viewModel = new PeriodListingViewModel(this, course);
+        savedInstanceState = getIntent().getExtras();
+        date = savedInstanceState.getLong(SELECTED_DATE,0);
+        viewModel = new PeriodListingViewModel(this, course, date);
         binding(R.layout.activity_period_listing, viewModel);
         setSupportActionBar(findViewById(R.id.toolbar));
     }

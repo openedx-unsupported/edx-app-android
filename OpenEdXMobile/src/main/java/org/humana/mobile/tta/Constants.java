@@ -1,6 +1,9 @@
 package org.humana.mobile.tta;
 
 import org.humana.mobile.tta.data.local.db.table.Unit;
+import org.humana.mobile.tta.data.model.program.ProgramFilter;
+
+import java.util.List;
 
 public class Constants {
 
@@ -108,7 +111,9 @@ public class Constants {
     //for app update
     public static final String VERSION_NAME = "version_name";
     public static final String VERSION_CODE = "version_code";
+    public static final String SELECTED_DATE = "selected_date";
     public static String PROGRAM_ID;
     public static String UNIT_ID="";
     public static String USERNAME="";
+    public static List<ProgramFilter> PROG_FILTER;
 }

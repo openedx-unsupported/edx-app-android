@@ -18,6 +18,7 @@ public class AddUnitsActivity extends BaseVMActivity {
     private long periodId;
     private String periodName;
     private EnrolledCoursesResponse course;
+    private Long selectedDate = 0L;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class AddUnitsActivity extends BaseVMActivity {
             getBundledData(savedInstanceState);
         }
 
-        viewModel = new AddUnitsViewModel(this, periodId, periodName, course);
+        viewModel = new AddUnitsViewModel(this, periodId, periodName, course, selectedDate);
         binding(R.layout.t_activity_add_units, viewModel);
 
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -63,6 +64,9 @@ public class AddUnitsActivity extends BaseVMActivity {
         }
         if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
             periodName = parameters.getString(Constants.KEY_PERIOD_NAME);
+        }
+        if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
+            selectedDate = parameters.getLong(Constants.SELECTED_DATE);
         }
         if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
             course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);

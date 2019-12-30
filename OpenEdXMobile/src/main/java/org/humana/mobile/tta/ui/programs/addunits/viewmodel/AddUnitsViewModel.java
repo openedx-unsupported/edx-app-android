@@ -75,6 +75,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private boolean isUnitModePeriod;
+    private Long selectedDate;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -84,12 +85,14 @@ public class AddUnitsViewModel extends BaseViewModel {
         return true;
     };
 
-    public AddUnitsViewModel(BaseVMActivity activity, long periodId, String periodName, EnrolledCoursesResponse course) {
+    public AddUnitsViewModel(BaseVMActivity activity, long periodId, String periodName, EnrolledCoursesResponse course,
+                             Long selectedDate) {
         super(activity);
 
         this.course = course;
         this.periodId = periodId;
         this.periodName.set(periodName);
+        this.selectedDate = selectedDate;
         emptyVisible.set(false);
         units = new ArrayList<>();
         selectedOriginal = new ArrayList<>();
@@ -119,7 +122,14 @@ public class AddUnitsViewModel extends BaseViewModel {
                     if (selected.contains(item)){
                         selected.remove(item);
                     } else {
-                        selected.add(item);
+                        if (selectedDate!=0){
+                            item.setMyDate(selectedDate);
+                            proposedDateAdded.put(item.getId(), selectedDate);
+                            selected.add(item);
+                        }
+                        {
+                            selected.add(item);
+                        }
                     }
 
                     if (selectedOriginal.contains(item)) {
@@ -293,7 +303,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     private void fetchFilters() {
-
+        mActivity.showLoading();
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.addunits.name(),filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -303,8 +313,10 @@ public class AddUnitsViewModel extends BaseViewModel {
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
+                            mActivity.hideLoading();
                         } else {
                             filtersVisible.set(false);
+                            mActivity.hideLoading();
                         }
                     }
 
@@ -317,7 +329,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     private void fetchData(){
-
+        mActivity.showLoading();
         if (changesMade){
             units.clear();
             selectedOriginal.clear();
@@ -369,14 +381,12 @@ public class AddUnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         if (isUnitModePeriod) {
-
             mDataManager.getUnits(filters, "",mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),"",
                     periodId ,take, skip,0L,0L,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {
-                            mActivity.hideLoading();
                             if (data.size() < take) {
                                 isUnitModePeriod = false;
                                 skip = -1;
@@ -396,6 +406,8 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                             populateUnits(data);
                             unitsAdapter.setLoadingDone();
+
+
                         }
 
                         @Override
@@ -416,7 +428,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {
-                            mActivity.hideLoading();
                             if (data.size() < take) {
                                 allLoaded = true;
                             }
@@ -457,7 +468,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         if (newItemsAdded) {
             unitsAdapter.notifyItemRangeInserted(units.size() - n, n);
         }
-
+        mActivity.hideLoading();
         toggleEmptyVisibility();
     }
 

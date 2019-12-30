@@ -66,16 +66,14 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         fetchPrograms();
 
         programsAdapter.setItemClickListener((view, item) -> {
-
+            mActivity.showLoading();
             if (selectPrograms.size() > 0) {
                 if (view == itemView) {
                     selectPrograms.clear();
-//                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
                 } else {
                     selectPrograms.clear();
                     selectPrograms.add(item);
-//                    itemView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
-//                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
+
                     itemView = view;
                     programId = item.getId();
                     org.humana.mobile.tta.Constants.PROGRAM_ID = programId;
@@ -94,6 +92,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                                 Constants.isSingleRow = true;
                                 ActivityUtil.gotoPage(mActivity, LandingActivity.class);
                                 mActivity.finish();
+                                mActivity.hideLoading();
 
                             } else {
                                 Bundle b = new Bundle();
@@ -102,6 +101,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                                 Constants.isSinglePrg = false;
                                 ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
                                 mActivity.finish();
+                                mActivity.hideLoading();
 
                             }
 
@@ -118,7 +118,6 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 selectPrograms.add(item);
                 itemView = view;
                 programId = item.getId();
-//                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                 mDataManager.getLoginPrefs().setProgramId(programId);
                 mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
                 mDataManager.getLoginPrefs().setParentId(item.getParent_id());
@@ -163,10 +162,10 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
             @Override
             public void onSuccess(List<Program> data) {
-                mActivity.hideLoading();
+
                 populatePrograms(data);
                 programsAdapter.setLoadingDone();
-
+                mActivity.hideLoading();
             }
 
             @Override
@@ -261,7 +260,6 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                 if (isPrev.get()) {
                     if (model.getId().equals(mDataManager.getLoginPrefs().getProgramId())) {
                         itemView = itemBinding.llProg;
-//                        itemBinding.btnView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_blue_light));
                     }
                 }
 

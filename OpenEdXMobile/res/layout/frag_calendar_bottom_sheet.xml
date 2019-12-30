@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@color/humana_card_background"
-            android:visibility="visible"
+            android:visibility="@{viewModel.emptyVisible ? View.VISIBLE : View.GONE}"
             android:orientation="horizontal">
 
             <TextView

@@ -274,8 +274,8 @@ public class StudentsViewModel extends BaseViewModel {
                         }
                     }
 
-                }); itemBinding.imgTwitter.setOnClickListener(v -> {
-
+                });
+                itemBinding.imgTwitter.setOnClickListener(v -> {
                     if (model.social_profile.size()>0 && model.social_profile != null) {
                         for (int i=0; i<model.social_profile.size(); i++) {
                             if (model.social_profile.get(i).platform.equals("twitter")) {
@@ -286,7 +286,8 @@ public class StudentsViewModel extends BaseViewModel {
                         }
                     }
 
-                }); itemBinding.imgFacebook.setOnClickListener(v -> {
+                });
+                itemBinding.imgFacebook.setOnClickListener(v -> {
                     if (model.social_profile.size()>0 && model.social_profile != null) {
                         for (int i=0; i<model.social_profile.size(); i++) {
                             if (model.social_profile.get(i).platform.equals("facebook")) {
@@ -338,13 +339,13 @@ public class StudentsViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
-//    public void onEventMainThread(ProgramUser event) {
-//        ProgramUser period = new ProgramUser();
-//        int position2 = gridUsersAdapter.getItemPosition(period);
-//        if (position2 >= 0) {
-//            ProgramUser p = users.get(position2);
-//            p.pendingCount = period.pendingCount + event.pendingCount;
-//            gridUsersAdapter.notifyItemChanged(position2);
-//        }
-//    }
+    public void onEventMainThread(ProgramUser event) {
+        ProgramUser period = new ProgramUser();
+        int position2 = gridUsersAdapter.getItemPosition(period);
+        if (position2 >= 0) {
+            ProgramUser p = users.get(position2);
+            p.pendingCount = period.pendingCount + event.pendingCount;
+            gridUsersAdapter.notifyItemChanged(position2);
+        }
+    }
 }

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
+
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
@@ -34,9 +36,9 @@ public class PeriodListingViewModel extends BaseViewModel {
     public List<ProgramFilter> filters;
     private int take, skip;
     private  EnrolledCoursesResponse course;
+    private final String SELECTED_DATE= "selected_date";
 
-
-    public PeriodListingViewModel(BaseVMActivity activity, EnrolledCoursesResponse course) {
+    public PeriodListingViewModel(BaseVMActivity activity, EnrolledCoursesResponse course, Long selectedDate) {
         super(activity);
         this.course = course;
         emptyVisible.set(false);
@@ -56,11 +58,14 @@ public class PeriodListingViewModel extends BaseViewModel {
                     Bundle parameters = new Bundle();
                     parameters.putString(Constants.KEY_PERIOD_NAME, item.getTitle());
                     parameters.putLong(Constants.KEY_PERIOD_ID, item.getId());
+                    parameters.putLong(SELECTED_DATE, selectedDate);
                     parameters.putSerializable(Router.EXTRA_COURSE_DATA, PeriodListingViewModel.this.course);
                     ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
                     mActivity.finish();
             }
         });
+
+        mActivity.showLoading();
 
     }
 
@@ -70,10 +75,10 @@ public class PeriodListingViewModel extends BaseViewModel {
                 , take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
-                        mActivity.hideLoading();
 //                        populatePeriods(data);
                         periodAdapter.setItems(data);
                         periodAdapter.setLoadingDone();
+                        mActivity.hideLoading();
                     }
 
                     @Override
