@@ -1,11 +1,12 @@
 package org.edx.mobile.view;
 
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.UiThreadTestRule;
-import androidx.test.runner.AndroidJUnit4;
 
 import com.facebook.testing.screenshot.Screenshot;
 
@@ -51,7 +52,8 @@ public abstract class PresenterActivityScreenshotTest<ActivityT extends Presente
     @Before
     public void before() {
         this.presenter = mock(getPresenterType());
-        ((EdxInstrumentationTestApplication) InstrumentationRegistry.getTargetContext().getApplicationContext()).setNextPresenter(presenter);
+        ((EdxInstrumentationTestApplication) InstrumentationRegistry.getInstrumentation().
+                getTargetContext().getApplicationContext()).setNextPresenter(presenter);
         this.activity = mActivityRule.launchActivity(null);
         // To simplify tests, we automatically execute view methods on the application's UI thread.
         this.view = UiThreadInvocationHandler.newProxyInstance(uiThreadTestRule, activity.view, getViewType());
@@ -59,7 +61,10 @@ public abstract class PresenterActivityScreenshotTest<ActivityT extends Presente
 
     @After
     public void after() {
-        Screenshot.snap(activity.findViewById(android.R.id.content)).setName(getClass().getName() + "_" + testName.getMethodName()).record();
+        activity.runOnUiThread(() -> {
+            Screenshot.snap(activity.findViewById(android.R.id.content)).setName(getClass().getName() + "_" + testName.getMethodName()).record();
+        });
+
     }
 
     @SuppressWarnings("unchecked")
