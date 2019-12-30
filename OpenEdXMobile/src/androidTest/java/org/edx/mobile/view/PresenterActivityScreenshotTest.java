@@ -1,11 +1,12 @@
 package org.edx.mobile.view;
 
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.UiThreadTestRule;
-import androidx.test.runner.AndroidJUnit4;
 
 import com.facebook.testing.screenshot.Screenshot;
 

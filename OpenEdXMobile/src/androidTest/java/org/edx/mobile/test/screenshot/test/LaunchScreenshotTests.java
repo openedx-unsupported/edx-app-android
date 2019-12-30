@@ -1,8 +1,9 @@
 package org.edx.mobile.test.screenshot.test;
 
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import android.view.View;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.facebook.testing.screenshot.Screenshot;
 
