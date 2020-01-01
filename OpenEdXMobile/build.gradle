@@ -268,6 +268,8 @@ if (firebaseEnabled?: false) {
     // Apply the Performance Monitoring plugin to enable instrumentation
     apply plugin: 'com.google.firebase.firebase-perf'
 }
+// Variable to check if Firebase Cloud Messaging is enabled
+def fcmEnabled = config.get('PUSH_NOTIFICATIONS') && firebaseEnabled && firebase?.get('CLOUD_MESSAGING_ENABLED')
 
 android {
     signingConfigs {
@@ -378,6 +380,7 @@ android {
 
         manifestPlaceholders = [supportsRtl:"false",
                                 firebaseEnabled: firebaseEnabled?: false,
+                                fcmEnabled: fcmEnabled,
                                 branchKey: branchKey,
                                 facebookAppId: facebookAppId,
                                 fbLoginProtocolScheme: fbLoginProtocolScheme,

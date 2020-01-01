@@ -9,11 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseAppActivity;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.module.prefs.PrefManager;
 
-public class WhatsNewActivity extends BaseAppActivity {
+public class WhatsNewActivity extends BaseFragmentActivity {
 
     public static Intent newIntent(@NonNull Context context) {
         return new Intent(context, WhatsNewActivity.class);

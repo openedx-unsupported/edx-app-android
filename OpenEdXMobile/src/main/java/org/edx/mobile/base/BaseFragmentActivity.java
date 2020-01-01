@@ -21,8 +21,10 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.deeplink.PushLinkManager;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.event.PushLinkReceivedEvent;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.interfaces.OnActivityResultListener;
@@ -326,6 +328,22 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                 }
             });
 
+        }
+    }
+
+    public void onEvent(final PushLinkReceivedEvent event) {
+        if (event.getPushLink().isDeepLink()) {
+            showAlertDialog(event.getPushLink().getTitle(), event.getPushLink().getBody(),
+                    getString(R.string.view_button_text),
+                    // On View Click
+                    (dialog, which) -> PushLinkManager.INSTANCE.onPushLinkActionGranted(this, event.getPushLink()),
+                    getString(R.string.label_cancel), null
+            );
+        } else {
+            showAlertDialog(event.getPushLink().getTitle(), event.getPushLink().getBody(),
+                    getString(R.string.label_ok), null,
+                    getString(R.string.label_cancel), null
+            );
         }
     }
 

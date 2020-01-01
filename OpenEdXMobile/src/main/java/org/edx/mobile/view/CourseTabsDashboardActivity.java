@@ -1,6 +1,6 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +18,7 @@ import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_TOPIC_ID;
 import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
 public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
-    public static Intent newIntent(@NonNull Activity activity,
+    public static Intent newIntent(@NonNull Context activity,
                                    @Nullable EnrolledCoursesResponse courseData,
                                    @Nullable String courseId,
                                    @Nullable String topicId,

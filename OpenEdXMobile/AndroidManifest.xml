@@ -314,8 +314,6 @@
         <!-- Setup Firebase -->
         <meta-data android:name="firebase_analytics_collection_enabled"
             android:value="${firebaseEnabled}" />
-        <meta-data android:name="firebase_messaging_auto_init_enabled"
-            android:value="${firebaseEnabled}" />
 
         <!-- Branch -->
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="${branchKey}" />
@@ -339,9 +337,11 @@
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
 
         <!-- Notifications through Firebase Cloud Messaging (FCM) -->
+        <meta-data android:name="firebase_messaging_auto_init_enabled"
+            android:value="${fcmEnabled}" />
         <service
             android:name="org.edx.mobile.notifications.services.NotificationService"
-            android:enabled="${firebaseEnabled}">
+            android:enabled="${fcmEnabled}">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
