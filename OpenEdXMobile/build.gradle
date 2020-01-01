@@ -15,10 +15,8 @@ buildscript {
 
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
-
-//        TODO : Need to update when available, ( In order to resolve "variant.getConnectedInstrumentTest()" warning)
-//        Reference : https://github.com/facebook/screenshot-tests-for-android/issues/210
-        classpath 'com.facebook.testing.screenshot:plugin:0.8.0'
+        //Screenshot testing library
+        classpath 'com.facebook.testing.screenshot:plugin:0.11.0'
         classpath 'com.google.gms:google-services:4.2.0'
     }
 }
