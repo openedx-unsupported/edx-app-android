@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.LinearLayout;
 
 import org.edx.mobile.R;
@@ -35,23 +34,26 @@ import static org.junit.Assert.assertTrue;
 // The SDK version needs to be lesser than Lollipop because of this
 // issue: https://github.com/robolectric/robolectric/issues/1810
 @Config(sdk = 19)
-public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
+public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
+
+    protected abstract BaseCourseUnitVideoFragment getCourseUnitPlayerFragmentInstance();
+
     /**
      * Method for iterating through the mock course response data, and
      * returning the first video block leaf.
      *
      * @return The first {@link VideoBlockModel} leaf in the mock course data
      */
-    private VideoBlockModel getVideoUnit() {
-        EnrolledCoursesResponse courseData;
+    VideoBlockModel getVideoUnit() {
+        final EnrolledCoursesResponse courseData;
         try {
             courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        String courseId = courseData.getCourse().getId();
-        CourseStructureV1Model model;
-        CourseComponent courseComponent;
+        final String courseId = courseData.getCourse().getId();
+        final CourseStructureV1Model model;
+        final CourseComponent courseComponent;
         try {
             model = executeStrict(courseAPI.getCourseStructure(config.getApiUrlVersionConfig().getBlocksApiVersion(), courseId));
             courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
@@ -59,7 +61,7 @@ public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
             throw new RuntimeException(e);
         }
 
-        return (VideoBlockModel) courseComponent.getVideos().get(0);
+        return courseComponent.getVideos().get(0);
     }
 
     /**
@@ -67,44 +69,44 @@ public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() {
-        BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
+        final BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertTrue(fragment.getRetainInstance());
 
-        View view = fragment.getView();
+        final View view = fragment.getView();
         assertNotNull(view);
-        View messageContainer = view.findViewById(R.id.message_container);
+        final View messageContainer = view.findViewById(R.id.message_container);
         assertNotNull(messageContainer);
     }
 
     /**
      * Generic method for testing setup on orientation changes
      *
-     * @param fragment The current fragment
+     * @param fragment    The current fragment
      * @param orientation The orientation change to test
      */
     private void testOrientationChange(
             BaseCourseUnitVideoFragment fragment, int orientation) {
-        Resources resources = fragment.getResources();
-        Configuration config = resources.getConfiguration();
+        final Resources resources = fragment.getResources();
+        final Configuration config = resources.getConfiguration();
         assertNotEquals(orientation, config.orientation);
         config.orientation = orientation;
         fragment.onConfigurationChanged(config);
 
-        boolean isLandscape = config.orientation ==
-                Configuration.ORIENTATION_LANDSCAPE;
-        View view = fragment.getView();
+        final View view = fragment.getView();
         assertNotNull(view);
-        Window window = fragment.getActivity().getWindow();
 
-        View playerContainer = view.findViewById(R.id.player_container);
+        final boolean isLandscape = config.orientation ==
+                Configuration.ORIENTATION_LANDSCAPE;
+
+        final View playerContainer = view.findViewById(R.id.player_container);
         if (playerContainer != null) {
             assertThat(playerContainer).isInstanceOf(ViewGroup.class);
             ViewGroup.LayoutParams layoutParams = playerContainer.getLayoutParams();
             assertNotNull(layoutParams);
             assertThat(layoutParams).hasWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-            int height = isLandscape ? displayMetrics.heightPixels :
+            final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            final int height = isLandscape ? displayMetrics.heightPixels :
                     (displayMetrics.widthPixels * 9 / 16);
             assertThat(layoutParams).hasHeight(height);
         }
@@ -115,7 +117,7 @@ public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
      */
     @Test
     public void orientationChangeTest() {
-        BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
+        final BaseCourseUnitVideoFragment fragment = getCourseUnitPlayerFragmentInstance();
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);
@@ -128,7 +130,7 @@ public class CourseUnitAndroidVideoPlayerFragmentTest extends UiTest {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            LinearLayout view = new LinearLayout(this);
+            final LinearLayout view = new LinearLayout(this);
             // noinspection ResourceType
             view.setId(1);
 
