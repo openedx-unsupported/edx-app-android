@@ -134,6 +134,9 @@ dependencies {
     // Mx module for listing
     implementation project(':mxlib')
 
+    //for mx custom calender
+    implementation project(":mxcalendar")
+
     //MVVM ::Start Arjun
     implementation "com.android.support:support-vector-drawable:${supportLibraryVersion}"
     implementation "com.android.support:support-v4:${supportLibraryVersion}"

@@ -1,0 +1,3 @@
+[submodule "mxcalendar"]
+	path = mxcalendar
+	url = https://manprax.visualstudio.com/DefaultCollection/MXStore/_git/mxcalendar
