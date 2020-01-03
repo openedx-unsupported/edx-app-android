@@ -448,7 +448,7 @@ public class TaAPI {
         parameters.put(Constants.KEY_ACTION_ID, action_id);
         parameters.put(Constants.KEY_ACTION_PARENT_ID, action_parent_id);
         parameters.put(Constants.KEY_RESPONDENT, respondent);
-        parameters.put(Constants.KEY_UNIQUE_ID, unique_id);
+        parameters.put(Constants.KEY_DEVICE_ID, unique_id);
         return taService.sendNotification(parameters);
 
     }

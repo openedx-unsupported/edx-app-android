@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.humana.mobile.tta.utils.AppUtil;
+
 import static org.humana.mobile.util.BrowserUtil.loginPrefs;
 
 public  class FirebaseHelper {
@@ -27,6 +29,7 @@ public  class FirebaseHelper {
                 Bundle parameters = new Bundle();
                 parameters.putString("user_id", loginPrefs.getUsername());
                 parameters.putString("token", mToken);
+                parameters.putString("device_id", AppUtil.generateDeviceIdentifier(context));
 
                 FirebaseTokenUpdateTask firebasetokn_update_task = new FirebaseTokenUpdateTask(context, parameters) {
                     @Override

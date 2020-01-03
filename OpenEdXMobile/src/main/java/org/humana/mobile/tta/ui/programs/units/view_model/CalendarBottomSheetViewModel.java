@@ -672,7 +672,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         Intent intent = new Intent(mActivity, PeriodListingActivity.class);
         intent.putExtra(SELECTED_DATE, selectedDateLng);
         mActivity.startActivity(intent);
-//        ActivityUtil.gotoPage(mActivity, PeriodListingActivity.class, );
     }
 
 }

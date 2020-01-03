@@ -110,18 +110,4 @@ public class EdxCookieManager {
     public boolean isSessionCookieMissingOrExpired() {
         return authSessionCookieExpiration < System.currentTimeMillis();
     }
-
-   /* private void  saveCookie(Response<RequestBody> response)
-    {
-        if(response!=null) {
-            String[] arr;
-            for (String header : response.headers().toMultimap().get("Set-Cookie")) {
-                if (header.contains("sessionid=")) {
-                    arr = header.split(";");
-                    BrowserUtil.loginPrefs.setLoginUserCookie(arr[0]);
-                    break;
-                }
-            }
-        }
-    }*/
 }

@@ -19,9 +19,11 @@ import org.humana.mobile.http.interceptor.StaleIfErrorHandlingInterceptor;
 import org.humana.mobile.http.interceptor.StaleIfErrorInterceptor;
 import org.humana.mobile.http.interceptor.UserAgentInterceptor;
 import org.humana.mobile.http.util.Tls12SocketFactory;
+import org.humana.mobile.tta.Constants;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -69,7 +71,10 @@ public interface OkHttpClientProvider extends Provider<OkHttpClient> {
                     (usesOfflineCache ? USES_OFFLINE_CACHE : 0);
             OkHttpClient client = clients[index];
             if (client == null) {
-                final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                final OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                        .connectTimeout(Constants.CLIENT_TIMEOUT, TimeUnit.SECONDS)
+                        .readTimeout(Constants.CLIENT_TIMEOUT, TimeUnit.SECONDS)
+                        .writeTimeout(Constants.CLIENT_TIMEOUT, TimeUnit.SECONDS);
                 List<Interceptor> interceptors = builder.interceptors();
                 if (usesOfflineCache) {
                     final File cacheDirectory = new File(context.getFilesDir(), "http-cache");

@@ -36,6 +36,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     protected SwipeRefreshLayout swipeContainer;
 
     private DataManager mdataManager;
+    private final String lms_xblock = "/mx_humana_lms/xblock/";
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
@@ -147,12 +148,10 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 String role = mdataManager.getLoginPrefs().getRole();
                 String program_id = encode(mdataManager.getLoginPrefs().getProgramId());
 
-
-
-                String urlToloadStudent = environment.getConfig().getApiHostURL() + "/mx_humana_lms/xblock/"
+                String urlToloadStudent = environment.getConfig().getApiHostURL() + lms_xblock
                         + blockId + "/?program_id=" + program_id + "&role=" + role + "&username=" + Constants.USERNAME;
 
-                String urlToload = environment.getConfig().getApiHostURL() + "/mx_humana_lms/xblock/"
+                String urlToload = environment.getConfig().getApiHostURL() + lms_xblock
                         + blockId;
                 if (Constants.USERNAME.equals("")) {
                     authWebView.loadUrl(false, urlToload);

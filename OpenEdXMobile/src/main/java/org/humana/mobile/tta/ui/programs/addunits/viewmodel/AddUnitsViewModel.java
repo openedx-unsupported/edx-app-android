@@ -197,7 +197,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                     break;
                                                 }
                                             }
-                                            mActivity.hideLoading();
                                         } else {
                                             mActivity.hideLoading();
                                         }
@@ -255,6 +254,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                         } else {
                             mActivity.showLongSnack("This unit is empty");
                         }
+                        mDataManager.getEdxEnvironment().getConfig().getApiHostURL();
                     }
 
                     @Override
@@ -303,7 +303,6 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     private void fetchFilters() {
-        mActivity.showLoading();
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.addunits.name(),filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -313,10 +312,8 @@ public class AddUnitsViewModel extends BaseViewModel {
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
-                            mActivity.hideLoading();
                         } else {
                             filtersVisible.set(false);
-                            mActivity.hideLoading();
                         }
                     }
 
@@ -423,6 +420,11 @@ public class AddUnitsViewModel extends BaseViewModel {
                     });
 
         } else {
+            if (unitsAdapter.getItemCount()==0){
+                mActivity.showLoading();
+            }else {
+                mActivity.hideLoading();
+            }
             mDataManager.getAllUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(), null, periodId, take, skip,
                     new OnResponseCallback<List<Unit>>() {
@@ -437,7 +439,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                                     unselectedOriginal.add(unit);
                                 }
                             }
-
                             populateUnits(data);
                             unitsAdapter.setLoadingDone();
                         }
@@ -475,8 +476,12 @@ public class AddUnitsViewModel extends BaseViewModel {
     private void toggleEmptyVisibility() {
         if (units == null || units.isEmpty()) {
             emptyVisible.set(true);
+            mActivity.hideLoading();
+
         } else {
             emptyVisible.set(false);
+            mActivity.hideLoading();
+
         }
     }
 

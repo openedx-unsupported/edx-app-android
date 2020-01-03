@@ -90,7 +90,6 @@ public class UnitsViewModel extends BaseViewModel {
 
     public String selectedSession;
 
-
     private boolean isAllLoaded = false;
     private ContentList selectedContentList;
     private boolean isSelected = false;
@@ -411,8 +410,8 @@ public class UnitsViewModel extends BaseViewModel {
                         mActivity.hideLoading();
                     }
                 });
-
     }
+
 
     private void populateUnits(List<Unit> data) {
         boolean newItemsAdded = false;
@@ -535,7 +534,7 @@ public class UnitsViewModel extends BaseViewModel {
 
                 for (ProgramFilterTag tag : model.getTags()) {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            false, R.color.white, R.drawable.t_background_tag_filled
+                            tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
                 }
 
