@@ -2,6 +2,7 @@ package org.humana.mobile.module.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -67,6 +68,7 @@ public class LoginPrefs {
 
     @NonNull
     private final PrefManager pref;
+
     private final SharedPreferences.Editor editor = new SharedPreferences.Editor() {
         @Override
         public SharedPreferences.Editor putString(String key, @androidx.annotation.Nullable String value) {
@@ -810,4 +812,18 @@ public class LoginPrefs {
     public String getCurrrentPeriodTitle() {
         return pref.getString(PrefManager.Key.CURRENT_PERIOD_TITLE);
     }
+
+    // save filter list
+  /*  public void saveFilterList(ArrayList<ProgramFilter> list, String key){
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();     // This line is IMPORTANT !!!
+    }
+
+    public ArrayList<ProgramFilter> getFilterList(String key){
+        String json = pref.getString(key);
+        Type type = new TypeToken<ArrayList<ProgramFilter>>() {}.getType();
+        return gson.fromJson(json, type);
+    }*/
 }

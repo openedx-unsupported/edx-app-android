@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -41,6 +42,7 @@ import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Period;
+import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
@@ -113,14 +115,12 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     };
     private String lang;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public ScheduleViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
         super(context, fragment);
         this.course = course;
         filters = new ArrayList<>();
         periodList = new ArrayList<>();
         tags = new ArrayList<>();
-//        allFilters = new ArrayList<>();
         mActivity.showLoading();
         isSelected = false;
 
@@ -142,7 +142,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.textview_add:
-//                    downloadFile(item);
                     Bundle parameters = new Bundle();
                     parameters.putString(Constants.KEY_PERIOD_NAME, item.getTitle());
                     parameters.putLong(Constants.KEY_PERIOD_ID, item.getId());
@@ -158,8 +157,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     break;
 
                 case R.id.txt_end_date:
-//                    showEndDatePicker(item);
-//                    openDateRangePicker(item);
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
                         rangePicker(item);
@@ -178,9 +175,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         mActivity.showLoading();
         getFilters();
 
-
     }
-
 
     public void fetchData() {
         mActivity.showLoading();
@@ -191,7 +186,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             setFilters();
         }
         getPeriods();
-
     }
 
 
@@ -251,8 +245,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         } else {
             gridLayoutManager = new GridLayoutManager(mActivity, 1);
         }
-
-//        fetchData();
 
     }
 
@@ -328,11 +320,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         if (data.size() < take) {
                             allLoaded = true;
                         }
-                        changesMade = false;
                         emptyVisible.set(false);
                         populatePeriods(data);
-//                        periodAdapter.setLoadingDone();
-//                        mActivity.hideLoading();
+                        periodAdapter.setLoadingDone();
                     }
 
                     @Override
@@ -346,21 +336,21 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     }
 
     private void populatePeriods(List<Period> data) {
-        boolean newItemsAdded = false;
-        List<Period> periods = new ArrayList<>();
-        int n = 0;
-        for (Period period : data) {
-            if (!periodList.contains(period)) {
-                periodList.add(period);
-                newItemsAdded = true;
-                n++;
+            boolean newItemsAdded = false;
+            int n = 0;
+            for (Period period : data) {
+                if (!periodList.contains(period)) {
+                    periodList.add(period);
+                    newItemsAdded = true;
+                    n++;
+                }
             }
-        }
-        if (newItemsAdded) {
-            periodAdapter.notifyItemRangeInserted(periodList.size() - n, n);
-        }
-        mActivity.hideLoading();
-        toggleEmptyVisibility();
+            if (newItemsAdded) {
+                periodAdapter.notifyItemRangeInserted(periodList.size() - (n-1), n);
+            }
+            mActivity.hideLoading();
+            toggleEmptyVisibility();
+
     }
 
     @SuppressWarnings("unused")
@@ -379,7 +369,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     @SuppressWarnings("unused")
     public void onEventMainThread(String tag) {
         if (!org.humana.mobile.tta.data.constants.Constants.selectedSession.equals("")) {
-//            org.humana.mobile.tta.data.constants.Constants.selectedSession = tag.getDisplayName();
             allFilters.clear();
             allLoaded = false;
             changesMade = true;
@@ -486,9 +475,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
-                int langPos = 0;
-                int sessionPos = 0;
-
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 //String selectedTag = "";
                 items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
@@ -527,7 +513,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     mActivity.showLoading();
                     selectedFilter = mDataManager.getSelectedFilters();
                     getFilters();
-//                    fetchData();
                 });
 
             }
@@ -593,86 +578,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
     }
 
-    private void openDateRangePicker(Period period) {
-        DateRangePickerFragment pickerFrag = new DateRangePickerFragment();
-        pickerFrag.setCallback(new DateRangePickerFragment.Callback() {
-            @Override
-            public void onCancelled() {
-                Toast.makeText(mActivity, "User cancel",
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onDateTimeRecurrenceSet(final SelectedDate selectedDate, int hourOfDay, int minute,
-                                                SublimeRecurrencePicker.RecurrenceOption recurrenceOption,
-                                                String recurrenceRule) {
-
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat formatDate = new SimpleDateFormat("dd MMM yyyy");
-                String mDateStart = formatDate.format(selectedDate.getStartDate().getTime());
-                String mDateEnd = formatDate.format(selectedDate.getEndDate().getTime());
-
-                Log.d("mDateStart", mDateStart);
-                Log.d("mDateEnd", mDateEnd);
-//                SimpleDateFormat f = new SimpleDateFormat("dd-MMM-yyyy");
-                Date d = null;
-                try {
-                    d = formatDate.parse(mDateStart);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                startDate.set(d.getTime());
-
-                Date d1 = null;
-                try {
-                    d1 = formatDate.parse(mDateEnd);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                endDate.set(d1.getTime());
-
-                mDataManager.updatePeriods(mDataManager.getLoginPrefs().getProgramId(),
-                        mDataManager.getLoginPrefs().getSectionId(), String.valueOf(period.getId()),
-                        period.getTitle(), startDate.get(),
-                        endDate.get(),
-                        new OnResponseCallback<SuccessResponse>() {
-                            @Override
-                            public void onSuccess(SuccessResponse response) {
-                                mActivity.hideLoading();
-                                period.setStartDate(startDate.get());
-                                period.setEndDate(endDate.get());
-                                periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(period));
-
-                                if (response.getSuccess()) {
-                                    mActivity.showLongSnack("Start date set successfully");
-//                                    eventsArrayList.clear();
-                                    fetchData();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack(e.getLocalizedMessage());
-                            }
-                        });
-
-            }
-        });
-
-
-        // ini configurasi agar library menggunakan method Date Range Picker
-        SublimeOptions options = new SublimeOptions();
-        options.setCanPickDateRange(true);
-        options.setPickerToShow(SublimeOptions.Picker.DATE_PICKER);
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("SUBLIME_OPTIONS", options);
-        pickerFrag.setArguments(bundle);
-
-        pickerFrag.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        pickerFrag.show(mActivity.getSupportFragmentManager(), "SUBLIME_PICKER");
-    }
 
     public void rangePicker(Period period) {
         Calendar now = Calendar.getInstance();
@@ -692,8 +597,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                           int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MM yyyy");
-//        String mDateStart = formatDate.format();
-//        String mDateEnd = formatDate.format();
+
         Date d = null;
         try {
             d = formatDate.parse(dayOfMonth + " " + (monthOfYear + 1) + " " + year);
@@ -723,7 +627,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                         if (response.getSuccess()) {
                             mActivity.showLongSnack("Date set successfully");
-//                                    eventsArrayList.clear();
                             fetchData();
                         }
                     }
@@ -743,30 +646,4 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         mActivity.showLoading();
         getFilters();
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void downloadFile(Period period){
-
-//        askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
-        Uri uri = Uri.parse("http://tutorial.math.lamar.edu/pdf/Trig_Cheat_Sheet.pdf");
-
-        mDataManager.downloadFile(uri);
-
-        DownloadManager downloadManager = (DownloadManager) mActivity.getSystemService(DOWNLOAD_SERVICE);
-        DownloadManager.Query ImageDownloadQuery = new DownloadManager.Query();
-        Cursor cursor = downloadManager.query(ImageDownloadQuery);
-        if(cursor.moveToFirst()){
-            mDataManager.downloadStatus(cursor, period.getId());
-        }
-    }
-//    protected void askForPermission(String[] permissions, int requestCode) {
-//        if (getActivity() != null) {
-//            if (mActivity.getGrantedPermissionsCount(permissions) == permissions.length) {
-//                permissionListener.onPermissionGranted(permissions, requestCode);
-//            } else {
-//                PermissionsUtil.requestPermissions(requestCode, permissions, mActivity);
-//            }
-//        }
-//    }
 }

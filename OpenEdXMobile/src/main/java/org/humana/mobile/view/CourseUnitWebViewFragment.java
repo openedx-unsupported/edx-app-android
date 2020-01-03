@@ -143,7 +143,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             final CourseComponent component = hasComponentCallback.getComponent();
             if (component != null && component.equals(unit)) {
 //                authWebView.loadUrl(false, unit.getBlockUrl());
-                // ToDo hardcoded here for testing
                 String blockId = unit.getId();
                 String role = mdataManager.getLoginPrefs().getRole();
                 String program_id = encode(mdataManager.getLoginPrefs().getProgramId());

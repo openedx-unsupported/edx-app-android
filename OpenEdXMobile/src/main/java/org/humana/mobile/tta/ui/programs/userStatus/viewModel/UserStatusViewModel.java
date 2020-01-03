@@ -515,7 +515,8 @@ public class UserStatusViewModel extends BaseViewModel {
             if (binding instanceof TRowFilterDropDownBinding) {
                 TRowFilterDropDownBinding dropDownBinding = (TRowFilterDropDownBinding) binding;
 
-                int periodPos =0;
+                int periodPos = 0;
+                int statusPos = 0;
                 List<DropDownFilterView.FilterItem> items = new ArrayList<>();
                 items.add(new DropDownFilterView.FilterItem(model.getDisplayName(), null,
                         true, R.color.primary_cyan, R.drawable.t_background_tag_hollow
@@ -525,6 +526,7 @@ public class UserStatusViewModel extends BaseViewModel {
                             tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
                 }
+
 
                 for (int i = 0; i < items.size(); i++) {
                     if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle() != null) {
@@ -537,15 +539,28 @@ public class UserStatusViewModel extends BaseViewModel {
                     }
                 }
                 dropDownBinding.filterDropDown.setFilterItems(items);
-                dropDownBinding.filterDropDown.setSelection(periodPos);
-
-//                if (model.getInternalName().equals("period_id")){
-//                    if (mDataManager.getLoginPrefs().getCurrrentPeriod()!=0){
-//                        for (int i=0; i<= items.size();i++){
-//                        }
-//                        dropDownBinding.filterDropDown.setSelection();
-//                    }
-//                }
+                if (model.getDisplayName().equals("Period")) {
+                    dropDownBinding.filterDropDown.setSelection(periodPos);
+                }
+                if (model.getDisplayName().equals("Status")) {
+                    for (int i = 0; i < items.size(); i++) {
+                        if (items.get(i).getName().equals("Approved")) {
+                            tags.clear();
+                            tags.add((ProgramFilterTag) items.get(i).getItem());
+                            ProgramFilter filter = new ProgramFilter();
+                            filter.setTags(tags);
+                            filter.setDisplayName("Approved");
+                            filter.setInternalName("Approved");
+                            filter.setId(model.getId());
+                            filter.setOrder(model.getOrder());
+                            filter.setSelected(false);
+                            filters.clear();
+                            filters.add(filter);
+                            fetchUnits();
+                            dropDownBinding.filterDropDown.setSelection(i);
+                        }
+                    }
+                }
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
                     if (prev != null && prev.getItem() != null) {
@@ -560,9 +575,9 @@ public class UserStatusViewModel extends BaseViewModel {
                     mActivity.showLoading();
                     fetchData();
                 });
-                fetchData();
-
+//                fetchData();
             }
+
         }
     }
 

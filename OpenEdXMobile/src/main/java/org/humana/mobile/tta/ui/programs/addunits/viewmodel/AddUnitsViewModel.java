@@ -254,7 +254,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                         } else {
                             mActivity.showLongSnack("This unit is empty");
                         }
-                        mDataManager.getEdxEnvironment().getConfig().getApiHostURL();
                     }
 
                     @Override
@@ -394,13 +393,11 @@ public class AddUnitsViewModel extends BaseViewModel {
                                     selectedOriginal.add(unit);
                                 }
                             }
-
                             for (Unit unit: data){
                                 if (!selected.contains(unit)){
                                     selected.add(unit);
                                 }
                             }
-
                             populateUnits(data);
                             unitsAdapter.setLoadingDone();
 
