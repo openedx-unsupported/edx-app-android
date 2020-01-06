@@ -21,9 +21,10 @@ public class LoginPresenter extends ViewHoldingPresenter<LoginPresenter.LoginVie
         super.attachView(view);
 
         if (networkInfo.isOnZeroRatedNetwork()) {
-            view.setSocialLoginButtons(false, false);
+            view.setSocialLoginButtons(false, false, false);
         } else {
-            view.setSocialLoginButtons(config.getGoogleConfig().isEnabled(), config.getFacebookConfig().isEnabled());
+            view.setSocialLoginButtons(config.getGoogleConfig().isEnabled(), config.getFacebookConfig().isEnabled(),
+                    config.getMicrosoftConfig().isEnabled());
         }
 
         if (!config.isRegistrationEnabled()) {
@@ -33,7 +34,7 @@ public class LoginPresenter extends ViewHoldingPresenter<LoginPresenter.LoginVie
 
     public interface LoginViewInterface {
 
-        void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled);
+        void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled, boolean microsoftEnabled);
 
         void disableToolbarNavigation();
 

@@ -33,6 +33,8 @@ public abstract class RegisterTask extends Task<AuthResponse> {
                 return loginAPI.registerUsingGoogle(parameters, accessToken);
             case TYPE_FACEBOOK:
                 return loginAPI.registerUsingFacebook(parameters, accessToken);
+            case TYPE_MICROSOFT:
+                return loginAPI.registerUsingMicrosoft(parameters, accessToken);
             default: // normal email address login
                 return loginAPI.registerUsingEmail(parameters);
         }

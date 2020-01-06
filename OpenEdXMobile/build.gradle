@@ -149,6 +149,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
     implementation 'com.facebook.android:facebook-login:5.9.0'
+    implementation 'com.microsoft.identity.client:msal:0.3+'
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'de.greenrobot:eventbus:2.4.1'
@@ -259,6 +260,13 @@ def firebaseEnabled = firebaseConfig?.get('ENABLED')
 if (firebaseEnabled ?: false) {
     apply plugin: 'com.google.gms.google-services'
     // Apply the Performance Monitoring plugin to enable instrumentation
+    // Getting some libraries conflict after adding the microsoft client library for microsoft SSO
+    // with message "In project '*' a resolved Google Play services library dependency depends on
+    // another at an exact version (e.g. [1.3.1 ,2.3])." so ad below statement to resolve build issue.
+    // Ref: https://stackoverflow.com/a/57479692
+    googleServices {
+        disableVersionCheck = true
+    }
     apply plugin: 'com.google.firebase.firebase-perf'
 }
 // Variable to check if Firebase Cloud Messaging is enabled

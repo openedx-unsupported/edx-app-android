@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/facebook_text"
+        android:focusable="true"
+        android:foreground="@drawable/light_selectable_rounded_box_overlay"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/social_btn_min_height">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/microsoft_btn_bg"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_microsoft"
+                android:layout_width="@dimen/social_btn_icon_size"
+                android:layout_height="@dimen/social_btn_icon_size"
+                android:layout_margin="@dimen/social_btn_margin"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_microsoft_img" />
+
+            <View
+                android:layout_width="@dimen/social_btn_divider_width"
+                android:layout_height="@dimen/social_btn_divider_height"
+                android:background="@color/transparent_white_20" />
+
+            <TextView
+                android:id="@+id/tv_microsoft"
+                style="@style/regular_white_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/microsoft_text"
+                android:textColor="@color/white"
+                android:textSize="@dimen/social_btn_text_size" />
+        </LinearLayout>
+    </FrameLayout>
+</layout>

@@ -257,4 +257,5 @@
     <!-- Segmented Control Dimensions -->
     <dimen name="edx_segmented_control_start_corner">5dp</dimen>
     <dimen name="edx_segmented_control_end_corner">0dp</dimen>
+    <dimen name="social_button_top_margin">6dp</dimen>
 </resources>

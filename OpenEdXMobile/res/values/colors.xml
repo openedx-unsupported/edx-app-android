@@ -77,5 +77,6 @@
 
     <!-- Social platform colors -->
     <color name="fb_blue">#4267B2</color>
+    <color name="microsoft_dark">#333333</color>
     <color name="google_blue">#4285F4</color>
 </resources>
