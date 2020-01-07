@@ -39,6 +39,7 @@ public class ProgramUser {
     @SerializedName("current_period_title")
     public String current_period_title;
 
+
     public List<SocialProfile> social_profile;
 
 }

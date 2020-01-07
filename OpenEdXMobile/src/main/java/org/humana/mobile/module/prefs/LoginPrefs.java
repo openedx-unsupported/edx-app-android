@@ -2,7 +2,6 @@ package org.humana.mobile.module.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -20,13 +19,11 @@ import org.humana.mobile.tta.data.model.authentication.FieldInfo;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
-import org.humana.mobile.tta.data.model.program.SelectedProgramFilters;
 import org.humana.mobile.tta.wordpress_client.model.WPProfileModel;
 import org.humana.mobile.tta.wordpress_client.model.WpAuthResponse;
 import org.humana.mobile.user.ProfileImage;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -48,12 +45,12 @@ public class LoginPrefs {
         return gson.fromJson(json, type);
     }
 
-    public void setCachedFilter(List<SelectedFilter> selectedFilters)  {
+    public void setCachedFilter(List<SelectedFilter> selectedFilters) {
         pref.put(PrefManager.Key.TAG_LIST, gson.toJson(selectedFilters));
         //sselectedFilters
     }
 
-    public void clearCachedFilter(){
+    public void clearCachedFilter() {
         pref.put(PrefManager.Key.TAG_LIST, gson.toJson(null));
     }
 
@@ -693,9 +690,10 @@ public class LoginPrefs {
     }
 
     public String getSessionFilter() {
-       return pref.getString(PrefManager.Key.SESSION_FILTER);
+        return pref.getString(PrefManager.Key.SESSION_FILTER);
     }
-//    public void storeSessionFilter(@NonNull ProgramFilter filter) {
+
+    //    public void storeSessionFilter(@NonNull ProgramFilter filter) {
 //        pref.put(PrefManager.Key.SESSION_FILTER, gson.toJson(filter));
 //    }
 //
@@ -723,6 +721,7 @@ public class LoginPrefs {
         }
         return gson.fromJson(json, ProgramFilterTag.class);
     }
+
     public void clearSessionSelectedFilterOptionTag() {
         pref.put(PrefManager.Key.SESSION_FILTER_TAG, null);
     }
@@ -778,6 +777,7 @@ public class LoginPrefs {
     public String getTypeFilter() {
         return pref.getString(PrefManager.Key.TYPEFILTER);
     }
+
     public void setPeriodFilter(String type) {
         pref.put(PrefManager.Key.PERIOD_FILTER, type);
     }
@@ -786,7 +786,7 @@ public class LoginPrefs {
         return pref.getString(PrefManager.Key.PERIOD_FILTER);
     }
 
-    public void clearAllFilters(){
+    public void clearAllFilters() {
         pref.put(PrefManager.Key.SESSION_FILTER, null);
         pref.put(PrefManager.Key.SESSION_FILTER_TAG, null);
         pref.put(PrefManager.Key.SESSION_FILTER_TAG, null);
@@ -812,18 +812,4 @@ public class LoginPrefs {
     public String getCurrrentPeriodTitle() {
         return pref.getString(PrefManager.Key.CURRENT_PERIOD_TITLE);
     }
-
-    // save filter list
-  /*  public void saveFilterList(ArrayList<ProgramFilter> list, String key){
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString(key, json);
-        editor.apply();     // This line is IMPORTANT !!!
-    }
-
-    public ArrayList<ProgramFilter> getFilterList(String key){
-        String json = pref.getString(key);
-        Type type = new TypeToken<ArrayList<ProgramFilter>>() {}.getType();
-        return gson.fromJson(json, type);
-    }*/
 }

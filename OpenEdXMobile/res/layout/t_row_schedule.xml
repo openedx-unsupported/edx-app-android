@@ -114,6 +114,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="40dp"
+                    android:id="@+id/iv_start_date"
                     android:src="@drawable/map_pin_a"/>
                 <TextView
                     android:id="@+id/txt_start_date"
@@ -130,6 +131,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="40dp"
+                    android:id="@+id/iv_end_date"
                     android:src="@drawable/map_pin_b"/>
                 <TextView
                     android:id="@+id/txt_end_date"

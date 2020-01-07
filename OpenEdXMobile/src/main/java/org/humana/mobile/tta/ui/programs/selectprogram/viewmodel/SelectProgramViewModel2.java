@@ -66,7 +66,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         fetchPrograms();
 
         programsAdapter.setItemClickListener((view, item) -> {
-            mActivity.showLoading();
+//            mActivity.showLoading();
             if (selectPrograms.size() > 0) {
                 if (view == itemView) {
                     selectPrograms.clear();

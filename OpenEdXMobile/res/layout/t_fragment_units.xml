@@ -120,21 +120,5 @@
             </LinearLayout>
 
         </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll_calendar"
-            android:visibility="@{viewModel.calVisible ? View.VISIBLE : View.GONE}"
-            android:orientation="vertical">
-
-            <org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/calendar_view">
-
-            </org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView>
-
-        </LinearLayout>
     </LinearLayout>
 </layout>

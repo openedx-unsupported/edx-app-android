@@ -4,23 +4,27 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
+import com.lib.mxcalendar.models.Event;
+import com.lib.mxcalendar.util.Builder;
+import com.lib.mxcalendar.view.IMxCalenderListener;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.FragUnitCalendarViewBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
-import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
 import org.humana.mobile.view.Router;
 
-public class UnitCalendarActivity extends BaseVMActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+import de.greenrobot.event.EventBus;
+
+public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderListener {
 
     public UnitCalendarViewModel viewModel;
 
@@ -29,7 +33,8 @@ public class UnitCalendarActivity extends BaseVMActivity {
     private EnrolledCoursesResponse course;
     private BottomSheetBehavior behavior;
     private FrameLayout bottom_sheet;
-    
+    private List<Event> eventList;
+    FragUnitCalendarViewBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,56 +47,23 @@ public class UnitCalendarActivity extends BaseVMActivity {
         }
 
         viewModel = new UnitCalendarViewModel(this, course);
+        eventList = new ArrayList<>();
         ViewDataBinding viewDataBinding= binding(R.layout.frag_unit_calendar_view, viewModel);
-        FragUnitCalendarViewBinding binding= (FragUnitCalendarViewBinding) viewDataBinding;
+        binding= (FragUnitCalendarViewBinding) viewDataBinding;
         setSupportActionBar(findViewById(R.id.toolbar));
-        binding.calendarView.setCalendarListener(new CustomCalendarView.CalendarListener() {
-            @Override
-            public void onAction(long date, long startDatetime, long endDateTime) {
 
-                viewModel.eventDisplayDate = date;
-                viewModel.startDateTime = startDatetime;
-                viewModel.endDateTime = endDateTime;
-                viewModel.fetchUnits();
-//                if (behavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-//                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//
-//                } else {
-//                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//                }
-            }
+        binding.calendarView.init(
+                new Builder()
+        .setDayNameColor(null)
+        .setHeaderColor(null)
+        .setDayNumberColor(null)
+        .setListner(this)
+        .setTabletMode(isTabView()));
 
-        });
-//        bottom_sheet = findViewById(R.id.fl_bottom_sheet);
-//        behavior = BottomSheetBehavior.from(bottom_sheet);// click event for show-dismiss bottom sheet
-//
-//        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View view, int newState) {
-//                switch (newState) {
-//                    case BottomSheetBehavior.STATE_HIDDEN:
-//                        break;
-//                    case BottomSheetBehavior.STATE_EXPANDED: {
-////                        btn_bottom_sheet.setText("Close Sheet");
-//                    }
-//                    break;
-//                    case BottomSheetBehavior.STATE_COLLAPSED: {
-////                        btn_bottom_sheet.setText("Expand Sheet");
-//                    }
-//                    break;
-//                    case BottomSheetBehavior.STATE_DRAGGING:
-//                        break;
-//                    case BottomSheetBehavior.STATE_SETTLING:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View view, float v) {
-//
-//            }
-//        });
-        
+    }
+
+    private Boolean isTabView() {
+        return getResources().getBoolean(R.bool.isTablet);
     }
 
     @Override
@@ -127,5 +99,33 @@ public class UnitCalendarActivity extends BaseVMActivity {
             course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
         }
     }
+    public void onEventMainThread(List<Event> events) {
+        eventList = events;
+        viewModel.eventObservable.set(events);
+    }
 
+    public void registerEventBus() {
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onAction(long date, long startDateTime, long endDateTime) {
+        viewModel.eventDisplayDate = date;
+        viewModel.startDateTime = startDateTime;
+        viewModel.endDateTime = endDateTime;
+        viewModel.fetchUnits();
+    }
+
+    @Override
+    public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
+        ActivityCalendarBottomSheet bottomSheetDialogFragment =
+                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime);
+
+        bottomSheetDialogFragment.show(this.getSupportFragmentManager(),
+                "units");
+    }
 }

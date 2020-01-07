@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.lib.mxcalendar.models.Event;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
@@ -34,7 +35,6 @@ import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
 import org.humana.mobile.tta.ui.programs.units.PeriodListingActivity;
 import org.humana.mobile.util.DateUtil;
@@ -59,7 +59,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public static ObservableBoolean calVisible = new ObservableBoolean();
     public static ObservableBoolean frameVisible = new ObservableBoolean();
-    public static List<Events> eventsArrayList = new ArrayList<>();
+    public static List<Event> eventsArrayList = new ArrayList<>();
     public static ObservableField switchText = new ObservableField<>();
     public static ObservableField selectedEvent = new ObservableField<>();
     public ObservableField<String> dispDate = new ObservableField<>();
@@ -362,8 +362,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 if (data.get(i).getMyDate() > 0) {
                                     if (DateUtil.getDisplayDate(data.get(i).getMyDate()).equals(selectedDate)) {
                                         units.add(data.get(i));
-//                                        units =data;
-//                                populateUnits(units);
+
                                     }
                                 }
                             }
@@ -376,22 +375,21 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         if (role.equals(UserRole.Instructor.name())) {
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getMyDate() > 0) {
-                                    Events et = new Events(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                            data.get(i).getTitle(), data.get(i).getType());
+                                    Event et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                            data.get(i).getTitle(),null);
                                     eventsArrayList.add(et);
                                 }
                             }
                         }else {
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getCommonDate() > 0) {
-                                    Events et = new Events(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                            data.get(i).getTitle(), data.get(i).getType());
+                                    Event et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                            data.get(i).getTitle(), null);
                                     eventsArrayList.add(et);
                                 }
                             }
                         }
 //
-                        CustomCalendarView.createEvents(eventsArrayList, selectedDateLng);
 
 //                        populateUnits(data);
                         if (units.size()==0){

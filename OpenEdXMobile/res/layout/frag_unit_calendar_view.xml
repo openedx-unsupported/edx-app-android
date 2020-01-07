@@ -44,12 +44,14 @@
                 android:id="@+id/fl_bottom_sheet"
                 android:orientation="vertical">
 
-                <org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView
-                    android:id="@+id/calendar_view"
+                <com.lib.mxcalendar.view.MxCalenderView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    onCalendarEventListener="@{viewModel.eventObservable}"
+                    onCalendarDate="@{viewModel.eventDisplayDate}"
+                    android:id="@+id/calendar_view">
 
-                </org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView>
+                </com.lib.mxcalendar.view.MxCalenderView>
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"

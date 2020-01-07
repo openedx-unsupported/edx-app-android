@@ -2,32 +2,18 @@ package org.humana.mobile.tta.ui.programs.schedule.view_model;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.database.Cursor;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-
-import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
-import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
-import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -37,12 +23,10 @@ import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
 import org.humana.mobile.databinding.TRowScheduleBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
-import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Period;
-import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
@@ -53,7 +37,6 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.mxRangePicker.DateRangePickerFragment;
 import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
 import org.humana.mobile.tta.ui.programs.periodunits.PeriodUnitsActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
@@ -68,8 +51,6 @@ import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-
-import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog.OnDateSetListener {
 
@@ -134,7 +115,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         changesMade = true;
         selectedFilter = mDataManager.getSelectedFilters();
         periodAdapter.setItems(periodList);
-        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
             fabVisible.set(true);
         }
 
@@ -157,6 +138,18 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     break;
 
                 case R.id.txt_end_date:
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        periodItem.set(item);
+                        rangePicker(item);
+                    }
+                    break;
+                case R.id.iv_start_date:
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        periodItem.set(item);
+                        rangePicker(item);
+                    }
+                    break;
+                case R.id.iv_end_date:
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
                         rangePicker(item);
@@ -194,9 +187,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         if (allFilters == null || allFilters.isEmpty()) {
             return;
         }
-        if (selectedFilter.isEmpty()){
-            for (ProgramFilter filter : allFilters){
-                for (ProgramFilterTag tag : filter.getTags()){
+        if (selectedFilter.isEmpty()) {
+            for (ProgramFilter filter : allFilters) {
+                for (ProgramFilterTag tag : filter.getTags()) {
                     if (tag.getSelected()) {
                         SelectedFilter sf = new SelectedFilter();
                         sf.setInternal_name(filter.getInternalName());
@@ -261,7 +254,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
-                            changesMade=true;
+                            changesMade = true;
                             Constants.PROG_FILTER = filters;
                             fetchData();
 
@@ -292,7 +285,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                         } else {
                             filtersVisible.set(false);
-                            if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                            if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                                 fabVisible.set(true);
                             }
                         }
@@ -336,20 +329,20 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     }
 
     private void populatePeriods(List<Period> data) {
-            boolean newItemsAdded = false;
-            int n = 0;
-            for (Period period : data) {
-                if (!periodList.contains(period)) {
-                    periodList.add(period);
-                    newItemsAdded = true;
-                    n++;
-                }
+        boolean newItemsAdded = false;
+        int n = 0;
+        for (Period period : data) {
+            if (!periodList.contains(period)) {
+                periodList.add(period);
+                newItemsAdded = true;
+                n++;
             }
-            if (newItemsAdded) {
-                periodAdapter.notifyItemRangeInserted(periodList.size() - (n-1), n);
-            }
-            mActivity.hideLoading();
-            toggleEmptyVisibility();
+        }
+        if (newItemsAdded) {
+            periodAdapter.notifyItemRangeInserted(periodList.size() - (n - 1), n);
+        }
+        mActivity.hideLoading();
+        toggleEmptyVisibility();
 
     }
 
@@ -561,6 +554,16 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         listener.onItemClick(v, model);
                     }
                 });
+                scheduleBinding.ivStartDate.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+                scheduleBinding.ivEndDate.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
                 scheduleBinding.txtEndDate.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
@@ -641,6 +644,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
     public void setSessionFilter() {
         selectedFilter = mDataManager.getSelectedFilters();
+        filters = Constants.PROG_FILTER;
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();

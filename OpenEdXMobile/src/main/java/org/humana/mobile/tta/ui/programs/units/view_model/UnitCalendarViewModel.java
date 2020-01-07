@@ -3,23 +3,18 @@ package org.humana.mobile.tta.ui.programs.units.view_model;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.databinding.ObservableLong;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-import androidx.fragment.app.FragmentTransaction;
-
+import com.lib.mxcalendar.models.Event;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
@@ -30,7 +25,6 @@ import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.UnitStatusType;
 import org.humana.mobile.tta.data.enums.UserRole;
-import org.humana.mobile.tta.data.local.db.table.CalendarEvents;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
@@ -41,19 +35,10 @@ import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.humana.mobile.tta.ui.mxCalenderView.CustomCalendarView;
-import org.humana.mobile.tta.ui.mxCalenderView.Events;
-import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
-import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
@@ -73,7 +58,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
     public static ObservableBoolean calVisible = new ObservableBoolean();
     public static ObservableBoolean frameVisible = new ObservableBoolean();
     public static ObservableBoolean setSelected = new ObservableBoolean();
-    public static List<Events> eventsArrayList = new ArrayList<>();
+    public static List<Event> eventsArrayList = new ArrayList<>();
     public static ObservableField switchText = new ObservableField<>();
     public static ObservableField selectedEvent = new ObservableField<>();
     public static ObservableField<String> weekNo = new ObservableField<>();
@@ -93,6 +78,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
     public static long eventDisplayDate = 0L;
     public static long startDateTime, endDateTime;
+    public ObservableField<List<Event>> eventObservable = new ObservableField<>();
+    public ObservableLong eventObservableDate = new ObservableLong();
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -309,9 +296,9 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
     public void fetchUnits() {
 
-        mDataManager.getUnits(filters,"", mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(),  mDataManager.getLoginPrefs().getRole(), "",
-                0L, take, skip, startDateTime,endDateTime,
+        mDataManager.getUnits(filters, "", mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
+                0L, take, skip, startDateTime, endDateTime,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -323,29 +310,67 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         changesMade = false;
                         populateUnits(data);
                         eventsArrayList.clear();
+                        String colorCode = "#ffffff";
+                        Event et;
                         if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getCommonDate() > 0) {
-                                    Events et = new Events(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                            data.get(i).getTitle(), data.get(i).getType());
-                                    eventsArrayList.add(et);
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
                                 }
                             }
-                        }else {
+                        } else {
+
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getMyDate() > 0) {
-                                    Events et = new Events(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                            data.get(i).getTitle(), data.get(i).getType());
-                                    eventsArrayList.add(et);
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
                                 }
                             }
                         }
-                        CustomCalendarView.createEvents(eventsArrayList, eventDisplayDate);
+
+                        eventObservable.set(eventsArrayList);
+
                         mActivity.hideLoading();
 
-//                        unitsAdapter.setItems(data);
-//                        unitsAdapter.notifyDataSetChanged();
-//                        unitsAdapter.setLoadingDone();
                     }
 
                     @Override
@@ -359,28 +384,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
     }
 
-    private void fetchEvents() {
-
-        mDataManager.getEventCalendar(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(),  mDataManager.getLoginPrefs().getRole(), take,skip, 3,eventDisplayDate,
-                new OnResponseCallback<List<CalendarEvents>>() {
-                    @Override
-                    public void onSuccess(List<CalendarEvents> data) {
-                        mActivity.hideLoading();
-
-                        for (int i = 0 ; i<data.size(); i++){
-                            CustomCalendarView.createEvents(eventsArrayList, eventDisplayDate);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        toggleEmptyVisibility();
-                    }
-                });
-
-    }
 
     private void populateUnits(List<Unit> data) {
         boolean newItemsAdded = false;
@@ -423,22 +426,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
         allLoaded = false;
         fetchData();
     }
-    @SuppressWarnings("unused")
-    public void onEventMainThread(List<Unit> units) {
-//        filters.clear();
-//        changesMade = true;
-//        allLoaded = false;
-//        fetchData();
-
-//        fetchUnits();
-//        for (int i = 0; i < units.size(); i++) {
-//            Events et = new Events(DateUtil.getDisplayDate(units.get(i).getStaffDate()),
-//                    units.get(i).getTitle());
-//            eventsArrayList.add(et);
-//        }
-//        CustomCalendarView.createEvents(eventsArrayList, eventDisplayDate);
-    }
-
 
 
     @SuppressWarnings("unused")
@@ -466,21 +453,17 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
 
-
-//                unitBinding.tvStaffDate.setVisibility(View.GONE);
-//                unitBinding.tvMyDate.setVisibility(View.GONE);
                 if (DateUtil.getDisplayDate(model.getMyDate()).equals(eventDate.get())) {
-//                    CustomCalendarView.createEvents(eventsArrayList);
                     emptyVisible.set(false);
                     unitBinding.unitCode.setText(model.getTitle());
                     unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                             + model.getUnitHour() + mActivity.getResources().getString(R.string.point_txt));
                     if (!model.getStatus().isEmpty()) {
-                        if (model.getStaffDate()>0) {
+                        if (model.getStaffDate() > 0) {
                             unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
                             unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
                         }
-                    }else {
+                    } else {
                         unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                     }
                     unitBinding.tvDescription.setText(model.getDesc());
@@ -490,7 +473,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         } else {
                             unitBinding.tvComment.setVisibility(View.GONE);
                         }
-                    }else {
+                    } else {
                         unitBinding.tvComment.setVisibility(View.GONE);
                     }
                     if (model.getMyDate() > 0) {
@@ -507,7 +490,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         } else {
                             unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                         }
-                    }else {
+                    } else {
                         unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                     }
                     if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
@@ -536,9 +519,6 @@ public class UnitCalendarViewModel extends BaseViewModel {
                 } else {
                     emptyVisible.set(true);
                 }
-//                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-//                    eventsArrayList.add(ev);
-//                    CustomCalendarView.createEvents(eventsArrayList);
 
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
@@ -555,198 +535,4 @@ public class UnitCalendarViewModel extends BaseViewModel {
         }
     }
 
-
-    public static class CustomCalendarAdapter extends ArrayAdapter {
-
-        List<Date> dates;
-        Calendar currentDate;
-        List<Events> events;
-        LayoutInflater inflater;
-        Context context;
-        public int selectedPosition;
-
-
-        public CustomCalendarAdapter(@androidx.annotation.NonNull Context context,
-                                     List<Date> dates, Calendar currentDate, List<Events> events) {
-            super(context, R.layout.t_row_calender_view);
-            this.context = context;
-            this.dates = dates;
-            this.currentDate = currentDate;
-            this.events = events;
-            inflater = LayoutInflater.from(context);
-        }
-
-//        @androidx.annotation.Nullable
-//        @Override
-//        public Object getItem(int position) {
-//            return super.getItem(position);
-//        }
-
-        @androidx.annotation.NonNull
-        @Override
-        public View getView(int position, @androidx.annotation.Nullable View convertView,
-                            @androidx.annotation.NonNull ViewGroup parent) {
-            Date monthdate = dates.get(position);
-            View view = convertView;
-            Calendar dateCalendar = Calendar.getInstance();
-            dateCalendar.setTime(monthdate);
-            int dayNo = dateCalendar.get(Calendar.DATE);
-            int displayMonth = dateCalendar.get(Calendar.MONTH) + 1;
-            int displayYear = dateCalendar.get(Calendar.YEAR);
-            int currentMonth = currentDate.get(Calendar.MONTH) + 1;
-            int currentYear = currentDate.get(Calendar.YEAR);
-
-                startDateTime = dates.get(0).getTime();
-             endDateTime = dates.get(41).getTime();
-
-
-            if (view == null) {
-                boolean tabletSize = context.getResources().getBoolean(R.bool.isTablet);
-                if (tabletSize) {
-                    view = inflater.inflate(R.layout.t_row_cal_tabview, parent, false);
-                }else {
-                    view = inflater.inflate(R.layout.t_row_calender_view, parent, false);
-                }
-            }
-            Calendar eventCalendar = Calendar.getInstance();
-
-            TextView day = view.findViewById(R.id.cal_day);
-            TextView eventText = view.findViewById(R.id.day_event);
-            TextView eventText1 = view.findViewById(R.id.day_event1);
-            TextView eventText2 = view.findViewById(R.id.day_event2);
-            View event = view.findViewById(R.id.event_id);
-            day.setText(String.valueOf(dayNo));
-
-            if (setSelected.get()) {
-
-                if (selectedPosition == position && displayMonth == currentMonth) {
-                    day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_light_blue));
-                } else {
-                    day.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                }
-            } else {
-                if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && currentMonth == eventCalendar.get(Calendar.MONTH) + 1
-                        && displayYear == eventCalendar.get(Calendar.YEAR) && displayMonth== currentMonth) {
-                    eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
-                    dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
-                    if (displayYear == currentYear) {
-                        day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
-                        day.setTextColor(ContextCompat.getColor(context, R.color.white));
-                    }
-                    unitsAdapter.setItems(units);
-                    unitsAdapter.notifyDataSetChanged();
-                }
-            }
-            if (dayNo == eventCalendar.get(Calendar.DAY_OF_MONTH) && currentMonth == eventCalendar.get(Calendar.MONTH) + 1
-                    && displayYear == eventCalendar.get(Calendar.YEAR)) {
-//                eventDate.set(DateUtil.getDisplayDate(dates.get(position).getTime()));
-//                dispDate.set(DateUtil.getCalendarDate(dates.get(position).getTime()));
-                if (displayMonth == currentMonth && displayYear == currentYear) {
-                    day.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_all_blue));
-                    day.setTextColor(ContextCompat.getColor(context, R.color.white));
-                }
-            }
-            if (displayMonth == currentMonth && displayYear == currentYear) {
-                view.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-            } else {
-                view.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                day.setTextColor(ContextCompat.getColor(context, R.color.gray_3));
-            }
-
-            List<Events> mevents=getEvents(dayNo,displayMonth,displayYear);
-
-            if(mevents.size()>0) {
-                eventText.setVisibility(View.VISIBLE);
-                eventText.setText(mevents.get(0).getTitle());
-                if (mevents.get(0).getType().matches("Course")){
-                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-
-                }
-                else if (mevents.get(0).getType().matches("Experience")){
-                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
-//                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
-//                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
-                }
-                else if (mevents.get(0).getType().matches("Study Task")){
-                    eventText.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
-
-                }
-            }
-            if (mevents.size()>1){
-                eventText1.setVisibility(View.VISIBLE);
-                eventText1.setText(mevents.get(1).getTitle());
-                if (mevents.get(1).getType().equals("Course")){
-                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-                }
-                 if (mevents.get(1).getType().equals("Experience")){
-                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
-                }
-                 if (mevents.get(1).getType().equals("Study Task")){
-                    eventText1.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
-                }
-            }
-            if (mevents.size()>2){
-                eventText2.setVisibility(View.VISIBLE);
-                eventText2.setText(mevents.get(2).getTitle());
-                if (mevents.get(2).getType().equals("Course")){
-
-                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_course));
-                }
-                 if (mevents.get(2).getType().equals("Experience")){
-
-                    eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_experience));
-                }
-                 if (mevents.get(2).getType().equals("Study Task")){
-                     eventText2.setBackgroundColor(ContextCompat.getColor(context, R.color.humana_study));
-                }
-            }
-
-
-            view.setTag(position);
-            return view;
-        }
-
-        private List<Events> getEvents(int day,int displayMonth,int displayYear)
-        {
-            List<Events> mevents=new ArrayList<>();
-
-            Calendar eventCalendar = Calendar.getInstance();
-            for (int i = 0; i < events.size(); i++) {
-                eventCalendar.setTime(convertStringToDate(events.get(i).getDATE()));
-
-                if (day == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1
-                        && displayYear == eventCalendar.get(Calendar.YEAR)) {
-                    mevents.add(new Events(events.get(i).getDATE(), events.get(i).getTitle(), events.get(i).getType()));
-                }
-            }
-
-            return mevents;
-        }
-
-        private Date convertStringToDate(String date) {
-            Date date1 = null;
-            SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-            try {
-                date1 = format.parse(date);
-                System.out.println(date1);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            return date1;
-        }
-
-
-        @Override
-        public int getCount() {
-            return dates.size();
-        }
-
-        @Override
-        public int getPosition(@androidx.annotation.Nullable Object item) {
-            return dates.indexOf(item);
-        }
-
-    }
-    
-    }
+}

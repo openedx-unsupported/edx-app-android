@@ -118,4 +118,11 @@ public class Constants {
     public static String UNIT_ID="";
     public static String USERNAME="";
     public static List<ProgramFilter> PROG_FILTER;
+
+
+    // color code for calendar event background
+    public static final String COLOR_WHITE = "#FFFFFF";
+    public static final String COLOR_YELLOW = "#F8E56B";
+    public static final String COLOR_PINK = "#EF98FC";
+    public static final String COLOR_GREEN = "#33FFAC";
 }

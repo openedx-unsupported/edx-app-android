@@ -124,7 +124,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
         testOrientationChange(fragment, Configuration.ORIENTATION_PORTRAIT);
     }
 
-    private static class FragmentUtilActivity extends RoboFragmentActivity implements CourseUnitFragment.HasComponent {
+    private static class nFragmentUtilActivity extends RoboFragmentActivity implements CourseUnitFragment.HasComponent {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

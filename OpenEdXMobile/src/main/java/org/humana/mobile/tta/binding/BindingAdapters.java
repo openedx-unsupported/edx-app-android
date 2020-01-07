@@ -28,6 +28,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.lib.mxcalendar.models.Event;
+import com.lib.mxcalendar.view.MxCalenderView;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.view.MxFiniteRecyclerView;
@@ -556,6 +558,12 @@ public class BindingAdapters {
                 }
             });
 
+        }
+    }
+    @BindingAdapter({"onCalendarEventListener","onCalendarDate"})
+    public static void setOnCalenderEventListener(MxCalenderView view, List<Event> events,  long date) {
+        if (events != null) {
+            view.setEvents(events, date);
         }
     }
 }

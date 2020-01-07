@@ -42,7 +42,6 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.mxCalenderView.Events;
 import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
@@ -71,7 +70,6 @@ public class UnitsViewModel extends BaseViewModel {
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public static ObservableBoolean calVisible = new ObservableBoolean();
     public static ObservableBoolean frameVisible = new ObservableBoolean();
-    public static List<Events> eventsArrayList = new ArrayList<>();
     public static ObservableField switchText = new ObservableField<>();
     public static ObservableField selectedEvent = new ObservableField<>();
     public List<ProgramFilterTag> selectedTags = new ArrayList<>();
@@ -121,7 +119,7 @@ public class UnitsViewModel extends BaseViewModel {
         frameVisible.set(true);
 
         selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getSelectedFilters();;
+        selectedFilter=mDataManager.getSelectedFilters();
 
 
         unitsAdapter = new UnitsAdapter(mActivity);
@@ -555,9 +553,7 @@ public class UnitsViewModel extends BaseViewModel {
 //                    }else {
 //                        tags.add((ProgramFilterTag) item.getItem());
 //                    }
-//                    if (position == 0){
-//                        filters.clear();
-//                    }
+
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
                     sf.setDisplay_name(model.getDisplayName());

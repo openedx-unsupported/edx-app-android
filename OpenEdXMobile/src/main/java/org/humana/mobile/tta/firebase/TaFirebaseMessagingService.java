@@ -95,7 +95,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
             notification.setType(NotificationType.content.name());
             notification.setRef_id(path);
 
-            dataManager.createNotification(notification);
+           // dataManager.createNotification(notification);
         }
     }
 

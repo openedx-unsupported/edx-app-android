@@ -360,6 +360,7 @@ public class PrefManager {
         public static final String PERIOD_FILTER = "period_filter";
         public static final String CURRENT_PERIOD_ID = "current_period_id";
         public static final String CURRENT_PERIOD_TITLE = "current_period_title";
+        public static final String CURRENT_PERIOD_LANG = "current_period_lang";
     }
 
     public static final class Value {
