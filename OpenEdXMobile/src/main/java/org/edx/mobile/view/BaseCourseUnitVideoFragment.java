@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,8 +42,9 @@ import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
 /**
- * This class is represent base view & functionality of the player screen for the video content
- * including UI update, download, display and maintain the transcripts based on player position.
+ * Base class implementing the basic functionality of the video player screen.
+ * It handles UI updating.
+ * It downloads, displays and maintains the transcripts based on player position.
  */
 public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         implements IPlayerEventCallback, TranscriptListener {
@@ -153,7 +155,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
         messageContainer = view.findViewById(R.id.message_container);
-        transcriptListView = (ListView) view.findViewById(R.id.transcript_listview);
+        transcriptListView = view.findViewById(R.id.transcript_listview);
         if (showCastMiniController()) {
             view.findViewById(R.id.fl_mini_controller).setVisibility(View.VISIBLE);
         } else {
@@ -440,6 +442,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     protected void initTranscriptListView() {
         transcriptAdapter = new TranscriptAdapter(getContext(), environment);
         transcriptListView.setAdapter(transcriptAdapter);

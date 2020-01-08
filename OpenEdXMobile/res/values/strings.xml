@@ -420,6 +420,10 @@
     <string name="assessment_soon">Soon</string>
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
     <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
+    <!-- Label showing only when youtube in-app player produce error -->
+    <string name="assessment_unable_to_play_video" tools:ignore="MissingTranslation">Player Error</string>
+    <!-- Error message showing only when youtube in-app player produce error -->
+    <string name="assessment_unable_to_play_video_message" tools:ignore="MissingTranslation">Unable to play this video</string>
     <!-- Label showing only youtube is available -->
     <string name="assessment_only_on_youtube">This video can only be played on YouTube.</string>
     <!-- Label for button to open on youtube -->

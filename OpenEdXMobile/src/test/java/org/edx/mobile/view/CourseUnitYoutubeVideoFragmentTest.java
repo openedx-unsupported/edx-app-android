@@ -8,13 +8,13 @@ import java.io.IOException;
 
 public class CourseUnitYoutubeVideoFragmentTest extends BaseCourseUnitVideoFragmentTest {
 
-    private static final String YOUTUBE_VIDEO = "YOUTUBE_VIDEO";
+    private static final String YOUTUBE_IN_APP_PLAYER = "YOUTUBE_IN_APP_PLAYER";
 
     @Override
     protected JsonObject generateConfigProperties() throws IOException {
         // Add the mock youtube api key in the test config properties
         final JsonObject properties = super.generateConfigProperties();
-        properties.add(YOUTUBE_VIDEO, getYoutubeMockConfig());
+        properties.add(YOUTUBE_IN_APP_PLAYER, getYoutubeMockConfig());
         return properties;
     }
 

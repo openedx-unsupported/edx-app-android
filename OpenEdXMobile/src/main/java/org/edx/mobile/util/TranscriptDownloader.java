@@ -14,7 +14,7 @@ import okhttp3.Response;
 import roboguice.RoboGuice;
 
 /**
- * Class to download the transcript in background thread and post the result on UI thread
+ * {@link AsyncTask} to download the transcript in background thread and post the result on UI thread
  * that helps to update the UI component
  */
 public abstract class TranscriptDownloader extends AsyncTask<Void, Void, String> {

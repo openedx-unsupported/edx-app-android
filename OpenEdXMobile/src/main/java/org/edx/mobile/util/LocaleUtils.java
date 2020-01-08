@@ -167,12 +167,12 @@ public class LocaleUtils {
     }
 
     /**
-     * Utility method to extract the download url from the {@link TranscriptModel} based
-     * the last select transcript language / current device language.
+     * Utility method to extract the download url from the {@link TranscriptModel} based on
+     * the last select transcript language or current device language.
      *
      * @param context    - current application {@link Context}
      * @param transcript - {@link TranscriptModel} transcript model contains transcript info
-     * @return downloadable transcript url that can be null is transcripts are not available
+     * @return downloadable transcript url that can be null if transcripts are not available
      */
     @Nullable
     public static String getTranscriptURL(@NonNull Context context,

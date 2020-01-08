@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -20,6 +19,7 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.VideoUtil;
 
@@ -34,10 +34,10 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     private YouTubePlayerSupportFragment youTubePlayerFragment;
 
     /**
-     * isInForeground is set on false when the app comes to background from foreground
+     * isYoutubePlayerInForeground is set on false when the app comes to background from foreground
      * so this allow to play a video when the app comes to foreground from background
      */
-    private boolean isInForeground = true;
+    private boolean isYoutubePlayerInForeground = true;
     private int attempts;
 
     /**
@@ -92,7 +92,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
                 downloadTranscript();
                 String apiKey = environment.getConfig().getYoutubeInAppPlayerConfig().getApiKey();
                 if (apiKey == null || apiKey.isEmpty()) {
-                    logger.error(new Throwable("YOUTUBE_VIDEO:API_KEY is missing or empty"));
+                    logger.error(new Throwable("YOUTUBE_IN_APP_PLAYER:API_KEY is missing or empty"));
                     return;
                 }
                 youTubePlayerFragment.initialize(apiKey, this);
@@ -129,7 +129,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     @Override
     public void onStop() {
         super.onStop();
-        isInForeground = false;
+        isYoutubePlayerInForeground = false;
     }
 
     @Override
@@ -165,6 +165,22 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider,
                                         YouTubeInitializationResult result) {
+        redirectToYoutubeDialog();
+    }
+
+    private void redirectToYoutubeDialog() {
+        if (getActivity() != null && !getActivity().isDestroyed()) {
+            ((BaseFragmentActivity) getActivity())
+                    .showAlertDialog(
+                            getString(R.string.assessment_unable_to_play_video),
+                            getString(R.string.assessment_unable_to_play_video_message),
+                            getString(R.string.assessment_open_on_youtube),
+                            (dialog, which) -> BrowserUtil
+                                    .open(getActivity(),
+                                            unit.getData().encodedVideos.getYoutubeVideoInfo().url),
+                            getString(R.string.label_cancel), null
+                    );
+        }
     }
 
     private void releaseYoutubePlayer() {
@@ -239,10 +255,10 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
              */
             if (attempts <= 3) {
                 releaseYoutubePlayer();
-                initializeYoutubePlayer();
+                initializeHandler.postDelayed(CourseUnitYoutubePlayerFragment.this::initializeYoutubePlayer, 500);
                 attempts++;
             } else {
-                Toast.makeText(getActivity(), errorReason.toString(), Toast.LENGTH_LONG).show();
+                redirectToYoutubeDialog();
             }
         }
     }
@@ -268,13 +284,13 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
         @Override
         public void onStopped() {
-            if (!isInForeground && getUserVisibleHint()) {
+            if (!isYoutubePlayerInForeground && getUserVisibleHint()) {
                 /*
-                 * isInForeground is set on false when the app comes to background from foreground
+                 * isYoutubePlayerInForeground is set on false when the app comes to background from foreground
                  * so this allow to play a video when the app comes to foreground from background
                  */
                 try {
-                    isInForeground = true;
+                    isYoutubePlayerInForeground = true;
                     youTubePlayer.play();
                 } catch (Exception error) {
                     initializeYoutubePlayer();
