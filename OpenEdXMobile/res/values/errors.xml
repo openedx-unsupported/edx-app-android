@@ -72,7 +72,7 @@
     <!-- Snackbar notification shown when the current version of the app is outdated -->
     <string name="app_version_outdated" translatable="false">A new version of the app is available.</string>
     <!-- Toast notification for when the user presses the update action button from the Snackbar
-         notifications while no supported app store or browser is installed on the device with which
+         notificationResponse while no supported app store or browser is installed on the device with which
          the app could be updated -->
     <string name="app_version_upgrade_app_store_unavailable" translatable="false">No supported app store found on device.</string>
 

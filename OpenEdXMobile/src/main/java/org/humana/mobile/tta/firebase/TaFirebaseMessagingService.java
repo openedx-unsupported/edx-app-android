@@ -3,20 +3,16 @@ package org.humana.mobile.tta.firebase;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.enums.NotificationType;
 import org.humana.mobile.tta.data.local.db.table.Notification;
-import org.humana.mobile.tta.ui.deep_link.DeepLinkActivity;
+import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
 import org.humana.mobile.tta.ui.splash.SplashActivity;
 import org.humana.mobile.tta.utils.NotificationUtil;
 
@@ -71,14 +67,16 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         //**edit this line to put requestID as requestCode**
-        PendingIntent contentIntent = PendingIntent.getActivity(this, requestID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, requestID,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         int notificationId = 1;
         String channelId = "TheTeacherapp-Channel-01";
         String channelName = "TheTeacherapp Channel";
         int importance = NotificationManager.IMPORTANCE_HIGH;
 
-        new NotificationUtil(this, notificationId, channelId, channelName, channelName, importance)
+        new NotificationUtil(this, notificationId, channelId, channelName,
+                channelName, importance)
                 .setTitle(messageTitle)
                 .setMessage(messageBody)
                 .setContentIntent(contentIntent)
@@ -122,7 +120,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         //removed this check "|| (path==null && path.equals(""))"
         if(type==null || type.equals("") || loginPrefs==null || loginPrefs.getUsername()==null || loginPrefs.getUsername().equals(""))
         {
-            navigationIntent = new Intent(getApplicationContext(), SplashActivity.class);
+            navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
             //return here default intent for dashboard
             return navigationIntent;
         }
@@ -130,10 +128,10 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         if(type.equals(COURSE)|| type.equals(CONNECT))
         {
             if(path==null || path.equals(""))
-                navigationIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
             else
             {
-                navigationIntent=new Intent(getApplicationContext(), DeepLinkActivity.class);
+                navigationIntent=new Intent(getApplicationContext(), NotificationActivity.class);
                 navigationIntent.putExtra(EXTRA_PATH,path);
                 navigationIntent.putExtra(EXTRA_TYPE,type);
                 navigationIntent.putExtra(EXTRA_ISPUSH,true);
@@ -141,7 +139,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         }
         else
         {
-            navigationIntent = new Intent(getApplicationContext(), SplashActivity.class);
+            navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
         }
         return navigationIntent;
     }

@@ -1,4 +1,4 @@
-package org.humana.mobile.tta.ui.feed.view_model;
+package org.humana.mobile.tta.ui.programs.notifications.viewModel;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
@@ -16,12 +16,12 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowNotificationBinding;
 import org.humana.mobile.tta.Constants;
-import org.humana.mobile.tta.data.enums.NotificationType;
+import org.humana.mobile.tta.data.Notification;
+import org.humana.mobile.tta.data.NotificationResponse;
 import org.humana.mobile.tta.data.enums.SourceType;
 import org.humana.mobile.tta.data.local.db.table.Content;
-import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
-import org.humana.mobile.tta.ui.base.TaBaseFragment;
+import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.connect.ConnectDashboardActivity;
 import org.humana.mobile.tta.ui.course.CourseDashboardActivity;
@@ -29,10 +29,9 @@ import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class NotificationsViewModel extends BaseViewModel {
+public class NotificationViewModel extends BaseViewModel {
 
     private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_SKIP = 0;
@@ -55,8 +54,9 @@ public class NotificationsViewModel extends BaseViewModel {
         return true;
     };
 
-    public NotificationsViewModel(Context context, TaBaseFragment fragment) {
-        super(context, fragment);
+
+    public NotificationViewModel(BaseVMActivity activity) {
+        super(activity);
         notifications = new ArrayList<>();
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
@@ -65,44 +65,44 @@ public class NotificationsViewModel extends BaseViewModel {
         adapter.setItems(notifications);
         adapter.setItemClickListener((view, item) -> {
 
-            if (!item.isSeen()){
-                item.setSeen(true);
-                mDataManager.updateNotificationsInLocal(Collections.singletonList(item));
-                adapter.notifyItemChanged(adapter.getItemPosition(item));
-            }
-
-            try {
-                switch (NotificationType.valueOf(item.getType())){
-                    case content:
-                        mActivity.showLoading();
-                        mDataManager.getContent(Long.parseLong(item.getRef_id()), new OnResponseCallback<Content>() {
-                            @Override
-                            public void onSuccess(Content data) {
-                                mActivity.hideLoading();
-                                showContentDashboard(data);
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack(e.getLocalizedMessage());
-                            }
-                        });
-
-                        break;
-                    case system:
-                        mActivity.showLongSnack(item.getDescription());
-                        break;
-                    case profile:
-                        mActivity.showLongSnack(item.getDescription());
-                        break;
-                    default:
-                        mActivity.showLongSnack(item.getDescription());
-                }
-            } catch (IllegalArgumentException e) {
-                mActivity.showLongSnack(item.getDescription());
-            }
-
+//            if (!item.isSeen()){
+//                item.setSeen(true);
+//                mDataManager.updateNotificationsInLocal(Collections.singletonList(item));
+//                adapter.notifyItemChanged(adapter.getItemPosition(item));
+//            }
+//
+//            try {
+//                switch (NotificationType.valueOf(item.getType())){
+//                    case content:
+//                        mActivity.showLoading();
+//                        mDataManager.getContent(Long.parseLong(item.getRef_id()), new OnResponseCallback<Content>() {
+//                            @Override
+//                            public void onSuccess(Content data) {
+//                                mActivity.hideLoading();
+//                                showContentDashboard(data);
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Exception e) {
+//                                mActivity.hideLoading();
+//                                mActivity.showLongSnack(e.getLocalizedMessage());
+//                            }
+//                        });
+//
+//                        break;
+//                    case system:
+//                        mActivity.showLongSnack(item.getDescription());
+//                        break;
+//                    case profile:
+//                        mActivity.showLongSnack(item.getDescription());
+//                        break;
+//                    default:
+//                        mActivity.showLongSnack(item.getDescription());
+//                }
+//            } catch (IllegalArgumentException e) {
+//                mActivity.showLongSnack(item.getDescription());
+//            }
+//
         });
 
         mActivity.showLoading();
@@ -111,27 +111,28 @@ public class NotificationsViewModel extends BaseViewModel {
 
     private void fetchNotifications() {
 
-       /* mDataManager.getNotifications(take, skip, mDataManager.getLoginPrefs().getProgramId(),
-                new OnResponseCallback<List<Notification>>() {
-            @Override
-            public void onSuccess(List<Notification> data) {
-                mActivity.hideLoading();
-                if (data.size() < take){
-                    allLoaded = true;
-                }
-                populateNotifications(data);
-                adapter.setLoadingDone();
-            }
+        mDataManager.getNotifications(take, skip, mDataManager.getLoginPrefs().getProgramId(),
+                new OnResponseCallback<NotificationResponse>() {
+                    @Override
+                    public void onSuccess(NotificationResponse data) {
+                        mActivity.hideLoading();
+                        if (data.getNotifications().size() < take){
+                            allLoaded = true;
+                        }
+                        populateNotifications(data.getNotifications());
+                        adapter.setLoadingDone();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                mActivity.hideLoading();
-                allLoaded = true;
-                adapter.setLoadingDone();
-                toggleEmptyVisibility();
-            }
-        });
-*/
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                        mActivity.hideLoading();
+                        allLoaded = true;
+                        adapter.setLoadingDone();
+                        toggleEmptyVisibility();
+                    }
+                });
+
     }
 
     private void populateNotifications(List<Notification> data) {
@@ -186,18 +187,14 @@ public class NotificationsViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Notification model, @Nullable OnRecyclerItemClickListener<Notification> listener) {
             if (binding instanceof TRowNotificationBinding){
                 TRowNotificationBinding notificationBinding = (TRowNotificationBinding) binding;
-//                notificationBinding.setViewModel(model);
-                String time = DateUtil.getDayMonth(model.getCreated_time()) + " at " +
-                        DateUtil.getHourMinute12(model.getCreated_time());
-                notificationBinding.notificationDate.setText(time);
+                notificationBinding.setViewModel(model);
+//                String time = DateUtil.getDisplayDate(model.getScheduleDate());
+//                notificationBinding.notificationDate.setText(time);
 
-                if (model.isSeen()){
+
                     notificationBinding.notificationTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_3));
                     notificationBinding.notificationDate.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_3));
-                } else {
-                    notificationBinding.notificationTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_5));
-                    notificationBinding.notificationDate.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_5));
-                }
+
 
                 notificationBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){

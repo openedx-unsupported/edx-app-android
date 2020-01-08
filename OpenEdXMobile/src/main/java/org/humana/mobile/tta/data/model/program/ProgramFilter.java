@@ -14,9 +14,6 @@ public class ProgramFilter implements Comparable<ProgramFilter> {
     @SerializedName("internal_name")
     private String internalName;
 
-
-
-
     @SerializedName("isSelected")
     private boolean isSelected;
 

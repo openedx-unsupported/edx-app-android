@@ -319,19 +319,19 @@ public class UnitCalendarViewModel extends BaseViewModel {
                                         case "Study Task":
                                             colorCode = "#F8E56B";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(), colorCode);
+                                                    data.get(i).getTitle(), null,colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Experience":
                                             colorCode = "#33FFAC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(), colorCode);
+                                                    data.get(i).getTitle(), null,colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Course":
                                             colorCode = "#EF98FC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(), colorCode);
+                                                    data.get(i).getTitle(),null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                     }
@@ -346,19 +346,19 @@ public class UnitCalendarViewModel extends BaseViewModel {
                                         case "Study Task":
                                             colorCode = "#F8E56B";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), colorCode);
+                                                    data.get(i).getTitle(), null,colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Experience":
                                             colorCode = "#33FFAC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), colorCode);
+                                                    data.get(i).getTitle(), null,colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Course":
                                             colorCode = "#EF98FC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), colorCode);
+                                                    data.get(i).getTitle(), null,colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                     }

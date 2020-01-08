@@ -580,7 +580,7 @@
     <string name="notification_toggle" translatable="false">Allow Notifications</string>
     <!-- Placeholder title for content content with no title -->
     <string name="untitled_block" translatable="false">Untitled</string>
-    <!-- Title for default channel notifications -->
+    <!-- Title for default channel notificationResponse -->
     <string name="default_notification_channel_title" translatable="false">General Notification</string>
 
 
@@ -772,7 +772,7 @@
     <string name="all_medal">All medal</string>
     <string name="point_table" translatable="false">Point table</string>
     <string name="please_insert_valide_pmis_code">please Insert Valid Pmis Code</string>
-    <string name="notifications">Notifications</string>
+    <string name="notificationResponse">Notifications</string>
     <string name="empty_region_wise_list">\“%s\” does not have any %s</string>
     <string name="empty_my_agenda_list">\“%s\” does not have any selected %s. To select a %s, please click on @</string>
     <string name="empty_download_list">\“%s\” does not have any %s</string>

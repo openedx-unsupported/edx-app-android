@@ -3,7 +3,7 @@ package org.humana.mobile.tta.ui.programs.units.view_model;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
+
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

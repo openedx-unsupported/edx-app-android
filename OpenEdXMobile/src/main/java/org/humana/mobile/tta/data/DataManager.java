@@ -2775,54 +2775,12 @@ public class DataManager extends BaseRoboInjector {
                             @Override
                             protected void onPostExecute(Void aVoid) {
                                 super.onPostExecute(aVoid);
-                                getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
+                                getNotificationsFromLocal(take, skip, callback, new TaException("NotificationResponse not available"));
                             }
                         }.execute();
 
                     } else {
-                        getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
-                    }
-                }
-
-                @Override
-                protected void onException(Exception ex) {
-                    getNotificationsFromLocal(take, skip, callback, ex);
-                }
-            }.execute();
-
-        } else {
-            getNotificationsFromLocal(take, skip, callback, new TaException(context.getString(R.string.no_connection_exception)));
-        }
-
-    }*/
-
-    public void getNotifications(int take, int skip, String course_id, OnResponseCallback<List<Notification>> callback) {
-
-        if (NetworkUtil.isConnected(context)) {
-
-            new GetNotificationsTask(context, take, skip, course_id) {
-                @Override
-                protected void onSuccess(List<Notification> notifications) throws Exception {
-                    super.onSuccess(notifications);
-
-                    if (notifications != null) {
-
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... voids) {
-                                mLocalDataSource.insertNotifications(notifications);
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void aVoid) {
-                                super.onPostExecute(aVoid);
-                                getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
-                            }
-                        }.execute();
-
-                    } else {
-                        getNotificationsFromLocal(take, skip, callback, new TaException("Notifications not available"));
+                        getNotificationsFromLocal(take, skip, callback, new TaException("NotificationResponse not available"));
                     }
                 }
 
@@ -2837,7 +2795,27 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+*/
 
+    public void getNotifications(int take, int skip, String course_id, OnResponseCallback<NotificationResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetNotificationsTask(context, take, skip, course_id) {
+                @Override
+                protected void onSuccess(NotificationResponse notificationResponse) throws Exception {
+                    super.onSuccess(notificationResponse);
+
+                    if (notificationResponse != null) {
+
+                        callback.onSuccess(notificationResponse);
+                    }
+
+
+                }
+            }.execute();
+        }
+    }
     public void sendNotifications(String title, String type, String desc, String action,
                                   String action_id, String action_parent_id, String respondent,
                                   String unique_id,

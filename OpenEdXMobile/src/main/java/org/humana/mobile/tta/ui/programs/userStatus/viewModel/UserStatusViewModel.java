@@ -285,71 +285,71 @@ public class UserStatusViewModel extends BaseViewModel {
                                 getSelectedFilters(filter);
                             }
                         }
+/*
+                        for (int i = 0; i<data.size();i++){
+                            for (ProgramFilter filter: data){
+                                if (filter.getInternalName().toLowerCase().equals("status")){
+                                    tags.clear();
+                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
+                                        tag.setInternalName(tag.getInternalName());
+                                        tag.setOrder(tag.getOrder());
+                                        tag.setDisplayName(tag.getDisplayName());
+                                        tag.setId(tag.getId());
+                                        tag.setSelected(tag.getSelected());
+                                        tags.add(tag);
+                                    }
+                                    filters.add(filter);
+                                }
+                                if (filter.getInternalName().toLowerCase().equals("period")){
+                                    tags.clear();
+                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
+                                        tag.setInternalName(tag.getInternalName());
+                                        tag.setOrder(tag.getOrder());
+                                        tag.setDisplayName(tag.getDisplayName());
+                                        tag.setId(tag.getId());
+                                        tag.setSelected(tag.getSelected());
+                                        tags.add(tag);
+                                    }
+                                    filters.add(filter);
+                                }
+                                if (filter.getInternalName().toLowerCase().equals("period")){
+                                    tags.clear();
+                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
+                                        tag.setInternalName(tag.getInternalName());
+                                        tag.setOrder(tag.getOrder());
+                                        tag.setDisplayName(tag.getDisplayName());
+                                        tag.setId(tag.getId());
+                                        tag.setSelected(tag.getSelected());
+                                        tags.add(tag);
+                                    }
+                                    filters.add(filter);
+                                }
+                            }
+                        }
 
-//                        for (int i = 0; i<data.size();i++){
-//                            for (ProgramFilter filter: data){
-//                                if (filter.getInternalName().toLowerCase().equals("status")){
-//                                    tags.clear();
-//                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
-//                                        tag.setInternalName(tag.getInternalName());
-//                                        tag.setOrder(tag.getOrder());
-//                                        tag.setDisplayName(tag.getDisplayName());
-//                                        tag.setId(tag.getId());
-//                                        tag.setSelected(tag.getSelected());
-//                                        tags.add(tag);
-//                                    }
-//                                    filters.add(filter);
-//                                }
-//                                if (filter.getInternalName().toLowerCase().equals("period")){
-//                                    tags.clear();
-//                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
-//                                        tag.setInternalName(tag.getInternalName());
-//                                        tag.setOrder(tag.getOrder());
-//                                        tag.setDisplayName(tag.getDisplayName());
-//                                        tag.setId(tag.getId());
-//                                        tag.setSelected(tag.getSelected());
-//                                        tags.add(tag);
-//                                    }
-//                                    filters.add(filter);
-//                                }
-//                                if (filter.getInternalName().toLowerCase().equals("period")){
-//                                    tags.clear();
-//                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
-//                                        tag.setInternalName(tag.getInternalName());
-//                                        tag.setOrder(tag.getOrder());
-//                                        tag.setDisplayName(tag.getDisplayName());
-//                                        tag.setId(tag.getId());
-//                                        tag.setSelected(tag.getSelected());
-//                                        tags.add(tag);
-//                                    }
-//                                    filters.add(filter);
-//                                }
-//                            }
-//                        }
 
+                        for (ProgramFilter filter : data) {
+                            units.clear();
+                            if (filter.getInternalName().toLowerCase().contains("status")) {
+                                statusTags.clear();
+                                statusTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
+                                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
 
-//                        for (ProgramFilter filter : data) {
-//                            units.clear();
-//                            if (filter.getInternalName().toLowerCase().contains("status")) {
-//                                statusTags.clear();
-//                                statusTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-//                                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
-//
-//                                for (ProgramFilterTag tag : filter.getTags()) {
-//                                    statusTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-//                                            false, R.color.white, R.drawable.t_background_tag_filled));
-//
-//                                    if (tag.getSelected()){
-//                                        tags.clear();
-//                                        tags.add(tag);
-//                                        changesMade = true;
-//                                        allLoaded = false;
-//                                        fetchData();
-//                                    }
-//                                }
-//                            }
-//
-//                        }
+                                for (ProgramFilterTag tag : filter.getTags()) {
+                                    statusTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
+                                            false, R.color.white, R.drawable.t_background_tag_filled));
+
+                                    if (tag.getSelected()){
+                                        tags.clear();
+                                        tags.add(tag);
+                                        changesMade = true;
+                                        allLoaded = false;
+                                        fetchData();
+                                    }
+                                }
+                            }
+
+                        }*/
                     }
 
                     @Override
@@ -404,7 +404,6 @@ public class UserStatusViewModel extends BaseViewModel {
     }
 
     private void fetchUnits() {
-
         mDataManager.getUnits(filters, "", mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), studentName, 0, take, skip,
                 0L, 0L,
@@ -517,13 +516,9 @@ public class UserStatusViewModel extends BaseViewModel {
 
                 for (int i = 0; i < items.size(); i++) {
                     for (ProgramFilterTag tag : model.getTags()) {
-                        if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle() != null) {
-                            if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle().equals(items.get(i).getName())) {
                                 if (tag.getId() == mDataManager.getLoginPrefs().getCurrrentPeriod()) {
-                                    dropDownBinding.filterDropDown.setSelection(i);
+                                    dropDownBinding.filterDropDown.setSelection(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
                                     break;
-                                }
-                            }
                         }
                     }
                 }
@@ -551,7 +546,7 @@ public class UserStatusViewModel extends BaseViewModel {
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
-                    fetchUnits();
+                    fetchData();
 
                 });
             }
@@ -596,13 +591,6 @@ public class UserStatusViewModel extends BaseViewModel {
                 }
 
 
-//                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
-//                    if (model.getStatus().equals("Submitted")){
-//                        unitBinding.tvComment.setVisibility(View.GONE);
-//                    }else {
-//                        unitBinding.tvComment.setVisibility(View.VISIBLE);
-//                    }
-//                }
                 unitBinding.checkbox.setVisibility(View.GONE);
 
                 if (model.getMyDate() > 0) {
@@ -693,7 +681,6 @@ public class UserStatusViewModel extends BaseViewModel {
                 if (tag.getDisplayName()
                         .equals(mDataManager.getLoginPrefs().getCurrrentPeriodTitle())) {
                     if (mDataManager.getLoginPrefs().getCurrrentPeriod() == tag.getId()) {
-                        tags.clear();
                         tags.add(tag);
                         filter.setTags(tags);
                         filter.setDisplayName(model.getDisplayName());
@@ -701,26 +688,31 @@ public class UserStatusViewModel extends BaseViewModel {
                         filter.setId(model.getId());
                         filter.setOrder(model.getOrder());
                         filter.setSelected(false);
-                        filters.add(filter);
+                        if (!filters.contains(filter)) {
+                            filters.add(filter);
+                        }
                         break;
                     }
-                }
-                  if (tag.getInternalName().toLowerCase().equals("approved")) {
-                      filter.setTags(tags);
-                      filter.setDisplayName(model.getDisplayName());
-                      filter.setInternalName(model.getInternalName());
-                      filter.setId(model.getId());
-                      filter.setOrder(model.getOrder());
-                      filter.setSelected(false);
-                            if (!filters.contains(filter)) {
-                                filters.add(filter);
-                                fetchUnits();
-                            }
+            }
+        }
 
-                            break;
-                        }
+            for (ProgramFilterTag tag : model.getTags()) {
+                if (tag.getInternalName().toLowerCase().equals("approved")) {
+                    tags.add(tag);
+                    filter.setTags(tags);
+                    filter.setDisplayName(model.getDisplayName());
+                    filter.setInternalName(model.getInternalName());
+                    filter.setId(model.getId());
+                    filter.setOrder(model.getOrder());
+                    filter.setSelected(false);
+                    if (!filters.contains(filter)) {
+                        filters.add(filter);
+                        fetchUnits();
                     }
-
+                    break;
                 }
+            }
+
+    }
 
 }

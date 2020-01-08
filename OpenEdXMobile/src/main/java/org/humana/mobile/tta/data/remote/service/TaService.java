@@ -7,6 +7,7 @@ import org.humana.mobile.http.constants.ApiConstants;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.NotificationResponse;
 import org.humana.mobile.tta.data.local.db.table.CalendarEvents;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
@@ -50,7 +51,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
@@ -174,9 +174,9 @@ public interface TaService {
 
 //    @GET(ApiConstants.URL_MX_CREATE_GET_NOTIFICATIONS)
     @GET(ApiConstants.URL_MX_GET_NOTIFICATION)
-    Call<List<Notification>> getNotifications(@Query(Constants.KEY_TAKE) int take,
-                                              @Query(Constants.KEY_SKIP) int skip,
-                                              @Query(Constants.KEY_COURSE_ID) String CourseId);
+    Call<NotificationResponse> getNotifications(@Query(Constants.KEY_TAKE) int take,
+                                                @Query(Constants.KEY_SKIP) int skip,
+                                                @Query(Constants.KEY_COURSE_ID) String CourseId);
 
     @GET(ApiConstants.URL_MX_GET_FEEDS)
     Call<List<Feed>> getFeeds(@Query(Constants.KEY_TAKE) int take,

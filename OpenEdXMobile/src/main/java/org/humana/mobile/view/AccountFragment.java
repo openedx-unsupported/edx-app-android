@@ -23,6 +23,7 @@ import org.humana.mobile.tta.data.local.db.table.Section;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.feed.NotificationsFragment;
 import org.humana.mobile.tta.ui.landing.LandingActivity;
+import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
 import org.humana.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
 import org.humana.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
@@ -163,13 +164,14 @@ public class AccountFragment extends BaseFragment {
         });
     }
     public void showNotifications() {
-        ActivityUtil.replaceFragmentInActivity(
-                getActivity().getSupportFragmentManager(),
-                new NotificationsFragment(),
-                R.id.dashboard_fragment,
-                NotificationsFragment.TAG,
-                true,
-                null
-        );
+        ActivityUtil.gotoPage(getActivity(),NotificationActivity.class);
+//        ActivityUtil.replaceFragmentInActivity(
+//                getActivity().getSupportFragmentManager(),
+//                new NotificationsFragment(),
+//                R.id.dashboard_fragment,
+//                NotificationsFragment.TAG,
+//                true,
+//                null
+//        );
     }
 }

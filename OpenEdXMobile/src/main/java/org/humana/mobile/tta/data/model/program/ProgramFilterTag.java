@@ -70,12 +70,29 @@ public class ProgramFilterTag implements Comparable<ProgramFilterTag> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProgramFilterTag that = (ProgramFilterTag) o;
-        return internalName.equals(that.internalName);
+        ProgramFilterTag tag = (ProgramFilterTag) o;
+        return id == tag.id &&
+                order == tag.order &&
+                Objects.equals(displayName, tag.displayName) &&
+                Objects.equals(internalName, tag.internalName) &&
+                Objects.equals(isSelected, tag.isSelected);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(internalName);
+        return Objects.hash(id, displayName, internalName, isSelected, order);
     }
+
+    //    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        ProgramFilterTag that = (ProgramFilterTag) o;
+//        return internalName.equals(that.internalName);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(internalName);
+//    }
 }

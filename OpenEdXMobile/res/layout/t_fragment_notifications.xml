@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.humana.mobile.tta.ui.feed.view_model.NotificationsViewModel" />
+            type="org.humana.mobile.tta.ui.programs.notifications.viewModel.NotificationViewModel" />
     </data>
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_height="50dp"
             android:id="@+id/toolbar"
             android:background="@color/app_background"
-            app:title="@string/notifications"
+            app:title="@string/notificationResponse"
             app:navigationIcon="@drawable/back"
             app:titleTextAppearance="@style/ta_toolbar_title_style"
             android:gravity="start|center_vertical"
@@ -64,7 +64,7 @@
                     android:layout_marginEnd="@dimen/_70px"
                     android:fontFamily="@font/hind_regular"
                     android:gravity="center"
-                    android:text="No notifications available at the moment"
+                    android:text="No notificationResponse available at the moment"
                     android:textColor="@color/primary_cyan"
                     android:textSize="12sp" />
 

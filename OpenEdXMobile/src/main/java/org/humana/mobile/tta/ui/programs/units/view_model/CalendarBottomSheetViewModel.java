@@ -376,7 +376,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getMyDate() > 0) {
                                     Event et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                            data.get(i).getTitle(),null);
+                                            data.get(i).getTitle(),null, null);
                                     eventsArrayList.add(et);
                                 }
                             }
@@ -384,7 +384,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getCommonDate() > 0) {
                                     Event et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                            data.get(i).getTitle(), null);
+                                            data.get(i).getTitle(), null,null);
                                     eventsArrayList.add(et);
                                 }
                             }

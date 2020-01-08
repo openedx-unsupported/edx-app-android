@@ -536,6 +536,9 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
+        <activity android:name=".tta.ui.programs.notifications.NotificationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <!-- Humana activities end -->
 
@@ -580,9 +583,9 @@
 
         <service android:name="org.humana.mobile.services.DownloadSpeedService" />
 
-         <!--Notifications through Firebase Cloud Messaging (FCM) -->
+         <!--NotificationResponse through Firebase Cloud Messaging (FCM) -->
        <!-- <service
-            android:name="org.humana.mobile.notifications.services.NotificationService"
+            android:name="org.humana.mobile.notificationResponse.services.NotificationService"
             android:enabled="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
@@ -594,7 +597,7 @@
             </intent-filter>
         </service>
 
-        <!-- Set the icon for notifications -->
+        <!-- Set the icon for notificationResponse -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification" />

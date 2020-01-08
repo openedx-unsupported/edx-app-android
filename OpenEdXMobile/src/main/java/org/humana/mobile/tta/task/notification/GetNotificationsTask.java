@@ -5,12 +5,10 @@ import android.content.Context;
 import com.google.inject.Inject;
 
 import org.humana.mobile.task.Task;
-import org.humana.mobile.tta.data.local.db.table.Notification;
+import org.humana.mobile.tta.data.NotificationResponse;
 import org.humana.mobile.tta.data.remote.api.TaAPI;
 
-import java.util.List;
-
-public class GetNotificationsTask extends Task<List<Notification>> {
+public class GetNotificationsTask extends Task<NotificationResponse> {
 
     private int take, skip;
     private String course_id;
@@ -26,7 +24,7 @@ public class GetNotificationsTask extends Task<List<Notification>> {
     }
 
     @Override
-    public List<Notification> call() throws Exception {
+    public NotificationResponse call() throws Exception {
         return taAPI.getNotifications(take, skip,course_id).execute().body();
     }
 }

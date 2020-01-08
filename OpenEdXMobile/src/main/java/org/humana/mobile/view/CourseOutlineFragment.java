@@ -1181,7 +1181,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
 
-    // Notifications for firebase
+    // NotificationResponse for firebase
 
     private void sendNotifications(String title, String type, String desc, String action,
                                    String action_id, String action_parent_id, String respondent, String unique_id) {

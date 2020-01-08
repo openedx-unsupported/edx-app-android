@@ -46,7 +46,7 @@ public class NotificationService extends FirebaseMessagingService {
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
 
         if (!environment.getConfig().areFirebasePushNotificationsEnabled()) {
-            // Do not process Notifications when they are disabled.
+            // Do not process NotificationResponse when they are disabled.
             return;
         }
 
