@@ -341,6 +341,8 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                 // Nothing to do here
             }
         });
+        // mark offset as zero, so that playback will resume from start next time
+        saveCurrentPlaybackPosition(0);
     }
 
     @Override

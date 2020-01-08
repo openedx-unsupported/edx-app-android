@@ -832,8 +832,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
 
         if (callback != null) {
-            // mark offset as zero, so that playback will resume from start next time
-            callback.saveCurrentPlaybackPosition(0);
             callback.onPlaybackComplete();
         }
         hideVideoSpeedPopup();

@@ -169,6 +169,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
     private void releaseYoutubePlayer() {
         if (youTubePlayer != null) {
+            saveCurrentPlaybackPosition(youTubePlayer.getCurrentTimeMillis());
             youTubePlayer.release();
             youTubePlayer = null;
         }
@@ -176,8 +177,11 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
     @Override
     public void seekToCaption(Caption caption) {
-        if (caption != null && youTubePlayer != null) {
-            youTubePlayer.seekToMillis(caption.start.getMseconds());
+        if (youTubePlayer != null) {
+            saveCurrentPlaybackPosition(youTubePlayer.getCurrentTimeMillis());
+            if (caption != null) {
+                youTubePlayer.seekToMillis(caption.start.getMseconds());
+            }
         }
     }
 
@@ -224,6 +228,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
         public void onVideoEnded() {
             youTubePlayer.seekToMillis(0);
             youTubePlayer.pause();
+            onPlaybackComplete();
         }
 
         @Override
@@ -254,6 +259,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
         @Override
         public void onPaused() {
+            saveCurrentPlaybackPosition(getPlayerCurrentPosition());
             updateTranscriptCallbackStatus(false);
             environment.getAnalyticsRegistry().trackVideoPause(videoModel.videoId,
                     youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
