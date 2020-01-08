@@ -90,6 +90,7 @@ import org.humana.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsList
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.tta.utils.AppUtil;
 import org.humana.mobile.tta.utils.MXPDFManager;
+import org.humana.mobile.tta.wordpress_client.model.Link;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.PermissionsUtil;
 import org.humana.mobile.util.UiUtil;
@@ -439,59 +440,67 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                         {
                             //anlaytic hit for scrom view
                             aHelper.addMxAnalytics_db(loginPrefs.getUsername()
-                                    ,adapter.selectedUnit.getDisplayName() , Action.ViewUnit,
-                                    adapter.selectedUnit.getRoot().getDisplayName() , Source.Mobile);
+                                    , adapter.selectedUnit.getDisplayName(), Action.ViewUnit,
+                                    adapter.selectedUnit.getRoot().getDisplayName(), Source.Mobile);
+                            try {
 
-                            ScormBlockModel model =comp.getScorms().get(0);
-                            switch (mDataManager.getScormStatus(model)){
-                                case not_downloaded:
-                                    mDataManager.downloadSingle(model, getActivity(),
-                                            new VideoDownloadHelper.DownloadManagerCallback() {
-                                                @Override
-                                                public void onDownloadStarted(Long result) {
-                                                    Log.d("--> Download State", "onDownloadStarted");
-                                                    adapter.notifyDataSetChanged();
+                                ScormBlockModel model = comp.getScorms().get(0);
 
-                                                }
+                                switch (mDataManager.getScormStatus(model)) {
+                                    case not_downloaded:
+                                        mDataManager.downloadSingle(model, getActivity(),
+                                                new VideoDownloadHelper.DownloadManagerCallback() {
+                                                    @Override
+                                                    public void onDownloadStarted(Long result) {
+                                                        Log.d("--> Download State", "onDownloadStarted");
+                                                        adapter.notifyDataSetChanged();
 
-                                                @Override
-                                                public void onDownloadFailedToStart() {
-                                                    Log.d("--> Download State", "onDownloadFailedToStart");
-                                                }
+                                                    }
 
-                                                @Override
-                                                public void showProgressDialog(int numDownloads) {
-                                                    adapter.notifyDataSetChanged();
-                                                    Log.d("--> Download State", "showProgressDialog");
+                                                    @Override
+                                                    public void onDownloadFailedToStart() {
+                                                        Log.d("--> Download State", "onDownloadFailedToStart");
+                                                    }
+
+                                                    @Override
+                                                    public void showProgressDialog(int numDownloads) {
+                                                        adapter.notifyDataSetChanged();
+                                                        Log.d("--> Download State", "showProgressDialog");
 //                        progressDialog.setProgress(numDownloads);
-                                                }
+                                                    }
 
-                                                @Override
-                                                public void updateListUI() {
-                                                    Log.d("--> Download State", "updateListUI");
+                                                    @Override
+                                                    public void updateListUI() {
+                                                        Log.d("--> Download State", "updateListUI");
 
-                                                }
+                                                    }
 
-                                                @Override
-                                                public boolean showInfoMessage(String message) {
-                                                    Log.d("--> Download State", "showInfoMessage");
-                                                    return false;
-                                                }
-                                            });
-                                    break;
-                                case downloading:
-                                    break;
+                                                    @Override
+                                                    public boolean showInfoMessage(String message) {
+                                                        Log.d("--> Download State", "showInfoMessage");
+                                                        return false;
+                                                    }
+                                                });
+                                        break;
+                                    case downloading:
+                                        break;
                                     case downloaded:
 
-                                    break;
+                                        break;
 
-                                case watched:
-                                    break;
-                                case watching:
-                                    break;
+                                    case watched:
+                                        break;
+                                    case watching:
+                                        break;
+                                }
+
+
+                            }catch (IndexOutOfBoundsException ie){
+
+                                // When no scrom data is available for download navigate to Url
+                                environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
+                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), unitType, unitTitle);
                             }
-
-
                         }
                         else if(comp.getType()==BlockType.SCORM && scormManager.has(comp.getId()))
                         {

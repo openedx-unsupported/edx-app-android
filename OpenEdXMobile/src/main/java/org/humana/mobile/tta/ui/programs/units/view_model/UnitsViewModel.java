@@ -336,6 +336,7 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     private void setUnitFilters() {
+        if (filters!=null)
         filters.clear();
         if (allFilters == null || allFilters.isEmpty()) {
             return;
@@ -542,7 +543,9 @@ public class UnitsViewModel extends BaseViewModel {
                 if (selectedFilter !=null) {
                     for (SelectedFilter item : selectedFilter) {
                         if (model.getInternalName().equals(item.getInternal_name())) {
-                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                            if (!model.getInternalName().toLowerCase().equals("language_id")){
+                                dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                            }
                         }
                     }
                 }
