@@ -337,9 +337,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
             final DownloadEntry videoData = videoBlockModel.getDownloadEntry(storage);
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData, videoBlockModel);
-            } else if (videoBlockModel.getData().encodedVideos.youtube != null && config.getYoutubePlayerConfig().isYoutubePlayerEnabled()) {
-                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_youtube_play);
-                viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
+            } else if (videoBlockModel.getData().encodedVideos.youtube != null) {
+                final boolean isYoutubePlayerEnabled = config.getYoutubePlayerConfig().isYoutubePlayerEnabled();
+                viewHolder.rowType.setIcon(isYoutubePlayerEnabled ? FontAwesomeIcons.fa_youtube_play : FontAwesomeIcons.fa_laptop);
+                viewHolder.rowType.setIconColorResource(isYoutubePlayerEnabled ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_accent);
             }
         } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
