@@ -34,8 +34,8 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     private YouTubePlayerSupportFragment youTubePlayerFragment;
 
     /**
-     * isYoutubePlayerInForeground is set on false when the app comes to background from foreground
-     * so this allow to play a video when the app comes to foreground from background
+     * Flag to check if Youtube Player is in foreground.
+     * It helps to play the player again when the app comes from background to foreground
      */
     private boolean isYoutubePlayerInForeground = true;
     private int attempts;
@@ -169,6 +169,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     }
 
     private void redirectToYoutubeDialog() {
+        releaseYoutubePlayer();
         if (getActivity() != null && !getActivity().isDestroyed()) {
             ((BaseFragmentActivity) getActivity())
                     .showAlertDialog(
@@ -284,11 +285,11 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
         @Override
         public void onStopped() {
+            /*
+             * `onStopped` callback is called when the player comes from background to foreground,
+             * so checking if player needs to play again here.
+             */
             if (!isYoutubePlayerInForeground && getUserVisibleHint()) {
-                /*
-                 * isYoutubePlayerInForeground is set on false when the app comes to background from foreground
-                 * so this allow to play a video when the app comes to foreground from background
-                 */
                 try {
                     isYoutubePlayerInForeground = true;
                     youTubePlayer.play();
