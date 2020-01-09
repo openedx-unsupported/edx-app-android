@@ -6,13 +6,15 @@ This module will setup environment for AWS Device Farm
 
 import boto3
 import requests
+import sys
 
-REGION = 'us-east-1' 
+REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
 DEVICE_POOL_NAME = 'edx_devices_pool'
+TARGET_AVAILABILITY = 'HIGHLY_AVAILABLE'
 
 status_flag = False
-device_farm = boto3.client('devicefarm', region_name=REGION)
+device_farm = boto3.client('devicefarm', REGION)
 
 
 def setup_aws_data():
@@ -21,14 +23,16 @@ def setup_aws_data():
     """
 
     target_project_arn = setup_project(PROJECT_NAME)
-    setup_device_pool(target_project_arn, DEVICE_POOL_NAME)
+    device_pool_arn = setup_device_pool(target_project_arn, DEVICE_POOL_NAME)
+    get_device_info(target_project_arn)
+
 
 def setup_project(project_name):
     """
     Check if specific project exists, if not create new one by given name
 
     Arguments:
-            project_arn (str): project arn
+            project_name (str): project name
 
     Return:
             str: project arn value
@@ -38,13 +42,20 @@ def setup_project(project_name):
     project_arn = ''
     for project in device_farm.list_projects()['projects']:
         if project['name'] == project_name:
-            print('{} already exists'.format(project_name))
+            print('{} project already exists'.format(project_name))
             project_arn = project['arn']
         else:
-            print('{} is not available, creating new one'.format(project_name))
+            print(
+                '{} project is not available, creating new one'.format(
+                        project_name
+                        )
+                        )
             project_arn = create_project(project_name)
 
         return project_arn
+
+    raise KeyError('Problem finding project %r' % project_name)
+
 
 def create_project(project_name):
     """
@@ -61,10 +72,14 @@ def create_project(project_name):
     new_project = device_farm.create_project(
         name=project_name,
         defaultJobTimeoutMinutes=123)
-    project_name = new_project['project']['name']
-    print('{} created successfully.'.format(project_name))
+    if new_project is not None:
+        project_name = new_project['project']['name']
+        print('{} project created successfully'.format(project_name))
+        return new_project['project']['arn']
+    else:
+        print('Problem creating {} project'.format(project_name))
+        sys.exit()
 
-    return new_project['project']['arn']
 
 def setup_device_pool(project_arn, device_pool_name):
     """
@@ -80,11 +95,11 @@ def setup_device_pool(project_arn, device_pool_name):
 
     target_device_pool_arn = ''
     is_device_pool_exists = False
-    for device_pool in device_farm.list_device_pools(arn=str(project_arn))['devicePools']:
+    for device_pool in device_farm.list_device_pools(arn=project_arn)[
+            'devicePools']:
         pool_name = device_pool['name']
         if pool_name == device_pool_name:
             print('{} already exists'.format(pool_name))
-            print('{}'.format(device_pool))    
             target_device_pool_arn = device_pool['arn']
             is_device_pool_exists = True
             break
@@ -96,6 +111,9 @@ def setup_device_pool(project_arn, device_pool_name):
             device_pool_name, project_arn)
 
     return target_device_pool_arn
+
+    raise KeyError('Problem finding device pool %r' % device_pool_name)
+
 
 def create_device_pool(pool_name, project_arn):
     """
@@ -122,7 +140,7 @@ def create_device_pool(pool_name, project_arn):
             },
             {
                 "attribute": "OS_VERSION",
-                "operator": "EQUALS",
+                "operator": "GREATER_THAN_OR_EQUALS",
                 "value": '"9"'
             },
             {
@@ -142,11 +160,83 @@ def create_device_pool(pool_name, project_arn):
             }
         ]
     )
+    if new_device_pool is not None:
+        new_pool_name = new_device_pool['devicePool']['name']
+        new_pool_arn = new_device_pool['devicePool']['arn']
+        print('{} is created successfully'.format(pool_name))
+        return new_pool_arn
+    else:
+        print('Problem creating {} device pool'.format(project_name))
+        sys.exit()
 
-    new_pool_name = new_device_pool['devicePool']['name']
-    new_pool_arn = new_device_pool['devicePool']['arn']
-    print('{} is created successfully'.format(pool_name))
-    return new_pool_arn
+
+def get_device_info(target_project_arn):
+    """
+    Check if specific device pool exists, if not create new one by given name
+
+    Arguments:
+            target_project_arn (str): project arn
+
+    """
+    try:
+        device_info = device_farm.list_devices(
+            arn=target_project_arn,
+            filters=[
+                {
+                    "attribute": "PLATFORM",
+                    "operator": "EQUALS",
+                    "values": ['ANDROID', ]
+                },
+                {
+                    "attribute": "OS_VERSION",
+                    "operator": "GREATER_THAN_OR_EQUALS",
+                    "values": ['9', ]
+                },
+                {
+                    "attribute": "MANUFACTURER",
+                    "operator": "EQUALS",
+                    "values": ['Google', ]
+                },
+                {
+                    "attribute": "AVAILABILITY",
+                    "operator": "EQUALS",
+                    "values": ['HIGHLY_AVAILABLE', ]
+                },
+                {
+                    "attribute": "FLEET_TYPE",
+                    "operator": "EQUALS",
+                    "values": ['PUBLIC', ]
+                }
+            ])['devices']
+
+        if device_info is not None:
+            device_arn = device_info[0]['arn']
+            device_name = device_info[0]['name']
+            device_manufacture = device_info[0]['manufacturer']
+            device_model = device_info[0]['model']
+            device_model_id = device_info[0]['modelId']
+            device_type = device_info[0]['formFactor']
+            device_platform = device_info[0]['platform']
+            device_os = device_info[0]['os']
+            device_visibility = device_info[0]['fleetType']
+            device_availability = device_info[0]['availability']
+
+            print('Device Name - {} with Manufacture {}, model {}, modelId {} & type {}'.format(
+                device_name, device_manufacture, device_model, device_model_id, device_type))
+            print('Device Platform {} with OS {}, visibility {} & availability - {} '.format(
+                device_platform, device_os, device_visibility, device_availability))
+
+            if device_availability == TARGET_AVAILABILITY:
+                print('AWS setup is complete')
+            else:
+                print('Problem, device is not available')
+        else:
+            print('Problem finding device info')
+
+    except IndexError:
+        print('Problem finding device from pool {}'.format(device_info))
+        # sys.exit()
+
 
 if __name__ == '__main__':
     setup_aws_data()
