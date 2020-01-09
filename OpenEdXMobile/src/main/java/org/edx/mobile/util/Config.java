@@ -61,7 +61,7 @@ public class Config {
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String API_URL_VERSION = "API_URL_VERSION";
-    private static final String YOUTUBE_IN_APP_PLAYER = "YOUTUBE_IN_APP_PLAYER";
+    private static final String YOUTUBE_PLAYER = "YOUTUBE_PLAYER";
 
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
@@ -593,14 +593,14 @@ public class Config {
         }
     }
 
-    public static class YoutubeInAppPlayerConfig {
+    public static class YoutubePlayerConfig {
         @SerializedName("ENABLED")
         private boolean enabled;
 
         @SerializedName("API_KEY")
         private String apiKey;
 
-        public boolean isYoutubeEnabled() {
+        public boolean isYoutubePlayerEnabled() {
             return enabled;
         }
 
@@ -873,7 +873,7 @@ public class Config {
     }
 
     @NonNull
-    public YoutubeInAppPlayerConfig getYoutubeInAppPlayerConfig() {
-        return getObjectOrNewInstance(YOUTUBE_IN_APP_PLAYER, YoutubeInAppPlayerConfig.class);
+    public YoutubePlayerConfig getYoutubePlayerConfig() {
+        return getObjectOrNewInstance(YOUTUBE_PLAYER, YoutubePlayerConfig.class);
     }
 }

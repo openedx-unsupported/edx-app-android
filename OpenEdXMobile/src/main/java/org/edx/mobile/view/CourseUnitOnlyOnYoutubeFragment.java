@@ -32,7 +32,7 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_course_unit_only_on_youtube, container, false);
         TextView tvYouTubeMessage = view.findViewById(R.id.only_youtube_available_message);
-        if (environment.getConfig().getYoutubeInAppPlayerConfig().isYoutubeEnabled()) {
+        if (environment.getConfig().getYoutubePlayerConfig().isYoutubePlayerEnabled()) {
             tvYouTubeMessage.setText(R.string.assessment_needed_updating_youtube);
             view.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
             view.findViewById(R.id.update_youtube_button).setOnClickListener(v -> {
