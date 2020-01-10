@@ -179,7 +179,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
                             (dialog, which) -> BrowserUtil
                                     .open(getActivity(),
                                             unit.getData().encodedVideos.getYoutubeVideoInfo().url),
-                            getString(R.string.label_cancel), null
+                            getString(R.string.label_ok), null
                     );
         }
     }
