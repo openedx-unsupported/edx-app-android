@@ -61,6 +61,7 @@ public class Config {
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String API_URL_VERSION = "API_URL_VERSION";
+    private static final String YOUTUBE_PLAYER = "YOUTUBE_PLAYER";
 
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
@@ -592,6 +593,22 @@ public class Config {
         }
     }
 
+    public static class YoutubePlayerConfig {
+        @SerializedName("ENABLED")
+        private boolean enabled;
+
+        @SerializedName("API_KEY")
+        private String apiKey;
+
+        public boolean isYoutubePlayerEnabled() {
+            return enabled;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+    }
+
     @Inject
     public Config(Context context) {
         try {
@@ -853,5 +870,10 @@ public class Config {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @NonNull
+    public YoutubePlayerConfig getYoutubePlayerConfig() {
+        return getObjectOrNewInstance(YOUTUBE_PLAYER, YoutubePlayerConfig.class);
     }
 }

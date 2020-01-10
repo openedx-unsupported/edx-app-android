@@ -1,6 +1,8 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import java.io.File;
 
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
 import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_MP4;
+import static org.edx.mobile.util.AppConstants.YOUTUBE_PACKAGE_NAME;
 
 public class VideoUtil {
     public static final String[] SUPPORTED_VIDEO_FORMATS = {
@@ -151,5 +154,35 @@ public class VideoUtil {
             filepath = video.getBestEncodingUrl(context);
         }
         return filepath;
+    }
+
+    /**
+     * Utility method to check that the supported YouTube app is installed or not, because YouTube
+     * in-app player SDK works only if supported version of YouTube app is installed.
+     *
+     * @param context The activity context
+     * @return true if the requirements are satisfied otherwise false
+     */
+    public static boolean isYoutubeAPISupported(Context context) {
+        try {
+            final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(YOUTUBE_PACKAGE_NAME, 0);
+            /*
+             * Youtube documentation says "Users need to run version 4.2.16 of the mobile YouTube
+             * app (or higher) to use the API."
+             * But the sdk is not working even for youtube app version 10.18.55,
+             * With testing on different versions it has been figured out that the version of
+             * youtube app should be greater than or equal to 12.0.0
+             *
+             * Available Refs:
+             * - https://developers.google.com/youtube/android/player/
+             * - https://stackoverflow.com/a/37553255
+             *
+             */
+            final float targetVersion = 12;
+            final float currentVersion = Float.parseFloat(packageInfo.versionName.split("\\.")[0]);
+            return Float.compare(currentVersion, targetVersion) >= 0;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

@@ -137,9 +137,9 @@ public class AnalyticsRegistry implements Analytics {
 
     @Override
     public void trackVideoPause(String videoId, Double currentTime,
-                                String courseId, String unitUrl) {
+                                String courseId, String unitUrl, String playMedium) {
         for (Analytics service : services) {
-            service.trackVideoPause(videoId, currentTime, courseId, unitUrl);
+            service.trackVideoPause(videoId, currentTime, courseId, unitUrl, playMedium);
         }
     }
 
@@ -167,9 +167,9 @@ public class AnalyticsRegistry implements Analytics {
 
     @Override
     public void trackVideoOrientation(String videoId, Double currentTime, boolean isLandscape,
-                                      String courseId, String unitUrl) {
+                                      String courseId, String unitUrl, String playMedium) {
         for (Analytics service : services) {
-            service.trackVideoOrientation(videoId, currentTime, isLandscape, courseId, unitUrl);
+            service.trackVideoOrientation(videoId, currentTime, isLandscape, courseId, unitUrl, playMedium);
         }
     }
 

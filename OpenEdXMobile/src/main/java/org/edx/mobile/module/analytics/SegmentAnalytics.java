@@ -156,13 +156,17 @@ public class SegmentAnalytics implements Analytics {
      * @param currentTime -  Video Playing started at
      * @param courseId    -  CourseId under which the video is present
      * @param unitUrl     -  Page Url for that Video
+     * @param playMedium  - Player Medium {@link Analytics.Values.GOOGLE_CAST}
      */
     @Override
     public void trackVideoPause(String videoId,
-                                Double currentTime, String courseId, String unitUrl) {
+                                Double currentTime, String courseId, String unitUrl, String playMedium) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PAUSED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
+        if (!TextUtils.isEmpty(playMedium)) {
+            aEvent.data.put(Keys.PLAY_MEDIUM, playMedium);
+        }
         trackSegmentEvent(Events.PAUSED_VIDEO, aEvent.properties);
     }
 
@@ -350,16 +354,19 @@ public class SegmentAnalytics implements Analytics {
      * @param isLandscape -  true / false based on orientation
      * @param courseId
      * @param unitUrl
+     * @param playMedium  - Player Medium {@link Analytics.Values.GOOGLE_CAST}
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
     public void trackVideoOrientation(String videoId, Double currentTime,
-                                      boolean isLandscape, String courseId, String unitUrl) {
+                                      boolean isLandscape, String courseId, String unitUrl, String playMedium) {
         SegmentEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.FULLSREEN_TOGGLED);
         aEvent.data.putValue(Keys.FULLSCREEN, isLandscape);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-
+        if (!TextUtils.isEmpty(playMedium)) {
+            aEvent.data.put(Keys.PLAY_MEDIUM, playMedium);
+        }
         trackSegmentEvent(Events.SCREEN_TOGGLED, aEvent.properties);
     }
 
@@ -851,7 +858,9 @@ public class SegmentAnalytics implements Analytics {
     public void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState, @NonNull String playMedium) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, connectionState);
-        aEvent.data.put(Keys.PLAY_MEDIUM, playMedium);
+        if (!TextUtils.isEmpty(playMedium)) {
+            aEvent.data.put(Keys.PLAY_MEDIUM, playMedium);
+        }
         trackSegmentEvent(eventName, aEvent.properties);
     }
 }

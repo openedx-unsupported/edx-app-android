@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import roboguice.inject.InjectView;
 
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements
-        CourseUnitVideoFragment.HasComponent, PreLoadingListener {
+        BaseCourseUnitVideoFragment.HasComponent, PreLoadingListener {
     protected Logger logger = new Logger(getClass().getSimpleName());
 
     private DisableableViewPager pager;
@@ -70,8 +70,25 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 environment.getConfig(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            private boolean firstPageLoad = true;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                /*
+                 * The method setUserVisibleHint is not called the first time the viewpager loads
+                 * so it's necessary to call it manually in order to run the logic inside it.
+                 *
+                 * 'onPageScrolled' method has been chosen instead of 'onPageSelected', because
+                 * `onPageSelected` is not getting called when pager opens page of position 0.
+                 */
+                if (firstPageLoad) {
+                    firstPageLoad = false;
+                    final CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.instantiateItem(pager, position);
+                    initialPage.setUserVisibleHint(true);
+                }
+                // refresh the menu items to update the current state of google cast button
+                invalidateOptionsMenu();
             }
 
             @Override
@@ -85,7 +102,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 }
             }
         });
-
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
         mPreviousBtn.setOnClickListener(view -> navigatePreviousComponent());
@@ -255,6 +271,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public boolean showGoogleCastButton() {
-        return true;
+        if (pager != null && pagerAdapter != null) {
+            return ((CourseUnitFragment) pagerAdapter.instantiateItem(pager, pager.getCurrentItem())).hasCastSupportedVideoContent();
+        }
+        return super.showGoogleCastButton();
     }
 }

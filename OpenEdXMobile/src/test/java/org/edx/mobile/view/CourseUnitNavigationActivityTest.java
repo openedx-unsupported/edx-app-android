@@ -15,7 +15,6 @@ import com.google.gson.JsonObject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
@@ -254,7 +253,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
 
         Class<? extends CourseUnitFragment> fragmentClass;
         if (currentUnit instanceof VideoBlockModel) {
-            fragmentClass = CourseUnitVideoFragment.class;
+            fragmentClass = BaseCourseUnitVideoFragment.class;
         } else if (!currentUnit.isMultiDevice() ){
             fragmentClass = CourseUnitMobileNotSupportedFragment.class;
         } else if (currentUnit.getType() != BlockType.VIDEO &&
@@ -398,7 +397,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 .thenReturn(Mockito.mock(VideoInfo.class));
         when(encodeVideosModel.getData()).thenReturn(videoData);
         unitList.add(encodeVideosModel);
-        classesList.add(CourseUnitVideoFragment.class);
+        classesList.add(BaseCourseUnitVideoFragment.class);
 
         VideoBlockModel youtubeVideosModel = Mockito.mock(VideoBlockModel.class);
         VideoData videoData2 = Mockito.mock(VideoData.class);
@@ -407,8 +406,8 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 .thenReturn(Mockito.mock(VideoInfo.class));
         when(youtubeVideosModel.getData()).thenReturn(videoData2);
         unitList.add(youtubeVideosModel);
+        classesList.add(CourseUnitYoutubePlayerFragment.class);
         classesList.add(CourseUnitOnlyOnYoutubeFragment.class);
-
         DiscussionBlockModel discussionModel = Mockito.mock(DiscussionBlockModel.class);
         unitList.add(discussionModel);
         if (config.isDiscussionsEnabled()) {
@@ -475,7 +474,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 when(videoData.encodedVideos.getPreferredVideoInfo())
                         .thenReturn(Mockito.mock(VideoInfo.class));
                 when(encodedVideosModel.getData()).thenReturn(videoData);
-                argsList.add(new Object[] {encodedVideosModel, CourseUnitVideoFragment.class, true});
+                argsList.add(new Object[] {encodedVideosModel, BaseCourseUnitVideoFragment.class, true});
 
                 VideoBlockModel youtubeVideosModel = Mockito.mock(VideoBlockModel.class);
                 VideoData videoData2 = Mockito.mock(VideoData.class);

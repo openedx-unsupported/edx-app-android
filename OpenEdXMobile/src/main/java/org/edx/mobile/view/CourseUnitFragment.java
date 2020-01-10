@@ -21,7 +21,7 @@ public abstract class CourseUnitFragment extends BaseFragment {
     protected HasComponent hasComponentCallback;
 
     @Inject
-    IEdxEnvironment environment;
+    protected IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,5 +32,14 @@ public abstract class CourseUnitFragment extends BaseFragment {
 
     public void setHasComponentCallback(HasComponent callback) {
         hasComponentCallback = callback;
+    }
+
+    /**
+     * This method contains the status that screen has the Casting supported video content or not.
+     *
+     * @return true if screen has casting supported video content, else false
+     */
+    public boolean hasCastSupportedVideoContent() {
+        return false;
     }
 }

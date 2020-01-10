@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.google.inject.Inject;
 
@@ -12,12 +13,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 import roboguice.RoboGuice;
 
-public abstract class TranscriptDownloader implements Runnable {
+/**
+ * {@link AsyncTask} to download the transcript in background thread and post the result on UI thread
+ * that helps to update the UI component
+ */
+public abstract class TranscriptDownloader extends AsyncTask<Void, Void, String> {
 
+    private final Logger logger = new Logger(TranscriptDownloader.class.getName());
     private String srtUrl;
     @Inject
     private OkHttpClientProvider okHttpClientProvider;
-    private final Logger logger = new Logger(TranscriptDownloader.class.getName());
 
     public TranscriptDownloader(Context context, String url) {
         this.srtUrl = url;
@@ -25,7 +30,7 @@ public abstract class TranscriptDownloader implements Runnable {
     }
 
     @Override
-    public void run() {
+    protected String doInBackground(Void... voids) {
         try {
             final Response response = okHttpClientProvider.getWithOfflineCache()
                     .newCall(new Request.Builder()
@@ -36,11 +41,18 @@ public abstract class TranscriptDownloader implements Runnable {
             if (!response.isSuccessful()) {
                 throw new HttpStatusException(response);
             }
-            onDownloadComplete(response.body().string());
+            return response.body().string();
         } catch (Exception localException) {
             handle(localException);
             logger.error(localException);
         }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String response) {
+        super.onPostExecute(response);
+        onDownloadComplete(response);
     }
 
     public abstract void handle(Exception ex);

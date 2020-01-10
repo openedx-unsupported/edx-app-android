@@ -1,14 +1,16 @@
 package org.edx.mobile.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.IOUtils;
@@ -21,13 +23,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
-import java.util.Map;
+
+import subtitleFile.FormatSRT;
+import subtitleFile.TimedTextObject;
 
 @Singleton
 public class TranscriptManager {
     private final Logger logger = new Logger(getClass().getName());
     private final Context context;
+    private AsyncTask<Void, Void, String> transcriptDownloader;
 
     @Inject
     public TranscriptManager(Context context) {
@@ -113,22 +117,28 @@ public class TranscriptManager {
 
     /**
      * This function is used to handle downloading of SRT files and saving them
-     * @param downloadLink
+     *
+     * @param downloadLink     - transcript downloadable link
+     * @param downloadListener - Callback on transcript download complete {@link OnTranscriptDownloadListener}
      */
-    public void startTranscriptDownload(final String downloadLink) {
-        //Uri target = Uri.fromFile(new File(transcriptDir, Sha1Util.SHA1(downloadLink)));
-        if(downloadLink==null){
-            return;
-        }
-
+    @SuppressLint("StaticFieldLeak")
+    private void startTranscriptDownload(@NonNull final String downloadLink,
+                                         @Nullable OnTranscriptDownloadListener downloadListener) {
         //If file is not present in the Folder, then start downloading
-        if(!has(downloadLink)) {
-            TranscriptDownloader td = new TranscriptDownloader(context, downloadLink) {
+        if (!has(downloadLink)) {
+            transcriptDownloader = new TranscriptDownloader(context, downloadLink) {
 
                 @Override
                 public void onDownloadComplete(String response) {
                     try {
-                        put(downloadLink, response);
+                        if (response != null) {
+                            put(downloadLink, response);
+                            if (downloadListener != null) {
+                                final InputStream transcriptInputStream = fetchTranscriptResponse(downloadLink);
+                                TimedTextObject transcriptTimedTextObject = convertIntoTimedTextObject(transcriptInputStream);
+                                downloadListener.onDownloadComplete(transcriptTimedTextObject);
+                            }
+                        }
                     } catch (IOException e) {
                         logger.error(e);
                     }
@@ -138,41 +148,48 @@ public class TranscriptManager {
                 public void handle(Exception ex) {
                     logger.error(ex);
                 }
-            };
-            Thread th = new Thread(td);
-            th.start();
+            }.execute();
         }
     }
 
     /**
      * This function starts downloading all the srt files in a Transcript model
-     * @param transcript
+     *
+     * @param transcriptUrl    - download url to download the transcript
+     * @param downloadListener - Callback on transcript download complete {@link OnTranscriptDownloadListener}
      */
-    public void downloadTranscriptsForVideo(TranscriptModel transcript) {
-        if (transcript == null) {
+    public void downloadTranscriptsForVideo(@Nullable String transcriptUrl,
+                                            @Nullable OnTranscriptDownloadListener downloadListener) {
+        if (TextUtils.isEmpty(transcriptUrl)) {
             return;
         }
-        for (String value : transcript.values()) {
-            if (value != null) {
-                startTranscriptDownload(value);
+        InputStream transcriptsInputStream = fetchTranscriptResponse(transcriptUrl);
+        if (transcriptsInputStream != null) {
+            TimedTextObject transcriptTimedTextObject;
+            try {
+                transcriptTimedTextObject = convertIntoTimedTextObject(transcriptsInputStream);
+                if (downloadListener != null) {
+                    downloadListener.onDownloadComplete(transcriptTimedTextObject);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        } else {
+            startTranscriptDownload(transcriptUrl, downloadListener);
         }
     }
 
-
     /**
-     * This function is used to fetch all language Transcripts of a particular Video in strings
-     * @param transcript - This model contains links of the srt files
-     * @return ArrayList<String> which is the list of srt response strings
+     * Utility method that convert the {@link InputStream} to {@link TimedTextObject} for the
+     * transcript
+     *
+     * @param inputStream - that needs to convert
+     * @return - {@link TimedTextObject} a transcript object
      */
-    public LinkedHashMap<String, InputStream> fetchTranscriptsForVideo(TranscriptModel transcript) {
-        LinkedHashMap<String, InputStream> transcriptList = new LinkedHashMap<>();
-        for (Map.Entry<String, String> entry : transcript.entrySet()) {
-            if (entry.getValue() != null) {
-                transcriptList.put(entry.getKey(), fetchTranscriptResponse(entry.getValue()));
-            }
-        }
-        return transcriptList;
+    private TimedTextObject convertIntoTimedTextObject(@NonNull InputStream inputStream) throws IOException {
+        TimedTextObject timedTextObject = new FormatSRT().parseFile("temp.srt", inputStream);
+        inputStream.close();
+        return timedTextObject;
     }
 
     /**
@@ -207,5 +224,18 @@ public class TranscriptManager {
             return transcriptDir;
         }
         return null;
+    }
+
+    /**
+     * Method to cancel the transcript downloading.
+     */
+    public void cancelTranscriptDownloading() {
+        if (transcriptDownloader != null) {
+            transcriptDownloader.cancel(true);
+        }
+    }
+
+    public interface OnTranscriptDownloadListener {
+        void onDownloadComplete(TimedTextObject transcriptTimedTextObject);
     }
 }
