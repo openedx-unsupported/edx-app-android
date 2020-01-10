@@ -35,6 +35,7 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
     private FrameLayout bottom_sheet;
     private List<Event> eventList;
     FragUnitCalendarViewBinding binding;
+    private Long currentDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,10 +43,9 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
 
         if (getIntent().getExtras() != null){
             getBundledData(getIntent().getExtras());
-        } else if (savedInstanceState != null){
+        } else if (savedInstanceState != null) {
             getBundledData(savedInstanceState);
         }
-
         viewModel = new UnitCalendarViewModel(this, course);
         eventList = new ArrayList<>();
         ViewDataBinding viewDataBinding= binding(R.layout.frag_unit_calendar_view, viewModel);
@@ -59,6 +59,7 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
         .setDayNumberColor(null)
         .setListner(this)
         .setTabletMode(isTabView()));
+
 
     }
 
@@ -102,6 +103,20 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
     public void onEventMainThread(List<Event> events) {
         eventList = events;
         viewModel.eventObservable.set(events);
+        viewModel.eventObservableDate.set(viewModel.startDateTime);
+        binding.calendarView.setEvents(eventList,viewModel.startDateTime);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerEventBus();
+    }
+
+    @Override
+    protected void onPause() {
+        unRegisterEventBus();
+        super.onPause();
     }
 
     public void registerEventBus() {
@@ -114,18 +129,21 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
 
     @Override
     public void onAction(long date, long startDateTime, long endDateTime) {
-        viewModel.eventDisplayDate = date;
-        viewModel.startDateTime = startDateTime;
-        viewModel.endDateTime = endDateTime;
-        viewModel.fetchUnits();
+//        viewModel.startDateTime = startDateTime;
+//        viewModel.endDateTime = endDateTime;
+        viewModel.eventObservableDate.set(startDateTime);
+        viewModel.eventObservable.set(eventList);
+        viewModel.fetchUnits(startDateTime, endDateTime);
     }
 
     @Override
     public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
+
         ActivityCalendarBottomSheet bottomSheetDialogFragment =
                 new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime);
-
         bottomSheetDialogFragment.show(this.getSupportFragmentManager(),
                 "units");
     }
+
+
 }

@@ -478,6 +478,14 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
                             tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
+
+                    if (tag.getSelected()){
+                        SelectedFilter sf = new SelectedFilter();
+                        sf.setInternal_name(model.getInternalName());
+                        sf.setDisplay_name(model.getDisplayName());
+                        sf.setSelected_tag(tag.getDisplayName());
+                        mDataManager.updateSelectedFilters(sf);
+                    }
                 }
 
                 dropDownBinding.filterDropDown.setFilterItems(items);

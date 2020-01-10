@@ -9,12 +9,19 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.enums.NotificationType;
 import org.humana.mobile.tta.data.local.db.table.Notification;
+import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
 import org.humana.mobile.tta.ui.splash.SplashActivity;
 import org.humana.mobile.tta.utils.NotificationUtil;
+import org.humana.mobile.util.BrowserUtil;
+import org.humana.mobile.view.CourseOutlineActivity;
+import org.humana.mobile.view.CourseOutlineFragment;
+
+import java.util.List;
 
 import static org.humana.mobile.util.BrowserUtil.loginPrefs;
 
@@ -28,6 +35,12 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
     public static final String EXTRA_PATH = "path";
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_ISPUSH = "isPush";
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_SECTION_ID = "section_id";
+    public static final String EXTRA_PARENT_ACTION_ID = "action_parent_id";
+    public static final String EXTRA_ACTION_ID = "action_id";
+    DataManager mDataManager;
+
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -139,8 +152,37 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         }
         else
         {
+
             navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
         }
         return navigationIntent;
     }
+
+  /*  private void getEnrolledCourse() {
+
+        mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+            @Override
+            public void onSuccess(List<EnrolledCoursesResponse> data) {
+
+                if (mDataManager.getLoginPrefs().getProgramId() != null) {
+                    for (EnrolledCoursesResponse item : data) {
+                        if (item.getCourse().getId().trim().toLowerCase()
+                                .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
+                            course = item;
+                            break;
+                        }
+
+                    }
+                }
+                populateTabs();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                populateTabs();
+            }
+        });
+
+    }*/
+
 }

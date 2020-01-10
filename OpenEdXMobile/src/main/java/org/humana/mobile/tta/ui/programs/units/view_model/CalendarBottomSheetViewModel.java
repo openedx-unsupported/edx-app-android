@@ -78,6 +78,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private String selectedDate;
     private long startDateTime, endDateTime, selectedDateLng;
     private final String SELECTED_DATE= "selected_date";
+    private Boolean isDateSelected;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
 //        if (allLoaded)
@@ -107,6 +108,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         changesMade = true;
         calVisible.set(false);
         frameVisible.set(true);
+        isDateSelected = true;
 
         unitsAdapter = new UnitsAdapter(mActivity);
 //        switchText.set("Calendar View");
@@ -257,19 +259,19 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             public void onSuccess(SuccessResponse response) {
                                 mActivity.hideLoading();
 
-                                unit.setMyDate(data);
-                                unitsAdapter.remove(unit);
-                                unitsAdapter.notifyDataSetChanged();
-
-                                if (units.size()==0){
-                                    emptyVisible.set(true);
-                                }else {
-                                    emptyVisible.set(false);
-                                }
+//                                unit.setMyDate(data);
+//                                unitsAdapter.remove(unit);
+//                                unitsAdapter.notifyDataSetChanged();
+//
+//                                if (units.size()==0){
+//                                    emptyVisible.set(true);
+//                                }else {
+//                                    emptyVisible.set(false);
+//                                }
 
                                     mActivity.showLongSnack("Proposed date set successfully");
-                                mActivity.hideLoading();
-
+//                                mActivity.hideLoading();
+                                isDateSelected = true;
                                 fetchUnits();
                             }
 
@@ -371,13 +373,70 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         unitsAdapter.setItems(units);
                         unitsAdapter.notifyDataSetChanged();
                         unitsAdapter.setLoadingDone();
+                        String colorCode = "#ffffff";
+                        Event et;
 
-                        if (role.equals(UserRole.Instructor.name())) {
+                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getCommonDate() > 0) {
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(),null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
+                                }
+                            }
+                        } else {
+
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getMyDate() > 0) {
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
+                                }
+                            }
+                        }
+                       /* if (role.equals(UserRole.Instructor.name())) {
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getMyDate() > 0) {
                                     Event et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
                                             data.get(i).getTitle(),null, null);
                                     eventsArrayList.add(et);
+
                                 }
                             }
                         }else {
@@ -388,17 +447,16 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                     eventsArrayList.add(et);
                                 }
                             }
+                        }*/
+                        if (isDateSelected){
+                            EventBus.getDefault().post(eventsArrayList);
+                            isDateSelected = false;
                         }
-//
 
-//                        populateUnits(data);
                         if (units.size()==0){
                             emptyVisible.set(true);
                         }
-//                        unitsAdapter.setItems(units);
-//                        unitsAdapter.notifyDataSetChanged();
-//                        unitsAdapter.setLoadingDone();
-                        mActivity.hideLoading();
+
                     }
 
                     @Override
@@ -448,7 +506,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         }
     }
 
-    @SuppressWarnings("unused")
     public void onEventMainThread(PeriodSavedEvent event) {
         changesMade = true;
         allLoaded = false;
@@ -558,6 +615,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             unitBinding.statusIcon.setVisibility(View.GONE);
                         }
 
+                        mActivity.hideLoading();
 
 //                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
 //                    eventsArrayList.add(ev);
@@ -671,5 +729,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         intent.putExtra(SELECTED_DATE, selectedDateLng);
         mActivity.startActivity(intent);
     }
+
 
 }

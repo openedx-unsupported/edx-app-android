@@ -140,7 +140,7 @@ public class UnitsViewModel extends BaseViewModel {
                     EnrolledCoursesResponse c;
                     if (ssp) {
                         c = course;
-                    } else {
+                    }else {
                         c = parentCourse;
                     }
 
@@ -181,6 +181,7 @@ public class UnitsViewModel extends BaseViewModel {
 
                                     @Override
                                     public void onFailure(Exception e) {
+                                        e.printStackTrace();
                                         mActivity.hideLoading();
                                         mActivity.showLongSnack("enroll org failure");
                                     }
@@ -189,6 +190,7 @@ public class UnitsViewModel extends BaseViewModel {
 
                             @Override
                             public void onFailure(Exception e) {
+                                e.printStackTrace();
                                 mActivity.hideLoading();
                                 mActivity.showLongSnack("enroll failure");
                             }
@@ -236,6 +238,7 @@ public class UnitsViewModel extends BaseViewModel {
                                     public void onFailure(Exception e) {
                                         mActivity.hideLoading();
                                         mActivity.showLongSnack(e.getLocalizedMessage());
+                                        e.printStackTrace();
                                     }
                                 });
                     }
@@ -355,31 +358,32 @@ public class UnitsViewModel extends BaseViewModel {
                     }
                 }
             }
-            for (SelectedFilter selected : selectedFilter) {
-                for (ProgramFilter filter : allFilters) {
-                    List<ProgramFilterTag> selectedTags = new ArrayList<>();
-                    if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
-                        for (ProgramFilterTag tag : filter.getTags()) {
-                            if (selected.getSelected_tag() != null) {
-                                if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                    selectedTags.add(tag);
-                                    ProgramFilter pf = new ProgramFilter();
-                                    pf.setDisplayName(filter.getDisplayName());
-                                    pf.setInternalName(filter.getInternalName());
-                                    pf.setId(filter.getId());
-                                    pf.setOrder(filter.getOrder());
-                                    pf.setShowIn(filter.getShowIn());
-                                    pf.setTags(selectedTags);
-                                    filters.add(pf);
-                                    break;
-                                }
+
+
+
+        }
+        for (SelectedFilter selected : selectedFilter) {
+            for (ProgramFilter filter : allFilters) {
+                List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                    for (ProgramFilterTag tag : filter.getTags()) {
+                        if (selected.getSelected_tag() != null) {
+                            if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                selectedTags.add(tag);
+                                ProgramFilter pf = new ProgramFilter();
+                                pf.setDisplayName(filter.getDisplayName());
+                                pf.setInternalName(filter.getInternalName());
+                                pf.setId(filter.getId());
+                                pf.setOrder(filter.getOrder());
+                                pf.setShowIn(filter.getShowIn());
+                                pf.setTags(selectedTags);
+                                filters.add(pf);
+                                break;
                             }
                         }
                     }
                 }
-
             }
-
         }
 
 
@@ -466,15 +470,7 @@ public class UnitsViewModel extends BaseViewModel {
 
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(String sessiontype) {
-        if (!org.humana.mobile.tta.data.constants.Constants.selectedSession.equals("")) {
-            org.humana.mobile.tta.data.constants.Constants.selectedSession = sessiontype;
-            changesMade = true;
-            allLoaded = false;
-            fetchFilters();
-        }
-    }
+
 
 
     @SuppressWarnings("unused")
@@ -543,9 +539,7 @@ public class UnitsViewModel extends BaseViewModel {
                 if (selectedFilter !=null) {
                     for (SelectedFilter item : selectedFilter) {
                         if (model.getInternalName().equals(item.getInternal_name())) {
-                            if (!model.getInternalName().toLowerCase().equals("language_id")){
                                 dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
-                            }
                         }
                     }
                 }

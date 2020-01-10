@@ -214,7 +214,7 @@ public class Router {
     }
 
 
-    private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
+    public Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
                                              String courseComponentId, String lastAccessedId,
                                              boolean isVideosMode) {
         Bundle courseBundle = new Bundle();
@@ -228,7 +228,7 @@ public class Router {
 
         return intent;
     }
-    private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
+    public Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
                                              String courseComponentId, String lastAccessedId,
                                              boolean isVideosMode, Unit unit) {
         Bundle courseBundle = new Bundle();

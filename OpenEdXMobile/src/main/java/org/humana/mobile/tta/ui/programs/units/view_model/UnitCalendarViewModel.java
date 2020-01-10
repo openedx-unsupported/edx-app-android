@@ -77,7 +77,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
     public static ObservableField<String> dispDate = new ObservableField<>();
 
     public static long eventDisplayDate = 0L;
-    public static long startDateTime, endDateTime;
+    public long startDateTime, endDateTime;
     public ObservableField<List<Event>> eventObservable = new ObservableField<>();
     public ObservableLong eventObservableDate = new ObservableLong();
 
@@ -188,10 +188,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
         });
 
         mActivity.showLoading();
-        fetchData();
-//        CustomCalendarView.setupAdapter();
-
-
+//        fetchUnits();
     }
 
     private void fetchData() {
@@ -202,7 +199,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
             unitsAdapter.reset(true);
         }
 
-        fetchUnits();
+        fetchUnits(0L,0L);
 
     }
 
@@ -294,11 +291,11 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
     }
 
-    public void fetchUnits() {
-
+    public void fetchUnits(Long startDate, Long endDate) {
+        mActivity.showLoading();
         mDataManager.getUnits(filters, "", mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
-                0L, take, skip, startDateTime, endDateTime,
+                0L, take, skip, startDate, endDate,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -367,10 +364,13 @@ public class UnitCalendarViewModel extends BaseViewModel {
                             }
                         }
 
+
+
+                        EventBus.getDefault().post(eventsArrayList);
+
                         eventObservable.set(eventsArrayList);
-
-                        mActivity.hideLoading();
-
+                        startDateTime = startDate;
+                        eventObservableDate.set(startDate);
                     }
 
                     @Override
@@ -413,6 +413,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
     }
 
     private void toggleEmptyVisibility() {
+        mActivity.hideLoading();
         if (units == null || units.isEmpty()) {
             emptyVisible.set(true);
         } else {

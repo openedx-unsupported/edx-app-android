@@ -8,8 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.model.course.CourseComponent;
+import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Category;
+import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.ShowStudentUnitsEvent;
@@ -23,6 +26,7 @@ import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUsersFragment;
 import org.humana.mobile.tta.ui.programs.schedule.ScheduleFragment;
 import org.humana.mobile.tta.ui.programs.students.StudentsFragment;
 import org.humana.mobile.tta.ui.programs.units.UnitsFragment;
+import org.humana.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 import org.humana.mobile.view.CourseDiscussionTopicsFragment;
 import org.humana.mobile.view.Router;
 import org.humana.mobile.view.common.PageViewStateCallback;
@@ -32,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import okhttp3.ResponseBody;
 
 public class LibraryViewModel extends BaseViewModel {
 
@@ -202,6 +207,7 @@ public class LibraryViewModel extends BaseViewModel {
                             course = item;
                             break;
                         }
+
                     }
                 }
                 populateTabs();
@@ -214,6 +220,8 @@ public class LibraryViewModel extends BaseViewModel {
         });
 
     }
+
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseEnrolledEvent event) {
