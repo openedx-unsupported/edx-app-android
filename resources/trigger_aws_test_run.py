@@ -4,11 +4,11 @@
 This module will handle test run on AWS Device Farm
 """
 
-import boto3
+import sys
+import boto3 
 import requests
 
-
-REGION = 'us-west-2'
+REGION = 'us-east-1'
 PROJECT_NAME = 'edx-app-test'
 DEVICE_POOL_NAME = 'edx_devices_pool'
 ANDROID_APP_UPLOAD_TYPE = 'ANDROID_APP'
@@ -23,30 +23,26 @@ CUSTOM_SPECS_NAME = 'edx.yml'
 
 device_farm = boto3.client('devicefarm', region_name=REGION)
 
-
 def aws_job():
     """
     aws job to manage test run
     """
-
+    
     project_arn = get_project_arn(PROJECT_NAME)
     aut_arn = upload_file(project_arn,
                           ANDROID_APP_UPLOAD_TYPE,
                           AUT_NAME
                          )
-    print('{} uploaded successfully'.format(AUT_NAME))
-
+    
     package_arn = upload_file(project_arn,
                               PACKAGE_UPLOAD_TYPE,
                               PACKAGE_NAME
                              )
-    print('{} uploaded successfully'.format(PACKAGE_NAME))
 
     test_specs_arn = upload_file(project_arn,
                                  CUSTOM_SPECS_UPLOAD_TYPE,
                                  CUSTOM_SPECS_NAME
                                 )
-    print('{} uploaded successfully'.format(CUSTOM_SPECS_NAME))
 
     device_pool_arn = get_device_pool(project_arn, DEVICE_POOL_NAME)
 
@@ -105,6 +101,8 @@ def upload_file(project_arn, upload_type, target_file_name):
     print('File {} - status {} '.format(name, status))
 
     _upload_presigned_url(pre_signed_url, name)
+
+    print('{} uploaded successfully'.format(target_file_name))
     return upload_arn
 
 
@@ -139,7 +137,9 @@ def get_device_pool(project_arn, name):
     for device_pool in device_farm.list_device_pools(arn=project_arn
                                                     )['devicePools']:
         if device_pool['name'] == name:
+            print('{} exits '.format(name))
             return device_pool['arn']
+
     raise KeyError('Could not find device pool %r' % name)
 
 
@@ -196,6 +196,7 @@ def get_test_run(run_arn):
                                                                              run_status,
                                                                              run_results
                                                                             ))
+
 
 if __name__ == '__main__':
     aws_job()
