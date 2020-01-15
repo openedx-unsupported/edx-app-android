@@ -1,6 +1,6 @@
 package org.edx.mobile.test.screenshot.test;
 
-import android.view.View;
+import android.app.Activity;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -21,7 +21,9 @@ public class LaunchScreenshotTests {
 
     @Test
     public void testScreenshot_recordLaunchActivity() throws Throwable {
-        View view = mActivityRule.getActivity().findViewById(android.R.id.content);
-        Screenshot.snap(view).record();
+        Activity activity = mActivityRule.getActivity();
+        activity.runOnUiThread(() -> {
+            Screenshot.snap(activity.findViewById(android.R.id.content)).record();
+        });
     }
 }

@@ -60,7 +60,10 @@ public abstract class PresenterActivityScreenshotTest<ActivityT extends Presente
 
     @After
     public void after() {
-        Screenshot.snap(activity.findViewById(android.R.id.content)).setName(getClass().getName() + "_" + testName.getMethodName()).record();
+        activity.runOnUiThread(() -> {
+            Screenshot.snap(activity.findViewById(android.R.id.content)).setName(getClass().getName() + "_" + testName.getMethodName()).record();
+        });
+
     }
 
     @SuppressWarnings("unchecked")
