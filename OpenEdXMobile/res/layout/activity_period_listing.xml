@@ -24,7 +24,7 @@
         app:contentInsetStart="0dp"
         app:contentInsetStartWithNavigation="0dp"
         app:navigationIcon="@drawable/back"
-        app:title="Units"
+        app:title="Current Period"
         app:titleMarginStart="0dp"
         app:titleTextAppearance="@style/ta_toolbar_title_style" />
 

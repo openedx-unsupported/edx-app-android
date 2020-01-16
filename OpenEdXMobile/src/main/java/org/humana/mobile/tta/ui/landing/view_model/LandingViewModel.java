@@ -87,7 +87,6 @@ public class LandingViewModel extends BaseViewModel {
         navShiftMode.set(false);
         selectedId = R.id.action_library;
         showLibrary();
-        onAppStart();
         mActivity.showLoading();
     }
 
@@ -111,7 +110,6 @@ public class LandingViewModel extends BaseViewModel {
     }
 
     public void showFeed() {
-//        mActivity.showShortSnack("Coming soon");
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
                 new MyCoursesListFragment(),
@@ -155,21 +153,6 @@ public class LandingViewModel extends BaseViewModel {
         );
     }
 
-    private void onAppStart() {
-        mDataManager.updateNotifications(null);
-        mDataManager.getMyContentStatuses(new OnResponseCallback<List<ContentStatus>>() {
-            @Override
-            public void onSuccess(List<ContentStatus> data) {
-                statuses = data;
-                EventBus.getDefault().postSticky(new ContentStatusesReceivedEvent(data));
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
-    }
 
     public void selectLibrary() {
         selectedId = R.id.action_library;

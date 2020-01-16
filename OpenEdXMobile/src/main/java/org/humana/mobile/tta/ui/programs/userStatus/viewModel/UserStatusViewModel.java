@@ -617,7 +617,7 @@ public class UserStatusViewModel extends BaseViewModel {
                         unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
                         break;
                     case "Approved":
-                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
                         break;
                     case "Return":
                         unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
@@ -696,23 +696,25 @@ public class UserStatusViewModel extends BaseViewModel {
             }
         }
 
-            for (ProgramFilterTag tag : model.getTags()) {
-                if (tag.getInternalName().toLowerCase().equals("approved")) {
-                    tags.add(tag);
-                    filter.setTags(tags);
-                    filter.setDisplayName(model.getDisplayName());
-                    filter.setInternalName(model.getInternalName());
-                    filter.setId(model.getId());
-                    filter.setOrder(model.getOrder());
-                    filter.setSelected(false);
-                    if (!filters.contains(filter)) {
-                        filters.add(filter);
-                        fetchUnits();
+            if (model.getInternalName().toLowerCase().equals("status")) {
+                for (ProgramFilterTag tag : model.getTags()) {
+                    if (tag.getInternalName().toLowerCase().equals("approved")) {
+                        tags.add(tag);
+                        filter.setDisplayName(model.getDisplayName());
+                        filter.setInternalName(model.getInternalName());
+                        filter.setId(model.getId());
+                        filter.setOrder(model.getOrder());
+                        filter.setSelected(false);
+                        filter.setTags(tags);
+                        if (!filters.contains(filter)) {
+                            filters.add(filter);
+                            changesMade = true;
+                            fetchData();
+                        }
+                        break;
                     }
-                    break;
                 }
             }
-
     }
 
 }

@@ -199,6 +199,9 @@ public class Router {
         fragment.startActivityForResult(courseDetail, requestCode);
     }
 
+
+
+
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
                                      String courseComponentId, String type, String title) {
         Bundle courseBundle = new Bundle();
@@ -253,6 +256,19 @@ public class Router {
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
+        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
+        courseDetail.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
+        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, false);
+
+        return courseDetail;
+    }
+    public Intent createCourseOutlineIntent(Context context, EnrolledCoursesResponse model,
+                                             String courseComponentId, String lastAccessedId) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+
+        Intent courseDetail = new Intent(context, CourseOutlineActivity.class);
         courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetail.putExtra(EXTRA_LAST_ACCESSED_ID, lastAccessedId);
         courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, false);

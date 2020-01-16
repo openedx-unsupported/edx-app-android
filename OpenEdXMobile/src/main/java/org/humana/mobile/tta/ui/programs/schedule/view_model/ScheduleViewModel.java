@@ -9,6 +9,7 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
@@ -82,7 +83,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     private int take, skip;
     private boolean isSelected;
 
+    private long currentDate, lastDate;
     public List<ProgramFilterTag> selectedTags = new ArrayList<>();
+    public Calendar calendar;
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -104,6 +107,14 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         tags = new ArrayList<>();
         mActivity.showLoading();
         isSelected = false;
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate = calendar.getTimeInMillis();
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        lastDate = calendar.getTimeInMillis();
+
 
         emptyVisible.set(false);
 
@@ -479,13 +490,13 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
 
-                    if (tag.getSelected()){
-                        SelectedFilter sf = new SelectedFilter();
-                        sf.setInternal_name(model.getInternalName());
-                        sf.setDisplay_name(model.getDisplayName());
-                        sf.setSelected_tag(tag.getDisplayName());
-                        mDataManager.updateSelectedFilters(sf);
-                    }
+//                    if (tag.getSelected()){
+//                        SelectedFilter sf = new SelectedFilter();
+//                        sf.setInternal_name(model.getInternalName());
+//                        sf.setDisplay_name(model.getDisplayName());
+//                        sf.setSelected_tag(tag.getDisplayName());
+//                        mDataManager.updateSelectedFilters(sf);
+//                    }
                 }
 
                 dropDownBinding.filterDropDown.setFilterItems(items);
@@ -513,7 +524,31 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     allLoaded = false;
                     mActivity.showLoading();
                     selectedFilter = mDataManager.getSelectedFilters();
-                    getFilters();
+                    filters.clear();
+                    for (SelectedFilter selected : selectedFilter) {
+                        for (ProgramFilter filter : allFilters) {
+                            List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                            if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                                for (ProgramFilterTag tag : filter.getTags()) {
+                                    if (selected.getSelected_tag() != null) {
+                                        if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                            selectedTags.add(tag);
+                                            ProgramFilter pf = new ProgramFilter();
+                                            pf.setDisplayName(filter.getDisplayName());
+                                            pf.setInternalName(filter.getInternalName());
+                                            pf.setId(filter.getId());
+                                            pf.setOrder(filter.getOrder());
+                                            pf.setShowIn(filter.getShowIn());
+                                            pf.setTags(selectedTags);
+                                            filters.add(pf);
+                                            getFilters();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 });
 
             }
@@ -555,6 +590,12 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     scheduleBinding.txtEndDate.setText(DateUtil.getDisplayDate(model.getEndDate()));
                 } else {
                     scheduleBinding.txtEndDate.setText("end date");
+                }
+
+                if (model.getEndDate()>model.getStartDate()) {
+                    if (currentDate <= model.getStartDate() && lastDate >= model.getEndDate()) {
+                        scheduleBinding.card.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.green));
+                    }
                 }
 
                 scheduleBinding.txtStartDate.setOnClickListener(v -> {

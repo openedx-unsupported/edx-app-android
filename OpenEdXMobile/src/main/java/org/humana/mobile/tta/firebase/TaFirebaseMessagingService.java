@@ -9,19 +9,22 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.humana.mobile.core.IEdxEnvironment;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.model.course.CourseComponent;
+import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.enums.NotificationType;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
+import org.humana.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 import org.humana.mobile.tta.ui.splash.SplashActivity;
 import org.humana.mobile.tta.utils.NotificationUtil;
-import org.humana.mobile.util.BrowserUtil;
-import org.humana.mobile.view.CourseOutlineActivity;
-import org.humana.mobile.view.CourseOutlineFragment;
 
 import java.util.List;
+
+import okhttp3.ResponseBody;
 
 import static org.humana.mobile.util.BrowserUtil.loginPrefs;
 
@@ -40,26 +43,32 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
     public static final String EXTRA_PARENT_ACTION_ID = "action_parent_id";
     public static final String EXTRA_ACTION_ID = "action_id";
     DataManager mDataManager;
+    EnrolledCoursesResponse coursesResponse;
+    IEdxEnvironment environment;
 
+    Intent navigationIntent;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         // Log.d("Manprax","Notification Message Body: " + remoteMessage);
         //sendNotification(remoteMessage.getData().get("title"),remoteMessage.getData().get("body"),"","");
-
-        if (remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("body") &&
+        mDataManager = DataManager.getInstance(this);
+        if (remoteMessage.getData().containsKey(EXTRA_TITLE) && remoteMessage.getData().containsKey("body") &&
                 remoteMessage.getData().containsKey("path") && remoteMessage.getData().containsKey("type"))
             sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"),
-                    remoteMessage.getData().get("path"), remoteMessage.getData().get("type"));
-        else if(remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("body"))
+                    remoteMessage.getData().get("path"), remoteMessage.getData().get("type"),
+                    remoteMessage.getData().get(EXTRA_PARENT_ACTION_ID),
+                    remoteMessage.getData().get(EXTRA_ACTION_ID));
+        else if (remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("body"))
             sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"),
-                    "","");
+                    "", "", "", "");
         else
             return;
     }
 
-    private void sendNotification(String messageTitle,String messageBody,String path,String type) {
+    private void sendNotification(String messageTitle, String messageBody, String path, String type,
+                                  String action_parent_id, String action_id) {
         //**add this line**
         int requestID = (int) System.currentTimeMillis();
 
@@ -67,12 +76,9 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
 
         //get Intent for notification landing page
         //remove this for generlisation && path!=null && !path.equals("")
-        if(type!=null && !type.equals(""))
-        {
-            notificationIntent=getNavigationIntent(type,path);
-        }
-        else
-        {
+        if (type != null && !type.equals("")) {
+            notificationIntent = getNavigationIntent(type, path, action_parent_id, action_id);
+        } else {
             notificationIntent = new Intent(getApplicationContext(), SplashActivity.class);
         }
 
@@ -106,7 +112,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
             notification.setType(NotificationType.content.name());
             notification.setRef_id(path);
 
-           // dataManager.createNotification(notification);
+            // dataManager.createNotification(notification);
         }
     }
 
@@ -115,50 +121,43 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         super.onNewToken(s);
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
 
-            if(!task.isSuccessful())
+            if (!task.isSuccessful())
                 return;
 
-            Log.d("Firebase Token","TaFirebaseMessagingService Token-->" +
-                    ""+task.getResult().getToken());
+            Log.d("Firebase Token", "TaFirebaseMessagingService Token-->" +
+                    "" + task.getResult().getToken());
 
             FirebaseHelper.updateFirebasetokenToServer(getApplicationContext());
         });
     }
 
-    private Intent getNavigationIntent(String type, String path)
-    {
-        Intent navigationIntent=new Intent();
+    private Intent getNavigationIntent(String type, String path, String action_parent_id, String action_id) {
+        navigationIntent = new Intent();
 
         //if user is not logged in navigate to splash screen
         //removed this check "|| (path==null && path.equals(""))"
-        if(type==null || type.equals("") || loginPrefs==null || loginPrefs.getUsername()==null || loginPrefs.getUsername().equals(""))
-        {
+        if (type == null || type.equals("") || loginPrefs == null || loginPrefs.getUsername() == null || loginPrefs.getUsername().equals("")) {
             navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
             //return here default intent for dashboard
             return navigationIntent;
         }
 
-        if(type.equals(COURSE)|| type.equals(CONNECT))
-        {
-            if(path==null || path.equals(""))
+        if (type.equals(COURSE) || type.equals(CONNECT)) {
+            if (path == null || path.equals(""))
                 navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
-            else
-            {
-                navigationIntent=new Intent(getApplicationContext(), NotificationActivity.class);
-                navigationIntent.putExtra(EXTRA_PATH,path);
-                navigationIntent.putExtra(EXTRA_TYPE,type);
-                navigationIntent.putExtra(EXTRA_ISPUSH,true);
+            else {
+                navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
+                navigationIntent.putExtra(EXTRA_PATH, path);
+                navigationIntent.putExtra(EXTRA_TYPE, type);
+                navigationIntent.putExtra(EXTRA_ISPUSH, true);
             }
-        }
-        else
-        {
-
-            navigationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
+        } else {
+            getEnrolledCourse(action_parent_id, action_id);
         }
         return navigationIntent;
     }
 
-  /*  private void getEnrolledCourse() {
+    private void getEnrolledCourse(String action_parent_id, String action_id) {
 
         mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
             @Override
@@ -167,22 +166,56 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
                 if (mDataManager.getLoginPrefs().getProgramId() != null) {
                     for (EnrolledCoursesResponse item : data) {
                         if (item.getCourse().getId().trim().toLowerCase()
-                                .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())) {
-                            course = item;
-                            break;
+                                .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())){
+                            coursesResponse = item;
+                        environment = (IEdxEnvironment) mDataManager.edxDataManager.getEnvironment();
+//                        navigationIntent = environment.getRouter().createCourseOutlineIntent(getApplicationContext(),
+//                                coursesResponse, coursesResponse.getCourse().getId(), null);
+                        break;
                         }
-
                     }
+
                 }
-                populateTabs();
             }
 
             @Override
             public void onFailure(Exception e) {
-                populateTabs();
+                e.printStackTrace();
             }
         });
 
-    }*/
+
+
+        mDataManager.enrolInCourse(action_parent_id,
+                new OnResponseCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody responseBody) {
+                        mDataManager.getBlockComponent(action_id, mDataManager.getLoginPrefs().getProgramId(),
+                                new OnResponseCallback<CourseComponent>() {
+                                    @Override
+                                    public void onSuccess(CourseComponent data) {
+                                        if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+
+                                            navigationIntent = environment.getRouter().createCourseOutlineIntent(getApplicationContext(),
+                                                    coursesResponse, action_parent_id, null);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+
+                                        e.printStackTrace();
+                                    }
+                                });
+                    }
+
+
+                    @Override
+                    public void onFailure(Exception e) {
+//                        mActivity.showLongSnack("error during unit enroll");
+                    }
+                });
+
+    }
 
 }

@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.lib.mxcalendar.models.Event;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -79,6 +80,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private long startDateTime, endDateTime, selectedDateLng;
     private final String SELECTED_DATE= "selected_date";
     private Boolean isDateSelected;
+    public ObservableBoolean progressVisible = new ObservableBoolean();
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
 //        if (allLoaded)
@@ -190,6 +192,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         });
 
         mActivity.showLoading();
+        progressVisible.set(true);
         fetchData();
     }
 
@@ -293,7 +296,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
 
     private void fetchData() {
-
+        mActivity.showLoading();
         if (changesMade) {
             changesMade = false;
             skip = 0;
@@ -430,24 +433,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 }
                             }
                         }
-                       /* if (role.equals(UserRole.Instructor.name())) {
-                            for (int i = 0; i < data.size(); i++) {
-                                if (data.get(i).getMyDate() > 0) {
-                                    Event et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                            data.get(i).getTitle(),null, null);
-                                    eventsArrayList.add(et);
 
-                                }
-                            }
-                        }else {
-                            for (int i = 0; i < data.size(); i++) {
-                                if (data.get(i).getCommonDate() > 0) {
-                                    Event et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                            data.get(i).getTitle(), null,null);
-                                    eventsArrayList.add(et);
-                                }
-                            }
-                        }*/
                         if (isDateSelected){
                             EventBus.getDefault().post(eventsArrayList);
                             isDateSelected = false;
@@ -470,34 +456,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
     }
 
-    private void populateUnits(List<Unit> data) {
-        boolean newItemsAdded = false;
-        int n = 0;
-        for (Unit unit : data) {
-            if (!unitAlreadyAdded(unit)) {
-                units.add(unit);
-                newItemsAdded = true;
-                n++;
-            }
-
-        }
-
-        if (newItemsAdded) {
-            unitsAdapter.notifyItemRangeInserted(units.size() - n, n);
-        }
-
-        toggleEmptyVisibility();
-    }
-
-    private boolean unitAlreadyAdded(Unit unit) {
-        for (Unit u : units) {
-            if (TextUtils.equals(u.getId(), unit.getId()) && (u.getPeriodId() == unit.getPeriodId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void toggleEmptyVisibility() {
         if (units == null || units.isEmpty()) {
             emptyVisible.set(true);
@@ -515,7 +473,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(List<Unit> unit) {
-//        filters.clear();
         changesMade = true;
         allLoaded = false;
         fetchData();
@@ -544,9 +501,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Unit model, @Nullable OnRecyclerItemClickListener<Unit> listener) {
             if (binding instanceof TRowUnitBinding) {
 
-
-//                unitBinding.tvStaffDate.setVisibility(View.GONE);
-//                unitBinding.tvMyDate.setVisibility(View.GONE);
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (DateUtil.getDisplayDate(model.getCommonDate()).equals(selectedDate)) {
 //                    CustomCalendarView.createEvents(eventsArrayList);
@@ -615,11 +569,6 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             unitBinding.statusIcon.setVisibility(View.GONE);
                         }
 
-                        mActivity.hideLoading();
-
-//                    Events ev = new Events(DateUtil.getDisplayDate(model.getStaffDate()));
-//                    eventsArrayList.add(ev);
-//                    CustomCalendarView.createEvents(eventsArrayList);
 
                         unitBinding.tvMyDate.setOnClickListener(v -> {
                             if (listener != null) {
@@ -638,10 +587,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                 }
                 else {
                     if (DateUtil.getDisplayDate(model.getMyDate()).equals(selectedDate)) {
-//                    CustomCalendarView.createEvents(eventsArrayList);
                         TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                         unitBinding.setUnit(model);
-                        emptyVisible.set(false);
                         unitBinding.unitCode.setText(model.getTitle());
                         unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                                 + model.getUnitHour() + " "+mActivity.getResources().getString(R.string.point_txt));
@@ -720,6 +667,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         emptyVisible.set(true);
                     }
                 }
+                progressVisible.set(false);
+
             }
         }
     }

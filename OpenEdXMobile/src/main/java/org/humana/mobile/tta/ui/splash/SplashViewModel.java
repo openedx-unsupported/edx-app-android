@@ -42,31 +42,7 @@ public class SplashViewModel extends BaseViewModel {
     public void startRouting(Activity activity) {
 
         new Handler().postDelayed(() -> {
-//            activity.finish();
-//            if (mDataManager.getAppPref().isFirstLaunch()){
-//                ActivityUtil.gotoPage(activity, SwipeLaunchActivity.class);
-//                mDataManager.getAppPref().setFirstLaunch(false);
-//            } else {
-//                if (mDataManager.getLoginPrefs().getCurrentUserProfile() == null) {
-//                    ActivityUtil.gotoPage(activity, SigninRegisterActivity.class);
-//                } else {
-//                    performBackgroundTasks();
-//                   /* if (mDataManager.getLoginPrefs().getCurrentUserProfile().name == null ||
-//                            mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals("") ||
-//                            mDataManager.getLoginPrefs().getCurrentUserProfile().name.equals(mDataManager.getLoginPrefs().getUsername())
-//                    ) {
-//                        ActivityUtil.gotoPage(mActivity, UserInfoActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    } else {
-//                        ActivityUtil.gotoPage(activity, LandingActivity.class);
-//                    }*/
 //
-//                    ActivityUtil.gotoPage(activity, LandingActivity.class);
-//
-//                    mActivity.analytic.addMxAnalytics_db("TA App open", Action.AppOpen,
-//                            Page.LoginPage.name(), Source.Mobile, null);
-//
-//                }
-//            }
 
             if (!activity.isTaskRoot()) {
                 final Intent intent = mActivity.getIntent();
@@ -76,16 +52,7 @@ public class SplashViewModel extends BaseViewModel {
             }
 
             final IEdxEnvironment environment = MainApplication.getEnvironment(mActivity);
- /*       if (environment.getUserPrefs().getProfile() != null) {
-            //environment.getRouter().showMainDashboard(SplashActivity.this);
-            ActivityUtil.gotoPage(SplashActivity.this, LandingActivity.class);
-        } else if (!environment.getConfig().isRegistrationEnabled()) {
-            startActivity(environment.getRouter().getLogInIntent());
-        } else {
-            environment.getRouter().showLaunchScreen(SplashActivity.this);
-        }*/
 
- // Firebase send token
 
             FirebaseHelper.updateFirebasetokenToServer(mActivity);
 

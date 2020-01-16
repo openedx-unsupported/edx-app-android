@@ -95,6 +95,10 @@ public class StudentsViewModel extends BaseViewModel {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+                    } else if(mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, item.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
                     } else {
                         mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity,
                                 item.username);
@@ -102,11 +106,18 @@ public class StudentsViewModel extends BaseViewModel {
                     break;
 
                 case R.id.ll_status:
+                    mDataManager.getLoginPrefs().setCurrrentPeriod(0L);
+                    mDataManager.getLoginPrefs().setCurrrentPeriodTitle("Period");
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
-                    } else {
+                    }else if(mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
+                        Bundle b = new Bundle();
+                        b.putString(Router.EXTRA_USERNAME, item.username);
+                        ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
+                    }
+                    else {
                         mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
                     }
                     break;
@@ -249,17 +260,12 @@ public class StudentsViewModel extends BaseViewModel {
                 }
 
 
-                if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
-                    itemBinding.llStatus.setVisibility(View.GONE);
-                }
+//                if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
+//                    itemBinding.llStatus.setVisibility(View.GONE);
+//                }
                 itemBinding.txtCurrentCompleted.setText(String.format("%s "+mActivity.getResources().getString(R.string.point_txt),
                         String.valueOf(model.current_hours)));
                 itemBinding.txtCurrentPending.setText(String.format("%s units", String.valueOf(model.currentUnits)));
-
-
-                itemBinding.txtCompleted.setOnClickListener(v -> {
-
-                });
 
 
                 itemBinding.imgInsta.setOnClickListener(v -> {

@@ -10,6 +10,14 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="5dp"
+            android:id="@+id/progress_bar"
+            android:visibility="@{viewModel.progressVisible ? View.VISIBLE : View.GONE}"
+            style="@style/edX.Widget.ProgressBar"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"

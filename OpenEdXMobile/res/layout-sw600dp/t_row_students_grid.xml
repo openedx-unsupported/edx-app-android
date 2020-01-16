@@ -32,12 +32,26 @@
                 android:layout_marginTop="@dimen/_12px"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/ll_status"
-                android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:id="@+id/ll_status"
+                    android:padding="2dp"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="@font/hind_medium"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="Approved Units"
+                        android:textSize="12sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -131,12 +145,31 @@
                 <!--android:id="@+id/img_web"-->
                 <!--android:src="@drawable/internet_web_browser"/>-->
             </LinearLayout>
-
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center"
+            android:id="@+id/ll_current_status"
+            android:padding="2dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/humana_rounded_rect"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawablePadding="5dp"
+                android:fontFamily="@font/hind_medium"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Current Units"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:id="@+id/ll_current_status"
                 android:orientation="horizontal">
 
                 <TextView
@@ -162,21 +195,7 @@
                     android:fontFamily="@font/hind_medium" />
 
             </LinearLayout>
-
-            <!--<Button-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="25dp"-->
-            <!--android:id="@+id/follow_btn"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_marginTop="15dp"-->
-            <!--android:text="View"-->
-            <!--android:textSize="12sp"-->
-            <!--android:textColor="@color/primary_cyan"-->
-            <!--android:fontFamily="@font/hind_medium"-->
-            <!--android:background="@drawable/btn_selector_hollow"-->
-            <!--android:enabled="true"/>-->
-
+        </LinearLayout>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

@@ -109,7 +109,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 
                         @Override
                         public void onFailure(Exception e) {
-
+                            ActivityUtil.gotoPage(mActivity, LandingActivity.class);
                         }
                     });
 
@@ -148,7 +148,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 
                             @Override
                             public void onFailure(Exception e) {
-
+                                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
                             }
                         });
 

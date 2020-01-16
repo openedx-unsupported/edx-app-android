@@ -74,7 +74,8 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
         }
         savedInstanceState = getActivity().getIntent().getExtras();
 //        selectedDate = savedInstanceState.getLong("selectedDate", 0L);
-        viewModel = new CalendarBottomSheetViewModel(getActivity(),this, course,selectedDate,startDateTime, endDateTime);
+        viewModel = new CalendarBottomSheetViewModel(getActivity(),this, course,selectedDate,
+                startDateTime, endDateTime);
         viewModel.registerEventBus();
     }
 
@@ -84,6 +85,7 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
         View rootView = binding(inflater, container, R.layout.frag_calendar_bottom_sheet, viewModel).getRoot();
         binding = (FragCalendarBottomSheetBinding) binding(inflater, container, R.layout.frag_calendar_bottom_sheet, viewModel);
         sheetState = 0;
+
 
         return rootView;
     }

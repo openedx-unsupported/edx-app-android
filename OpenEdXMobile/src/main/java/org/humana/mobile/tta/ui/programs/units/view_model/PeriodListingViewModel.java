@@ -75,7 +75,6 @@ public class PeriodListingViewModel extends BaseViewModel {
                 , take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
-//                        populatePeriods(data);
                         periodAdapter.setItems(data);
                         periodAdapter.setLoadingDone();
                         mActivity.hideLoading();
@@ -96,23 +95,6 @@ public class PeriodListingViewModel extends BaseViewModel {
         } else {
             emptyVisible.set(false);
         }
-    }
-    private void populatePeriods(List<Period> data) {
-        boolean newItemsAdded = false;
-        List<Period> periods = new ArrayList<>();
-        int n = 0;
-        for (Period period : data) {
-            if (!periods.contains(period)) {
-                periods.add(period);
-                newItemsAdded = true;
-                n++;
-            }
-        }
-        if (newItemsAdded) {
-            periodAdapter.notifyItemRangeInserted(periods.size() - n, n);
-        }
-
-        toggleEmptyVisibility();
     }
 
     public class PeriodAdapter extends MxInfiniteAdapter<Period> {

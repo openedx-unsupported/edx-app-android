@@ -48,7 +48,7 @@ public class SwipeLaunchViewModel extends BaseViewModel {
     public SwipeLaunchViewModel(BaseVMActivity activity) {
         super(activity);
         fragments = new ArrayList<>();
-        fragments.add(LaunchFragment.newInstance(R.drawable.new_slider1, ""));
+        fragments.add(LaunchFragment.newInstance(R.drawable.new_slider_1, ""));
         fragments.add(LaunchFragment.newInstance(R.drawable.new_slider_2, ""));
         fragments.add(LaunchFragment.newInstance(R.drawable.new_slider_3, ""));
         adapter = new SectionsPagerAdapter(mActivity.getSupportFragmentManager());
