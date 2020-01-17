@@ -221,7 +221,6 @@ dependencies {
     testImplementation ("org.mockito:mockito-core:2.19.0"){
         exclude group: 'org.hamcrest'
     }
-    testImplementation 'commons-lang:commons-lang:2.6'
     testImplementation "org.robolectric:robolectric:4.3.1"
     testImplementation "com.github.nimbl3:robolectric.shadows-supportv4:4.1-SNAPSHOT"
     testImplementation "org.robolectric:shadows-multidex:4.0.1"
