@@ -1,6 +1,7 @@
 package org.edx.mobile.profiles;
 
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
@@ -15,7 +16,6 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.observer.Observer;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -35,7 +35,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-@Ignore
 public class UserProfileInteractorTest extends BaseTest {
 
     @Mock
@@ -126,7 +125,7 @@ public class UserProfileInteractorTest extends BaseTest {
                 new UserProfileBioModel(
                         UserProfileBioModel.ContentType.EMPTY,
                         null)
-                )));
+        )));
     }
 
     @Test
@@ -142,8 +141,8 @@ public class UserProfileInteractorTest extends BaseTest {
                 new UserProfileBioModel(
                         UserProfileBioModel.ContentType.INCOMPLETE,
                         null
-                        )
-                )));
+                )
+        )));
     }
 
     @Test
@@ -270,7 +269,7 @@ public class UserProfileInteractorTest extends BaseTest {
                 null,
                 new UserProfileBioModel(
                         UserProfileBioModel.ContentType.NO_ABOUT_ME,
-                null)
+                        null)
         )));
         when(account.getBio()).thenReturn(ProfileValues.ABOUT_ME);
         eventBus.post(new AccountDataLoadedEvent(account));

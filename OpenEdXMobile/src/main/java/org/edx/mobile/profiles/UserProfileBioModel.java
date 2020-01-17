@@ -1,5 +1,7 @@
 package org.edx.mobile.profiles;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -24,10 +26,10 @@ public class UserProfileBioModel {
 
     @Override
     public boolean equals(Object object) {
-        if(!(object instanceof UserProfileBioModel)) {
+        if (!(object instanceof UserProfileBioModel)) {
             return false;
         }
-        UserProfileBioModel model = (UserProfileBioModel)object;
-        return contentType.equals(model.contentType) && model.bioText != null && model.bioText.equals(bioText);
+        UserProfileBioModel model = (UserProfileBioModel) object;
+        return contentType.equals(model.contentType) && TextUtils.equals(model.bioText, bioText);
     }
 }
