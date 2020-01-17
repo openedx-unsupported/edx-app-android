@@ -205,7 +205,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
         // suppress external links on ZeroRated network
         if (isExternalLink(url)
-                && !ConfigUtil.isWhiteListedURL(url, config)
+                && !ConfigUtil.Companion.isWhiteListedURL(url, config)
                 && NetworkUtil.isOnZeroRatedNetwork(context, config)
                 && NetworkUtil.isConnectedMobile(context)) {
             return new WebResourceResponse("text/html", StandardCharsets.UTF_8.name(), null);
