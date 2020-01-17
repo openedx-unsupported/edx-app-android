@@ -63,7 +63,7 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
-import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtil;
@@ -571,16 +571,14 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (!isOnCourseOutline || isVideoMode || getCourseUpgradeStatus != null) {
             return;
         }
-        if (environment.getConfig().getFirebaseConfig().isEnabled()) {
-            final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-            firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
-                final boolean courseUpgradeEnabled = firebaseRemoteConfig
-                        .getBoolean(AppConstants.FirebaseConstants.REV_934_ENABLED);
-                if (courseUpgradeEnabled) {
-                    fetchCourseUpgradeStatus();
-                }
-            });
-        }
+        ConfigUtil.Companion.checkCourseUpgradeEnabled(environment.getConfig(), enabled -> {
+            if (enabled) {
+                fetchCourseUpgradeStatus();
+            } else {
+                courseUpgradeData = null;
+                updatePaymentsBannerVisibility(View.GONE);
+            }
+        });
     }
 
     private void fetchCourseUpgradeStatus() {
@@ -598,11 +596,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                         if (courseUpgrade != null && courseUpgrade.getShowUpsell()
                                 && !TextUtils.isEmpty(courseUpgrade.getBasketUrl())) {
                             courseUpgradeData = courseUpgrade;
+                            updatePaymentsBannerVisibility(View.VISIBLE);
                             PaymentsBannerFragment.Companion.loadPaymentsBannerFragment(
                                     R.id.fragment_container, courseData, null,
                                     courseUpgradeData, true, getChildFragmentManager(), true);
                         } else {
-                            hidePaymentsBanner();
+                            updatePaymentsBannerVisibility(View.GONE);
                         }
                     }
                 }
@@ -611,16 +610,16 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 public void onFailure(Call<CourseUpgradeResponse> call, Throwable t) {
                     // Setting the call to null ensures that only 1 request is enqueued at a specific point in time
                     getCourseUpgradeStatus = null;
-                    hidePaymentsBanner();
+                    updatePaymentsBannerVisibility(View.GONE);
                 }
             });
         }
     }
 
-    private void hidePaymentsBanner() {
+    private void updatePaymentsBannerVisibility(int visibility) {
         final View view = getView();
         if (view != null) {
-            view.findViewById(R.id.fragment_container).setVisibility(View.GONE);
+            view.findViewById(R.id.fragment_container).setVisibility(visibility);
         }
     }
 
@@ -784,7 +783,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             return;
         }
         // Hide payments banner
-        hidePaymentsBanner();
+        updatePaymentsBannerVisibility(View.GONE);
         getCourseComponentFromServer(true);
     }
 
