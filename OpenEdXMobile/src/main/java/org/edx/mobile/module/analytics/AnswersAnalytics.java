@@ -83,6 +83,11 @@ public class AnswersAnalytics implements Analytics {
     }
 
     @Override
+    public void trackCourseUpgradeSuccess(String blockId, String courseId, String minifiedBlockId) {
+        
+    }
+
+    @Override
     public void trackBrowserLaunched(String url) {
 
     }

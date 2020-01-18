@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/payment_blue_bg"
+                    android:paddingStart="@dimen/edx_margin"
+                    android:paddingTop="@dimen/edx_margin"
+                    android:paddingBottom="@dimen/edx_margin">
+
+                    <ImageView
+                        android:id="@+id/btn_close"
+                        android:layout_width="@dimen/fa_xxxx_large"
+                        android:layout_height="@dimen/fa_xxxx_large"
+                        android:layout_marginEnd="@dimen/edx_margin"
+                        android:background="@drawable/selectable_box_overlay"
+                        android:contentDescription="@string/close"
+                        android:padding="@dimen/widget_margin"
+                        android:src="@drawable/ic_close"
+                        android:tint="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_header"
+                        style="@style/bold_white_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/edx_margin"
+                        android:singleLine="true"
+                        android:text="@string/payments_info_header"
+                        android:textSize="@dimen/edx_large"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_close"
+                        app:layout_constraintEnd_toStartOf="@+id/btn_close"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/btn_close" />
+
+                    <TextView
+                        android:id="@+id/tv_header_detail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/edx_margin"
+                        android:paddingEnd="@dimen/edx_margin"
+                        android:text="@string/payments_info_details"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edx_base"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/btn_close"
+                        app:layout_constraintWidth_percent=".65" />
+
+                    <ImageView
+                        android:id="@+id/certificate_slice"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="@dimen/edx_half_margin"
+                        android:contentDescription="@null"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/payment_certificate_half"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_header_detail"
+                        app:layout_constraintStart_toEndOf="@id/tv_header_detail"
+                        app:layout_constraintTop_toTopOf="@id/tv_header_detail"
+                        app:layout_constraintWidth_percent=".35" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/edx_double_margin"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/edx_margin">
+
+                    <TextView
+                        android:id="@+id/tv_audit_access_expires_on"
+                        style="@style/bold_regular_edx_black_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/edx_large" />
+
+                    <TextView
+                        android:id="@+id/tv_audit_access_expires_details"
+                        style="@style/regular_edx_black_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/edx_double_margin"
+                        android:textSize="@dimen/edx_base" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:background="@color/edx_success_accent"
+            tools:layout_height="150dp" />
+
+    </LinearLayout>
+
+</layout>

@@ -56,8 +56,11 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         final ViewGroup parent = (ViewGroup) toolbarPlaceholder.getParent();
         final int index = parent.indexOfChild(toolbarPlaceholder);
         parent.removeView(toolbarPlaceholder);
-        final View toolbar = getLayoutInflater().inflate(getToolbarLayoutId(), parent, false);
-        parent.addView(toolbar, index);
+        int toolbarLayoutId = getToolbarLayoutId();
+        if (toolbarLayoutId >= 0) {
+            final View toolbar = getLayoutInflater().inflate(toolbarLayoutId, parent, false);
+            parent.addView(toolbar, index);
+        }
     }
 
     @LayoutRes

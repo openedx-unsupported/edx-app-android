@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -67,7 +68,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
         pager = findViewById(R.id.pager);
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
-                environment.getConfig(), unitList, courseData, this);
+                environment.getConfig(), unitList, courseData, courseUpgradeData, this);
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -275,5 +276,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             return ((CourseUnitFragment) pagerAdapter.instantiateItem(pager, pager.getCurrentItem())).hasCastSupportedVideoContent();
         }
         return super.showGoogleCastButton();
+    }
+
+    public void onEvent(CourseUpgradedEvent event) {
+        finish();
     }
 }
