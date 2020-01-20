@@ -2,13 +2,14 @@ package org.edx.mobile.module.db.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.common.util.ArrayUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
@@ -21,7 +22,6 @@ import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.util.TextUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -231,9 +231,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         if (callback != null) {
             return null;
         } else {
-//            return downloadingList.toArray(new Long[downloadingList.size()]);
-//            return downloadingList.stream().mapToLong(i -> i).toArray();
-            return null;
+            return ArrayUtils.toPrimitive(downloadingList.toArray(new Long[0]));
         }
     }
 
@@ -288,8 +286,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         if (callback != null) {
             return null;
         } else {
-//            return ArrayUtils.toPrimitive(downloadedList.toArray(new Long[downloadedList.size()]));
-            return null;
+            return ArrayUtils.toPrimitive(downloadedList.toArray(new Long[0]));
         }
     }
 

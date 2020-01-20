@@ -161,6 +161,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
     implementation 'com.facebook.android:facebook-login:5.9.0'
+    implementation 'commons-lang:commons-lang:2.6'
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'de.greenrobot:eventbus:2.4.1'
     implementation 'com.squareup.phrase:phrase:1.1.0'
