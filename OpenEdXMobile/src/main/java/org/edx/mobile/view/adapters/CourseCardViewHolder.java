@@ -2,11 +2,12 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 
@@ -51,7 +52,7 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
             Glide.with(context)
                     .load(imageUrl)
                     .placeholder(R.drawable.placeholder_course_card_image)
-                    .transform(new TopAnchorFillWidthTransformation(context))
+                    .transform(new TopAnchorFillWidthTransformation())
                     .into(courseImage);
         }
     }
