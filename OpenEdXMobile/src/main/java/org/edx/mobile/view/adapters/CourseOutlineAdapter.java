@@ -2,10 +2,6 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +10,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.bumptech.glide.Glide;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -639,7 +640,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         Glide.with(context)
                 .load(headerImageUrl)
                 .placeholder(R.drawable.placeholder_course_card_image)
-                .transform(new TopAnchorFillWidthTransformation(context))
+                .transform(new TopAnchorFillWidthTransformation())
                 .into(headerImageView);
 
         courseTextName.setText(courseData.getCourse().getName());

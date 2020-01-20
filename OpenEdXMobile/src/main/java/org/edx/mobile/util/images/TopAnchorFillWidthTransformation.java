@@ -1,6 +1,5 @@
 package org.edx.mobile.util.images;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,25 +19,19 @@ import java.security.MessageDigest;
  * layer.
  */
 public class TopAnchorFillWidthTransformation extends BitmapTransformation {
+    private static final String ID = "org.edx.mobile.util.images.CenterCrop";
+    private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
+
     private final Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
 
-    public TopAnchorFillWidthTransformation(Context context) {
-//        super(context);
-    }
-
-//    @Override
-//    public String getId() {
-//        return "TOP_ANCHOR_FILL_WIDTH";
-//    }
-
     @Override
-    protected Bitmap transform(BitmapPool pool, Bitmap toTransform,
+    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform,
                                int outWidth, int outHeight) {
         final int width = toTransform.getWidth();
         final float widthRatio = outWidth / (float) width;
 
-        /**
-         * Implementation Details:
+        /*
+         Implementation Details:
          Following if-condition is an optimization to just match the aspect ratio of the View where
          the Bitmap has a smaller width, and not artificially scale up the Bitmap (as ImageView
          will automatically scale it up to match it's coordinates unless explicitly set not to do
@@ -78,6 +71,6 @@ public class TopAnchorFillWidthTransformation extends BitmapTransformation {
 
     @Override
     public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
-
+        messageDigest.update(ID_BYTES);
     }
 }

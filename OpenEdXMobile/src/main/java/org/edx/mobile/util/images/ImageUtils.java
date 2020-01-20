@@ -7,15 +7,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.widget.ImageView;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -124,18 +123,8 @@ public class ImageUtils {
 
     public static void setRoundedCornerImage(@NonNull ImageView imageView,
                                              @DrawableRes int drawableRes) {
-        /*final Context context = imageView.getContext();
-        final float cornerRadius = context.getResources().getDimension(R.dimen.subject_item_corner_radius);
-        Glide.with(context)
-                .load(drawableRes).
-                .into(new BitmapImageViewTarget(imageView) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        final RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                        circularBitmapDrawable.setCornerRadius(cornerRadius); // radius for corners
-                        view.setImageDrawable(circularBitmapDrawable);
-                    }
-                });*/
+        final Context context = imageView.getContext();
+        final int cornerRadius = context.getResources().getDimensionPixelSize(R.dimen.subject_item_corner_radius);
+        Glide.with(context).load(drawableRes).transform(new RoundedCorners(cornerRadius)).into(imageView);
     }
 }
