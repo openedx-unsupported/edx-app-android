@@ -9,13 +9,19 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -93,11 +99,31 @@ public class Tls12SocketFactory extends SSLSocketFactory {
      * @return Updated builder object of OkHttpClient with TLS v1.2 enabled on it.
      */
     public static OkHttpClient.Builder enableTls12OnPreLollipop(OkHttpClient.Builder client) {
-        if (Build.VERSION.SDK_INT < 22) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
             try {
-                final SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-                sslContext.init(null, null, null);
-                client.sslSocketFactory(new Tls12SocketFactory(sslContext.getSocketFactory()));
+                /*
+                OkHttpClient#sslSocketFactory(SSLSocketFactory) has been deprecated in favor of
+                OkHttpClient#sslSocketFactory(SSLSocketFactory, X509TrustManager) which requires an
+                X509TrustManager object.
+                Ref: https://github.com/square/okhttp/issues/2372#issuecomment-277596841
+
+                Inspiration for the fix and update to code:
+                1 - https://github.com/square/okhttp/issues/2372#issuecomment-277677604
+                2 - https://square.github.io/okhttp/3.x/okhttp/okhttp3/OkHttpClient.Builder.html#sslSocketFactory-javax.net.ssl.SSLSocketFactory-javax.net.ssl.X509TrustManager-
+                 */
+                final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                        TrustManagerFactory.getDefaultAlgorithm());
+                trustManagerFactory.init((KeyStore) null);
+                final TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+                if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+                    throw new IllegalStateException("Unexpected default trust managers:"
+                            + Arrays.toString(trustManagers));
+                }
+                final X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
+
+                final SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, new TrustManager[]{trustManager}, null);
+                client.sslSocketFactory(new Tls12SocketFactory(sslContext.getSocketFactory()), trustManager);
 
                 final ConnectionSpec connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                         .tlsVersions(TlsVersion.TLS_1_2)
@@ -109,9 +135,7 @@ public class Tls12SocketFactory extends SSLSocketFactory {
                 specs.add(ConnectionSpec.CLEARTEXT);
 
                 client.connectionSpecs(specs);
-            } catch (NoSuchAlgorithmException e) {
-                logger.error(e);
-            } catch (KeyManagementException e) {
+            } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 logger.error(e);
             }
         }

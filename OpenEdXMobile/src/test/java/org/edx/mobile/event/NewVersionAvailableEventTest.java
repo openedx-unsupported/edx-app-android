@@ -731,6 +731,7 @@ public class NewVersionAvailableEventTest extends BaseTestCase {
             responseBuilder.request(request);
             responseBuilder.protocol(Protocol.HTTP_1_1);
             responseBuilder.code(isUnsupported ? UPGRADE_REQUIRED : ACCEPTED);
+            responseBuilder.message("");
             if (newVersion != null) {
                 responseBuilder.header(HEADER_APP_LATEST_VERSION, newVersion.toString());
             }
