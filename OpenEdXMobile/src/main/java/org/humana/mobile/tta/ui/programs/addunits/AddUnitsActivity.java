@@ -65,7 +65,7 @@ public class AddUnitsActivity extends BaseVMActivity {
         if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
             periodName = parameters.getString(Constants.KEY_PERIOD_NAME);
         }
-        if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
+        if (parameters.containsKey(Constants.SELECTED_DATE)){
             selectedDate = parameters.getLong(Constants.SELECTED_DATE);
         }
         if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){

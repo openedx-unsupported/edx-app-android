@@ -15,11 +15,15 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowNotificationBinding;
+import org.humana.mobile.event.NetworkConnectivityChangeEvent;
+import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.Notification;
 import org.humana.mobile.tta.data.NotificationResponse;
 import org.humana.mobile.tta.data.enums.SourceType;
 import org.humana.mobile.tta.data.local.db.table.Content;
+import org.humana.mobile.tta.event.ContentStatusReceivedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -27,9 +31,17 @@ import org.humana.mobile.tta.ui.connect.ConnectDashboardActivity;
 import org.humana.mobile.tta.ui.course.CourseDashboardActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
+import org.humana.mobile.util.NetworkUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import de.greenrobot.event.EventBus;
+import okhttp3.ResponseBody;
 
 public class NotificationViewModel extends BaseViewModel {
 
@@ -42,15 +54,22 @@ public class NotificationViewModel extends BaseViewModel {
     public RecyclerView.LayoutManager layoutManager;
 
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableBoolean offlineVisible = new ObservableBoolean();
 
     private int take, skip;
     private boolean allLoaded;
+
+    private String courseId, unitId;
+    EnrolledCoursesResponse coursesResponse;
+    SimpleDateFormat dateFormat;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
             return false;
         skip++;
-        fetchNotifications();
+        if (offlineVisible.get()) {
+            fetchNotifications();
+        }
         return true;
     };
 
@@ -63,50 +82,25 @@ public class NotificationViewModel extends BaseViewModel {
 
         adapter = new NotificationsAdapter(mActivity);
         adapter.setItems(notifications);
+
+
+        offlineVisible.set(false);
+        registerEventBus();
+
+        dateFormat = new SimpleDateFormat("dd mmm, yyyy", Locale.ENGLISH);
+
         adapter.setItemClickListener((view, item) -> {
 
-//            if (!item.isSeen()){
-//                item.setSeen(true);
-//                mDataManager.updateNotificationsInLocal(Collections.singletonList(item));
-//                adapter.notifyItemChanged(adapter.getItemPosition(item));
-//            }
-//
-//            try {
-//                switch (NotificationType.valueOf(item.getType())){
-//                    case content:
-//                        mActivity.showLoading();
-//                        mDataManager.getContent(Long.parseLong(item.getRef_id()), new OnResponseCallback<Content>() {
-//                            @Override
-//                            public void onSuccess(Content data) {
-//                                mActivity.hideLoading();
-//                                showContentDashboard(data);
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Exception e) {
-//                                mActivity.hideLoading();
-//                                mActivity.showLongSnack(e.getLocalizedMessage());
-//                            }
-//                        });
-//
-//                        break;
-//                    case system:
-//                        mActivity.showLongSnack(item.getDescription());
-//                        break;
-//                    case profile:
-//                        mActivity.showLongSnack(item.getDescription());
-//                        break;
-//                    default:
-//                        mActivity.showLongSnack(item.getDescription());
-//                }
-//            } catch (IllegalArgumentException e) {
-//                mActivity.showLongSnack(item.getDescription());
-//            }
-//
+            if (item.getActionParentId() != null){
+                mActivity.showLoading();
+                courseId = item.getActionParentId();
+                unitId = item.getActionId();
+                getEnrolledCourse();
+            }
         });
 
         mActivity.showLoading();
-        fetchNotifications();
+//        fetchNotifications();
     }
 
     private void fetchNotifications() {
@@ -176,6 +170,7 @@ public class NotificationViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
+        onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
     public class NotificationsAdapter extends MxInfiniteAdapter<Notification> {
@@ -187,15 +182,7 @@ public class NotificationViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Notification model, @Nullable OnRecyclerItemClickListener<Notification> listener) {
             if (binding instanceof TRowNotificationBinding){
                 TRowNotificationBinding notificationBinding = (TRowNotificationBinding) binding;
-                notificationBinding.setViewModel(model);
-//                String time = DateUtil.getDisplayDate(model.getScheduleDate());
-//                notificationBinding.notificationDate.setText(time);
-
-
-                    notificationBinding.notificationTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_3));
-                    notificationBinding.notificationDate.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_3));
-
-
+                notificationBinding.setViewModel(model);;
                 notificationBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);
@@ -203,5 +190,105 @@ public class NotificationViewModel extends BaseViewModel {
                 });
             }
         }
+    }
+
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NetworkConnectivityChangeEvent event) {
+        if (NetworkUtil.isConnected(mActivity)) {
+            offlineVisible.set(false);
+            fetchNotifications();
+        } else {
+            mActivity.hideLoading();
+            offlineVisible.set(true);
+        }
+    }
+
+
+    public void registerEventBus() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void unRegisterEventBus() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    private void getEnrolledCourse() {
+
+        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody responseBody) {
+                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                    @Override
+                    public void onSuccess(List<EnrolledCoursesResponse> data) {
+
+                        if (courseId != null) {
+                            for (EnrolledCoursesResponse item : data) {
+                                if (item.getCourse().getId().equals(courseId)) {
+                                    coursesResponse = item;
+                                    break;
+                                }
+                            }
+                            enrollCourse(coursesResponse, courseId, unitId);
+
+                            mActivity.hideLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.hideLoading();
+                        e.printStackTrace();
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+                mActivity.hideLoading();
+                mActivity.showLongSnack("enroll failure");
+            }
+        });
+
+    }
+
+    private void enrollCourse(EnrolledCoursesResponse item, String action_parent_id, String action_id) {
+        mDataManager.enrolInCourse(action_parent_id,
+                new OnResponseCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody responseBody) {
+                        mDataManager.getBlockComponent(action_id, action_parent_id,
+                                new OnResponseCallback<CourseComponent>() {
+                                    @Override
+                                    public void onSuccess(CourseComponent data) {
+                                        if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
+
+                                            mDataManager.getEdxEnvironment().getRouter().showCourseContainerOutline(
+                                                    mActivity, Constants.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                                                    coursesResponse, data.getChildren().get(0).getId(),
+                                                    null, false);
+
+                                            mActivity.hideLoading();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+
+                                        e.printStackTrace();
+                                        mActivity.hideLoading();
+                                    }
+                                });
+                    }
+
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                        mActivity.hideLoading();
+                    }
+                });
     }
 }

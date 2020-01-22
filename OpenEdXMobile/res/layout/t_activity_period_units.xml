@@ -29,6 +29,47 @@
             app:titleMarginStart="0dp"
             app:titleTextAppearance="@style/ta_toolbar_title_style" />
 
+        <LinearLayout
+            android:id="@+id/searchview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_14px"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_24px"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:padding="10dp"
+                android:drawablePadding="5dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:hint="Search units.."
+                onSearchInSoftKeyboard="@{()->viewModel.fetchData()}"
+                android:drawableLeft="@drawable/search_selected"
+                android:background="@drawable/rectangle_transparent"
+                text_changed_listener="@{viewModel.watcher}"
+                android:layout_marginEnd="@dimen/_24px"/>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:tint="@color/material_red_500"
+                android:src="@drawable/t_icon_calendar"
+                android:foregroundGravity="center"
+                android:onClick="@{()-> viewModel.changeToCalenderView()}"
+                android:id="@+id/switch_unit"/>
+
+        </LinearLayout>
+
         <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,6 +79,7 @@
             app:mx_moreButtonVisible="false"
             app:mx_itemLayout="@layout/t_row_filter_drop_down"
             app:mx_itemLimit="100"
+            android:paddingStart="12dp"
             finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
 

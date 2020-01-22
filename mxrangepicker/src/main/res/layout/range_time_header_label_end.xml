@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/range_time_display_end"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:background="@color/range_accent_color" >
+        <View
+            android:id="@+id/range_center_view_end"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:background="#00000000"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/range_hour_space_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/range_time_placeholder"
+            android:layout_toLeftOf="@+id/range_separator_end"
+            android:layout_centerVertical="true"
+            android:visibility="invisible"
+            style="@style/range_time_label"
+            android:importantForAccessibility="no" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignRight="@+id/range_hour_space_end"
+            android:layout_alignLeft="@+id/range_hour_space_end"
+            android:layout_marginLeft="@dimen/range_extra_time_label_margin"
+            android:layout_marginRight="@dimen/range_extra_time_label_margin"
+            android:layout_centerVertical="true" >
+            <com.ankit.mxrangepicker.AccessibleTextView
+                android:id="@+id/range_hours_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/range_time_placeholder"
+                android:textColor="@color/range_white"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"
+                style="@style/range_time_label" />
+            </FrameLayout>
+
+        <TextView
+            android:id="@+id/range_separator_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/range_time_separator"
+            android:paddingLeft="@dimen/range_separator_padding"
+            android:paddingRight="@dimen/range_separator_padding"
+            android:layout_alignRight="@+id/range_center_view_end"
+            android:layout_centerVertical="true"
+            android:textColor="@color/range_accent_color_focused"
+            style="@style/range_time_label"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/range_minutes_space_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/range_time_placeholder"
+            android:layout_toRightOf="@+id/range_separator_end"
+            android:layout_centerVertical="true"
+            android:visibility="invisible"
+            android:textColor="@color/range_accent_color_focused"
+            style="@style/range_time_label"
+            android:importantForAccessibility="no" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignRight="@+id/range_minutes_space_end"
+            android:layout_alignLeft="@+id/range_minutes_space_end"
+            android:layout_marginLeft="@dimen/range_extra_time_label_margin"
+            android:layout_marginRight="@dimen/range_extra_time_label_margin"
+            android:layout_centerVertical="true" >
+            <com.ankit.mxrangepicker.AccessibleTextView
+                android:id="@+id/range_minutes_end"
+                style="@style/range_time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/range_time_placeholder"
+                android:layout_gravity="center"
+                android:textColor="@color/range_accent_color_focused" />
+        </FrameLayout>
+        <com.ankit.mxrangepicker.AccessibleTextView
+            android:id="@+id/range_ampm_hitspace_end"
+            android:layout_width="@dimen/range_ampm_label_size"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/range_ampm_label_end"
+            android:layout_alignRight="@+id/range_ampm_label_end" />
+        <TextView
+            android:id="@+id/range_ampm_label_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/range_time_placeholder"
+            android:paddingLeft="@dimen/range_ampm_left_padding"
+            android:paddingRight="@dimen/range_ampm_left_padding"
+            android:layout_toRightOf="@+id/range_minutes_space_end"
+            android:layout_alignBaseline="@+id/range_separator_end"
+            android:textColor="@color/range_accent_color_focused"
+            style="@style/range_ampm_label"
+            android:importantForAccessibility="no" />
+  </RelativeLayout>

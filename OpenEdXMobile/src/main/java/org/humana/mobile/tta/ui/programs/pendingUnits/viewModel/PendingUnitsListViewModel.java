@@ -88,78 +88,23 @@ public class PendingUnitsListViewModel extends BaseViewModel {
 
         unitsAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
-                case R.id.tv_my_date:
-                    showDatePicker(item);
+                case R.id.btn_approve:
+                    Constants.isUnitApprove = true;
+                    enrollCourse(item);
+                    break;
+                case R.id.btn_reject:
+                    Constants.isUnitApprove = true;
+                    enrollCourse(item);
                     break;
                 default:
-                    mActivity.showLoading();
-                    boolean ssp = unitsList.contains(item);
-                    EnrolledCoursesResponse c;
-                    if (ssp) {
-                        c = course;
-                    } else {
-                        c = parentCourse;
-                    }
-
-                    if (c == null) {
-
-                        String courseId;
-                        if (ssp) {
-                            courseId = mDataManager.getLoginPrefs().getProgramId();
-                        } else {
-                            courseId = mDataManager.getLoginPrefs().getParentId();
-                        }
-                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                            @Override
-                            public void onSuccess(ResponseBody responseBody) {
-
-                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                    @Override
-                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                        if (courseId != null) {
-                                            for (EnrolledCoursesResponse response : data) {
-                                                if (response.getCourse().getId().trim().toLowerCase()
-                                                        .equals(courseId.trim().toLowerCase())) {
-                                                    if (ssp) {
-                                                        PendingUnitsListViewModel.this.course = response;
-                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                    } else {
-                                                        PendingUnitsListViewModel.this.parentCourse = response;
-                                                    }
-                                                    getBlockComponent(item);
-                                                    break;
-                                                }
-                                            }
-                                            mActivity.hideLoading();
-                                        } else {
-                                            mActivity.hideLoading();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        mActivity.hideLoading();
-                                        mActivity.showLongSnack("enroll org failure");
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack("enroll failure");
-                            }
-                        });
-
-                    } else {
-                        getBlockComponent(item);
-                    }
+                   enrollCourse(item);
 
             }
         });
     }
 
     private void enrollCourse(Unit item){
+        mActivity.showLoading();
         boolean ssp = unitsList.contains(item);
         EnrolledCoursesResponse c;
         if (ssp) {
@@ -221,41 +166,6 @@ public class PendingUnitsListViewModel extends BaseViewModel {
         } else {
             getBlockComponent(item);
         }
-    }
-
-    private void showDatePicker(Unit unit) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
-            @Override
-            public void onSuccess(Long data) {
-                mActivity.showLoading();
-                mDataManager.setProposedDate(mDataManager.getLoginPrefs().getProgramId(),
-                        mDataManager.getLoginPrefs().getSectionId(), data, unit.getPeriodId(), unit.getId(),
-                        new OnResponseCallback<SuccessResponse>() {
-                            @Override
-                            public void onSuccess(SuccessResponse response) {
-                                mActivity.hideLoading();
-                                unit.setMyDate(data);
-                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
-                                if (response.getSuccess()) {
-                                    mActivity.showLongSnack("Proposed date set successfully");
-                                    EventBus.getDefault().post(unitsList);
-                                }
-
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack(e.getLocalizedMessage());
-                            }
-                        });
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
     }
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {

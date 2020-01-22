@@ -3,11 +3,15 @@ package org.humana.mobile.tta.firebase;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.inject.Inject;
 
 import org.humana.mobile.core.IEdxEnvironment;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
@@ -18,6 +22,7 @@ import org.humana.mobile.tta.data.enums.NotificationType;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
+import org.humana.mobile.tta.ui.programs.notifications.NotificationNavigationActivity;
 import org.humana.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 import org.humana.mobile.tta.ui.splash.SplashActivity;
 import org.humana.mobile.tta.utils.NotificationUtil;
@@ -44,6 +49,8 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
     public static final String EXTRA_ACTION_ID = "action_id";
     DataManager mDataManager;
     EnrolledCoursesResponse coursesResponse;
+
+    @Inject
     IEdxEnvironment environment;
 
     Intent navigationIntent;
@@ -152,70 +159,11 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
                 navigationIntent.putExtra(EXTRA_ISPUSH, true);
             }
         } else {
-            getEnrolledCourse(action_parent_id, action_id);
+            navigationIntent = new Intent(getApplicationContext(), NotificationNavigationActivity.class);
+            navigationIntent.putExtra(EXTRA_PARENT_ACTION_ID, action_parent_id);
+            navigationIntent.putExtra(EXTRA_ACTION_ID, action_id);
         }
         return navigationIntent;
-    }
-
-    private void getEnrolledCourse(String action_parent_id, String action_id) {
-
-        mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-            @Override
-            public void onSuccess(List<EnrolledCoursesResponse> data) {
-
-                if (mDataManager.getLoginPrefs().getProgramId() != null) {
-                    for (EnrolledCoursesResponse item : data) {
-                        if (item.getCourse().getId().trim().toLowerCase()
-                                .equals(mDataManager.getLoginPrefs().getProgramId().trim().toLowerCase())){
-                            coursesResponse = item;
-                        environment = (IEdxEnvironment) mDataManager.edxDataManager.getEnvironment();
-//                        navigationIntent = environment.getRouter().createCourseOutlineIntent(getApplicationContext(),
-//                                coursesResponse, coursesResponse.getCourse().getId(), null);
-                        break;
-                        }
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-
-
-        mDataManager.enrolInCourse(action_parent_id,
-                new OnResponseCallback<ResponseBody>() {
-                    @Override
-                    public void onSuccess(ResponseBody responseBody) {
-                        mDataManager.getBlockComponent(action_id, mDataManager.getLoginPrefs().getProgramId(),
-                                new OnResponseCallback<CourseComponent>() {
-                                    @Override
-                                    public void onSuccess(CourseComponent data) {
-                                        if (data.isContainer() && data.getChildren() != null && !data.getChildren().isEmpty()) {
-
-                                            navigationIntent = environment.getRouter().createCourseOutlineIntent(getApplicationContext(),
-                                                    coursesResponse, action_parent_id, null);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Exception e) {
-
-                                        e.printStackTrace();
-                                    }
-                                });
-                    }
-
-
-                    @Override
-                    public void onFailure(Exception e) {
-//                        mActivity.showLongSnack("error during unit enroll");
-                    }
-                });
-
     }
 
 }

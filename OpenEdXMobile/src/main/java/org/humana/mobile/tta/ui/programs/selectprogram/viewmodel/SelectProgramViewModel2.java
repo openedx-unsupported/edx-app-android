@@ -6,6 +6,7 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,15 +20,24 @@ import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowSelectProgSectionBinding;
 import org.humana.mobile.http.constants.ApiConstants;
+import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.data.constants.Constants;
 import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
+import org.humana.mobile.tta.ui.feed.FeedFragment;
 import org.humana.mobile.tta.ui.landing.LandingActivity;
+import org.humana.mobile.tta.ui.library.LibraryFragment;
+import org.humana.mobile.tta.ui.profile.ProfileFragment;
 import org.humana.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
+import org.humana.mobile.tta.ui.search.SearchFragment;
 import org.humana.mobile.tta.utils.ActivityUtil;
+import org.humana.mobile.view.AccountFragment;
+import org.humana.mobile.view.MyCoursesListFragment;
+import org.humana.mobile.view.dialog.NativeFindCoursesFragment;
 
 
 import java.util.ArrayList;
@@ -43,11 +53,15 @@ public class SelectProgramViewModel2 extends BaseViewModel {
     public Boolean prevVisible = false;
     public ObservableBoolean isPrev = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableBoolean navShiftMode = new ObservableBoolean();
+    public ObservableBoolean offlineVisible = new ObservableBoolean();
+
+    private int selectedId = R.id.action_library;
 
 
 
-    public SelectProgramViewModel2(BaseVMActivity activity) {
-        super(activity);
+    public SelectProgramViewModel2(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
+        super(context, fragment);
 
         mActivity.showLoading();
         programId = mDataManager.getLoginPrefs().getProgramId();
@@ -55,6 +69,7 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         programsAdapter = new ProgramsAdapter(mActivity);
         programsAdapter.setItems(programs);
         selectPrograms = new ArrayList<>();
+        navShiftMode.set(false);
 
         boolean tabview = mActivity.getResources().getBoolean(R.bool.isTablet);
         if (tabview){
@@ -266,4 +281,6 @@ public class SelectProgramViewModel2 extends BaseViewModel {
             }
         }
     }
+
+
 }

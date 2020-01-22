@@ -539,6 +539,8 @@
         <activity android:name=".tta.ui.programs.notifications.NotificationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
+        <activity android:name=".tta.ui.programs.notifications.NotificationNavigationActivity"
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
 
         <!-- Humana activities end -->
 

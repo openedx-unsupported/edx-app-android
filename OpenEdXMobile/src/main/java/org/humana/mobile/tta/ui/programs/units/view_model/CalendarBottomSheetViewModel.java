@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -37,7 +38,9 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.mxCalenderView.Events;
+import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
 import org.humana.mobile.tta.ui.programs.units.PeriodListingActivity;
+import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -81,6 +84,8 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private final String SELECTED_DATE= "selected_date";
     private Boolean isDateSelected;
     public ObservableBoolean progressVisible = new ObservableBoolean();
+    private Long periodId;
+    private String periodName;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
 //        if (allLoaded)
@@ -90,7 +95,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 //        return true;
     };
     public CalendarBottomSheetViewModel(Context context, TaBaseBottomsheetFragment fragment, EnrolledCoursesResponse course,
-                                        Long selectedDate, Long startDateTime, Long endDateTime) {
+                                        Long selectedDate, Long startDateTime, Long endDateTime, Long periodId, String periodName) {
         super(context, fragment);
 
 
@@ -100,6 +105,9 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         this.selectedDateLng =selectedDate;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+        this.periodId = periodId;
+        this.periodName = periodName;
+
         dispDate.set(DateUtil.getCalendarDate(selectedDate));
 //        units = new ArrayList<>();
         tags = new ArrayList<>();
@@ -376,6 +384,10 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         unitsAdapter.setItems(units);
                         unitsAdapter.notifyDataSetChanged();
                         unitsAdapter.setLoadingDone();
+                        progressVisible.set(false);
+                        if (unitsAdapter.isEmpty()){
+                            emptyVisible.set(true);
+                        }
                         String colorCode = "#ffffff";
                         Event et;
 
@@ -439,9 +451,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             isDateSelected = false;
                         }
 
-                        if (units.size()==0){
-                            emptyVisible.set(true);
-                        }
+
 
                     }
 
@@ -503,10 +513,9 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (DateUtil.getDisplayDate(model.getCommonDate()).equals(selectedDate)) {
-//                    CustomCalendarView.createEvents(eventsArrayList);
                         TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                         unitBinding.setUnit(model);
-                        emptyVisible.set(false);
+                        progressVisible.set(false);
                         unitBinding.unitCode.setText(model.getTitle());
                         unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                                 + model.getUnitHour() +" "+ mActivity.getResources().getString(R.string.point_txt));
@@ -583,12 +592,15 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         });
                     } else {
                         emptyVisible.set(true);
+                        progressVisible.set(false);
                     }
                 }
                 else {
                     if (DateUtil.getDisplayDate(model.getMyDate()).equals(selectedDate)) {
                         TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                         unitBinding.setUnit(model);
+                        emptyVisible.set(false);
+                        progressVisible.set(false);
                         unitBinding.unitCode.setText(model.getTitle());
                         unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
                                 + model.getUnitHour() + " "+mActivity.getResources().getString(R.string.point_txt));
@@ -665,6 +677,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         });
                     } else {
                         emptyVisible.set(true);
+                        progressVisible.set(false);
                     }
                 }
                 progressVisible.set(false);
@@ -674,9 +687,18 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     }
 
     public void navigateToPeriodListing(){
-        Intent intent = new Intent(mActivity, PeriodListingActivity.class);
-        intent.putExtra(SELECTED_DATE, selectedDateLng);
-        mActivity.startActivity(intent);
+        if (periodId > 0){
+            Bundle parameters = new Bundle();
+            parameters.putLong(Constants.KEY_PERIOD_ID, periodId);
+            parameters.putString(Constants.KEY_PERIOD_NAME, periodName);
+            parameters.putLong(Constants.SELECTED_DATE, selectedDateLng);
+            ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
+        }else {
+            Intent intent = new Intent(mActivity, PeriodListingActivity.class);
+            intent.putExtra(Constants.SELECTED_DATE, selectedDateLng);
+            intent.putExtra(Constants.KEY_PERIOD_ID, periodId);
+            mActivity.startActivity(intent);
+        }
     }
 
 

@@ -294,6 +294,20 @@ public class Router {
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         fragment.startActivityForResult(courseDetail, requestCode);
     }
+    public Intent showCourseUnitDetail(Activity activity,EnrolledCoursesResponse model,
+                                     String courseComponentId, boolean isVideosMode) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+
+        Intent courseDetail = new Intent(activity, CourseUnitNavigationActivity.class);
+        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
+        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivityForResult(courseDetail, 0);
+
+        return courseDetail;
+    }
 
     public void showCourseDiscussionAddPost(@NonNull Activity activity, @Nullable DiscussionTopic discussionTopic, @NonNull EnrolledCoursesResponse courseData) {
         Intent addPostIntent = new Intent(activity, DiscussionAddPostActivity.class);

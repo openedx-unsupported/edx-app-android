@@ -20,6 +20,7 @@ import org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
 import org.humana.mobile.view.Router;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -46,7 +47,7 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
         } else if (savedInstanceState != null) {
             getBundledData(savedInstanceState);
         }
-        viewModel = new UnitCalendarViewModel(this, course);
+        viewModel = new UnitCalendarViewModel(this, course, periodName, periodId);
         eventList = new ArrayList<>();
         ViewDataBinding viewDataBinding= binding(R.layout.frag_unit_calendar_view, viewModel);
         binding= (FragUnitCalendarViewBinding) viewDataBinding;
@@ -140,7 +141,7 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
     public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
 
         ActivityCalendarBottomSheet bottomSheetDialogFragment =
-                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime);
+                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId, periodName);
         bottomSheetDialogFragment.show(this.getSupportFragmentManager(),
                 "units");
     }

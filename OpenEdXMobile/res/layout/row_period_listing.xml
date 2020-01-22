@@ -6,6 +6,9 @@
         <variable
             name="period"
             type="org.humana.mobile.tta.data.local.db.table.Period" />
+        <variable
+            name="viewModel"
+            type="org.humana.mobile.tta.ui.programs.units.view_model.PeriodListingViewModel" />
     </data>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,16 +34,17 @@
             android:id="@+id/text_title"
             android:textSize="16sp"
             android:text="@{period.title}"
+            android:drawableEnd="@drawable/sp_chevron_end"
             android:textColor="@color/gray_5"/>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            android:fontFamily="@font/hind_medium"
-            android:src="@drawable/sp_chevron_end"
-            android:id="@+id/img_title"
-            android:layout_gravity="center"
-            android:textColor="@color/gray_5"/>
+        <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="0.1"-->
+            <!--android:fontFamily="@font/hind_medium"-->
+            <!--android:src="@drawable/sp_chevron_end"-->
+            <!--android:id="@+id/img_title"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textColor="@color/gray_5"/>-->
     </LinearLayout>
 
 

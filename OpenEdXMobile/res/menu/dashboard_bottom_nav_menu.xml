@@ -7,7 +7,7 @@
 
     <item android:id="@+id/action_feed"
         android:title="@string/course"
-        android:icon="@drawable/t_icon_course"/>
+        android:icon="@drawable/course"/>
 
     <item android:id="@+id/action_search"
         android:title="@string/search"

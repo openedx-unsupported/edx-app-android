@@ -28,6 +28,8 @@
                 android:layout_marginBottom="10dp"
                 app:mx_itemLayout="@layout/t_row_filter_drop_down"
                 app:mx_itemLimit="100"
+                android:paddingStart="14dp"
+                android:paddingEnd="12dp"
                 app:mx_moreButtonVisible="false"
                 app:mx_titleVisible="false"
                 finite_recycler_adapter="@{viewModel.filtersAdapter}"/>

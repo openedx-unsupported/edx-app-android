@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.ankit.mxrangepicker.date.AccessibleDateAnimator
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/range_animator_end"
+     android:layout_width="@dimen/range_date_picker_component_width"
+     android:layout_height="@dimen/range_date_picker_view_animator_height"
+     android:gravity="center"
+     android:paddingLeft="8dp"
+     android:paddingRight="8dp" />

@@ -12,12 +12,13 @@
         app:cardCornerRadius="4dp"
         android:id="@+id/cv_unit"
         android:padding="5dp"
-        app:cardUseCompatPadding="true"
-        app:cardBackgroundColor="@color/humana_card_background">
+        app:cardBackgroundColor="@color/humana_card_background"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="1.5dp"
             android:background="@color/humana_card_background"
             android:orientation="vertical">
 

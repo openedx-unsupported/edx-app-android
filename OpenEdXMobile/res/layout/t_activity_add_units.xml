@@ -28,7 +28,31 @@
             app:title="@{viewModel.periodName}"
             app:titleMarginStart="0dp"
             app:titleTextAppearance="@style/ta_toolbar_title_style" />
+        <LinearLayout
+            android:id="@+id/searchview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_24px"
+                android:textSize="14sp"
+                android:padding="10dp"
+                android:drawablePadding="5dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:hint="Search units.."
+                onSearchInSoftKeyboard="@{()->viewModel.fetchData()}"
+                android:drawableLeft="@drawable/search_selected"
+                android:background="@drawable/rectangle_transparent"
+                text_changed_listener="@{viewModel.watcher}"
+                android:layout_marginEnd="@dimen/_24px"/>
+
+        </LinearLayout>
         <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

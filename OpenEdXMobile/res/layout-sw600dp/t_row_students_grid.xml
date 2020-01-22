@@ -33,57 +33,9 @@
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"/>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|center"
-                    android:id="@+id/ll_status"
-                    android:padding="2dp"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:drawablePadding="5dp"
-                        android:fontFamily="@font/hind_medium"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="Approved Units"
-                        android:textSize="12sp"
-                        android:layout_gravity="center"
-                        android:textColor="@color/black" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txt_pending"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start|center"
-                        android:drawablePadding="5dp"
-                        android:padding="5dp"
-                        android:textColor="@color/black"
-                        android:drawableLeft="@drawable/check"
-                        android:fontFamily="@font/hind_medium" />
-
-                    <TextView
-                        android:id="@+id/txt_completed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start|center"
-                        android:drawablePadding="5dp"
-                        android:padding="5dp"
-                        android:textColor="@color/gray_5"
-                        android:drawableLeft="@drawable/ic_access_time_red_24dp"
-                        android:fontFamily="@font/hind_medium" />
-
-                </LinearLayout>
 
 
-            </LinearLayout>
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -111,6 +63,36 @@
                 android:paddingEnd="8dp"
                 android:singleLine="true"
                 android:ellipsize="marquee" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/ll_status"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_pending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:drawableLeft="@drawable/check"
+                    android:fontFamily="@font/hind_medium" />
+
+                <TextView
+                    android:id="@+id/txt_completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:textColor="@color/gray_5"
+                    android:drawableLeft="@drawable/ic_access_time_red_24dp"
+                    android:fontFamily="@font/hind_medium" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -148,13 +130,13 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="start|center"
+            android:gravity="center"
             android:id="@+id/ll_current_status"
-            android:padding="2dp"
+            android:padding="5dp"
             android:layout_gravity="center"
             android:layout_marginBottom="2dp"
             android:background="@drawable/humana_rounded_rect"
-            android:orientation="vertical">
+            android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -170,14 +152,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/txt_current_pending"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|center"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:drawablePadding="5dp"
+                    android:layout_weight="1"
                     android:padding="5dp"
                     android:textColor="@color/black"
                     android:drawableLeft="@drawable/check"
@@ -185,10 +168,10 @@
 
                 <TextView
                     android:id="@+id/txt_current_completed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|center"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:drawablePadding="5dp"
+                    android:layout_weight="1"
                     android:padding="5dp"
                     android:textColor="@color/gray_5"
                     android:drawableLeft="@drawable/ic_access_time_red_24dp"

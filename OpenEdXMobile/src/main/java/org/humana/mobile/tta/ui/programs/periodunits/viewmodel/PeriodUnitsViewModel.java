@@ -10,7 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -37,6 +39,7 @@ import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
+import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 import org.humana.mobile.view.Router;
@@ -71,6 +74,8 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
+    public ObservableField<String> searchText = new ObservableField<>("");
+
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -299,7 +304,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     }
 
-    private void fetchData() {
+    public void fetchData() {
 
         if (changesMade) {
             changesMade = false;
@@ -343,7 +348,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     private void fetchUnits() {
 
-        mDataManager.getUnits(filters,"", mDataManager.getLoginPrefs().getProgramId(),
+        mDataManager.getUnits(filters,searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),"",
                 periodId, take, skip,0L,0L,
                 new OnResponseCallback<List<Unit>>() {
@@ -590,5 +595,29 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 });
             }
         }
+    }
+    public TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            searchText.set(s.toString());
+
+        }
+    };
+
+    public void changeToCalenderView() {
+        Bundle b = new Bundle();
+        b.putLong(Constants.KEY_PERIOD_ID, periodId);
+        b.putString(Constants.KEY_PERIOD_NAME, String.valueOf(periodName));
+        ActivityUtil.gotoPage(mActivity, UnitCalendarActivity.class, b);
     }
 }

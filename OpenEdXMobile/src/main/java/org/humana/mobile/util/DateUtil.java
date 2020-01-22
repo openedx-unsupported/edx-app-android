@@ -28,7 +28,7 @@ public class DateUtil {
      * Stamp
      */
     public static Date convertToDate(String date) {
-        if(date==null){
+        if (date == null) {
             return null;
         }
 
@@ -36,7 +36,7 @@ public class DateUtil {
         final ParsePosition parsePosition = new ParsePosition(0);
         try {
             parsedate = ISO8601Utils.parse(date, parsePosition);
-            logger.debug("Parsed Data"+parsedate);
+            logger.debug("Parsed Data" + parsedate);
             return parsedate;
 
         } catch (ParseException e) {
@@ -48,12 +48,12 @@ public class DateUtil {
     /**
      * @return The current date and time in a ISO 8601 compliant format.
      */
-    public static String getCurrentTimeStamp(){
+    public static String getCurrentTimeStamp() {
         return ISO8601Utils.format(new Date(), true); // Find todays date
     }
 
     /**
-     *  This function returns course start date in the MMMM dd, yyyy format
+     * This function returns course start date in the MMMM dd, yyyy format
      */
     public static String formatCourseNotStartedDate(String date) {
         try {
@@ -86,35 +86,35 @@ public class DateUtil {
         }
     }
 
-    public static String getCurrentDateForServerLocal(){
+    public static String getCurrentDateForServerLocal() {
         return getDateForServerLocal(System.currentTimeMillis());
     }
 
-    public static String getDateForServerLocal(long time){
+    public static String getDateForServerLocal(long time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-        try{
+        try {
             return sdf.format(new Date(time));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
 
-    public static String getCurrentDateForServerGMT(){
+    public static String getCurrentDateForServerGMT() {
         // return getDateForServerGMT(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("gmt"));
 
-        try{
+        try {
             return sdf.format(new Date(System.currentTimeMillis()));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
 
-    public static String getDisplayTime(String timeISO){
-        if (timeISO == null){
+    public static String getDisplayTime(String timeISO) {
+        if (timeISO == null) {
             return null;
         }
 
@@ -147,15 +147,15 @@ public class DateUtil {
 
     }
 
-    public static String getDisplayDate(long timestamp){
+    public static String getDisplayDate(long timestamp) {
         return getDisplayTime(new Date(timestamp));
     }
 
-    public static String getDisplayDateInMill(long timestamp){
+    public static String getDisplayDateInMill(long timestamp) {
         return getDisplayTime(new Date(timestamp * 1000));
     }
 
-    public static String getCalendarDate(long timestamp){
+    public static String getCalendarDate(long timestamp) {
         return getDisplayCalendarTime(new Date(timestamp));
     }
 
@@ -167,7 +167,7 @@ public class DateUtil {
 
     }
 
-    public static String getDayMonth(long timestamp){
+    public static String getDayMonth(long timestamp) {
 
         Locale locale = new Locale("en");
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM", locale);
@@ -175,7 +175,7 @@ public class DateUtil {
 
     }
 
-    public static String getHourMinute12(long timestamp){
+    public static String getHourMinute12(long timestamp) {
 
         Locale locale = new Locale("en");
         SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm a", locale);
@@ -183,15 +183,33 @@ public class DateUtil {
 
     }
 
-    public static void showDatePicker(Context context, long selectedTime, OnResponseCallback<Long> callback){
+    public static void showDatePicker(Context context, long selectedTime, OnResponseCallback<Long> callback) {
         Calendar cal = Calendar.getInstance();
-        if (selectedTime > 0){
+
+        if (selectedTime > 0) {
             cal.setTimeInMillis(selectedTime);
         }
         DatePickerDialog dialog = new DatePickerDialog(context, (datePicker, i, i1, i2) -> {
 
-            cal.set(i, i1, i2);
-            callback.onSuccess(cal.getTimeInMillis());
+            cal.set(Calendar.YEAR, i);
+            cal.set(Calendar.MONTH, i1);
+            cal.set(Calendar.DAY_OF_MONTH, i2);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            String str;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00 a", Locale.ENGLISH);
+            str = df.format(cal.getTime());
+            Date date = null;
+            try {
+                date = df.parse(str);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            long epoch = date.getTime();
+
+
+//            cal.set(i, i1, i2);
+            callback.onSuccess(epoch);
 
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         dialog.setCancelable(true);

@@ -141,5 +141,6 @@
     <color name="humana_course">#33FFAC</color>
     <color name="humana_experience">#EF98FC</color>
     <color name="humana_study">#FAD884</color>
+    <color name="humana_current_period">#D6E8FF</color>
 
 </resources>

@@ -117,6 +117,7 @@ public class Constants {
     public static String PROGRAM_ID;
     public static String UNIT_ID="";
     public static String USERNAME="";
+    public static Boolean isUnitApprove =false;
     public static List<ProgramFilter> PROG_FILTER;
 
 
@@ -125,4 +126,9 @@ public class Constants {
     public static final String COLOR_YELLOW = "#F8E56B";
     public static final String COLOR_PINK = "#EF98FC";
     public static final String COLOR_GREEN = "#33FFAC";
+    public static final String EXTRA_ACTION_PARENT_ID = "action_parent_id";
+    public static final String EXTRA_ACTION_ID = "action_id";
+
+
+
 }

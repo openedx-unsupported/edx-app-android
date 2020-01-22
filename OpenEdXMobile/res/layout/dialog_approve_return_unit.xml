@@ -46,10 +46,10 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/humana_rounded_rectangle"
+        android:background="@drawable/rectangle_transparent"
         android:minHeight="200dp"
         android:maxHeight="200dp"
-        android:hint="Remarks"
+        android:hint="Remarks.."
         android:padding="8dp"
         android:textSize="14sp"
         android:id="@+id/et_remarks"

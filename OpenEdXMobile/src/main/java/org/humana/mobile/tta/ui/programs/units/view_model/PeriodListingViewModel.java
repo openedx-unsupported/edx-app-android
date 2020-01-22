@@ -37,15 +37,19 @@ public class PeriodListingViewModel extends BaseViewModel {
     private int take, skip;
     private  EnrolledCoursesResponse course;
     private final String SELECTED_DATE= "selected_date";
+    private long seletedDate;
+    public ObservableBoolean rowVisible = new ObservableBoolean();
 
     public PeriodListingViewModel(BaseVMActivity activity, EnrolledCoursesResponse course, Long selectedDate) {
         super(activity);
         this.course = course;
         emptyVisible.set(false);
+        rowVisible.set(false);
         layoutManager = new LinearLayoutManager(mActivity);
-        take =10;
+        take =24;
         skip = 0;
         filters = new ArrayList<>();
+        this.seletedDate = selectedDate;
 
         periods = new ArrayList<>();
         periodAdapter = new PeriodAdapter(mActivity);
@@ -75,8 +79,16 @@ public class PeriodListingViewModel extends BaseViewModel {
                 , take, skip, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
-                        periodAdapter.setItems(data);
+//                        periodAdapter.setItems(data);
+                        List<Period> periods = new ArrayList<>();
                         periodAdapter.setLoadingDone();
+                        for (Period period : data){
+                            if (seletedDate >= period.getStartDate()
+                            && seletedDate <= period.getEndDate()){
+                                periods.add(period);
+                                periodAdapter.setItems(periods);
+                            }
+                        }
                         mActivity.hideLoading();
                     }
 

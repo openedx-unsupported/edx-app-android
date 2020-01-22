@@ -63,36 +63,41 @@ public class SplashViewModel extends BaseViewModel {
             }
 
             if (environment.getUserPrefs().getProfile() != null) {
-                //environment.getRouter().showMainDashboard(SplashActivity.this);
-                mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
-                    @Override
-                    public void onSuccess(List<Program> data) {
-                        if (data.size() == 0){
-                            ActivityUtil.gotoPage(mActivity, LandingActivity.class);
-                            mActivity.finish();
+                if (mDataManager.getLoginPrefs().getProgramId() != null){
+
+                    ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                    mActivity.finish();
+                }else {
+                    mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
+                        @Override
+                        public void onSuccess(List<Program> data) {
+                            if (data.size() == 0) {
+                                ActivityUtil.gotoPage(mActivity, LandingActivity.class);
+                                mActivity.finish();
+                            }
+                            if (data.size() == 1) {
+                                org.humana.mobile.tta.Constants.PROGRAM_ID = data.get(0).getId();
+                                mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
+                                mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
+                                Constants.isSinglePrg = true;
+                                mDataManager.getLoginPrefs().setParentId(data.get(0).getParent_id());
+                                getSection();
+                            } else {
+                                ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class,
+                                        Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            }
+
                         }
-                        if (data.size() == 1) {
-                            org.humana.mobile.tta.Constants.PROGRAM_ID = data.get(0).getId();
-                            mDataManager.getLoginPrefs().setProgramId(data.get(0).getId());
-                            mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
-                            Constants.isSinglePrg = true;
-                            mDataManager.getLoginPrefs().setParentId(data.get(0).getParent_id());
-                            getSection();
-                        } else {
-                            ActivityUtil.gotoPage(mActivity, SelectProgramActivity.class,
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            mActivity.hideLoading();
+                            mDataManager.getLoginPrefs().setProgramId("");
+                            ActivityUtil.gotoPage(mActivity, LandingActivity.class,
                                     Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         }
-
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        mDataManager.getLoginPrefs().setProgramId("");
-                        ActivityUtil.gotoPage(mActivity, LandingActivity.class,
-                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    }
-                });
+                    });
+                }
             } else {
                 environment.getRouter().showLaunchScreen(mActivity);
             }

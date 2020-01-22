@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/range_date_picker_header"
+    android:layout_width="@dimen/range_date_picker_component_width"
+    android:layout_height="@dimen/range_date_picker_header_height"
+    android:background="@color/range_calendar_header"
+    android:gravity="center"
+    android:includeFontPadding="false"
+    android:textColor="@color/range_white"
+    android:textSize="@dimen/range_date_picker_header_text_size"
+    android:importantForAccessibility="no" />

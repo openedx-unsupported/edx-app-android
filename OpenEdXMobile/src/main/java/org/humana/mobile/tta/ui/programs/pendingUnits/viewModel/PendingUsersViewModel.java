@@ -3,15 +3,19 @@ package org.humana.mobile.tta.ui.programs.pendingUnits.viewModel;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ViewDataBinding;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -254,12 +258,23 @@ public class PendingUsersViewModel extends BaseViewModel {
                 itemBinding.textCount.setText(String.format("Pending Units: %d", model.pendingCount));
 
                 if (model.profileImage != null) {
-                    Glide.with(mActivity).load(mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
-                            model.profileImage.getImageUrlFull())
-                            .centerCrop()
+                    Glide.with(mActivity).load(
+                            mDataManager.getEdxEnvironment().getConfig().getApiHostURL() +
+                                    model.profileImage.getImageUrlFull()).asBitmap().centerCrop()
                             .placeholder(R.drawable.profile_photo_placeholder)
-                            .into(itemBinding.userImage);
-                }
+                            .centerCrop()
+                            .into(new BitmapImageViewTarget(itemBinding.userImage) {
+                                @Override
+                                protected void setResource(Bitmap resource) {
+                                    RoundedBitmapDrawable circularBitmapDrawable =
+                                            RoundedBitmapDrawableFactory.create(mActivity.getResources(), resource);
+                                    circularBitmapDrawable.setCircular(true);
+                                    itemBinding.userImage.setImageDrawable(circularBitmapDrawable);
+                                }
+                            });
+
+            }
+
                 itemBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);

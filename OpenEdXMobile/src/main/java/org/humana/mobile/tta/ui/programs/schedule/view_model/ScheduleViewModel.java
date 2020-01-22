@@ -15,7 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.ankit.mxrangepicker.date.DatePickerDialog;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -44,12 +44,12 @@ import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 import org.humana.mobile.view.Router;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
@@ -86,6 +86,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     private long currentDate, lastDate;
     public List<ProgramFilterTag> selectedTags = new ArrayList<>();
     public Calendar calendar;
+    public final String START_DATE = "startDate";
+    public final String END_DATE = "endDate";
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -110,9 +112,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
         currentDate = calendar.getTimeInMillis();
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 0);
         lastDate = calendar.getTimeInMillis();
 
 
@@ -144,26 +148,26 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item);
+                        rangePicker(item.getStartDate(), item.getEndDate());
                     }
                     break;
 
                 case R.id.txt_end_date:
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item);
+                        rangePicker(item.getStartDate(), item.getEndDate());
                     }
                     break;
                 case R.id.iv_start_date:
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item);
+                        rangePicker(item.getStartDate(), item.getEndDate());
                     }
                     break;
                 case R.id.iv_end_date:
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item);
+                        rangePicker(item.getStartDate(), item.getEndDate());
                     }
                     break;
 
@@ -489,14 +493,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
                             tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
-
-//                    if (tag.getSelected()){
-//                        SelectedFilter sf = new SelectedFilter();
-//                        sf.setInternal_name(model.getInternalName());
-//                        sf.setDisplay_name(model.getDisplayName());
-//                        sf.setSelected_tag(tag.getDisplayName());
-//                        mDataManager.updateSelectedFilters(sf);
-//                    }
                 }
 
                 dropDownBinding.filterDropDown.setFilterItems(items);
@@ -592,10 +588,16 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     scheduleBinding.txtEndDate.setText("end date");
                 }
 
-                if (model.getEndDate()>model.getStartDate()) {
-                    if (currentDate <= model.getStartDate() && lastDate >= model.getEndDate()) {
-                        scheduleBinding.card.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.green));
+                if (model.getStartDate()>0) {
+                    if (model.getEndDate() > model.getStartDate()) {
+                        if (currentDate <= model.getStartDate() && lastDate >= model.getEndDate()) {
+                            scheduleBinding.card.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_current_period));
+                        }else {
+                            scheduleBinding.card.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        }
                     }
+                }else {
+                    scheduleBinding.card.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
                 }
 
                 scheduleBinding.txtStartDate.setOnClickListener(v -> {
@@ -631,14 +633,26 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     }
 
 
-    public void rangePicker(Period period) {
+    private void rangePicker(Long startDate, Long endDate) {
         Calendar now = Calendar.getInstance();
+//        SimpleDateFormat syear = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+//        SimpleDateFormat smonth = new SimpleDateFormat("MM", Locale.ENGLISH);
+//        SimpleDateFormat sday = new SimpleDateFormat("dd", Locale.ENGLISH);
+//
+//        String start = DateUtil.getDisplayDate(startDate);
+//        String end = DateUtil.getDisplayDate(endDate);
+//
+//        String startDay = ;
+
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 this,
                 now.get(Calendar.YEAR), // Initial year selection
                 now.get(Calendar.MONTH), // Initial month selection
-                now.get(Calendar.DAY_OF_MONTH) // Inital day selection
+                now.get(Calendar.DAY_OF_MONTH)
+                // Inital day selection
+
         );
+
 // If you're calling this from a support Fragment
         dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
 
@@ -647,24 +661,64 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear,
                           int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd MM yyyy");
 
-        Date d = null;
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, monthOfYear);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        String str;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00 a", Locale.ENGLISH);
+        str = df.format(c.getTime());
         try {
-            d = formatDate.parse(dayOfMonth + " " + (monthOfYear + 1) + " " + year);
-        } catch (ParseException e) {
+
+            Date date11 = df.parse(str);
+            long epoch = date11.getTime();
+            startDate.set(epoch);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        startDate.set(d.getTime());
 
-        Date d1 = null;
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.YEAR, yearEnd);
+        c1.set(Calendar.MONTH, monthOfYearEnd);
+        c1.set(Calendar.DAY_OF_MONTH, dayOfMonthEnd);
+        c1.set(Calendar.HOUR_OF_DAY, 23);
+        c1.set(Calendar.MINUTE, 59);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
+        str = sdf.format(c1.getTime());
         try {
-            d1 = formatDate.parse(dayOfMonthEnd + " " + (monthOfYearEnd + 1) + " " + yearEnd);
-        } catch (ParseException e) {
+
+            Date date11 = sdf.parse(str);
+            long epoch = date11.getTime();
+            endDate.set(epoch);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        endDate.set(d1.getTime());
+
+        if (startDate.get() < endDate.get()){
+            updatePeriod();
+        }else {
+            mActivity.showLongSnack("");
+        }
+
+
+    }
+
+    public void setSessionFilter() {
+        selectedFilter = mDataManager.getSelectedFilters();
+        filters = Constants.PROG_FILTER;
+        changesMade = true;
+        allLoaded = false;
+        mActivity.showLoading();
+        getFilters();
+    }
+
+    public void updatePeriod(){
         mDataManager.updatePeriods(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), String.valueOf(periodItem.get().getId()),
                 periodItem.get().getTitle(), startDate.get(),
@@ -689,14 +743,5 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         mActivity.showLongSnack(e.getLocalizedMessage());
                     }
                 });
-    }
-
-    public void setSessionFilter() {
-        selectedFilter = mDataManager.getSelectedFilters();
-        filters = Constants.PROG_FILTER;
-        changesMade = true;
-        allLoaded = false;
-        mActivity.showLoading();
-        getFilters();
     }
 }

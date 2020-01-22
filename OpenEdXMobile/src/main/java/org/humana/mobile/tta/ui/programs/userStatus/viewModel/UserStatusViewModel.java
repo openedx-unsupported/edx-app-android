@@ -69,6 +69,8 @@ public class UserStatusViewModel extends BaseViewModel {
     private boolean allLoaded;
     private boolean changesMade;
     private EnrolledCoursesResponse parentCourse;
+    public ObservableField<String> toolbarTitle = new ObservableField<>();
+    public Boolean showCurrentPeriodTitle;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -78,11 +80,12 @@ public class UserStatusViewModel extends BaseViewModel {
         return true;
     };
 
-    public UserStatusViewModel(BaseVMActivity activity, String studentName, EnrolledCoursesResponse course) {
+    public UserStatusViewModel(BaseVMActivity activity, String studentName, EnrolledCoursesResponse course, Boolean showCurrentPeriodTitle) {
         super(activity);
 
         this.course = course;
         this.studentName = studentName;
+        this.showCurrentPeriodTitle = showCurrentPeriodTitle;
         name.set(studentName);
         units = new ArrayList<>();
         tags = new LinkedList<>();
@@ -94,6 +97,16 @@ public class UserStatusViewModel extends BaseViewModel {
 
         unitsAdapter = new UserStatusAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
+
+        if (showCurrentPeriodTitle){
+            toolbarTitle.set("Current Periods");
+        }else {
+            toolbarTitle.set("Approved Units");
+        }
+
+        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+            studentVisible.set(true);
+        }else  studentVisible.set(false);
 
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
@@ -271,11 +284,11 @@ public class UserStatusViewModel extends BaseViewModel {
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
-                            if (!studentName.equals("")) {
-                                studentVisible.set(true);
-                            } else {
-                                studentVisible.set(false);
-                            }
+//                            if (!studentName.equals("")) {
+//                                studentVisible.set(true);
+//                            } else {
+//                                studentVisible.set(false);
+//                            }
                         } else {
                             filtersVisible.set(false);
                         }
@@ -285,71 +298,6 @@ public class UserStatusViewModel extends BaseViewModel {
                                 getSelectedFilters(filter);
                             }
                         }
-/*
-                        for (int i = 0; i<data.size();i++){
-                            for (ProgramFilter filter: data){
-                                if (filter.getInternalName().toLowerCase().equals("status")){
-                                    tags.clear();
-                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
-                                        tag.setInternalName(tag.getInternalName());
-                                        tag.setOrder(tag.getOrder());
-                                        tag.setDisplayName(tag.getDisplayName());
-                                        tag.setId(tag.getId());
-                                        tag.setSelected(tag.getSelected());
-                                        tags.add(tag);
-                                    }
-                                    filters.add(filter);
-                                }
-                                if (filter.getInternalName().toLowerCase().equals("period")){
-                                    tags.clear();
-                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
-                                        tag.setInternalName(tag.getInternalName());
-                                        tag.setOrder(tag.getOrder());
-                                        tag.setDisplayName(tag.getDisplayName());
-                                        tag.setId(tag.getId());
-                                        tag.setSelected(tag.getSelected());
-                                        tags.add(tag);
-                                    }
-                                    filters.add(filter);
-                                }
-                                if (filter.getInternalName().toLowerCase().equals("period")){
-                                    tags.clear();
-                                    for (ProgramFilterTag tag : data.get(i).getTags()) {
-                                        tag.setInternalName(tag.getInternalName());
-                                        tag.setOrder(tag.getOrder());
-                                        tag.setDisplayName(tag.getDisplayName());
-                                        tag.setId(tag.getId());
-                                        tag.setSelected(tag.getSelected());
-                                        tags.add(tag);
-                                    }
-                                    filters.add(filter);
-                                }
-                            }
-                        }
-
-
-                        for (ProgramFilter filter : data) {
-                            units.clear();
-                            if (filter.getInternalName().toLowerCase().contains("status")) {
-                                statusTags.clear();
-                                statusTags.add(new DropDownFilterView.FilterItem(filter.getDisplayName(), null,
-                                        true, R.color.primary_cyan, R.drawable.t_background_tag_hollow));
-
-                                for (ProgramFilterTag tag : filter.getTags()) {
-                                    statusTags.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                                            false, R.color.white, R.drawable.t_background_tag_filled));
-
-                                    if (tag.getSelected()){
-                                        tags.clear();
-                                        tags.add(tag);
-                                        changesMade = true;
-                                        allLoaded = false;
-                                        fetchData();
-                                    }
-                                }
-                            }
-
-                        }*/
                     }
 
                     @Override
@@ -614,19 +562,19 @@ public class UserStatusViewModel extends BaseViewModel {
 
                 switch (model.getStatus()) {
                     case "Submitted":
-                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
                         break;
                     case "Approved":
                         unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
                         break;
                     case "Return":
-                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
                         break;
                     case "":
-                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
                         break;
                     case "None":
-                        unitBinding.cvUnit.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
                         break;
                 }
 

@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -76,6 +78,8 @@ public class AddUnitsViewModel extends BaseViewModel {
     private boolean changesMade;
     private boolean isUnitModePeriod;
     private Long selectedDate;
+    public ObservableField<String> searchText = new ObservableField<>("");
+
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -324,7 +328,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
     }
 
-    private void fetchData(){
+    public void fetchData(){
         mActivity.showLoading();
         if (changesMade){
             units.clear();
@@ -377,7 +381,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         if (isUnitModePeriod) {
-            mDataManager.getUnits(filters, "",mDataManager.getLoginPrefs().getProgramId(),
+            mDataManager.getUnits(filters, searchText.get(),mDataManager.getLoginPrefs().getProgramId(),
                     mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),"",
                     periodId ,take, skip,0L,0L,
                     new OnResponseCallback<List<Unit>>() {
@@ -657,4 +661,22 @@ public class AddUnitsViewModel extends BaseViewModel {
             }
         }
     }
+
+    public TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            searchText.set(s.toString());
+
+        }
+    };
 }

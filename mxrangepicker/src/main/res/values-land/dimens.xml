@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <dimen name="range_dialog_height">200dip</dimen>
+    <dimen name="range_left_side_width">200dip</dimen>
+
+    <dimen name="range_selected_date_year_size">30dp</dimen>
+    <dimen name="range_selected_date_day_size">100dp</dimen>
+    <dimen name="range_selected_date_month_size">30dp</dimen>
+
+    <dimen name="range_picker_dimen">200dip</dimen>
+    <dimen name="range_time_picker_height">200dip</dimen>
+    <dimen name="range_header_height">70dip</dimen>
+</resources>

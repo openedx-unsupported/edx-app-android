@@ -222,6 +222,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         if (!Constants.UNIT_ID.equals("")){
             linearLayout.setVisibility(View.VISIBLE);
+            approveReturn(Constants.UNIT_ID,unitType,unitTitle, unitDesc);
         }
 
 
@@ -240,6 +241,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         restore(bundle);
         initListView(view);
         fetchCourseComponent();
+
 
 //        getUserUnitResponse();
 
@@ -1092,14 +1094,19 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         btnApprove.setOnClickListener(v -> {
             String remarks = etRemarks.getText().toString();
             approveUnits(unitId, remarks, (int) unitRating, type, title,desc);
+            Constants.isUnitApprove = false;
             dialog.dismiss();
         });
 
         btnReturn.setOnClickListener(v -> {
             String remarks = etRemarks.getText().toString();
-
-            rejectUnits(unitId, remarks, (int) unitRating, type, title, desc);
-            dialog.dismiss();
+            if (remarks.length()==0){
+                etRemarks.setError("Please enter remarks.");
+                etRemarks.setFocusable(true);
+            }else {
+                rejectUnits(unitId, remarks, (int) unitRating, type, title, desc);
+                dialog.dismiss();
+            }
         });
         dialog.setCancelable(true);
         dialog.show();
@@ -1107,8 +1114,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
 
-    public void approveUnits(String unitId, String remarks, int rating, String unitType, String unitTitle,
-                             String desc) {
+    public void approveUnits(String unitId, String remarks, int rating, String unitType,
+                             String unitTitle, String desc) {
         mDataManager.approveUnit(unitId,
                 Constants.USERNAME, remarks, rating, new OnResponseCallback<SuccessResponse>() {
                     @Override

@@ -24,7 +24,7 @@ public class NotificationActivity extends BaseVMActivity {
     private NotificationViewModel viewModel;
     private EnrolledCoursesResponse course;
     private long periodId;
-    private String periodName;
+    private String periodName, unitId, courseId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +35,13 @@ public class NotificationActivity extends BaseVMActivity {
         } else if (savedInstanceState != null){
             getBundledData(savedInstanceState);
         }
-        viewModel = new NotificationViewModel(this);
-        binding(R.layout.t_fragment_notifications, viewModel);
+
 
         savedInstanceState = getIntent().getExtras();
         assert savedInstanceState != null;
+
+        viewModel = new NotificationViewModel(this);
+        binding(R.layout.t_fragment_notifications, viewModel);
         setSupportActionBar(findViewById(R.id.toolbar));
     }
 
@@ -75,5 +77,6 @@ public class NotificationActivity extends BaseVMActivity {
         if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
             course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
         }
+
     }
 }

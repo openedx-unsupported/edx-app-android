@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/range_date_picker_component_width"
+    android:layout_height="wrap_content"
+    android:background="@color/range_date_picker_view_animator"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TabHost
+        android:id="@+id/range_tabHost"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/start_date_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <include layout="@layout/range_date_picker_selected_date" />
+
+                    <include layout="@layout/range_date_picker_view_animator" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/range_end_date_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <include layout="@layout/range_date_picker_selected_date_end" />
+
+                    <include layout="@layout/range_date_picker_view_animator_end" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+    </TabHost>
+
+    <include layout="@layout/range_done_button" />
+
+</LinearLayout>

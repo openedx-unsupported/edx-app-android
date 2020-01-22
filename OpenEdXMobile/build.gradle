@@ -137,6 +137,9 @@ dependencies {
     //for mx custom calender
     implementation project(":mxcalendar")
 
+    //for mx range picker
+    implementation project(':mxrangepicker')
+
     //MVVM ::Start Arjun
     implementation "com.android.support:support-vector-drawable:${supportLibraryVersion}"
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
@@ -245,7 +248,7 @@ dependencies {
 
 
     implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.1'
-    implementation 'com.borax12.materialdaterangepicker:library:2.0'
+//    implementation 'com.borax12.materialdaterangepicker:library:2.0'
 
     //Include DI framework
     implementation 'org.roboguice:roboguice:3.0.1'

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -69,7 +70,12 @@
                     android:textSize="12sp" />
 
             </LinearLayout>
-
+            <include
+                layout="@layout/t_view_offline_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                bind:isVisible="@{viewModel.offlineVisible}"/>
         </FrameLayout>
 
     </LinearLayout>

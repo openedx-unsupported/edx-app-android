@@ -403,6 +403,10 @@ public class UnitsViewModel extends BaseViewModel {
                         populateUnits(data);
                         unitsAdapter.setLoadingDone();
                         mActivity.hideLoading();
+
+                        if (data.size()==0){
+                            emptyVisible.set(true);
+                        }
                     }
 
                     @Override
@@ -704,6 +708,11 @@ public class UnitsViewModel extends BaseViewModel {
 
     public void changeToCalenderView() {
         ActivityUtil.gotoPage(mActivity, UnitCalendarActivity.class);
+    }
+
+    public void searchUnits(){
+        changesMade = true;
+        fetchData();
     }
 
 

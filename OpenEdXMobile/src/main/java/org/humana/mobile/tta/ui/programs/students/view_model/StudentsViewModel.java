@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -71,6 +72,7 @@ public class StudentsViewModel extends BaseViewModel {
     public ObservableBoolean isTabView = new ObservableBoolean();
 
 
+
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
             return false;
@@ -94,10 +96,12 @@ public class StudentsViewModel extends BaseViewModel {
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
+                        b.putBoolean("isCurrent", true);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
                     } else if(mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
+                        b.putBoolean("isCurrent", true);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
                     } else {
                         mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity,
@@ -111,10 +115,12 @@ public class StudentsViewModel extends BaseViewModel {
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
+                        b.putBoolean("isCurrent", false);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
                     }else if(mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
+                        b.putBoolean("isCurrent", false);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
                     }
                     else {
@@ -232,7 +238,7 @@ public class StudentsViewModel extends BaseViewModel {
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
                 itemBinding.txtCompleted.setText(String.format("%s "+ mActivity.getResources().getString(R.string.point_txt), String.valueOf(model.completedHours)));
-                itemBinding.txtPending.setText(String.format("%s units", String.valueOf(model.completedUnits)));
+                itemBinding.txtPending.setText(String.format("%s Units", String.valueOf(model.completedUnits)));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null) {
 
@@ -265,7 +271,7 @@ public class StudentsViewModel extends BaseViewModel {
 //                }
                 itemBinding.txtCurrentCompleted.setText(String.format("%s "+mActivity.getResources().getString(R.string.point_txt),
                         String.valueOf(model.current_hours)));
-                itemBinding.txtCurrentPending.setText(String.format("%s units", String.valueOf(model.currentUnits)));
+                itemBinding.txtCurrentPending.setText(String.format("%s Units", String.valueOf(model.currentUnits)));
 
 
                 itemBinding.imgInsta.setOnClickListener(v -> {

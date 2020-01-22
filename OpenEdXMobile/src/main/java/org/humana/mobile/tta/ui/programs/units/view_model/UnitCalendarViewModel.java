@@ -80,6 +80,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
     public long startDateTime, endDateTime;
     public ObservableField<List<Event>> eventObservable = new ObservableField<>();
     public ObservableLong eventObservableDate = new ObservableLong();
+    public String periodName;
+    public Long periodId;
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -90,10 +92,13 @@ public class UnitCalendarViewModel extends BaseViewModel {
         return true;
     };
 
-    public UnitCalendarViewModel(BaseVMActivity activity, EnrolledCoursesResponse course) {
+    public UnitCalendarViewModel(BaseVMActivity activity, EnrolledCoursesResponse course,
+                                 String periodName, long periodId) {
         super(activity);
 
         this.course = course;
+        this.periodId = periodId;
+        this.periodName = periodName;
         units = new ArrayList<>();
         tags = new ArrayList<>();
         filters = new ArrayList<>();
@@ -103,6 +108,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
         changesMade = true;
         calVisible.set(false);
         frameVisible.set(true);
+
 
         layoutManager = new LinearLayoutManager(mActivity);
         unitsAdapter = new UnitsAdapter(mActivity);
@@ -187,8 +193,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
         });
 
+
         mActivity.showLoading();
-//        fetchUnits();
     }
 
     private void fetchData() {
@@ -294,8 +300,9 @@ public class UnitCalendarViewModel extends BaseViewModel {
     public void fetchUnits(Long startDate, Long endDate) {
         mActivity.showLoading();
         mDataManager.getUnits(filters, "", mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
-                0L, take, skip, startDate, endDate,
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
+                "",
+                periodId, take, skip, startDate, endDate,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -371,6 +378,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         eventObservable.set(eventsArrayList);
                         startDateTime = startDate;
                         eventObservableDate.set(startDate);
+
                     }
 
                     @Override

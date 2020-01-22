@@ -14,6 +14,7 @@ public class UserStatusActivity extends BaseVMActivity {
     UserStatusViewModel viewModel;
     private EnrolledCoursesResponse course;
     private String username;
+    private Boolean showCurrentPeriod;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +23,7 @@ public class UserStatusActivity extends BaseVMActivity {
         } else if (savedInstanceState != null){
             getBundledData(savedInstanceState);
         }
-        viewModel = new UserStatusViewModel(this, username, course);
+        viewModel = new UserStatusViewModel(this, username, course, showCurrentPeriod);
         binding(R.layout.t_activity_user_status, viewModel);
 
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -35,6 +36,9 @@ public class UserStatusActivity extends BaseVMActivity {
 
         if (parameters.containsKey(Router.EXTRA_USERNAME)){
             username =  parameters.getString(Router.EXTRA_USERNAME);
+        }
+        if (parameters.containsKey("isCurrent")){
+            showCurrentPeriod =  parameters.getBoolean("isCurrent");
         }
     }
     @Override

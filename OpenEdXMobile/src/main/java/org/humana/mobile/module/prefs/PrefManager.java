@@ -361,6 +361,8 @@ public class PrefManager {
         public static final String CURRENT_PERIOD_ID = "current_period_id";
         public static final String CURRENT_PERIOD_TITLE = "current_period_title";
         public static final String CURRENT_PERIOD_LANG = "current_period_lang";
+        public static final String CALENDER_START_DATE = "calender_start_date";
+        public static final String CALENDER_END_DATE = "calender_start_date";
     }
 
     public static final class Value {
