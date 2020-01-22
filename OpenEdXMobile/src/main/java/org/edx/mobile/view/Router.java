@@ -104,7 +104,7 @@ public class Router {
 
     public void showSettings(Activity sourceActivity) {
         Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
-        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(settingsIntent);
     }
 
@@ -436,7 +436,11 @@ public class Router {
     }
 
     public void showAccountActivity(@NonNull Activity activity) {
-        activity.startActivity(AccountActivity.newIntent(activity));
+        activity.startActivity(AccountActivity.newIntent(activity, null));
+    }
+
+    public void showAccountActivity(@NonNull Activity activity, @Nullable @ScreenDef String screenName) {
+        activity.startActivity(AccountActivity.newIntent(activity, screenName));
     }
 
     public void showSubjectsActivityForResult(@NonNull Fragment fragment, int requestCode) {
