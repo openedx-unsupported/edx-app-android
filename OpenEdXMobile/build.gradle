@@ -165,8 +165,16 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'de.greenrobot:eventbus:2.4.1'
     implementation 'com.squareup.phrase:phrase:1.1.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.0.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    /*
+     * REASON FOR NOT UPGRADING Okhttp TO LATEST VERSION
+     * OkHttp works on Android 5.0+ (API level 21+) and on Java 8+.
+     * The OkHttp 3.12.x branch supports Android 2.3+ (API level 9+) and Java 7+. These platforms
+     * lack support for TLS 1.2 and should not be used. But because upgrading is difficult we will
+     * backport critical fixes to the 3.12.x branch through December 31, 2020.
+     * Ref: https://square.github.io/okhttp/#requirements
+     */
+    implementation 'com.squareup.okhttp3:okhttp:3.12.8'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.8'
     /* Exclude dependencies defined statically at the top-
      * level, to prevent them from being resolved to the
      * latest version as a result of dynamic version
@@ -181,12 +189,10 @@ dependencies {
     }
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    implementation ('com.github.bumptech.glide:okhttp3-integration:1.4.0'){
-        exclude group: 'glide-parent'
-    }
     implementation 'de.hdodenhof:circleimageview:2.0.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation ('com.github.bumptech.glide:okhttp3-integration:4.11.0')
 
     // Segment Library
     implementation 'com.segment.analytics.android:analytics:4.2.6'
@@ -241,7 +247,7 @@ dependencies {
     testImplementation ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testImplementation 'com.squareup.okhttp3:mockwebserver:3.0.1'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.12.8'
     testImplementation ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
@@ -390,6 +396,7 @@ android {
                                 sdCardEnabled: config.get('DOWNLOAD_TO_SD_CARD_ENABLED') ?: true]
 
         javaCompileOptions {
+
             annotationProcessorOptions {
                 includeCompileClasspath false
             }

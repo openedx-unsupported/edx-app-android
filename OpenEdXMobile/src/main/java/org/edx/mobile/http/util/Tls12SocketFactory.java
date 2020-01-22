@@ -9,13 +9,19 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -95,9 +101,19 @@ public class Tls12SocketFactory extends SSLSocketFactory {
     public static OkHttpClient.Builder enableTls12OnPreLollipop(OkHttpClient.Builder client) {
         if (Build.VERSION.SDK_INT < 22) {
             try {
-                final SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-                sslContext.init(null, null, null);
-                client.sslSocketFactory(new Tls12SocketFactory(sslContext.getSocketFactory()));
+                final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                        TrustManagerFactory.getDefaultAlgorithm());
+                trustManagerFactory.init((KeyStore) null);
+                final TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+                if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+                    throw new IllegalStateException("Unexpected default trust managers:"
+                            + Arrays.toString(trustManagers));
+                }
+                final X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
+
+                final SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, new TrustManager[]{trustManager}, null);
+                client.sslSocketFactory(new Tls12SocketFactory(sslContext.getSocketFactory()), trustManager);
 
                 final ConnectionSpec connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                         .tlsVersions(TlsVersion.TLS_1_2)
@@ -109,9 +125,7 @@ public class Tls12SocketFactory extends SSLSocketFactory {
                 specs.add(ConnectionSpec.CLEARTEXT);
 
                 client.connectionSpecs(specs);
-            } catch (NoSuchAlgorithmException e) {
-                logger.error(e);
-            } catch (KeyManagementException e) {
+            } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 logger.error(e);
             }
         }
