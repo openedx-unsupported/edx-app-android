@@ -59,8 +59,9 @@ public class DeepLinkManager {
                 router.showUserProfile(activity, username);
                 break;
             }
+            case Screen.SETTINGS:
             case Screen.ACCOUNT: {
-                router.showAccountActivity(activity);
+                router.showAccountActivity(activity, screenName);
                 break;
             }
             default: {
