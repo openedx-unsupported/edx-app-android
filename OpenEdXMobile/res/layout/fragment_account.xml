@@ -5,6 +5,7 @@
 <android.support.design.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/humana_card_background"
     android:id="@+id/cl_main">
 
     <LinearLayout
@@ -15,9 +16,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center|end"
                 android:background="@color/humana_card_background">
-
-
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -27,7 +27,8 @@
                     android:paddingEnd="15dp"
                     android:paddingTop="10dp"
                     android:layout_marginTop="10dp"
-                    android:foregroundGravity="bottom"
+                    android:paddingBottom="5dp"
+                    android:foregroundGravity="center"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:tint="@color/material_red_500"
@@ -87,6 +88,7 @@
             android:gravity="center_horizontal"
             android:textColor="@color/edx_brand_gray_base"
             android:textSize="@dimen/drawer_app_version_text"
+            android:background="@color/humana_card_background"
             tools:text="Version Major.Minor.Patch" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -79,6 +79,8 @@
                     android:padding="5dp"
                     android:textColor="@color/black"
                     android:drawableLeft="@drawable/check"
+                    android:drawableTint="@color/secondary_green"
+
                     android:fontFamily="@font/hind_medium" />
 
                 <TextView
@@ -89,6 +91,7 @@
                     android:drawablePadding="5dp"
                     android:padding="5dp"
                     android:textColor="@color/gray_5"
+                    android:drawableTint="@color/secondary_green"
                     android:drawableLeft="@drawable/ic_access_time_red_24dp"
                     android:fontFamily="@font/hind_medium" />
 
@@ -164,6 +167,7 @@
                     android:padding="5dp"
                     android:textColor="@color/black"
                     android:drawableLeft="@drawable/check"
+                    android:drawableTint="@color/pending_orange"
                     android:fontFamily="@font/hind_medium" />
 
                 <TextView
@@ -175,6 +179,7 @@
                     android:padding="5dp"
                     android:textColor="@color/gray_5"
                     android:drawableLeft="@drawable/ic_access_time_red_24dp"
+                    android:drawableTint="@color/pending_orange"
                     android:fontFamily="@font/hind_medium" />
 
             </LinearLayout>

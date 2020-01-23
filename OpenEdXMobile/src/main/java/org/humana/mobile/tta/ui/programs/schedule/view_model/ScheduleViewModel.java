@@ -181,7 +181,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         });
 
         mActivity.showLoading();
-        getFilters();
+//        getFilters();
 
     }
 
@@ -254,6 +254,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             gridLayoutManager = new GridLayoutManager(mActivity, 1);
         }
 
+        getFilters();
     }
 
     public void getFilters() {
