@@ -21,7 +21,7 @@ public class Notification {
     @SerializedName("respondents")
     private String mRespondents;
     @SerializedName("schedule_date")
-    private String mScheduleDate;
+    private Long mScheduleDate;
     @SerializedName("status")
     private String mStatus;
     @SerializedName("title")
@@ -83,11 +83,11 @@ public class Notification {
         mRespondents = respondents;
     }
 
-    public String getScheduleDate() {
+    public Long getScheduleDate() {
         return mScheduleDate;
     }
 
-    public void setScheduleDate(String scheduleDate) {
+    public void setScheduleDate(Long scheduleDate) {
         mScheduleDate = scheduleDate;
     }
 

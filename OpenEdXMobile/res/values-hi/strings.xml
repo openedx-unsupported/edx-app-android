@@ -134,4 +134,6 @@
     <string name="material_calendar_saturday">S</string>
     <string name="material_calendar_sunday">S</string>
     <string name="point_txt">Points</string>
+    <string name="period_saved_successed">Period saved successfully</string>
+    <string name="emply_unit">This unit is empty</string>
 </resources>

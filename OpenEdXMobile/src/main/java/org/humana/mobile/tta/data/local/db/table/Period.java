@@ -42,6 +42,17 @@ public class Period implements Parcelable {
     @SerializedName("desc")
     private String desc;
 
+    public String getAbout_url() {
+        return about_url;
+    }
+
+    public void setAbout_url(String about_url) {
+        this.about_url = about_url;
+    }
+
+    @SerializedName("about_url")
+    private String about_url;
+
 
     @SerializedName("startDate")
     private long startDate;
@@ -62,6 +73,7 @@ public class Period implements Parcelable {
         username = in.readString();
         language = in.readString();
         desc = in.readString();
+        about_url = in.readString();
         startDate = in.readLong();
         endDate = in.readLong();
     }
@@ -175,6 +187,7 @@ public class Period implements Parcelable {
         dest.writeString(username);
         dest.writeString(language);
         dest.writeString(desc);
+        dest.writeString(about_url);
         dest.writeLong(startDate);
         dest.writeLong(endDate);
     }

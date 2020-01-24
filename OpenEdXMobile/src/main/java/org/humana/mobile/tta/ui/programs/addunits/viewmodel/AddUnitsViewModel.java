@@ -29,8 +29,10 @@ import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
+import org.humana.mobile.tta.data.model.program.SelectedFilter;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
+import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -79,6 +81,8 @@ public class AddUnitsViewModel extends BaseViewModel {
     private boolean isUnitModePeriod;
     private Long selectedDate;
     public ObservableField<String> searchText = new ObservableField<>("");
+    private List<SelectedFilter> selectedFilter;
+
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -113,6 +117,9 @@ public class AddUnitsViewModel extends BaseViewModel {
         allLoaded = false;
         changesMade = true;
         isUnitModePeriod = true;
+
+        selectedFilter=new ArrayList<>();
+        selectedFilter=mDataManager.getSelectedFilters();
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
@@ -184,7 +191,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                             @Override
                             public void onSuccess(ResponseBody responseBody) {
 
-                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                mDataManager.getenrolledCourseByOrg(Constants.KEY_HUMANA, new OnResponseCallback<List<EnrolledCoursesResponse>>() {
                                     @Override
                                     public void onSuccess(List<EnrolledCoursesResponse> data) {
                                         if (courseId != null) {
@@ -232,7 +239,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
         mActivity.showLoading();
         fetchFilters();
-        fetchData();
+//        fetchData();
     }
 
     private void getBlockComponent(Unit unit) {
@@ -256,7 +263,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                                     c, data.getChildren().get(0).getId(),
                                     null, false);
                         } else {
-                            mActivity.showLongSnack("This unit is empty");
+                            mActivity.showLongSnack(mActivity.getString(R.string.empty_unit));
                         }
                     }
 
@@ -276,12 +283,27 @@ public class AddUnitsViewModel extends BaseViewModel {
         onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
+    public void onEventMainThread(ProgramFilterSavedEvent event) {
+        changesMade = true;
+        allLoaded = false;
+        filters = event.getProgramFilters();
+        setUnitFilters();
+    }
+
     public void onEventMainThread(NetworkConnectivityChangeEvent event) {
         if (NetworkUtil.isConnected(mActivity)) {
 
         } else {
-            mActivity.showIndefiniteSnack("You are offline");
+            mActivity.showIndefiniteSnack(mActivity.getString(R.string.offline_text));
         }
+    }
+
+    public void registerEventBus() {
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void unRegisterEventBus() {
+        EventBus.getDefault().unregister(this);
     }
 
     private void showDatePicker(Unit unit){
@@ -318,6 +340,10 @@ public class AddUnitsViewModel extends BaseViewModel {
                         } else {
                             filtersVisible.set(false);
                         }
+
+                        EventBus.getDefault()
+                                .post(new ProgramFilterSavedEvent(filters));
+                        fetchData();
                     }
 
                     @Override
@@ -350,32 +376,53 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     private void setUnitFilters(){
-        filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()){
+        if (filters!=null)
+            filters.clear();
+        if (allFilters == null || allFilters.isEmpty()) {
             return;
         }
-
-        for (ProgramFilter filter: allFilters){
-
-            List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag: filter.getTags()){
-                if (tags.contains(tag)){
-                    selectedTags.add(tag);
+        if (selectedFilter.isEmpty()){
+            for (ProgramFilter filter : allFilters){
+                for (ProgramFilterTag tag : filter.getTags()){
+                    if (tag.getSelected()) {
+                        SelectedFilter sf = new SelectedFilter();
+                        sf.setInternal_name(filter.getInternalName());
+                        sf.setDisplay_name(filter.getDisplayName());
+                        sf.setSelected_tag(tag.getDisplayName());
+                        mDataManager.updateSelectedFilters(sf);
+                        selectedFilter = mDataManager.getSelectedFilters();
+                        break;
+                    }
                 }
             }
 
-            if (!selectedTags.isEmpty()){
-                ProgramFilter pf = new ProgramFilter();
-                pf.setDisplayName(filter.getDisplayName());
-                pf.setInternalName(filter.getInternalName());
-                pf.setId(filter.getId());
-                pf.setOrder(filter.getOrder());
-                pf.setShowIn(filter.getShowIn());
-                pf.setTags(selectedTags);
 
-                filters.add(pf);
+
+        }
+        for (SelectedFilter selected : selectedFilter) {
+            for (ProgramFilter filter : allFilters) {
+                List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                    for (ProgramFilterTag tag : filter.getTags()) {
+                        if (selected.getSelected_tag() != null) {
+                            if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                selectedTags.add(tag);
+                                ProgramFilter pf = new ProgramFilter();
+                                pf.setDisplayName(filter.getDisplayName());
+                                pf.setInternalName(filter.getInternalName());
+                                pf.setId(filter.getId());
+                                pf.setOrder(filter.getOrder());
+                                pf.setShowIn(filter.getShowIn());
+                                pf.setTags(selectedTags);
+                                filters.add(pf);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
+
     }
 
     private void fetchUnits() {
@@ -504,7 +551,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                     @Override
                     public void onSuccess(SuccessResponse data) {
                         mActivity.hideLoading();
-                        mActivity.showLongToast("Period saved successfully");
+                        mActivity.showLongToast(mActivity.getString(R.string.period_saved_successed));
                         EventBus.getDefault().post(
                                 new PeriodSavedEvent(periodId, added.size() - removed.size()));
                         mActivity.onBackPressed();
@@ -541,23 +588,64 @@ public class AddUnitsViewModel extends BaseViewModel {
                 ));
                 for (ProgramFilterTag tag : model.getTags()) {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
-                            false, R.color.white, R.drawable.t_background_tag_filled
+                            tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
                 }
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
+                if (selectedFilter != null) {
+                    for (SelectedFilter item : selectedFilter) {
+                        if (model.getInternalName().equals(item.getInternal_name())) {
+                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                        }
+                    }
+                }
+
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-                    if (prev != null && prev.getItem() != null){
-                        tags.remove((ProgramFilterTag) prev.getItem());
-                    }
-                    if (item.getItem() != null){
-                        tags.add((ProgramFilterTag) item.getItem());
-                    }
+//                    if (prev != null && prev.getItem() != null){
+//                        tags.remove((ProgramFilterTag) prev.getItem());
+//                    }
+//                    if (item.getItem() != null){
+//                        tags.add((ProgramFilterTag) item.getItem());
+//                    }
+
+                    SelectedFilter sf = new SelectedFilter();
+                    sf.setInternal_name(model.getInternalName());
+                    sf.setDisplay_name(model.getDisplayName());
+                    sf.setSelected_tag(item.getName());
+                    mDataManager.updateSelectedFilters(sf);
 
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
-                    fetchData();
+                    selectedFilter = mDataManager.getSelectedFilters();
+                    filters.clear();
+                    for (SelectedFilter selected : selectedFilter) {
+                        for (ProgramFilter filter : allFilters) {
+                            List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                            if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                                for (ProgramFilterTag tag : filter.getTags()) {
+                                    if (selected.getSelected_tag() != null) {
+                                        if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
+                                            selectedTags.add(tag);
+                                            ProgramFilter pf = new ProgramFilter();
+                                            pf.setDisplayName(filter.getDisplayName());
+                                            pf.setInternalName(filter.getInternalName());
+                                            pf.setId(filter.getId());
+                                            pf.setOrder(filter.getOrder());
+                                            pf.setShowIn(filter.getShowIn());
+                                            pf.setTags(selectedTags);
+                                            filters.add(pf);
+                                            EventBus.getDefault()
+                                                    .post(new ProgramFilterSavedEvent(filters));
+                                            fetchFilters();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 });
             }
         }

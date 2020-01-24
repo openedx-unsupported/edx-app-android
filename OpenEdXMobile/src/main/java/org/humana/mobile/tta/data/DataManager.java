@@ -109,6 +109,7 @@ import org.humana.mobile.tta.data.remote.api.MxSurveyAPI;
 import org.humana.mobile.tta.exception.NoConnectionException;
 import org.humana.mobile.tta.exception.TaException;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.scorm.PDFBlockModel;
 import org.humana.mobile.tta.scorm.ScormBlockModel;
 import org.humana.mobile.tta.scorm.ScormStartResponse;
 import org.humana.mobile.tta.task.GetEnrolledCourseTask;
@@ -1317,6 +1318,14 @@ public class DataManager extends BaseRoboInjector {
         DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
         de.url = scorm.getDownloadUrl();
         de.title = scorm.getParent().getDisplayName();
+        downloadManager.downloadVideo(de, activity, callback);
+    }
+    public void downloadSingle(PDFBlockModel scorm,
+                               FragmentActivity activity,
+                               VideoDownloadHelper.DownloadManagerCallback callback) {
+        DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
+        de.url = scorm.getDownloadUrl();
+        de.title = scorm.getDisplayName();
         downloadManager.downloadVideo(de, activity, callback);
     }
 

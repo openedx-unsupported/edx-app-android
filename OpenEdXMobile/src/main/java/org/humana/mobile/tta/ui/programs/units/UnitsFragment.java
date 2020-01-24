@@ -42,9 +42,6 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
-
-        TFragmentUnitsBinding binding = (TFragmentUnitsBinding) binding(inflater, container, R.layout.t_fragment_units, viewModel);
-
         return rootView;
     }
 

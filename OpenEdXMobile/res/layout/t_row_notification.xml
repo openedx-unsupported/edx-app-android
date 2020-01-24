@@ -92,7 +92,6 @@
                 android:layout_marginTop="5dp"
                 android:textColor="@color/gray_5"
                 android:textSize="12sp"
-                android:text="@{viewModel.scheduleDate}"
                 android:fontFamily="@font/hind_medium"/>
 
 

@@ -82,6 +82,7 @@ import org.humana.mobile.tta.analytics.analytics_enums.Source;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.scorm.PDFBlockModel;
 import org.humana.mobile.tta.scorm.ScormBlockModel;
 import org.humana.mobile.tta.scorm.ScormManager;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
@@ -446,7 +447,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                                     adapter.selectedUnit.getRoot().getDisplayName(), Source.Mobile);
                             try {
 
-                                ScormBlockModel model = comp.getScorms().get(0);
+                                PDFBlockModel model = comp.getPDFs().get(0);
 
                                 switch (mDataManager.getScormStatus(model)) {
                                     case not_downloaded:
@@ -487,7 +488,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                                     case downloading:
                                         break;
                                     case downloaded:
-
                                         break;
 
                                     case watched:

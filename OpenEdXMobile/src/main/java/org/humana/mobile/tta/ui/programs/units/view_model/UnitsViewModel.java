@@ -38,6 +38,7 @@ import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
+import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -53,11 +54,10 @@ import java.util.Objects;
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 
-public class UnitsViewModel extends BaseViewModel {
+import static org.humana.mobile.tta.Constants.DEFAULT_SKIP;
+import static org.humana.mobile.tta.Constants.DEFAULT_TAKE;
 
-    //region
-    private static final int DEFAULT_TAKE = 10;
-    private static final int DEFAULT_SKIP = 0;
+public class UnitsViewModel extends BaseViewModel {
 
     private List<SelectedFilter> selectedFilter;
     public UnitsAdapter unitsAdapter;
@@ -66,13 +66,11 @@ public class UnitsViewModel extends BaseViewModel {
     public ProgramUser user;
     private int filterSize = 0;
 
-    public static ObservableBoolean filtersVisible = new ObservableBoolean();
+    public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
-    public static ObservableBoolean calVisible = new ObservableBoolean();
-    public static ObservableBoolean frameVisible = new ObservableBoolean();
-    public static ObservableField switchText = new ObservableField<>();
-    public static ObservableField selectedEvent = new ObservableField<>();
-    public List<ProgramFilterTag> selectedTags = new ArrayList<>();
+    public ObservableBoolean calVisible = new ObservableBoolean();
+    public ObservableBoolean frameVisible = new ObservableBoolean();
+    public ObservableField switchText = new ObservableField<>();
 
     public ObservableField<String> searchText = new ObservableField<>("");
 
@@ -87,11 +85,6 @@ public class UnitsViewModel extends BaseViewModel {
     private EnrolledCoursesResponse parentCourse;
 
     public String selectedSession;
-
-    private boolean isAllLoaded = false;
-    private ContentList selectedContentList;
-    private boolean isSelected = false;
-    private List<DropDownFilterView.FilterItem> sessionTags;
 
     //endregion
 
@@ -124,7 +117,6 @@ public class UnitsViewModel extends BaseViewModel {
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
-        switchText.set("Calendar View");
         selectedSession = "";
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
@@ -298,7 +290,6 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     public void fetchFilters() {
-        sessionTags = new ArrayList<>();
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.units.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -310,7 +301,7 @@ public class UnitsViewModel extends BaseViewModel {
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
                             changesMade=true;
-                            Constants.PROG_FILTER = filters;
+//                            Constants.PROG_FILTER = filters;
                             fetchData();
 
                         } else {
@@ -462,16 +453,19 @@ public class UnitsViewModel extends BaseViewModel {
         fetchData();
     }
 
+    public void onEventMainThread(ProgramFilterSavedEvent event) {
+        changesMade = true;
+        allLoaded = false;
+        filters = event.getProgramFilters();
+//        fetchFilters();
+    }
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(List<Unit> unit) {
-//        filters.clear();
         changesMade = true;
         allLoaded = false;
-//        fetchFilters();
         fetchData();
-
-
     }
 
 
@@ -589,6 +583,8 @@ public class UnitsViewModel extends BaseViewModel {
                                             pf.setShowIn(filter.getShowIn());
                                             pf.setTags(selectedTags);
                                             filters.add(pf);
+                                            EventBus.getDefault()
+                                                    .post(new ProgramFilterSavedEvent(filters));
                                             fetchFilters();
                                             break;
                                         }
@@ -736,7 +732,7 @@ public class UnitsViewModel extends BaseViewModel {
 
     public void setSessionFilter() {
         selectedFilter = mDataManager.getSelectedFilters();
-        filters = Constants.PROG_FILTER;
+//        filters = Constants.PROG_FILTER;
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();

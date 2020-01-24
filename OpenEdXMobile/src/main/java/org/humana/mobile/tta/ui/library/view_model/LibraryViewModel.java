@@ -95,34 +95,6 @@ public class LibraryViewModel extends BaseViewModel {
 
     }
 
-    private void getData() {
-        mActivity.showLoading();
-
-        mDataManager.getCollectionConfig(new OnResponseCallback<CollectionConfigResponse>() {
-            @Override
-            public void onSuccess(CollectionConfigResponse data) {
-//                mActivity.hideLoading();
-                cr = data;
-
-                if (cr != null) {
-                    categories.clear();
-                    categories.addAll(cr.getCategory());
-                    Collections.sort(categories);
-                }
-
-                populateTabs();
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-//                mActivity.hideLoading();
-                mActivity.showShortSnack(e.getLocalizedMessage());
-            }
-        });
-
-    }
-
     private void populateTabs() {
         mActivity.showLoading();
         fragments.clear();
@@ -183,14 +155,6 @@ public class LibraryViewModel extends BaseViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        initialPosition.set(0);
-
-//        if (!categories.isEmpty()) {
-//            PageViewStateCallback callback = (PageViewStateCallback) fragments.get(0);
-//            if (callback != null) {
-//                callback.onPageShow();
-//            }
-//        }
 
     }
 

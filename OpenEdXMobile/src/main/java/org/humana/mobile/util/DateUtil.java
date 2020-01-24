@@ -146,9 +146,20 @@ public class DateUtil {
         return outputFormat.format(date);
 
     }
+    public static String getDateTime(Date date) {
+
+        Locale locale = new Locale("en");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a", locale);
+        return outputFormat.format(date);
+
+    }
 
     public static String getDisplayDate(long timestamp) {
         return getDisplayTime(new Date(timestamp));
+    }
+
+    public static String getDisplayDateTime(long timestamp) {
+        return getDateTime(new Date(timestamp));
     }
 
     public static String getDisplayDateInMill(long timestamp) {

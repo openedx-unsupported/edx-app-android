@@ -182,7 +182,11 @@ public class NotificationViewModel extends BaseViewModel {
         public void onBind(@NonNull ViewDataBinding binding, @NonNull Notification model, @Nullable OnRecyclerItemClickListener<Notification> listener) {
             if (binding instanceof TRowNotificationBinding){
                 TRowNotificationBinding notificationBinding = (TRowNotificationBinding) binding;
-                notificationBinding.setViewModel(model);;
+                notificationBinding.setViewModel(model);
+                if (model.getScheduleDate() > 0){
+                    notificationBinding.notificationDate.setText(DateUtil.getDisplayDateTime(model.getScheduleDate()));
+                }
+
                 notificationBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null){
                         listener.onItemClick(v, model);

@@ -61,7 +61,8 @@ public class VideoDownloadHelper {
     private AnalyticsRegistry analyticsRegistry;
 
 
-    public void downloadVideos(final List<? extends HasDownloadEntry> model, long contentid, final FragmentActivity activity,
+    public void downloadVideos(final List<? extends HasDownloadEntry> model, long contentid,
+                               final FragmentActivity activity,
                                final DownloadManagerCallback callback) {
         if (model == null || model.isEmpty()) {
             return;
@@ -81,7 +82,8 @@ public class VideoDownloadHelper {
         MediaConsentUtils.requestStreamMedia(activity, dialogCallback);
     }
 
-    private void startDownloadVideos(List<? extends HasDownloadEntry> model, long contentid, FragmentActivity activity, DownloadManagerCallback callback) {
+    private void startDownloadVideos(List<? extends HasDownloadEntry> model, long contentid,
+                                     FragmentActivity activity, DownloadManagerCallback callback) {
         long downloadSize = 0;
         ArrayList<DownloadEntry> downloadList = new ArrayList<>();
         int downloadCount = 0;
@@ -159,7 +161,8 @@ public class VideoDownloadHelper {
         downloadFragment.setCancelable(false);
     }
 
-    public void downloadVideo(DownloadEntry downloadEntry, final FragmentActivity activity, final DownloadManagerCallback callback) {
+    public void downloadVideo(DownloadEntry downloadEntry, final FragmentActivity activity,
+                              final DownloadManagerCallback callback) {
         if (downloadEntry != null) {
             List<DownloadEntry> downloadEntries = new ArrayList<>();
             downloadEntries.add(downloadEntry);

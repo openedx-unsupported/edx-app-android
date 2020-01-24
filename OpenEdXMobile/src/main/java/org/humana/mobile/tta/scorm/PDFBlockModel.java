@@ -5,15 +5,15 @@ import org.humana.mobile.model.course.CourseComponent;
 
 public class PDFBlockModel extends ScormBlockModel {
 
-    private ScormData data;
+//    private ScormData data;
 
     public PDFBlockModel(BlockModel blockModel, CourseComponent parent) {
         super(blockModel, parent);
-        this.data = (ScormData) blockModel.data;
+//        this.data = (ScormData) blockModel.data;
     }
 
-    public void setData(ScormData data) {
-        this.data = data;
-    }
+//    public void setData(ScormData data) {
+//        this.data = data;
+//    }
 
 }

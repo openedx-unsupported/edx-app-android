@@ -970,5 +970,8 @@
         <item>@string/material_calendar_saturday</item>
     </array>
 
+    // humana strings
+    <string name="period_saved_successed">Period saved successfully</string>
+    <string name="empty_unit">This unit is empty</string>
 
 </resources>

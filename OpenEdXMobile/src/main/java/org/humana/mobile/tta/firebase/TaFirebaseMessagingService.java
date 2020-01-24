@@ -29,6 +29,7 @@ import org.humana.mobile.tta.utils.NotificationUtil;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 
 import static org.humana.mobile.util.BrowserUtil.loginPrefs;
@@ -61,6 +62,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         // Log.d("Manprax","Notification Message Body: " + remoteMessage);
         //sendNotification(remoteMessage.getData().get("title"),remoteMessage.getData().get("body"),"","");
         mDataManager = DataManager.getInstance(this);
+
         if (remoteMessage.getData().containsKey(EXTRA_TITLE) && remoteMessage.getData().containsKey("body") &&
                 remoteMessage.getData().containsKey("path") && remoteMessage.getData().containsKey("type"))
             sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"),

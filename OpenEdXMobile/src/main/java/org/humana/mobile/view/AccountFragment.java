@@ -2,12 +2,14 @@ package org.humana.mobile.view;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.inject.Inject;
 
 import org.humana.mobile.BuildConfig;
@@ -20,6 +22,7 @@ import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.constants.Constants;
 import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
+import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.feed.NotificationsFragment;
 import org.humana.mobile.tta.ui.landing.LandingActivity;
@@ -30,6 +33,8 @@ import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.Config;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class AccountFragment extends BaseFragment {
     private static final String TAG = AccountFragment.class.getCanonicalName();
@@ -46,13 +51,14 @@ public class AccountFragment extends BaseFragment {
 
     private DataManager mDataManager;
 
+    public ObservableField<String> notificationBladge = new ObservableField<>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
         mDataManager = DataManager.getInstance(getActivity());
-
 
         binding.showNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +152,7 @@ public class AccountFragment extends BaseFragment {
                     Constants.isSingleRow = true;
                     Snackbar.make(binding.clMain, "Single program and section exists for this user",
                             Snackbar.LENGTH_LONG).show();
-//                    ActivityUtil.gotoPage(getActivity(), LandingActivity.class,
-//                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
 
                 } else {
                     ActivityUtil.gotoPage(getActivity(), SelectSectionActivity.class,
@@ -159,19 +164,12 @@ public class AccountFragment extends BaseFragment {
 
             @Override
             public void onFailure(Exception e) {
-
+                e.printStackTrace();
             }
         });
     }
     public void showNotifications() {
         ActivityUtil.gotoPage(getActivity(),NotificationActivity.class);
-//        ActivityUtil.replaceFragmentInActivity(
-//                getActivity().getSupportFragmentManager(),
-//                new NotificationsFragment(),
-//                R.id.dashboard_fragment,
-//                NotificationsFragment.TAG,
-//                true,
-//                null
-//        );
     }
+
 }

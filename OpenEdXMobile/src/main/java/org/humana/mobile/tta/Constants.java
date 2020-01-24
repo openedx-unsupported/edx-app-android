@@ -109,7 +109,8 @@ public class Constants {
     public static final String KEY_DATA = "data";
     public static String DefaultUpdateMessage = "<html><body><div style=\"margin:0 auto;padding:10px;\"> <ul><li>कृपया अपना ऐप अपडेट करें ।</li></ul>\n" +
             "</div></body></html>\n";
-
+    public static final int DEFAULT_TAKE = 10;
+    public static final int DEFAULT_SKIP = 0;
     //for app update
     public static final String VERSION_NAME = "version_name";
     public static final String VERSION_CODE = "version_code";
@@ -118,17 +119,7 @@ public class Constants {
     public static String UNIT_ID="";
     public static String USERNAME="";
     public static Boolean isUnitApprove =false;
-    public static List<ProgramFilter> PROG_FILTER;
-
-
-    // color code for calendar event background
-    public static final String COLOR_WHITE = "#FFFFFF";
-    public static final String COLOR_YELLOW = "#F8E56B";
-    public static final String COLOR_PINK = "#EF98FC";
-    public static final String COLOR_GREEN = "#33FFAC";
-    public static final String EXTRA_ACTION_PARENT_ID = "action_parent_id";
-    public static final String EXTRA_ACTION_ID = "action_id";
-
+    public static final String KEY_HUMANA ="Humana";
 
 
 }

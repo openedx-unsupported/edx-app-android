@@ -47,20 +47,21 @@ public class SelectProgramViewModel2 extends BaseViewModel {
     public List<Program> programs;
     public List<Program> selectPrograms;
     private String programId;
-    private static View itemView;
     public ProgramsAdapter programsAdapter;
     public RecyclerView.LayoutManager layoutManager;
     public Boolean prevVisible = false;
-    public ObservableBoolean isPrev = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableBoolean navShiftMode = new ObservableBoolean();
     public ObservableBoolean offlineVisible = new ObservableBoolean();
+    private final String KEY_PROGRAM = "program";
+    private final String KEY_PREVVISIBLE = "prevVisible";
 
-    private int selectedId = R.id.action_library;
 
 
 
-    public SelectProgramViewModel2(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
+
+    public SelectProgramViewModel2(Context context, TaBaseFragment fragment,
+                                   EnrolledCoursesResponse course) {
         super(context, fragment);
 
         mActivity.showLoading();
@@ -81,15 +82,9 @@ public class SelectProgramViewModel2 extends BaseViewModel {
         fetchPrograms();
 
         programsAdapter.setItemClickListener((view, item) -> {
-//            mActivity.showLoading();
             if (selectPrograms.size() > 0) {
-                if (view == itemView) {
-                    selectPrograms.clear();
-                } else {
-                    selectPrograms.clear();
-                    selectPrograms.add(item);
 
-                    itemView = view;
+
                     programId = item.getId();
                     org.humana.mobile.tta.Constants.PROGRAM_ID = programId;
                     mDataManager.getLoginPrefs().setProgramId(programId);
@@ -111,8 +106,8 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 
                             } else {
                                 Bundle b = new Bundle();
-                                b.putCharSequence("program", programId);
-                                b.putBoolean("prevVisible",prevVisible);
+                                b.putCharSequence(KEY_PROGRAM, programId);
+                                b.putBoolean(KEY_PREVVISIBLE,prevVisible);
                                 Constants.isSinglePrg = false;
                                 ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
                                 mActivity.finish();
@@ -128,10 +123,9 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                         }
                     });
 
-                }
+
             } else {
                 selectPrograms.add(item);
-                itemView = view;
                 programId = item.getId();
                 mDataManager.getLoginPrefs().setProgramId(programId);
                 mDataManager.getLoginPrefs().setProgramTitle(item.getTitle());
@@ -151,8 +145,8 @@ public class SelectProgramViewModel2 extends BaseViewModel {
 
                                 } else {
                                     Bundle b = new Bundle();
-                                    b.putCharSequence("program", programId);
-                                    b.putBoolean("prevVisible",prevVisible);
+                                    b.putCharSequence(KEY_PROGRAM, programId);
+                                    b.putBoolean(KEY_PREVVISIBLE,prevVisible);
                                     Constants.isSinglePrg = false;
                                     ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
                                     mActivity.finish();
@@ -207,8 +201,8 @@ public class SelectProgramViewModel2 extends BaseViewModel {
             prevVisible = true;
             mDataManager.getLoginPrefs().setProgramTitle(data.get(0).getTitle());
             Bundle b = new Bundle();
-            b.putCharSequence("program", programId);
-            b.putBoolean("prevVisible",prevVisible);
+            b.putCharSequence(KEY_PROGRAM, programId);
+            b.putBoolean(KEY_PREVVISIBLE,prevVisible);
             ActivityUtil.gotoPage(mActivity, SelectSectionActivity.class, b);
             mDataManager.getLoginPrefs().setProgramId(programId);
             mActivity.finish();
@@ -272,11 +266,6 @@ public class SelectProgramViewModel2 extends BaseViewModel {
                     }
                 });
 
-                if (isPrev.get()) {
-                    if (model.getId().equals(mDataManager.getLoginPrefs().getProgramId())) {
-                        itemView = itemBinding.llProg;
-                    }
-                }
 
             }
         }

@@ -53,6 +53,7 @@ import org.humana.mobile.tta.analytics.analytics_enums.Action;
 import org.humana.mobile.tta.analytics.analytics_enums.Source;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.enums.FilePathValueForXblock;
+import org.humana.mobile.tta.scorm.PDFBlockModel;
 import org.humana.mobile.tta.scorm.ScormBlockModel;
 import org.humana.mobile.tta.scorm.ScormManager;
 import org.humana.mobile.tta.utils.ActivityUtil;
@@ -478,8 +479,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
 //                                }
 //                            });
 //                        }
-
-
                     //endregion
                     convertView.setTag(holder);
                     break;
@@ -689,7 +688,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.mx_scrom_open_layout.setVisibility(View.GONE);
             viewHolder.mProgressLayout.setVisibility(View.GONE);
 
-             List<ScormBlockModel> models= unit.getScorms();
+             List<PDFBlockModel> models= unit.getPDFs();
              if (models.size()>0)
             switch (dataManager.getScormStatus(models.get(0))){
                 case not_downloaded:

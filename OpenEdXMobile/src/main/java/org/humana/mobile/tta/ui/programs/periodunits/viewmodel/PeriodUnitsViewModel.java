@@ -35,6 +35,7 @@ import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
+import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -79,7 +80,6 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private List<SelectedFilter> selectedFilter;
 
 
-
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
             return false;
@@ -98,7 +98,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         tags = new ArrayList<>();
         filters = new ArrayList<>();
 
-        filters = Constants.PROG_FILTER;
+//        filters = Constants.PROG_FILTER;
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
         allLoaded = false;
@@ -106,8 +106,8 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
-        selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getSelectedFilters();
+        selectedFilter = new ArrayList<>();
+        selectedFilter = mDataManager.getSelectedFilters();
 
 
         unitsAdapter.setItems(units);
@@ -186,9 +186,9 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
         });
 
-        if (emptyVisible.get()){
+        if (emptyVisible.get()) {
             addUnitsVisible.set(true);
-        }else {
+        } else {
             addUnitsVisible.set(false);
         }
 //        if (mDataManager.getLoginPrefs().getRole() != null &&
@@ -275,7 +275,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private void fetchFilters() {
 
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.periodunits.name(),filters,
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.periodunits.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
@@ -305,8 +305,9 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                         } else {
                             filtersVisible.set(false);
                         }
-                        Constants.PROG_FILTER = filters;
-
+//                        Constants.PROG_FILTER = filters;
+                        EventBus.getDefault()
+                                .post(new ProgramFilterSavedEvent(filters));
                         fetchData();
                     }
 
@@ -333,14 +334,14 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     }
 
     private void setUnitFilters() {
-        if (filters!=null)
+        if (filters != null)
             filters.clear();
         if (allFilters == null || allFilters.isEmpty()) {
             return;
         }
-        if (selectedFilter.isEmpty()){
-            for (ProgramFilter filter : allFilters){
-                for (ProgramFilterTag tag : filter.getTags()){
+        if (selectedFilter.isEmpty()) {
+            for (ProgramFilter filter : allFilters) {
+                for (ProgramFilterTag tag : filter.getTags()) {
                     if (tag.getSelected()) {
                         SelectedFilter sf = new SelectedFilter();
                         sf.setInternal_name(filter.getInternalName());
@@ -352,8 +353,6 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                     }
                 }
             }
-
-
 
         }
         for (SelectedFilter selected : selectedFilter) {
@@ -384,9 +383,9 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     private void fetchUnits() {
 
-        mDataManager.getUnits(filters,searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),"",
-                periodId, take, skip,0L,0L,
+        mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
+                periodId, take, skip, 0L, 0L,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -457,6 +456,12 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         fetchData();
     }
 
+    public void onEventMainThread(ProgramFilterSavedEvent event) {
+        changesMade = true;
+        allLoaded = false;
+        filters = event.getProgramFilters();
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseEnrolledEvent event) {
         this.course = event.getCourse();
@@ -500,10 +505,9 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 }
 
 
-
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
-                if (selectedFilter !=null) {
+                if (selectedFilter != null) {
                     for (SelectedFilter item : selectedFilter) {
                         if (model.getInternalName().equals(item.getInternal_name())) {
                             dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
@@ -551,6 +555,8 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                                             pf.setShowIn(filter.getShowIn());
                                             pf.setTags(selectedTags);
                                             filters.add(pf);
+                                            EventBus.getDefault()
+                                                    .post(new ProgramFilterSavedEvent(filters));
                                             fetchFilters();
                                             break;
                                         }
@@ -580,15 +586,15 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                        + model.getUnitHour() + " " +mActivity.getResources().getString(R.string.point_txt));
+                        + model.getUnitHour() + " " + mActivity.getResources().getString(R.string.point_txt));
                 if (!model.getStatus().equals("")) {
-                    if (model.getStatusDate()>0) {
+                    if (model.getStatusDate() > 0) {
                         if (!DateUtil.getDisplayDate(model.getStatusDate()).equals("01 Jan 1970")) {
                             unitBinding.tvStaffDate.setText(model.getStatus() + ": " + DateUtil.getDisplayDate(model.getStatusDate()));
                             unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
                         }
                     }
-                }else {
+                } else {
                     unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                 }
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
@@ -600,22 +606,21 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                             unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                         }
                     }
-                }else {
+                } else {
                     unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                 }
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (!model.getStatus().equals("")) {
                         unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
-                        if(model.getStatus().equals("Submitted")){
+                        if (model.getStatus().equals("Submitted")) {
                             unitBinding.tvComment.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             unitBinding.tvComment.setVisibility(View.VISIBLE);
                         }
-                    }
-                    else {
+                    } else {
                         unitBinding.tvComment.setVisibility(View.GONE);
                     }
-                }else {
+                } else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                 }
                 unitBinding.tvDescription.setText(model.getDesc());
@@ -630,14 +635,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
 
                 String role = mDataManager.getLoginPrefs().getRole();
-//                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
-//                    if (model.getStaffDate() > 0) {
-//                        unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
-//                        unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-//                    } else {
-//                        unitBinding.tvStaffDate.setVisibility(View.GONE);
-//                    }
-//                }
+
 
                 if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
                         !TextUtils.isEmpty(model.getStatus())) {
@@ -677,6 +675,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
             }
         }
     }
+
     public TextWatcher watcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

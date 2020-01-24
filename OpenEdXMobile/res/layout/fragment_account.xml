@@ -13,30 +13,41 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
+                android:orientation="vertical"
                 android:background="@color/humana_card_background">
-
-                <ImageView
-                    android:layout_width="wrap_content"
+                <TextView
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:paddingTop="10dp"
-                    android:layout_marginTop="10dp"
-                    android:paddingBottom="5dp"
-                    android:foregroundGravity="center"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:tint="@color/material_red_500"
-                    android:focusable="true"
+                    android:layout_width="wrap_content"
                     android:id="@+id/show_notifications"
-                    app:srcCompat="@drawable/t_icon_notification"/>
+                    android:textColor="@color/dark_red"
+                    android:fontFamily="@font/hind_bold"
+                    android:textSize="20sp"
+                    android:gravity="top"
+                    android:layout_margin="5dp"
+                    android:padding="5dp"
+                    android:drawableTop="@color/material_red_500"
+                    android:drawableTint="@color/material_red_500"
+                    android:drawableLeft="@drawable/t_icon_notification"
+                     />
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:paddingStart="15dp"-->
+                    <!--android:paddingEnd="15dp"-->
+                    <!--android:paddingBottom="5dp"-->
+                    <!--android:foregroundGravity="center"-->
+                    <!--android:clickable="true"-->
+                    <!--android:tint="@color/material_red_500"-->
+                    <!--android:focusable="true"-->
+                    <!--android:id="@+id/show_notifications"-->
+                    <!--app:srcCompat="@drawable/t_icon_notification"/>-->
 
-            </RelativeLayout>
+            </LinearLayout>
         <LinearLayout
             android:id="@+id/button_layout"
             android:layout_width="match_parent"

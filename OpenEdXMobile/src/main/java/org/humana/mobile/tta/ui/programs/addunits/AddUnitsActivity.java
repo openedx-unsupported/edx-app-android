@@ -32,7 +32,7 @@ public class AddUnitsActivity extends BaseVMActivity {
 
         viewModel = new AddUnitsViewModel(this, periodId, periodName, course, selectedDate);
         binding(R.layout.t_activity_add_units, viewModel);
-
+        viewModel.registerEventBus();
         setSupportActionBar(findViewById(R.id.toolbar));
     }
 

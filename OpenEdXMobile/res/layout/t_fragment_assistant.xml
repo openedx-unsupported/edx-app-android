@@ -18,7 +18,7 @@
     <com.maurya.mx.mxlib.view.MxRecyclerView
         infinite_recycler_adapter="@{viewModel.assistantAdapter}"
         layout_manager="@{viewModel.linearLayoutManager}"
-        scroll_to_position="@{viewModel.scrollPosition.get()}"
+        scroll_to_position="@{viewModel.scrollPosition}"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/_8px"
