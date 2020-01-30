@@ -474,7 +474,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                 mActivity.hideLoading();
             }
             mDataManager.getAllUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
-                    mDataManager.getLoginPrefs().getSectionId(), null, periodId, take, skip,
+                    mDataManager.getLoginPrefs().getSectionId(), searchText.get(), periodId, take, skip,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {
@@ -767,4 +767,13 @@ public class AddUnitsViewModel extends BaseViewModel {
 
         }
     };
+
+    public void searchFilter(){
+        mActivity.hideLoading();
+        isUnitModePeriod = false;
+        unitsAdapter.setLoadingDone();
+        skip = 0;
+        changesMade = true;
+        fetchData();
+    }
 }

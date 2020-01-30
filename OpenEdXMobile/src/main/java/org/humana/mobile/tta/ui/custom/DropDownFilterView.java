@@ -376,7 +376,7 @@ public class DropDownFilterView extends FrameLayout
                 } else if (position == filterItems.size() - 1){
                     view.setBackgroundResource(R.drawable.t_background_drop_down_bottom);
                 } else {
-                    view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.humana));
+                    view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.humana_light_blue));
                 }
             } else {
                 textView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_cyan));

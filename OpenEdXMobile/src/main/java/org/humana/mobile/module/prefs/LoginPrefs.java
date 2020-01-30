@@ -812,6 +812,28 @@ public class LoginPrefs {
     public String getCurrrentPeriodTitle() {
         return pref.getString(PrefManager.Key.CURRENT_PERIOD_TITLE);
     }
+    public void setScheduleTootipSeen(boolean isSeen) {
+        pref.put(PrefManager.Key.IS_SCHEDULE_TOOLTIP, isSeen);
+    }
+
+    public boolean isScheduleTootipSeen() {
+        return pref.getBoolean(PrefManager.Key.IS_SCHEDULE_TOOLTIP, false);
+    }
+    public void setUnitTootipSeen(boolean isSeen) {
+        pref.put(PrefManager.Key.IS_UNIT_TOOLTIP, isSeen);
+    }
+
+    public boolean isUnitTootipSeen() {
+        return pref.getBoolean(PrefManager.Key.IS_UNIT_TOOLTIP, false);
+    }
+    public void setProfileTootipSeen(boolean isSeen) {
+        pref.put(PrefManager.Key.IS_PROFILE_TOOLTIP, isSeen);
+    }
+
+    public boolean isProfileTootipSeen() {
+        return pref.getBoolean(PrefManager.Key.IS_PROFILE_TOOLTIP, false);
+    }
+
 
 
 }

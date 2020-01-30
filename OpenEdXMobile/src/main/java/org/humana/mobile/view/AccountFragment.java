@@ -3,8 +3,10 @@ package org.humana.mobile.view;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.feed.NotificationsFragment;
 import org.humana.mobile.tta.ui.landing.LandingActivity;
 import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
@@ -52,6 +55,8 @@ public class AccountFragment extends BaseFragment {
     private DataManager mDataManager;
 
     public ObservableField<String> notificationBladge = new ObservableField<>();
+    public ObservableField<String> notificationTooltipText = new ObservableField<>();
+    public ObservableInt notficationTooltipGravity = new ObservableInt();
 
 
     @Override
@@ -138,6 +143,10 @@ public class AccountFragment extends BaseFragment {
         binding.tvVersionNo.setText(String.format("%s %s %s", getString(R.string.label_version),
                 BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));
 
+        if (!mDataManager.getLoginPrefs().isProfileTootipSeen()) {
+            showTooltip();
+        }
+
         return binding.getRoot();
     }
     private void getSection() {
@@ -172,4 +181,21 @@ public class AccountFragment extends BaseFragment {
         ActivityUtil.gotoPage(getActivity(),NotificationActivity.class);
     }
 
+
+    private void showTooltip(){
+        notificationTooltipText.set("View all notification here");
+        notficationTooltipGravity.set(Gravity.BOTTOM);
+
+        new MxTooltip.Builder(getActivity())
+                .anchorView(binding.showNotifications)
+                .text(notificationTooltipText.get())
+                .gravity(notficationTooltipGravity.get())
+                .animated(true)
+                .transparentOverlay(true)
+                .arrowDrawable(R.drawable.down_arrow)
+                .build()
+                .show();
+
+        mDataManager.getLoginPrefs().setProfileTootipSeen(true);
+    }
 }

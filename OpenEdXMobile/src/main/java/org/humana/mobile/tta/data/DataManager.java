@@ -2,11 +2,13 @@ package org.humana.mobile.tta.data;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -65,6 +67,7 @@ import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
+import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Feed;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.data.local.db.table.Period;
@@ -1326,6 +1329,18 @@ public class DataManager extends BaseRoboInjector {
         DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
         de.url = scorm.getDownloadUrl();
         de.title = scorm.getDisplayName();
+        downloadManager.downloadVideo(de, activity, callback);
+    }
+
+    public void downloadSingle(String url,
+                               String title,
+                               FragmentActivity activity,
+                               PDFBlockModel scorm,
+                               VideoDownloadHelper.DownloadManagerCallback callback) {
+        DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
+        de.url = url;
+        de.title = title;
+
         downloadManager.downloadVideo(de, activity, callback);
     }
 
@@ -4520,6 +4535,8 @@ public class DataManager extends BaseRoboInjector {
         downloadManager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(uri);
 
+        DownloadManager.Query query = new DownloadManager.Query();
+
         //Setting title of request
         request.setTitle("Data Download");
 
@@ -4529,16 +4546,20 @@ public class DataManager extends BaseRoboInjector {
         //Set the local destination for the downloaded file to a path
         //within the application's external files directory
         request.setDestinationInExternalFilesDir(context,
-                Environment.DIRECTORY_DOWNLOADS, "AndroidTutorialPoint.pdf");
+                Environment.DIRECTORY_DOWNLOADS, uri.getLastPathSegment());
 
 
         //Enqueue download and save into referenceId
         downloadReference = downloadManager.enqueue(request);
+        query.setFilterById(downloadReference);
+
+        Cursor cursor = downloadManager.query(query);
+//        downloadStatus(cursor, downloadReference);
         return downloadReference;
     }
 
 
-    public void downloadStatus(Cursor cursor, long DownloadId) {
+    public void downloadStatus(Cursor cursor) {
 
         //column for download  status
         int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);

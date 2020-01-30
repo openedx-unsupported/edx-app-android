@@ -46,7 +46,7 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:hint="Search units.."
-                onSearchInSoftKeyboard="@{()->viewModel.fetchData()}"
+                onSearchInSoftKeyboard="@{()->viewModel.searchFilter()}"
                 android:drawableLeft="@drawable/search_selected"
                 android:background="@drawable/rectangle_transparent"
                 text_changed_listener="@{viewModel.watcher}"

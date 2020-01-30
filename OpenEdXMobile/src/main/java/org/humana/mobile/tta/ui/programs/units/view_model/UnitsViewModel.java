@@ -3,7 +3,8 @@ package org.humana.mobile.tta.ui.programs.units.view_model;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
-
+import android.databinding.ObservableInt;
+import android.databinding.ObservableLong;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,8 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 
+import com.lib.mxcalendar.models.Event;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -29,7 +32,6 @@ import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UnitStatusType;
 import org.humana.mobile.tta.data.enums.UserRole;
-import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
@@ -49,7 +51,6 @@ import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
@@ -71,6 +72,23 @@ public class UnitsViewModel extends BaseViewModel {
     public ObservableBoolean calVisible = new ObservableBoolean();
     public ObservableBoolean frameVisible = new ObservableBoolean();
     public ObservableField switchText = new ObservableField<>();
+
+    // ToolTip
+    public ObservableInt searchTooltipGravity = new ObservableInt();
+    public ObservableField searchTooltipText = new ObservableField<>();
+
+    public ObservableInt calenderTooltipGravity = new ObservableInt();
+    public ObservableField calenderTooltipText = new ObservableField<>();
+
+
+    //CalenderView
+    public ObservableField<List<Event>> eventObservable = new ObservableField<>();
+    public ObservableLong eventObservableDate = new ObservableLong();
+    public static List<Event> eventsArrayList = new ArrayList<>();
+    public long startDateTime, endDateTime;
+
+
+
 
     public ObservableField<String> searchText = new ObservableField<>("");
 
@@ -97,7 +115,8 @@ public class UnitsViewModel extends BaseViewModel {
     };
 
 
-    public UnitsViewModel(Context context, TaBaseFragment fragment, EnrolledCoursesResponse course) {
+    public UnitsViewModel(Context context, TaBaseFragment fragment,
+                          EnrolledCoursesResponse course,String periodName, long periodId) {
         super(context, fragment);
 
         this.course = course;
@@ -111,8 +130,8 @@ public class UnitsViewModel extends BaseViewModel {
         calVisible.set(false);
         frameVisible.set(true);
 
-        selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getSelectedFilters();
+        selectedFilter = new ArrayList<>();
+        selectedFilter = mDataManager.getSelectedFilters();
 
 
         unitsAdapter = new UnitsAdapter(mActivity);
@@ -132,7 +151,7 @@ public class UnitsViewModel extends BaseViewModel {
                     EnrolledCoursesResponse c;
                     if (ssp) {
                         c = course;
-                    }else {
+                    } else {
                         c = parentCourse;
                     }
 
@@ -197,6 +216,15 @@ public class UnitsViewModel extends BaseViewModel {
         });
         mActivity.showLoading();
         fetchFilters();
+    }
+
+
+    private void setToolTip() {
+        searchTooltipText.set("You can filter \nunits with title here");
+        searchTooltipGravity.set(Gravity.TOP);
+        calenderTooltipText.set("Filter units \ndate wise");
+        calenderTooltipGravity.set(Gravity.BOTTOM);
+        mDataManager.getLoginPrefs().setUnitTootipSeen(true);
     }
 
     private void getBlockComponent(Unit unit) {
@@ -300,7 +328,7 @@ public class UnitsViewModel extends BaseViewModel {
                             filterSize = allFilters.size();
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
-                            changesMade=true;
+                            changesMade = true;
 //                            Constants.PROG_FILTER = filters;
                             fetchData();
 
@@ -330,14 +358,14 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
     private void setUnitFilters() {
-        if (filters!=null)
-        filters.clear();
+        if (filters != null)
+            filters.clear();
         if (allFilters == null || allFilters.isEmpty()) {
             return;
         }
-        if (selectedFilter.isEmpty()){
-            for (ProgramFilter filter : allFilters){
-                for (ProgramFilterTag tag : filter.getTags()){
+        if (selectedFilter.isEmpty()) {
+            for (ProgramFilter filter : allFilters) {
+                for (ProgramFilterTag tag : filter.getTags()) {
                     if (tag.getSelected()) {
                         SelectedFilter sf = new SelectedFilter();
                         sf.setInternal_name(filter.getInternalName());
@@ -349,7 +377,6 @@ public class UnitsViewModel extends BaseViewModel {
                     }
                 }
             }
-
 
 
         }
@@ -395,9 +422,105 @@ public class UnitsViewModel extends BaseViewModel {
                         unitsAdapter.setLoadingDone();
                         mActivity.hideLoading();
 
-                        if (data.size()==0){
+                        if (data.size() == 0) {
                             emptyVisible.set(true);
                         }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        allLoaded = true;
+                        unitsAdapter.setLoadingDone();
+                        toggleEmptyVisibility();
+                        mActivity.hideLoading();
+                    }
+                });
+    }
+
+    public void fetchUnits(Long startDate, Long endDate) {
+        mActivity.showLoading();
+        mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
+                "", 0L, take, skip, 0L, 0L,
+                new OnResponseCallback<List<Unit>>() {
+                    @Override
+                    public void onSuccess(List<Unit> data) {
+                        if (data.size() < take) {
+                            allLoaded = true;
+                        }
+                        populateUnits(data);
+                        unitsAdapter.setLoadingDone();
+                        mActivity.hideLoading();
+
+                        if (data.size() == 0) {
+                            emptyVisible.set(true);
+                        }
+
+                        eventsArrayList.clear();
+                        String colorCode = "#ffffff";
+                        Event et;
+                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getCommonDate() > 0) {
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(),null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
+                                }
+                            }
+                        } else {
+
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getMyDate() > 0) {
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null,colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
+                                }
+                            }
+                        }
+
+
+
+                        EventBus.getDefault().post(eventsArrayList);
+
+                        eventObservable.set(eventsArrayList);
+                        startDateTime = startDate;
+                        eventObservableDate.set(startDate);
                     }
 
                     @Override
@@ -467,8 +590,6 @@ public class UnitsViewModel extends BaseViewModel {
         allLoaded = false;
         fetchData();
     }
-
-
 
 
     @SuppressWarnings("unused")
@@ -541,10 +662,10 @@ public class UnitsViewModel extends BaseViewModel {
 
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
-                if (selectedFilter !=null) {
+                if (selectedFilter != null) {
                     for (SelectedFilter item : selectedFilter) {
                         if (model.getInternalName().equals(item.getInternal_name())) {
-                                dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
                         }
                     }
                 }
@@ -706,7 +827,7 @@ public class UnitsViewModel extends BaseViewModel {
         ActivityUtil.gotoPage(mActivity, UnitCalendarActivity.class);
     }
 
-    public void searchUnits(){
+    public void searchUnits() {
         changesMade = true;
         fetchData();
     }
@@ -731,11 +852,15 @@ public class UnitsViewModel extends BaseViewModel {
     };
 
     public void setSessionFilter() {
+
         selectedFilter = mDataManager.getSelectedFilters();
 //        filters = Constants.PROG_FILTER;
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();
         fetchFilters();
+        if (!mDataManager.getLoginPrefs().isUnitTootipSeen()) {
+            setToolTip();
+        }
     }
 }

@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -513,7 +514,8 @@ public class BindingAdapters {
     }
 
     @BindingAdapter({"tool_tip", "tool_tip_gravity", "tool_tip_position"})
-    public static void showToolTipPos(BottomNavigationView view, String message, int gravity, int position) {
+    public static void showToolTipPos(BottomNavigationView view, String message, int gravity,
+                                      int position) {
         view.post(() -> {
             View v = view.findViewById(R.id.action_library);
             if (v != null && !MxTooltip.isToolTipAdded(v))

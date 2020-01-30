@@ -31,6 +31,8 @@
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
                 app:mx_moreButtonVisible="false"
+                tool_tip_gravity="@{viewModel.toolTipFilterGravity}"
+                tool_tip="@{viewModel.toolTipFilterText}"
                 app:mx_titleVisible="false"
                 finite_recycler_adapter="@{viewModel.filtersAdapter}"/>
 
@@ -87,6 +89,8 @@
             android:layout_margin="5dp"
             android:visibility="@{viewModel.fabVisible ? View.VISIBLE : View.GONE}"
             android:contentDescription="@string/submit"
+            tool_tip="@{viewModel.toolTipText}"
+            tool_tip_gravity="@{viewModel.toolTipGravity}"
             android:onClick="@{() -> viewModel.addPeriod()}"
             android:src="@android:drawable/ic_input_add"
             android:tint="@color/white" />

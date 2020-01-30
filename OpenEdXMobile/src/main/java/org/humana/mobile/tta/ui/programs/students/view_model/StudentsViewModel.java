@@ -262,7 +262,7 @@ public class StudentsViewModel extends BaseViewModel {
                 if (model.education != null) {
                     itemBinding.textDegree.setText(model.education);
                 }else {
-                    itemBinding.textDegree.setVisibility(View.GONE);
+                    itemBinding.textDegree.setVisibility(View.INVISIBLE);
                 }
 
 

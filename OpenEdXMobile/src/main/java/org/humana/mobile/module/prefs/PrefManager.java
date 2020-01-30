@@ -363,6 +363,9 @@ public class PrefManager {
         public static final String CURRENT_PERIOD_LANG = "current_period_lang";
         public static final String CALENDER_START_DATE = "calender_start_date";
         public static final String CALENDER_END_DATE = "calender_start_date";
+        public static final String IS_SCHEDULE_TOOLTIP = "is_schedule_tooltip";
+        public static final String IS_UNIT_TOOLTIP = "is_unit_tooltip";
+        public static final String IS_PROFILE_TOOLTIP = "is_profile_tooltip";
     }
 
     public static final class Value {

@@ -131,24 +131,24 @@
                 <!--android:src="@drawable/internet_web_browser"/>-->
             </LinearLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:id="@+id/ll_current_status"
             android:padding="5dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="2dp"
+            android:layout_margin="8dp"
             android:background="@drawable/humana_rounded_rect"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/hind_medium"
                 android:gravity="center"
+                android:textSize="12sp"
                 android:padding="5dp"
                 android:text="Current Units"
-                android:textSize="12sp"
                 android:layout_gravity="center"
                 android:textColor="@color/black" />
             <LinearLayout
@@ -164,8 +164,10 @@
                     android:layout_height="match_parent"
                     android:drawablePadding="5dp"
                     android:layout_weight="1"
-                    android:padding="5dp"
                     android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:gravity="center|start"
                     android:drawableLeft="@drawable/check"
                     android:drawableTint="@color/pending_orange"
                     android:fontFamily="@font/hind_medium" />
@@ -176,11 +178,13 @@
                     android:layout_height="match_parent"
                     android:drawablePadding="5dp"
                     android:layout_weight="1"
-                    android:padding="5dp"
+                    android:gravity="center|start"
                     android:textColor="@color/gray_5"
+                    android:textSize="12sp"
                     android:drawableLeft="@drawable/ic_access_time_red_24dp"
                     android:drawableTint="@color/pending_orange"
                     android:fontFamily="@font/hind_medium" />
+
 
             </LinearLayout>
         </LinearLayout>

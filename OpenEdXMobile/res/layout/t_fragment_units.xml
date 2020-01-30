@@ -35,6 +35,8 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:hint="Search units.."
+                tool_tip="@{viewModel.searchTooltipText}"
+                tool_tip_gravity="@{viewModel.searchTooltipGravity}"
                 onSearchInSoftKeyboard="@{()->viewModel.searchUnits()}"
                 android:drawableLeft="@drawable/search_selected"
                 android:background="@drawable/rectangle_transparent"
@@ -53,17 +55,17 @@
                 android:onClick="@{()->viewModel.fetchUnits()}"
                 android:contentDescription="assistant button"
                 android:src="@drawable/t_icon_search_blue" />
-            <ImageView
+            <Switch
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.15"
+                android:layout_weight="0.2"
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
-                android:tint="@color/material_red_500"
-                android:src="@drawable/t_icon_calendar"
+                android:gravity="top"
                 android:foregroundGravity="center"
-                android:onClick="@{()-> viewModel.changeToCalenderView()}"
+                tool_tip="@{viewModel.calenderTooltipText}"
+                tool_tip_gravity="@{viewModel.calenderTooltipGravity}"
                 android:id="@+id/switch_unit"/>
 
         </LinearLayout>
@@ -80,7 +82,21 @@
             finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:id="@+id/cal_layout">
+        <com.lib.mxcalendar.view.MxCalenderView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            onCalendarEventListener="@{viewModel.eventObservable}"
+            onCalendarDate="@{viewModel.eventObservableDate}"
+            android:visibility="visible"
+            android:id="@+id/calendar_view">
 
+        </com.lib.mxcalendar.view.MxCalenderView>
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

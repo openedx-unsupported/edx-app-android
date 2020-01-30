@@ -84,6 +84,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.scorm.PDFBlockModel;
 import org.humana.mobile.tta.scorm.ScormBlockModel;
+import org.humana.mobile.tta.scorm.ScormData;
 import org.humana.mobile.tta.scorm.ScormManager;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity;
@@ -99,10 +100,14 @@ import org.humana.mobile.view.adapters.CourseOutlineAdapter;
 import org.humana.mobile.view.common.TaskProgressCallback;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -448,52 +453,73 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                             try {
 
                                 PDFBlockModel model = comp.getPDFs().get(0);
+                                boolean containURl = false;
 
-                                switch (mDataManager.getScormStatus(model)) {
-                                    case not_downloaded:
-                                        mDataManager.downloadSingle(model, getActivity(),
-                                                new VideoDownloadHelper.DownloadManagerCallback() {
-                                                    @Override
-                                                    public void onDownloadStarted(Long result) {
-                                                        Log.d("--> Download State", "onDownloadStarted");
-                                                        adapter.notifyDataSetChanged();
+                                if (model != null) {
+                                    final String URL_REGEX =
+                                            "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
-                                                    }
+                                    Pattern p = Pattern.compile(URL_REGEX);
+                                    Matcher m = p.matcher(model.getData().scormData);//replace with string to compare
+                                    if (m.find()) {
+                                        System.out.println("String contains URL");
+                                        containURl = true;
+                                    }
+                                    if (!containURl) {
+                                        ScormData scormData = model.getData();
+                                        scormData.scormData = environment.getConfig().getApiHostURL()
+                                                + model.getData().scormData;
+                                        scormData.lastModified = model.getData().lastModified;
+                                        scormData.scormDuration = model.getData().scormDuration;
+                                        scormData.scormImageUrl = model.getData().scormImageUrl;
+                                        model.setData(scormData);
+                                    }
 
-                                                    @Override
-                                                    public void onDownloadFailedToStart() {
-                                                        Log.d("--> Download State", "onDownloadFailedToStart");
-                                                    }
+                                    switch (mDataManager.getScormStatus(model)) {
+                                        case not_downloaded:
+                                            mDataManager.downloadSingle(model, getActivity(),
+                                                    new VideoDownloadHelper.DownloadManagerCallback() {
+                                                        @Override
+                                                        public void onDownloadStarted(Long result) {
+                                                            Log.d("--> Download State", "onDownloadStarted");
+                                                            adapter.notifyDataSetChanged();
 
-                                                    @Override
-                                                    public void showProgressDialog(int numDownloads) {
-                                                        adapter.notifyDataSetChanged();
-                                                        Log.d("--> Download State", "showProgressDialog");
-//                        progressDialog.setProgress(numDownloads);
-                                                    }
+                                                        }
 
-                                                    @Override
-                                                    public void updateListUI() {
-                                                        Log.d("--> Download State", "updateListUI");
+                                                        @Override
+                                                        public void onDownloadFailedToStart() {
+                                                            Log.d("--> Download State", "onDownloadFailedToStart");
+                                                        }
 
-                                                    }
+                                                        @Override
+                                                        public void showProgressDialog(int numDownloads) {
+                                                            adapter.notifyDataSetChanged();
+                                                            Log.d("--> Download State", "showProgressDialog");
+                                                        }
 
-                                                    @Override
-                                                    public boolean showInfoMessage(String message) {
-                                                        Log.d("--> Download State", "showInfoMessage");
-                                                        return false;
-                                                    }
-                                                });
-                                        break;
-                                    case downloading:
-                                        break;
-                                    case downloaded:
-                                        break;
+                                                        @Override
+                                                        public void updateListUI() {
+                                                            Log.d("--> Download State", "updateListUI");
 
-                                    case watched:
-                                        break;
-                                    case watching:
-                                        break;
+                                                        }
+
+                                                        @Override
+                                                        public boolean showInfoMessage(String message) {
+                                                            Log.d("--> Download State", "showInfoMessage");
+                                                            return false;
+                                                        }
+                                                    });
+                                            break;
+                                        case downloading:
+                                            break;
+                                        case downloaded:
+                                            break;
+
+                                        case watched:
+                                            break;
+                                        case watching:
+                                            break;
+                                    }
                                 }
 
 

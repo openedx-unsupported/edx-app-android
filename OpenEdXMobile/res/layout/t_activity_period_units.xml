@@ -50,9 +50,9 @@
                 android:inputType="text"
                 android:hint="Search units.."
                 onSearchInSoftKeyboard="@{()->viewModel.fetchData()}"
+                text_changed_listener="@{viewModel.watcher}"
                 android:drawableLeft="@drawable/search_selected"
                 android:background="@drawable/rectangle_transparent"
-                text_changed_listener="@{viewModel.watcher}"
                 android:layout_marginEnd="@dimen/_24px"/>
 
             <ImageView

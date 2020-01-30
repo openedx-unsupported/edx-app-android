@@ -76,7 +76,7 @@ public class MxTooltip implements PopupWindow.OnDismissListener {
     // Default Resources
     private static final int mDefaultPopupWindowStyleRes = android.R.attr.popupWindowStyle;
     private static final int mDefaultTextAppearanceRes = R.style.simpletooltip_default;
-    private static final int mDefaultBackgroundColorRes = R.color.mx_tooltip_background;
+    private static final int mDefaultBackgroundColorRes = R.color.humana_light_blue;
     private static final int mDefaultTextColorRes = R.color.mx_tooltip_text;
     private static final int mDefaultArrowColorRes = R.color.mx_tooltip_arrow;
     private static final int mDefaultMarginRes = R.dimen.mx_tooltip_margin;

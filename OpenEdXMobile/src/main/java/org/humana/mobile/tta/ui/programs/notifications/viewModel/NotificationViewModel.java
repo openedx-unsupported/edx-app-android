@@ -100,7 +100,7 @@ public class NotificationViewModel extends BaseViewModel {
         });
 
         mActivity.showLoading();
-//        fetchNotifications();
+        fetchNotifications();
     }
 
     private void fetchNotifications() {
@@ -170,7 +170,7 @@ public class NotificationViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
-        onEventMainThread(new NetworkConnectivityChangeEvent());
+//        onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
     public class NotificationsAdapter extends MxInfiniteAdapter<Notification> {

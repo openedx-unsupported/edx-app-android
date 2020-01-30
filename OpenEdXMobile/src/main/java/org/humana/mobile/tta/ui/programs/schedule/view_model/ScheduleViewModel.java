@@ -2,9 +2,9 @@ package org.humana.mobile.tta.ui.programs.schedule.view_model;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,10 +27,13 @@ import org.humana.mobile.R;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
 import org.humana.mobile.databinding.TRowScheduleBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.services.DownloadService;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
+import org.humana.mobile.tta.data.local.db.dao.PeriodDescDao;
+import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Period;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
@@ -38,6 +43,7 @@ import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
@@ -47,6 +53,7 @@ import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 import org.humana.mobile.view.Router;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,11 +75,23 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     private List<ProgramFilterTag> tags;
     private List<DropDownFilterView.FilterItem> langTags;
     private List<DropDownFilterView.FilterItem> sessionTags;
+    private List<DownloadPeriodDesc> periodDescList;
+    private PeriodDescDao periodDescDao;
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableBoolean fabVisible = new ObservableBoolean();
     public ObservableBoolean readMore = new ObservableBoolean();
+    public ObservableBoolean progressVisible = new ObservableBoolean();
+    public ObservableField<String> toolTipText = new ObservableField<>();
+    public ObservableInt toolTipGravity = new ObservableInt();
+
+    public ObservableField<String> toolTipAddUnitText = new ObservableField<>();
+    public ObservableInt toolTipAddUnitGravity = new ObservableInt();
+    public ObservableInt toolTipAddUnitPosition = new ObservableInt();
+
+    public ObservableField<String> toolTipFilterText = new ObservableField<>();
+    public ObservableInt toolTipFilterGravity = new ObservableInt();
 
     public ObservableField<Long> startDate = new ObservableField<>();
     public ObservableField<Long> endDate = new ObservableField<>();
@@ -92,6 +111,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     public Calendar calendar;
     public final String START_DATE = "startDate";
     public final String END_DATE = "endDate";
+    CourseComponent courseComponent;
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -123,6 +143,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         calendar.set(Calendar.MINUTE, 0);
         lastDate = calendar.getTimeInMillis();
         readMore.set(false);
+        periodDescList = new ArrayList<>();
 
 
         emptyVisible.set(false);
@@ -139,6 +160,10 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             fabVisible.set(true);
         }
 
+
+        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
+            setToolTip();
+        }
 
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
@@ -177,10 +202,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     break;
 
                 case R.id.txt_read_more:
-                    Intent intent = DownloadService.getDownloadService(mActivity,
+                    DownloadService.getDownloadService(mActivity,
                             item.getAbout_url(),
                             item.getTitle());
-                    mActivity.showShortSnack(intent.getStringExtra("status"));
 
                     break;
 
@@ -206,6 +230,20 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             setFilters();
         }
         getPeriods();
+    }
+
+
+    public void setToolTip() {
+        toolTipGravity.set(Gravity.TOP);
+        toolTipText.set("Create period from here");
+
+        toolTipFilterGravity.set(Gravity.BOTTOM);
+        toolTipFilterText.set("Filter results..");
+
+        toolTipAddUnitGravity.set(Gravity.BOTTOM);
+        toolTipAddUnitText.set("Add unit here");
+        toolTipAddUnitPosition.set(0);
+
     }
 
 
@@ -394,6 +432,14 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         allLoaded = false;
         filters = event.getProgramFilters();
 //        getFilters();
+    }
+
+    public void onEventMainThread(DownloadPeriodDesc event) {
+        periodDescList = periodDescDao.getAll(event.getAbout_url());
+        Log.d("prgress", "false");
+        periodAdapter.notifyDataSetChanged();
+//        progressVisible.set(false);
+
     }
 
 
@@ -614,10 +660,28 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 }
 
 
-                if (model.getDesc().length() > 30) {
-                    scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
-                } else {
-                    scheduleBinding.txtReadMore.setVisibility(View.GONE);
+                if (model.getDesc() != null) {
+                    if (model.getDesc().length() > 30) {
+                        scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
+                    } else {
+                        scheduleBinding.txtReadMore.setVisibility(View.GONE);
+                    }
+                }
+
+                if (getItemPosition(model) == 0) {
+                    if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
+                        new MxTooltip.Builder(mActivity)
+                                .anchorView(scheduleBinding.textviewAdd)
+                                .text(toolTipAddUnitText.get())
+                                .gravity(toolTipAddUnitGravity.get())
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.down_arrow)
+                                .build()
+                                .show();
+
+                        mDataManager.getLoginPrefs().setScheduleTootipSeen(true);
+                    }
                 }
 
                 scheduleBinding.txtStartDate.setOnClickListener(v -> {
@@ -640,6 +704,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         listener.onItemClick(v, model);
                     }
                 });
+                scheduleBinding.txtReadMore.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
 
 
                 scheduleBinding.getRoot().setOnClickListener(v -> {
@@ -647,6 +716,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         listener.onItemClick(v, model);
                     }
                 });
+
+
             }
         }
 
@@ -654,21 +725,46 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
     private void rangePicker(Long startDate, Long endDate) {
+
+
         Calendar now = Calendar.getInstance();
-//        SimpleDateFormat syear = new SimpleDateFormat("yyyy", Locale.ENGLISH);
-//        SimpleDateFormat smonth = new SimpleDateFormat("MM", Locale.ENGLISH);
-//        SimpleDateFormat sday = new SimpleDateFormat("dd", Locale.ENGLISH);
-//
-//        String start = DateUtil.getDisplayDate(startDate);
-//        String end = DateUtil.getDisplayDate(endDate);
-//
-//        String startDay = ;
+        String startDateStr;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00 a", Locale.ENGLISH);
+        startDateStr = df.format(startDate);
+        Date mstartDate = null;
+        try {
+            mstartDate = df.parse(startDateStr);
+            now.setTime(mstartDate);
+            now.set(Calendar.HOUR_OF_DAY, 0);
+            now.set(Calendar.MINUTE, 0);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar now2 = Calendar.getInstance();
+
+        SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
+        String endDateStr = df1.format(endDate);
+        Date mendDate = null;
+        try {
+            mendDate = df1.parse(endDateStr);
+            now2.setTime(mendDate);
+            now2.set(Calendar.HOUR_OF_DAY, 23);
+            now2.set(Calendar.MINUTE, 59);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 this,
                 now.get(Calendar.YEAR), // Initial year selection
                 now.get(Calendar.MONTH), // Initial month selection
-                now.get(Calendar.DAY_OF_MONTH)
+                now.get(Calendar.DAY_OF_MONTH),
+                now2.get(Calendar.YEAR),
+                now2.get(Calendar.MONTH),
+                now2.get(Calendar.DAY_OF_MONTH)
+
                 // Inital day selection
 
         );
@@ -723,7 +819,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         if (startDate.get() < endDate.get()) {
             updatePeriod();
         } else {
-            mActivity.showLongSnack("");
+            mActivity.showLongSnack("wrong dates selected");
         }
 
 
@@ -731,7 +827,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
     public void setSessionFilter() {
         selectedFilter = mDataManager.getSelectedFilters();
-//        filters = Constants.PROG_FILTER;
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();
