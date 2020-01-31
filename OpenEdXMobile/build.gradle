@@ -281,15 +281,6 @@ if (firebaseEnabled?: false) {
 def fcmEnabled = config.get('PUSH_NOTIFICATIONS') && firebaseEnabled && firebase?.get('CLOUD_MESSAGING_ENABLED')
 
 android {
-    signingConfigs {
-        releasekey {
-            storeFile file(RELEASE_STORE_FILE)
-            storePassword RELEASE_STORE_PASSWORD
-            keyAlias RELEASE_KEY_ALIAS
-            keyPassword RELEASE_KEY_PASSWORD
-        }
-    }
-
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -474,7 +465,10 @@ android {
         }
 
         release {
-            signingConfig signingConfigs.releasekey
+            // Only apply release signing configurations if keystore.properties is available
+            if (project.file('signing/keystore.properties').exists()) {
+                apply from: 'signing/signing.gradle'
+            }
             applicationVariants.all { variant ->
                 variant.outputs.all { output ->
                     project.ext { appName = 'edx' }

@@ -8,12 +8,4 @@ project.ext {
     TARGET_SDK_VERSION = 28
     // Minimum API Level required for the application to run
     MIN_SDK_VERSION = 19
-
-    // dummy keystore configuration if not already defined
-    if ( !project.properties.containsKey("RELEASE_STORE_FILE")) {
-        RELEASE_STORE_FILE = "edx-android-release-key.keystore"
-        RELEASE_STORE_PASSWORD = "*****"
-        RELEASE_KEY_ALIAS = "edx-android-release"
-        RELEASE_KEY_PASSWORD = "*****"
-    }
 }
