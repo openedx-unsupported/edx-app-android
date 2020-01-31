@@ -5,11 +5,11 @@
 [<img align="right" alt="Get it on Google Play" height="128" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">](https://play.google.com/store/apps/details?id=org.edx.mobile)
 
 This is the source code for the edX mobile Android app. It is changing rapidly
-and its structure should not be relied upon. See http://code.edx.org for other
+and its structure should not be relied upon. See <http://code.edx.org> for other
 parts of the edX code base.
 
 It requires the "Dogwood" release of open edX or newer. See
-https://openedx.atlassian.net/wiki/display/COMM/Open+edX+Releases for more
+<https://openedx.atlassian.net/wiki/display/COMM/Open+edX+Releases> for more
 information.
 
 License
@@ -81,21 +81,27 @@ There are 3 Build Variants in this project:
 Building For Release
 --------------------
 To build an APK for release, you may specify an application ID and signing key.
-Application ID key is optional and if it is not present the package identifier will be used as an application ID.
+
+#### Specifying an Application ID
+Application ID key is optional and if it is not present the package identifier will be used as an Application ID.
 Create or edit the `gradle.properties` file inside the `OpenEdXMobile` directory of `edx-app-android`. For example:
 
     APPLICATION_ID=com.example.yourapp
-    RELEASE_STORE_FILE=../../path/to/your.keystore
+
+
+#### Specifying the Signing Key
+Place your keystore file inside the `OpenEdXMobile/signing` directory of `edx-app-android` & then create a `keystore.properties` file inside the same directory with the following configurations:
+
+    RELEASE_STORE_FILE=signing/your_keystore_file.keystore
     RELEASE_STORE_PASSWORD=your store password here
     RELEASE_KEY_PASSWORD=your key password here
     RELEASE_KEY_ALIAS=your key alias here
 
 Now you can build a release build from Android Studio. Or, in the directory of `edx-app-android` you can build a release build with this gradle command:
 
-
     ./gradlew assembleProdRelease
 
-**Note:** For release branch naming convention take a look at this PR https://github.com/edx/edx-app-android/pull/774 that creates the versionCode automatically based on branch name. The output APK will be named with the version.
+**Note:** For release branch naming convention take a look at this PR <https://github.com/edx/edx-app-android/pull/774> that creates the versionCode automatically based on branch name. The output APK will be named with the version.
 
 
 Customization

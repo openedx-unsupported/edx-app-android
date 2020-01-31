@@ -58,8 +58,10 @@ build
 .idea
 Test-Reports
 test-build
+
+# Files related to release signing
 *.keystore
-#gradle.properties
+/OpenEdXMobile/signing/keystore.properties
 
 # reports directory
 /artifacts
