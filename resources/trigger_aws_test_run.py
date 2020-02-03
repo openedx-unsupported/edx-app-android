@@ -7,8 +7,9 @@ This module will handle test run on AWS Device Farm
 import sys
 import boto3 
 import requests
+import time
 
-REGION = 'us-east-1'
+REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
 DEVICE_POOL_NAME = 'edx_devices_pool'
 ANDROID_APP_UPLOAD_TYPE = 'ANDROID_APP'
@@ -16,10 +17,20 @@ PACKAGE_UPLOAD_TYPE = 'APPIUM_PYTHON_TEST_PACKAGE'
 CUSTOM_SPECS_UPLOAD_TYPE = 'APPIUM_PYTHON_TEST_SPEC'
 RUN_TYPE = 'APPIUM_PYTHON'
 RUN_NAME = 'edX test run'
+RUN_TIMEOUT_SECONDS = 60 * 3
+UPLOAD_SUCCESS_STATUS = 'SUCCEEDED'
 
-AUT_NAME = 'edx.apk'
-PACKAGE_NAME = 'test_bundle.zip'
-CUSTOM_SPECS_NAME = 'edx.yml'
+if len(sys.argv) == 4:
+    AUT_NAME = sys.argv[1]
+    PACKAGE_NAME = sys.argv[2]
+    CUSTOM_SPECS_NAME = sys.argv[3]
+    print('Application Under Test - {}, Test Package - {} - configs {}'.format(
+        AUT_NAME, 
+        PACKAGE_NAME, 
+        CUSTOM_SPECS_NAME
+        ))
+else:
+    print('Please trigger with all needed arguments.')
 
 device_farm = boto3.client('devicefarm', region_name=REGION)
 
@@ -33,17 +44,14 @@ def aws_job():
                           ANDROID_APP_UPLOAD_TYPE,
                           AUT_NAME
                          )
-    
     package_arn = upload_file(project_arn,
                               PACKAGE_UPLOAD_TYPE,
                               PACKAGE_NAME
                              )
-
     test_specs_arn = upload_file(project_arn,
                                  CUSTOM_SPECS_UPLOAD_TYPE,
                                  CUSTOM_SPECS_NAME
                                 )
-
     device_pool_arn = get_device_pool(project_arn, DEVICE_POOL_NAME)
 
     test_run_arn = schedule_run(
@@ -102,6 +110,22 @@ def upload_file(project_arn, upload_type, target_file_name):
 
     _upload_presigned_url(pre_signed_url, name)
 
+    timeout_seconds=10
+    check_every_seconds = 10 if timeout_seconds == RUN_TIMEOUT_SECONDS else 1
+    start = time.time()
+    while True:
+        get_upload_status = device_farm.get_upload(arn=upload_arn)
+        current_status = get_upload_status['upload']['status']
+        if current_status in UPLOAD_SUCCESS_STATUS:
+            print('{} upload status - {}'.format(target_file_name, current_status))    
+            break
+        print('Waiting for status {} to be {}'.format(current_status, UPLOAD_SUCCESS_STATUS))
+        now = time.time()
+        if now - start > timeout_seconds:
+            print('Time out, unable to upload {}'.format(target_file_name))
+            break
+        time.sleep(check_every_seconds)
+
     print('{} uploaded successfully'.format(target_file_name))
     return upload_arn
 
@@ -118,7 +142,7 @@ def _upload_presigned_url(url, target_file_name):
     with open(target_file_name, 'rb') as target_file:
         data = target_file.read()
         result = requests.put(url, data=data)
-
+        # print(result.status_code)
         assert result.status_code == 200
 
 
@@ -167,8 +191,9 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         name=name,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
-              'testSpecArn': test_specs_arn
-             })
+              'testSpecArn': test_specs_arn,
+             },
+             )
 
     run = result['run']
     return run['arn']
@@ -196,7 +221,6 @@ def get_test_run(run_arn):
                                                                              run_status,
                                                                              run_results
                                                                             ))
-
-
+    
 if __name__ == '__main__':
     aws_job()

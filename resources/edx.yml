@@ -25,7 +25,7 @@ phases:
         # --platform-name $DEVICEFARM_DEVICE_PLATFORM_NAME --app $DEVICEFARM_APP_PATH
         # --udid $DEVICEFARM_DEVICE_UDID --chromedriver-executable $DEVICEFARM_CHROMEDRIVER_EXECUTABLE  >> $DEVICEFARM_LOG_DIR/appiumlog.txt 2>&1 &
       
-      - killall -KILL node
+      # - killall -KILL node
       - appium --log-timestamp --device-name $DEVICEFARM_DEVICE_NAME --platform-name $DEVICEFARM_DEVICE_PLATFORM_NAME --app $DEVICEFARM_APP_PATH 
         --app-pkg org.edx.mobile --app-activity .view.SplashActivity 
         --app-wait-activity .view.DiscoveryLaunchActivity  >> $DEVICEFARM_LOG_DIR/appiumlog.txt 2>&1 &
@@ -59,13 +59,14 @@ phases:
       - echo "Navigate to test package directory"
       - cd $DEVICEFARM_TEST_PACKAGE_PATH
       - echo "Start Appium Python test"
-      - bin/py.test --collect-only tests/android/tests/test_android_edx_app.py
+      - bin/py.test --collect-only tests/android/tests/test_android_new_landing.py tests/android/tests/test_android_login.py tests/android/tests/test_android_main_dashboard.py tests/android/tests/test_android_my_courses_list.py tests/android/tests/test_android_course_discovery.py tests/android/tests/test_android_register.py 
+
       # By default, the following command is used by Device Farm to run your Appium Python test.
       # The goal is to run all your tests files in the test package.
       # Alternatively, You may specify your customized command.
       # Note: For most use cases, the default command works fine.
       # Please refer "https://docs.pytest.org/en/latest/usage.html" for more options on running pytests from command line.
-      - bin/py.test -v tests/android/tests/test_android_edx_app.py --html=$DEVICEFARM_LOG_DIR/report.html      
+      - bin/py.test -v tests/android/tests/test_android_new_landing.py tests/android/tests/test_android_login.py tests/android/tests/test_android_main_dashboard.py tests/android/tests/test_android_my_courses_list.py tests/android/tests/test_android_course_discovery.py tests/android/tests/test_android_register.py --html=$DEVICEFARM_LOG_DIR/report.html      
 
   # The post test phase includes are commands that are run after your tests are executed.
   post_test:
