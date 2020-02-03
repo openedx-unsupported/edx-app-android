@@ -29,7 +29,7 @@ public class DeepLinkManager {
                     router.showFindCourses(activity, screenName, deepLink.getPathId());
                     break;
                 default:
-                    activity.startActivity(router.getLogInIntent());
+                    activity.startActivity(router.getLogInIntent(deepLink));
                     break;
             }
             return;
