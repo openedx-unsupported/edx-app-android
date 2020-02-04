@@ -1,14 +1,19 @@
 package org.humana.mobile.tta.ui.programs.schedule.view_model;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,8 +37,6 @@ import org.humana.mobile.services.DownloadService;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
-import org.humana.mobile.tta.data.local.db.dao.PeriodDescDao;
-import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Period;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
@@ -75,8 +78,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     private List<ProgramFilterTag> tags;
     private List<DropDownFilterView.FilterItem> langTags;
     private List<DropDownFilterView.FilterItem> sessionTags;
-    private List<DownloadPeriodDesc> periodDescList;
-    private PeriodDescDao periodDescDao;
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
@@ -112,6 +113,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     public final String START_DATE = "startDate";
     public final String END_DATE = "endDate";
     CourseComponent courseComponent;
+    String about_url;
+    private List<Period> savedPeriods = new ArrayList<>();
+    private final String TAG = "Permissions";
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -143,10 +147,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         calendar.set(Calendar.MINUTE, 0);
         lastDate = calendar.getTimeInMillis();
         readMore.set(false);
-        periodDescList = new ArrayList<>();
+        about_url = "";
 
 
         emptyVisible.set(false);
+
 
         filtersAdapter = new FiltersAdapter(mActivity);
         periodAdapter = new PeriodAdapter(mActivity);
@@ -165,6 +170,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             setToolTip();
         }
 
+//        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
+
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.textview_add:
@@ -178,33 +185,55 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item.getStartDate(), item.getEndDate());
+                        rangePicker(item.getStartDate(), item.getEndDate(), true);
                     }
                     break;
 
                 case R.id.txt_end_date:
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item.getStartDate(), item.getEndDate());
+                        rangePicker(item.getStartDate(), item.getEndDate(), false);
                     }
                     break;
                 case R.id.iv_start_date:
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item.getStartDate(), item.getEndDate());
+                        rangePicker(item.getStartDate(), item.getEndDate(), true);
                     }
                     break;
                 case R.id.iv_end_date:
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         periodItem.set(item);
-                        rangePicker(item.getStartDate(), item.getEndDate());
+                        rangePicker(item.getStartDate(), item.getEndDate(), false);
                     }
                     break;
 
                 case R.id.txt_read_more:
-                    DownloadService.getDownloadService(mActivity,
-                            item.getAbout_url(),
-                            item.getTitle());
+                    if (isReadStoragePermissionGranted() && isWriteStoragePermissionGranted()) {
+                    if (item.getDownloadStatus() != null) {
+                        if (!item.getDownloadStatus().equals("Downloaded")) {
+                            item.setDownloadStatus(mActivity.getString(R.string.downloading));
+                            EventBus.getDefault().post(item);
+                            DownloadService.getDownloadService(mActivity,
+                                    item.getAbout_url(),
+                                    item.getTitle(),
+                                    item.getId(),
+                                    item);
+
+//                            item.setDownloadStatus(mActivity.getString(R.string.downloading));
+//                            periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(item));
+                        } else {
+                            Uri uri = Uri.parse(item.getAbout_url());
+                            DownloadService.openDownloadedFile(uri, mActivity);
+                        }
+                    } else {
+                        DownloadService.getDownloadService(mActivity,
+                                item.getAbout_url(),
+                                item.getTitle(),
+                                item.getId(),
+                                item);
+                    }
+                }
 
                     break;
 
@@ -230,17 +259,42 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             setFilters();
         }
         getPeriods();
+//        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
     }
 
 
+    private void getDownloadPeriodDesc(String userName) {
+        mDataManager.getPeriodDesc(userName,
+                new OnResponseCallback<List<Period>>() {
+                    @Override
+                    public void onSuccess(List<Period> periods) {
+                        for (Period period : periods) {
+                            if (period.getDownloadStatus() != null) {
+                                savedPeriods.add(period);
+                            }
+                        }
+
+                        getPeriods();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                        getFilters();
+                    }
+                });
+    }
+
     public void setToolTip() {
-        toolTipGravity.set(Gravity.TOP);
-        toolTipText.set("Create period from here");
+        if (fabVisible.get()) {
+            toolTipGravity.set(Gravity.TOP);
+            toolTipText.set("Create period from here");
+        }
 
         toolTipFilterGravity.set(Gravity.BOTTOM);
         toolTipFilterText.set("Filter results..");
 
-        toolTipAddUnitGravity.set(Gravity.BOTTOM);
+        toolTipAddUnitGravity.set(Gravity.TOP);
         toolTipAddUnitText.set("Add unit here");
         toolTipAddUnitPosition.set(0);
 
@@ -307,7 +361,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         selectedFilter = mDataManager.getSelectedFilters();
         changesMade = true;
         setFilters();
+        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
         getFilters();
+
     }
 
     public void getFilters() {
@@ -375,14 +431,28 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         mActivity.showLoading();
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
-                , take, skip, new OnResponseCallback<List<Period>>() {
+                , take, skip, 0, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
                         if (data.size() < take) {
                             allLoaded = true;
                         }
+                        List<Period> periodList = new ArrayList<>();
+                        if (savedPeriods.size()!=0) {
+                            for (Period period1 : savedPeriods) {
+                                for (Period period : data) {
+                                    if (data.contains(period1)) {
+                                        periodList.add(period1);
+                                    } else {
+                                        periodList.add(period);
+                                    }
+                                }
+                            }
+                            populatePeriods(periodList);
+                        }else {
+                            populatePeriods(data);
+                        }
                         emptyVisible.set(false);
-                        populatePeriods(data);
                         periodAdapter.setLoadingDone();
                     }
 
@@ -431,15 +501,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         changesMade = true;
         allLoaded = false;
         filters = event.getProgramFilters();
-//        getFilters();
     }
 
-    public void onEventMainThread(DownloadPeriodDesc event) {
-        periodDescList = periodDescDao.getAll(event.getAbout_url());
-        Log.d("prgress", "false");
-        periodAdapter.notifyDataSetChanged();
-//        progressVisible.set(false);
-
+    public void onEventMainThread(Period period) {
+//        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
+        periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(period));
     }
 
 
@@ -661,10 +727,17 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
                 if (model.getDesc() != null) {
-                    if (model.getDesc().length() > 30) {
+                    if (model.getAbout_url()!=null && !model.getAbout_url().equals("")) {
                         scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
                     } else {
                         scheduleBinding.txtReadMore.setVisibility(View.GONE);
+                    }
+                }
+                if (model.getDownloadStatus() != null) {
+                    if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloaded))) {
+                        scheduleBinding.txtReadMore.setText(mActivity.getString(R.string.view_more));
+                    }else if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloading))){
+                        scheduleBinding.txtReadMore.setText(mActivity.getString(R.string.downloading));
                     }
                 }
 
@@ -683,6 +756,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         mDataManager.getLoginPrefs().setScheduleTootipSeen(true);
                     }
                 }
+
 
                 scheduleBinding.txtStartDate.setOnClickListener(v -> {
                     if (listener != null) {
@@ -724,7 +798,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     }
 
 
-    private void rangePicker(Long startDate, Long endDate) {
+    private void rangePicker(Long startDate, Long endDate, boolean isStart) {
 
 
         Calendar now = Calendar.getInstance();
@@ -763,8 +837,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 now.get(Calendar.DAY_OF_MONTH),
                 now2.get(Calendar.YEAR),
                 now2.get(Calendar.MONTH),
-                now2.get(Calendar.DAY_OF_MONTH)
-
+                now2.get(Calendar.DAY_OF_MONTH),
+                isStart
                 // Inital day selection
 
         );
@@ -830,6 +904,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();
+        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
         getFilters();
     }
 
@@ -859,4 +934,44 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     }
                 });
     }
+
+    public  boolean isReadStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted1");
+                return true;
+            } else {
+
+                Log.v(TAG,"Permission is revoked1");
+                ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted1");
+            return true;
+        }
+    }
+
+    public  boolean isWriteStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (mActivity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted2");
+                return true;
+            } else {
+
+                Log.v(TAG,"Permission is revoked2");
+                ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted2");
+            return true;
+        }
+    }
+
+
 }

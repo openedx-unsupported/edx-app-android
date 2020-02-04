@@ -122,7 +122,7 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item);
+                    showDatePicker(item,"My Date");
                     break;
                 default:
                     mActivity.showLoading();
@@ -253,8 +253,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
 
     }
 
-    private void showDatePicker(Unit unit) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+    private void showDatePicker(Unit unit, String title) {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(),title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 mActivity.showLoading();

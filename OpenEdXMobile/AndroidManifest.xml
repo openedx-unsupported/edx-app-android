@@ -540,7 +540,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
         <activity android:name=".tta.ui.programs.notifications.NotificationNavigationActivity"
-            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar"/>
+            android:theme="@style/AppTheme.NoActionBar.CustomStatusBar" />
 
         <!-- Humana activities end -->
 
@@ -582,6 +582,8 @@
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/image_provider"/>
         </provider>
+
+
 
         <service android:name="org.humana.mobile.services.DownloadSpeedService" />
 

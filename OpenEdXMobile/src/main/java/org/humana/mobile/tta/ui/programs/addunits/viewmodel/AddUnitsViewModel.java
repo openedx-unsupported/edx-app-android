@@ -6,6 +6,7 @@ import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -165,7 +166,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                     break;
                 case R.id.tv_my_date:
-                    showDatePicker(item);
+                    showDatePicker(item,"My date");
                     break;
                 default:
 
@@ -306,8 +307,8 @@ public class AddUnitsViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
-    private void showDatePicker(Unit unit){
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+    private void showDatePicker(Unit unit, String title){
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(),title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 unit.setMyDate(data);
@@ -722,6 +723,32 @@ public class AddUnitsViewModel extends BaseViewModel {
                     }
                 }catch (Exception e){
                     e.printStackTrace();
+                }
+
+                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
+                    if (mDataManager.getLoginPrefs().getRole() != null
+                            && mDataManager.getLoginPrefs().getRole().trim()
+                            .equalsIgnoreCase(UserRole.Student.name())){
+                        unitBinding.tvMyDate.setEnabled(false);
+                    }
+                }
+
+                switch (model.getStatus()) {
+                    case "Submitted":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                        break;
+                    case "Approved":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                        break;
+                    case "Return":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                        break;
+                    case "":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        break;
+                    case "None":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        break;
                 }
                 unitBinding.checkbox.setOnClickListener(v -> {
                     if (listener != null) {

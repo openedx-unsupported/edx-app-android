@@ -92,6 +92,9 @@ public class Unit {
     @SerializedName("staff_date")
     private long staffDate;
 
+    @SerializedName("isPublish")
+    private boolean isPublish;
+
     public String getDesc() {
         return desc;
     }
@@ -189,6 +192,14 @@ public class Unit {
 
     public void setStaffDate(long staffDate) {
         this.staffDate = staffDate;
+    }
+
+    public boolean isPublish() {
+        return isPublish;
+    }
+
+    public void setPublish(boolean publish) {
+        isPublish = publish;
     }
 
     @Override

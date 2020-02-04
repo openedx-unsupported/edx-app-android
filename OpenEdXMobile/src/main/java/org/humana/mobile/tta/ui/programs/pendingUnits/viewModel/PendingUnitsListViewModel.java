@@ -98,6 +98,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                     break;
                 default:
                    enrollCourse(item);
+                   Constants.isUnitApprove = false;
 
             }
         });

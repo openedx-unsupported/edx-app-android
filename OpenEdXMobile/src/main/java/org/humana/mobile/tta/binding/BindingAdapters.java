@@ -552,12 +552,9 @@ public class BindingAdapters {
         if (listener == null) {
             view.setOnEditorActionListener(null);
         } else {
-            view.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    listener.onSearchInSoftKeyboard();
-                    return true;
-                }
+            view.setOnEditorActionListener((v, actionId, event) -> {
+                listener.onSearchInSoftKeyboard();
+                return true;
             });
 
         }

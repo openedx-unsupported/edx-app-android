@@ -13,6 +13,7 @@ import org.humana.mobile.tta.data.local.db.dao.ContentStatusDao;
 import org.humana.mobile.tta.data.local.db.dao.FeedDao;
 import org.humana.mobile.tta.data.local.db.dao.NotificationDao;
 import org.humana.mobile.tta.data.local.db.dao.PeriodDao;
+import org.humana.mobile.tta.data.local.db.dao.PeriodDescDao;
 import org.humana.mobile.tta.data.local.db.dao.ProgramDao;
 import org.humana.mobile.tta.data.local.db.dao.SectionDao;
 import org.humana.mobile.tta.data.local.db.dao.SourceDao;
@@ -21,6 +22,7 @@ import org.humana.mobile.tta.data.local.db.dao.UnitStatusDao;
 import org.humana.mobile.tta.data.local.db.dao.UserDao;
 import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
+import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Feed;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.data.local.db.table.Period;
@@ -49,7 +51,8 @@ import org.humana.mobile.tta.data.local.db.table.Source;
                 Program.class,
                 Section.class,
                 Period.class,
-                Unit.class
+                Unit.class,
+                DownloadPeriodDesc.class
         },
         version = 8,
         exportSchema = false
@@ -70,6 +73,7 @@ public abstract class TADatabase extends RoomDatabase {
     public abstract ProgramDao programDao();
     public abstract SectionDao sectionDao();
     public abstract PeriodDao periodDao();
+    public abstract PeriodDescDao periodDescDao();
     public abstract UnitDao unitDao();
 
     public static final Migration MIGRATION_5_6 = new Migration(5, 6) {

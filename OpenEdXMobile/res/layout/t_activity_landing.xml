@@ -39,6 +39,9 @@
             app:itemTextColor="@color/dashboard_bottom_nav_item_color_selector"
             bottom_nav_item_selected_listener="@{viewModel.itemSelectedListener}"
             bottom_nav_enable_shift_mode="@{viewModel.navShiftMode}"
+            tool_tip_position="@{viewModel.toolPosition}"
+            tool_tip="@{viewModel.tooltipText}"
+            tool_tip_gravity="@{viewModel.tooltipGravity}"
             android:textSize="10sp" />
 
     </LinearLayout>

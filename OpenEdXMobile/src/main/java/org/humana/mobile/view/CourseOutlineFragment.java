@@ -115,7 +115,8 @@ import retrofit2.Call;
 public class CourseOutlineFragment extends OfflineSupportBaseFragment
         implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
         VideoDownloadHelper.DownloadManagerCallback,
-        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>, BaseFragment.PermissionListener {
+        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>,
+        BaseFragment.PermissionListener {
     private final Logger logger = new Logger(getClass().getName());
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
@@ -226,7 +227,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
         }
 
-        if (!Constants.UNIT_ID.equals("")){
+        if (Constants.isUnitApprove){
             linearLayout.setVisibility(View.VISIBLE);
             approveReturn(Constants.UNIT_ID,unitType,unitTitle, unitDesc);
         }

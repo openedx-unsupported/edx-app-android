@@ -4,6 +4,7 @@ import org.humana.mobile.tta.data.local.db.table.Category;
 import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
+import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Feed;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.data.local.db.table.Period;
@@ -89,4 +90,8 @@ public interface ILocalDataSource {
     Unit getUnit(String id);
     void insertUnits(List<Unit> units);
     void insertUnit(Unit unit);
+
+    void insertPeriodDesc(DownloadPeriodDesc periodDesc);
+    DownloadPeriodDesc getPeriodDesc(long id);
+    List<DownloadPeriodDesc> getPeriodDescList(String about_url);
 }

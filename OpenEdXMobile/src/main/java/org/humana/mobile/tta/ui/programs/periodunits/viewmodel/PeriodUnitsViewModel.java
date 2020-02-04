@@ -115,7 +115,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item);
+                    showDatePicker(item, "My Date");
                     break;
                 default:
                     mActivity.showLoading();
@@ -240,8 +240,8 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         layoutManager = new LinearLayoutManager(mActivity);
     }
 
-    private void showDatePicker(Unit unit) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+    private void showDatePicker(Unit unit, String title) {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(),title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 mActivity.showLoading();
@@ -660,7 +660,30 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 } else {
                     unitBinding.statusIcon.setVisibility(View.GONE);
                 }
-
+                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
+                    if (mDataManager.getLoginPrefs().getRole() != null
+                            && mDataManager.getLoginPrefs().getRole().trim()
+                            .equalsIgnoreCase(UserRole.Student.name())){
+                        unitBinding.tvMyDate.setEnabled(false);
+                    }
+                }
+                switch (model.getStatus()) {
+                    case "Submitted":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                        break;
+                    case "Approved":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                        break;
+                    case "Return":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                        break;
+                    case "":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        break;
+                    case "None":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        break;
+                }
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);

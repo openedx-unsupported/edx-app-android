@@ -3,8 +3,11 @@ package org.humana.mobile.tta.ui.landing.view_model;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.net.Uri;
 import android.support.design.widget.BottomNavigationView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
@@ -47,6 +50,10 @@ public class LandingViewModel extends BaseViewModel {
     public ObservableBoolean navShiftMode = new ObservableBoolean();
     public ObservableBoolean offlineVisible = new ObservableBoolean();
 
+    public ObservableField<String> tooltipText = new ObservableField<>();
+    public ObservableInt tooltipGravity = new ObservableInt();
+    public ObservableInt toolPosition = new ObservableInt();
+
     private List<ContentStatus> statuses;
 
     public BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener = item -> {
@@ -88,6 +95,10 @@ public class LandingViewModel extends BaseViewModel {
         selectedId = R.id.action_library;
         showLibrary();
         mActivity.showLoading();
+
+        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()){
+            setToolTip();
+        }
     }
 
     @Override
@@ -298,5 +309,11 @@ public class LandingViewModel extends BaseViewModel {
         builder.setCancelable(false);
         dialog.setCancelable(false);
         dialog.show();
+    }
+
+    public void setToolTip(){
+        toolPosition.set(1);
+        tooltipGravity.set(Gravity.TOP);
+        tooltipText.set("Programs");
     }
 }

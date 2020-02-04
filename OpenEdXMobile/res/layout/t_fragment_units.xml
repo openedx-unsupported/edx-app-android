@@ -55,7 +55,7 @@
                 android:onClick="@{()->viewModel.fetchUnits()}"
                 android:contentDescription="assistant button"
                 android:src="@drawable/t_icon_search_blue" />
-            <Switch
+            <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
@@ -65,7 +65,10 @@
                 android:gravity="top"
                 android:foregroundGravity="center"
                 tool_tip="@{viewModel.calenderTooltipText}"
+                android:src="@drawable/t_icon_calendar"
+                android:tint="@color/material_red_500"
                 tool_tip_gravity="@{viewModel.calenderTooltipGravity}"
+                android:onClick="@{()->viewModel.changeToCalenderView()}"
                 android:id="@+id/switch_unit"/>
 
         </LinearLayout>
@@ -82,7 +85,7 @@
             finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
@@ -96,7 +99,7 @@
             android:id="@+id/calendar_view">
 
         </com.lib.mxcalendar.view.MxCalenderView>
-        </FrameLayout>
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

@@ -10,15 +10,6 @@ public class DownloadPeriodDesc {
 
     private String about_url;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    private String status;
 
 
     public long getId() {

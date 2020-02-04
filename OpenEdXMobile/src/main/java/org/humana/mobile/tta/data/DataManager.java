@@ -2,13 +2,11 @@ package org.humana.mobile.tta.data;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -67,7 +65,6 @@ import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
-import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Feed;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.data.local.db.table.Period;
@@ -1323,6 +1320,7 @@ public class DataManager extends BaseRoboInjector {
         de.title = scorm.getParent().getDisplayName();
         downloadManager.downloadVideo(de, activity, callback);
     }
+
     public void downloadSingle(PDFBlockModel scorm,
                                FragmentActivity activity,
                                VideoDownloadHelper.DownloadManagerCallback callback) {
@@ -2840,6 +2838,7 @@ public class DataManager extends BaseRoboInjector {
             }.execute();
         }
     }
+
     public void sendNotifications(String title, String type, String desc, String action,
                                   String action_id, String action_parent_id, String respondent,
                                   String unique_id,
@@ -3781,10 +3780,10 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void getPeriods(List<ProgramFilter> filters, String programId, String sectionId,
-                           String role, int take, int skip, OnResponseCallback<List<Period>> callback) {
+                           String role, int take, int skip, long periodId,
+                           OnResponseCallback<List<Period>> callback) {
 
         if (NetworkUtil.isConnected(context)) {
-
             new GetPeriodsTask(context, filters, programId, sectionId, role, take, skip) {
                 @Override
                 protected void onSuccess(List<Period> periods) throws Exception {
@@ -3794,15 +3793,17 @@ public class DataManager extends BaseRoboInjector {
                         return;
                     }
 
+
                     for (Period period : periods) {
                         period.setUsername(loginPrefs.getUsername());
                     }
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            mLocalDataSource.insertPeriods(periods);
-                        }
-                    }.start();
+//                    new Thread() {
+//                        @Override
+//                        public void run() {
+//                            mLocalDataSource.insertPeriods(periods);
+//                        }
+//                    }.start();
+
 
                     callback.onSuccess(periods);
                 }
@@ -3816,6 +3817,46 @@ public class DataManager extends BaseRoboInjector {
         } else {
             callback.onFailure(new NoConnectionException(context));
         }
+
+    }
+
+    public void insertPeriodDesc(Period period) {
+        new Thread() {
+            @Override
+            public void run() {
+                mLocalDataSource.insertPeriod(period);
+            }
+        }.start();
+
+    }
+
+    public void getPeriodDesc(String userName, OnResponseCallback<List<Period>> callback) {
+
+        new Task<List<Period>>(context) {
+            @Override
+            public List<Period> call() {
+                return mLocalDataSource.getPeriods(userName);
+            }
+
+            @Override
+            protected void onSuccess(List<Period> periods) throws Exception {
+                super.onSuccess(periods);
+                callback.onSuccess(periods);
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(ex);
+            }
+        }.execute();
+
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                super.run();
+//                callback.onSuccess(mLocalDataSource.getPeriods(userName));
+//            }
+//        }.start();
 
     }
 
@@ -4503,28 +4544,6 @@ public class DataManager extends BaseRoboInjector {
     }
 
 
-//    public void downloadFile(Context context, String url, String title, long id) {
-//        Uri Download_Uri = Uri.parse(url);
-//        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-//
-//        //Restrict the types of networks over which this download may proceed.
-//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-//        //Set whether this download may proceed over a roaming connection.
-//        request.setAllowedOverRoaming(false);
-//        //Set the title of this download, to be displayed in notifications (if enabled).
-//        request.setTitle("Downloading");
-//        //Set a description of this download, to be displayed in notifications (if enabled)
-//        request.setDescription("Downloading File");
-//        //Set the local destination for the downloaded file to a path within the application's external files directory
-//        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + "_" + id);
-//        request.allowScanningByMediaScanner();
-//
-//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//        //Enqueue a new download and same the referenceId
-//        ((DownloadManager) context.getSystemService(DOWNLOAD_SERVICE)).enqueue(request);
-//    }
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     public long downloadFile(Uri uri) {
 
@@ -4577,7 +4596,7 @@ public class DataManager extends BaseRoboInjector {
         switch (status) {
             case DownloadManager.STATUS_FAILED:
                 statusText = "STATUS_FAILED";
-                Log.d("STATUS_FAILED",statusText);
+                Log.d("STATUS_FAILED", statusText);
                 switch (reason) {
                     case DownloadManager.ERROR_CANNOT_RESUME:
                         reasonText = "ERROR_CANNOT_RESUME";
@@ -4610,7 +4629,7 @@ public class DataManager extends BaseRoboInjector {
                 break;
             case DownloadManager.STATUS_PAUSED:
                 statusText = "STATUS_PAUSED";
-                Log.d("STATUS_PAUSED",statusText);
+                Log.d("STATUS_PAUSED", statusText);
                 switch (reason) {
                     case DownloadManager.PAUSED_QUEUED_FOR_WIFI:
                         reasonText = "PAUSED_QUEUED_FOR_WIFI";
@@ -4628,16 +4647,16 @@ public class DataManager extends BaseRoboInjector {
                 break;
             case DownloadManager.STATUS_PENDING:
                 statusText = "STATUS_PENDING";
-                Log.d("STATUS_PENDING",statusText);
+                Log.d("STATUS_PENDING", statusText);
                 break;
             case DownloadManager.STATUS_RUNNING:
                 statusText = "STATUS_RUNNING";
-                Log.d("STATUS_RUNNING",statusText);
+                Log.d("STATUS_RUNNING", statusText);
 
                 break;
             case DownloadManager.STATUS_SUCCESSFUL:
                 statusText = "STATUS_SUCCESSFUL";
-                Log.d("STATUS_SUCCESSFUL",statusText);
+                Log.d("STATUS_SUCCESSFUL", statusText);
 
                 reasonText = "Filename:\n" + filename;
                 break;

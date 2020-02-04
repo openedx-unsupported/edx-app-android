@@ -1,17 +1,20 @@
 package org.humana.mobile.tta.ui.library.view_model;
 
 import android.content.Context;
+import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Category;
+import org.humana.mobile.tta.data.local.db.table.Period;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.library.CollectionConfigResponse;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
@@ -51,6 +54,9 @@ public class LibraryViewModel extends BaseViewModel {
 
     public ObservableInt initialPosition = new ObservableInt();
     public ObservableInt tabPosition = new ObservableInt();
+    public ObservableInt tooltipGravity = new ObservableInt();
+    public ObservableInt tooltipPosition = new ObservableInt();
+    public ObservableField<String> tooltipText = new ObservableField();
 
     public ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -156,6 +162,9 @@ public class LibraryViewModel extends BaseViewModel {
             e.printStackTrace();
         }
 
+        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
+            setTooltip();
+        }
     }
 
     private void getEnrolledCourse() {
@@ -185,8 +194,6 @@ public class LibraryViewModel extends BaseViewModel {
 
     }
 
-
-
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseEnrolledEvent event) {
         this.course = event.getCourse();
@@ -210,5 +217,12 @@ public class LibraryViewModel extends BaseViewModel {
         public ListingPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+    }
+
+    private void setTooltip(){
+        tooltipGravity.set(Gravity.BOTTOM);
+        tooltipText.set("Tabs");
+        tooltipPosition.set(2);
+
     }
 }

@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.lib.mxcalendar.models.Event;
+import com.lib.mxcalendar.view.IMxCalenderListener;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -45,6 +46,7 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
+import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
 import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
@@ -58,7 +60,7 @@ import okhttp3.ResponseBody;
 import static org.humana.mobile.tta.Constants.DEFAULT_SKIP;
 import static org.humana.mobile.tta.Constants.DEFAULT_TAKE;
 
-public class UnitsViewModel extends BaseViewModel {
+public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener {
 
     private List<SelectedFilter> selectedFilter;
     public UnitsAdapter unitsAdapter;
@@ -103,6 +105,8 @@ public class UnitsViewModel extends BaseViewModel {
     private EnrolledCoursesResponse parentCourse;
 
     public String selectedSession;
+    private String periodName;
+    private long periodId;
 
     //endregion
 
@@ -125,6 +129,8 @@ public class UnitsViewModel extends BaseViewModel {
         filters = new ArrayList<>();
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
+        this.periodId = periodId;
+        this.periodName = periodName;
         allLoaded = false;
         changesMade = true;
         calVisible.set(false);
@@ -142,76 +148,82 @@ public class UnitsViewModel extends BaseViewModel {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item);
+                    showDatePicker(item, mActivity.getString(R.string.my_date));
                     break;
                 default:
                     mActivity.showLoading();
 
-                    boolean ssp = units.contains(item);
-                    EnrolledCoursesResponse c;
-                    if (ssp) {
-                        c = course;
-                    } else {
-                        c = parentCourse;
-                    }
-
-                    if (c == null) {
-
-                        String courseId;
+//                    if (item.isPublish()) {
+                        boolean ssp = units.contains(item);
+                        EnrolledCoursesResponse c;
                         if (ssp) {
-                            courseId = mDataManager.getLoginPrefs().getProgramId();
+                            c = course;
                         } else {
-                            courseId = mDataManager.getLoginPrefs().getParentId();
+                            c = parentCourse;
                         }
-                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                            @Override
-                            public void onSuccess(ResponseBody responseBody) {
 
-                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                    @Override
-                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                        if (courseId != null) {
-                                            for (EnrolledCoursesResponse response : data) {
-                                                if (response.getCourse().getId().trim().toLowerCase()
-                                                        .equals(courseId.trim().toLowerCase())) {
-                                                    if (ssp) {
-                                                        UnitsViewModel.this.course = response;
-                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                    } else {
-                                                        UnitsViewModel.this.parentCourse = response;
+                        if (c == null) {
+
+                            String courseId;
+                            if (ssp) {
+                                courseId = mDataManager.getLoginPrefs().getProgramId();
+                            } else {
+                                courseId = mDataManager.getLoginPrefs().getParentId();
+                            }
+                            mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                                @Override
+                                public void onSuccess(ResponseBody responseBody) {
+
+                                    mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                        @Override
+                                        public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                            if (courseId != null) {
+                                                for (EnrolledCoursesResponse response : data) {
+                                                    if (response.getCourse().getId().trim().toLowerCase()
+                                                            .equals(courseId.trim().toLowerCase())) {
+                                                        if (ssp) {
+                                                            UnitsViewModel.this.course = response;
+                                                            EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                        } else {
+                                                            UnitsViewModel.this.parentCourse = response;
+                                                        }
+                                                        getBlockComponent(item);
+                                                        break;
                                                     }
-                                                    getBlockComponent(item);
-                                                    break;
                                                 }
+                                                mActivity.hideLoading();
+                                            } else {
+                                                mActivity.hideLoading();
                                             }
-                                            mActivity.hideLoading();
-                                        } else {
-                                            mActivity.hideLoading();
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        e.printStackTrace();
-                                        mActivity.hideLoading();
-                                        mActivity.showLongSnack("enroll org failure");
-                                    }
-                                });
-                            }
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            e.printStackTrace();
+                                            mActivity.hideLoading();
+                                            mActivity.showLongSnack("enroll org failure");
+                                        }
+                                    });
+                                }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                e.printStackTrace();
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack("enroll failure");
-                            }
-                        });
+                                @Override
+                                public void onFailure(Exception e) {
+                                    e.printStackTrace();
+                                    mActivity.hideLoading();
+                                    mActivity.showLongSnack("enroll failure");
+                                }
+                            });
 
-                    } else {
-                        getBlockComponent(item);
-                    }
+                        } else {
+                            getBlockComponent(item);
+                        }
 
+//                    }
+//                    else{
+//                        mActivity.showShortSnack("Unit in not published");
+//                    }
             }
+
 
         });
         mActivity.showLoading();
@@ -282,8 +294,8 @@ public class UnitsViewModel extends BaseViewModel {
     }
 
 
-    private void showDatePicker(Unit unit) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+    private void showDatePicker(Unit unit, String title) {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), title,new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 mActivity.showLoading();
@@ -517,7 +529,6 @@ public class UnitsViewModel extends BaseViewModel {
 
 
                         EventBus.getDefault().post(eventsArrayList);
-
                         eventObservable.set(eventsArrayList);
                         startDateTime = startDate;
                         eventObservableDate.set(startDate);
@@ -605,6 +616,26 @@ public class UnitsViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onAction(long date, long startDateTime, long endDateTime) {
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.eventObservableDate.set(startDateTime);
+//        viewModel.eventObservable.set(eventList);
+        fetchUnits(startDateTime, endDateTime);
+    }
+
+    @Override
+    public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
+        ActivityCalendarBottomSheet bottomSheetDialogFragment =
+                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime,periodId
+                        , periodName);
+        bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
+                "units");
+    }
+
+
+
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
         /**
          * Base constructor.
@@ -650,13 +681,7 @@ public class UnitsViewModel extends BaseViewModel {
                     items.add(new DropDownFilterView.FilterItem(tag.getDisplayName(), tag,
                             tag.getSelected(), R.color.white, R.drawable.t_background_tag_filled
                     ));
-//                    if (tag.getSelected()){
-//                        SelectedFilter sf = new SelectedFilter();
-//                        sf.setInternal_name(model.getInternalName());
-//                        sf.setDisplay_name(model.getDisplayName());
-//                        sf.setSelected_tag(tag.getDisplayName());
-//                        mDataManager.updateSelectedFilters(sf);
-//                    }
+
                 }
 
 
@@ -783,6 +808,31 @@ public class UnitsViewModel extends BaseViewModel {
 
                 }
 
+
+                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
+                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())){
+                        unitBinding.tvMyDate.setEnabled(false);
+                    }
+                }
+
+                switch (model.getStatus()) {
+                    case "Submitted":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                        break;
+                    case "Approved":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                        break;
+                    case "Return":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                        break;
+                    case "":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        break;
+                    case "None":
+                        unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                        break;
+                }
+
                 if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
                         !TextUtils.isEmpty(model.getStatus())) {
                     try {
@@ -852,9 +902,7 @@ public class UnitsViewModel extends BaseViewModel {
     };
 
     public void setSessionFilter() {
-
         selectedFilter = mDataManager.getSelectedFilters();
-//        filters = Constants.PROG_FILTER;
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();

@@ -627,6 +627,15 @@
         <item name="android:fontFamily">@font/hind_light</item>
     </style>
 
+    <style name="DatePickerDialogStyle" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/hind_medium</item>
+        <item name="colorAccent">@color/material_red_500</item>
+        <item name="colorPrimary">@color/humana_card_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
     <style name="AppBottomSheetDialogTheme"
         parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>

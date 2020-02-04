@@ -113,7 +113,7 @@ public class UserStatusViewModel extends BaseViewModel {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item);
+                    showDatePicker(item, mActivity.getString(R.string.my_date));
                     break;
                 default:
                     mActivity.showLoading();
@@ -188,8 +188,8 @@ public class UserStatusViewModel extends BaseViewModel {
         fetchFilters();
     }
 
-    private void showDatePicker(Unit unit) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(), new OnResponseCallback<Long>() {
+    private void showDatePicker(Unit unit, String title) {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(),title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 mActivity.showLoading();

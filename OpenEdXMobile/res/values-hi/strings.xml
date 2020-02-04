@@ -136,4 +136,9 @@
     <string name="point_txt">Points</string>
     <string name="period_saved_successed">Period saved successfully</string>
     <string name="emply_unit">This unit is empty</string>
+
+
+    <string name="downloading">Downloading...</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="my_date">My Date</string>
 </resources>

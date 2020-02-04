@@ -105,6 +105,8 @@ public class AccountFragment extends BaseFragment {
             }
         });
 
+        binding.activateTutorialBtn.setOnClickListener(v -> enableTutorials());
+
 
         binding.changeProgBtn.setOnClickListener(v -> {
 
@@ -192,10 +194,17 @@ public class AccountFragment extends BaseFragment {
                 .gravity(notficationTooltipGravity.get())
                 .animated(true)
                 .transparentOverlay(true)
-                .arrowDrawable(R.drawable.down_arrow)
+                .arrowDrawable(R.drawable.up_arrow)
                 .build()
                 .show();
 
         mDataManager.getLoginPrefs().setProfileTootipSeen(true);
+    }
+
+    private void enableTutorials(){
+        mDataManager.getLoginPrefs().setProfileTootipSeen(false);
+        mDataManager.getLoginPrefs().setScheduleTootipSeen(false);
+        mDataManager.getLoginPrefs().setUnitTootipSeen(false);
+        showTooltip();
     }
 }

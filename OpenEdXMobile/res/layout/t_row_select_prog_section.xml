@@ -61,7 +61,7 @@
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:minWidth="100dp"
-                    android:background="@drawable/red_rect_rounded_corner"
+                    android:background="@drawable/humana_blue_rounded_rect"
                     android:padding="5dp"
                     android:text="View"
                     android:textColor="@color/white" />

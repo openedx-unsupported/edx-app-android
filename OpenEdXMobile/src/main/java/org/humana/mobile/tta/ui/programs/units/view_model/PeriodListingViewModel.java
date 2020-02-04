@@ -76,7 +76,7 @@ public class PeriodListingViewModel extends BaseViewModel {
     private void getPeriods() {
         mDataManager.getPeriods(filters, mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole()
-                , take, skip, new OnResponseCallback<List<Period>>() {
+                , take, skip,0, new OnResponseCallback<List<Period>>() {
                     @Override
                     public void onSuccess(List<Period> data) {
 //                        periodAdapter.setItems(data);

@@ -60,6 +60,16 @@ public class Period implements Parcelable {
     @SerializedName("endDate")
     private long endDate;
 
+    public String getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public void setDownloadStatus(String downloadStatus) {
+        this.downloadStatus = downloadStatus;
+    }
+
+    private String downloadStatus;
+
     public Period() {
     }
 

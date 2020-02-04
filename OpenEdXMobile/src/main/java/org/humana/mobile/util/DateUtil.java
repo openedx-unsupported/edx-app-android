@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.internal.bind.util.ISO8601Utils;
 
+import org.humana.mobile.R;
 import org.humana.mobile.logger.Logger;
 import org.humana.mobile.tta.exception.TaException;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
@@ -194,13 +195,14 @@ public class DateUtil {
 
     }
 
-    public static void showDatePicker(Context context, long selectedTime, OnResponseCallback<Long> callback) {
+    public static void showDatePicker(Context context, long selectedTime,String title, OnResponseCallback<Long> callback) {
         Calendar cal = Calendar.getInstance();
 
         if (selectedTime > 0) {
             cal.setTimeInMillis(selectedTime);
         }
-        DatePickerDialog dialog = new DatePickerDialog(context, (datePicker, i, i1, i2) -> {
+        DatePickerDialog dialog = new DatePickerDialog(context, R.style.DatePickerDialogStyle,
+                (datePicker, i, i1, i2) -> {
 
             cal.set(Calendar.YEAR, i);
             cal.set(Calendar.MONTH, i1);
@@ -228,6 +230,13 @@ public class DateUtil {
         dialog.setOnCancelListener(dialogInterface -> {
             callback.onFailure(new TaException("Date not selected"));
         });
+
+        if (!title.equals("")) {
+            dialog.setTitle(title);
+            if (title.equals(context.getString(R.string.my_date))){
+                dialog.setIcon(R.drawable.student_icon);
+            }
+        }
         dialog.show();
     }
 }

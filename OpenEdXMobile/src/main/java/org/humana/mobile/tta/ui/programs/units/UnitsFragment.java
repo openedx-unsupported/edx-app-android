@@ -27,8 +27,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class UnitsFragment extends TaBaseFragment implements PageViewStateCallback,
-        IMxCalenderListener {
+public class UnitsFragment extends TaBaseFragment implements PageViewStateCallback{
     public static final String TAG = LibraryFragment.class.getCanonicalName();
 
     private UnitsViewModel viewModel;
@@ -61,26 +60,23 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
         View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
         binding = (TFragmentUnitsBinding) binding(inflater, container, R.layout.t_fragment_units, viewModel);
 
-//        binding.calendarView.init(
-//                new Builder()
-//                        .setDayNameColor(null)
-//                        .setHeaderColor(null)
-//                        .setDayNumberColor(null)
-//                        .setListner(this)
-//                        .setTabletMode(isTabView()));
+        binding.calendarView.init(
+                new Builder()
+                        .setDayNameColor(null)
+                        .setHeaderColor(null)
+                        .setDayNumberColor(null)
+                        .setListner(viewModel)
+                        .setTabletMode(isTabView()));
 
-        binding.switchUnit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked()) {
-                    viewModel.calVisible.set(true);
-                    viewModel.frameVisible.set(false);
-                } else {
-                    viewModel.calVisible.set(false);
-                    viewModel.frameVisible.set(true);
-                }
-            }
-        });
+//        binding.switchUnit.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (buttonView.isChecked()) {
+//                viewModel.calVisible.set(true);
+//                viewModel.frameVisible.set(false);
+//            } else {
+//                viewModel.calVisible.set(false);
+//                viewModel.frameVisible.set(true);
+//            }
+//        });
         return rootView;
     }
 
@@ -121,25 +117,6 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
 
     private Boolean isTabView() {
         return getResources().getBoolean(R.bool.isTablet);
-    }
-
-    @Override
-    public void onAction(long date, long startDateTime, long endDateTime) {
-        viewModel.startDateTime = startDateTime;
-        viewModel.endDateTime = endDateTime;
-        viewModel.eventObservableDate.set(startDateTime);
-        viewModel.eventObservable.set(eventList);
-//        viewModel.fetchUnits(startDateTime, endDateTime);
-    }
-
-    @Override
-    public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
-
-        ActivityCalendarBottomSheet bottomSheetDialogFragment =
-                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime,
-                        periodId, periodName);
-        bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
-                "units");
     }
 
 

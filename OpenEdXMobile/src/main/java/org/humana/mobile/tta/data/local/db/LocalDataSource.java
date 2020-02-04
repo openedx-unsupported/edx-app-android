@@ -1,10 +1,12 @@
 package org.humana.mobile.tta.data.local.db;
 
+import org.humana.mobile.tta.data.local.db.dao.PeriodDescDao;
 import org.humana.mobile.tta.data.local.db.table.Category;
 import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
+import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Feed;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.data.local.db.table.Period;
@@ -278,6 +280,29 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public void insertPeriod(Period period) {
         mAppDatabase.periodDao().insert(period);
+    }
+
+//    @Override
+//    public List<DownloadPeriodDesc> getPeriodDesc(String periodDesc) {
+//        return mAppDatabase.periodDescDao().getAll(periodDesc);
+//    }
+//    @Override
+//    public DownloadPeriodDesc getPeriodDescById(long id) {
+//        return mAppDatabase.periodDescDao().getById(id);
+//    }
+    @Override
+    public void insertPeriodDesc(DownloadPeriodDesc periodDesc) {
+        mAppDatabase.periodDescDao().insert(periodDesc);
+    }
+
+    @Override
+    public DownloadPeriodDesc getPeriodDesc(long id) {
+        return mAppDatabase.periodDescDao().getById(id);
+    }
+
+    @Override
+    public List<DownloadPeriodDesc> getPeriodDescList(String aboutUrl) {
+        return mAppDatabase.periodDescDao().getAll(aboutUrl);
     }
 
     @Override

@@ -43,6 +43,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -76,7 +77,8 @@ public class MxTooltip implements PopupWindow.OnDismissListener {
     // Default Resources
     private static final int mDefaultPopupWindowStyleRes = android.R.attr.popupWindowStyle;
     private static final int mDefaultTextAppearanceRes = R.style.simpletooltip_default;
-    private static final int mDefaultBackgroundColorRes = R.color.humana_light_blue;
+    private static final int mDefaultBackgroundColorRes = R.color.material_red_500;
+    private static final int mDefaultBackgroundDrawableRes = R.drawable.red_rect_rounded_corner;
     private static final int mDefaultTextColorRes = R.color.mx_tooltip_text;
     private static final int mDefaultArrowColorRes = R.color.mx_tooltip_arrow;
     private static final int mDefaultMarginRes = R.dimen.mx_tooltip_margin;
@@ -609,7 +611,7 @@ public class MxTooltip implements PopupWindow.OnDismissListener {
             if (contentView == null) {
                 TextView tv = new TextView(context);
                 MxTooltipUtils.setTextAppearance(tv, mDefaultTextAppearanceRes);
-                tv.setBackgroundColor(backgroundColor);
+                tv.setBackground(ContextCompat.getDrawable(context, mDefaultBackgroundDrawableRes));
                 tv.setTextColor(textColor);
                 contentView = tv;
             }
