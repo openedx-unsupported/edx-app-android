@@ -1,5 +1,7 @@
 package org.humana.mobile.tta.ui.programs.units;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.lib.mxcalendar.models.Event;
 import com.lib.mxcalendar.util.Builder;
@@ -27,7 +30,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class UnitsFragment extends TaBaseFragment implements PageViewStateCallback{
+public class UnitsFragment extends TaBaseFragment implements PageViewStateCallback {
     public static final String TAG = LibraryFragment.class.getCanonicalName();
 
     private UnitsViewModel viewModel;
@@ -37,6 +40,7 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
     private long periodId;
     private String periodName;
     TFragmentUnitsBinding binding;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,8 +53,8 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
             getDataFromBundle(getArguments());
         }
 
-        viewModel = new UnitsViewModel(getActivity(), this, course, periodName, periodId);
         eventList = new ArrayList<>();
+        viewModel = new UnitsViewModel(getActivity(), this, course, periodName, periodId);
         viewModel.registerEventBus();
     }
 
@@ -59,7 +63,6 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
         binding = (TFragmentUnitsBinding) binding(inflater, container, R.layout.t_fragment_units, viewModel);
-
         binding.calendarView.init(
                 new Builder()
                         .setDayNameColor(null)
@@ -68,15 +71,7 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
                         .setListner(viewModel)
                         .setTabletMode(isTabView()));
 
-//        binding.switchUnit.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            if (buttonView.isChecked()) {
-//                viewModel.calVisible.set(true);
-//                viewModel.frameVisible.set(false);
-//            } else {
-//                viewModel.calVisible.set(false);
-//                viewModel.frameVisible.set(true);
-//            }
-//        });
+
         return rootView;
     }
 
@@ -91,6 +86,12 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     private void getDataFromBundle(Bundle bundle) {
         if (bundle.containsKey(Router.EXTRA_COURSE_DATA)) {
             course = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
@@ -103,6 +104,7 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
             periodName = bundle.getString(Constants.KEY_PERIOD_NAME);
         }
     }
+
 
     @Override
     public void onDestroy() {
@@ -127,6 +129,7 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
     public void unRegisterEventBus() {
         EventBus.getDefault().unregister(this);
     }
+
 
 
 

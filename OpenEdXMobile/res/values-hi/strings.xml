@@ -122,7 +122,7 @@
     <string name="error_teacher_id">टीचर ID रिक्त नहीं हो सकती</string>
     <string name="program">Program</string>
     <string name="empty_list_message">सूची खाली है</string>
-    <string name="proposed_date">Change date</string>
+    <string name="change_date">Change date</string>
     <string name="material_calendar_today_button">Today</string>
     <string name="material_calendar_positive_button">OK</string>
     <string name="material_calendar_negative_button">Cancel</string>
@@ -141,4 +141,5 @@
     <string name="downloading">Downloading...</string>
     <string name="downloaded">Downloaded</string>
     <string name="my_date">My Date</string>
+    <string name="unit_not_published">Unit in not published</string>
 </resources>

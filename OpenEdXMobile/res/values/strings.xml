@@ -929,7 +929,8 @@
     <string name="empty_feed_message">No feeds available at the moment</string>
 
     <string name="com.crashlytics.android.build_id" translatable="false">RANDOM_UUID</string>
-    <string name="proposed_date">Change date</string>
+    <string name="change_date">Change date</string>
+    <string name="proposed_date">Proposed Date</string>
     <string name="point_txt">Points</string>
 
     <!-- TTA strings end -->
@@ -976,5 +977,6 @@
     <string name="downloading">Downloading...</string>
     <string name="downloaded">Downloaded</string>
     <string name="my_date">My Date</string>
+    <string name="unit_not_published">Unit in not published</string>
 
 </resources>

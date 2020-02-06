@@ -12,9 +12,12 @@ import org.humana.mobile.logger.Logger;
 import org.humana.mobile.model.VideoModel;
 import org.humana.mobile.model.db.DownloadEntry;
 import org.humana.mobile.model.download.NativeDownloadModel;
+import org.humana.mobile.model.download.PDFDownloadModel;
 import org.humana.mobile.module.analytics.AnalyticsRegistry;
 import org.humana.mobile.module.db.DataCallback;
+import org.humana.mobile.services.DownloadService;
 
+import de.greenrobot.event.EventBus;
 import roboguice.receiver.RoboBroadcastReceiver;
 
 public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
@@ -62,6 +65,10 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
                             }
                             return;
                         } else {
+                            if (DownloadService.isDownload){
+                                EventBus.getDefault().post(new PDFDownloadModel(DownloadService.isDownload));
+                                DownloadService.isDownload = false;
+                            }
                             logger.debug("Download successful for id : " + id);
                         }
 

@@ -115,10 +115,17 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item, "My Date");
+                    String title;
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                        title = mActivity.getString(R.string.proposed_date);
+                    }else {
+                        title = mActivity.getString(R.string.my_date);
+                    }
+                    showDatePicker(item, title);
                     break;
                 default:
                     mActivity.showLoading();
+                    if (item.isPublish()){
                     boolean ssp = units.contains(item);
                     EnrolledCoursesResponse c;
                     if (ssp) {
@@ -181,7 +188,9 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                         getBlockComponent(item);
                     }
 
-
+            } else{
+                mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
+            }
             }
 
         });
@@ -629,7 +638,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 if (model.getMyDate() > 0) {
                     unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                 } else {
-                    unitBinding.tvMyDate.setText(R.string.proposed_date);
+                    unitBinding.tvMyDate.setText(R.string.change_date);
                 }
                 unitBinding.tvMyDate.setVisibility(View.VISIBLE);
 
@@ -662,10 +671,23 @@ public class PeriodUnitsViewModel extends BaseViewModel {
                 }
                 if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
                     if (mDataManager.getLoginPrefs().getRole() != null
-                            && mDataManager.getLoginPrefs().getRole().trim()
-                            .equalsIgnoreCase(UserRole.Student.name())){
+                            && mDataManager.getLoginPrefs().getRole()
+                            .equals(UserRole.Student.name())){
                         unitBinding.tvMyDate.setEnabled(false);
+                    }else {
+                        unitBinding.tvMyDate.setEnabled(true);
                     }
+                }else {
+                    unitBinding.tvMyDate.setEnabled(true);
+                }
+                if (role != null && role.equals(UserRole.Student.name())){
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.student_icon,
+                            0,0,0);
+                }else {
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.teacher_icon,
+                            0,0,0);
                 }
                 switch (model.getStatus()) {
                     case "Submitted":

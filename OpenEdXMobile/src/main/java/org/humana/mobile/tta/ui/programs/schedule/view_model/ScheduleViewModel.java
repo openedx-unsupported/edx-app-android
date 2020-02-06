@@ -29,11 +29,18 @@ import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
+import org.humana.mobile.course.CourseDetail;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
 import org.humana.mobile.databinding.TRowScheduleBinding;
+import org.humana.mobile.model.VideoModel;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
+import org.humana.mobile.model.api.TranscriptModel;
 import org.humana.mobile.model.course.CourseComponent;
+import org.humana.mobile.model.db.DownloadEntry;
+import org.humana.mobile.model.download.NativeDownloadModel;
+import org.humana.mobile.model.download.PDFDownloadModel;
 import org.humana.mobile.services.DownloadService;
+import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
@@ -46,6 +53,7 @@ import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.scorm.PDFBlockModel;
 import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -118,12 +126,14 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     private final String TAG = "Permissions";
 
 
+
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
             return false;
         else {
             this.skip++;
             fetchData();
+//            getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
             return true;
         }
     };
@@ -151,7 +161,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
         emptyVisible.set(false);
-
+        progressVisible.set(false);
 
         filtersAdapter = new FiltersAdapter(mActivity);
         periodAdapter = new PeriodAdapter(mActivity);
@@ -159,7 +169,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         skip = SKIP;
         allLoaded = false;
         changesMade = true;
-//        selectedFilter = mDataManager.getSelectedFilters();
         periodAdapter.setItems(periodList);
         if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
             fabVisible.set(true);
@@ -213,20 +222,20 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     if (item.getDownloadStatus() != null) {
                         if (!item.getDownloadStatus().equals("Downloaded")) {
                             item.setDownloadStatus(mActivity.getString(R.string.downloading));
-                            EventBus.getDefault().post(item);
+                            periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(item));
                             DownloadService.getDownloadService(mActivity,
                                     item.getAbout_url(),
                                     item.getTitle(),
                                     item.getId(),
                                     item);
 
-//                            item.setDownloadStatus(mActivity.getString(R.string.downloading));
-//                            periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(item));
                         } else {
                             Uri uri = Uri.parse(item.getAbout_url());
                             DownloadService.openDownloadedFile(uri, mActivity);
                         }
                     } else {
+                        item.setDownloadStatus(mActivity.getString(R.string.downloading));
+                        periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(item));
                         DownloadService.getDownloadService(mActivity,
                                 item.getAbout_url(),
                                 item.getTitle(),
@@ -259,11 +268,14 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             setFilters();
         }
         getPeriods();
-//        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
     }
 
 
+
+
+
     private void getDownloadPeriodDesc(String userName) {
+        savedPeriods.clear();
         mDataManager.getPeriodDesc(userName,
                 new OnResponseCallback<List<Period>>() {
                     @Override
@@ -274,15 +286,15 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             }
                         }
 
-                        getPeriods();
+
                     }
 
                     @Override
                     public void onFailure(Exception e) {
                         e.printStackTrace();
-                        getFilters();
                     }
                 });
+
     }
 
     public void setToolTip() {
@@ -361,8 +373,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         selectedFilter = mDataManager.getSelectedFilters();
         changesMade = true;
         setFilters();
-        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
         getFilters();
+        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
 
     }
 
@@ -437,20 +449,21 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         if (data.size() < take) {
                             allLoaded = true;
                         }
-                        List<Period> periodList = new ArrayList<>();
+                        List<Period> ps = new ArrayList<>();
+                        ps = data;
                         if (savedPeriods.size()!=0) {
-                            for (Period period1 : savedPeriods) {
-                                for (Period period : data) {
-                                    if (data.contains(period1)) {
-                                        periodList.add(period1);
-                                    } else {
-                                        periodList.add(period);
+                            for (Period savedPeriod : savedPeriods) {
+                                for (int i=0; i< data.size();i++) {
+                                    if (data.get(i).getId()==savedPeriod.getId()) {
+                                        ps.remove(data.get(i));
+                                        ps.add(i,savedPeriod);
+                                        break;
                                     }
                                 }
                             }
-                            populatePeriods(periodList);
+                            populatePeriods(ps);
                         }else {
-                            populatePeriods(data);
+                            populatePeriods(ps);
                         }
                         emptyVisible.set(false);
                         periodAdapter.setLoadingDone();
@@ -503,9 +516,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         filters = event.getProgramFilters();
     }
 
-    public void onEventMainThread(Period period) {
-//        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
-        periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(period));
+    public void onEventMainThread(PDFDownloadModel model) {
+        if (model.isDownload()) {
+            progressVisible.set(false);
+            periodAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -729,17 +744,30 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 if (model.getDesc() != null) {
                     if (model.getAbout_url()!=null && !model.getAbout_url().equals("")) {
                         scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
+//                        if (progressVisible.get()){
+//                            scheduleBinding.pbDownload.setVisibility(View.VISIBLE);
+//                            scheduleBinding.txtReadMore.setVisibility(View.GONE);
+//                        }else {
+//                            scheduleBinding.pbDownload.setVisibility(View.GONE);
+//                            scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
+//                        }
                     } else {
                         scheduleBinding.txtReadMore.setVisibility(View.GONE);
+
                     }
                 }
                 if (model.getDownloadStatus() != null) {
                     if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloaded))) {
                         scheduleBinding.txtReadMore.setText(mActivity.getString(R.string.view_more));
+                        scheduleBinding.pbDownload.setVisibility(View.GONE);
+                        scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
                     }else if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloading))){
                         scheduleBinding.txtReadMore.setText(mActivity.getString(R.string.downloading));
+                            scheduleBinding.pbDownload.setVisibility(View.VISIBLE);
+                            scheduleBinding.txtReadMore.setVisibility(View.GONE);
                     }
                 }
+
 
                 if (getItemPosition(model) == 0) {
                     if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
@@ -904,11 +932,12 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         changesMade = true;
         allLoaded = false;
         mActivity.showLoading();
-        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
         getFilters();
+        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
     }
 
     public void updatePeriod() {
+        mActivity.showLoading();
         mDataManager.updatePeriods(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), String.valueOf(periodItem.get().getId()),
                 periodItem.get().getTitle(), startDate.get(),

@@ -102,6 +102,13 @@
                     android:textColor="@color/com_facebook_blue"
                     android:textSize="@dimen/_12px_sp"
                     android:visibility="visible" />
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:id="@+id/pb_download"
+                    android:progressTint="@color/material_red_500"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
@@ -129,7 +136,7 @@
                     android:layout_width="30dp"
                     android:layout_height="40dp"
                     android:id="@+id/iv_start_date"
-                    android:src="@drawable/map_pin_a"/>
+                    android:src="@drawable/frm_date_icon"/>
                 <TextView
                     android:id="@+id/txt_start_date"
                     android:layout_width="0dp"
@@ -146,7 +153,7 @@
                     android:layout_width="30dp"
                     android:layout_height="40dp"
                     android:id="@+id/iv_end_date"
-                    android:src="@drawable/map_pin_b"/>
+                    android:src="@drawable/to_date_icon"/>
                 <TextView
                     android:id="@+id/txt_end_date"
                     android:layout_width="0dp"

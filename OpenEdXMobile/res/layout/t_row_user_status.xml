@@ -95,7 +95,7 @@
                 android:drawableEnd="@drawable/t_icon_calendar"
                 android:drawablePadding="6dp"
                 android:padding="6dp"
-                android:text="@string/proposed_date"
+                android:text="@string/change_date"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:elevation="2dp"

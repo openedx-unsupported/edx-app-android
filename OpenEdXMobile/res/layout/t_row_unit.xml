@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -117,7 +117,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/hind_medium"
                     android:gravity="start|center"
-                    android:text="@string/proposed_date"
+                    android:text="@string/change_date"
                     android:textColor="@color/gray_5"
                     android:textSize="12sp"
                     android:textStyle="bold"

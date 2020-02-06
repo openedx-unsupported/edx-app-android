@@ -235,6 +235,8 @@ public class DateUtil {
             dialog.setTitle(title);
             if (title.equals(context.getString(R.string.my_date))){
                 dialog.setIcon(R.drawable.student_icon);
+            }else {
+                dialog.setIcon(R.drawable.teacher_icon);
             }
         }
         dialog.show();

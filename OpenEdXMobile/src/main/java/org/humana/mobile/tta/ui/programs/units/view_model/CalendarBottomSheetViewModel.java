@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.lib.mxcalendar.models.Event;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
@@ -34,10 +33,10 @@ import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
+import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
-import org.humana.mobile.tta.ui.mxCalenderView.Events;
 import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
 import org.humana.mobile.tta.ui.programs.units.PeriodListingActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
@@ -81,7 +80,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     private EnrolledCoursesResponse parentCourse;
     private String selectedDate;
     private long startDateTime, endDateTime, selectedDateLng;
-    private final String SELECTED_DATE= "selected_date";
+    private final String SELECTED_DATE = "selected_date";
     private Boolean isDateSelected;
     public ObservableBoolean progressVisible = new ObservableBoolean();
     private Long periodId;
@@ -89,29 +88,32 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
 //        if (allLoaded)
-            return false;
+        return false;
 //        this.skip++;
 ////        fetchData();
 //        return true;
     };
+
     public CalendarBottomSheetViewModel(Context context, TaBaseBottomsheetFragment fragment, EnrolledCoursesResponse course,
-                                        Long selectedDate, Long startDateTime, Long endDateTime, Long periodId, String periodName) {
+                                        Long selectedDate, Long startDateTime, Long endDateTime,
+                                        Long periodId, String periodName, List<ProgramFilter> filters) {
         super(context, fragment);
 
 
         this.course = course;
         this.units = units;
         this.selectedDate = DateUtil.getDisplayDate(selectedDate);
-        this.selectedDateLng =selectedDate;
+        this.selectedDateLng = selectedDate;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.periodId = periodId;
         this.periodName = periodName;
+        this.filters = filters;
 
         dispDate.set(DateUtil.getCalendarDate(selectedDate));
 //        units = new ArrayList<>();
         tags = new ArrayList<>();
-        filters = new ArrayList<>();
+//        filters = new ArrayList<>();
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
         allLoaded = false;
@@ -128,71 +130,81 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item, "My Date");
+                    String title;
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        title = mActivity.getString(R.string.proposed_date);
+                    } else {
+                        title = mActivity.getString(R.string.my_date);
+                    }
+                    showDatePicker(item, title);
                     break;
                 default:
-                    mActivity.showLoading();
+                    if (item.isPublish()) {
+                        mActivity.showLoading();
 
-                    boolean ssp = units.contains(item);
-                    EnrolledCoursesResponse c;
-                    if (ssp) {
-                        c = course;
-                    } else {
-                        c = parentCourse;
-                    }
-
-                    if (c == null) {
-
-                        String courseId;
+                        boolean ssp = units.contains(item);
+                        EnrolledCoursesResponse c;
                         if (ssp) {
-                            courseId = mDataManager.getLoginPrefs().getProgramId();
+                            c = course;
                         } else {
-                            courseId = mDataManager.getLoginPrefs().getParentId();
+                            c = parentCourse;
                         }
-                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                            @Override
-                            public void onSuccess(ResponseBody responseBody) {
 
-                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                    @Override
-                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                        if (courseId != null) {
-                                            for (EnrolledCoursesResponse response : data) {
-                                                if (response.getCourse().getId().trim().toLowerCase()
-                                                        .equals(courseId.trim().toLowerCase())) {
-                                                    if (ssp) {
-                                                        CalendarBottomSheetViewModel.this.course = response;
-                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                    } else {
-                                                        CalendarBottomSheetViewModel.this.parentCourse = response;
+                        if (c == null) {
+
+                            String courseId;
+                            if (ssp) {
+                                courseId = mDataManager.getLoginPrefs().getProgramId();
+                            } else {
+                                courseId = mDataManager.getLoginPrefs().getParentId();
+                            }
+                            mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                                @Override
+                                public void onSuccess(ResponseBody responseBody) {
+
+                                    mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                        @Override
+                                        public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                            if (courseId != null) {
+                                                for (EnrolledCoursesResponse response : data) {
+                                                    if (response.getCourse().getId().trim().toLowerCase()
+                                                            .equals(courseId.trim().toLowerCase())) {
+                                                        if (ssp) {
+                                                            CalendarBottomSheetViewModel.this.course = response;
+                                                            EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                        } else {
+                                                            CalendarBottomSheetViewModel.this.parentCourse = response;
+                                                        }
+                                                        getBlockComponent(item);
+                                                        break;
                                                     }
-                                                    getBlockComponent(item);
-                                                    break;
                                                 }
+                                                mActivity.hideLoading();
+                                            } else {
+                                                mActivity.hideLoading();
                                             }
-                                            mActivity.hideLoading();
-                                        } else {
-                                            mActivity.hideLoading();
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        mActivity.hideLoading();
-                                        mActivity.showLongSnack("enroll org failure");
-                                    }
-                                });
-                            }
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            mActivity.hideLoading();
+                                            mActivity.showLongSnack("enroll org failure");
+                                        }
+                                    });
+                                }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack("enroll failure");
-                            }
-                        });
+                                @Override
+                                public void onFailure(Exception e) {
+                                    mActivity.hideLoading();
+                                    mActivity.showLongSnack("enroll failure");
+                                }
+                            });
 
+                        } else {
+                            getBlockComponent(item);
+                        }
                     } else {
-                        getBlockComponent(item);
+                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
                     }
 
             }
@@ -253,13 +265,13 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
-        onEventMainThread(units);
+//        onEventMainThread(units);
 
     }
 
 
     private void showDatePicker(Unit unit, String title) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(),title, new OnResponseCallback<Long>() {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 mActivity.showLoading();
@@ -270,17 +282,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             public void onSuccess(SuccessResponse response) {
                                 mActivity.hideLoading();
 
-//                                unit.setMyDate(data);
-//                                unitsAdapter.remove(unit);
-//                                unitsAdapter.notifyDataSetChanged();
-//
-//                                if (units.size()==0){
-//                                    emptyVisible.set(true);
-//                                }else {
-//                                    emptyVisible.set(false);
-//                                }
-
-                                    mActivity.showLongSnack("Proposed date set successfully");
+                                mActivity.showLongSnack("Proposed date set successfully");
 //                                mActivity.hideLoading();
                                 isDateSelected = true;
                                 fetchUnits();
@@ -302,55 +304,19 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
     }
 
 
-
     private void fetchData() {
         mActivity.showLoading();
-        if (changesMade) {
-            changesMade = false;
-            skip = 0;
-            unitsAdapter.reset(true);
-            setUnitFilters();
-        }
-
         fetchUnits();
 
     }
 
-    private void setUnitFilters() {
-        filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
-            return;
-        }
 
-        for (ProgramFilter filter : allFilters) {
-
-            List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag : filter.getTags()) {
-                if (tags.contains(tag)) {
-                    selectedTags.add(tag);
-                }
-            }
-
-            if (!selectedTags.isEmpty()) {
-                ProgramFilter pf = new ProgramFilter();
-                pf.setDisplayName(filter.getDisplayName());
-                pf.setInternalName(filter.getInternalName());
-                pf.setId(filter.getId());
-                pf.setOrder(filter.getOrder());
-                pf.setShowIn(filter.getShowIn());
-                pf.setTags(selectedTags);
-
-                filters.add(pf);
-            }
-        }
-    }
 
     private void fetchUnits() {
 
-        mDataManager.getUnits(filters, "",mDataManager.getLoginPrefs().getProgramId(),
+        mDataManager.getUnits(filters, "", mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
-                0L, take, skip,
-                startDateTime, endDateTime,
+                0L, take, skip, startDateTime, endDateTime,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -370,7 +336,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                     }
                                 }
                             }
-                        }else {
+                        } else {
                             for (int i = 0; i < data.size(); i++) {
                                 if (data.get(i).getMyDate() > 0) {
                                     if (DateUtil.getDisplayDate(data.get(i).getMyDate()).equals(selectedDate)) {
@@ -385,32 +351,32 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         unitsAdapter.notifyDataSetChanged();
                         unitsAdapter.setLoadingDone();
                         progressVisible.set(false);
-                        if (unitsAdapter.isEmpty()){
+                        if (unitsAdapter.isEmpty()) {
                             emptyVisible.set(true);
                         }
                         String colorCode = "#ffffff";
                         Event et;
 
                         if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                            for (int i = 0; i < data.size(); i++) {
-                                if (data.get(i).getCommonDate() > 0) {
-                                    switch (data.get(i).getType()) {
+                            for (int i = 0; i < units.size(); i++) {
+                                if (units.get(i).getCommonDate() > 0) {
+                                    switch (units.get(i).getType()) {
                                         case "Study Task":
                                             colorCode = "#F8E56B";
-                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                            et = new Event(DateUtil.getDisplayDate(units.get(i).getCommonDate()),
+                                                    units.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Experience":
                                             colorCode = "#33FFAC";
-                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                            et = new Event(DateUtil.getDisplayDate(units.get(i).getCommonDate()),
+                                                    units.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Course":
                                             colorCode = "#EF98FC";
-                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(),null, colorCode);
+                                            et = new Event(DateUtil.getDisplayDate(units.get(i).getCommonDate()),
+                                                    units.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                     }
@@ -419,25 +385,25 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             }
                         } else {
 
-                            for (int i = 0; i < data.size(); i++) {
-                                if (data.get(i).getMyDate() > 0) {
-                                    switch (data.get(i).getType()) {
+                            for (int i = 0; i < units.size(); i++) {
+                                if (units.get(i).getMyDate() > 0) {
+                                    switch (units.get(i).getType()) {
                                         case "Study Task":
                                             colorCode = "#F8E56B";
-                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                            et = new Event(DateUtil.getDisplayDate(units.get(i).getMyDate()),
+                                                    units.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Experience":
                                             colorCode = "#33FFAC";
-                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                            et = new Event(DateUtil.getDisplayDate(units.get(i).getMyDate()),
+                                                    units.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Course":
                                             colorCode = "#EF98FC";
-                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                            et = new Event(DateUtil.getDisplayDate(units.get(i).getMyDate()),
+                                                    units.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                     }
@@ -446,11 +412,10 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             }
                         }
 
-                        if (isDateSelected){
+                        if (isDateSelected) {
                             EventBus.getDefault().post(eventsArrayList);
                             isDateSelected = false;
                         }
-
 
 
                     }
@@ -480,6 +445,12 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         fetchData();
     }
 
+    public void onEventMainThread(ProgramFilterSavedEvent event) {
+        changesMade = true;
+        allLoaded = false;
+        filters = new ArrayList<>();
+        filters = event.getProgramFilters();
+    }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(List<Unit> unit) {
@@ -518,7 +489,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         progressVisible.set(false);
                         unitBinding.unitCode.setText(model.getTitle());
                         unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                                + model.getUnitHour() +" "+ mActivity.getResources().getString(R.string.point_txt));
+                                + model.getUnitHour() + " " + mActivity.getResources().getString(R.string.point_txt));
                         if (!model.getStatus().isEmpty()) {
                             if (model.getStaffDate() > 0) {
                                 unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
@@ -540,7 +511,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         if (model.getMyDate() > 0) {
                             unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                         } else {
-                            unitBinding.tvMyDate.setText(R.string.proposed_date);
+                            unitBinding.tvMyDate.setText(R.string.change_date);
                         }
 
                         String role = mDataManager.getLoginPrefs().getRole();
@@ -554,28 +525,45 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         } else {
                             unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                         }
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                                !TextUtils.isEmpty(model.getStatus())) {
-                            try {
-                                switch (UnitStatusType.valueOf(model.getStatus())) {
-                                    case Completed:
-                                        unitBinding.card.setBackgroundColor(
-                                                ContextCompat.getColor(getContext(), R.color.secondary_green));
-                                        break;
-                                    case InProgress:
-                                        unitBinding.card.setBackgroundColor(
-                                                ContextCompat.getColor(getContext(), R.color.humana_card_background));
-                                        break;
-                                    case Pending:
-                                        unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
-                                                R.color.material_red_500));
-                                        break;
-                                }
-                            } catch (IllegalArgumentException e) {
-                                unitBinding.statusIcon.setVisibility(View.GONE);
+                        if (role != null && role.equals(UserRole.Student.name())) {
+                            unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.student_icon,
+                                    0, 0, 0);
+                        } else {
+                            unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.teacher_icon,
+                                    0, 0, 0);
+                        }
+
+
+                        if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())) {
+                            if (mDataManager.getLoginPrefs().getRole() != null
+                                    && mDataManager.getLoginPrefs().getRole()
+                                    .equals(UserRole.Student.name())) {
+                                unitBinding.tvMyDate.setEnabled(false);
+                            } else {
+                                unitBinding.tvMyDate.setEnabled(true);
                             }
                         } else {
-                            unitBinding.statusIcon.setVisibility(View.GONE);
+                            unitBinding.tvMyDate.setEnabled(true);
+                        }
+
+                        switch (model.getStatus()) {
+                            case "Submitted":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                                break;
+                            case "Approved":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                                break;
+                            case "Return":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                                break;
+                            case "":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                                break;
+                            case "None":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                                break;
                         }
 
 
@@ -594,8 +582,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         emptyVisible.set(true);
                         progressVisible.set(false);
                     }
-                }
-                else {
+                } else {
                     if (DateUtil.getDisplayDate(model.getMyDate()).equals(selectedDate)) {
                         TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                         unitBinding.setUnit(model);
@@ -603,7 +590,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         progressVisible.set(false);
                         unitBinding.unitCode.setText(model.getTitle());
                         unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                                + model.getUnitHour() + " "+mActivity.getResources().getString(R.string.point_txt));
+                                + model.getUnitHour() + " " + mActivity.getResources().getString(R.string.point_txt));
                         if (!model.getStatus().isEmpty()) {
                             if (model.getStaffDate() > 0) {
                                 unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
@@ -625,7 +612,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         if (model.getMyDate() > 0) {
                             unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                         } else {
-                            unitBinding.tvMyDate.setText(R.string.proposed_date);
+                            unitBinding.tvMyDate.setText(R.string.change_date);
                         }
 
                         String role = mDataManager.getLoginPrefs().getRole();
@@ -639,7 +626,50 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         } else {
                             unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                         }
-                        if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
+
+
+                        if (role != null && role.equals(UserRole.Student.name())) {
+                            unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.student_icon,
+                                    0, 0, 0);
+                        } else {
+                            unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.teacher_icon,
+                                    0, 0, 0);
+                        }
+
+
+                        if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())) {
+                            if (mDataManager.getLoginPrefs().getRole() != null
+                                    && mDataManager.getLoginPrefs().getRole()
+                                    .equals(UserRole.Student.name())) {
+                                unitBinding.tvMyDate.setEnabled(false);
+                            } else {
+                                unitBinding.tvMyDate.setEnabled(true);
+                            }
+                        } else {
+                            unitBinding.tvMyDate.setEnabled(true);
+                        }
+
+                        switch (model.getStatus()) {
+                            case "Submitted":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.pending));
+                                break;
+                            case "Approved":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_green));
+                                break;
+                            case "Return":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.secondary_red));
+                                break;
+                            case "":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                                break;
+                            case "None":
+                                unitBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));
+                                break;
+                        }
+
+                    /*    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
                                 !TextUtils.isEmpty(model.getStatus())) {
                             try {
                                 switch (UnitStatusType.valueOf(model.getStatus())) {
@@ -661,7 +691,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             }
                         } else {
                             unitBinding.statusIcon.setVisibility(View.GONE);
-                        }
+                        }*/
 
 
                         unitBinding.tvMyDate.setOnClickListener(v -> {
@@ -686,14 +716,14 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         }
     }
 
-    public void navigateToPeriodListing(){
-        if (periodId > 0){
+    public void navigateToPeriodListing() {
+        if (periodId > 0) {
             Bundle parameters = new Bundle();
             parameters.putLong(Constants.KEY_PERIOD_ID, periodId);
             parameters.putString(Constants.KEY_PERIOD_NAME, periodName);
             parameters.putLong(Constants.SELECTED_DATE, selectedDateLng);
             ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
-        }else {
+        } else {
             Intent intent = new Intent(mActivity, PeriodListingActivity.class);
             intent.putExtra(Constants.SELECTED_DATE, selectedDateLng);
             intent.putExtra(Constants.KEY_PERIOD_ID, periodId);

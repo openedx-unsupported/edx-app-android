@@ -47,8 +47,6 @@ import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
-import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
-import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -73,6 +71,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableBoolean calVisible = new ObservableBoolean();
     public ObservableBoolean frameVisible = new ObservableBoolean();
+    public ObservableBoolean isCheckedObserver = new ObservableBoolean();
     public ObservableField switchText = new ObservableField<>();
 
     // ToolTip
@@ -87,9 +86,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public ObservableField<List<Event>> eventObservable = new ObservableField<>();
     public ObservableLong eventObservableDate = new ObservableLong();
     public static List<Event> eventsArrayList = new ArrayList<>();
-    public long startDateTime, endDateTime;
-
-
+    public static long startDateTime, endDateTime;
 
 
     public ObservableField<String> searchText = new ObservableField<>("");
@@ -120,7 +117,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
 
     public UnitsViewModel(Context context, TaBaseFragment fragment,
-                          EnrolledCoursesResponse course,String periodName, long periodId) {
+                          EnrolledCoursesResponse course, String periodName, long periodId) {
         super(context, fragment);
 
         this.course = course;
@@ -148,12 +145,18 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item, mActivity.getString(R.string.my_date));
+                    String title;
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        title = mActivity.getString(R.string.proposed_date);
+                    } else {
+                        title = mActivity.getString(R.string.my_date);
+                    }
+                    showDatePicker(item, title);
                     break;
                 default:
-                    mActivity.showLoading();
 
-//                    if (item.isPublish()) {
+                    if (item.isPublish()) {
+                        mActivity.showLoading();
                         boolean ssp = units.contains(item);
                         EnrolledCoursesResponse c;
                         if (ssp) {
@@ -218,10 +221,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                             getBlockComponent(item);
                         }
 
-//                    }
-//                    else{
-//                        mActivity.showShortSnack("Unit in not published");
-//                    }
+                    } else {
+                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
+                    }
             }
 
 
@@ -288,14 +290,14 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public void onResume() {
         super.onResume();
         layoutManager = new LinearLayoutManager(mActivity);
-        calVisible.set(false);
+//        calVisible.set(false);
 //        onEventMainThread(units);
 
     }
 
 
     private void showDatePicker(Unit unit, String title) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(), title,new OnResponseCallback<Long>() {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 mActivity.showLoading();
@@ -365,7 +367,15 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
             unitsAdapter.reset(true);
             setUnitFilters();
         }
-        fetchUnits();
+        if (isCheckedObserver.get()) {
+            fetchUnits(startDateTime, endDateTime);
+            calVisible.set(true);
+            frameVisible.set(false);
+        }else {
+            calVisible.set(false);
+            frameVisible.set(true);
+            fetchUnits();
+        }
 
     }
 
@@ -453,7 +463,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         mActivity.showLoading();
         mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
-                "", 0L, take, skip, 0L, 0L,
+                "", 0L, take, skip, startDate, endDate,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -478,19 +488,19 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                         case "Study Task":
                                             colorCode = "#F8E56B";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                                    data.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Experience":
                                             colorCode = "#33FFAC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                                    data.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Course":
                                             colorCode = "#EF98FC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
-                                                    data.get(i).getTitle(),null, colorCode);
+                                                    data.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                     }
@@ -505,19 +515,19 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                         case "Study Task":
                                             colorCode = "#F8E56B";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                                    data.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Experience":
                                             colorCode = "#33FFAC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                                    data.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                         case "Course":
                                             colorCode = "#EF98FC";
                                             et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
-                                                    data.get(i).getTitle(), null,colorCode);
+                                                    data.get(i).getTitle(), null, colorCode);
                                             eventsArrayList.add(et);
                                             break;
                                     }
@@ -527,11 +537,12 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                         }
 
 
-
-                        EventBus.getDefault().post(eventsArrayList);
-                        eventObservable.set(eventsArrayList);
+//                        EventBus.getDefault().post(eventsArrayList);
                         startDateTime = startDate;
+                        endDateTime = endDate;
                         eventObservableDate.set(startDate);
+                        eventObservable.set(eventsArrayList);
+                        mActivity.hideLoading();
                     }
 
                     @Override
@@ -615,25 +626,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public void unRegisterEventBus() {
         EventBus.getDefault().unregister(this);
     }
-
-    @Override
-    public void onAction(long date, long startDateTime, long endDateTime) {
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.eventObservableDate.set(startDateTime);
-//        viewModel.eventObservable.set(eventList);
-        fetchUnits(startDateTime, endDateTime);
-    }
-
-    @Override
-    public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
-        ActivityCalendarBottomSheet bottomSheetDialogFragment =
-                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime,periodId
-                        , periodName);
-        bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
-                "units");
-    }
-
 
 
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
@@ -792,7 +784,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 if (model.getMyDate() > 0) {
                     unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                 } else {
-                    unitBinding.tvMyDate.setText(R.string.proposed_date);
+                    unitBinding.tvMyDate.setText(R.string.change_date);
                 }
 
                 String role = mDataManager.getLoginPrefs().getRole();
@@ -808,11 +800,27 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
                 }
 
+                if (role != null && role.equals(UserRole.Student.name())) {
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.student_icon,
+                            0, 0, 0);
+                } else {
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.teacher_icon,
+                            0, 0, 0);
+                }
 
-                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
-                    if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())){
+
+                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())) {
+                    if (mDataManager.getLoginPrefs().getRole() != null
+                            && mDataManager.getLoginPrefs().getRole()
+                            .equals(UserRole.Student.name())) {
                         unitBinding.tvMyDate.setEnabled(false);
+                    } else {
+                        unitBinding.tvMyDate.setEnabled(true);
                     }
+                } else {
+                    unitBinding.tvMyDate.setEnabled(true);
                 }
 
                 switch (model.getStatus()) {
@@ -833,29 +841,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                         break;
                 }
 
-                if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name()) &&
-                        !TextUtils.isEmpty(model.getStatus())) {
-                    try {
-                        switch (UnitStatusType.valueOf(model.getStatus())) {
-                            case Completed:
-                                unitBinding.card.setBackgroundColor(
-                                        ContextCompat.getColor(getContext(), R.color.secondary_green));
-                                break;
-                            case InProgress:
-                                unitBinding.card.setBackgroundColor(
-                                        ContextCompat.getColor(getContext(), R.color.humana_card_background));
-                                break;
-                            case Pending:
-                                unitBinding.card.setBackgroundColor(ContextCompat.getColor(getContext(),
-                                        R.color.material_red_500));
-                                break;
-                        }
-                    } catch (IllegalArgumentException e) {
-                        unitBinding.statusIcon.setVisibility(View.GONE);
-                    }
-                } else {
-                    unitBinding.statusIcon.setVisibility(View.GONE);
-                }
+
 
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
@@ -873,8 +859,36 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         }
     }
 
-    public void changeToCalenderView() {
-        ActivityUtil.gotoPage(mActivity, UnitCalendarActivity.class);
+    public void changeToCalenderView(Boolean isChecked) {
+        if (isChecked) {
+            isCheckedObserver.set(isChecked);
+            calVisible.set(true);
+            frameVisible.set(false);
+            fetchData();
+        } else {
+            isCheckedObserver.set(isChecked);
+            calVisible.set(false);
+            frameVisible.set(true);
+        }
+    }
+
+
+    @Override
+    public void onAction(long date, long startDateTime, long endDateTime) {
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+//        this.eventObservableDate.set(startDateTime);
+//        eventObservable.set(eventsArrayList);
+        fetchUnits(startDateTime, endDateTime);
+    }
+
+    @Override
+    public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
+        ActivityCalendarBottomSheet bottomSheetDialogFragment =
+                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
+                        , periodName,filters);
+        bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
+                "units");
     }
 
     public void searchUnits() {

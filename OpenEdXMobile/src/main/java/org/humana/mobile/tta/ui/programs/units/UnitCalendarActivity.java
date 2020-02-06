@@ -140,10 +140,10 @@ public class UnitCalendarActivity extends BaseVMActivity implements IMxCalenderL
     @Override
     public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
 
-        ActivityCalendarBottomSheet bottomSheetDialogFragment =
-                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId, periodName);
-        bottomSheetDialogFragment.show(this.getSupportFragmentManager(),
-                "units");
+//        ActivityCalendarBottomSheet bottomSheetDialogFragment =
+//                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId, periodName);
+//        bottomSheetDialogFragment.show(this.getSupportFragmentManager(),
+//                "units");
     }
 
 

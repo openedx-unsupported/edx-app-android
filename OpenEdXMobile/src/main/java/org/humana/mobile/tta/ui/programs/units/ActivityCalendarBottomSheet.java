@@ -24,6 +24,7 @@ import org.humana.mobile.databinding.TFragmentUnitsBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.local.db.table.Unit;
+import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -47,14 +48,17 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
     private Long selectedDate, startDateTime, endDateTime;
     FragCalendarBottomSheetBinding binding;
     private int sheetState;
+    List<ProgramFilter> filters;
 
     @SuppressLint("ValidFragment")
-    public ActivityCalendarBottomSheet(Long selectedDate, Long startDateTime, Long endDateTime, Long periodId, String periodName) {
+    public ActivityCalendarBottomSheet(Long selectedDate, Long startDateTime, Long endDateTime,
+                                       Long periodId, String periodName, List<ProgramFilter> filters) {
         this.selectedDate = selectedDate;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.periodId = periodId;
         this.periodName = periodName;
+        this.filters = filters;
     }
 
     public ActivityCalendarBottomSheet() {
@@ -77,7 +81,7 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
         savedInstanceState = getActivity().getIntent().getExtras();
 //        selectedDate = savedInstanceState.getLong("selectedDate", 0L);
         viewModel = new CalendarBottomSheetViewModel(getActivity(),this, course,selectedDate,
-                startDateTime, endDateTime, periodId, periodName);
+                startDateTime, endDateTime, periodId, periodName, filters);
         viewModel.registerEventBus();
     }
 

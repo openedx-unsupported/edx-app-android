@@ -544,7 +544,7 @@ public class UserStatusViewModel extends BaseViewModel {
                 if (model.getMyDate() > 0) {
                     unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                 } else {
-                    unitBinding.tvMyDate.setText(R.string.proposed_date);
+                    unitBinding.tvMyDate.setText(R.string.change_date);
                 }
 
                 String role = mDataManager.getLoginPrefs().getRole();

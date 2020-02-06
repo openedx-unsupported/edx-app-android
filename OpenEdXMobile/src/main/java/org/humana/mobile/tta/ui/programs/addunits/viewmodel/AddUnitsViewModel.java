@@ -166,74 +166,82 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                     break;
                 case R.id.tv_my_date:
-                    showDatePicker(item,"My date");
+                    String title;
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                        title = mActivity.getString(R.string.proposed_date);
+                    }else {
+                        title = mActivity.getString(R.string.my_date);
+                    }
+                    showDatePicker(item, title);
                     break;
                 default:
 
                     mActivity.showLoading();
-
-                    boolean ssp = selectedOriginal.contains(item);
-                    EnrolledCoursesResponse c;
-                    if (ssp) {
-                        c = course;
-                    } else {
-                        c = parentCourse;
-                    }
-
-                    if (c == null){
-
-                        String courseId;
+                    if (item.isPublish()) {
+                        boolean ssp = selectedOriginal.contains(item);
+                        EnrolledCoursesResponse c;
                         if (ssp) {
-                            courseId = mDataManager.getLoginPrefs().getProgramId();
+                            c = course;
                         } else {
-                            courseId = mDataManager.getLoginPrefs().getParentId();
+                            c = parentCourse;
                         }
-                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                            @Override
-                            public void onSuccess(ResponseBody responseBody) {
 
-                                mDataManager.getenrolledCourseByOrg(Constants.KEY_HUMANA, new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                    @Override
-                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                        if (courseId != null) {
-                                            for (EnrolledCoursesResponse response: data) {
-                                                if(response.getCourse().getId().trim().toLowerCase()
-                                                        .equals(courseId.trim().toLowerCase())) {
-                                                    if (ssp) {
-                                                        AddUnitsViewModel.this.course = response;
-                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                    } else {
-                                                        AddUnitsViewModel.this.parentCourse = response;
+                        if (c == null) {
+
+                            String courseId;
+                            if (ssp) {
+                                courseId = mDataManager.getLoginPrefs().getProgramId();
+                            } else {
+                                courseId = mDataManager.getLoginPrefs().getParentId();
+                            }
+                            mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                                @Override
+                                public void onSuccess(ResponseBody responseBody) {
+
+                                    mDataManager.getenrolledCourseByOrg(Constants.KEY_HUMANA, new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                        @Override
+                                        public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                            if (courseId != null) {
+                                                for (EnrolledCoursesResponse response : data) {
+                                                    if (response.getCourse().getId().trim().toLowerCase()
+                                                            .equals(courseId.trim().toLowerCase())) {
+                                                        if (ssp) {
+                                                            AddUnitsViewModel.this.course = response;
+                                                            EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                        } else {
+                                                            AddUnitsViewModel.this.parentCourse = response;
+                                                        }
+                                                        getBlockComponent(item);
+                                                        break;
                                                     }
-                                                    getBlockComponent(item);
-                                                    break;
                                                 }
+                                            } else {
+                                                mActivity.hideLoading();
                                             }
-                                        } else {
-                                            mActivity.hideLoading();
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        mActivity.hideLoading();
-                                        mActivity.showLongSnack("You're not enrolled in the program");
-                                    }
-                                });
-                            }
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            mActivity.hideLoading();
+                                            mActivity.showLongSnack("You're not enrolled in the program");
+                                        }
+                                    });
+                                }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack("enroll failure");
-                            }
-                        });
+                                @Override
+                                public void onFailure(Exception e) {
+                                    mActivity.hideLoading();
+                                    mActivity.showLongSnack("enroll failure");
+                                }
+                            });
 
-                    } else {
-                        getBlockComponent(item);
+                        } else {
+                            getBlockComponent(item);
+                        }
+
+                    } else{
+                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
                     }
-
-
 
             }
         });
@@ -671,7 +679,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                     if (model.getMyDate() > 0){
                         unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                     } else {
-                        unitBinding.tvMyDate.setText(R.string.proposed_date);
+                        unitBinding.tvMyDate.setText(R.string.change_date);
                     }
                     unitBinding.tvMyDate.setVisibility(View.VISIBLE);
                 } else {
@@ -727,10 +735,25 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                 if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
                     if (mDataManager.getLoginPrefs().getRole() != null
-                            && mDataManager.getLoginPrefs().getRole().trim()
-                            .equalsIgnoreCase(UserRole.Student.name())){
+                            && mDataManager.getLoginPrefs().getRole()
+                            .equals(UserRole.Student.name())){
                         unitBinding.tvMyDate.setEnabled(false);
+                    }else {
+                        unitBinding.tvMyDate.setEnabled(true);
                     }
+                }else {
+                    unitBinding.tvMyDate.setEnabled(true);
+                }
+
+                String role = mDataManager.getLoginPrefs().getRole();
+                if (role != null && role.equals(UserRole.Student.name())){
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.student_icon,
+                            0,0,0);
+                }else {
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.teacher_icon,
+                            0,0,0);
                 }
 
                 switch (model.getStatus()) {

@@ -34,6 +34,7 @@ import org.humana.mobile.discussion.DiscussionTopic;
 import org.humana.mobile.discussion.DiscussionTopicDepth;
 import org.humana.mobile.http.callback.Callback;
 import org.humana.mobile.model.Page;
+import org.humana.mobile.model.VideoModel;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.api.ProfileModel;
 import org.humana.mobile.model.course.CourseComponent;
@@ -1333,9 +1334,9 @@ public class DataManager extends BaseRoboInjector {
     public void downloadSingle(String url,
                                String title,
                                FragmentActivity activity,
-                               PDFBlockModel scorm,
+                               VideoModel scorm,
                                VideoDownloadHelper.DownloadManagerCallback callback) {
-        DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
+        DownloadEntry de = (DownloadEntry) scorm;
         de.url = url;
         de.title = title;
 
@@ -3849,15 +3850,6 @@ public class DataManager extends BaseRoboInjector {
                 callback.onFailure(ex);
             }
         }.execute();
-
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                callback.onSuccess(mLocalDataSource.getPeriods(userName));
-//            }
-//        }.start();
-
     }
 
     public void updatePeriods(String programId, String sectionId,

@@ -42,34 +42,21 @@
                 android:background="@drawable/rectangle_transparent"
                 text_changed_listener="@{viewModel.watcher}"
                 android:layout_marginEnd="@dimen/_24px"/>
-            <ImageView
-                android:id="@+id/assistant_button"
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switch_unit"
+                tool_tip="@{viewModel.calenderTooltipText}"
+                tool_tip_gravity="@{viewModel.calenderTooltipGravity}"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.15"
-                android:padding="8dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/_20dp"
-                android:layout_marginTop="8dp"
-                android:visibility="gone"
-                android:onClick="@{()->viewModel.fetchUnits()}"
-                android:contentDescription="assistant button"
-                android:src="@drawable/t_icon_search_blue" />
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
                 android:layout_gravity="center|end"
-                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
-                android:gravity="top"
+                android:layout_marginEnd="8dp"
+                android:onCheckedChanged="@{(switch, checked) ->viewModel.changeToCalenderView(checked)}"
+                android:layout_weight="0.2"
                 android:foregroundGravity="center"
-                tool_tip="@{viewModel.calenderTooltipText}"
-                android:src="@drawable/t_icon_calendar"
-                android:tint="@color/material_red_500"
-                tool_tip_gravity="@{viewModel.calenderTooltipGravity}"
-                android:onClick="@{()->viewModel.changeToCalenderView()}"
-                android:id="@+id/switch_unit"/>
+                android:gravity="top"
+                android:tint="@color/material_red_500" />
 
         </LinearLayout>
         <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
@@ -85,10 +72,10 @@
             finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
+            android:visibility="@{viewModel.calVisible?View.VISIBLE:View.GONE}"
             android:id="@+id/cal_layout">
         <com.lib.mxcalendar.view.MxCalenderView
             android:layout_width="match_parent"
@@ -99,7 +86,7 @@
             android:id="@+id/calendar_view">
 
         </com.lib.mxcalendar.view.MxCalenderView>
-        </LinearLayout>
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
