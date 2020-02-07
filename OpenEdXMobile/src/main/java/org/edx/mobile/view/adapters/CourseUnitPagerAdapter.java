@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.edx.mobile.model.api.AuthorizationDenialReason;
+import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -14,13 +15,14 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.VideoUtil;
+import org.edx.mobile.view.LockedCourseUnitFragment;
 import org.edx.mobile.view.CourseBaseActivity;
-import org.edx.mobile.view.CourseUnitVideoPlayerFragment;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
 import org.edx.mobile.view.CourseUnitFragment;
 import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment;
 import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment;
+import org.edx.mobile.view.CourseUnitVideoPlayerFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
 import org.edx.mobile.view.CourseUnitYoutubePlayerFragment;
 
@@ -30,17 +32,20 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
     private Config config;
     private List<CourseComponent> unitList;
     private EnrolledCoursesResponse courseData;
+    private CourseUpgradeResponse courseUpgradeData;
     private CourseUnitFragment.HasComponent callback;
 
     public CourseUnitPagerAdapter(FragmentManager manager,
                                   Config config,
                                   List<CourseComponent> unitList,
                                   EnrolledCoursesResponse courseData,
+                                  CourseUpgradeResponse courseUpgradeData,
                                   CourseUnitFragment.HasComponent callback) {
         super(manager);
         this.config = config;
         this.unitList = unitList;
         this.courseData = courseData;
+        this.courseUpgradeData = courseUpgradeData;
         this.callback = callback;
     }
 
@@ -79,7 +84,11 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         CourseUnitFragment unitFragment;
         final boolean isYoutubeVideo = (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null);
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+            if (courseUpgradeData == null) {
+                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+            } else {
+                unitFragment = LockedCourseUnitFragment.newInstance(minifiedUnit, courseData, courseUpgradeData);
+            }
         }
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
         else if (isCourseUnitVideo(minifiedUnit)) {

@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,19 +8,38 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.ProgressBar;
 
-import org.edx.mobile.R;
+import com.google.inject.Inject;
 
+import org.edx.mobile.R;
+import org.edx.mobile.event.CourseUpgradedEvent;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
+
+import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
 import static org.edx.mobile.util.links.WebViewLink.Authority.ENROLLED_COURSE_INFO;
 
 public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
+    @Inject
+    AnalyticsRegistry analyticsRegistry;
+
     @InjectView(R.id.loading_indicator)
     private ProgressBar progressWheel;
 
-    public static Fragment newInstance(@NonNull String url, @Nullable String javascript, boolean isManuallyReloadable) {
+    public static Fragment newInstance(@NonNull String url, @Nullable String javascript,
+                                       boolean isManuallyReloadable,
+                                       @NonNull EnrolledCoursesResponse courseData,
+                                       @Nullable CourseComponent unit) {
         final Fragment fragment = new CourseUpgradeWebViewFragment();
-        fragment.setArguments(makeArguments(url, javascript, isManuallyReloadable));
+        final Bundle bundle = makeArguments(url, javascript, isManuallyReloadable);
+        bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+        if (unit != null) {
+            bundle.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        }
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -43,11 +63,12 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
                     // This means that the transaction completed successfully and user tapped on the
                     // WebView's `View Course` button.
                     if (helper.authority == ENROLLED_COURSE_INFO) {
-                        getActivity().finish();
+                        onCoursePaymentSuccessful();
                     }
                 }
             });
         }
+        analyticsRegistry.trackScreenView(Analytics.Screens.PLACE_ORDER_COURSE_UPGRADE);
     }
 
     @Override
@@ -69,9 +90,38 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
         if (getActivity() != null && authWebView.getWebView() != null) {
             final String url = authWebView.getWebView().getUrl();
             if (url != null && url.contains("checkout/receipt")) {
-                getActivity().finish();
+                onCoursePaymentSuccessful();
             }
+        }
+    }
 
+    public void onCoursePaymentSuccessful() {
+        // Finish activity
+        final Activity activity = getActivity();
+        if( activity != null) {
+            activity.finish();
+        }
+
+        final Bundle arguments = getArguments();
+        if (arguments != null) {
+            final EnrolledCoursesResponse courseData =
+                    (EnrolledCoursesResponse) arguments.getSerializable(Router.EXTRA_COURSE_DATA);
+
+            // Fire Course Upgraded event
+            EventBus.getDefault().postSticky(new CourseUpgradedEvent(courseData.getCourse().getId()));
+
+            // Fire analytics
+            final CourseComponent courseUnit = (CourseComponent) arguments.getSerializable(Router.EXTRA_COURSE_UNIT);
+            if (courseUnit != null) {
+                analyticsRegistry.trackCourseUpgradeSuccess(courseUnit.getId(),
+                        courseData.getCourse().getId(), courseUnit.getBlockId());
+            } else {
+                analyticsRegistry.trackCourseUpgradeSuccess(null,
+                        courseData.getCourse().getId(), null);
+            }
+        } else {
+            // Fire Course Upgraded event
+            EventBus.getDefault().postSticky(new CourseUpgradedEvent(null));
         }
     }
 }

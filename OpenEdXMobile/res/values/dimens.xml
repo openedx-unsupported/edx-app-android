@@ -9,6 +9,7 @@
     <dimen name="common_course_display_margin_top">15dp</dimen>
     <dimen name="common_course_display_margin_side">20dp</dimen>
     <dimen name="course_outline_list_item_min_height">64dp</dimen>
+    <dimen name="image_border_width">1dp</dimen>
 
     <!-- Per Material Design Guidelines -->
     <dimen name="action_bar_icon_size">24dp</dimen>
@@ -21,11 +22,11 @@
 
     <!-- Navigation Drawer -->
     <dimen name="height_drawer_menu">44dp</dimen>
-    <dimen name="drawer_profile_image_border_width">1dp</dimen>
+    <dimen name="drawer_profile_image_border_width">@dimen/image_border_width</dimen>
     <dimen name="drawer_app_version_text">12sp</dimen>
 
     <!-- Popup Spinner -->
-    <dimen name="popup_spinner_border">1dp</dimen>
+    <dimen name="popup_spinner_border">@dimen/image_border_width</dimen>
     <dimen name="popup_spinner_min_height">34dp</dimen>
 
     <!-- Course Outline -->

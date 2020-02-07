@@ -446,7 +446,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         classesList.add(CourseUnitMobileNotSupportedFragment.class);
 
         CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
-                unitList, courseData, hasComponent);
+                unitList, courseData, null, hasComponent);
 
         for (int size = unitList.size(), i = 0; i < size; i++) {
             assertThat(adapter.getItem(i)).isInstanceOf(classesList.get(i));
@@ -545,7 +545,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
             CourseUnitFragment.HasComponent hasComponent = Mockito.mock(CourseUnitFragment.HasComponent.class);
 
             CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
-                    Collections.singletonList(paramCourseComponent), courseData, hasComponent);
+                    Collections.singletonList(paramCourseComponent), courseData, null, hasComponent);
 
             assertThat(adapter.getItem(0)).isInstanceOf(expectedFragmentClass);
         }

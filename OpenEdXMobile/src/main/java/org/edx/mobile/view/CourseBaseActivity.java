@@ -14,6 +14,7 @@ import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
+import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
@@ -56,6 +57,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
     Config config;
 
     protected EnrolledCoursesResponse courseData;
+    protected CourseUpgradeResponse courseUpgradeData;
     protected String courseComponentId;
     protected String blocksApiVersion;
 
@@ -104,12 +106,14 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+        outState.putParcelable(Router.EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData);
         outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
     }
 
     protected void restore(Bundle savedInstanceState) {
         blocksApiVersion = config.getApiUrlVersionConfig().getBlocksApiVersion();
         courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
+        courseUpgradeData = savedInstanceState.getParcelable(Router.EXTRA_COURSE_UPGRADE_DATA);
         courseComponentId = savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
 
         if (courseComponentId == null) {
