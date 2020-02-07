@@ -19,6 +19,7 @@ import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.Analytics;
@@ -168,6 +169,9 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         }
         if (binding != null) {
             binding.viewPager.setCurrentItem(binding.viewPager.getAdapter().getCount() - 1, true);
+            if (event.getScreenName() != null) {
+                EventBus.getDefault().post(ScreenArgumentsEvent.Companion.getNewInstance(event.getScreenName()));
+            }
         }
     }
 
