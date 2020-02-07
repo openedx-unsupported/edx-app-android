@@ -15,6 +15,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
+import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
@@ -251,12 +252,9 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
             final PanelFindCourseBinding footer = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
                     R.layout.panel_find_course, binding.myCourseList, false);
             binding.myCourseList.addFooterView(footer.getRoot(), null, false);
-            footer.courseBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    environment.getAnalyticsRegistry().trackUserFindsCourses();
-                    EventBus.getDefault().post(new MoveToDiscoveryTabEvent());
-                }
+            footer.courseBtn.setOnClickListener(v -> {
+                environment.getAnalyticsRegistry().trackUserFindsCourses();
+                EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.COURSE_DISCOVERY));
             });
         }
         // Add empty view to cause divider to render at the bottom of the list.

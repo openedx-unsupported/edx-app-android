@@ -15,6 +15,8 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
+import org.edx.mobile.deeplink.Screen;
+import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.logger.Logger;
@@ -28,6 +30,7 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 import roboguice.RoboGuice;
 
@@ -123,6 +126,12 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
                 final String courseId = helper.params.get(WebViewLink.Param.COURSE_ID);
                 final String emailOptIn = helper.params.get(WebViewLink.Param.EMAIL_OPT);
                 onClickEnroll(courseId, Boolean.getBoolean(emailOptIn));
+                break;
+            }
+            case COURSE: {
+                if (helper.params.containsKey(WebViewLink.Param.PROGRAMS)) {
+                    EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.PROGRAM_DISCOVERY));
+                }
                 break;
             }
         }

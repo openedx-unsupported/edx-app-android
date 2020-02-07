@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class WebViewLinkTest extends BaseTestCase {
     @Test
@@ -86,5 +87,18 @@ public class WebViewLinkTest extends BaseTestCase {
         assertNotNull(link);
         assertNotNull(link.params);
         assertEquals(pathId, link.params.get(WebViewLink.Param.PATH_ID));
+    }
+
+    @Test
+    public void testWebViewLinkParsesProgramDiscovery() {
+        final Uri uri = new Uri.Builder()
+                .scheme(WebViewLink.SCHEME)
+                .authority(WebViewLink.Authority.COURSE.getKey())
+                .appendQueryParameter(WebViewLink.Param.PROGRAMS, "")
+                .build();
+        final WebViewLink link = WebViewLink.parse(uri.toString());
+        assertNotNull(link);
+        assertNotNull(link.params);
+        assertTrue(link.params.containsKey(WebViewLink.Param.PROGRAMS));
     }
 }
