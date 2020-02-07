@@ -22,6 +22,7 @@ public class CourseEntry implements Serializable {
     private String start; // start date
     private String course_image;
     private String end; // completion date
+    private String dynamic_upgrade_deadline; // Upgrade deadline to get unlimited access to the course as long as it exists.
     private String start_display;
     private StartType start_type;
     @NonNull private String name;
@@ -62,6 +63,10 @@ public class CourseEntry implements Serializable {
 
     public void setCourse_image(String course_image) {
         this.course_image = course_image;
+    }
+
+    public String getDynamicUpgradeDeadline() {
+        return dynamic_upgrade_deadline;
     }
 
     public String getEnd() {

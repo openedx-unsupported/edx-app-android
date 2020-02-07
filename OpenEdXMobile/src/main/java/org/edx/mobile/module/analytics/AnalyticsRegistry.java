@@ -72,6 +72,13 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
+    public void trackCourseUpgradeSuccess(String blockId, String courseId, String minifiedBlockId) {
+        for (Analytics service : services) {
+            service.trackCourseUpgradeSuccess(blockId, courseId, minifiedBlockId);
+        }
+    }
+
+    @Override
     public void trackUserFindsCourses() {
         for (Analytics service : services) {
             service.trackUserFindsCourses();

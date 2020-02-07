@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.edx.mobile.model.api.AuthorizationDenialReason;
+import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -20,6 +21,7 @@ import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment;
 import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment;
 import org.edx.mobile.view.CourseUnitVideoFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
+import org.edx.mobile.view.LockedCourseUnitFragment;
 
 import java.util.List;
 
@@ -27,17 +29,20 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
     private Config config;
     private List<CourseComponent> unitList;
     private EnrolledCoursesResponse courseData;
+    private CourseUpgradeResponse courseUpgradeData;
     private CourseUnitFragment.HasComponent callback;
 
     public CourseUnitPagerAdapter(FragmentManager manager,
                                   Config config,
                                   List<CourseComponent> unitList,
                                   EnrolledCoursesResponse courseData,
+                                  CourseUpgradeResponse courseUpgradeData,
                                   CourseUnitFragment.HasComponent callback) {
         super(manager);
         this.config = config;
         this.unitList = unitList;
         this.courseData = courseData;
+        this.courseUpgradeData = courseUpgradeData;
         this.callback = callback;
     }
 
@@ -75,7 +80,11 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
 
         CourseUnitFragment unitFragment;
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+            if (courseUpgradeData == null) {
+                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+            } else {
+                unitFragment = LockedCourseUnitFragment.newInstance(minifiedUnit, courseData, courseUpgradeData);
+            }
         }
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
         else if (isCourseUnitVideo(minifiedUnit)) {

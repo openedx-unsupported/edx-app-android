@@ -85,6 +85,7 @@ public interface CourseService {
     /**
      * @return Upgrade status for the given course.
      */
+    @Headers("Cache-Control: no-cache")
     @GET("/api/experiments/v0/custom/REV-934")
     Call<CourseUpgradeResponse> getCourseUpgradeStatus(@Query("course_id") String courseId);
 

@@ -8,7 +8,10 @@ import android.support.v4.app.Fragment;
 
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
+import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+
+import de.greenrobot.event.EventBus;
 
 import static org.edx.mobile.view.Router.EXTRA_ANNOUNCEMENTS;
 import static org.edx.mobile.view.Router.EXTRA_COURSE_DATA;
@@ -43,5 +46,11 @@ public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
     @Override
     public Object getRefreshEvent() {
         return new CourseDashboardRefreshEvent();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().removeStickyEvent(CourseUpgradedEvent.class);
     }
 }

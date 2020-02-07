@@ -296,6 +296,16 @@ public class SegmentAnalytics implements Analytics {
         trackSegmentEvent(Events.VIDEO_DOWNLOADED, aEvent.properties);
     }
 
+    @Override
+    public void trackCourseUpgradeSuccess(String blockId, String courseId, String minifiedBlockId) {
+        SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_UPGRADE_SUCCESS);
+        aEvent.data.putValue(Keys.BLOCK_ID, blockId);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        //Add category for Google Analytics
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, courseId);
+        trackSegmentEvent(Events.COURSE_UPGRADE_SUCCESS, aEvent.properties);
+    }
 
     /**
      * This function is used to track Bulk Download from Subsection

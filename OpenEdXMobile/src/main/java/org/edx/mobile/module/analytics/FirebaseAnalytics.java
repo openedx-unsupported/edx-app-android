@@ -179,6 +179,18 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
+    public void trackCourseUpgradeSuccess(String blockId, String courseId, String minifiedBlockId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.COURSE_UPGRADE_SUCCESS,
+                Values.USER_COURSE_UPGRADE_SUCCESS);
+        event.putCourseId(courseId);
+        event.putString(Keys.BLOCK_ID, minifiedBlockId);
+
+        //Add category for Google Analytics
+        event.addCategoryToBiEvents(Values.CONVERSION, courseId);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
     public void trackSubSectionBulkVideoDownload(String section, String subSection,
                                                  String enrollmentId, long videoCount) {
         final FirebaseEvent event = new FirebaseEvent(Events.BULK_DOWNLOAD_SUBSECTION,

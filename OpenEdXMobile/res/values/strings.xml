@@ -263,6 +263,14 @@
     <!--Title of place order for course upgrade screen-->
     <string name="place_order_title" tools:ignore="MissingTranslation">Place Order</string>
 
+    <!-- Mobile Payments -->
+    <string name="payments_info_header" tools:ignore="MissingTranslation">Pursue a Verified Certificate!</string>
+    <string name="payments_info_details" tools:ignore="MissingTranslation">Highlight your new knowledge and skills with a verified certificate.\n\nUse this valuable credential to improve your job prospects and advance your career, or highlight your certificate in school applications.</string>
+    <string name="audit_access_expires_on" tools:ignore="MissingTranslation">Audit Access Expires {date}</string>
+    <string name="audit_access_expires_details" tools:ignore="MissingTranslation">You loose all course access, including your progress, on {date}.</string>
+    <string name="upgrade_deadline_details" tools:ignore="MissingTranslation">Upgrade by {date} to get unlimited access to the course as long as it exists on the site.</string>
+    <string name="locked_content_header" tools:ignore="MissingTranslation">Available to verified learners!</string>
+    <string name="locked_content_details" tools:ignore="MissingTranslation">Graded assessments are available to Verified Track Learners. Upgrade below to unlock.</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->

@@ -1,0 +1,90 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/payment_blue_bg_2"
+                    android:paddingLeft="@dimen/edx_margin"
+                    android:paddingTop="@dimen/edx_double_margin"
+                    android:paddingRight="@dimen/edx_margin"
+                    android:paddingBottom="@dimen/edx_double_margin">
+
+                    <org.edx.mobile.view.custom.IconImageViewXml
+                        android:id="@+id/lock"
+                        android:layout_width="@dimen/fa_xxx_large"
+                        android:layout_height="@dimen/fa_xxx_large"
+                        app:iconColor="@color/white"
+                        app:iconName="fa-lock"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_header"
+                        style="@style/bold_white_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/edx_margin"
+                        android:singleLine="true"
+                        android:text="@string/locked_content_header"
+                        android:textSize="@dimen/edx_large"
+                        app:layout_constraintBottom_toBottomOf="@+id/lock"
+                        app:layout_constraintStart_toEndOf="@+id/lock"
+                        app:layout_constraintTop_toTopOf="@+id/lock" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/edx_double_margin"
+                        android:layout_marginEnd="@dimen/edx_margin"
+                        android:text="@string/locked_content_details"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edx_base"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lock" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/edx_margin"
+                    android:adjustViewBounds="true"
+                    android:background="@color/grey_act_background"
+                    android:contentDescription="@string/tab_label_certificate"
+                    android:padding="@dimen/image_border_width"
+                    android:src="@drawable/payment_certificate" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:background="@color/edx_success_accent"
+            tools:layout_height="150dp" />
+
+    </LinearLayout>
+
+</layout>

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -67,7 +68,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
         pager = findViewById(R.id.pager);
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
-                environment.getConfig(), unitList, courseData, this);
+                environment.getConfig(), unitList, courseData, courseUpgradeData, this);
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -251,5 +252,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     @Override
     public boolean isMainUnitLoaded() {
         return viewPagerState == State.MAIN_UNIT_LOADED;
+    }
+
+    public void onEvent(CourseUpgradedEvent event) {
+        finish();
     }
 }

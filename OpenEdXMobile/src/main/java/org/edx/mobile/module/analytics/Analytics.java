@@ -130,6 +130,15 @@ public interface Analytics {
                                String unitUrl);
 
     /**
+     * Track user's successful course upgrade.
+     *
+     * @param blockId         ID of the locked course unit from which the user is redirected to upgrade screen.
+     * @param courseId        ID of the course which user has upgraded.
+     * @param minifiedBlockId Block ID of the locked course unit from which the user is redirected to upgrade screen.
+     */
+    void trackCourseUpgradeSuccess(String blockId, String courseId, String minifiedBlockId);
+
+    /**
      * This function is used to track launching the browser
      *
      * @param url
@@ -514,6 +523,7 @@ public interface Analytics {
         String USER_REGISTRATION_SUCCESS = "edx.bi.app.user.register.success";
         String USER_COURSE_ENROLL_CLICKED = "edx.bi.app.course.enroll.clicked";
         String USER_COURSE_ENROLL_SUCCESS = "edx.bi.app.course.enroll.success";
+        String USER_COURSE_UPGRADE_SUCCESS = "edx.bi.app.course.upgrade.success";
         String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
         String CONVERSION = "conversion";
         String USER_ENGAGEMENT = "user-engagement";
@@ -620,6 +630,9 @@ public interface Analytics {
         String WHATS_NEW = "WhatsNew: Whats New";
         String VIDEOS_COURSE_VIDEOS = "Videos: Course Videos";
         String ALL_SUBJECTS = "Discover: All Subjects";
+        String PAYMENTS_INFO_SCREEN = "Payments info";
+        String COURSE_UNIT_LOCKED = "Course unit locked";
+        String PLACE_ORDER_COURSE_UPGRADE = "Place order: course upgrade";
     }
 
     interface Events {
@@ -645,6 +658,7 @@ public interface Analytics {
         String REGISTRATION_SUCCESS = "Registration Success";
         String COURSE_ENROLL_CLICKED = "Course Enroll Clicked";
         String COURSE_ENROLL_SUCCESS = "Course Enroll Success";
+        String COURSE_UPGRADE_SUCCESS = "Course Upgrade Success";
         String DISCOVERY_COURSES_SEARCH = "Discovery: Courses Search";
         String SPEED = "Connected Speed Report";
         String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
