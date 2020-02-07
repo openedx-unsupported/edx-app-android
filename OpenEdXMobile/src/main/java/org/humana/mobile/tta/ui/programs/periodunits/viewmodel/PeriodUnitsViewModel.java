@@ -15,6 +15,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 
+import com.lib.mxcalendar.models.Event;
+import com.lib.mxcalendar.view.IMxCalenderListener;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -41,6 +43,7 @@ import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
+import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
 import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
@@ -52,7 +55,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 
-public class PeriodUnitsViewModel extends BaseViewModel {
+public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderListener {
 
     private static final int DEFAULT_TAKE = 10;
     private static final int DEFAULT_SKIP = 0;
@@ -66,6 +69,7 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     public ObservableBoolean addUnitsVisible = new ObservableBoolean();
     public ObservableField<String> periodName = new ObservableField<>();
 
+
     private EnrolledCoursesResponse course;
     private long periodId;
     private List<Unit> units;
@@ -78,6 +82,15 @@ public class PeriodUnitsViewModel extends BaseViewModel {
     private EnrolledCoursesResponse parentCourse;
     public ObservableField<String> searchText = new ObservableField<>("");
     private List<SelectedFilter> selectedFilter;
+
+//    Calendar View
+
+    public ObservableField<List<Event>> eventObservable = new ObservableField<>();
+    public static List<Event> eventsArrayList = new ArrayList<>();
+    public static long startDateTime, endDateTime;
+    public ObservableBoolean calVisible = new ObservableBoolean();
+    public ObservableBoolean frameVisible = new ObservableBoolean();
+    public ObservableBoolean isCheckedObserver = new ObservableBoolean();
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -338,7 +351,15 @@ public class PeriodUnitsViewModel extends BaseViewModel {
             setUnitFilters();
         }
 
-        fetchUnits();
+        if (isCheckedObserver.get()) {
+            fetchUnits(startDateTime, endDateTime);
+            calVisible.set(true);
+            frameVisible.set(false);
+        }else {
+            calVisible.set(false);
+            frameVisible.set(true);
+            fetchUnits();
+        }
 
     }
 
@@ -418,6 +439,116 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     }
 
+
+
+
+    public void fetchUnits(Long startDate, Long endDate) {
+        mActivity.showLoading();
+        mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
+                mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
+                "", 0L, take, skip, startDate, endDate,
+                new OnResponseCallback<List<Unit>>() {
+                    @Override
+                    public void onSuccess(List<Unit> data) {
+                        if (data.size() < take) {
+                            allLoaded = true;
+                        }
+                        populateUnits(data);
+                        unitsAdapter.setLoadingDone();
+                        mActivity.hideLoading();
+
+                        if (data.size() == 0) {
+                            emptyVisible.set(true);
+                            calVisible.set(false);
+                            frameVisible.set(false);
+                        }else {
+                            emptyVisible.set(false);
+                            calVisible.set(true);
+                            frameVisible.set(false);
+                        }
+
+                        eventsArrayList.clear();
+                        String colorCode = "#ffffff";
+                        Event et;
+                        if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getCommonDate() > 0) {
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getCommonDate()),
+                                                    data.get(i).getTitle(), null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
+                                }
+                            }
+                        } else {
+
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getMyDate() > 0) {
+                                    switch (data.get(i).getType()) {
+                                        case "Study Task":
+                                            colorCode = "#F8E56B";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Experience":
+                                            colorCode = "#33FFAC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                        case "Course":
+                                            colorCode = "#EF98FC";
+                                            et = new Event(DateUtil.getDisplayDate(data.get(i).getMyDate()),
+                                                    data.get(i).getTitle(), null, colorCode);
+                                            eventsArrayList.add(et);
+                                            break;
+                                    }
+
+                                }
+                            }
+                        }
+                        startDateTime = startDate;
+                        endDateTime = endDate;
+                        eventObservable.set(null);
+                        eventObservable.set(eventsArrayList);
+                        mActivity.hideLoading();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        List<Event> events = new ArrayList<>();
+                        allLoaded = true;
+                        unitsAdapter.setLoadingDone();
+//                        toggleEmptyVisibility();
+                        mActivity.hideLoading();
+                        Event et;
+                        for (Event event: eventsArrayList) {
+                            et = new Event(event.getDATE(),
+                                    "", null, "#ffffff");
+                            events.add(et);
+                        }
+                        eventObservable.set(events);
+                    }
+                });
+    }
+
     private void populateUnits(List<Unit> data) {
         boolean newItemsAdded = false;
         int n = 0;
@@ -465,6 +596,13 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         fetchData();
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(List<Unit> unit) {
+        changesMade = true;
+        allLoaded = false;
+        fetchData();
+    }
+
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
@@ -482,6 +620,25 @@ public class PeriodUnitsViewModel extends BaseViewModel {
 
     public void unRegisterEventBus() {
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onAction(long date, long startDateTime, long endDateTime) {
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+//        eventObservableDate.set(startDateTime);
+//        eventObservable.set(eventsArrayList);
+//        fetchUnits(startDateTime, endDateTime);
+        fetchData();
+    }
+
+    @Override
+    public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
+        ActivityCalendarBottomSheet bottomSheetDialogFragment =
+                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
+                        , periodName.get(),filters);
+        bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
+                "units");
     }
 
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
@@ -739,10 +896,20 @@ public class PeriodUnitsViewModel extends BaseViewModel {
         }
     };
 
-    public void changeToCalenderView() {
-        Bundle b = new Bundle();
-        b.putLong(Constants.KEY_PERIOD_ID, periodId);
-        b.putString(Constants.KEY_PERIOD_NAME, String.valueOf(periodName));
-        ActivityUtil.gotoPage(mActivity, UnitCalendarActivity.class, b);
+    public void changeToCalenderView(Boolean isChecked) {
+        if (isChecked) {
+            isCheckedObserver.set(true);
+            calVisible.set(true);
+            frameVisible.set(false);
+            changesMade=false;
+            skip =0;
+            fetchData();
+        } else {
+            isCheckedObserver.set(isChecked);
+            calVisible.set(false);
+            frameVisible.set(true);
+            fetchData();
+        }
     }
+
 }

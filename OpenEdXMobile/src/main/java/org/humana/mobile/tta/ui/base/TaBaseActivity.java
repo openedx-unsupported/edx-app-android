@@ -68,7 +68,7 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         super.onCreate(savedInstanceState);
         eventManager.fire(new OnCreateEvent<Activity>(this, savedInstanceState));
         mLoading = new ProgressDialogLoading(this);
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         analytic = new Analytic(this);
     }
 
@@ -84,63 +84,75 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
 
     public void showLoading() {
         if (mLoading != null) {
-            mLoading.showLoading();
+            try {
+                mLoading.showLoading();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void hideLoading() {
         if (mLoading != null) {
-            mLoading.hideLoading();
+            try {
+                mLoading.hideLoading();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void dismiss() {
         if (mLoading != null) {
-            mLoading.dismiss();
+            try {
+                mLoading.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void showErrorDialog(@Nullable String title, @NonNull String message) {
-        AlertDialogFragment.showDialog(getSupportFragmentManager(),title, message);
+        AlertDialogFragment.showDialog(getSupportFragmentManager(), title, message);
     }
 
-    public void showShortSnack(String msg){
+    public void showShortSnack(String msg) {
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
 
-    public void showLongSnack(String msg){
+    public void showLongSnack(String msg) {
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
     }
 
-    public void showIndefiniteSnack(String msg){
+    public void showIndefiniteSnack(String msg) {
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_INDEFINITE)
                 .setAction("OK", null)
                 .show();
     }
 
-    public void showShortToast(String msg){
+    public void showShortToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    public void showLongToast(String msg){
+    public void showLongToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
-    public void logD(String msg){
+    public void logD(String msg) {
         logger.debug(msg);
     }
 
-    public void logW(String msg){
+    public void logW(String msg) {
         logger.warn(msg);
     }
 
-    public void showAlertDailog(String title, String msg, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){
+    public void showAlertDailog(String title, String msg, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
                 .setMessage(msg)
                 .setPositiveButton("OK", positiveListener);
-        if (negativeListener != null){
+        if (negativeListener != null) {
             builder.setNegativeButton("Cancel", negativeListener);
         }
         builder.create().show();
@@ -165,14 +177,14 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         focusDummy.setFocusableInTouchMode(true);
         if (root instanceof ViewGroup) {
             if (!(root instanceof ScrollView)) {
-                ((ViewGroup)root).addView(focusDummy, 0, new LinearLayout.LayoutParams(0, 0));
+                ((ViewGroup) root).addView(focusDummy, 0, new LinearLayout.LayoutParams(0, 0));
             }
         } else {
             content.addView(focusDummy, 0, new LinearLayout.LayoutParams(0, 0));
         }
     }
 
-    public void askForPermissions(String[] permissions, int requestCode){
+    public void askForPermissions(String[] permissions, int requestCode) {
         if (getGrantedPermissionsCount(permissions) == permissions.length) {
             onPermissionGranted(permissions, requestCode);
         } else {
@@ -191,11 +203,11 @@ public class TaBaseActivity extends RxAppCompatActivity implements RoboContext, 
         }
     }
 
-    protected void onPermissionGranted(String[] permissions, int requestCode){
+    protected void onPermissionGranted(String[] permissions, int requestCode) {
 
     }
 
-    protected void onPermissionDenied(String[] permissions, int requestCode){
+    protected void onPermissionDenied(String[] permissions, int requestCode) {
 
     }
 

@@ -55,18 +55,17 @@
                 android:background="@drawable/rectangle_transparent"
                 android:layout_marginEnd="@dimen/_24px"/>
 
-            <ImageView
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switch_unit"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.15"
+                android:layout_height="match_parent"
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:tint="@color/material_red_500"
-                android:src="@drawable/t_icon_calendar"
+                android:layout_weight="0.2"
                 android:foregroundGravity="center"
-                android:onClick="@{()-> viewModel.changeToCalenderView()}"
-                android:id="@+id/switch_unit"/>
+                android:gravity="center"
+                android:onCheckedChanged="@{(switch, checked) ->viewModel.changeToCalenderView(checked)}"
+                android:tint="@color/material_red_500" />
 
         </LinearLayout>
 
@@ -82,7 +81,21 @@
             android:paddingStart="12dp"
             finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
+        <FrameLayout
+            android:id="@+id/cal_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.calVisible?View.VISIBLE:View.GONE}">
 
+            <com.lib.mxcalendar.view.MxCalenderView
+                android:id="@+id/calendar_view"
+                onCalendarRefresh="@{viewModel.eventObservable}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+            </com.lib.mxcalendar.view.MxCalenderView>
+        </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

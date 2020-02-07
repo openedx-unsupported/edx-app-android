@@ -16,6 +16,7 @@ import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -563,6 +564,13 @@ public class BindingAdapters {
     public static void setOnCalenderEventListener(MxCalenderView view, List<Event> events,  long date) {
         if (events != null) {
             view.setEvents(events, date);
+        }
+    }
+
+    @BindingAdapter({"onCalendarRefresh"})
+    public static void setOnCalenderRefreshListner(MxCalenderView view, List<Event> events){
+        if (events!=null){
+            view.setEvents(events);
         }
     }
 }

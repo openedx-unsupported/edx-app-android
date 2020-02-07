@@ -2,7 +2,9 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="org.humana.mobile.tta.ui.programs.units.view_model.UnitsViewModel" />
@@ -11,37 +13,38 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/searchview_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:background="@color/white"
             android:orientation="horizontal"
             android:paddingBottom="2dp"
-            android:layout_marginTop="5dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/_24px"
-                android:layout_marginTop="8dp"
-                android:textSize="14sp"
-                android:padding="10dp"
-                android:drawablePadding="5dp"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:hint="Search units.."
+                onSearchInSoftKeyboard="@{()->viewModel.searchUnits()}"
+                text_changed_listener="@{viewModel.watcher}"
                 tool_tip="@{viewModel.searchTooltipText}"
                 tool_tip_gravity="@{viewModel.searchTooltipGravity}"
-                onSearchInSoftKeyboard="@{()->viewModel.searchUnits()}"
-                android:drawableLeft="@drawable/search_selected"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_24px"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/_24px"
+                android:layout_weight="1"
                 android:background="@drawable/rectangle_transparent"
-                text_changed_listener="@{viewModel.watcher}"
-                android:layout_marginEnd="@dimen/_24px"/>
+                android:drawableLeft="@drawable/search_selected"
+                android:drawablePadding="5dp"
+                android:hint="Search units.."
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:padding="10dp"
+                android:textSize="14sp" />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_unit"
@@ -50,57 +53,57 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center|end"
-                android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
-                android:onCheckedChanged="@{(switch, checked) ->viewModel.changeToCalenderView(checked)}"
                 android:layout_weight="0.2"
                 android:foregroundGravity="center"
-                android:gravity="top"
+                android:gravity="center"
+                android:onCheckedChanged="@{(switch, checked) ->viewModel.changeToCalenderView(checked)}"
                 android:tint="@color/material_red_500" />
 
         </LinearLayout>
+
         <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+            finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:paddingStart="10dp"
             android:paddingEnd="12dp"
-            app:mx_titleVisible="false"
-            app:mx_moreButtonVisible="false"
+            android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"
             app:mx_itemLimit="100"
-            finite_recycler_adapter="@{viewModel.filtersAdapter}"
-            android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
+            app:mx_moreButtonVisible="false"
+            app:mx_titleVisible="false" />
 
         <FrameLayout
+            android:id="@+id/cal_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.calVisible?View.VISIBLE:View.GONE}"
-            android:id="@+id/cal_layout">
-        <com.lib.mxcalendar.view.MxCalenderView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            onCalendarEventListener="@{viewModel.eventObservable}"
-            onCalendarDate="@{viewModel.eventObservableDate}"
-            android:visibility="visible"
-            android:id="@+id/calendar_view">
+            android:visibility="@{viewModel.calVisible?View.VISIBLE:View.GONE}">
 
-        </com.lib.mxcalendar.view.MxCalenderView>
+            <com.lib.mxcalendar.view.MxCalenderView
+                android:id="@+id/calendar_view"
+                onCalendarRefresh="@{viewModel.eventObservable}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+            </com.lib.mxcalendar.view.MxCalenderView>
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/fl_unit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.frameVisible ? View.VISIBLE : View.GONE}"
-            android:id="@+id/fl_unit">
+            android:visibility="@{viewModel.frameVisible ? View.VISIBLE : View.GONE}">
 
             <com.maurya.mx.mxlib.view.MxRecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:mx_itemLayout="@layout/t_row_unit"
+                infinite_load_more_listener="@{viewModel.loadMoreListener}"
                 infinite_recycler_adapter="@{viewModel.unitsAdapter}"
                 layout_manager="@{viewModel.layoutManager}"
-                infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mx_itemLayout="@layout/t_row_unit" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -119,8 +122,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/_46px"
                     android:layout_marginStart="@dimen/_70px"
+                    android:layout_marginTop="@dimen/_46px"
                     android:layout_marginEnd="@dimen/_70px"
                     android:fontFamily="@font/hind_regular"
                     android:gravity="center"

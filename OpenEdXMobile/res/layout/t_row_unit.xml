@@ -96,7 +96,7 @@
                     android:layout_weight="0.8"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="2dp"
-                    android:drawableStart="@drawable/ic_access_time_black_24dp"
+                    android:drawableStart="@drawable/teacher_icon"
                     android:fontFamily="@font/hind_medium"
                     android:padding="2dp"
                     android:textColor="@color/gray_5"

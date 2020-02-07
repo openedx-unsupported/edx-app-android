@@ -758,11 +758,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 }
                 if (model.getDownloadStatus() != null) {
                     if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloaded))) {
-                        scheduleBinding.txtReadMore.setText(mActivity.getString(R.string.view_more));
+                        scheduleBinding.txtReadMore.setBackground(
+                                ContextCompat.getDrawable(mActivity,R.drawable.t_icon_play_green));
                         scheduleBinding.pbDownload.setVisibility(View.GONE);
                         scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
                     }else if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloading))){
-                        scheduleBinding.txtReadMore.setText(mActivity.getString(R.string.downloading));
                             scheduleBinding.pbDownload.setVisibility(View.VISIBLE);
                             scheduleBinding.txtReadMore.setVisibility(View.GONE);
                     }

@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
+import com.lib.mxcalendar.util.Builder;
+
 import org.humana.mobile.R;
+import org.humana.mobile.databinding.TActivityPeriodUnitsBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -18,6 +21,7 @@ public class PeriodUnitsActivity extends BaseVMActivity {
     private EnrolledCoursesResponse course;
     private long periodId;
     private String periodName;
+    private TActivityPeriodUnitsBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,11 +34,19 @@ public class PeriodUnitsActivity extends BaseVMActivity {
         }
 
         viewModel = new PeriodUnitsViewModel(this, periodId, periodName, course);
-        binding(R.layout.t_activity_period_units, viewModel);
+        binding = (TActivityPeriodUnitsBinding) binding(R.layout.t_activity_period_units, viewModel);
         viewModel.emptyVisible.set(false);
 
         setSupportActionBar(findViewById(R.id.toolbar));
         viewModel.registerEventBus();
+
+        binding.calendarView.init(
+                new Builder()
+                        .setDayNameColor(null)
+                        .setHeaderColor(null)
+                        .setDayNumberColor(null)
+                        .setListner(viewModel)
+                        .setTabletMode(isTabView()));
     }
 
     @Override
@@ -75,5 +87,8 @@ public class PeriodUnitsActivity extends BaseVMActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.unRegisterEventBus();
+    }
+    private Boolean isTabView() {
+        return getResources().getBoolean(R.bool.isTablet);
     }
 }

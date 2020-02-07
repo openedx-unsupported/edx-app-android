@@ -91,16 +91,17 @@
                     android:textColor="@color/gray_4"
                     android:textSize="@dimen/_12px_sp" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/txt_read_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="bottom|end"
                     android:fontFamily="@font/hind_bold"
                     android:gravity="bottom"
-                    android:text="read more.."
                     android:textColor="@color/com_facebook_blue"
                     android:textSize="@dimen/_12px_sp"
+                    android:backgroundTint="@color/material_red_500"
+                    android:background="@drawable/download"
                     android:visibility="visible" />
                 <ProgressBar
                     android:layout_width="wrap_content"

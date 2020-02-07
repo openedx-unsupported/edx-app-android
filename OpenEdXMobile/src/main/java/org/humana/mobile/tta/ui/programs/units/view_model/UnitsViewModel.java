@@ -19,6 +19,7 @@ import android.view.View;
 
 import com.lib.mxcalendar.models.Event;
 import com.lib.mxcalendar.view.IMxCalenderListener;
+import com.lib.mxcalendar.view.MxCalenderView;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -72,7 +73,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public ObservableBoolean calVisible = new ObservableBoolean();
     public ObservableBoolean frameVisible = new ObservableBoolean();
     public ObservableBoolean isCheckedObserver = new ObservableBoolean();
-    public ObservableField switchText = new ObservableField<>();
 
     // ToolTip
     public ObservableInt searchTooltipGravity = new ObservableInt();
@@ -84,7 +84,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
     //CalenderView
     public ObservableField<List<Event>> eventObservable = new ObservableField<>();
-    public ObservableLong eventObservableDate = new ObservableLong();
     public static List<Event> eventsArrayList = new ArrayList<>();
     public static long startDateTime, endDateTime;
 
@@ -134,7 +133,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         frameVisible.set(true);
 
         selectedFilter = new ArrayList<>();
-        selectedFilter = mDataManager.getSelectedFilters();
+        selectedFilter.addAll(mDataManager.getSelectedFilters());
 
 
         unitsAdapter = new UnitsAdapter(mActivity);
@@ -394,7 +393,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                         sf.setDisplay_name(filter.getDisplayName());
                         sf.setSelected_tag(tag.getDisplayName());
                         mDataManager.updateSelectedFilters(sf);
-                        selectedFilter = mDataManager.getSelectedFilters();
+                        selectedFilter.addAll(mDataManager.getSelectedFilters());
                         break;
                     }
                 }
@@ -417,7 +416,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                 pf.setOrder(filter.getOrder());
                                 pf.setShowIn(filter.getShowIn());
                                 pf.setTags(selectedTags);
-                                filters.add(pf);
+                                if (!filters.contains(pf)) {
+                                    filters.add(pf);
+                                }
                                 break;
                             }
                         }
@@ -476,6 +477,12 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
                         if (data.size() == 0) {
                             emptyVisible.set(true);
+                            calVisible.set(false);
+                            frameVisible.set(false);
+                        }else {
+                            emptyVisible.set(false);
+                            calVisible.set(true);
+                            frameVisible.set(false);
                         }
 
                         eventsArrayList.clear();
@@ -535,22 +542,30 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                 }
                             }
                         }
-
-
-//                        EventBus.getDefault().post(eventsArrayList);
                         startDateTime = startDate;
                         endDateTime = endDate;
-                        eventObservableDate.set(startDate);
+                        eventObservable.set(null);
                         eventObservable.set(eventsArrayList);
                         mActivity.hideLoading();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
+                        List<Event> events = new ArrayList<>();
                         allLoaded = true;
                         unitsAdapter.setLoadingDone();
-                        toggleEmptyVisibility();
                         mActivity.hideLoading();
+//                        eventsArrayList.clear();
+//                        emptyVisible.set(true);
+//                        calVisible.set(false);
+//                        frameVisible.set(false);
+                        Event et;
+                        for (Event event: eventsArrayList) {
+                            et = new Event(event.getDATE(),
+                                    null, null, "#ffffff");
+                            events.add(et);
+                        }
+                        eventObservable.set(events);
                     }
                 });
     }
@@ -601,7 +616,11 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
-        filters = event.getProgramFilters();
+        filters.clear();
+        List<ProgramFilter> programFilters = event.getProgramFilters();
+        if (programFilters != null) {
+            filters.addAll(programFilters);
+        }
 //        fetchFilters();
     }
 
@@ -861,14 +880,17 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
     public void changeToCalenderView(Boolean isChecked) {
         if (isChecked) {
-            isCheckedObserver.set(isChecked);
+            isCheckedObserver.set(true);
             calVisible.set(true);
             frameVisible.set(false);
+            changesMade=false;
+            skip =0;
             fetchData();
         } else {
             isCheckedObserver.set(isChecked);
             calVisible.set(false);
             frameVisible.set(true);
+            fetchData();
         }
     }
 
@@ -877,9 +899,10 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public void onAction(long date, long startDateTime, long endDateTime) {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-//        this.eventObservableDate.set(startDateTime);
+//        eventObservableDate.set(startDateTime);
 //        eventObservable.set(eventsArrayList);
-        fetchUnits(startDateTime, endDateTime);
+//        fetchUnits(startDateTime, endDateTime);
+        fetchData();
     }
 
     @Override
@@ -911,13 +934,12 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         @Override
         public void afterTextChanged(Editable s) {
             searchText.set(s.toString());
-
         }
     };
 
     public void setSessionFilter() {
-        selectedFilter = mDataManager.getSelectedFilters();
-        changesMade = true;
+        selectedFilter.addAll(mDataManager.getSelectedFilters());
+        changesMade = false;
         allLoaded = false;
         mActivity.showLoading();
         fetchFilters();
