@@ -1,23 +1,18 @@
 package org.humana.mobile.tta.ui.programs.schedule.view_model;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,18 +24,12 @@ import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
-import org.humana.mobile.course.CourseDetail;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
 import org.humana.mobile.databinding.TRowScheduleBinding;
-import org.humana.mobile.model.VideoModel;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
-import org.humana.mobile.model.api.TranscriptModel;
 import org.humana.mobile.model.course.CourseComponent;
-import org.humana.mobile.model.db.DownloadEntry;
-import org.humana.mobile.model.download.NativeDownloadModel;
 import org.humana.mobile.model.download.PDFDownloadModel;
 import org.humana.mobile.services.DownloadService;
-import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
 import org.humana.mobile.tta.data.enums.UserRole;
@@ -53,7 +42,6 @@ import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
-import org.humana.mobile.tta.scorm.PDFBlockModel;
 import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -61,6 +49,7 @@ import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
 import org.humana.mobile.tta.ui.programs.periodunits.PeriodUnitsActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
+import org.humana.mobile.tta.utils.AppUtil;
 import org.humana.mobile.util.DateUtil;
 import org.humana.mobile.view.Router;
 
@@ -123,8 +112,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     CourseComponent courseComponent;
     String about_url;
     private List<Period> savedPeriods = new ArrayList<>();
-    private final String TAG = "Permissions";
-
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -158,6 +145,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         lastDate = calendar.getTimeInMillis();
         readMore.set(false);
         about_url = "";
+        selectedFilter = new ArrayList<>();
 
 
         emptyVisible.set(false);
@@ -218,9 +206,23 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     break;
 
                 case R.id.txt_read_more:
-                    if (isReadStoragePermissionGranted() && isWriteStoragePermissionGranted()) {
-                    if (item.getDownloadStatus() != null) {
-                        if (!item.getDownloadStatus().equals("Downloaded")) {
+                    if (AppUtil.isReadStoragePermissionGranted(mActivity)
+                            && AppUtil.isWriteStoragePermissionGranted(mActivity)) {
+                        if (item.getDownloadStatus() != null) {
+                            if (!item.getDownloadStatus().equals("Downloaded")) {
+                                item.setDownloadStatus(mActivity.getString(R.string.downloading));
+                                periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(item));
+                                DownloadService.getDownloadService(mActivity,
+                                        item.getAbout_url(),
+                                        item.getTitle(),
+                                        item.getId(),
+                                        item);
+
+                            } else {
+                                Uri uri = Uri.parse(item.getAbout_url());
+                                DownloadService.openDownloadedFile(uri, mActivity);
+                            }
+                        } else {
                             item.setDownloadStatus(mActivity.getString(R.string.downloading));
                             periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(item));
                             DownloadService.getDownloadService(mActivity,
@@ -228,21 +230,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                     item.getTitle(),
                                     item.getId(),
                                     item);
-
-                        } else {
-                            Uri uri = Uri.parse(item.getAbout_url());
-                            DownloadService.openDownloadedFile(uri, mActivity);
                         }
-                    } else {
-                        item.setDownloadStatus(mActivity.getString(R.string.downloading));
-                        periodAdapter.notifyItemChanged(periodAdapter.getItemPosition(item));
-                        DownloadService.getDownloadService(mActivity,
-                                item.getAbout_url(),
-                                item.getTitle(),
-                                item.getId(),
-                                item);
                     }
-                }
 
                     break;
 
@@ -269,9 +258,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         }
         getPeriods();
     }
-
-
-
 
 
     private void getDownloadPeriodDesc(String userName) {
@@ -326,6 +312,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         sf.setInternal_name(filter.getInternalName());
                         sf.setDisplay_name(filter.getDisplayName());
                         sf.setSelected_tag(tag.getDisplayName());
+                        sf.setSelected_tag_item(tag);
                         mDataManager.updateSelectedFilters(sf);
                         selectedFilter = mDataManager.getSelectedFilters();
                         break;
@@ -340,17 +327,32 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                     for (ProgramFilterTag tag : filter.getTags()) {
                         if (selected.getSelected_tag() != null) {
-                            if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                selectedTags.add(tag);
-                                ProgramFilter pf = new ProgramFilter();
-                                pf.setDisplayName(filter.getDisplayName());
-                                pf.setInternalName(filter.getInternalName());
-                                pf.setId(filter.getId());
-                                pf.setOrder(filter.getOrder());
-                                pf.setShowIn(filter.getShowIn());
-                                pf.setTags(selectedTags);
-                                filters.add(pf);
-                                break;
+                            if (selected.getSelected_tag_item()!=null) {
+                                if (selected.getSelected_tag_item().equals(tag)) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+                                    break;
+                                }
+                            }else {
+                                if (selected.getSelected_tag().equals(tag.getDisplayName())) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -370,7 +372,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             gridLayoutManager = new GridLayoutManager(mActivity, 1);
         }
 
-        selectedFilter = mDataManager.getSelectedFilters();
+        selectedFilter.addAll(mDataManager.getSelectedFilters());
         changesMade = true;
         setFilters();
         getFilters();
@@ -451,18 +453,19 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         }
                         List<Period> ps = new ArrayList<>();
                         ps = data;
-                        if (savedPeriods.size()!=0) {
+                        if (savedPeriods.size() != 0) {
                             for (Period savedPeriod : savedPeriods) {
-                                for (int i=0; i< data.size();i++) {
-                                    if (data.get(i).getId()==savedPeriod.getId()) {
+                                for (int i = 0; i < data.size(); i++) {
+                                    if (data.get(i).getId() == savedPeriod.getId() &&
+                                            data.get(i).getAbout_url().equalsIgnoreCase(savedPeriod.getAbout_url())) {
                                         ps.remove(data.get(i));
-                                        ps.add(i,savedPeriod);
+                                        ps.add(i, savedPeriod);
                                         break;
                                     }
                                 }
                             }
                             populatePeriods(ps);
-                        }else {
+                        } else {
                             populatePeriods(ps);
                         }
                         emptyVisible.set(false);
@@ -638,9 +641,21 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
                 if (selectedFilter != null) {
-                    for (SelectedFilter item : selectedFilter) {
-                        if (model.getInternalName().equals(item.getInternal_name())) {
-                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                    for (ProgramFilterTag tag : model.getTags()) {
+                        for (SelectedFilter item : selectedFilter) {
+                            if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
+                                if (item.getSelected_tag_item()!=null) {
+                                    if (item.getSelected_tag_item().equals(tag)) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getSelected_tag_item());
+                                    }
+                                    break;
+                                }else {
+                                        if (item.getSelected_tag().equals(model.getDisplayName())) {
+                                            dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
+                                        }
+
+                                }
+                            }
                         }
                     }
                 }
@@ -651,6 +666,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
                     sf.setDisplay_name(model.getDisplayName());
+                    sf.setSelected_tag_item((ProgramFilterTag) item.getItem());
                     sf.setSelected_tag(item.getName());
 
                     mDataManager.updateSelectedFilters(sf);
@@ -665,20 +681,51 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                                 for (ProgramFilterTag tag : filter.getTags()) {
                                     if (selected.getSelected_tag() != null) {
-                                        if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                            selectedTags.add(tag);
-                                            ProgramFilter pf = new ProgramFilter();
-                                            pf.setDisplayName(filter.getDisplayName());
-                                            pf.setInternalName(filter.getInternalName());
-                                            pf.setId(filter.getId());
-                                            pf.setOrder(filter.getOrder());
-                                            pf.setShowIn(filter.getShowIn());
-                                            pf.setTags(selectedTags);
-                                            filters.add(pf);
-                                            EventBus.getDefault()
-                                                    .post(new ProgramFilterSavedEvent(filters));
-                                            getFilters();
-                                            break;
+                                        if (selected.getSelected_tag_item()!=null) {
+                                            if (selected.getSelected_tag_item().equals(tag)) {
+                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                EventBus.getDefault()
+                                                        .post(new ProgramFilterSavedEvent(filters));
+                                                getFilters();
+                                                break;
+                                            }
+                                        }else {
+                                            if (selected.getSelected_tag().equals(tag.getDisplayName())) {
+                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                EventBus.getDefault()
+                                                        .post(new ProgramFilterSavedEvent(filters));
+                                                getFilters();
+                                                break;
+                                            } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
+//                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                EventBus.getDefault()
+                                                        .post(new ProgramFilterSavedEvent(filters));
+                                                getFilters();
+                                            }
                                         }
                                     }
                                 }
@@ -742,15 +789,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
                 if (model.getDesc() != null) {
-                    if (model.getAbout_url()!=null && !model.getAbout_url().equals("")) {
+                    if (model.getAbout_url() != null && !model.getAbout_url().equals("")) {
                         scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
-//                        if (progressVisible.get()){
-//                            scheduleBinding.pbDownload.setVisibility(View.VISIBLE);
-//                            scheduleBinding.txtReadMore.setVisibility(View.GONE);
-//                        }else {
-//                            scheduleBinding.pbDownload.setVisibility(View.GONE);
-//                            scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
-//                        }
+
                     } else {
                         scheduleBinding.txtReadMore.setVisibility(View.GONE);
 
@@ -759,12 +800,12 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 if (model.getDownloadStatus() != null) {
                     if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloaded))) {
                         scheduleBinding.txtReadMore.setBackground(
-                                ContextCompat.getDrawable(mActivity,R.drawable.t_icon_play_green));
+                                ContextCompat.getDrawable(mActivity, R.drawable.t_icon_play_green));
                         scheduleBinding.pbDownload.setVisibility(View.GONE);
                         scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
-                    }else if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloading))){
-                            scheduleBinding.pbDownload.setVisibility(View.VISIBLE);
-                            scheduleBinding.txtReadMore.setVisibility(View.GONE);
+                    } else if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloading))) {
+                        scheduleBinding.pbDownload.setVisibility(View.VISIBLE);
+                        scheduleBinding.txtReadMore.setVisibility(View.GONE);
                     }
                 }
 
@@ -963,44 +1004,5 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     }
                 });
     }
-
-    public  boolean isReadStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted1");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked1");
-                ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted1");
-            return true;
-        }
-    }
-
-    public  boolean isWriteStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (mActivity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted2");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked2");
-                ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted2");
-            return true;
-        }
-    }
-
 
 }

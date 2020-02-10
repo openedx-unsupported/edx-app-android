@@ -5,6 +5,10 @@ public class SelectedFilter {
     private String display_name;
     private String selected_tag;
 
+
+
+    private ProgramFilterTag selected_tag_item;
+
     public String getInternal_name() {
         return internal_name;
     }
@@ -28,4 +32,15 @@ public class SelectedFilter {
     public void setSelected_tag(String selected_tag) {
         this.selected_tag = selected_tag;
     }
+
+    public ProgramFilterTag getSelected_tag_item() {
+        return selected_tag_item;
+    }
+
+    public void setSelected_tag_item(ProgramFilterTag selected_tag_item) {
+        this.selected_tag_item = selected_tag_item;
+    }
+
+
+
 }

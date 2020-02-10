@@ -3,6 +3,7 @@ package org.humana.mobile.tta.ui.programs.periodunits.viewmodel;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.databinding.ObservableLong;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -44,7 +45,6 @@ import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
 import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
-import org.humana.mobile.tta.ui.programs.units.UnitCalendarActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 import org.humana.mobile.view.Router;
@@ -91,6 +91,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     public ObservableBoolean calVisible = new ObservableBoolean();
     public ObservableBoolean frameVisible = new ObservableBoolean();
     public ObservableBoolean isCheckedObserver = new ObservableBoolean();
+    public ObservableLong eventObservableDate = new ObservableLong();
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -129,81 +130,81 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
             switch (view.getId()) {
                 case R.id.tv_my_date:
                     String title;
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         title = mActivity.getString(R.string.proposed_date);
-                    }else {
+                    } else {
                         title = mActivity.getString(R.string.my_date);
                     }
                     showDatePicker(item, title);
                     break;
                 default:
-                    mActivity.showLoading();
-                    if (item.isPublish()){
-                    boolean ssp = units.contains(item);
-                    EnrolledCoursesResponse c;
-                    if (ssp) {
-                        c = course;
-                    } else {
-                        c = parentCourse;
-                    }
-
-                    if (c == null) {
-
-                        String courseId;
+                    if (item.isPublish()) {
+                        mActivity.showLoading();
+                        boolean ssp = units.contains(item);
+                        EnrolledCoursesResponse c;
                         if (ssp) {
-                            courseId = mDataManager.getLoginPrefs().getProgramId();
+                            c = course;
                         } else {
-                            courseId = mDataManager.getLoginPrefs().getParentId();
+                            c = parentCourse;
                         }
-                        mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                            @Override
-                            public void onSuccess(ResponseBody responseBody) {
 
-                                mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                    @Override
-                                    public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                        if (courseId != null) {
-                                            for (EnrolledCoursesResponse response : data) {
-                                                if (response.getCourse().getId().trim().toLowerCase()
-                                                        .equals(courseId.trim().toLowerCase())) {
-                                                    if (ssp) {
-                                                        PeriodUnitsViewModel.this.course = response;
-                                                        EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                    } else {
-                                                        PeriodUnitsViewModel.this.parentCourse = response;
+                        if (c == null) {
+
+                            String courseId;
+                            if (ssp) {
+                                courseId = mDataManager.getLoginPrefs().getProgramId();
+                            } else {
+                                courseId = mDataManager.getLoginPrefs().getParentId();
+                            }
+                            mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                                @Override
+                                public void onSuccess(ResponseBody responseBody) {
+
+                                    mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                        @Override
+                                        public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                            if (courseId != null) {
+                                                for (EnrolledCoursesResponse response : data) {
+                                                    if (response.getCourse().getId().trim().toLowerCase()
+                                                            .equals(courseId.trim().toLowerCase())) {
+                                                        if (ssp) {
+                                                            PeriodUnitsViewModel.this.course = response;
+                                                            EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                        } else {
+                                                            PeriodUnitsViewModel.this.parentCourse = response;
+                                                        }
+                                                        getBlockComponent(item);
+                                                        break;
                                                     }
-                                                    getBlockComponent(item);
-                                                    break;
                                                 }
+                                                mActivity.hideLoading();
+                                            } else {
+                                                mActivity.hideLoading();
                                             }
-                                            mActivity.hideLoading();
-                                        } else {
-                                            mActivity.hideLoading();
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        mActivity.hideLoading();
-                                        mActivity.showLongSnack("enroll org failure");
-                                    }
-                                });
-                            }
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            mActivity.hideLoading();
+                                            mActivity.showLongSnack("enroll org failure");
+                                        }
+                                    });
+                                }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                mActivity.hideLoading();
-                                mActivity.showLongSnack("enroll failure");
-                            }
-                        });
+                                @Override
+                                public void onFailure(Exception e) {
+                                    mActivity.hideLoading();
+                                    mActivity.showLongSnack("enroll failure");
+                                }
+                            });
+
+                        } else {
+                            getBlockComponent(item);
+                        }
 
                     } else {
-                        getBlockComponent(item);
+                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
                     }
-
-            } else{
-                mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
-            }
             }
 
         });
@@ -263,7 +264,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     }
 
     private void showDatePicker(Unit unit, String title) {
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(),title, new OnResponseCallback<Long>() {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 mActivity.showLoading();
@@ -327,9 +328,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         } else {
                             filtersVisible.set(false);
                         }
-//                        Constants.PROG_FILTER = filters;
-                        EventBus.getDefault()
-                                .post(new ProgramFilterSavedEvent(filters));
+//                        EventBus.getDefault()
+//                                .post(new ProgramFilterSavedEvent(filters));
                         fetchData();
                     }
 
@@ -355,7 +355,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
             fetchUnits(startDateTime, endDateTime);
             calVisible.set(true);
             frameVisible.set(false);
-        }else {
+        } else {
             calVisible.set(false);
             frameVisible.set(true);
             fetchUnits();
@@ -440,8 +440,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     }
 
 
-
-
     public void fetchUnits(Long startDate, Long endDate) {
         mActivity.showLoading();
         mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
@@ -461,7 +459,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                             emptyVisible.set(true);
                             calVisible.set(false);
                             frameVisible.set(false);
-                        }else {
+                        } else {
                             emptyVisible.set(false);
                             calVisible.set(true);
                             frameVisible.set(false);
@@ -526,7 +524,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         }
                         startDateTime = startDate;
                         endDateTime = endDate;
-                        eventObservable.set(null);
+                        eventObservableDate.set(startDate);
                         eventObservable.set(eventsArrayList);
                         mActivity.hideLoading();
                     }
@@ -539,11 +537,12 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
 //                        toggleEmptyVisibility();
                         mActivity.hideLoading();
                         Event et;
-                        for (Event event: eventsArrayList) {
+                        for (Event event : eventsArrayList) {
                             et = new Event(event.getDATE(),
                                     "", null, "#ffffff");
                             events.add(et);
                         }
+                        eventObservableDate.set(startDate);
                         eventObservable.set(events);
                     }
                 });
@@ -636,7 +635,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
         ActivityCalendarBottomSheet bottomSheetDialogFragment =
                 new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
-                        , periodName.get(),filters);
+                        , periodName.get(), filters);
         bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
                 "units");
     }
@@ -826,25 +825,25 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                 } else {
                     unitBinding.statusIcon.setVisibility(View.GONE);
                 }
-                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
+                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())) {
                     if (mDataManager.getLoginPrefs().getRole() != null
                             && mDataManager.getLoginPrefs().getRole()
-                            .equals(UserRole.Student.name())){
+                            .equals(UserRole.Student.name())) {
                         unitBinding.tvMyDate.setEnabled(false);
-                    }else {
+                    } else {
                         unitBinding.tvMyDate.setEnabled(true);
                     }
-                }else {
+                } else {
                     unitBinding.tvMyDate.setEnabled(true);
                 }
-                if (role != null && role.equals(UserRole.Student.name())){
+                if (role != null && role.equals(UserRole.Student.name())) {
                     unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.student_icon,
-                            0,0,0);
-                }else {
+                            0, 0, 0);
+                } else {
                     unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.teacher_icon,
-                            0,0,0);
+                            0, 0, 0);
                 }
                 switch (model.getStatus()) {
                     case "Submitted":
@@ -901,8 +900,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
             isCheckedObserver.set(true);
             calVisible.set(true);
             frameVisible.set(false);
-            changesMade=false;
-            skip =0;
+            changesMade = false;
+            skip = 0;
             fetchData();
         } else {
             isCheckedObserver.set(isChecked);

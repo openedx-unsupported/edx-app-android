@@ -138,6 +138,7 @@ public class DownloadService extends IntentService {
                         case "org.humana.mobile.downaload":
                             period.setDownloadStatus("Downloaded");
                             period.setUsername(mDataManager.getLoginPrefs().getUsername());
+                            period.setAbout_url(downloadPath);
 
                             mDataManager.insertPeriodDesc(period);
 //                            EventBus.getDefault().post(period);

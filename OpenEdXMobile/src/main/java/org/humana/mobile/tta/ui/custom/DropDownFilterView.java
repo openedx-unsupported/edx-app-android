@@ -117,15 +117,7 @@ public class DropDownFilterView extends FrameLayout
     public void setSelection(String s) {
         if (TextUtils.isEmpty(s))
             return;
-        mSelectedFilter = s;
-        FilterItem item = getSelectedFilter(s);
-        if (item == null)
-            return;
-        setSelection(filterItems.indexOf(item));
-//        appCompatSpinner.setBackgroundResource(item.selectedBackground);
-//        appCompatSpinner.setOnItemSelectedListener(null);
-//        appCompatSpinner.setSelection(filterItems.indexOf(item), false);
-//        appCompatSpinner.setOnItemSelectedListener(this);
+        setSelection(getFilterPositionFromName(s));
     }
 
     public void setSelection(int position) {
@@ -149,6 +141,36 @@ public class DropDownFilterView extends FrameLayout
         appCompatSpinner.setOnItemSelectedListener(this);
 //        });
     }
+
+
+    private int getFilterPositionFromName(String filterName) {
+        for (int i = 0; i < this.filterItems.size(); i++) {
+            FilterItem item = this.filterItems.get(i);
+            if (item.getName().trim().equalsIgnoreCase(filterName.trim())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int getFilterPositionFromItem(Object object) {
+        if (object == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < this.filterItems.size(); i++) {
+            FilterItem item = filterItems.get(i);
+            if (item.getItem() != null && item.getItem().equals(object)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void setSelection(Object item) {
+        setSelection(getFilterPositionFromItem(item));
+    }
+
 
     public void notifyDataSetChanged() {
         mxSpinnerAdapter.clear();

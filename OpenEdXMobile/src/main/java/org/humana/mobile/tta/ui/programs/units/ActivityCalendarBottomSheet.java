@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.FragCalendarBottomSheetBinding;
-import org.humana.mobile.databinding.TFragmentUnitsBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.local.db.table.Unit;

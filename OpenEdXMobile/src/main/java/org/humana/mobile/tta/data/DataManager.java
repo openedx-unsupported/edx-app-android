@@ -3798,12 +3798,6 @@ public class DataManager extends BaseRoboInjector {
                     for (Period period : periods) {
                         period.setUsername(loginPrefs.getUsername());
                     }
-//                    new Thread() {
-//                        @Override
-//                        public void run() {
-//                            mLocalDataSource.insertPeriods(periods);
-//                        }
-//                    }.start();
 
 
                     callback.onSuccess(periods);
