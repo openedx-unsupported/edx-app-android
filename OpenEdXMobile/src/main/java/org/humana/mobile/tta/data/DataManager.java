@@ -4516,8 +4516,8 @@ public class DataManager extends BaseRoboInjector {
             if (!isExist) {
                 sel_cachefilter.add(selectedFilter);
             }
-            loginPrefs.setCachedFilter(sel_cachefilter);
         }
+        loginPrefs.setCachedFilter(sel_cachefilter);
     }
 
 

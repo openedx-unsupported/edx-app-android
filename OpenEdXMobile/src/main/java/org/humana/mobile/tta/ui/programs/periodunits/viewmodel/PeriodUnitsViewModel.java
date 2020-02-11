@@ -311,6 +311,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                         sf.setInternal_name(filter.getInternalName());
                                         sf.setDisplay_name(filter.getDisplayName());
                                         sf.setSelected_tag(tag.getDisplayName());
+                                        sf.setSelected_tag_item(tag);
                                         mDataManager.updateSelectedFilters(sf);
                                         selectedFilter = mDataManager.getSelectedFilters();
 //                                        tags.add(tag);
@@ -377,12 +378,14 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         sf.setInternal_name(filter.getInternalName());
                         sf.setDisplay_name(filter.getDisplayName());
                         sf.setSelected_tag(tag.getDisplayName());
+                        sf.setSelected_tag_item(tag);
                         mDataManager.updateSelectedFilters(sf);
-                        selectedFilter = mDataManager.getSelectedFilters();
+                        selectedFilter.addAll(mDataManager.getSelectedFilters());
                         break;
                     }
                 }
             }
+
 
         }
         for (SelectedFilter selected : selectedFilter) {
@@ -391,17 +394,34 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                 if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                     for (ProgramFilterTag tag : filter.getTags()) {
                         if (selected.getSelected_tag() != null) {
-                            if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                selectedTags.add(tag);
-                                ProgramFilter pf = new ProgramFilter();
-                                pf.setDisplayName(filter.getDisplayName());
-                                pf.setInternalName(filter.getInternalName());
-                                pf.setId(filter.getId());
-                                pf.setOrder(filter.getOrder());
-                                pf.setShowIn(filter.getShowIn());
-                                pf.setTags(selectedTags);
-                                filters.add(pf);
-                                break;
+                            if (selected.getSelected_tag_item()!=null) {
+                                if (selected.getSelected_tag_item().equals(tag)) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+
+                                    break;
+                                }
+                            }else {
+                                if (selected.getSelected_tag().equals(tag.getDisplayName())) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+
+                                    break;
+                                }
                             }
                         }
                     }
@@ -605,8 +625,11 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
+        filters.clear();
         filters = event.getProgramFilters();
     }
+
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CourseEnrolledEvent event) {
@@ -625,9 +648,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     public void onAction(long date, long startDateTime, long endDateTime) {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-//        eventObservableDate.set(startDateTime);
-//        eventObservable.set(eventsArrayList);
-//        fetchUnits(startDateTime, endDateTime);
         fetchData();
     }
 
@@ -673,13 +693,24 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
                 if (selectedFilter != null) {
-                    for (SelectedFilter item : selectedFilter) {
-                        if (model.getInternalName().equals(item.getInternal_name())) {
-                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                    for (ProgramFilterTag tag : model.getTags()) {
+                        for (SelectedFilter item : selectedFilter) {
+                            if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
+                                if (item.getSelected_tag_item()!=null) {
+                                    if (item.getSelected_tag_item().equals(tag)) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getSelected_tag_item());
+                                    }
+                                    break;
+                                }else {
+                                    if (item.getSelected_tag().equals(model.getDisplayName())) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
+                                    }
+
+                                }
+                            }
                         }
                     }
                 }
-
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
 //                    if (prev != null && prev.getItem() != null) {
 //                        tags.remove((ProgramFilterTag) prev.getItem());
@@ -691,12 +722,12 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                             periodName.set(tag.getDisplayName());
                             periodId = tag.getId();
                         }
-//                        tags.add(tag);
                     }
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
                     sf.setDisplay_name(model.getDisplayName());
                     sf.setSelected_tag(item.getName());
+                    sf.setSelected_tag_item((ProgramFilterTag) item.getItem());
                     mDataManager.updateSelectedFilters(sf);
 
                     changesMade = true;
@@ -710,27 +741,53 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                             if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                                 for (ProgramFilterTag tag : filter.getTags()) {
                                     if (selected.getSelected_tag() != null) {
-                                        if (selected.getSelected_tag().equalsIgnoreCase(tag.getDisplayName())) {
-                                            selectedTags.add(tag);
-                                            ProgramFilter pf = new ProgramFilter();
-                                            pf.setDisplayName(filter.getDisplayName());
-                                            pf.setInternalName(filter.getInternalName());
-                                            pf.setId(filter.getId());
-                                            pf.setOrder(filter.getOrder());
-                                            pf.setShowIn(filter.getShowIn());
-                                            pf.setTags(selectedTags);
-                                            filters.add(pf);
-                                            EventBus.getDefault()
-                                                    .post(new ProgramFilterSavedEvent(filters));
-                                            fetchFilters();
-                                            break;
+                                        if (selected.getSelected_tag_item()!=null) {
+                                            if (selected.getSelected_tag_item().equals(tag)) {
+                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                fetchFilters();
+                                                break;
+                                            }
+                                        }else {
+                                            if (selected.getSelected_tag().equals(tag.getDisplayName())) {
+                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                fetchFilters();
+                                                break;
+                                            } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
+//                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                fetchFilters();
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-
+                    EventBus.getDefault()
+                            .post(new ProgramFilterSavedEvent(filters));
 
                 });
             }

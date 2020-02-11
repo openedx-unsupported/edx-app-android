@@ -516,6 +516,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
+        filters.clear();
         filters = event.getProgramFilters();
     }
 
@@ -692,8 +693,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                EventBus.getDefault()
-                                                        .post(new ProgramFilterSavedEvent(filters));
                                                 getFilters();
                                                 break;
                                             }
@@ -708,8 +707,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                EventBus.getDefault()
-                                                        .post(new ProgramFilterSavedEvent(filters));
                                                 getFilters();
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
@@ -722,8 +719,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                EventBus.getDefault()
-                                                        .post(new ProgramFilterSavedEvent(filters));
                                                 getFilters();
                                             }
                                         }
@@ -732,6 +727,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             }
                         }
                     }
+                    EventBus.getDefault()
+                            .post(new ProgramFilterSavedEvent(filters));
                 });
 
             }

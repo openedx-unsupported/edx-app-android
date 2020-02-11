@@ -93,7 +93,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
     private EnrolledCoursesResponse course;
     private List<Unit> units;
-    private List<ProgramFilterTag> tags;
     private List<ProgramFilter> allFilters;
     private List<ProgramFilter> filters;
     private int take, skip;
@@ -122,7 +121,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
         this.course = course;
         units = new ArrayList<>();
-        tags = new ArrayList<>();
         filters = new ArrayList<>();
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
@@ -445,7 +443,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
             }
         }
 
-
     }
 
     public void fetchUnits() {
@@ -634,11 +631,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
             changesMade = true;
             allLoaded = false;
             filters.clear();
-//            List<ProgramFilter> programFilters = new ArrayList<>();
-            if (event.getProgramFilters() != null) {
-                filters.addAll(event.getProgramFilters());
-            }
-//            fetchFilters();
+            filters = event.getProgramFilters();
         }
     }
 
@@ -717,7 +710,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
                 if (selectedFilter != null) {
-                    for (ProgramFilterTag tag:model.getTags()) {
+                    for (ProgramFilterTag tag : model.getTags()) {
                         for (SelectedFilter item : selectedFilter) {
                             if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
                                 if (item.getSelected_tag_item()!=null) {
@@ -729,6 +722,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                     if (item.getSelected_tag().equals(model.getDisplayName())) {
                                         dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
                                     }
+
                                 }
                             }
                         }
@@ -771,8 +765,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                EventBus.getDefault()
-                                                        .post(new ProgramFilterSavedEvent(filters));
                                                 fetchFilters();
                                                 break;
                                             }
@@ -787,8 +779,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                EventBus.getDefault()
-                                                        .post(new ProgramFilterSavedEvent(filters));
                                                 fetchFilters();
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
@@ -801,8 +791,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                EventBus.getDefault()
-                                                        .post(new ProgramFilterSavedEvent(filters));
                                                 fetchFilters();
                                             }
                                         }
@@ -811,6 +799,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                             }
                         }
                     }
+                    EventBus.getDefault()
+                            .post(new ProgramFilterSavedEvent(filters));
                 });
 
             } else if (binding instanceof TRowTextBinding) {
@@ -998,7 +988,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     };
 
     public void setSessionFilter() {
-        selectedFilter.addAll(mDataManager.getSelectedFilters());
+        selectedFilter = mDataManager.getSelectedFilters();
         changesMade = false;
         allLoaded = false;
         mActivity.showLoading();

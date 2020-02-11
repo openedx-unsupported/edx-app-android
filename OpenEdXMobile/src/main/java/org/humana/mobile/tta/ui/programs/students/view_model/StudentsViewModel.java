@@ -91,8 +91,10 @@ public class StudentsViewModel extends BaseViewModel {
         gridUsersAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()){
                 case R.id.ll_current_status:
-                    mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
-                    mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.current_period_title);
+                    if (item.current_period_title!=null) {
+                        mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
+                        mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.current_period_title);
+                    }
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);

@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.lib.mxcalendar.models.Event;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -29,8 +30,10 @@ import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
+import org.humana.mobile.tta.data.model.program.SelectedFilter;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
+import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
@@ -71,6 +74,8 @@ public class UserStatusViewModel extends BaseViewModel {
     private EnrolledCoursesResponse parentCourse;
     public ObservableField<String> toolbarTitle = new ObservableField<>();
     public Boolean showCurrentPeriodTitle;
+    private List<SelectedFilter> selectedFilter;
+
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -292,12 +297,69 @@ public class UserStatusViewModel extends BaseViewModel {
                         } else {
                             filtersVisible.set(false);
                         }
-                        for (ProgramFilter filter : data) {
-                            if (filter.getInternalName().toLowerCase().equals("period_id")
-                                    || filter.getInternalName().toLowerCase().equals("status")) {
-                                getSelectedFilters(filter);
-                            }
+                        if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle()!=null){
+                        if (!mDataManager.getLoginPrefs().getCurrrentPeriodTitle()
+                                        .equalsIgnoreCase("")) {
+                            ProgramFilterTag tag = new ProgramFilterTag();
+                            tag.setDisplayName("Approved");
+                            tag.setInternalName("Approved");
+                            tag.setSelected(true);
+                            tag.setOrder(0);
+                            tag.setId(3);
+                            SelectedFilter selectedFilter = new SelectedFilter();
+                            selectedFilter.setSelected_tag("Approved");
+                            selectedFilter.setInternal_name("status");
+                            selectedFilter.setDisplay_name("Status");
+                            selectedFilter.setSelected_tag_item(tag);
+                            mDataManager.updateSelectedFilters(selectedFilter);
+
+                            ProgramFilterTag tag1 = new ProgramFilterTag();
+                            tag1.setDisplayName(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+                            tag1.setInternalName(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+                            tag1.setSelected(false);
+                            tag1.setOrder(0);
+                            tag1.setId(mDataManager.getLoginPrefs().getCurrrentPeriod());
+
+                            SelectedFilter sf = new SelectedFilter();
+                            sf.setSelected_tag(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+                            sf.setInternal_name("period_id");
+                            sf.setDisplay_name("Period");
+                            sf.setSelected_tag_item(tag1);
+                            mDataManager.updateSelectedFilters(sf);
                         }
+                        }else {
+                            SelectedFilter sf = new SelectedFilter();
+                            sf.setSelected_tag("Period");
+                            sf.setInternal_name("period_id");
+                            sf.setDisplay_name("Period");
+                            mDataManager.updateSelectedFilters(sf);
+
+                            ProgramFilterTag tag = new ProgramFilterTag();
+                            tag.setDisplayName("Approved");
+                            tag.setInternalName("Approved");
+                            tag.setSelected(true);
+                            tag.setOrder(0);
+                            tag.setId(3);
+                            SelectedFilter selectedFilter = new SelectedFilter();
+                            selectedFilter.setSelected_tag("Approved");
+                            selectedFilter.setInternal_name("status");
+                            selectedFilter.setDisplay_name("Status");
+                            selectedFilter.setSelected_tag_item(tag);
+                            mDataManager.updateSelectedFilters(selectedFilter);
+                        }
+                        changesMade = true;
+                        selectedFilter = mDataManager.getSelectedFilters();
+                        setUnitFilters();
+
+
+//                        EventBus.getDefault().post(new ProgramFilterSavedEvent(filters));
+//                        fetchData();
+//                        for (ProgramFilter filter : data) {
+//                            if (filter.getInternalName().toLowerCase().equals("period_id")
+//                                    || filter.getInternalName().toLowerCase().equals("status")) {
+//                                getSelectedFilters(filter);
+//                            }
+//                        }
                     }
 
                     @Override
@@ -323,32 +385,70 @@ public class UserStatusViewModel extends BaseViewModel {
     }
 
     private void setUnitFilters() {
-        filters.clear();
-        if (tags.isEmpty() || allFilters == null || allFilters.isEmpty()) {
+        if (filters != null)
+            filters.clear();
+        if (allFilters == null || allFilters.isEmpty()) {
             return;
         }
-
-        for (ProgramFilter filter : allFilters) {
-
-            List<ProgramFilterTag> selectedTags = new ArrayList<>();
-            for (ProgramFilterTag tag : filter.getTags()) {
-                if (tags.contains(tag)) {
-                    selectedTags.add(tag);
+        if (selectedFilter.isEmpty()) {
+            for (ProgramFilter filter : allFilters) {
+                for (ProgramFilterTag tag : filter.getTags()) {
+                    if (tag.getSelected()) {
+                        SelectedFilter sf = new SelectedFilter();
+                        sf.setInternal_name(filter.getInternalName());
+                        sf.setDisplay_name(filter.getDisplayName());
+                        sf.setSelected_tag(tag.getDisplayName());
+                        sf.setSelected_tag_item(tag);
+                        mDataManager.updateSelectedFilters(sf);
+                        selectedFilter.addAll(mDataManager.getSelectedFilters());
+                        break;
+                    }
                 }
             }
 
-            if (!selectedTags.isEmpty()) {
-                ProgramFilter pf = new ProgramFilter();
-                pf.setDisplayName(filter.getDisplayName());
-                pf.setInternalName(filter.getInternalName());
-                pf.setId(filter.getId());
-                pf.setOrder(filter.getOrder());
-                pf.setShowIn(filter.getShowIn());
-                pf.setTags(selectedTags);
 
-                filters.add(pf);
+        }
+        for (SelectedFilter selected : selectedFilter) {
+            for (ProgramFilter filter : allFilters) {
+                List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                    for (ProgramFilterTag tag : filter.getTags()) {
+                        if (selected.getSelected_tag() != null) {
+                            if (selected.getSelected_tag_item()!=null) {
+                                if (selected.getSelected_tag_item().equals(tag)) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+
+                                    break;
+                                }
+                            }else {
+                                if (selected.getSelected_tag().equals(tag.getDisplayName())) {
+                                    selectedTags.add(tag);
+                                    ProgramFilter pf = new ProgramFilter();
+                                    pf.setDisplayName(filter.getDisplayName());
+                                    pf.setInternalName(filter.getInternalName());
+                                    pf.setId(filter.getId());
+                                    pf.setOrder(filter.getOrder());
+                                    pf.setShowIn(filter.getShowIn());
+                                    pf.setTags(selectedTags);
+                                    filters.add(pf);
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
+        fetchUnits();
     }
 
     private void fetchUnits() {
@@ -462,39 +562,111 @@ public class UserStatusViewModel extends BaseViewModel {
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
 
-                for (int i = 0; i < items.size(); i++) {
+//                for (int i = 0; i < items.size(); i++) {
+//                    for (ProgramFilterTag tag : model.getTags()) {
+//                                if (tag.getId() == mDataManager.getLoginPrefs().getCurrrentPeriod()) {
+//                                    dropDownBinding.filterDropDown.setSelection(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+//                                    break;
+//                        }
+//                    }
+//                }
+//
+//
+//                if (model.getDisplayName().equals("Status")) {
+//                    for (int i = 0; i < items.size(); i++) {
+//                        if (items.get(i).getName().equals("Approved")) {
+//                            dropDownBinding.filterDropDown.setSelection(i);
+//                            break;
+//                        }
+//                    }
+//                }
+                if (selectedFilter != null) {
                     for (ProgramFilterTag tag : model.getTags()) {
-                                if (tag.getId() == mDataManager.getLoginPrefs().getCurrrentPeriod()) {
-                                    dropDownBinding.filterDropDown.setSelection(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+                        for (SelectedFilter item : selectedFilter) {
+                            if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
+                                if (item.getSelected_tag_item()!=null) {
+                                    if (item.getSelected_tag_item().equals(tag)) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getSelected_tag_item());
+                                    }
                                     break;
-                        }
-                    }
-                }
+                                }else {
+                                    if (item.getSelected_tag().equals(model.getDisplayName())) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
+                                    }
 
-
-                if (model.getDisplayName().equals("Status")) {
-                    for (int i = 0; i < items.size(); i++) {
-                        if (items.get(i).getName().equals("Approved")) {
-                            dropDownBinding.filterDropDown.setSelection(i);
-                            break;
+                                }
+                            }
                         }
                     }
                 }
 
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
 
-                    if (prev != null && prev.getItem() != null) {
-                        tags.remove((ProgramFilterTag) prev.getItem());
-                    }
-                    if (item.getItem() != null) {
-                        tags.add((ProgramFilterTag) item.getItem());
-                    }
-
+                    SelectedFilter sf = new SelectedFilter();
+                    sf.setInternal_name(model.getInternalName());
+                    sf.setDisplay_name(model.getDisplayName());
+                    sf.setSelected_tag(item.getName());
+                    sf.setSelected_tag_item((ProgramFilterTag) item.getItem());
+                    mDataManager.updateSelectedFilters(sf);
 
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
-                    fetchData();
+                    selectedFilter = mDataManager.getSelectedFilters();
+                    filters.clear();
+                    for (SelectedFilter selected : selectedFilter) {
+                        for (ProgramFilter filter : allFilters) {
+                            List<ProgramFilterTag> selectedTags = new ArrayList<>();
+                            if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
+                                for (ProgramFilterTag tag : filter.getTags()) {
+                                    if (selected.getSelected_tag() != null) {
+                                        if (selected.getSelected_tag_item()!=null) {
+                                            if (selected.getSelected_tag_item().equals(tag)) {
+                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                fetchFilters();
+                                                break;
+                                            }
+                                        }else {
+                                            if (selected.getSelected_tag().equals(tag.getDisplayName())) {
+                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                fetchFilters();
+                                                break;
+                                            } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
+//                                                selectedTags.add(tag);
+                                                ProgramFilter pf = new ProgramFilter();
+                                                pf.setDisplayName(filter.getDisplayName());
+                                                pf.setInternalName(filter.getInternalName());
+                                                pf.setId(filter.getId());
+                                                pf.setOrder(filter.getOrder());
+                                                pf.setShowIn(filter.getShowIn());
+                                                pf.setTags(selectedTags);
+                                                filters.add(pf);
+                                                fetchFilters();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    EventBus.getDefault()
+                            .post(new ProgramFilterSavedEvent(filters));
 
                 });
             }
