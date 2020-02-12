@@ -56,7 +56,7 @@ public class BrowserUtil {
         if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity, environment.getConfig())) {
 
             // check if this URL is a white-listed URL, anything outside the white-list is EXTERNAL LINK
-            if (ConfigUtil.isWhiteListedURL(url, environment.getConfig())) {
+            if (ConfigUtil.Companion.isWhiteListedURL(url, environment.getConfig())) {
                 // this is white-listed URL
                 logger.debug(String.format("opening white-listed URL: %s", url));
                 openInBrowser(activity, url);
