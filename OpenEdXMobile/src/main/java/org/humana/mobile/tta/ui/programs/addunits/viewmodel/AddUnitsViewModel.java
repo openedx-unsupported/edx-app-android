@@ -662,7 +662,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             }
                                         }else {
@@ -676,7 +675,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
 //                                                selectedTags.add(tag);
@@ -688,7 +686,6 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                             }
                                         }
                                     }
@@ -698,6 +695,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                     }
                     EventBus.getDefault()
                             .post(new ProgramFilterSavedEvent(filters));
+                    fetchFilters();
                 });
             }
         }

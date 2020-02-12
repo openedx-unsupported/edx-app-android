@@ -47,8 +47,6 @@
                 <com.lib.mxcalendar.view.MxCalenderView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    onCalendarEventListener="@{viewModel.eventObservable}"
-                    onCalendarDate="@{viewModel.eventObservableDate}"
                     android:id="@+id/calendar_view">
 
                 </com.lib.mxcalendar.view.MxCalenderView>

@@ -49,22 +49,41 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:hint="Search units.."
-                onSearchInSoftKeyboard="@{()->viewModel.fetchData()}"
+                onSearchInSoftKeyboard="@{()->viewModel.searchUnits()}"
                 text_changed_listener="@{viewModel.watcher}"
                 android:drawableLeft="@drawable/search_selected"
                 android:background="@drawable/rectangle_transparent"
                 android:layout_marginEnd="@dimen/_24px"/>
 
-            <android.support.v7.widget.SwitchCompat
+            <ImageView
                 android:id="@+id/switch_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="8dp"
+                android:maxHeight="20dp"
+                android:layout_weight="0.1"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:background="@drawable/t_icon_calendar"
+                android:backgroundTint="@color/material_red_500"
+                android:visibility="@{viewModel.calVisible?View.GONE:View.VISIBLE}"
+                android:onClick="@{() ->viewModel.changeToCalenderView(true)}"
+                android:tint="@color/material_red_500" />
+            <ImageView
+                android:id="@+id/hide_unit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="8dp"
-                android:layout_weight="0.2"
+                android:maxHeight="20dp"
+                android:layout_weight="0.1"
                 android:foregroundGravity="center"
                 android:gravity="center"
-                android:onCheckedChanged="@{(switch, checked) ->viewModel.changeToCalenderView(checked)}"
+                android:background="@drawable/t_icon_calendar"
+                android:backgroundTint="@color/secondary_green"
+                android:visibility="@{viewModel.calVisible?View.VISIBLE:View.GONE}"
+                android:onClick="@{() ->viewModel.changeToCalenderView(false)}"
                 android:tint="@color/material_red_500" />
 
         </LinearLayout>

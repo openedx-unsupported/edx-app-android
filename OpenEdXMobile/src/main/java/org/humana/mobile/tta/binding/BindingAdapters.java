@@ -560,14 +560,14 @@ public class BindingAdapters {
 
         }
     }
-    @BindingAdapter({"onCalendarEventListener","onCalendarDate"})
+   /* @BindingAdapter({"onCalendarEventListener","onCalendarDate"})
     public static void setOnCalenderEventListener(MxCalenderView view, List<Event> events,  long date) {
         if (events != null) {
             view.setEvents(events, date);
         }
-    }
+    }*/
 
-    @BindingAdapter({"onCalendarRefresh"})
+    @BindingAdapter("onCalendarRefresh")
     public static void setOnCalenderRefreshListner(MxCalenderView view, List<Event> events){
         if (events!=null){
             view.setEvents(events);

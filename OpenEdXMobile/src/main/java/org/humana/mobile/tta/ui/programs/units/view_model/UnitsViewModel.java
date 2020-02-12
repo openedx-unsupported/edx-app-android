@@ -85,7 +85,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     //CalenderView
     public ObservableField<List<Event>> eventObservable = new ObservableField<>();
     public ObservableLong eventObservableDate = new ObservableLong();
-    public static List<Event> eventsArrayList = new ArrayList<>();
+    public List<Event> eventsArrayList = new ArrayList<>();
     public static long startDateTime, endDateTime;
 
 
@@ -479,7 +479,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         mActivity.showLoading();
         mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
-                "", 0L, take, skip, startDate, endDate,
+                "", 0L, 0, 0, startDate, endDate,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -559,8 +559,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                         }
                         startDateTime = startDate;
                         endDateTime = endDate;
-                        eventObservableDate.set(startDate);
                         eventObservable.set(eventsArrayList);
+                        eventObservable.notifyChange();
                         mActivity.hideLoading();
                     }
 
@@ -578,7 +578,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                             events.add(et);
                         }
                         eventObservable.set(events);
-                        eventObservableDate.set(startDate);
+                        eventObservable.notifyChange();
                     }
                 });
     }
@@ -765,7 +765,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             }
                                         }else {
@@ -779,7 +778,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
 //                                                selectedTags.add(tag);
@@ -791,7 +789,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                             }
                                         }
                                     }
@@ -801,6 +798,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     }
                     EventBus.getDefault()
                             .post(new ProgramFilterSavedEvent(filters));
+                    fetchFilters();
+
                 });
 
             } else if (binding instanceof TRowTextBinding) {
@@ -960,7 +959,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         ActivityCalendarBottomSheet bottomSheetDialogFragment =
                 new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
                         , periodName,filters);
-        bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
+        bottomSheetDialogFragment.show(mActivity.getSupportFragmentManager(),
                 "units");
     }
 

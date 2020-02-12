@@ -68,6 +68,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableBoolean addUnitsVisible = new ObservableBoolean();
     public ObservableField<String> periodName = new ObservableField<>();
+    private boolean isfilterSelected;
 
 
     private EnrolledCoursesResponse course;
@@ -122,7 +123,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
         filtersAdapter = new FiltersAdapter(mActivity);
         selectedFilter = new ArrayList<>();
         selectedFilter = mDataManager.getSelectedFilters();
-
+        isfilterSelected = false;
 
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
@@ -303,24 +304,46 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
 
-                        for (ProgramFilter filter : data) {
-                            if (filter.getInternalName().toLowerCase().contains("period_id")) {
-                                for (ProgramFilterTag tag : filter.getTags()) {
-                                    if (tag.getId() == periodId) {
-                                        SelectedFilter sf = new SelectedFilter();
-                                        sf.setInternal_name(filter.getInternalName());
-                                        sf.setDisplay_name(filter.getDisplayName());
-                                        sf.setSelected_tag(tag.getDisplayName());
-                                        sf.setSelected_tag_item(tag);
-                                        mDataManager.updateSelectedFilters(sf);
-                                        selectedFilter = mDataManager.getSelectedFilters();
-//                                        tags.add(tag);
-                                        break;
+                        if (!isfilterSelected) {
+                            for (ProgramFilter filter : data) {
+                                if (filter.getInternalName().toLowerCase().contains("period_id")) {
+                                    for (ProgramFilterTag tag : filter.getTags()) {
+                                        for (SelectedFilter selectedFilter : selectedFilter) {
+                                            if (!tag.getDisplayName().equals(selectedFilter.getSelected_tag())) {
+                                                if (tag.getId() == periodId) {
+                                                    SelectedFilter sf = new SelectedFilter();
+                                                    sf.setInternal_name(filter.getInternalName());
+                                                    sf.setDisplay_name(filter.getDisplayName());
+                                                    sf.setSelected_tag(tag.getDisplayName());
+                                                    sf.setSelected_tag_item(tag);
+                                                    mDataManager.updateSelectedFilters(sf);
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
+                            }
+                        }else {
+                            for (ProgramFilter filter : data) {
+                                if (filter.getInternalName().toLowerCase().contains("period_id")) {
+                                    for (ProgramFilterTag tag : filter.getTags()) {
+                                                if (tag.getId() == periodId) {
+                                                    SelectedFilter sf = new SelectedFilter();
+                                                    sf.setInternal_name(filter.getInternalName());
+                                                    sf.setDisplay_name(filter.getDisplayName());
+                                                    sf.setSelected_tag(tag.getDisplayName());
+                                                    sf.setSelected_tag_item(tag);
+                                                    mDataManager.updateSelectedFilters(sf);
+                                                    break;
+                                                }
+                                    }
+                                    break;
+                                }
                             }
                         }
+                        selectedFilter = mDataManager.getSelectedFilters();
 
                         if (!data.isEmpty()) {
                             allFilters = data;
@@ -432,7 +455,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     }
 
     private void fetchUnits() {
-
+        mActivity.showLoading();
         mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
                 periodId, take, skip, 0L, 0L,
@@ -454,6 +477,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         allLoaded = true;
                         unitsAdapter.setLoadingDone();
                         toggleEmptyVisibility();
+//                        emptyVisible.set(true);
+//                        frameVisible.set(false);
                     }
                 });
 
@@ -464,7 +489,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
         mActivity.showLoading();
         mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(),
-                "", 0L, take, skip, startDate, endDate,
+                "", 0L, 0, 0, startDate, endDate,
                 new OnResponseCallback<List<Unit>>() {
                     @Override
                     public void onSuccess(List<Unit> data) {
@@ -546,6 +571,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         endDateTime = endDate;
                         eventObservableDate.set(startDate);
                         eventObservable.set(eventsArrayList);
+                        eventObservable.notifyChange();
                         mActivity.hideLoading();
                     }
 
@@ -562,8 +588,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                     "", null, "#ffffff");
                             events.add(et);
                         }
-                        eventObservableDate.set(startDate);
                         eventObservable.set(events);
+                        eventObservable.notifyChange();
                     }
                 });
     }
@@ -572,7 +598,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
         boolean newItemsAdded = false;
         int n = 0;
         for (Unit unit : data) {
-            if (!units.contains(unit)) {
+            if (!unitAlreadyAdded(unit)) {
                 units.add(unit);
                 newItemsAdded = true;
                 n++;
@@ -585,8 +611,17 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
 
         toggleEmptyVisibility();
     }
+    private boolean unitAlreadyAdded(Unit unit) {
+        for (Unit u : units) {
+            if (TextUtils.equals(u.getId(), unit.getId()) && (u.getPeriodId() == unit.getPeriodId())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void toggleEmptyVisibility() {
+        mActivity.hideLoading();
         if (units == null || units.isEmpty()) {
             emptyVisible.set(true);
             addUnitsVisible.set(true);
@@ -656,8 +691,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
         ActivityCalendarBottomSheet bottomSheetDialogFragment =
                 new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
                         , periodName.get(), filters);
-        bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(),
-                "units");
+        bottomSheetDialogFragment.show(mActivity.getSupportFragmentManager(),
+                "PeriodUnits");
     }
 
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
@@ -712,16 +747,16 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                     }
                 }
                 dropDownBinding.filterDropDown.setOnFilterItemListener((v, item, position, prev) -> {
-//                    if (prev != null && prev.getItem() != null) {
-//                        tags.remove((ProgramFilterTag) prev.getItem());
-//                    }
-//
+
                     if (item.getItem() != null) {
                         ProgramFilterTag tag = (ProgramFilterTag) item.getItem();
                         if (model.getInternalName().toLowerCase().contains("period_id")) {
                             periodName.set(tag.getDisplayName());
                             periodId = tag.getId();
+                            isfilterSelected = true;
                         }
+                    }else {
+                        isfilterSelected = false;
                     }
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
@@ -752,7 +787,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             }
                                         }else {
@@ -766,7 +800,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
 //                                                selectedTags.add(tag);
@@ -778,7 +811,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                             }
                                         }
                                     }
@@ -788,6 +820,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                     }
                     EventBus.getDefault()
                             .post(new ProgramFilterSavedEvent(filters));
+                    fetchFilters();
 
                 });
             }
@@ -951,6 +984,12 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
 
         }
     };
+
+    public void searchUnits() {
+        changesMade = true;
+        fetchData();
+    }
+
 
     public void changeToCalenderView(Boolean isChecked) {
         if (isChecked) {

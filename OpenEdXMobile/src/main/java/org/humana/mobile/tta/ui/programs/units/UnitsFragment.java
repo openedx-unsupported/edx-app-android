@@ -78,11 +78,12 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (course != null) {
-            outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
-        }
-        if (periodName != null) {
+        outState.putLong(Constants.KEY_PERIOD_ID, periodId);
+        if (periodName != null){
             outState.putString(Constants.KEY_PERIOD_NAME, periodName);
+        }
+        if (course != null){
+            outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
         }
     }
 

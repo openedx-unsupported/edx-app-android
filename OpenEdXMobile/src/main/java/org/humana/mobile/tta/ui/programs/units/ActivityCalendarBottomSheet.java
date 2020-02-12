@@ -72,12 +72,12 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null){
-            getDataFromBundle(savedInstanceState);
+            getBundledData(savedInstanceState);
         }
         if (course == null && getArguments() != null){
-            getDataFromBundle(getArguments());
+            getBundledData(getArguments());
         }
-        savedInstanceState = getActivity().getIntent().getExtras();
+//        savedInstanceState = getActivity().getIntent().getExtras();
 //        selectedDate = savedInstanceState.getLong("selectedDate", 0L);
         viewModel = new CalendarBottomSheetViewModel(getActivity(),this, course,selectedDate,
                 startDateTime, endDateTime, periodId, periodName, filters);
@@ -97,15 +97,26 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+        outState.putLong(Constants.KEY_PERIOD_ID, periodId);
+        if (periodName != null){
+            outState.putString(Constants.KEY_PERIOD_NAME, periodName);
+        }
         if (course != null){
             outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
         }
+        super.onSaveInstanceState(outState);
+
     }
 
-    private void getDataFromBundle(Bundle bundle){
-        if (bundle.containsKey(Router.EXTRA_COURSE_DATA)){
-            course = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
+    private void getBundledData(Bundle parameters){
+        if (parameters.containsKey(Constants.KEY_PERIOD_ID)){
+            periodId = parameters.getLong(Constants.KEY_PERIOD_ID);
+        }
+        if (parameters.containsKey(Constants.KEY_PERIOD_NAME)){
+            periodName = parameters.getString(Constants.KEY_PERIOD_NAME);
+        }
+        if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
+            course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
         }
     }
 

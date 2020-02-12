@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +39,7 @@ import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
@@ -70,8 +73,11 @@ public class StudentsViewModel extends BaseViewModel {
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableBoolean isTabView = new ObservableBoolean();
-
-
+    public ObservableField<String> toolTipText = new ObservableField<>();
+    public ObservableInt toolTipGravity = new ObservableInt();
+    public ObservableField<String> toolProfileUnitText = new ObservableField<>();
+    public ObservableInt toolTipProfileGravity = new ObservableInt();
+    public ObservableBoolean isSeen = new ObservableBoolean();
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -89,9 +95,9 @@ public class StudentsViewModel extends BaseViewModel {
         filters = new ArrayList<>();
         gridUsersAdapter.setItems(users);
         gridUsersAdapter.setItemClickListener((view, item) -> {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.ll_current_status:
-                    if (item.current_period_title!=null) {
+                    if (item.current_period_title != null) {
                         mDataManager.getLoginPrefs().setCurrrentPeriod(item.current_period_id);
                         mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.current_period_title);
                     }
@@ -100,7 +106,7 @@ public class StudentsViewModel extends BaseViewModel {
                         b.putString(Router.EXTRA_USERNAME, item.username);
                         b.putBoolean("isCurrent", true);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
-                    } else if(mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
+                    } else if (mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
                         b.putBoolean("isCurrent", true);
@@ -119,19 +125,18 @@ public class StudentsViewModel extends BaseViewModel {
                         b.putString(Router.EXTRA_USERNAME, item.username);
                         b.putBoolean("isCurrent", false);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
-                    }else if(mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
+                    } else if (mDataManager.getLoginPrefs().getUsername().equals(item.username)) {
                         Bundle b = new Bundle();
                         b.putString(Router.EXTRA_USERNAME, item.username);
                         b.putBoolean("isCurrent", false);
                         ActivityUtil.gotoPage(mActivity, UserStatusActivity.class, b);
-                    }
-                    else {
+                    } else {
                         mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
                     }
                     break;
-                    default:
-                        mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
-                        break;
+                default:
+                    mDataManager.getEdxEnvironment().getRouter().showUserProfile(mActivity, item.username);
+                    break;
             }
 
         });
@@ -150,7 +155,9 @@ public class StudentsViewModel extends BaseViewModel {
 
         changesMade = true;
         mActivity.showLoading();
-        fetchData();
+        if (isSeen.get()) {
+            fetchData();
+        }
 
     }
 
@@ -186,7 +193,7 @@ public class StudentsViewModel extends BaseViewModel {
 
     }
 
-    private void fetchData() {
+    public void fetchData() {
 
         if (changesMade) {
             skip = 0;
@@ -239,11 +246,10 @@ public class StudentsViewModel extends BaseViewModel {
 
             if (binding instanceof TRowStudentsGridBinding) {
                 TRowStudentsGridBinding itemBinding = (TRowStudentsGridBinding) binding;
-                itemBinding.txtCompleted.setText(String.format("%s "+ mActivity.getResources().getString(R.string.point_txt), String.valueOf(model.completedHours)));
+                itemBinding.txtCompleted.setText(String.format("%s " + mActivity.getResources().getString(R.string.point_txt), String.valueOf(model.completedHours)));
                 itemBinding.txtPending.setText(String.format("%s Units", String.valueOf(model.completedUnits)));
                 itemBinding.userName.setText(model.name);
                 if (model.profileImage != null) {
-
 
 
                     Glide.with(mActivity).load(
@@ -252,18 +258,18 @@ public class StudentsViewModel extends BaseViewModel {
                             .placeholder(R.drawable.profile_photo_placeholder)
                             .centerCrop()
                             .into(new BitmapImageViewTarget(itemBinding.userImage) {
-                        @Override
-                        protected void setResource(Bitmap resource) {
-                            RoundedBitmapDrawable circularBitmapDrawable =
-                                    RoundedBitmapDrawableFactory.create(mActivity.getResources(), resource);
-                            circularBitmapDrawable.setCircular(true);
-                            itemBinding.userImage.setImageDrawable(circularBitmapDrawable);
-                        }
-                    });
+                                @Override
+                                protected void setResource(Bitmap resource) {
+                                    RoundedBitmapDrawable circularBitmapDrawable =
+                                            RoundedBitmapDrawableFactory.create(mActivity.getResources(), resource);
+                                    circularBitmapDrawable.setCircular(true);
+                                    itemBinding.userImage.setImageDrawable(circularBitmapDrawable);
+                                }
+                            });
                 }
                 if (model.education != null) {
                     itemBinding.textDegree.setText(model.education);
-                }else {
+                } else {
                     itemBinding.textDegree.setVisibility(View.INVISIBLE);
                 }
 
@@ -271,15 +277,15 @@ public class StudentsViewModel extends BaseViewModel {
 //                if (!mDataManager.getLoginPrefs().getRole().equals("Instructor")) {
 //                    itemBinding.llStatus.setVisibility(View.GONE);
 //                }
-                itemBinding.txtCurrentCompleted.setText(String.format("%s "+mActivity.getResources().getString(R.string.point_txt),
+                itemBinding.txtCurrentCompleted.setText(String.format("%s " + mActivity.getResources().getString(R.string.point_txt),
                         String.valueOf(model.current_hours)));
                 itemBinding.txtCurrentPending.setText(String.format("%s Units", String.valueOf(model.currentUnits)));
 
 
                 itemBinding.imgInsta.setOnClickListener(v -> {
 
-                    if (model.social_profile.size()>0) {
-                        for (int i=0; i<model.social_profile.size(); i++) {
+                    if (model.social_profile.size() > 0) {
+                        for (int i = 0; i < model.social_profile.size(); i++) {
                             if (model.social_profile.get(i).platform.equals("linkedin")) {
                                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                                         Uri.parse(model.social_profile.get(i).social_link));
@@ -290,8 +296,8 @@ public class StudentsViewModel extends BaseViewModel {
 
                 });
                 itemBinding.imgTwitter.setOnClickListener(v -> {
-                    if (model.social_profile.size()>0 && model.social_profile != null) {
-                        for (int i=0; i<model.social_profile.size(); i++) {
+                    if (model.social_profile.size() > 0 && model.social_profile != null) {
+                        for (int i = 0; i < model.social_profile.size(); i++) {
                             if (model.social_profile.get(i).platform.equals("twitter")) {
                                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                                         Uri.parse(model.social_profile.get(i).social_link));
@@ -302,8 +308,8 @@ public class StudentsViewModel extends BaseViewModel {
 
                 });
                 itemBinding.imgFacebook.setOnClickListener(v -> {
-                    if (model.social_profile.size()>0 && model.social_profile != null) {
-                        for (int i=0; i<model.social_profile.size(); i++) {
+                    if (model.social_profile.size() > 0 && model.social_profile != null) {
+                        for (int i = 0; i < model.social_profile.size(); i++) {
                             if (model.social_profile.get(i).platform.equals("facebook")) {
 
                                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
@@ -314,6 +320,11 @@ public class StudentsViewModel extends BaseViewModel {
                     }
 
                 });
+
+                if (getItemPosition(model) == 0) {
+                        setUpToolTip(itemBinding);
+                }
+
 
                 itemBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
@@ -344,7 +355,6 @@ public class StudentsViewModel extends BaseViewModel {
     }
 
 
-
     public void registerEventBus() {
         EventBus.getDefault().registerSticky(this);
     }
@@ -360,6 +370,44 @@ public class StudentsViewModel extends BaseViewModel {
             ProgramUser p = users.get(position2);
             p.pendingCount = period.pendingCount + event.pendingCount;
             gridUsersAdapter.notifyItemChanged(position2);
+        }
+    }
+
+    private void setUpToolTip(TRowStudentsGridBinding itemBinding){
+        if (mDataManager.getLoginPrefs().isStudentTootipSeen()) {
+            new MxTooltip.Builder(mActivity)
+                    .anchorView(itemBinding.userImage)
+                    .text("View Profile")
+                    .gravity(Gravity.TOP)
+                    .animated(true)
+                    .transparentOverlay(true)
+                    .arrowDrawable(R.drawable.down_arrow)
+                    .build()
+                    .show();
+
+            new MxTooltip.Builder(mActivity)
+                    .anchorView(itemBinding.txtPending)
+                    .text("View Approved Units")
+                    .gravity(Gravity.TOP)
+                    .animated(true)
+                    .transparentOverlay(true)
+                    .arrowDrawable(R.drawable.down_arrow)
+                    .build()
+                    .show();
+
+            new MxTooltip.Builder(mActivity)
+                    .anchorView(itemBinding.txtCurrentPending)
+                    .text("View Current periods")
+                    .gravity(Gravity.BOTTOM)
+                    .animated(true)
+                    .transparentOverlay(true)
+                    .arrowDrawable(R.drawable.up_arrow)
+                    .build()
+                    .show();
+
+
+            mDataManager.getLoginPrefs().setStudentTootipSeen(true);
+            isSeen.set(false);
         }
     }
 }

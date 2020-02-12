@@ -366,6 +366,7 @@ public class PrefManager {
         public static final String IS_SCHEDULE_TOOLTIP = "is_schedule_tooltip";
         public static final String IS_UNIT_TOOLTIP = "is_unit_tooltip";
         public static final String IS_PROFILE_TOOLTIP = "is_profile_tooltip";
+        public static final String IS_STUDENT_TOOLTIP = "is_student_tooltip";
     }
 
     public static final class Value {

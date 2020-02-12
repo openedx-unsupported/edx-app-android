@@ -34,4 +34,12 @@ public class StudentsFragment extends TaBaseFragment {
         super.onDestroy();
         viewModel.unRegisterEventBus();
     }
+
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        viewModel.isSeen.set(true);
+        viewModel.isSeen.notifyChange();
+        viewModel.fetchData();
+    }
 }

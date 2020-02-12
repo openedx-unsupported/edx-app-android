@@ -833,7 +833,12 @@ public class LoginPrefs {
     public boolean isProfileTootipSeen() {
         return pref.getBoolean(PrefManager.Key.IS_PROFILE_TOOLTIP, false);
     }
-
+    public boolean isStudentTootipSeen() {
+        return pref.getBoolean(PrefManager.Key.IS_STUDENT_TOOLTIP, false);
+    }
+    public void setStudentTootipSeen(boolean isSeen) {
+        pref.put(PrefManager.Key.IS_STUDENT_TOOLTIP, isSeen);
+    }
 
 
 }

@@ -89,10 +89,10 @@ public class UserStatusViewModel extends BaseViewModel {
         super(activity);
 
         this.course = course;
+        units = new ArrayList<>();
         this.studentName = studentName;
         this.showCurrentPeriodTitle = showCurrentPeriodTitle;
         name.set(studentName);
-        units = new ArrayList<>();
         tags = new LinkedList<>();
         filters = new LinkedList<>();
         take = DEFAULT_TAKE;
@@ -349,7 +349,7 @@ public class UserStatusViewModel extends BaseViewModel {
                         }
                         changesMade = true;
                         selectedFilter = mDataManager.getSelectedFilters();
-                        setUnitFilters();
+                        fetchData();
 
 
 //                        EventBus.getDefault().post(new ProgramFilterSavedEvent(filters));
@@ -448,7 +448,6 @@ public class UserStatusViewModel extends BaseViewModel {
                 }
             }
         }
-        fetchUnits();
     }
 
     private void fetchUnits() {
@@ -631,7 +630,6 @@ public class UserStatusViewModel extends BaseViewModel {
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             }
                                         }else {
@@ -645,7 +643,6 @@ public class UserStatusViewModel extends BaseViewModel {
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
 //                                                selectedTags.add(tag);
@@ -657,7 +654,6 @@ public class UserStatusViewModel extends BaseViewModel {
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                fetchFilters();
                                             }
                                         }
                                     }
@@ -667,6 +663,7 @@ public class UserStatusViewModel extends BaseViewModel {
                     }
                     EventBus.getDefault()
                             .post(new ProgramFilterSavedEvent(filters));
+                    fetchFilters();
 
                 });
             }
@@ -795,46 +792,5 @@ public class UserStatusViewModel extends BaseViewModel {
         mActivity.onBackPressed();
     }
 
-    public void getSelectedFilters(ProgramFilter model) {
-        ProgramFilter filter = new ProgramFilter();
-            for (ProgramFilterTag tag : model.getTags()) {
-                if (tag.getDisplayName()
-                        .equals(mDataManager.getLoginPrefs().getCurrrentPeriodTitle())) {
-                    if (mDataManager.getLoginPrefs().getCurrrentPeriod() == tag.getId()) {
-                        tags.add(tag);
-                        filter.setTags(tags);
-                        filter.setDisplayName(model.getDisplayName());
-                        filter.setInternalName(model.getInternalName());
-                        filter.setId(model.getId());
-                        filter.setOrder(model.getOrder());
-                        filter.setSelected(false);
-                        if (!filters.contains(filter)) {
-                            filters.add(filter);
-                        }
-                        break;
-                    }
-            }
-        }
-
-            if (model.getInternalName().toLowerCase().equals("status")) {
-                for (ProgramFilterTag tag : model.getTags()) {
-                    if (tag.getInternalName().toLowerCase().equals("approved")) {
-                        tags.add(tag);
-                        filter.setDisplayName(model.getDisplayName());
-                        filter.setInternalName(model.getInternalName());
-                        filter.setId(model.getId());
-                        filter.setOrder(model.getOrder());
-                        filter.setSelected(false);
-                        filter.setTags(tags);
-                        if (!filters.contains(filter)) {
-                            filters.add(filter);
-                            changesMade = true;
-                            fetchData();
-                        }
-                        break;
-                    }
-                }
-            }
-    }
 
 }

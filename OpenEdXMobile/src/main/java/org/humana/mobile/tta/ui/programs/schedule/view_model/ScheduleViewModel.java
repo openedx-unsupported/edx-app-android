@@ -693,7 +693,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                getFilters();
                                                 break;
                                             }
                                         }else {
@@ -707,7 +706,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                getFilters();
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
 //                                                selectedTags.add(tag);
@@ -719,7 +717,6 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
-                                                getFilters();
                                             }
                                         }
                                     }
@@ -729,6 +726,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     }
                     EventBus.getDefault()
                             .post(new ProgramFilterSavedEvent(filters));
+                    getFilters();
                 });
 
             }
@@ -865,36 +863,40 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
     private void rangePicker(Long startDate, Long endDate, boolean isStart) {
-
-
         Calendar now = Calendar.getInstance();
-        String startDateStr;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00 a", Locale.ENGLISH);
-        startDateStr = df.format(startDate);
-        Date mstartDate = null;
-        try {
-            mstartDate = df.parse(startDateStr);
-            now.setTime(mstartDate);
-            now.set(Calendar.HOUR_OF_DAY, 0);
-            now.set(Calendar.MINUTE, 0);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         Calendar now2 = Calendar.getInstance();
 
-        SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
-        String endDateStr = df1.format(endDate);
-        Date mendDate = null;
-        try {
-            mendDate = df1.parse(endDateStr);
-            now2.setTime(mendDate);
-            now2.set(Calendar.HOUR_OF_DAY, 23);
-            now2.set(Calendar.MINUTE, 59);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (startDate!=0) {
+            String startDateStr;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00 a", Locale.ENGLISH);
+            startDateStr = df.format(startDate);
+            Date mstartDate = null;
+            try {
+                mstartDate = df.parse(startDateStr);
+                now.setTime(mstartDate);
+                now.set(Calendar.HOUR_OF_DAY, 0);
+                now.set(Calendar.MINUTE, 0);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
+        if (endDate!=0) {
+
+            SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
+            String endDateStr = df1.format(endDate);
+            Date mendDate = null;
+            try {
+                mendDate = df1.parse(endDateStr);
+                now2.setTime(mendDate);
+                now2.set(Calendar.HOUR_OF_DAY, 23);
+                now2.set(Calendar.MINUTE, 59);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 this,
