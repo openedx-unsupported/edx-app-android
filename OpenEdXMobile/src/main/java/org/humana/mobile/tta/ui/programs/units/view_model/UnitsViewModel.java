@@ -19,7 +19,6 @@ import android.view.View;
 
 import com.lib.mxcalendar.models.Event;
 import com.lib.mxcalendar.view.IMxCalenderListener;
-import com.lib.mxcalendar.view.MxCalenderView;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -32,7 +31,6 @@ import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.enums.ShowIn;
-import org.humana.mobile.tta.data.enums.UnitStatusType;
 import org.humana.mobile.tta.data.enums.UserRole;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
@@ -47,7 +45,7 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
+import org.humana.mobile.tta.ui.programs.units.FragmentCalendarBottomSheet;
 import org.humana.mobile.util.DateUtil;
 
 import java.util.ArrayList;
@@ -956,8 +954,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
     @Override
     public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
-        ActivityCalendarBottomSheet bottomSheetDialogFragment =
-                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
+        FragmentCalendarBottomSheet bottomSheetDialogFragment =
+                new FragmentCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
                         , periodName,filters);
         bottomSheetDialogFragment.show(mActivity.getSupportFragmentManager(),
                 "units");

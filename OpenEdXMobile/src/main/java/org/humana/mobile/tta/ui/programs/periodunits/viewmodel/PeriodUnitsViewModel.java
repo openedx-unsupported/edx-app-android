@@ -44,7 +44,7 @@ import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
 import org.humana.mobile.tta.ui.programs.addunits.AddUnitsActivity;
-import org.humana.mobile.tta.ui.programs.units.ActivityCalendarBottomSheet;
+import org.humana.mobile.tta.ui.programs.units.FragmentCalendarBottomSheet;
 import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.DateUtil;
 import org.humana.mobile.view.Router;
@@ -215,12 +215,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
         } else {
             addUnitsVisible.set(false);
         }
-//        if (mDataManager.getLoginPrefs().getRole() != null &&
-//                mDataManager.getLoginPrefs().getRole().equalsIgnoreCase(UserRole.Instructor.name())) {
-//            addUnitsVisible.set(true);
-//        } else {
-//            addUnitsVisible.set(false);
-//        }
 
         mActivity.showLoading();
         fetchFilters();
@@ -304,13 +298,12 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
 
-                        if (!isfilterSelected) {
+                       /* if (isfilterSelected) {
                             for (ProgramFilter filter : data) {
                                 if (filter.getInternalName().toLowerCase().contains("period_id")) {
                                     for (ProgramFilterTag tag : filter.getTags()) {
                                         for (SelectedFilter selectedFilter : selectedFilter) {
-                                            if (!tag.getDisplayName().equals(selectedFilter.getSelected_tag())) {
-                                                if (tag.getId() == periodId) {
+                                            if (tag.getDisplayName().equals(selectedFilter.getSelected_tag())) {
                                                     SelectedFilter sf = new SelectedFilter();
                                                     sf.setInternal_name(filter.getInternalName());
                                                     sf.setDisplay_name(filter.getDisplayName());
@@ -318,7 +311,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                                     sf.setSelected_tag_item(tag);
                                                     mDataManager.updateSelectedFilters(sf);
                                                     break;
-                                                }
+
                                             }
                                         }
                                     }
@@ -343,7 +336,35 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                 }
                             }
                         }
-                        selectedFilter = mDataManager.getSelectedFilters();
+                        selectedFilter = mDataManager.getSelectedFilters();*/
+
+                       if (periodId!=0) {
+                           for (ProgramFilter filter : data) {
+                               if (filter.getInternalName().toLowerCase().contains("period_id")) {
+                                   for (ProgramFilterTag tag : filter.getTags()) {
+                                       if (tag.getId() == periodId) {
+                                           SelectedFilter sf = new SelectedFilter();
+                                           sf.setInternal_name(filter.getInternalName());
+                                           sf.setDisplay_name(filter.getDisplayName());
+                                           sf.setSelected_tag(tag.getDisplayName());
+                                           sf.setSelected_tag_item(tag);
+                                           mDataManager.updateSelectedFilters(sf);
+                                           break;
+                                       }
+//                                    else if (periodId == 0){
+//                                        SelectedFilter sf = new SelectedFilter();
+//                                        sf.setInternal_name("period_id");
+//                                        sf.setDisplay_name("Period");
+//                                        sf.setSelected_tag("Period");
+//                                        sf.setSelected_tag_item(null);
+//                                        mDataManager.updateSelectedFilters(sf);
+//                                    }
+                                   }
+                                   break;
+                               }
+                           }
+                           selectedFilter = mDataManager.getSelectedFilters();
+                       }
 
                         if (!data.isEmpty()) {
                             allFilters = data;
@@ -354,6 +375,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         }
 //                        EventBus.getDefault()
 //                                .post(new ProgramFilterSavedEvent(filters));
+                        changesMade = true;
                         fetchData();
                     }
 
@@ -476,7 +498,9 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         mActivity.hideLoading();
                         allLoaded = true;
                         unitsAdapter.setLoadingDone();
+                        unitsAdapter.reset(true);
                         toggleEmptyVisibility();
+
 //                        emptyVisible.set(true);
 //                        frameVisible.set(false);
                     }
@@ -688,8 +712,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
 
     @Override
     public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
-        ActivityCalendarBottomSheet bottomSheetDialogFragment =
-                new ActivityCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
+        FragmentCalendarBottomSheet bottomSheetDialogFragment =
+                new FragmentCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
                         , periodName.get(), filters);
         bottomSheetDialogFragment.show(mActivity.getSupportFragmentManager(),
                 "PeriodUnits");
@@ -753,10 +777,10 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         if (model.getInternalName().toLowerCase().contains("period_id")) {
                             periodName.set(tag.getDisplayName());
                             periodId = tag.getId();
-                            isfilterSelected = true;
                         }
-                    }else {
-                        isfilterSelected = false;
+                    }else if (item.getName().equals("Period")){
+                        periodName.set("Period");
+                        periodId = 0;
                     }
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
@@ -811,6 +835,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
                                                 filters.add(pf);
+                                                isfilterSelected = true;
+                                                break;
                                             }
                                         }
                                     }
@@ -818,8 +844,10 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                             }
                         }
                     }
-                    EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters));
+//                    ProgramFilterSavedEvent programFilterSavedEvent = new ProgramFilterSavedEvent(filters);
+//                    programFilterSavedEvent.setProgramFilters(filters);
+//                    EventBus.getDefault()
+//                            .post(programFilterSavedEvent);
                     fetchFilters();
 
                 });

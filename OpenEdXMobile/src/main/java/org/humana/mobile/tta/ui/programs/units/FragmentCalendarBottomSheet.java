@@ -3,40 +3,28 @@ package org.humana.mobile.tta.ui.programs.units;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.FragCalendarBottomSheetBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.tta.Constants;
-import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.ui.base.TaBaseBottomsheetFragment;
-import org.humana.mobile.tta.ui.base.TaBaseFragment;
-import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
-import org.humana.mobile.tta.ui.library.LibraryFragment;
 import org.humana.mobile.tta.ui.programs.units.view_model.CalendarBottomSheetViewModel;
-import org.humana.mobile.tta.ui.programs.units.view_model.UnitCalendarViewModel;
-import org.humana.mobile.tta.ui.programs.units.view_model.UnitsViewModel;
 import org.humana.mobile.view.Router;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
+public class FragmentCalendarBottomSheet extends TaBaseBottomsheetFragment {
 
     private CalendarBottomSheetViewModel viewModel;
 
@@ -50,7 +38,7 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
     List<ProgramFilter> filters;
 
     @SuppressLint("ValidFragment")
-    public ActivityCalendarBottomSheet(Long selectedDate, Long startDateTime, Long endDateTime,
+    public FragmentCalendarBottomSheet(Long selectedDate, Long startDateTime, Long endDateTime,
                                        Long periodId, String periodName, List<ProgramFilter> filters) {
         this.selectedDate = selectedDate;
         this.startDateTime = startDateTime;
@@ -60,11 +48,14 @@ public class ActivityCalendarBottomSheet extends TaBaseBottomsheetFragment {
         this.filters = filters;
     }
 
-    public ActivityCalendarBottomSheet() {
+    public FragmentCalendarBottomSheet() {
+        if (getActivity().getIntent().getExtras() != null) {
+            getBundledData(getActivity().getIntent().getExtras());
+        }
     }
 
-    public static ActivityCalendarBottomSheet newInstance() {
-        return new ActivityCalendarBottomSheet();
+    public static FragmentCalendarBottomSheet newInstance() {
+        return new FragmentCalendarBottomSheet();
     }
 
     @Override

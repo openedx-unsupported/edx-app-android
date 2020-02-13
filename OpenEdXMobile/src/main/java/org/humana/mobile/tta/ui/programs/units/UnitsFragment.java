@@ -1,19 +1,15 @@
 package org.humana.mobile.tta.ui.programs.units;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import com.lib.mxcalendar.models.Event;
 import com.lib.mxcalendar.util.Builder;
-import com.lib.mxcalendar.view.IMxCalenderListener;
 
 import org.humana.mobile.R;
 import org.humana.mobile.databinding.TFragmentUnitsBinding;
@@ -41,6 +37,8 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
     private String periodName;
     TFragmentUnitsBinding binding;
 
+    private Builder mBuilder;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,26 +51,28 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
             getDataFromBundle(getArguments());
         }
 
+
         eventList = new ArrayList<>();
         viewModel = new UnitsViewModel(getActivity(), this, course, periodName, periodId);
         viewModel.registerEventBus();
+
+        mBuilder = new Builder()
+                .setDayNameColor(null)
+                .setHeaderColor(null)
+                .setDayNumberColor(null)
+                .setListner(viewModel)
+                .setTabletMode(isTabView());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = binding(inflater, container, R.layout.t_fragment_units, viewModel).getRoot();
         binding = (TFragmentUnitsBinding) binding(inflater, container, R.layout.t_fragment_units, viewModel);
-        binding.calendarView.init(
-                new Builder()
-                        .setDayNameColor(null)
-                        .setHeaderColor(null)
-                        .setDayNumberColor(null)
-                        .setListner(viewModel)
-                        .setTabletMode(isTabView()));
 
 
-        return rootView;
+        binding.calendarView.init(mBuilder);
+
+        return binding.getRoot();
     }
 
     @Override
@@ -87,11 +87,6 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 
     private void getDataFromBundle(Bundle bundle) {
         if (bundle.containsKey(Router.EXTRA_COURSE_DATA)) {
@@ -115,6 +110,7 @@ public class UnitsFragment extends TaBaseFragment implements PageViewStateCallba
 
     @Override
     public void onPageShow() {
+        binding.calendarView.setBuilder(mBuilder);
         viewModel.setSessionFilter();
     }
 
