@@ -583,6 +583,10 @@ public class Config {
         @SerializedName("BLOCKS")
         private String blocksApiVersion;
 
+        public ApiUrlVersionConfig() {
+            blocksApiVersion = DEFAULT_API_VERSION;
+        }
+
         public ApiUrlVersionConfig(@NonNull String blocksApiVersion) {
             this.blocksApiVersion = blocksApiVersion;
         }
