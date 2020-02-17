@@ -15,7 +15,7 @@ public class LoginActivityTest extends PresenterActivityTest<LoginActivity, Logi
 
     @Before
     public void setup() {
-        startActivity(LoginActivity.newIntent());
+        startActivity(LoginActivity.newIntent(null));
     }
 
     @Test

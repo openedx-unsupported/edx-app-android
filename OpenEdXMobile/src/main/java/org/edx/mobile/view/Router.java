@@ -19,6 +19,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseDetail;
+import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -63,6 +64,7 @@ public class Router {
     public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
     public static final String EXTRA_PATH_ID = "path_id";
     public static final String EXTRA_SCREEN_NAME = "screen_name";
+    public static final String EXTRA_DEEP_LINK = "deep_link";
 
     @Inject
     Config config;
@@ -127,8 +129,13 @@ public class Router {
     }
 
     @NonNull
+    public Intent getLogInIntent(@Nullable DeepLink deepLink) {
+        return LoginActivity.newIntent(deepLink);
+    }
+
+    @NonNull
     public Intent getLogInIntent() {
-        return LoginActivity.newIntent();
+        return getLogInIntent(null);
     }
 
     @NonNull

@@ -19,6 +19,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginTask;
 import org.edx.mobile.databinding.ActivityLoginBinding;
+import org.edx.mobile.deeplink.DeepLink;
+import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.HttpStatus;
@@ -48,8 +50,16 @@ public class LoginActivity
     LoginPrefs loginPrefs;
 
     @NonNull
-    public static Intent newIntent() {
-        return IntentFactory.newIntentForComponent(LoginActivity.class);
+    public static Intent newIntent(@Nullable DeepLink deepLink) {
+        final Intent intent = IntentFactory.newIntentForComponent(LoginActivity.class);
+        intent.putExtra(Router.EXTRA_DEEP_LINK, deepLink);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return intent;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        this.setIntent(intent);
     }
 
     @NonNull
@@ -279,6 +289,11 @@ public class LoginActivity
     public void onUserLoginSuccess(ProfileModel profile) {
         setResult(RESULT_OK);
         finish();
+        final DeepLink deepLink = getIntent().getParcelableExtra(Router.EXTRA_DEEP_LINK);
+        if (deepLink != null) {
+            DeepLinkManager.onDeepLinkReceived(this, deepLink);
+            return;
+        }
         if (!environment.getConfig().isRegistrationEnabled()) {
             environment.getRouter().showMainDashboard(this);
         }
