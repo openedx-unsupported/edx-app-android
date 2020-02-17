@@ -39,10 +39,6 @@ class ConfigUtil {
             if (config.firebaseConfig.isEnabled) {
                 val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
                 firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
-                    val courseUpgradeEnabled = firebaseRemoteConfig
-                            .getBoolean(AppConstants.FirebaseConstants.REV_934_ENABLED)
-                    // Check course upgrade enabled in firebase remote config
-                    if (courseUpgradeEnabled) {
                         val whiteListedReleasesJson = firebaseRemoteConfig
                                 .getString(AppConstants.FirebaseConstants.REV_934_WHITELISTED_RELEASES)
                         if (!TextUtils.isEmpty(whiteListedReleasesJson)) {
@@ -56,7 +52,6 @@ class ConfigUtil {
                                 }
                             }
                         }
-                    }
                     listener.onCourseUpgradeResult(false)
                 }
             }
