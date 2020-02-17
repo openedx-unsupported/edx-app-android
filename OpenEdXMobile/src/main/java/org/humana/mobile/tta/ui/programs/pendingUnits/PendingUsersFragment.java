@@ -29,4 +29,11 @@ public class PendingUsersFragment extends TaBaseFragment{
         View rootView = binding(inflater, container, R.layout.t_fragment_pending_users, viewModel).getRoot();
         return rootView;
     }
+    @Override
+    public void onPageShow() {
+        super.onPageShow();
+        viewModel.isSeen.set(true);
+        viewModel.isSeen.notifyChange();
+        viewModel.fetchData();
+    }
 }

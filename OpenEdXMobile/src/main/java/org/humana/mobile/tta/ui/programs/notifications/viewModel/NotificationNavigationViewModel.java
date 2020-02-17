@@ -26,6 +26,9 @@ public class NotificationNavigationViewModel extends BaseViewModel {
         this.unitId = unitId;
 
         getEnrolledCourse(courseId, unitId);
+        if (mDataManager.getLoginPrefs().getNotificationSeen().equals(Constants.NOTIFICATION_RECIEVED)) {
+            mDataManager.getLoginPrefs().setNotificationSeen(Constants.NOTIFICATION_SEEN);
+        }
     }
 
     private void getEnrolledCourse(String action_parent_id, String action_id) {

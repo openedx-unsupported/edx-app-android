@@ -205,6 +205,8 @@ public class AccountFragment extends BaseFragment {
         mDataManager.getLoginPrefs().setProfileTootipSeen(false);
         mDataManager.getLoginPrefs().setScheduleTootipSeen(false);
         mDataManager.getLoginPrefs().setUnitTootipSeen(false);
+        mDataManager.getLoginPrefs().setPendingTootipSeen(false);
+        mDataManager.getLoginPrefs().setStudentTootipSeen(false);
         showTooltip();
     }
 }

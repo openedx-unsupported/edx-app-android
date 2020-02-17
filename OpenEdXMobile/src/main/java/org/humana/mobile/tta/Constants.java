@@ -120,6 +120,9 @@ public class Constants {
     public static String USERNAME="";
     public static Boolean isUnitApprove =false;
     public static final String KEY_HUMANA ="Humana";
+    public static final String NOTIFICATION_SEEN ="Seen";
+    public static final String NOTIFICATION_NOT_SEEN ="NotSeen";
+    public static final String NOTIFICATION_RECIEVED ="NotRecieved";
 
 
 }

@@ -22,7 +22,6 @@ import org.humana.mobile.tta.data.app_update.UpdateType;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
 import org.humana.mobile.tta.data.model.UpdateResponse;
 import org.humana.mobile.tta.event.ContentStatusReceivedEvent;
-import org.humana.mobile.tta.event.ContentStatusesReceivedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.agenda.AgendaFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -96,7 +95,7 @@ public class LandingViewModel extends BaseViewModel {
         showLibrary();
         mActivity.showLoading();
 
-        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()){
+        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
             setToolTip();
         }
     }
@@ -105,6 +104,11 @@ public class LandingViewModel extends BaseViewModel {
     public void onResume() {
         super.onResume();
         onEventMainThread(new NetworkConnectivityChangeEvent());
+        if (mDataManager.getLoginPrefs().getNotificationSeen() != null) {
+            if (mDataManager.getLoginPrefs().getNotificationSeen().equals(Constants.NOTIFICATION_RECIEVED)) {
+                mDataManager.getLoginPrefs().setNotificationSeen(Constants.NOTIFICATION_NOT_SEEN);
+            }
+        }
     }
 
     public void showLibrary() {
@@ -311,7 +315,7 @@ public class LandingViewModel extends BaseViewModel {
         dialog.show();
     }
 
-    public void setToolTip(){
+    public void setToolTip() {
         toolPosition.set(1);
         tooltipGravity.set(Gravity.TOP);
         tooltipText.set("Programs");

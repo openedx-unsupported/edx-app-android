@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="org.humana.mobile.tta.ui.programs.userStatus.viewModel.UserStatusViewModel" />
@@ -13,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -27,62 +30,61 @@
             app:titleMarginStart="0dp"
             app:titleTextAppearance="@style/ta_toolbar_title_style" />
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-    <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        app:mx_titleVisible="false"
-        app:mx_moreButtonVisible="false"
-        app:mx_itemLayout="@layout/t_row_filter_drop_down"
-        app:mx_itemLimit="100"
-        finite_recycler_adapter="@{viewModel.filtersAdapter}"
-        android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.5"
-        android:layout_marginLeft="@dimen/_8px"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/ll_student_name"
-        android:gravity="center"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="@drawable/rounded_rectange"
-        android:visibility="@{viewModel.studentVisible?View.VISIBLE:View.GONE}"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.name}"
-            android:textColor="@color/colorAccent"
-            android:gravity="start|center_vertical"
-            android:fontFamily="@font/hind_semibold"
-            android:onClick="@{()->viewModel.getAllUnits()}"
-            />
+            android:orientation="vertical">
 
-        <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_close_black_24dp"
-        android:tint="@color/colorAccent"
-        android:onClick="@{()->viewModel.getAllUnits()}"
-        />
+            <com.maurya.mx.mxlib.view.MxFiniteRecyclerView
+                finite_recycler_adapter="@{viewModel.filtersAdapter}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"
+                app:mx_itemLayout="@layout/t_row_filter_drop_down"
+                app:mx_itemLimit="100"
+                app:mx_moreButtonVisible="false"
+                app:mx_titleVisible="false" />
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_student_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounded_rectange"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:visibility="@{viewModel.studentVisible?View.VISIBLE:View.GONE}">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/hind_semibold"
+                    android:gravity="start|center_vertical"
+                    android:onClick="@{()->viewModel.getAllUnits()}"
+                    android:text="@{viewModel.name}"
+                    android:textColor="@color/gray_5" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:background="@drawable/ic_cancel_black_24dp"
+                    android:onClick="@{()->viewModel.getAllUnits()}"
+                    android:tint="@color/colorAccent" />
+
+            </LinearLayout>
 
 
-</LinearLayout>
-
+        </LinearLayout>
 
 
         <FrameLayout
@@ -91,12 +93,12 @@
             android:layout_weight="1">
 
             <com.maurya.mx.mxlib.view.MxRecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:mx_itemLayout="@layout/t_row_unit"
+                infinite_load_more_listener="@{viewModel.loadMoreListener}"
                 infinite_recycler_adapter="@{viewModel.unitsAdapter}"
                 layout_manager="@{viewModel.layoutManager}"
-                infinite_load_more_listener="@{viewModel.loadMoreListener}"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mx_itemLayout="@layout/t_row_unit" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -115,8 +117,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/_46px"
                     android:layout_marginStart="@dimen/_70px"
+                    android:layout_marginTop="@dimen/_46px"
                     android:layout_marginEnd="@dimen/_70px"
                     android:fontFamily="@font/hind_regular"
                     android:gravity="center"

@@ -74,6 +74,8 @@ public class UserStatusViewModel extends BaseViewModel {
     private EnrolledCoursesResponse parentCourse;
     public ObservableField<String> toolbarTitle = new ObservableField<>();
     public Boolean showCurrentPeriodTitle;
+    public Boolean isPeriodFilterSelected = false;
+    public Boolean isStatusFilterSelected = false;
     private List<SelectedFilter> selectedFilter;
 
 
@@ -102,6 +104,7 @@ public class UserStatusViewModel extends BaseViewModel {
 
         unitsAdapter = new UserStatusAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
+        selectedFilter = mDataManager.getLoginPrefs().getCachedFilter();
 
         if (showCurrentPeriodTitle){
             toolbarTitle.set("Current Periods");
@@ -118,7 +121,13 @@ public class UserStatusViewModel extends BaseViewModel {
 
             switch (view.getId()) {
                 case R.id.tv_my_date:
-                    showDatePicker(item, mActivity.getString(R.string.my_date));
+                    String title;
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
+                        title = mActivity.getString(R.string.proposed_date);
+                    } else {
+                        title = mActivity.getString(R.string.my_date);
+                    }
+                    showDatePicker(item, title);
                     break;
                 default:
                     mActivity.showLoading();
@@ -289,51 +298,30 @@ public class UserStatusViewModel extends BaseViewModel {
                             allFilters = data;
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
-//                            if (!studentName.equals("")) {
-//                                studentVisible.set(true);
-//                            } else {
-//                                studentVisible.set(false);
-//                            }
                         } else {
                             filtersVisible.set(false);
                         }
-                        if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle()!=null){
-                        if (!mDataManager.getLoginPrefs().getCurrrentPeriodTitle()
-                                        .equalsIgnoreCase("")) {
-                            ProgramFilterTag tag = new ProgramFilterTag();
-                            tag.setDisplayName("Approved");
-                            tag.setInternalName("Approved");
-                            tag.setSelected(true);
-                            tag.setOrder(0);
-                            tag.setId(3);
-                            SelectedFilter selectedFilter = new SelectedFilter();
-                            selectedFilter.setSelected_tag("Approved");
-                            selectedFilter.setInternal_name("status");
-                            selectedFilter.setDisplay_name("Status");
-                            selectedFilter.setSelected_tag_item(tag);
-                            mDataManager.updateSelectedFilters(selectedFilter);
 
-                            ProgramFilterTag tag1 = new ProgramFilterTag();
-                            tag1.setDisplayName(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
-                            tag1.setInternalName(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
-                            tag1.setSelected(false);
-                            tag1.setOrder(0);
-                            tag1.setId(mDataManager.getLoginPrefs().getCurrrentPeriod());
 
-                            SelectedFilter sf = new SelectedFilter();
-                            sf.setSelected_tag(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
-                            sf.setInternal_name("period_id");
-                            sf.setDisplay_name("Period");
-                            sf.setSelected_tag_item(tag1);
-                            mDataManager.updateSelectedFilters(sf);
+                        if (mDataManager.getLoginPrefs().getCurrrentPeriodTitle()!=null||
+                                !mDataManager.getLoginPrefs().getCurrrentPeriodTitle()
+                                        .equalsIgnoreCase("")){
+                            if (!isPeriodFilterSelected){
+                                ProgramFilterTag tag1 = new ProgramFilterTag();
+                                tag1.setDisplayName(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+                                tag1.setInternalName(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+                                tag1.setSelected(false);
+                                tag1.setOrder(0);
+                                tag1.setId(mDataManager.getLoginPrefs().getCurrrentPeriod());
+                                SelectedFilter sf = new SelectedFilter();
+                                sf.setSelected_tag(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
+                                sf.setInternal_name("period_id");
+                                sf.setDisplay_name("Period");
+                                sf.setSelected_tag_item(tag1);
+                                mDataManager.updateSelectedFilters(sf);
+                            }
                         }
-                        }else {
-                            SelectedFilter sf = new SelectedFilter();
-                            sf.setSelected_tag("Period");
-                            sf.setInternal_name("period_id");
-                            sf.setDisplay_name("Period");
-                            mDataManager.updateSelectedFilters(sf);
-
+                        if (!isStatusFilterSelected){
                             ProgramFilterTag tag = new ProgramFilterTag();
                             tag.setDisplayName("Approved");
                             tag.setInternalName("Approved");
@@ -347,19 +335,11 @@ public class UserStatusViewModel extends BaseViewModel {
                             selectedFilter.setSelected_tag_item(tag);
                             mDataManager.updateSelectedFilters(selectedFilter);
                         }
+
                         changesMade = true;
                         selectedFilter = mDataManager.getSelectedFilters();
                         fetchData();
 
-
-//                        EventBus.getDefault().post(new ProgramFilterSavedEvent(filters));
-//                        fetchData();
-//                        for (ProgramFilter filter : data) {
-//                            if (filter.getInternalName().toLowerCase().equals("period_id")
-//                                    || filter.getInternalName().toLowerCase().equals("status")) {
-//                                getSelectedFilters(filter);
-//                            }
-//                        }
                     }
 
                     @Override
@@ -425,7 +405,6 @@ public class UserStatusViewModel extends BaseViewModel {
                                     pf.setShowIn(filter.getShowIn());
                                     pf.setTags(selectedTags);
                                     filters.add(pf);
-
                                     break;
                                 }
                             }else {
@@ -439,7 +418,6 @@ public class UserStatusViewModel extends BaseViewModel {
                                     pf.setShowIn(filter.getShowIn());
                                     pf.setTags(selectedTags);
                                     filters.add(pf);
-
                                     break;
                                 }
                             }
@@ -516,6 +494,15 @@ public class UserStatusViewModel extends BaseViewModel {
         changesMade = true;
         allLoaded = false;
         fetchData();
+    }
+
+  @SuppressWarnings("unused")
+    public void onEventMainThread(ProgramFilterSavedEvent event) {
+      if (event !=null) {
+          changesMade = true;
+          allLoaded = false;
+          filters = (LinkedList<ProgramFilter>) event.getProgramFilters();
+      }
     }
 
     @SuppressWarnings("unused")
@@ -607,11 +594,19 @@ public class UserStatusViewModel extends BaseViewModel {
                     sf.setSelected_tag(item.getName());
                     sf.setSelected_tag_item((ProgramFilterTag) item.getItem());
                     mDataManager.updateSelectedFilters(sf);
-
+                    if (model.getInternalName().toLowerCase().equalsIgnoreCase("period_id")){
+                        isPeriodFilterSelected = true;
+                        mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.getName());
+                    }
+                    if (model.getInternalName().toLowerCase().equalsIgnoreCase("status")){
+                        isStatusFilterSelected = true;
+                    }
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
+                    selectedFilter.clear();
                     selectedFilter = mDataManager.getSelectedFilters();
+
                     filters.clear();
                     for (SelectedFilter selected : selectedFilter) {
                         for (ProgramFilter filter : allFilters) {
@@ -662,7 +657,7 @@ public class UserStatusViewModel extends BaseViewModel {
                         }
                     }
                     EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters));
+                            .post(new ProgramFilterSavedEvent(filters, false));
                     fetchFilters();
 
                 });
@@ -728,6 +723,30 @@ public class UserStatusViewModel extends BaseViewModel {
                     unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
 
                 }
+
+                if (role != null && role.equals(UserRole.Student.name())) {
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.student_icon,
+                            0, 0, 0);
+                } else {
+                    unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.teacher_icon,
+                            0, 0, 0);
+                }
+
+
+                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())) {
+                    if (mDataManager.getLoginPrefs().getRole() != null
+                            && mDataManager.getLoginPrefs().getRole()
+                            .equals(UserRole.Student.name())) {
+                        unitBinding.tvMyDate.setEnabled(false);
+                    } else {
+                        unitBinding.tvMyDate.setEnabled(true);
+                    }
+                } else {
+                    unitBinding.tvMyDate.setEnabled(true);
+                }
+
 
                 switch (model.getStatus()) {
                     case "Submitted":

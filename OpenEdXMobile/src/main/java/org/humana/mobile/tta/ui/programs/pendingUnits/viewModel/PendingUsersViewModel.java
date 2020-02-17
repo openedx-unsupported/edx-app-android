@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +30,7 @@ import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
@@ -59,6 +61,7 @@ public class PendingUsersViewModel extends BaseViewModel {
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
+    public ObservableBoolean isSeen = new ObservableBoolean();
 
     public RecyclerView.LayoutManager filterLayoutManager;
     public RecyclerView.LayoutManager layoutManager;
@@ -111,7 +114,7 @@ public class PendingUsersViewModel extends BaseViewModel {
         return true;
     };
 
-    private void fetchData() {
+    public void fetchData() {
 
         if (changesMade) {
             skip = 0;
@@ -274,6 +277,24 @@ public class PendingUsersViewModel extends BaseViewModel {
                             });
 
             }
+                if (getItemPosition(model) == 0) {
+                    if (!mDataManager.getLoginPrefs().isPendingTootipSeen()) {
+                        if (isSeen.get()) {
+                            new MxTooltip.Builder(mActivity)
+                                    .anchorView(itemBinding.userImage)
+                                    .text("View submitted units of\nstudent and take appropriate\naction on it")
+                                    .gravity(Gravity.BOTTOM)
+                                    .animated(true)
+                                    .transparentOverlay(true)
+                                    .arrowDrawable(R.drawable.up_arrow)
+                                    .build()
+                                    .show();
+
+                            mDataManager.getLoginPrefs().setPendingTootipSeen(true);
+                            isSeen.set(false);
+                        }
+                    }
+                }
 
                 itemBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {

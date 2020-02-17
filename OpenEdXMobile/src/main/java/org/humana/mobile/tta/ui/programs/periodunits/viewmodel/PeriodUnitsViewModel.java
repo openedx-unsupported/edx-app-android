@@ -69,6 +69,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     public ObservableBoolean addUnitsVisible = new ObservableBoolean();
     public ObservableField<String> periodName = new ObservableField<>();
     private boolean isfilterSelected;
+    private boolean isChangefilter;
 
 
     private EnrolledCoursesResponse course;
@@ -124,6 +125,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
         selectedFilter = new ArrayList<>();
         selectedFilter = mDataManager.getSelectedFilters();
         isfilterSelected = false;
+        isChangefilter = true;
 
         unitsAdapter.setItems(units);
         unitsAdapter.setItemClickListener((view, item) -> {
@@ -291,7 +293,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     }
 
     private void fetchFilters() {
-
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
                 mDataManager.getLoginPrefs().getSectionId(), ShowIn.periodunits.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
@@ -473,6 +474,10 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                 }
             }
         }
+        if (isChangefilter){
+            fetchFilters();
+            isChangefilter = false;
+        }
 
     }
 
@@ -501,8 +506,6 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         unitsAdapter.reset(true);
                         toggleEmptyVisibility();
 
-//                        emptyVisible.set(true);
-//                        frameVisible.set(false);
                     }
                 });
 
@@ -684,8 +687,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
-        filters.clear();
         filters = event.getProgramFilters();
+        fetchFilters();
     }
 
 
@@ -846,8 +849,8 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                     }
 //                    ProgramFilterSavedEvent programFilterSavedEvent = new ProgramFilterSavedEvent(filters);
 //                    programFilterSavedEvent.setProgramFilters(filters);
-//                    EventBus.getDefault()
-//                            .post(programFilterSavedEvent);
+                    EventBus.getDefault()
+                            .post(new ProgramFilterSavedEvent(filters, true));
                     fetchFilters();
 
                 });

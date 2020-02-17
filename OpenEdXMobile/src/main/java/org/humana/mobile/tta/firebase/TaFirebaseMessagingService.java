@@ -123,6 +123,8 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
 
             // dataManager.createNotification(notification);
         }
+
+        loginPrefs.setNotificationSeen(Constants.NOTIFICATION_RECIEVED);
     }
 
     @Override

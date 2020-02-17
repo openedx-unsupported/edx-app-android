@@ -9,8 +9,12 @@ public class ProgramFilterSavedEvent {
 
     private List<ProgramFilter> programFilters;
 
-    public ProgramFilterSavedEvent(List<ProgramFilter> programFilters) {
+
+    private Boolean isFetchFilters;
+
+    public ProgramFilterSavedEvent(List<ProgramFilter> programFilters, Boolean isFetchFilters) {
         this.programFilters = programFilters;
+        this.isFetchFilters = isFetchFilters;
     }
 
 
@@ -21,4 +25,12 @@ public class ProgramFilterSavedEvent {
     public void setProgramFilters(List<ProgramFilter> programFilters) {
         this.programFilters = programFilters;
     }
+    public Boolean getFetchFilters() {
+        return isFetchFilters;
+    }
+
+    public void setFetchFilters(Boolean fetchFilters) {
+        isFetchFilters = fetchFilters;
+    }
+
 }

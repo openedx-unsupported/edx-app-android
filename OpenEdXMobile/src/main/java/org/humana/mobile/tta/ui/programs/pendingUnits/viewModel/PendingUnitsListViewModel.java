@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -31,6 +32,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
+import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.util.DateUtil;
@@ -385,6 +387,23 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                 }else {
                     itemBinding.llApproval.setVisibility(View.VISIBLE);
                 }
+
+                if (getItemPosition(model) == 0) {
+                    if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
+                        new MxTooltip.Builder(mActivity)
+                                .anchorView(itemBinding.textPeriodName)
+                                .text(R.string.view_profile)
+                                .gravity(Gravity.BOTTOM)
+                                .animated(true)
+                                .transparentOverlay(true)
+                                .arrowDrawable(R.drawable.up_arrow)
+                                .build()
+                                .show();
+
+                        mDataManager.getLoginPrefs().setScheduleTootipSeen(true);
+                    }
+                }
+
                 itemBinding.btnApprove.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);

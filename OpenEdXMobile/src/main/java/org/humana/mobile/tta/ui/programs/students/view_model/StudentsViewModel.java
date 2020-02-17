@@ -73,10 +73,7 @@ public class StudentsViewModel extends BaseViewModel {
     public ObservableBoolean filtersVisible = new ObservableBoolean();
     public ObservableBoolean emptyVisible = new ObservableBoolean();
     public ObservableBoolean isTabView = new ObservableBoolean();
-    public ObservableField<String> toolTipText = new ObservableField<>();
-    public ObservableInt toolTipGravity = new ObservableInt();
-    public ObservableField<String> toolProfileUnitText = new ObservableField<>();
-    public ObservableInt toolTipProfileGravity = new ObservableInt();
+
     public ObservableBoolean isSeen = new ObservableBoolean();
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -322,7 +319,43 @@ public class StudentsViewModel extends BaseViewModel {
                 });
 
                 if (getItemPosition(model) == 0) {
-                        setUpToolTip(itemBinding);
+                    if (isSeen.get()) {
+                        if (!mDataManager.getLoginPrefs().isStudentTootipSeen()) {
+                            new MxTooltip.Builder(mActivity)
+                                    .anchorView(itemBinding.userImage)
+                                    .text("View Profile")
+                                    .gravity(Gravity.TOP)
+                                    .animated(true)
+                                    .transparentOverlay(true)
+                                    .arrowDrawable(R.drawable.down_arrow)
+                                    .build()
+                                    .show();
+
+                            new MxTooltip.Builder(mActivity)
+                                    .anchorView(itemBinding.txtPending)
+                                    .text("View Approved Units")
+                                    .gravity(Gravity.TOP)
+                                    .animated(true)
+                                    .transparentOverlay(true)
+                                    .arrowDrawable(R.drawable.down_arrow)
+                                    .build()
+                                    .show();
+
+                            new MxTooltip.Builder(mActivity)
+                                    .anchorView(itemBinding.txtCurrentPending)
+                                    .text("View Current periods")
+                                    .gravity(Gravity.BOTTOM)
+                                    .animated(true)
+                                    .transparentOverlay(true)
+                                    .arrowDrawable(R.drawable.up_arrow)
+                                    .build()
+                                    .show();
+
+
+                            mDataManager.getLoginPrefs().setStudentTootipSeen(true);
+                            isSeen.set(false);
+                        }
+                    }
                 }
 
 
@@ -373,41 +406,5 @@ public class StudentsViewModel extends BaseViewModel {
         }
     }
 
-    private void setUpToolTip(TRowStudentsGridBinding itemBinding){
-        if (mDataManager.getLoginPrefs().isStudentTootipSeen()) {
-            new MxTooltip.Builder(mActivity)
-                    .anchorView(itemBinding.userImage)
-                    .text("View Profile")
-                    .gravity(Gravity.TOP)
-                    .animated(true)
-                    .transparentOverlay(true)
-                    .arrowDrawable(R.drawable.down_arrow)
-                    .build()
-                    .show();
 
-            new MxTooltip.Builder(mActivity)
-                    .anchorView(itemBinding.txtPending)
-                    .text("View Approved Units")
-                    .gravity(Gravity.TOP)
-                    .animated(true)
-                    .transparentOverlay(true)
-                    .arrowDrawable(R.drawable.down_arrow)
-                    .build()
-                    .show();
-
-            new MxTooltip.Builder(mActivity)
-                    .anchorView(itemBinding.txtCurrentPending)
-                    .text("View Current periods")
-                    .gravity(Gravity.BOTTOM)
-                    .animated(true)
-                    .transparentOverlay(true)
-                    .arrowDrawable(R.drawable.up_arrow)
-                    .build()
-                    .show();
-
-
-            mDataManager.getLoginPrefs().setStudentTootipSeen(true);
-            isSeen.set(false);
-        }
-    }
 }

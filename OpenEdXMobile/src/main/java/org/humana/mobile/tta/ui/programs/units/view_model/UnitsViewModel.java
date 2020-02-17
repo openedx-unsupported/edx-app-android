@@ -628,7 +628,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         if (event !=null) {
             changesMade = true;
             allLoaded = false;
-            filters.clear();
             filters = event.getProgramFilters();
         }
     }
@@ -795,7 +794,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                         }
                     }
                     EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters));
+                            .post(new ProgramFilterSavedEvent(filters, false));
                     fetchFilters();
 
                 });
@@ -937,6 +936,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
             isCheckedObserver.set(isChecked);
             calVisible.set(false);
             frameVisible.set(true);
+            changesMade = true;
+            skip = 0;
+            allLoaded = false;
             fetchData();
         }
     }
@@ -946,9 +948,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public void onAction(long date, long startDateTime, long endDateTime) {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-//        eventObservableDate.set(startDateTime);
-//        eventObservable.set(eventsArrayList);
-//        fetchUnits(startDateTime, endDateTime);
         fetchData();
     }
 

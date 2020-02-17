@@ -805,8 +805,8 @@ public class LoginPrefs {
         return pref.getLong(PrefManager.Key.CURRENT_PERIOD_ID);
     }
 
-    public void setCurrrentPeriodTitle(String periodId) {
-        pref.put(PrefManager.Key.CURRENT_PERIOD_TITLE, periodId);
+    public void setCurrrentPeriodTitle(String periodName) {
+        pref.put(PrefManager.Key.CURRENT_PERIOD_TITLE, periodName);
     }
 
     public String getCurrrentPeriodTitle() {
@@ -839,6 +839,17 @@ public class LoginPrefs {
     public void setStudentTootipSeen(boolean isSeen) {
         pref.put(PrefManager.Key.IS_STUDENT_TOOLTIP, isSeen);
     }
-
-
+// Notification
+    public String getNotificationSeen() {
+        return pref.getString(PrefManager.Key.IS_NOTIFICATION_SEEN);
+    }
+    public void setNotificationSeen(String isSeen) {
+        pref.put(PrefManager.Key.IS_NOTIFICATION_SEEN, isSeen);
+    }
+    public boolean isPendingTootipSeen() {
+        return pref.getBoolean(PrefManager.Key.IS_PENDING_TOOLTIP, false);
+    }
+    public void setPendingTootipSeen(boolean isSeen) {
+        pref.put(PrefManager.Key.IS_PENDING_TOOLTIP, isSeen);
+    }
 }

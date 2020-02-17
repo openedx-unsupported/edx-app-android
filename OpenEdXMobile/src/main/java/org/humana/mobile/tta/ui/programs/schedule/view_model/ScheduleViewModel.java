@@ -100,6 +100,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     public RecyclerView.LayoutManager gridLayoutManager;
 
     private boolean allLoaded;
+    private boolean isFilterChange;
     private boolean changesMade;
     private int take, skip;
     private boolean isSelected;
@@ -146,6 +147,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         readMore.set(false);
         about_url = "";
         selectedFilter = new ArrayList<>();
+        isFilterChange = false;
 
 
         emptyVisible.set(false);
@@ -245,7 +247,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         });
 
         mActivity.showLoading();
-
+        getFilters();
     }
 
     public void fetchData() {
@@ -360,6 +362,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             }
 
         }
+
     }
 
     @Override
@@ -371,11 +374,12 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         } else {
             gridLayoutManager = new GridLayoutManager(mActivity, 1);
         }
+        selectedFilter = mDataManager.getSelectedFilters();
 
-        selectedFilter.addAll(mDataManager.getSelectedFilters());
         changesMade = true;
-        setFilters();
-        getFilters();
+        if (isFilterChange){
+            getFilters();
+        }
         getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
 
     }
@@ -394,6 +398,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             filtersVisible.set(true);
                             filtersAdapter.setItems(data);
                             changesMade = true;
+                            isFilterChange = false;
                             fetchData();
 
                             if (mDataManager.getLoginPrefs().getRole() != null) {
@@ -516,8 +521,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
-        filters.clear();
+//        filters.clear();
         filters = event.getProgramFilters();
+        if (event.getFetchFilters()) {
+           isFilterChange = true;
+        }
     }
 
     public void onEventMainThread(PDFDownloadModel model) {
@@ -725,7 +733,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         }
                     }
                     EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters));
+                            .post(new ProgramFilterSavedEvent(filters,false));
                     getFilters();
                 });
 
@@ -793,7 +801,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     }
                 }
                 if (model.getDownloadStatus() != null) {
-                    if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloaded))) {
+                    if (model.getDownloadStatus()
+                            .equalsIgnoreCase(mActivity.getString(R.string.downloaded))) {
                         scheduleBinding.txtReadMore.setBackground(
                                 ContextCompat.getDrawable(mActivity, R.drawable.t_icon_play_green));
                         scheduleBinding.pbDownload.setVisibility(View.GONE);

@@ -694,7 +694,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                         }
                     }
                     EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters));
+                            .post(new ProgramFilterSavedEvent(filters, true));
                     fetchFilters();
                 });
             }
