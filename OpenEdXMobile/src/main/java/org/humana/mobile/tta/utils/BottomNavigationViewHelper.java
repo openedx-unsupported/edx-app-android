@@ -3,7 +3,14 @@ package org.humana.mobile.tta.utils;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.humana.mobile.R;
 
 import java.lang.reflect.Field;
 
@@ -31,4 +38,16 @@ public class BottomNavigationViewHelper {
         }
     }
 
+    public static void addBadgeToBottomNav(BottomNavigationView view, int position, long count) {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
+        BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(position);
+        //noinspection RestrictedApi
+//        item.addView(item, position);
+
+        View badge = LayoutInflater.from(view.getContext())
+                .inflate(R.layout.notification_badge, item, true);
+
+        TextView notificationBadge = menuView.findViewById(R.id.notifications_badge);
+        notificationBadge.setText(String.valueOf(count));
+    }
 }

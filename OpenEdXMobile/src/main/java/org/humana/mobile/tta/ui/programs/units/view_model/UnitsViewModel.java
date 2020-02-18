@@ -416,8 +416,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                     pf.setOrder(filter.getOrder());
                                     pf.setShowIn(filter.getShowIn());
                                     pf.setTags(selectedTags);
-                                    filters.add(pf);
-
+                                    if (!filters.contains(pf)) {
+                                        filters.add(pf);
+                                    }
                                     break;
                                 }
                             }else {
@@ -430,8 +431,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                     pf.setOrder(filter.getOrder());
                                     pf.setShowIn(filter.getShowIn());
                                     pf.setTags(selectedTags);
-                                    filters.add(pf);
-
+                                    if (!filters.contains(pf)) {
+                                        filters.add(pf);
+                                    }
                                     break;
                                 }
                             }
@@ -761,7 +763,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setOrder(filter.getOrder());
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
-                                                filters.add(pf);
+                                                if (!filters.contains(pf)) {
+                                                    filters.add(pf);
+                                                }
                                                 break;
                                             }
                                         }else {
@@ -774,10 +778,11 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setOrder(filter.getOrder());
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
-                                                filters.add(pf);
+                                                if (!filters.contains(pf)) {
+                                                    filters.add(pf);
+                                                }
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
-//                                                selectedTags.add(tag);
                                                 ProgramFilter pf = new ProgramFilter();
                                                 pf.setDisplayName(filter.getDisplayName());
                                                 pf.setInternalName(filter.getInternalName());
@@ -785,7 +790,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 pf.setOrder(filter.getOrder());
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
-                                                filters.add(pf);
+                                                if (!filters.contains(pf)) {
+                                                    filters.add(pf);
+                                                }
                                             }
                                         }
                                     }

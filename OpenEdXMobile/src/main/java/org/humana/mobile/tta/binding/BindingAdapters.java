@@ -296,6 +296,13 @@ public class BindingAdapters {
             BottomNavigationViewHelper.disableShiftMode(view);
         }
     }
+    // Provide the notification badge with count created by ankit
+    @BindingAdapter({"add_badge_to_bottom_nav","bottom_nav_badge_count"})
+    public static void addBadgeBottomNav(BottomNavigationView view, int position, Long count) {
+        if (view !=null) {
+            BottomNavigationViewHelper.addBadgeToBottomNav(view, position, count);
+        }
+    }
 
     @BindingAdapter({"finite_recycler_adapter"})
     public static void setFiniteAdapter(MxFiniteRecyclerView view, MxFiniteAdapter adapter) {

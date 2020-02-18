@@ -71,6 +71,7 @@ public class AccountFragment extends BaseFragment {
                 showNotifications();
             }
         });
+        binding.tvNotificationBadge.setText("4");
         if (config.isUserProfilesEnabled()) {
             binding.profileBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

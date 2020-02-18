@@ -2,8 +2,13 @@ package org.humana.mobile.tta.ui.landing;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import org.humana.mobile.R;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.landing.view_model.LandingViewModel;
@@ -24,7 +29,18 @@ public class LandingActivity extends BaseVMActivity {
 
         viewModel.registerEventBus();
     }
-
+    public void removeBadge(BottomNavigationView navigationView, int index) {
+        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) navigationView.getChildAt(0);
+        View v = bottomNavigationMenuView.getChildAt(index);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+        itemView.removeViewAt(itemView.getChildCount()-1);
+    }
+    public void zBadge(BottomNavigationView navigationView, int index) {
+        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) navigationView.getChildAt(0);
+        View v = bottomNavigationMenuView.getChildAt(index);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+        itemView.removeViewAt(itemView.getChildCount()-1);
+    }
     @Override
     public void onBackPressed() {
 

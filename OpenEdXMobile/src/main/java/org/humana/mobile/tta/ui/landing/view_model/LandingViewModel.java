@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.databinding.ObservableLong;
 import android.net.Uri;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Gravity;
@@ -52,6 +53,8 @@ public class LandingViewModel extends BaseViewModel {
     public ObservableField<String> tooltipText = new ObservableField<>();
     public ObservableInt tooltipGravity = new ObservableInt();
     public ObservableInt toolPosition = new ObservableInt();
+    public ObservableInt setNavigationBadge = new ObservableInt();
+    public ObservableLong badgeCount = new ObservableLong();
 
     private List<ContentStatus> statuses;
 
@@ -98,6 +101,9 @@ public class LandingViewModel extends BaseViewModel {
         if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
             setToolTip();
         }
+        badgeCount.set(4);
+        setNavigationBadge.set(3);
+
     }
 
     @Override

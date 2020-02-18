@@ -86,7 +86,7 @@
                     android:layout_gravity="center"
                     android:gravity="start|center"
                     android:lines="3"
-                    android:ellipsize="none"
+                    android:ellipsize="end"
                     android:fontFamily="@font/hind_medium"
                     android:text="@{period.desc}"
                     android:textColor="@color/gray_4"

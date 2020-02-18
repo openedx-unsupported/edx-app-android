@@ -13,41 +13,58 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
                 android:orientation="vertical"
                 android:background="@color/humana_card_background">
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/show_notifications"
-                    android:textColor="@color/dark_red"
-                    android:fontFamily="@font/hind_bold"
-                    android:textSize="20sp"
-                    android:gravity="top"
-                    android:layout_margin="5dp"
-                    android:padding="5dp"
-                    android:drawableTop="@color/material_red_500"
-                    android:drawableTint="@color/material_red_500"
-                    android:drawableLeft="@drawable/t_icon_notification"
-                     />
-                <!--<ImageView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentEnd="true"-->
-                    <!--android:paddingStart="15dp"-->
-                    <!--android:paddingEnd="15dp"-->
-                    <!--android:paddingBottom="5dp"-->
-                    <!--android:foregroundGravity="center"-->
-                    <!--android:clickable="true"-->
-                    <!--android:tint="@color/material_red_500"-->
-                    <!--android:focusable="true"-->
-                    <!--android:id="@+id/show_notifications"-->
-                    <!--app:srcCompat="@drawable/t_icon_notification"/>-->
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_notification_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/circle_material_red"
+                    android:fontFamily="@font/hind_bold"
+                    android:gravity="start|bottom"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <!--<TextView-->
+                    <!--android:layout_height="80dp"-->
+                    <!--android:layout_width="80dp"-->
+                    <!--android:id="@+id/show_notifications"-->
+                    <!--android:textColor="@color/dark_red"-->
+                    <!--android:fontFamily="@font/hind_bold"-->
+                    <!--android:textSize="20sp"-->
+                    <!--android:gravity="top"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:drawableTop="@color/material_red_500"-->
+                    <!--android:drawableTint="@color/material_red_500"-->
+                    <!--android:drawableLeft="@drawable/t_icon_notification" />-->
+                <ImageView
+                    android:id="@+id/show_notifications"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="512dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foregroundGravity="center"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="5dp"
+                    android:tint="@color/humana_light_blue"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/t_icon_notification" />
+
+            </android.support.constraint.ConstraintLayout>
         <LinearLayout
             android:id="@+id/button_layout"
             android:layout_width="match_parent"

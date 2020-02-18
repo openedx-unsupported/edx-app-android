@@ -42,7 +42,8 @@
             tool_tip_position="@{viewModel.toolPosition}"
             tool_tip="@{viewModel.tooltipText}"
             tool_tip_gravity="@{viewModel.tooltipGravity}"
-            android:textSize="10sp" />
+            add_badge_to_bottom_nav="@{viewModel.setNavigationBadge}"
+            bottom_nav_badge_count="@{viewModel.badgeCount}"/>
 
     </LinearLayout>
 

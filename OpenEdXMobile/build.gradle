@@ -242,6 +242,7 @@ dependencies {
     implementation('io.branch.sdk.android:library:2.19.2') {
         exclude module: 'answers-shim'
     }
+    
 
     //New Relic Integration
     implementation 'com.newrelic.agent.android:android-agent:5.4.1'

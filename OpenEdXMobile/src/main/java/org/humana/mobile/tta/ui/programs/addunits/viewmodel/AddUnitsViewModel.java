@@ -422,8 +422,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                                     pf.setOrder(filter.getOrder());
                                     pf.setShowIn(filter.getShowIn());
                                     pf.setTags(selectedTags);
-                                    filters.add(pf);
-
+                                    if (!filters.contains(pf)) {
+                                        filters.add(pf);
+                                    }
                                     break;
                                 }
                             }else {
@@ -436,7 +437,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                                     pf.setOrder(filter.getOrder());
                                     pf.setShowIn(filter.getShowIn());
                                     pf.setTags(selectedTags);
-                                    filters.add(pf);
+                                    if (!filters.contains(pf)) {
+                                        filters.add(pf);
+                                    }
 
                                     break;
                                 }
@@ -661,7 +664,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                 pf.setOrder(filter.getOrder());
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
-                                                filters.add(pf);
+                                                if (!filters.contains(pf)) {
+                                                    filters.add(pf);
+                                                }
                                                 break;
                                             }
                                         }else {
@@ -674,7 +679,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                 pf.setOrder(filter.getOrder());
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
-                                                filters.add(pf);
+                                                if (!filters.contains(pf)) {
+                                                    filters.add(pf);
+                                                }
                                                 break;
                                             } else if (selected.getSelected_tag().equals(filter.getDisplayName())) {
 //                                                selectedTags.add(tag);
@@ -685,7 +692,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                 pf.setOrder(filter.getOrder());
                                                 pf.setShowIn(filter.getShowIn());
                                                 pf.setTags(selectedTags);
-                                                filters.add(pf);
+                                                if (!filters.contains(pf)) {
+                                                    filters.add(pf);
+                                                }
                                             }
                                         }
                                     }
