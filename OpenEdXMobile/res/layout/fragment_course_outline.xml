@@ -38,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:visibility="gone"
         tools:background="@color/edx_success_accent"
         tools:layout_height="150dp" />
 

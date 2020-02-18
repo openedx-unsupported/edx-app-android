@@ -255,7 +255,8 @@
 
         <activity
             android:name=".view.CourseUpgradeWebViewActivity"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"
+            android:screenOrientation="portrait"/>
 
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
