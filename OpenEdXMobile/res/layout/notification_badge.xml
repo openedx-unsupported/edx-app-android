@@ -3,14 +3,13 @@
 
     <TextView
         android:id="@+id/notifications.badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="top|center_horizontal"
-        android:layout_marginLeft="22dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"
         android:background="@drawable/circle_material_red"
         android:gravity="center"
-        android:padding="3dp"
         android:text="9+"
         android:textColor="@color/white"
         android:textSize="11sp" />

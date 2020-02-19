@@ -282,28 +282,6 @@ public class LocalDataSource implements ILocalDataSource {
         mAppDatabase.periodDao().insert(period);
     }
 
-//    @Override
-//    public List<DownloadPeriodDesc> getPeriodDesc(String periodDesc) {
-//        return mAppDatabase.periodDescDao().getAll(periodDesc);
-//    }
-//    @Override
-//    public DownloadPeriodDesc getPeriodDescById(long id) {
-//        return mAppDatabase.periodDescDao().getById(id);
-//    }
-    @Override
-    public void insertPeriodDesc(DownloadPeriodDesc periodDesc) {
-        mAppDatabase.periodDescDao().insert(periodDesc);
-    }
-
-    @Override
-    public DownloadPeriodDesc getPeriodDesc(long id) {
-        return mAppDatabase.periodDescDao().getById(id);
-    }
-
-    @Override
-    public List<DownloadPeriodDesc> getPeriodDescList(String aboutUrl) {
-        return mAppDatabase.periodDescDao().getAll(aboutUrl);
-    }
 
     @Override
     public List<Unit> getUnits(String programId, String sectionId, int take, int skip) {

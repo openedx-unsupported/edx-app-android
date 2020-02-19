@@ -22,18 +22,20 @@
 
                 <TextView
                     android:id="@+id/tv_notification_badge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/circle_material_red"
+                    android:elevation="5dp"
                     android:fontFamily="@font/hind_bold"
-                    android:gravity="start|bottom"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="11sp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/show_notifications"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <!--<TextView-->
                     <!--android:layout_height="80dp"-->
@@ -49,18 +51,19 @@
                     <!--android:drawableLeft="@drawable/t_icon_notification" />-->
                 <ImageView
                     android:id="@+id/show_notifications"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="512dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foregroundGravity="center"
+                    android:foregroundGravity="right"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
                     android:paddingBottom="5dp"
                     android:tint="@color/humana_light_blue"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.969"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/t_icon_notification" />
 

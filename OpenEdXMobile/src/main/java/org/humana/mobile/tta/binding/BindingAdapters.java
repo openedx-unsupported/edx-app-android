@@ -304,6 +304,7 @@ public class BindingAdapters {
         }
     }
 
+
     @BindingAdapter({"finite_recycler_adapter"})
     public static void setFiniteAdapter(MxFiniteRecyclerView view, MxFiniteAdapter adapter) {
         view.setAdapter(adapter);

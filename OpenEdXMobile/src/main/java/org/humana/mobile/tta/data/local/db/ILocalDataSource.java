@@ -16,6 +16,7 @@ import org.humana.mobile.tta.data.local.db.table.UnitStatus;
 import org.humana.mobile.tta.data.local.db.table.User;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 
 import java.util.List;
 
@@ -91,7 +92,4 @@ public interface ILocalDataSource {
     void insertUnits(List<Unit> units);
     void insertUnit(Unit unit);
 
-    void insertPeriodDesc(DownloadPeriodDesc periodDesc);
-    DownloadPeriodDesc getPeriodDesc(long id);
-    List<DownloadPeriodDesc> getPeriodDescList(String about_url);
 }

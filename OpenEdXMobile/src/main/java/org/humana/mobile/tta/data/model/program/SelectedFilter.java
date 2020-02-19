@@ -1,5 +1,9 @@
 package org.humana.mobile.tta.data.model.program;
 
+import androidx.annotation.Nullable;
+
+import java.util.Objects;
+
 public class SelectedFilter {
     private String internal_name;
     private String display_name;
@@ -42,5 +46,12 @@ public class SelectedFilter {
     }
 
 
-
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SelectedFilter filter = (SelectedFilter) o;
+        return selected_tag.equals(filter.selected_tag) &&
+                selected_tag_item == filter.selected_tag_item;
+    }
 }

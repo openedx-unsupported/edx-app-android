@@ -32,6 +32,7 @@ import org.humana.mobile.tta.ui.library.LibraryFragment;
 import org.humana.mobile.tta.ui.profile.ProfileFragment;
 import org.humana.mobile.tta.ui.search.SearchFragment;
 import org.humana.mobile.tta.utils.ActivityUtil;
+import org.humana.mobile.tta.utils.BottomNavigationViewHelper;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.view.AccountFragment;
 import org.humana.mobile.view.MyCoursesListFragment;
@@ -82,6 +83,7 @@ public class LandingViewModel extends BaseViewModel {
             case R.id.action_profile:
                 selectedId = R.id.action_profile;
                 showProfile();
+                BottomNavigationViewHelper.removeBadgeFromBottomNav();
                 return true;
             default:
                 selectedId = R.id.action_library;

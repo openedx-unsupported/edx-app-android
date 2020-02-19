@@ -97,6 +97,7 @@ import org.humana.mobile.tta.data.model.profile.FeedbackResponse;
 import org.humana.mobile.tta.data.model.profile.FollowStatus;
 import org.humana.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.humana.mobile.tta.data.model.profile.UserAddressResponse;
+import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
@@ -173,6 +174,7 @@ import org.humana.mobile.tta.task.program.GetAllUnitsTask;
 import org.humana.mobile.tta.task.program.GetBlockComponentFromCacheTask;
 import org.humana.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.humana.mobile.tta.task.program.GetCourseComponentTask;
+import org.humana.mobile.tta.task.program.GetNotificationCountTask;
 import org.humana.mobile.tta.task.program.GetPendingUnitsTask;
 import org.humana.mobile.tta.task.program.GetPendingUsersTask;
 import org.humana.mobile.tta.task.program.GetPeriodsTask;
@@ -3630,6 +3632,31 @@ public class DataManager extends BaseRoboInjector {
 
         } else {
             getProgramsFromLocal(callback, new NoConnectionException(context));
+        }
+
+    }
+    public void getNotificationCount(OnResponseCallback<NotificationCountResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetNotificationCountTask(context) {
+                @Override
+                protected void onSuccess(NotificationCountResponse response) throws Exception {
+                    super.onSuccess(response);
+                    if (response == null) {
+                        callback.onFailure(new TaException("No Notifications Available"));
+                        return;
+                    }
+
+                    callback.onSuccess(response);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }.execute();
+
         }
 
     }

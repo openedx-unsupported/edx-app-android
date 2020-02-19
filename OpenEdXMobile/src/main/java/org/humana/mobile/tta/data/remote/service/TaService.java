@@ -34,6 +34,7 @@ import org.humana.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.humana.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.humana.mobile.tta.data.model.profile.FeedbackResponse;
 import org.humana.mobile.tta.data.model.profile.FollowStatus;
+import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
@@ -202,6 +203,9 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_PROGRAMS)
     Call<List<Program>> getPrograms();
+
+    @GET(ApiConstants.URL_MX_GET_PROGRAMS)
+    Call<NotificationCountResponse> getNotificationCount();
 
     @GET(ApiConstants.URL_MX_GET_SECTIONS)
     Call<List<Section>> getSections(@Query(Constants.KEY_PROGRAM_ID) String programId);

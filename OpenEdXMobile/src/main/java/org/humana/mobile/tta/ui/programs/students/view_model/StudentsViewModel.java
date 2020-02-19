@@ -86,7 +86,8 @@ public class StudentsViewModel extends BaseViewModel {
 
     public StudentsViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
-
+        take = TAKE;
+        skip = SKIP;
         gridUsersAdapter = new GridUsersAdapter(mActivity);
         users = new ArrayList<>();
         filters = new ArrayList<>();
@@ -138,8 +139,7 @@ public class StudentsViewModel extends BaseViewModel {
 
         });
 
-        take = TAKE;
-        skip = SKIP;
+
 
         boolean tabsize = getActivity().getResources().getBoolean(R.bool.isTablet);
         if (tabsize) {

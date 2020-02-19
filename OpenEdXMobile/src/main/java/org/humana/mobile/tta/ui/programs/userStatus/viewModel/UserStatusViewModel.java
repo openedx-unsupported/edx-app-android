@@ -318,7 +318,9 @@ public class UserStatusViewModel extends BaseViewModel {
                                 sf.setInternal_name("period_id");
                                 sf.setDisplay_name("Period");
                                 sf.setSelected_tag_item(tag1);
-                                mDataManager.updateSelectedFilters(sf);
+                                if (!selectedFilter.contains(sf)) {
+                                    mDataManager.updateSelectedFilters(sf);
+                                }
                             }
                         }
                         if (!isStatusFilterSelected){
@@ -328,12 +330,14 @@ public class UserStatusViewModel extends BaseViewModel {
                             tag.setSelected(true);
                             tag.setOrder(0);
                             tag.setId(3);
-                            SelectedFilter selectedFilter = new SelectedFilter();
-                            selectedFilter.setSelected_tag("Approved");
-                            selectedFilter.setInternal_name("status");
-                            selectedFilter.setDisplay_name("Status");
-                            selectedFilter.setSelected_tag_item(tag);
-                            mDataManager.updateSelectedFilters(selectedFilter);
+                            SelectedFilter sf = new SelectedFilter();
+                            sf.setSelected_tag("Approved");
+                            sf.setInternal_name("status");
+                            sf.setDisplay_name("Status");
+                            sf.setSelected_tag_item(tag);
+                            if (!selectedFilter.contains(sf)) {
+                                mDataManager.updateSelectedFilters(sf);
+                            }
                         }
 
                         changesMade = true;
@@ -551,25 +555,6 @@ public class UserStatusViewModel extends BaseViewModel {
 
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
-
-//                for (int i = 0; i < items.size(); i++) {
-//                    for (ProgramFilterTag tag : model.getTags()) {
-//                                if (tag.getId() == mDataManager.getLoginPrefs().getCurrrentPeriod()) {
-//                                    dropDownBinding.filterDropDown.setSelection(mDataManager.getLoginPrefs().getCurrrentPeriodTitle());
-//                                    break;
-//                        }
-//                    }
-//                }
-//
-//
-//                if (model.getDisplayName().equals("Status")) {
-//                    for (int i = 0; i < items.size(); i++) {
-//                        if (items.get(i).getName().equals("Approved")) {
-//                            dropDownBinding.filterDropDown.setSelection(i);
-//                            break;
-//                        }
-//                    }
-//                }
                 if (selectedFilter != null) {
                     for (ProgramFilterTag tag : model.getTags()) {
                         for (SelectedFilter item : selectedFilter) {
@@ -597,7 +582,9 @@ public class UserStatusViewModel extends BaseViewModel {
                     sf.setDisplay_name(model.getDisplayName());
                     sf.setSelected_tag(item.getName());
                     sf.setSelected_tag_item((ProgramFilterTag) item.getItem());
-                    mDataManager.updateSelectedFilters(sf);
+                    if (!selectedFilter.contains(sf)) {
+                        mDataManager.updateSelectedFilters(sf);
+                    }
                     if (model.getInternalName().toLowerCase().equalsIgnoreCase("period_id")){
                         isPeriodFilterSelected = true;
                         mDataManager.getLoginPrefs().setCurrrentPeriodTitle(item.getName());
@@ -666,8 +653,6 @@ public class UserStatusViewModel extends BaseViewModel {
                             }
                         }
                     }
-                    EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters, false));
                     fetchFilters();
 
                 });
