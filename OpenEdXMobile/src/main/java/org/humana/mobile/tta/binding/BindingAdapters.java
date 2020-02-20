@@ -300,7 +300,8 @@ public class BindingAdapters {
     @BindingAdapter({"add_badge_to_bottom_nav","bottom_nav_badge_count"})
     public static void addBadgeBottomNav(BottomNavigationView view, int position, Long count) {
         if (view !=null) {
-            BottomNavigationViewHelper.addBadgeToBottomNav(view, position, count);
+            BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
+            bottomNavigationViewHelper.addBadgeToBottomNav(view, position, count);
         }
     }
 

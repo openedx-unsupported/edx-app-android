@@ -42,8 +42,6 @@
                 infinite_load_more_listener="@{viewModel.loadMoreListener}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
                 app:mx_itemLayout="@layout/t_row_students_grid" />
 
           <!--  <com.maurya.mx.mxlib.view.MxRecyclerView

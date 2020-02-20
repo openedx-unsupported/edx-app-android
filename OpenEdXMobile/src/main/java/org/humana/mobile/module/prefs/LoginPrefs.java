@@ -852,4 +852,11 @@ public class LoginPrefs {
     public void setPendingTootipSeen(boolean isSeen) {
         pref.put(PrefManager.Key.IS_PENDING_TOOLTIP, isSeen);
     }
+
+    public Long getNotificationCount() {
+        return pref.getLong(PrefManager.Key.NOTIFICATION_COUNT);
+    }
+    public void setNotificationCount(Long isSeen) {
+        pref.put(PrefManager.Key.NOTIFICATION_COUNT, isSeen);
+    }
 }

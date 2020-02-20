@@ -184,6 +184,7 @@ import org.humana.mobile.tta.task.program.GetSectionsTask;
 import org.humana.mobile.tta.task.program.GetUnitsTask;
 import org.humana.mobile.tta.task.program.GetUserStatusTask;
 import org.humana.mobile.tta.task.program.GetUsersTask;
+import org.humana.mobile.tta.task.program.ReadNotificationTask;
 import org.humana.mobile.tta.task.program.RejectUnitTask;
 import org.humana.mobile.tta.task.program.SavePeriodTask;
 import org.humana.mobile.tta.task.program.SetProposedDateTask;
@@ -191,6 +192,7 @@ import org.humana.mobile.tta.task.program.SetSpecificSessionTask;
 import org.humana.mobile.tta.task.program.UpdatePeriodTask;
 import org.humana.mobile.tta.task.search.GetSearchFilterTask;
 import org.humana.mobile.tta.task.search.SearchTask;
+import org.humana.mobile.tta.utils.BottomNavigationViewHelper;
 import org.humana.mobile.tta.utils.RxUtil;
 import org.humana.mobile.tta.wordpress_client.model.Comment;
 import org.humana.mobile.tta.wordpress_client.model.CustomComment;
@@ -3642,6 +3644,33 @@ public class DataManager extends BaseRoboInjector {
             new GetNotificationCountTask(context) {
                 @Override
                 protected void onSuccess(NotificationCountResponse response) throws Exception {
+                    super.onSuccess(response);
+                    if (response == null) {
+                        callback.onFailure(new TaException("No Notifications Available"));
+                        return;
+                    }
+
+                    callback.onSuccess(response);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
+                    bottomNavigationViewHelper.removeBadgeFromBottomNav();
+                    ex.printStackTrace();
+                }
+            }.execute();
+
+        }
+
+    }
+    public void readNotification(String id,OnResponseCallback<SuccessResponse> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new ReadNotificationTask(context,id) {
+                @Override
+                protected void onSuccess(SuccessResponse response) throws Exception {
                     super.onSuccess(response);
                     if (response == null) {
                         callback.onFailure(new TaException("No Notifications Available"));

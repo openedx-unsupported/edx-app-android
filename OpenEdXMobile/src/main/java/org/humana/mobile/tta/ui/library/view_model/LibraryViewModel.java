@@ -17,6 +17,7 @@ import org.humana.mobile.tta.data.local.db.table.Category;
 import org.humana.mobile.tta.data.local.db.table.Period;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.ShowStudentUnitsEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
@@ -225,4 +226,5 @@ public class LibraryViewModel extends BaseViewModel {
         tooltipPosition.set(2);
 
     }
+
 }

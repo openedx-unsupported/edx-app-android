@@ -266,6 +266,9 @@ public class TaAPI {
     public Call<NotificationCountResponse> getNotificationCount(){
         return taService.getNotificationCount();
     }
+    public Call<SuccessResponse> getReadNotification(String id){
+        return taService.getReadNotification(id);
+    }
 
     public Call<List<Section>> getSections(String programId){
         return taService.getSections(programId);

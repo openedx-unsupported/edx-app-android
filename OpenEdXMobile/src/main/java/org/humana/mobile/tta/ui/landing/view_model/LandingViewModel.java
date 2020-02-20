@@ -22,6 +22,8 @@ import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.app_update.UpdateType;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
 import org.humana.mobile.tta.data.model.UpdateResponse;
+import org.humana.mobile.tta.data.model.program.EventNotificationCount;
+import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.event.ContentStatusReceivedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.agenda.AgendaFragment;
@@ -83,7 +85,8 @@ public class LandingViewModel extends BaseViewModel {
             case R.id.action_profile:
                 selectedId = R.id.action_profile;
                 showProfile();
-                BottomNavigationViewHelper.removeBadgeFromBottomNav();
+                BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
+                bottomNavigationViewHelper.removeBadgeFromBottomNav();
                 return true;
             default:
                 selectedId = R.id.action_library;
@@ -103,8 +106,8 @@ public class LandingViewModel extends BaseViewModel {
         if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
             setToolTip();
         }
-        badgeCount.set(4);
         setNavigationBadge.set(3);
+        getNotificationCount();
 
     }
 
@@ -189,7 +192,14 @@ public class LandingViewModel extends BaseViewModel {
             offlineVisible.set(true);
         }
     }
-
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventNotificationCount event) {
+        if (event !=null){
+            if (event.isCountChanged()){
+                getNotificationCount();
+            }
+        }
+    }
     @SuppressWarnings("unused")
     public void onEventMainThread(ContentStatusReceivedEvent event) {
         if (statuses == null) {
@@ -327,5 +337,30 @@ public class LandingViewModel extends BaseViewModel {
         toolPosition.set(1);
         tooltipGravity.set(Gravity.TOP);
         tooltipText.set("Programs");
+    }
+
+    private void getNotificationCount(){
+        mDataManager.getNotificationCount(new OnResponseCallback<NotificationCountResponse>() {
+            @Override
+            public void onSuccess(NotificationCountResponse response) {
+                if (response.getUnReadCount()==0L){
+                    BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
+                    bottomNavigationViewHelper.removeBadgeFromBottomNav();
+                    mDataManager.getLoginPrefs().setNotificationCount(0L);
+                }else {
+                    badgeCount.set(response.getUnReadCount());
+                    mDataManager.getLoginPrefs().setNotificationCount(response.getUnReadCount());
+                    badgeCount.notifyChange();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
+                bottomNavigationViewHelper.removeBadgeFromBottomNav();
+                e.printStackTrace();
+            }
+        });
     }
 }

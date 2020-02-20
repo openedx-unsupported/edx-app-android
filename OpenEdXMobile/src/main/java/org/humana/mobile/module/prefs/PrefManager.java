@@ -368,6 +368,7 @@ public class PrefManager {
         public static final String IS_PROFILE_TOOLTIP = "is_profile_tooltip";
         public static final String IS_STUDENT_TOOLTIP = "is_student_tooltip";
         public static final String IS_NOTIFICATION_SEEN = "is_notification_seen";
+        public static final String NOTIFICATION_COUNT = "notification_count";
         public static final String IS_PENDING_TOOLTIP = "is_pending_tooltip";
     }
 

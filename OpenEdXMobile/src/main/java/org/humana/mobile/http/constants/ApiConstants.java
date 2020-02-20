@@ -215,6 +215,10 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_NOTIFICATION = "/mx_humana_lms/api/v1/get_notifications";
 
+    public static final String URL_MX_GET_NOTIFICATION_COUNT = "/mx_humana_lms/api/v1/getNotificationCount";
+
+    public static final String URL_MX_GET_NOTIFICATION_READ = "/mx_humana_lms/api/v1/readNotification";
+
 
     public static final int STANDARD_PAGE_SIZE = 20;
 

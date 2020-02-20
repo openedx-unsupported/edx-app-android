@@ -23,6 +23,7 @@ import org.humana.mobile.tta.data.Notification;
 import org.humana.mobile.tta.data.NotificationResponse;
 import org.humana.mobile.tta.data.enums.SourceType;
 import org.humana.mobile.tta.data.local.db.table.Content;
+import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.event.ContentStatusReceivedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -96,6 +97,7 @@ public class NotificationViewModel extends BaseViewModel {
                 courseId = item.getActionParentId();
                 unitId = item.getActionId();
                 getEnrolledCourse();
+                notifyNotificationRead(String.valueOf(item.getId()), item);
             }
         });
 
@@ -184,7 +186,15 @@ public class NotificationViewModel extends BaseViewModel {
                 TRowNotificationBinding notificationBinding = (TRowNotificationBinding) binding;
                 notificationBinding.setViewModel(model);
                 if (model.getScheduleDate() > 0){
-                    notificationBinding.notificationDate.setText(DateUtil.getDisplayDateTime(model.getScheduleDate()));
+                    notificationBinding.notificationDate.setText(DateUtil
+                            .getDisplayDateTime(model.getScheduleDate()));
+                }
+
+                if (model.isSeen()!=null) {
+                    if (!model.isSeen()) {
+                        notificationBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(
+                                mActivity, R.color.humana_current_period));
+                    }
                 }
 
                 notificationBinding.getRoot().setOnClickListener(v -> {
@@ -294,5 +304,24 @@ public class NotificationViewModel extends BaseViewModel {
                         mActivity.hideLoading();
                     }
                 });
+    }
+    
+    private void notifyNotificationRead(String id, Notification item){
+        mActivity.showLoading();
+        mDataManager.readNotification(id, new OnResponseCallback<SuccessResponse>() {
+            @Override
+            public void onSuccess(SuccessResponse response) {
+                item.setSeen(true);
+                adapter.notifyItemChanged(adapter.getItemPosition(item));
+                mActivity.hideLoading();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+                mActivity.showShortToast(mActivity.getString(R.string.notify_read_request));
+                mActivity.hideLoading();
+            }
+        });
     }
 }

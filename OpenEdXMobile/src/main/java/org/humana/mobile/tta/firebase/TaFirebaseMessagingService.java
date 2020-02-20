@@ -20,6 +20,7 @@ import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.enums.NotificationType;
 import org.humana.mobile.tta.data.local.db.table.Notification;
+import org.humana.mobile.tta.data.model.program.EventNotificationCount;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
 import org.humana.mobile.tta.ui.programs.notifications.NotificationNavigationActivity;
@@ -125,6 +126,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         loginPrefs.setNotificationSeen(Constants.NOTIFICATION_RECIEVED);
+        EventBus.getDefault().post(new EventNotificationCount(true));
     }
 
     @Override

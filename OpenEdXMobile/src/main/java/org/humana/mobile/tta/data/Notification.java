@@ -27,6 +27,10 @@ public class Notification {
     @SerializedName("title")
     private String mTitle;
 
+
+    @SerializedName("isSeen")
+    private Boolean isSeen;
+
     public String getActionId() {
         return mActionId;
     }
@@ -105,6 +109,14 @@ public class Notification {
 
     public void setTitle(String title) {
         mTitle = title;
+    }
+
+    public Boolean isSeen() {
+        return isSeen;
+    }
+
+    public void setSeen(Boolean seen) {
+        isSeen = seen;
     }
 
 }

@@ -1,9 +1,11 @@
 package org.humana.mobile.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.databinding.ObservableLong;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Gravity;
@@ -24,6 +26,9 @@ import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.constants.Constants;
 import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
+import org.humana.mobile.tta.data.model.program.EventNotificationCount;
+import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
+import org.humana.mobile.tta.event.ContentStatusReceivedEvent;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.tutorials.MxTooltip;
@@ -33,11 +38,14 @@ import org.humana.mobile.tta.ui.programs.notifications.NotificationActivity;
 import org.humana.mobile.tta.ui.programs.selectSection.SelectSectionActivity;
 import org.humana.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
 import org.humana.mobile.tta.utils.ActivityUtil;
+import org.humana.mobile.tta.utils.BottomNavigationViewHelper;
 import org.humana.mobile.util.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+
 
 public class AccountFragment extends BaseFragment {
     private static final String TAG = AccountFragment.class.getCanonicalName();
@@ -60,6 +68,12 @@ public class AccountFragment extends BaseFragment {
 
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        registerEventBus();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
@@ -71,7 +85,10 @@ public class AccountFragment extends BaseFragment {
                 showNotifications();
             }
         });
-        binding.tvNotificationBadge.setText("4");
+        setNotificationBladge();
+
+        binding.tvNotificationBadge.setText(notificationBladge.get());
+
         if (config.isUserProfilesEnabled()) {
             binding.profileBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,7 +179,7 @@ public class AccountFragment extends BaseFragment {
                     mDataManager.getLoginPrefs().setRole(data.get(0).getRole());
 
                     Constants.isSingleRow = true;
-                    Snackbar.make(binding.clMain, "Single program and section exists for this user",
+                    Snackbar.make(binding.clMain, R.string.single_program_text,
                             Snackbar.LENGTH_LONG).show();
 
 
@@ -182,6 +199,7 @@ public class AccountFragment extends BaseFragment {
     }
     public void showNotifications() {
         ActivityUtil.gotoPage(getActivity(),NotificationActivity.class);
+        binding.tvNotificationBadge.setVisibility(View.GONE);
     }
 
 
@@ -210,4 +228,44 @@ public class AccountFragment extends BaseFragment {
         mDataManager.getLoginPrefs().setStudentTootipSeen(false);
         showTooltip();
     }
+
+    private void setNotificationBladge(){
+        if (mDataManager.getLoginPrefs().getNotificationCount() > 9){
+            notificationBladge.set("9+");
+            notificationBladge.notifyChange();
+        }else if (mDataManager.getLoginPrefs().getNotificationCount()==0 ||
+                mDataManager.getLoginPrefs().getNotificationCount()==-1){
+            binding.tvNotificationBadge.setVisibility(View.GONE);
+        }
+        else {
+            notificationBladge.set(String.valueOf(mDataManager.getLoginPrefs().getNotificationCount()));
+            notificationBladge.notifyChange();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unRegisterEventBus();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventNotificationCount event) {
+       if (event !=null){
+           if (event.isCountChanged()){
+                setNotificationBladge();
+           }
+       }
+    }
+
+    public void registerEventBus() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void unRegisterEventBus() {
+        EventBus.getDefault().unregister(this);
+    }
+
+
+
 }

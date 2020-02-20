@@ -15,8 +15,8 @@
         app:cardElevation="@dimen/_16px"
         android:id="@+id/user_card"
         android:shadowColor="@color/gray_1"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                     <TextView
                         android:id="@+id/txt_pending"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/check"
                         android:drawablePadding="5dp"
                         android:fontFamily="@font/hind_medium"

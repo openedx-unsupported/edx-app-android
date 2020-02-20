@@ -204,8 +204,11 @@ public interface TaService {
     @GET(ApiConstants.URL_MX_GET_PROGRAMS)
     Call<List<Program>> getPrograms();
 
-    @GET(ApiConstants.URL_MX_GET_PROGRAMS)
+    @GET(ApiConstants.URL_MX_GET_NOTIFICATION_COUNT)
     Call<NotificationCountResponse> getNotificationCount();
+
+    @GET(ApiConstants.URL_MX_GET_NOTIFICATION_READ)
+    Call<SuccessResponse> getReadNotification(@Query(Constants.KEY_ID) String id);
 
     @GET(ApiConstants.URL_MX_GET_SECTIONS)
     Call<List<Section>> getSections(@Query(Constants.KEY_PROGRAM_ID) String programId);

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/notifications.badge"
+        android:id="@+id/badge"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="top|center_horizontal"
@@ -10,7 +13,6 @@
         android:layout_marginTop="2dp"
         android:background="@drawable/circle_material_red"
         android:gravity="center"
-        android:text="9+"
         android:textColor="@color/white"
         android:textSize="11sp" />
-</merge>
+</FrameLayout>

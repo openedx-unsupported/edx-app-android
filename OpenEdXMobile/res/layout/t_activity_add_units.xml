@@ -39,7 +39,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/_24px"
+                android:layout_marginStart="@dimen/_22px"
+                android:layout_marginTop="8dp"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:drawablePadding="5dp"
@@ -62,6 +63,7 @@
             app:mx_moreButtonVisible="false"
             app:mx_itemLayout="@layout/t_row_filter_drop_down"
             app:mx_itemLimit="100"
+            android:paddingStart="10dp"
             finite_recycler_adapter="@{viewModel.filtersAdapter}"
             android:visibility="@{viewModel.filtersVisible?View.VISIBLE:View.GONE}"/>
 

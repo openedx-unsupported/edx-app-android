@@ -2,8 +2,13 @@ package org.humana.mobile.tta.data.model.program;
 
 import android.arch.persistence.room.Entity;
 
+import com.google.gson.annotations.SerializedName;
+
 public class NotificationCountResponse {
+    @SerializedName("ReadCount")
     private Long ReadCount;
+
+    @SerializedName("UnReadCount")
     private Long UnReadCount;
 
     public Long getReadCount() {

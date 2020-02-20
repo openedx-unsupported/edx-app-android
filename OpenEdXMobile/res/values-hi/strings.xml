@@ -143,4 +143,6 @@
     <string name="my_date">My Date</string>
     <string name="unit_not_published">Unit in not published</string>
     <string name="view_profile">View Profile</string>
+    <string name="notify_read_request">Unable to notify read request.</string>
+    <string name="single_program_text">Single program and section exists for this user</string>
 </resources>

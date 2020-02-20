@@ -15,8 +15,8 @@
         app:cardElevation="@dimen/_16px"
         android:shadowColor="@color/gray_1"
         android:id="@+id/user_card"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp">
 
         <LinearLayout

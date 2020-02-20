@@ -14,11 +14,13 @@ import org.humana.mobile.R;
 
 import java.lang.reflect.Field;
 
-import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class BottomNavigationViewHelper {
     private static TextView notificationBadge;
+    private static View badge;
+    static BottomNavigationItemView item;
+    static BottomNavigationMenuView menuView;
 
     public static void disableShiftMode(BottomNavigationView view) {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
@@ -43,20 +45,26 @@ public class BottomNavigationViewHelper {
     }
 
     public static void addBadgeToBottomNav(BottomNavigationView view, int position, long count) {
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
-        BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(position);
+        if (count!=0) {
+            menuView = (BottomNavigationMenuView) view.getChildAt(0);
+            item = (BottomNavigationItemView) menuView.getChildAt(position);
 
-        View badge = LayoutInflater.from(view.getContext())
-                .inflate(R.layout.notification_badge, item, true);
-
-        notificationBadge = menuView.findViewById(R.id.notifications_badge);
-        notificationBadge.setText(String.valueOf(count));
+            badge = LayoutInflater.from(view.getContext())
+                    .inflate(R.layout.notification_badge, item, false);
+            item.addView(badge);
+            notificationBadge = item.findViewById(R.id.badge);
+            if (count > 9) {
+                notificationBadge.setText("9+");
+            } else {
+                notificationBadge.setText(String.valueOf(count));
+            }
+        }
     }
 
     public static void removeBadgeFromBottomNav(){
 
-            boolean badgeIsVisible = notificationBadge.getVisibility() != VISIBLE;
-            notificationBadge.setVisibility(badgeIsVisible ? GONE : GONE);
+        item.removeView(badge);
 
+//            badge.setVisibility(GONE);
     }
 }
