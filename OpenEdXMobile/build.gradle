@@ -1,4 +1,3 @@
-import groovy.json.JsonBuilder
 import org.edx.builder.TaskHelper
 
 buildscript {
@@ -34,18 +33,7 @@ edx {
 apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
 apply from: 'jacoco.gradle'
-
-class AndroidHelper {
-    static def saveProcessedConfig(project, config) {
-        def path = project.file('assets/config')
-        path.mkdirs()
-        def jsonWriter = new FileWriter(path.absolutePath + '/config.json')
-        def builder = new JsonBuilder(config)
-        jsonWriter.withWriter {
-            builder.writeTo(it)
-        }
-    }
-}
+apply from: file('gradle_scripts/AndroidHelper.gradle')
 
 /**
  * Computes a semantic version string, e.g. "1.0" or "2.5.7" by parsing git branches or tags.
@@ -261,15 +249,15 @@ configurations {
 }
 
 def config = new TaskHelper().loadConfig(project)
-def firebase = config.get('FIREBASE')
-def firebaseEnabled = firebase?.get('ENABLED')
-if (firebaseEnabled?: false) {
+def firebaseConfig = config.get('FIREBASE')
+def firebaseEnabled = firebaseConfig?.get('ENABLED')
+if (firebaseEnabled ?: false) {
     apply plugin: 'com.google.gms.google-services'
     // Apply the Performance Monitoring plugin to enable instrumentation
     apply plugin: 'com.google.firebase.firebase-perf'
 }
 // Variable to check if Firebase Cloud Messaging is enabled
-def fcmEnabled = config.get('PUSH_NOTIFICATIONS') && firebaseEnabled && firebase?.get('CLOUD_MESSAGING_ENABLED')
+def fcmEnabled = config.get('PUSH_NOTIFICATIONS') && firebaseEnabled && firebaseConfig?.get('CLOUD_MESSAGING_ENABLED')
 
 android {
     signingConfigs {
@@ -295,7 +283,7 @@ android {
     flavorDimensions "default"
 
     defaultConfig {
-        applicationId "org.edx.mobile"
+        applicationId APPLICATION_ID
         // minimum version is Android 4.1
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
@@ -495,18 +483,26 @@ android {
     }
 }
 
-
 android.applicationVariants.all { variant ->
     def variantName = variant.name.capitalize()
     def taskName = "applyConfig" + variantName
     def configureTask = project.task(taskName) << {
-        def helper = new AndroidHelper()
-        helper.saveProcessedConfig(project, config)
+        AndroidHelper.saveProcessedConfig(project, config)
     }
     def generateTask = project.tasks.getByName("generate" + variantName + "Resources")
     generateTask.dependsOn(configureTask)
+    // Task that generate google-services.json from the configs and execute before the
+    // google-services.json validation
+    if (firebaseEnabled) {
+        def serviceJsonTask = "generate$variantName" + "GoogleServicesJson"
+        project.task(serviceJsonTask).doFirst {
+            AndroidHelper.saveGoogleServicesJson(project, firebaseConfig)
+        }
+        def googleServicesJsonValidationTask = "process$variantName" + "GoogleServices"
+        tasks.getByName(googleServicesJsonValidationTask).dependsOn(serviceJsonTask)
+    }
 
-    tasks.all {task ->
+    tasks.all { task ->
         if (task.name.startsWith("test")) {
             task.mustRunAfter(configureTask)
         }
