@@ -58,6 +58,8 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
              */
             authWebView.getWebViewClient().setHostForThisPage(Uri.parse(getArguments().getString(ARG_URL)).getHost());
 
+            authWebView.getWebViewClient().addInternalLinkHost("https://payment.edx.org");
+
             authWebView.getWebViewClient().setActionListener(helper -> {
                 if (getActivity() != null) {
                     // This means that the transaction completed successfully and user tapped on the
