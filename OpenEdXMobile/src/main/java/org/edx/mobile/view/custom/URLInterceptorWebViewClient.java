@@ -23,6 +23,9 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.links.WebViewLink;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import roboguice.RoboGuice;
 
 /**
@@ -59,6 +62,11 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     external web browser.
      */
     private boolean isAllLinksExternal = false;
+    /**
+     * List of hosts whose links will be considered as internal links and will be opened within the
+     * app rather than redirecting them into external browser.
+     */
+    private Set<String> internalLinkHosts = new HashSet<>();
 
     public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView) {
         this.activity = activity;
@@ -178,6 +186,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             // For more details see LEARNER-6596
             // Return false means the current WebView handles the url.
             return false;
+        } else if (isInternalLink(url)) {
+            return false;
         } else if (isAllLinksExternal || isExternalLink(url)) {
             // open URL in external web browser
             // return true means the host application handles the url
@@ -192,6 +202,31 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     public void setAllLinksAsExternal(boolean isAllLinksExternal) {
         this.isAllLinksExternal = isAllLinksExternal;
+    }
+
+    /**
+     * Add a host whose links will be considered as internal links and will be loaded within the
+     * app rather than redirecting them into external browser.
+     *
+     * @param internalLinkHost host which needs to add in the list
+     */
+    public void addInternalLinkHost(@NonNull String internalLinkHost) {
+        this.internalLinkHosts.add(internalLinkHost);
+    }
+
+    /**
+     * Check either the url should be loaded within app or should be redirected to external browser.
+     *
+     * @param url which needs be checked
+     * @return true if url is considered internal, false otherwise
+     */
+    private boolean isInternalLink(@NonNull String url) {
+        for (String internalLinkHost : internalLinkHosts) {
+            if (url.startsWith(internalLinkHost)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setLoadingInitialUrl(boolean isLoadingInitialUrl) {
