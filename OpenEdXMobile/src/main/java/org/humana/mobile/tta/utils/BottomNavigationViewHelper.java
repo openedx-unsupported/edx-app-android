@@ -63,7 +63,9 @@ public class BottomNavigationViewHelper {
 
     public static void removeBadgeFromBottomNav(){
 
-        item.removeView(badge);
+        if (item!=null) {
+            item.removeView(badge);
+        }
 
 //            badge.setVisibility(GONE);
     }

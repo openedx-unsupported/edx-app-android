@@ -120,7 +120,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         isUnitModePeriod = true;
 
         selectedFilter=new ArrayList<>();
-        selectedFilter=mDataManager.getSelectedFilters();
+        selectedFilter= mDataManager.getSelectedFilters();
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
@@ -295,8 +295,10 @@ public class AddUnitsViewModel extends BaseViewModel {
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
-        filters.clear();
-        filters = event.getProgramFilters();
+        if (event!=null) {
+            filters.clear();
+            filters.addAll(event.getProgramFilters());
+        }
     }
 
     public void onEventMainThread(NetworkConnectivityChangeEvent event) {
@@ -621,9 +623,21 @@ public class AddUnitsViewModel extends BaseViewModel {
                 dropDownBinding.filterDropDown.setFilterItems(items);
 
                 if (selectedFilter != null) {
-                    for (SelectedFilter item : selectedFilter) {
-                        if (model.getInternalName().equals(item.getInternal_name())) {
-                            dropDownBinding.filterDropDown.setSelection(item.getSelected_tag());
+                    for (ProgramFilterTag tag : model.getTags()) {
+                        for (SelectedFilter item : selectedFilter) {
+                            if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
+                                if (item.getSelected_tag_item()!=null) {
+                                    if (item.getSelected_tag_item().equals(tag)) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getSelected_tag_item());
+                                    }
+                                    break;
+                                }else {
+                                    if (item.getSelected_tag().equals(model.getDisplayName())) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
+                                    }
+
+                                }
+                            }
                         }
                     }
                 }
@@ -702,8 +716,8 @@ public class AddUnitsViewModel extends BaseViewModel {
                             }
                         }
                     }
-                    EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters, true));
+//                    EventBus.getDefault()
+//                            .post(new ProgramFilterSavedEvent(filters, true));
                     fetchFilters();
                 });
             }

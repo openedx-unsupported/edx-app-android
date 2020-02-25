@@ -85,7 +85,7 @@ public class AccountFragment extends BaseFragment {
                 showNotifications();
             }
         });
-        setNotificationBladge();
+        getNotificationCount();
 
         binding.tvNotificationBadge.setText(notificationBladge.get());
 
@@ -182,7 +182,6 @@ public class AccountFragment extends BaseFragment {
                     Snackbar.make(binding.clMain, R.string.single_program_text,
                             Snackbar.LENGTH_LONG).show();
 
-
                 } else {
                     ActivityUtil.gotoPage(getActivity(), SelectSectionActivity.class,
                             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -231,15 +230,14 @@ public class AccountFragment extends BaseFragment {
 
     private void setNotificationBladge(){
         if (mDataManager.getLoginPrefs().getNotificationCount() > 9){
-            notificationBladge.set("9+");
-            notificationBladge.notifyChange();
+            binding.tvNotificationBadge.setText("9+");
         }else if (mDataManager.getLoginPrefs().getNotificationCount()==0 ||
                 mDataManager.getLoginPrefs().getNotificationCount()==-1){
             binding.tvNotificationBadge.setVisibility(View.GONE);
         }
         else {
-            notificationBladge.set(String.valueOf(mDataManager.getLoginPrefs().getNotificationCount()));
-            notificationBladge.notifyChange();
+            binding.tvNotificationBadge.setVisibility(View.VISIBLE);
+            binding.tvNotificationBadge.setText(String.valueOf(mDataManager.getLoginPrefs().getNotificationCount()));
         }
     }
 
@@ -258,6 +256,12 @@ public class AccountFragment extends BaseFragment {
        }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getNotificationCount();
+    }
+
     public void registerEventBus() {
         EventBus.getDefault().register(this);
     }
@@ -267,5 +271,20 @@ public class AccountFragment extends BaseFragment {
     }
 
 
+    private void getNotificationCount(){
+        mDataManager.getNotificationCount(new OnResponseCallback<NotificationCountResponse>() {
+            @Override
+            public void onSuccess(NotificationCountResponse response) {
 
+                mDataManager.getLoginPrefs().setNotificationCount(response.getUnReadCount());
+                setNotificationBladge();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+                e.printStackTrace();
+            }
+        });
+    }
 }

@@ -630,7 +630,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         if (event !=null) {
             changesMade = true;
             allLoaded = false;
-            filters = event.getProgramFilters();
+            filters=(event.getProgramFilters());
         }
     }
 
@@ -740,8 +740,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     sf.setDisplay_name(model.getDisplayName());
                     sf.setSelected_tag(item.getName());
                     sf.setSelected_tag_item((ProgramFilterTag) item.getItem());
-                    mDataManager.updateSelectedFilters(sf);
-
+                    if (!selectedFilter.contains(sf)) {
+                        mDataManager.updateSelectedFilters(sf);
+                    }
                     changesMade = true;
                     allLoaded = false;
                     mActivity.showLoading();
@@ -800,8 +801,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                             }
                         }
                     }
-                    EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters, false));
+//                    EventBus.getDefault()
+//                            .post(new ProgramFilterSavedEvent(filters, false));
                     fetchFilters();
 
                 });
@@ -992,7 +993,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
     public void setSessionFilter() {
         selectedFilter = mDataManager.getSelectedFilters();
-        changesMade = false;
+        changesMade = true;
         allLoaded = false;
         mActivity.showLoading();
         fetchFilters();

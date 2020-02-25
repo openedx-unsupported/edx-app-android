@@ -68,7 +68,7 @@ public class NotificationViewModel extends BaseViewModel {
         if (allLoaded)
             return false;
         skip++;
-        if (offlineVisible.get()) {
+        if (!offlineVisible.get()) {
             fetchNotifications();
         }
         return true;
@@ -96,8 +96,7 @@ public class NotificationViewModel extends BaseViewModel {
                 mActivity.showLoading();
                 courseId = item.getActionParentId();
                 unitId = item.getActionId();
-                getEnrolledCourse();
-                notifyNotificationRead(String.valueOf(item.getId()), item);
+                getEnrolledCourse(item);
             }
         });
 
@@ -194,6 +193,9 @@ public class NotificationViewModel extends BaseViewModel {
                     if (!model.isSeen()) {
                         notificationBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(
                                 mActivity, R.color.humana_current_period));
+                    }else {
+                        notificationBinding.cvUnit.setCardBackgroundColor(ContextCompat.getColor(
+                                mActivity, R.color.humana_card_background));
                     }
                 }
 
@@ -227,7 +229,7 @@ public class NotificationViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
-    private void getEnrolledCourse() {
+    private void getEnrolledCourse(Notification notification) {
 
         mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
             @Override
@@ -244,6 +246,7 @@ public class NotificationViewModel extends BaseViewModel {
                                 }
                             }
                             enrollCourse(coursesResponse, courseId, unitId);
+                            notifyNotificationRead(String.valueOf(notification.getId()), notification);
 
                             mActivity.hideLoading();
                         }
@@ -285,6 +288,7 @@ public class NotificationViewModel extends BaseViewModel {
                                                     null, false);
 
                                             mActivity.hideLoading();
+
                                         }
                                     }
 

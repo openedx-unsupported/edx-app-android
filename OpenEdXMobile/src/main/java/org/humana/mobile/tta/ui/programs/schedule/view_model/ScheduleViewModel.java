@@ -742,8 +742,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             }
                         }
                     }
-                    EventBus.getDefault()
-                            .post(new ProgramFilterSavedEvent(filters,false));
+//                    EventBus.getDefault()
+//                            .post(new ProgramFilterSavedEvent(filters,false));
                     getFilters();
                 });
 
