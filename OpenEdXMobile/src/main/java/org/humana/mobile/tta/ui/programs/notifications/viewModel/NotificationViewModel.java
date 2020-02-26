@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -23,7 +24,9 @@ import org.humana.mobile.tta.data.Notification;
 import org.humana.mobile.tta.data.NotificationResponse;
 import org.humana.mobile.tta.data.enums.SourceType;
 import org.humana.mobile.tta.data.local.db.table.Content;
+import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.model.SuccessResponse;
+import org.humana.mobile.tta.data.model.program.EventNotificationCount;
 import org.humana.mobile.tta.event.ContentStatusReceivedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -80,6 +83,7 @@ public class NotificationViewModel extends BaseViewModel {
         notifications = new ArrayList<>();
         take = DEFAULT_TAKE;
         skip = DEFAULT_SKIP;
+        layoutManager = new LinearLayoutManager(mActivity);
 
         adapter = new NotificationsAdapter(mActivity);
         adapter.setItems(notifications);
@@ -132,18 +136,28 @@ public class NotificationViewModel extends BaseViewModel {
 
     private void populateNotifications(List<Notification> data) {
         boolean newItemsAdded = false;
-
+        int n = 0;
         for (Notification notification: data){
-            if (!notifications.contains(notification)){
+            if (!unitAlreadyAdded(notification)) {
                 notifications.add(notification);
                 newItemsAdded = true;
+                n++;
             }
         }
 
         if (newItemsAdded) {
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemRangeInserted(notifications.size() - n, n);
         }
         toggleEmptyVisibility();
+    }
+
+    private boolean unitAlreadyAdded(Notification notification) {
+        for (Notification u : notifications) {
+            if (u.getId().equals(notification.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void toggleEmptyVisibility(){
@@ -170,7 +184,6 @@ public class NotificationViewModel extends BaseViewModel {
     @Override
     public void onResume() {
         super.onResume();
-        layoutManager = new LinearLayoutManager(mActivity);
 //        onEventMainThread(new NetworkConnectivityChangeEvent());
     }
 
@@ -219,7 +232,13 @@ public class NotificationViewModel extends BaseViewModel {
             offlineVisible.set(true);
         }
     }
-
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventNotificationCount event) {
+       if (event.isCountChanged()){
+           allLoaded = false;
+           fetchNotifications();
+       }
+    }
 
     public void registerEventBus() {
         EventBus.getDefault().register(this);
@@ -318,6 +337,7 @@ public class NotificationViewModel extends BaseViewModel {
                 item.setSeen(true);
                 adapter.notifyItemChanged(adapter.getItemPosition(item));
                 mActivity.hideLoading();
+                EventBus.getDefault().post(new EventNotificationCount(true));
             }
 
             @Override

@@ -612,11 +612,15 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
     }
 
     public void addUnits() {
-        Bundle parameters = new Bundle();
-        parameters.putString(Constants.KEY_PERIOD_NAME, periodName.get());
-        parameters.putLong(Constants.KEY_PERIOD_ID, periodId);
-        parameters.putSerializable(Router.EXTRA_COURSE_DATA, course);
-        ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
+        if (periodId!=0) {
+            Bundle parameters = new Bundle();
+            parameters.putString(Constants.KEY_PERIOD_NAME, periodName.get());
+            parameters.putLong(Constants.KEY_PERIOD_ID, periodId);
+            parameters.putSerializable(Router.EXTRA_COURSE_DATA, course);
+            ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
+        }else {
+            mActivity.showShortToast(mActivity.getString(R.string.select_period));
+        }
     }
 
     @SuppressWarnings("unused")
@@ -806,10 +810,11 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         }
                     }
 
-                    for (ProgramFilter filter: filters)
-                    if (!filter.getInternalName().toLowerCase().equalsIgnoreCase("period_id")){
-                        periodId = 0;
-                    }
+//                    for (ProgramFilter filter: filters) {
+//                        if (!filter.getInternalName().toLowerCase().equalsIgnoreCase("period_id")) {
+//                            periodId = 0;
+//                        }
+//                    }
                     EventBus.getDefault()
                             .post(new ProgramFilterSavedEvent(filters, true));
                     fetchFilters();

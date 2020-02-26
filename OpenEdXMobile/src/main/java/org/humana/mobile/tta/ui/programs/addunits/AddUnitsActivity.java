@@ -49,13 +49,16 @@ public class AddUnitsActivity extends BaseVMActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(Constants.KEY_PERIOD_ID, periodId);
         if (periodName != null){
             outState.putString(Constants.KEY_PERIOD_NAME, periodName);
         }
         if (course != null){
             outState.putSerializable(Router.EXTRA_COURSE_DATA, course);
         }
+        if (periodId != 0){
+            outState.putLong(Constants.KEY_PERIOD_ID, periodId);
+        }
+
     }
 
     private void getBundledData(Bundle parameters){

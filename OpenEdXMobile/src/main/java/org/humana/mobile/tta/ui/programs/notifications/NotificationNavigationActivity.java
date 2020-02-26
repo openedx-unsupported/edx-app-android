@@ -15,6 +15,7 @@ public class NotificationNavigationActivity extends BaseVMActivity {
     private NotificationNavigationViewModel viewModel;
     private EnrolledCoursesResponse course;
     private String courseId, unitId;
+    private String notificationId;
 
 
     @Override
@@ -31,7 +32,7 @@ public class NotificationNavigationActivity extends BaseVMActivity {
         savedInstanceState = getIntent().getExtras();
         assert savedInstanceState != null;
 
-        viewModel = new NotificationNavigationViewModel(this, courseId, unitId);
+        viewModel = new NotificationNavigationViewModel(this, courseId, unitId, notificationId);
         binding(R.layout.t_activty_notification_navigation, viewModel);
     }
 
@@ -45,6 +46,9 @@ public class NotificationNavigationActivity extends BaseVMActivity {
         if (unitId != null){
             outState.putSerializable(Constants.KEY_ACTION_ID, unitId);
         }
+        if (notificationId != null){
+            outState.putSerializable(Constants.KEY_NOTIFICATION_ID, notificationId);
+        }
     }
 
     private void getBundledData(Bundle parameters){
@@ -55,6 +59,11 @@ public class NotificationNavigationActivity extends BaseVMActivity {
         if (parameters.containsKey(Constants.KEY_ACTION_ID)){
             unitId = parameters.getString(Constants.KEY_ACTION_ID);
         }
+
+        if (parameters.containsKey(Constants.KEY_NOTIFICATION_ID)){
+            notificationId = parameters.getString(Constants.KEY_NOTIFICATION_ID);
+        }
+
 
     }
 }

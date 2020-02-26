@@ -1,8 +1,11 @@
 package org.humana.mobile.tta.ui.programs.notifications.viewModel;
 
+import org.humana.mobile.R;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.Notification;
+import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -18,20 +21,24 @@ public class NotificationNavigationViewModel extends BaseViewModel {
 
     private String courseId, unitId;
     EnrolledCoursesResponse coursesResponse;
+    private String notificationId;
 
-    public NotificationNavigationViewModel(BaseVMActivity activity, String courseId, String unitId) {
+    public NotificationNavigationViewModel(BaseVMActivity activity, String courseId, String unitId,
+                                           String notificationId) {
         super(activity);
 
         this.courseId = courseId;
         this.unitId = unitId;
+        this.notificationId = notificationId;
 
-        getEnrolledCourse(courseId, unitId);
+        getEnrolledCourse();
         if (mDataManager.getLoginPrefs().getNotificationSeen().equals(Constants.NOTIFICATION_RECIEVED)) {
             mDataManager.getLoginPrefs().setNotificationSeen(Constants.NOTIFICATION_SEEN);
         }
+        notifyNotificationRead(String.valueOf(notificationId));
     }
 
-    private void getEnrolledCourse(String action_parent_id, String action_id) {
+    private void getEnrolledCourse() {
 
         mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
             @Override
@@ -104,5 +111,21 @@ public class NotificationNavigationViewModel extends BaseViewModel {
                         e.printStackTrace();
                     }
                 });
+    }
+    private void notifyNotificationRead(String id){
+        mActivity.showLoading();
+        mDataManager.readNotification(id, new OnResponseCallback<SuccessResponse>() {
+            @Override
+            public void onSuccess(SuccessResponse response) {
+                mActivity.hideLoading();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+                mActivity.showShortToast(mActivity.getString(R.string.notify_read_request));
+                mActivity.hideLoading();
+            }
+        });
     }
 }

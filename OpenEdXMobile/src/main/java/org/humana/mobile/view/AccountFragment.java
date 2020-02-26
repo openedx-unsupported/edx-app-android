@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.inject.Inject;
+import com.lib.mxcalendar.models.Event;
 
 import org.humana.mobile.BuildConfig;
 import org.humana.mobile.R;
@@ -28,7 +29,6 @@ import org.humana.mobile.tta.data.local.db.table.Program;
 import org.humana.mobile.tta.data.local.db.table.Section;
 import org.humana.mobile.tta.data.model.program.EventNotificationCount;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
-import org.humana.mobile.tta.event.ContentStatusReceivedEvent;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.tutorials.MxTooltip;
@@ -101,27 +101,15 @@ public class AccountFragment extends BaseFragment {
             binding.profileBtn.setVisibility(View.GONE);
         }
 
-        binding.settingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showSettings(getActivity());
-            }
-        });
+        binding.settingsBtn.setOnClickListener(v -> environment.getRouter().showSettings(getActivity()));
 
-        binding.feedbackBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showFeedbackScreen(getActivity(), getString(R.string.email_subject));
-            }
-        });
+        binding.feedbackBtn.setOnClickListener(v -> environment.getRouter()
+                .showFeedbackScreen(getActivity(), getString(R.string.email_subject)));
 
-        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().performManualLogout(getActivity(),
-                        environment.getAnalyticsRegistry(), environment.getNotificationDelegate());
-            }
-        });
+        binding.logoutBtn.setOnClickListener(v -> environment
+                .getRouter().performManualLogout(getActivity(),
+                environment.getAnalyticsRegistry(),
+                        environment.getNotificationDelegate()));
 
         binding.activateTutorialBtn.setOnClickListener(v -> enableTutorials());
 
@@ -247,11 +235,11 @@ public class AccountFragment extends BaseFragment {
         unRegisterEventBus();
     }
 
-    @SuppressWarnings("unused")
+//    @SuppressWarnings("unused")
     public void onEventMainThread(EventNotificationCount event) {
        if (event !=null){
            if (event.isCountChanged()){
-                setNotificationBladge();
+                getNotificationCount();
            }
        }
     }
@@ -278,6 +266,7 @@ public class AccountFragment extends BaseFragment {
 
                 mDataManager.getLoginPrefs().setNotificationCount(response.getUnReadCount());
                 setNotificationBladge();
+//                EventBus.getDefault().post(new EventNotificationCount(true));
             }
 
             @Override

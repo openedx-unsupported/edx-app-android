@@ -49,6 +49,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
     public static final String EXTRA_SECTION_ID = "section_id";
     public static final String EXTRA_PARENT_ACTION_ID = "action_parent_id";
     public static final String EXTRA_ACTION_ID = "action_id";
+    public static final String NOTIFICATION_ID = "notification_id";
     DataManager mDataManager;
     EnrolledCoursesResponse coursesResponse;
 
@@ -69,16 +70,17 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
             sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"),
                     remoteMessage.getData().get("path"), remoteMessage.getData().get("type"),
                     remoteMessage.getData().get(EXTRA_PARENT_ACTION_ID),
-                    remoteMessage.getData().get(EXTRA_ACTION_ID));
+                    remoteMessage.getData().get(EXTRA_ACTION_ID),
+                    remoteMessage.getData().get(NOTIFICATION_ID));
         else if (remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("body"))
             sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"),
-                    "", "", "", "");
+                    "", "", "", "", String.valueOf(0L));
         else
             return;
     }
 
     private void sendNotification(String messageTitle, String messageBody, String path, String type,
-                                  String action_parent_id, String action_id) {
+                                  String action_parent_id, String action_id, String notification_id) {
         //**add this line**
         int requestID = (int) System.currentTimeMillis();
 
@@ -87,7 +89,8 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         //get Intent for notification landing page
         //remove this for generlisation && path!=null && !path.equals("")
         if (type != null && !type.equals("")) {
-            notificationIntent = getNavigationIntent(type, path, action_parent_id, action_id);
+            notificationIntent = getNavigationIntent(type, path, action_parent_id, action_id,
+                    notification_id);
         } else {
             notificationIntent = new Intent(getApplicationContext(), SplashActivity.class);
         }
@@ -144,7 +147,8 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         });
     }
 
-    private Intent getNavigationIntent(String type, String path, String action_parent_id, String action_id) {
+    private Intent getNavigationIntent(String type, String path, String action_parent_id,
+                                       String action_id, String notification_id) {
         navigationIntent = new Intent();
 
         //if user is not logged in navigate to splash screen
@@ -168,6 +172,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
             navigationIntent = new Intent(getApplicationContext(), NotificationNavigationActivity.class);
             navigationIntent.putExtra(EXTRA_PARENT_ACTION_ID, action_parent_id);
             navigationIntent.putExtra(EXTRA_ACTION_ID, action_id);
+            navigationIntent.putExtra(NOTIFICATION_ID, notification_id);
         }
         return navigationIntent;
     }

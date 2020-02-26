@@ -145,4 +145,5 @@
     <string name="view_profile">View Profile</string>
     <string name="notify_read_request">Unable to notify read request.</string>
     <string name="single_program_text">Single program and section exists for this user</string>
+    <string name="select_period">Please select period.</string>
 </resources>

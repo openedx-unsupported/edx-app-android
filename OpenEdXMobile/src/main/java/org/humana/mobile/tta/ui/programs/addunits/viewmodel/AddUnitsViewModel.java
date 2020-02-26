@@ -94,7 +94,8 @@ public class AddUnitsViewModel extends BaseViewModel {
         return true;
     };
 
-    public AddUnitsViewModel(BaseVMActivity activity, long periodId, String periodName, EnrolledCoursesResponse course,
+    public AddUnitsViewModel(BaseVMActivity activity, long periodId, String periodName,
+                             EnrolledCoursesResponse course,
                              Long selectedDate) {
         super(activity);
 

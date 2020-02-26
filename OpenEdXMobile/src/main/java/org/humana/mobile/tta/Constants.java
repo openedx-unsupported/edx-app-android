@@ -95,6 +95,7 @@ public class Constants {
     public static final String KEY_ACTION_PARENT_ID = "action_parent_id";
     public static final String KEY_RESPONDENT = "respondent";
     public static final String KEY_DEVICE_ID = "device_id";
+    public static final String KEY_NOTIFICATION_ID = "notification_id";
     public static final String KEY_ID = "id";
     public static final int CLIENT_TIMEOUT = 60;
 

@@ -85,8 +85,8 @@ public class LandingViewModel extends BaseViewModel {
             case R.id.action_profile:
                 selectedId = R.id.action_profile;
                 showProfile();
-                BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
-                bottomNavigationViewHelper.removeBadgeFromBottomNav();
+//                BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
+//                bottomNavigationViewHelper.removeBadgeFromBottomNav();
                 return true;
             default:
                 selectedId = R.id.action_library;
@@ -348,6 +348,8 @@ public class LandingViewModel extends BaseViewModel {
                     bottomNavigationViewHelper.removeBadgeFromBottomNav();
                     mDataManager.getLoginPrefs().setNotificationCount(0L);
                 }else {
+                    BottomNavigationViewHelper bottomNavigationViewHelper = new BottomNavigationViewHelper();
+                    bottomNavigationViewHelper.removeBadgeFromBottomNav();
                     badgeCount.set(response.getUnReadCount());
                     mDataManager.getLoginPrefs().setNotificationCount(response.getUnReadCount());
                     badgeCount.notifyChange();
