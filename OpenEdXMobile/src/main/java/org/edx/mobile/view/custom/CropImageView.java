@@ -8,6 +8,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
@@ -108,7 +109,13 @@ public class CropImageView extends org.edx.mobile.third_party.subscaleview.Subsa
         mRectF.set((float) canvas.getWidth() / 2 - radius, (float) canvas.getHeight() / 2 - radius, (float) canvas.getWidth() / 2 + radius, (float) canvas.getHeight() / 2 + radius);
         circleSelectionPath.reset();
         circleSelectionPath.addOval(mRectF, Path.Direction.CW);
-        canvas.clipPath(circleSelectionPath, Region.Op.XOR);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            canvas.clipOutPath(circleSelectionPath);
+        } else {
+            canvas.clipPath(circleSelectionPath, Region.Op.XOR);
+        }
+
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
         // Canvas did not save and called restore due to which app crashes, so we have to save first then call restore
         canvas.save();
