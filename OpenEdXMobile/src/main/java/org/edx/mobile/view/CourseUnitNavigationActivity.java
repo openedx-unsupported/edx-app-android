@@ -110,6 +110,21 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        /*
+         * If the youtube player is not in a proper state then it throws the IllegalStateException.
+         * To avoid the crash and continue the flow we are catching the exception.
+         *
+         * It may occur when the edX app was in background and user kills the on-device YouTube app.
+         */
+        try {
+            super.onSaveInstanceState(outState);
+        } catch (IllegalStateException e) {
+            logger.error(e);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         updateUIForOrientation();
