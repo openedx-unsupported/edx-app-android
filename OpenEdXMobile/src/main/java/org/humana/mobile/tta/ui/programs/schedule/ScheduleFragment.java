@@ -37,9 +37,8 @@ public class ScheduleFragment extends TaBaseFragment implements PageViewStateCal
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewDataBinding binding = binding(inflater, container, R.layout.t_fragment_schedules, viewModel);
+        return binding(inflater, container, R.layout.t_fragment_schedules, viewModel).getRoot();
 
-        return binding.getRoot();
     }
 
     @Override

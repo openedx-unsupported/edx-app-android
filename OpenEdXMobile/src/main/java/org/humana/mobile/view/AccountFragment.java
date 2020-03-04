@@ -1,6 +1,7 @@
 package org.humana.mobile.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
@@ -8,6 +9,7 @@ import android.databinding.ObservableInt;
 import android.databinding.ObservableLong;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,10 +108,30 @@ public class AccountFragment extends BaseFragment {
         binding.feedbackBtn.setOnClickListener(v -> environment.getRouter()
                 .showFeedbackScreen(getActivity(), getString(R.string.email_subject)));
 
-        binding.logoutBtn.setOnClickListener(v -> environment
-                .getRouter().performManualLogout(getActivity(),
-                environment.getAnalyticsRegistry(),
-                        environment.getNotificationDelegate()));
+        binding.logoutBtn.setOnClickListener(v ->{
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        builder1.setMessage("Do you really want to logout.");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Yes",
+                (dialog, id) -> {
+                    environment
+                            .getRouter().performManualLogout(getActivity(),
+                            environment.getAnalyticsRegistry(),
+                            environment.getNotificationDelegate());
+                    dialog.cancel();
+
+                });
+
+        builder1.setNegativeButton(
+                "No",
+                (dialog, id) -> dialog.cancel());
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+                });
 
         binding.activateTutorialBtn.setOnClickListener(v -> enableTutorials());
 
@@ -151,9 +173,9 @@ public class AccountFragment extends BaseFragment {
         binding.tvVersionNo.setText(String.format("%s %s %s", getString(R.string.label_version),
                 BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));
 
-        if (!mDataManager.getLoginPrefs().isProfileTootipSeen()) {
-            showTooltip();
-        }
+//        if (!mDataManager.getLoginPrefs().isProfileTootipSeen()) {
+//            showTooltip();
+//        }
 
         return binding.getRoot();
     }

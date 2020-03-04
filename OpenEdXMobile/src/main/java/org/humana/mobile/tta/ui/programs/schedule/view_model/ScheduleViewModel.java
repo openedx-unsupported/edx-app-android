@@ -165,9 +165,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         }
 
 
-        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
-            setToolTip();
-        }
+//        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
+//            setToolTip();
+//        }
 
 //        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
 
@@ -207,7 +207,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     }
                     break;
 
-                case R.id.txt_read_more:
+                case R.id.ll_read_more:
                     if (AppUtil.isReadStoragePermissionGranted(mActivity)
                             && AppUtil.isWriteStoragePermissionGranted(mActivity)) {
                         if (item.getDownloadStatus() != null) {
@@ -329,7 +329,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                     for (ProgramFilterTag tag : filter.getTags()) {
                         if (selected.getSelected_tag() != null) {
-                            if (selected.getSelected_tag_item()!=null) {
+                            if (selected.getSelected_tag_item() != null) {
                                 if (selected.getSelected_tag_item().equals(tag)) {
                                     selectedTags.add(tag);
                                     ProgramFilter pf = new ProgramFilter();
@@ -344,7 +344,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                     }
                                     break;
                                 }
-                            }else {
+                            } else {
                                 if (selected.getSelected_tag().equals(tag.getDisplayName())) {
                                     selectedTags.add(tag);
                                     ProgramFilter pf = new ProgramFilter();
@@ -381,7 +381,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         selectedFilter = mDataManager.getSelectedFilters();
 
         changesMade = true;
-        if (isFilterChange){
+        if (isFilterChange) {
             getFilters();
         }
         getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
@@ -528,7 +528,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 //        filters.clear();
         filters = event.getProgramFilters();
         if (event.getFetchFilters()) {
-           isFilterChange = true;
+            isFilterChange = true;
         }
     }
 
@@ -657,15 +657,15 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     for (ProgramFilterTag tag : model.getTags()) {
                         for (SelectedFilter item : selectedFilter) {
                             if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
-                                if (item.getSelected_tag_item()!=null) {
+                                if (item.getSelected_tag_item() != null) {
                                     if (item.getSelected_tag_item().equals(tag)) {
                                         dropDownBinding.filterDropDown.setSelection(item.getSelected_tag_item());
                                     }
                                     break;
-                                }else {
-                                        if (item.getSelected_tag().equals(model.getDisplayName())) {
-                                            dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
-                                        }
+                                } else {
+                                    if (item.getSelected_tag().equals(model.getDisplayName())) {
+                                        dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
+                                    }
 
                                 }
                             }
@@ -694,7 +694,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                             if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                                 for (ProgramFilterTag tag : filter.getTags()) {
                                     if (selected.getSelected_tag() != null) {
-                                        if (selected.getSelected_tag_item()!=null) {
+                                        if (selected.getSelected_tag_item() != null) {
                                             if (selected.getSelected_tag_item().equals(tag)) {
                                                 selectedTags.add(tag);
                                                 ProgramFilter pf = new ProgramFilter();
@@ -709,7 +709,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                                                 }
                                                 break;
                                             }
-                                        }else {
+                                        } else {
                                             if (selected.getSelected_tag().equals(tag.getDisplayName())) {
                                                 selectedTags.add(tag);
                                                 ProgramFilter pf = new ProgramFilter();
@@ -803,10 +803,10 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                 if (model.getDesc() != null) {
                     if (model.getAbout_url() != null && !model.getAbout_url().equals("")) {
-                        scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
+                        scheduleBinding.llReadMore.setVisibility(View.VISIBLE);
 
                     } else {
-                        scheduleBinding.txtReadMore.setVisibility(View.GONE);
+                        scheduleBinding.llReadMore.setVisibility(View.GONE);
 
                     }
                 }
@@ -816,15 +816,15 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         scheduleBinding.txtReadMore.setBackground(
                                 ContextCompat.getDrawable(mActivity, R.drawable.t_icon_play_green));
                         scheduleBinding.pbDownload.setVisibility(View.GONE);
-                        scheduleBinding.txtReadMore.setVisibility(View.VISIBLE);
+                        scheduleBinding.llReadMore.setVisibility(View.VISIBLE);
+                        scheduleBinding.tvReadMore.setText("open");
                     } else if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloading))) {
                         scheduleBinding.pbDownload.setVisibility(View.VISIBLE);
-                        scheduleBinding.txtReadMore.setVisibility(View.GONE);
+                        scheduleBinding.llReadMore.setVisibility(View.GONE);
                     }
                 }
 
-
-                if (getItemPosition(model) == 0) {
+               /* if (getItemPosition(model) == 0) {
                     if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
                         new MxTooltip.Builder(mActivity)
                                 .anchorView(scheduleBinding.textviewAdd)
@@ -838,8 +838,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                         mDataManager.getLoginPrefs().setScheduleTootipSeen(true);
                     }
-                }
-
+                }*/
 
                 scheduleBinding.txtStartDate.setOnClickListener(v -> {
                     if (listener != null) {
@@ -861,31 +860,27 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                         listener.onItemClick(v, model);
                     }
                 });
-                scheduleBinding.txtReadMore.setOnClickListener(v -> {
+                scheduleBinding.llReadMore.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }
                 });
-
-
                 scheduleBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }
                 });
 
-
             }
         }
 
     }
 
-
     private void rangePicker(Long startDate, Long endDate, boolean isStart) {
         Calendar now = Calendar.getInstance();
         Calendar now2 = Calendar.getInstance();
 
-        if (startDate!=0) {
+        if (startDate != 0) {
             String startDateStr;
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00 a", Locale.ENGLISH);
             startDateStr = df.format(startDate);
@@ -900,7 +895,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
             }
         }
 
-        if (endDate!=0) {
+        if (endDate != 0) {
 
             SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
             String endDateStr = df1.format(endDate);

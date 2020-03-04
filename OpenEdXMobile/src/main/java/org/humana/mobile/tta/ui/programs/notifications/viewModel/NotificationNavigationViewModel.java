@@ -1,11 +1,14 @@
 package org.humana.mobile.tta.ui.programs.notifications.viewModel;
 
+import com.lib.mxcalendar.models.Event;
+
 import org.humana.mobile.R;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.tta.Constants;
 import org.humana.mobile.tta.data.Notification;
 import org.humana.mobile.tta.data.model.SuccessResponse;
+import org.humana.mobile.tta.data.model.program.EventNotificationCount;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
@@ -118,7 +121,7 @@ public class NotificationNavigationViewModel extends BaseViewModel {
             @Override
             public void onSuccess(SuccessResponse response) {
                 mActivity.hideLoading();
-            }
+                EventBus.getDefault().post(new EventNotificationCount(true));            }
 
             @Override
             public void onFailure(Exception e) {

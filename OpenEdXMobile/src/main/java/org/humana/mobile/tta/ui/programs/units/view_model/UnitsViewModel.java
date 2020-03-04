@@ -251,7 +251,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                         mActivity.hideLoading();
 
                                         if (UnitsViewModel.this.course == null) {
-                                            mActivity.showLongSnack("You're not enrolled in the program");
+                                            mActivity.showLongSnack(mActivity.getString(R.string.not_enrolled));
                                             return;
                                         }
 
@@ -261,7 +261,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                     UnitsViewModel.this.course, data.getChildren().get(0).getId(),
                                                     null, false);
                                         } else {
-                                            mActivity.showLongSnack("This unit is empty");
+                                            mActivity.showLongSnack(mActivity.getString(R.string.empty_unit));
                                         }
                                     }
 
@@ -997,8 +997,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         allLoaded = false;
         mActivity.showLoading();
         fetchFilters();
-        if (!mDataManager.getLoginPrefs().isUnitTootipSeen()) {
-            setToolTip();
-        }
+//        if (!mDataManager.getLoginPrefs().isUnitTootipSeen()) {
+//            setToolTip();
+//        }
     }
 }

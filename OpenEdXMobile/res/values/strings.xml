@@ -973,7 +973,6 @@
 
     // humana strings
     <string name="period_saved_successed">Period saved successfully</string>
-    <string name="empty_unit">This unit is empty</string>
     <string name="downloading">Downloading...</string>
     <string name="downloaded">Downloaded</string>
     <string name="my_date">My Date</string>
@@ -982,5 +981,7 @@
     <string name="notify_read_request">Unable to notify read request.</string>
     <string name="single_program_text">Single program and section exists for this user</string>
     <string name="select_period">Please select period.</string>
+    <string name="not_enrolled">You\'re not enrolled in the program</string>
+    <string name="empty_unit">This unit is empty</string>
 
 </resources>

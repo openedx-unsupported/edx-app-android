@@ -103,9 +103,9 @@ public class LandingViewModel extends BaseViewModel {
         showLibrary();
         mActivity.showLoading();
 
-        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
-            setToolTip();
-        }
+//        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
+//            setToolTip();
+//        }
         setNavigationBadge.set(3);
         getNotificationCount();
 

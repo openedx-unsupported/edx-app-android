@@ -33,6 +33,7 @@
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="11sp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/show_notifications"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -101,6 +102,7 @@
             <TextView
                 android:id="@+id/activate_tutorial_btn"
                 style="@style/account_option"
+                android:visibility="gone"
                 android:text="@string/label_activate_tutorial" />
 
             <TextView

@@ -16,7 +16,7 @@ public class ProgramUser {
     public String education;
 
     @SerializedName("profile_image")
-    public ProfileImage profileImage;
+    public ProfileImageModel profileImage;
 
     @SerializedName("completed_units")
     public long completedUnits;

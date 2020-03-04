@@ -1,4 +1,4 @@
-package org.humana.mobile.user;
+package org.humana.mobile.tta.data.model.program;
 
 import android.support.annotation.Nullable;
 
@@ -6,20 +6,20 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class ProfileImage implements Serializable {
-    @SerializedName("image_url_full")
+public class ProfileImageModel implements Serializable {
+    @SerializedName("full")
     @Nullable
     private String imageUrlFull;
 
-    @SerializedName("image_url_large")
+    @SerializedName("large")
     @Nullable
     private String imageUrlLarge;
 
-    @SerializedName("image_url_medium")
+    @SerializedName("medium")
     @Nullable
     private String imageUrlMedium;
 
-    @SerializedName("image_url_small")
+    @SerializedName("small")
     @Nullable
     private String imageUrlSmall;
 

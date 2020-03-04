@@ -138,13 +138,18 @@ public class LibraryViewModel extends BaseViewModel {
             if (!unitsFragment.isAdded()) {
                 fragments.add(unitsFragment);
             }
+            PendingUsersFragment pendingUsersFragment = new PendingUsersFragment();
             if (mDataManager.getLoginPrefs().getRole() != null) {
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
-                    fragments.add(new PendingUsersFragment());
+                    if (!pendingUsersFragment.isAdded()) {
+                        fragments.add(pendingUsersFragment);
+                    }
                 }
             }
-            fragments.add(new StudentsFragment());
-
+            StudentsFragment studentsFragment = new StudentsFragment();
+            if (!studentsFragment.isAdded()) {
+                fragments.add(new StudentsFragment());
+            }
             CourseDiscussionTopicsFragment discussionFragment = new CourseDiscussionTopicsFragment();
             if (course != null) {
                 Bundle bundle = new Bundle();
@@ -152,20 +157,31 @@ public class LibraryViewModel extends BaseViewModel {
                 discussionFragment.setArguments(bundle);
 
                 discussionFragment.setRetainInstance(true);
-                fragments.add(discussionFragment);
+                if (!discussionFragment.isAdded()) {
+                    fragments.add(discussionFragment);
+                }
             } else {
-                fragments.add(discussionFragment);
+                if (!discussionFragment.isAdded()) {
+                    fragments.add(discussionFragment);
+                }
             }
-            fragments.add(new CurricullamFragment());
-            adapter.setFragments(fragments, demolist);
+            CurricullamFragment curricullamFragment = new CurricullamFragment();
+            if (!curricullamFragment.isAdded()) {
+                fragments.add(new CurricullamFragment());
+            }
+            try {
+                adapter.setFragments(fragments, demolist);
+            }catch (IllegalStateException ie){
+                ie.printStackTrace();
+            }
             mActivity.hideLoading();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
-            setTooltip();
-        }
+//        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
+//            setTooltip();
+//        }
     }
 
     private void getEnrolledCourse() {

@@ -277,7 +277,7 @@ public class PendingUsersViewModel extends BaseViewModel {
                             });
 
             }
-                if (getItemPosition(model) == 0) {
+               /* if (getItemPosition(model) == 0) {
                     if (!mDataManager.getLoginPrefs().isPendingTootipSeen()) {
                         if (isSeen.get()) {
                             new MxTooltip.Builder(mActivity)
@@ -295,7 +295,7 @@ public class PendingUsersViewModel extends BaseViewModel {
                         }
                     }
                 }
-
+*/
                 itemBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);

@@ -318,7 +318,7 @@ public class StudentsViewModel extends BaseViewModel {
 
                 });
 
-                if (getItemPosition(model) == 0) {
+               /* if (getItemPosition(model) == 0) {
                     if (isSeen.get()) {
                         if (!mDataManager.getLoginPrefs().isStudentTootipSeen()) {
                             new MxTooltip.Builder(mActivity)
@@ -356,7 +356,7 @@ public class StudentsViewModel extends BaseViewModel {
                             isSeen.set(false);
                         }
                     }
-                }
+                }*/
 
 
                 itemBinding.getRoot().setOnClickListener(v -> {

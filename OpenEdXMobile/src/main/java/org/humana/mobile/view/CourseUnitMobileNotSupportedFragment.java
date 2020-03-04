@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import org.humana.mobile.R;
@@ -11,6 +15,8 @@ import org.humana.mobile.model.course.BlockType;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.services.ViewPagerDownloadManager;
 import org.humana.mobile.util.BrowserUtil;
+import org.humana.mobile.view.custom.AuthenticatedWebView;
+import org.humana.mobile.view.custom.URLInterceptorWebViewClient;
 
 /**
  *
@@ -47,6 +53,8 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_grade, container, false);
+        AuthenticatedWebView webView = v.findViewById(R.id.auth_webview);
+
         ((TextView) v.findViewById(R.id.not_available_message)).setText(
                 unit.getType() == BlockType.VIDEO ? R.string.video_only_on_web_short : R.string.assessment_not_available);
         v.findViewById(R.id.view_on_web_button).setOnClickListener(new View.OnClickListener() {
@@ -57,6 +65,41 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
                         , unit.getCourseId(), unit.isMultiDevice(), unit.getBlockId());
             }
         });
+
+        webView.initWebView(getActivity(), true, false);
+        webView.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
+            @Override
+            public void onPageStarted() {
+            }
+
+            @Override
+            public void onPageFinished() {
+                ViewPagerDownloadManager.instance.done(CourseUnitMobileNotSupportedFragment.this, true);
+            }
+
+            @Override
+            public void onPageLoadError(WebView view, int errorCode, String description, String failingUrl) {
+                if (failingUrl != null && failingUrl.equals(view.getUrl())) {
+                    ViewPagerDownloadManager.instance.done(CourseUnitMobileNotSupportedFragment.this, false);
+                }
+            }
+
+            @Override
+            public void onPageLoadError(WebView view, WebResourceRequest request,
+                                        WebResourceResponse errorResponse, boolean isMainRequestFailure) {
+                if (isMainRequestFailure) {
+                    ViewPagerDownloadManager.instance.done(CourseUnitMobileNotSupportedFragment.this,
+                            false);
+                }
+            }
+
+            @Override
+            public void onPageLoadProgressChanged(WebView webView, int progress) {
+
+            }
+        });
+        webView.loadUrl(false, unit.getBlockUrl());
+
         return v;
     }
 
