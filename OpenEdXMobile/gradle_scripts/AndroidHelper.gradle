@@ -1,0 +1,104 @@
+import groovy.json.JsonBuilder
+
+class AndroidHelper {
+
+    static def saveProcessedConfig(project, config) {
+        def path = project.file("assets/config")
+        path.mkdirs()
+        def jsonWriter = new FileWriter(path.absolutePath + "/config.json")
+        def builder = new JsonBuilder(config)
+        jsonWriter.withWriter {
+            builder.writeTo(it)
+        }
+    }
+
+    static def saveGoogleServicesJson(project, firebaseConfig) {
+        def googleServiceJsonPath = project.projectDir.toString() + "/google-services.json"
+        new FileWriter(googleServiceJsonPath).withWriter {
+            getGoogleServicesContent(project, firebaseConfig).writeTo(it)
+        }
+    }
+
+    static def getGoogleServicesContent(project, firebaseConfig) {
+        if (checkRequiredFields(firebaseConfig)) {
+            def jsonBuilder = new JsonBuilder()
+            def projectNumber = firebaseConfig.get("PROJECT_NUMBER")
+            def projectId = firebaseConfig.get("PROJECT_ID")
+            def oauthClientId = firebaseConfig.get("OAUTH_CLIENT_ID")
+            def currentKey = firebaseConfig.get("CURRENT_KEY")
+            def mobileSdkAppId = firebaseConfig.get("MOBILE_SDK_APP_ID")
+            // construct the google-services.json fields
+            jsonBuilder {
+                project_info {
+                    project_number projectNumber
+                    firebase_url "https://$projectId" + ".firebaseio.com"
+                    project_id projectId
+                    storage_bucket projectId + ".appspot.com"
+                }
+                client([{
+                            client_info {
+                                "mobilesdk_app_id" mobileSdkAppId
+                                "android_client_info" {
+                                    "package_name" project.APPLICATION_ID
+                                }
+                            }
+                            oauth_client([
+                                    {
+                                        "client_id" oauthClientId
+                                        "client_type" 3
+                                    }
+                            ])
+                            api_key(
+                                    [{
+                                         "current_key" currentKey
+                                     }])
+                            services {
+                                appinvite_service {
+                                    other_platform_oauth_client([{
+                                                                     "client_id" oauthClientId
+                                                                     "client_type" 3
+                                                                 }
+                                    ])
+                                }
+                            }
+                        }])
+                configuration_version "1"
+            }
+            return jsonBuilder
+        }
+    }
+
+    static def checkRequiredFields(firebaseConfig) {
+        def available = true
+        def message = ""
+        if (!firebaseConfig.get("PROJECT_NUMBER")) {
+            message += 'FIREBASE:PROJECT_NUMBER is missing or empty\n'
+            available = false
+        }
+
+        if (!firebaseConfig.get("PROJECT_ID")) {
+            message += 'FIREBASE:PROJECT_ID is missing or empty\n'
+            available = false
+        }
+
+        if (!firebaseConfig.get("OAUTH_CLIENT_ID")) {
+            message += 'FIREBASE:OAUTH_CLIENT_ID is missing or empty\n'
+            available = false
+        }
+
+        if (!firebaseConfig.get("CURRENT_KEY")) {
+            message += 'FIREBASE:CURRENT_KEY is missing or empty\n'
+            available = false
+        }
+        if (!firebaseConfig.get("MOBILE_SDK_APP_ID")) {
+            message += 'FIREBASE:MOBILE_SDK_APP_ID is missing or empty\n'
+            available = false
+        }
+        if (!available) {
+            throw new GradleException(message)
+        }
+        return available
+    }
+}
+
+ext.AndroidHelper = AndroidHelper
