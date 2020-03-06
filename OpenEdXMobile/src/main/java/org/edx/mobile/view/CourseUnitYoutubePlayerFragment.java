@@ -114,8 +114,20 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
     @Override
     protected void setFullScreen(boolean fullscreen) {
+        /*
+         * If the youtube player is not in a proper state then it throws the IllegalStateException.
+         * To avoid the crash and continue the flow we are reinitializing the player here.
+         *
+         * It may occur when the edX app was in background and user kills the on-device YouTube app.
+         */
         if (youTubePlayer != null) {
-            youTubePlayer.setFullscreen(fullscreen);
+            try {
+                youTubePlayer.setFullscreen(fullscreen);
+            } catch (IllegalStateException e) {
+                logger.error(e);
+                releaseYoutubePlayer();
+                initializeYoutubePlayer();
+            }
         }
     }
 
