@@ -108,7 +108,7 @@ public class CropImageView extends org.humana.mobile.third_party.subscaleview.Su
         mRectF.set((float) canvas.getWidth() / 2 - radius, (float) canvas.getHeight() / 2 - radius, (float) canvas.getWidth() / 2 + radius, (float) canvas.getHeight() / 2 + radius);
         circleSelectionPath.reset();
         circleSelectionPath.addOval(mRectF, Path.Direction.CW);
-        canvas.clipPath(circleSelectionPath, Region.Op.XOR);
+        canvas.clipPath(circleSelectionPath, Region.Op.DIFFERENCE);
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
         // Canvas did not save and called restore due to which app crashes, so we have to save first then call restore
         canvas.save();

@@ -104,16 +104,18 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:fontFamily="@font/hind_regular"
+                        android:textSize="12sp"
                         android:textColor="@color/com_facebook_blue"
-                        android:text="read more." />
+                        android:text="Read More..." />
 
                     <ImageView
                         android:id="@+id/txt_read_more"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_gravity="bottom|end"
-                        android:background="@drawable/download"
-                        android:backgroundTint="@color/material_red_500"
+                        android:background="@drawable/ic_before_dnd"
                         android:fontFamily="@font/hind_bold"
                         android:gravity="bottom"
                         android:padding="5dp"

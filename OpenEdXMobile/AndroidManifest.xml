@@ -585,6 +585,7 @@
 
 
 
+
         <service android:name="org.humana.mobile.services.DownloadSpeedService" />
 
          <!--NotificationResponse through Firebase Cloud Messaging (FCM) -->

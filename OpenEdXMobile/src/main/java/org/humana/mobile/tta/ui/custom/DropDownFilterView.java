@@ -315,7 +315,7 @@ public class DropDownFilterView extends FrameLayout
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             final View view;
             TextView textView = createTextView(parent, 12, 6, 12, 6, false);
-
+            textView.setSingleLine(false);
             if (convertView == null) {
                 view = textView;//LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
             } else {
@@ -390,6 +390,7 @@ public class DropDownFilterView extends FrameLayout
             FilterItem item = getItem(position);
             textView = (TextView) view;
             textView.setText(item.name);
+            textView.setSingleLine(false);
 
             if (item.isSelected){
                 textView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));

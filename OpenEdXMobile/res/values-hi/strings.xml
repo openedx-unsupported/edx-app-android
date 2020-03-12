@@ -146,4 +146,5 @@
     <string name="single_program_text">Single program and section exists for this user</string>
     <string name="select_period">Please select period.</string>
     <string name="not_enrolled">You\'re not enrolled in the program</string>
+    <string name="internal_storage">Internal Storage</string>
 </resources>

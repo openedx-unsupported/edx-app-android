@@ -68,7 +68,7 @@ public class CropImageActivity extends BaseAppActivity {
                             setResult(Activity.RESULT_OK, new Intent()
                                     .putExtra(EXTRA_CROP_RECT, imageView.getCropRect())
                                     .putExtra(EXTRA_IMAGE_URI, imageUri)
-                                    .putExtra(EXTRA_FROM_CAMERA, getIntent().getBooleanExtra(EXTRA_FROM_CAMERA, false))
+                                    .putExtra(EXTRA_FROM_CAMERA, getIntent().getBooleanExtra(EXTRA_FROM_CAMERA, true))
                             );
                             finish();
                         }

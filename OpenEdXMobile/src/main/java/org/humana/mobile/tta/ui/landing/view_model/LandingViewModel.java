@@ -111,16 +111,6 @@ public class LandingViewModel extends BaseViewModel {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        onEventMainThread(new NetworkConnectivityChangeEvent());
-        if (mDataManager.getLoginPrefs().getNotificationSeen() != null) {
-            if (mDataManager.getLoginPrefs().getNotificationSeen().equals(Constants.NOTIFICATION_RECIEVED)) {
-                mDataManager.getLoginPrefs().setNotificationSeen(Constants.NOTIFICATION_NOT_SEEN);
-            }
-        }
-    }
 
     public void showLibrary() {
         mActivity.showLoading();
