@@ -418,7 +418,12 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     private void setModulatedAlpha() {
-        paint.setAlpha(((color >> 24) * iconState.alpha) / 255);
+        /* color >>> 24 Returns the alpha component of a color int
+         * For example we have a color #8800ff00, its integer value will be -2013200640
+         * -2013200640 >>> 24 will give us 136 which is the decimal value of hex 88
+         * Ref: https://developer.android.com/reference/android/graphics/Color#alpha(int)
+         */
+        paint.setAlpha(((color >>> 24) * iconState.alpha) / 255);
     }
 
     @Override
@@ -431,7 +436,7 @@ public final class IconDrawable extends Drawable implements Animatable {
     @Override
     @CheckResult
     public int getOpacity() {
-        int baseAlpha = color >> 24;
+        int baseAlpha = color >>> 24;
         if (baseAlpha == 255 && iconState.alpha == 255) return PixelFormat.OPAQUE;
         if (baseAlpha == 0 || iconState.alpha == 0) return PixelFormat.TRANSPARENT;
         return PixelFormat.OPAQUE;
