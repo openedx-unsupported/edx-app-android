@@ -4,7 +4,7 @@
   <string name="error_unknown">שגיאה. נא לנסות שוב.</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid">לא ניתן להעלות את תוכן הקורס. נסו שוב מאוחר יותר.</string>
+  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">לא ניתן להעלות את תוכן הקורס. נסו שוב מאוחר יותר.</string>
   <!--Title of alert shown when course enrollment request fails-->
   <string name="enrollment_error_title" tools:ignore="MissingTranslation">שגיאה בהרשמה</string>
   <!--Error message shown in alert when course enrollment request fails-->
