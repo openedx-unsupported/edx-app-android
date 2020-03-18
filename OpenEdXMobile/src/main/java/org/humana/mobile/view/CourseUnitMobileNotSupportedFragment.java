@@ -1,6 +1,7 @@
 package org.humana.mobile.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,14 @@ import org.humana.mobile.R;
 import org.humana.mobile.model.course.BlockType;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.services.ViewPagerDownloadManager;
+import org.humana.mobile.tta.Constants;
+import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.util.BrowserUtil;
 import org.humana.mobile.view.custom.AuthenticatedWebView;
 import org.humana.mobile.view.custom.URLInterceptorWebViewClient;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  *
@@ -26,6 +32,9 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     /**
      * Create a new instance of fragment
      */
+    private DataManager mdataManager;
+    private final String lms_xblock = "/mx_humana_lms/ora/";
+
     public static CourseUnitMobileNotSupportedFragment newInstance(CourseComponent unit) {
         CourseUnitMobileNotSupportedFragment f = new CourseUnitMobileNotSupportedFragment();
 
@@ -65,7 +74,7 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
                         , unit.getCourseId(), unit.isMultiDevice(), unit.getBlockId());
             }
         });
-
+        mdataManager = DataManager.getInstance(getActivity());
         webView.initWebView(getActivity(), true, false);
         webView.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override
@@ -98,7 +107,19 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
 
             }
         });
-        webView.loadUrl(false, unit.getBlockUrl());
+
+        String blockId = unit.getId();
+
+        String urlToloadStudent = environment.getConfig().getApiHostURL() + lms_xblock
+                + blockId + "/"+Constants.USERNAME;
+        if (!Constants.USERNAME.equals("")) {
+            webView.loadUrl(false, urlToloadStudent);
+            Log.d("LoadedURL", urlToloadStudent);
+        } else {
+            webView.loadUrl(false, unit.getBlockUrl());
+            Constants.USERNAME = "";
+        }
+
 
         return v;
     }
@@ -114,6 +135,22 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     @Override
     public void run() {
         ViewPagerDownloadManager.instance.done(this, true);
+    }
+
+    public static String encode(String url) {
+
+        try {
+
+            String encodeURL = URLEncoder.encode(url, "UTF-8");
+
+            return encodeURL;
+
+        } catch (UnsupportedEncodingException e) {
+
+            return "Issue while encoding" + e.getMessage();
+
+        }
+
     }
 
 }

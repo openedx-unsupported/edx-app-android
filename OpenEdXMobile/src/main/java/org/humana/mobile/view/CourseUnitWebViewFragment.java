@@ -156,7 +156,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                     authWebView.loadUrl(false, urlToload);
                 } else {
                     authWebView.loadUrl(false, urlToloadStudent);
-                    Constants.USERNAME = "";
                 }
             }
         }
