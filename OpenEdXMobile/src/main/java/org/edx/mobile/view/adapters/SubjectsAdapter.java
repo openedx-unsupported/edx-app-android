@@ -73,7 +73,7 @@ public class SubjectsAdapter extends ArrayAdapter<SubjectModel> implements Filte
             final ArrayList<SubjectModel> finalList = new ArrayList<>();
             String filterableString;
             for (SubjectModel item : allSubjects) {
-                filterableString = item.filter.toLowerCase();
+                filterableString = item.name.toLowerCase();
                 if (filterableString.startsWith(filterString)) {
                     finalList.add(item);
                 }
