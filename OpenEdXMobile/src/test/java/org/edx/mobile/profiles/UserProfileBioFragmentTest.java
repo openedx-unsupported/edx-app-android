@@ -1,8 +1,7 @@
 package org.edx.mobile.profiles;
 
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 
-import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.databinding.FragmentUserProfileBioBinding;
 import org.edx.mobile.view.PresenterFragmentTest;
 import org.junit.Before;

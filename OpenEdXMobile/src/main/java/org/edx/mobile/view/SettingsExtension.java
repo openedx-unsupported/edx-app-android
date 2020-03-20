@@ -1,6 +1,6 @@
 package org.edx.mobile.view;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 

@@ -1,8 +1,8 @@
 package org.edx.mobile.event;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.internal.bind.util.ISO8601Utils;
 
@@ -731,6 +731,7 @@ public class NewVersionAvailableEventTest extends BaseTestCase {
             responseBuilder.request(request);
             responseBuilder.protocol(Protocol.HTTP_1_1);
             responseBuilder.code(isUnsupported ? UPGRADE_REQUIRED : ACCEPTED);
+            responseBuilder.message("");
             if (newVersion != null) {
                 responseBuilder.header(HEADER_APP_LATEST_VERSION, newVersion.toString());
             }

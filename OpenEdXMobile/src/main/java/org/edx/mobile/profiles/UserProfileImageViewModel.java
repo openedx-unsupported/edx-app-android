@@ -1,7 +1,7 @@
 package org.edx.mobile.profiles;
 
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class UserProfileImageViewModel {
     @Nullable

@@ -3,7 +3,7 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DbStructure;

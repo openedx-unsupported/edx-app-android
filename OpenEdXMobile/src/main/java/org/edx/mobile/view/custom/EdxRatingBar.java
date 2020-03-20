@@ -3,12 +3,11 @@ package org.edx.mobile.view.custom;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatRatingBar;
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.AppCompatRatingBar;
 import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityEvent;
-import android.widget.RatingBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.ResourceUtil;

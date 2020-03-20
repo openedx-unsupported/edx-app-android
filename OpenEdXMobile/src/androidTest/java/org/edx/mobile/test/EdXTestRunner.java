@@ -3,7 +3,7 @@ package org.edx.mobile.test;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.test.runner.AndroidJUnitRunner;
+import androidx.test.runner.AndroidJUnitRunner;
 
 import com.facebook.testing.screenshot.ScreenshotRunner;
 

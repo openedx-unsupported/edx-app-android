@@ -1,20 +1,11 @@
 package org.edx.mobile.view;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +17,17 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
@@ -474,6 +476,15 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                                 courseData.getCourse().getId(), rowItem.component.getId());
                     }
 
+                    /*
+                    The android docs have NOT been updated yet, but if you jump into the source code
+                    you'll notice that the parameter to the method setDuration(int duration) can
+                    either be one of LENGTH_SHORT, LENGTH_LONG, LENGTH_INDEFINITE or a custom
+                    duration in milliseconds.
+                    https://stackoverflow.com/a/30552666
+                    https://github.com/material-components/material-components-android/commit/2cb77c9331cc3c6a5034aace0238b96508acf47d
+                     */
+                    @SuppressLint("WrongConstant")
                     final Snackbar snackbar = Snackbar.make(listView,
                             getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
                             SNACKBAR_SHOWTIME_MS);

@@ -1,7 +1,8 @@
 package org.edx.mobile.profiles;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
@@ -124,7 +125,7 @@ public class UserProfileInteractorTest extends BaseTest {
                 new UserProfileBioModel(
                         UserProfileBioModel.ContentType.EMPTY,
                         null)
-                )));
+        )));
     }
 
     @Test
@@ -140,8 +141,8 @@ public class UserProfileInteractorTest extends BaseTest {
                 new UserProfileBioModel(
                         UserProfileBioModel.ContentType.INCOMPLETE,
                         null
-                        )
-                )));
+                )
+        )));
     }
 
     @Test
@@ -268,7 +269,7 @@ public class UserProfileInteractorTest extends BaseTest {
                 null,
                 new UserProfileBioModel(
                         UserProfileBioModel.ContentType.NO_ABOUT_ME,
-                null)
+                        null)
         )));
         when(account.getBio()).thenReturn(ProfileValues.ABOUT_ME);
         eventBus.post(new AccountDataLoadedEvent(account));

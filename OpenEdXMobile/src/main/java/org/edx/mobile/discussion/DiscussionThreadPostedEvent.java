@@ -1,6 +1,6 @@
 package org.edx.mobile.discussion;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class DiscussionThreadPostedEvent {
     @NonNull

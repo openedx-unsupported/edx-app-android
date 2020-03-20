@@ -9,8 +9,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
 import org.edx.mobile.third_party.subscaleview.SubsamplingScaleImageView;

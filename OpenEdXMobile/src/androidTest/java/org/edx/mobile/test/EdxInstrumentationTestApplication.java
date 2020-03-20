@@ -1,6 +1,6 @@
 package org.edx.mobile.test;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.view.Presenter;

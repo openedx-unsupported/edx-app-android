@@ -1,7 +1,7 @@
 package com.joanzapata.iconify;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
 
 /**
  * Icon represents one icon in an icon font.

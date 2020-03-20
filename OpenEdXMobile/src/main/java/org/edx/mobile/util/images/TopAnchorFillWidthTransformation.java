@@ -1,13 +1,16 @@
 package org.edx.mobile.util.images;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+
+import java.security.MessageDigest;
 
 /**
  * Transformation for anchoring the image to the top of the container, and
@@ -16,25 +19,19 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
  * layer.
  */
 public class TopAnchorFillWidthTransformation extends BitmapTransformation {
+    private static final String ID = "org.edx.mobile.util.images.CenterCrop";
+    private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
+
     private final Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
 
-    public TopAnchorFillWidthTransformation(Context context) {
-        super(context);
-    }
-
     @Override
-    public String getId() {
-        return "TOP_ANCHOR_FILL_WIDTH";
-    }
-
-    @Override
-    protected Bitmap transform(BitmapPool pool, Bitmap toTransform,
+    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform,
                                int outWidth, int outHeight) {
         final int width = toTransform.getWidth();
         final float widthRatio = outWidth / (float) width;
 
-        /**
-         * Implementation Details:
+        /*
+         Implementation Details:
          Following if-condition is an optimization to just match the aspect ratio of the View where
          the Bitmap has a smaller width, and not artificially scale up the Bitmap (as ImageView
          will automatically scale it up to match it's coordinates unless explicitly set not to do
@@ -70,5 +67,10 @@ public class TopAnchorFillWidthTransformation extends BitmapTransformation {
         }
         canvas.drawBitmap(toTransform, 0, 0, paint);
         return newBitmap;
+    }
+
+    @Override
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+        messageDigest.update(ID_BYTES);
     }
 }

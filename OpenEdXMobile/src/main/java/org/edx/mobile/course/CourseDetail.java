@@ -2,7 +2,7 @@ package org.edx.mobile.course;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.model.api.StartType;
 import org.edx.mobile.util.UrlUtil;

@@ -1,10 +1,10 @@
 package org.edx.mobile.view
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import kotlinx.android.synthetic.main.fragment_payments_info.*
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment

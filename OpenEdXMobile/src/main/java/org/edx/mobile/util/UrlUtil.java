@@ -1,7 +1,7 @@
 package org.edx.mobile.util;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.links.WebViewLink;

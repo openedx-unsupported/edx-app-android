@@ -1,7 +1,7 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
+import androidx.core.view.ViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;

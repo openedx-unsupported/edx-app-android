@@ -4,6 +4,7 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://maven.google.com' }
+        maven { url 'https://jitpack.io' }
     }
     project.apply from: "${rootDir}/constants.gradle"
 }
@@ -17,7 +18,7 @@ buildscript {
         mavenCentral()  //  This is the Maven Central repo
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:${GRADLE_PLUGIN_VERSION}"
+        classpath "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
         classpath 'com.google.gms:google-services:4.2.0'
         // Add the dependency for the Performance Monitoring plugin
         classpath 'com.google.firebase:perf-plugin:1.2.1'  // Performance Monitoring plugin

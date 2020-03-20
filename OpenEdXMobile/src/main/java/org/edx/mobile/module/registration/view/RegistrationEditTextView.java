@@ -1,9 +1,9 @@
 package org.edx.mobile.module.registration.view;
 
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatEditText;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.view.ViewCompat;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;

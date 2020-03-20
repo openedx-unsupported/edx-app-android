@@ -1,6 +1,6 @@
 package org.edx.mobile.model.course;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.edx.mobile.R;
