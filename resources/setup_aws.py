@@ -47,9 +47,9 @@ def setup_project(project_name):
         else:
             print(
                 '{} project is not available, creating new one'.format(
-                        project_name
-                        )
-                        )
+                    project_name
+                )
+            )
             project_arn = create_project(project_name)
 
         return project_arn
@@ -78,7 +78,6 @@ def create_project(project_name):
         return new_project['project']['arn']
     else:
         print('Problem creating {} project'.format(project_name))
-        sys.exit()
 
 
 def setup_device_pool(project_arn, device_pool_name):
@@ -131,7 +130,7 @@ def create_device_pool(pool_name, project_arn):
         projectArn=project_arn,
         name=pool_name,
         description='it is edX device pool',
-        maxDevices=10,
+        maxDevices=1,
         rules=[
             {
                 "attribute": "PLATFORM",
@@ -167,7 +166,6 @@ def create_device_pool(pool_name, project_arn):
         return new_pool_arn
     else:
         print('Problem creating {} device pool'.format(project_name))
-        sys.exit()
 
 
 def get_device_info(target_project_arn):
@@ -222,9 +220,20 @@ def get_device_info(target_project_arn):
             device_availability = device_info[0]['availability']
 
             print('Device Name - {} with Manufacture {}, model {}, modelId {} & type {}'.format(
-                device_name, device_manufacture, device_model, device_model_id, device_type))
+                device_name,
+                device_manufacture,
+                device_model,
+                device_model_id,
+                device_type
+            )
+            )
             print('Device Platform {} with OS {}, visibility {} & availability - {} '.format(
-                device_platform, device_os, device_visibility, device_availability))
+                device_platform,
+                device_os,
+                device_visibility,
+                device_availability
+            )
+            )
 
             if device_availability == TARGET_AVAILABILITY:
                 print('AWS setup is complete')
@@ -235,8 +244,6 @@ def get_device_info(target_project_arn):
 
     except IndexError:
         print('Problem finding device from pool {}'.format(device_info))
-        # sys.exit()
-
 
 if __name__ == '__main__':
     setup_aws_data()
