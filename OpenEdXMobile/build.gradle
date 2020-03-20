@@ -113,12 +113,12 @@ dependencies {
     // with module updates.
     implementation project (':android-iconify-fontawesome')
 
-    implementation "androidx.appcompat:appcompat:1.0.0"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.appcompat:appcompat:$androidXVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidXVersion"
+    implementation "androidx.cardview:cardview:$androidXVersion"
     implementation "com.google.android.material:material:1.0.0"
     // For the optional Nullable annotation
-    implementation "androidx.annotation:annotation:1.0.0"
+    implementation "androidx.annotation:annotation:$androidXVersion"
 
     // NOTE: Always update the version of google-services and firebase libraries using the ones
     // provided in this link: https://developers.google.com/android/guides/releases
@@ -145,7 +145,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.9.2'
 
     // Google cast sdk
-    implementation "androidx.mediarouter:mediarouter:1.0.0"
+    implementation "androidx.mediarouter:mediarouter:$androidXVersion"
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
     implementation 'com.facebook.android:facebook-login:5.9.0'
