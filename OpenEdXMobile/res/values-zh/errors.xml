@@ -4,7 +4,7 @@
   <string name="error_unknown">未知错误。请稍后重试。</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid">无法加载课程内容，请稍后重试。</string>
+  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">无法加载课程内容，请稍后重试。</string>
   <!--Title of alert shown when course enrollment request fails-->
   <string name="enrollment_error_title" tools:ignore="MissingTranslation">选课出错</string>
   <!--Error message shown in alert when course enrollment request fails-->

@@ -20,7 +20,7 @@
               "type" : "select",
               "options" : {
                 "range_min" : 1896,
-                "range_max" : 2019,
+                "range_max" : 2020,
                 "allows_none" : true,
                 "none_label" : "No birth year"
               },

@@ -4,12 +4,13 @@
   <string name="error_unknown">Erro desconhecido. Tente novamente mais tarde.</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid">Não é possível carregar o conteúdo do curso. Tente novamente mais tarde.</string>
+  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Não é possível carregar o conteúdo do curso. Tente novamente mais tarde.</string>
   <!--Title of alert shown when course enrollment request fails-->
   <string name="enrollment_error_title" tools:ignore="MissingTranslation">Erro na matrícula</string>
   <!--Error message shown in alert when course enrollment request fails-->
   <string name="enrollment_error_message" tools:ignore="MissingTranslation">Não foi possível matricular você neste curso neste momento usando a aplicação móvel {platform_name}. Por favor tente novamente pelo navegador web.</string>
   <!--Error message shown when a course section is not available on mobile-->
+  <string name="not_available_on_mobile" tools:ignore="MissingTranslation">Não disponível para dispositivos móveis</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">Você não está conectado à Internet.</string>
@@ -52,6 +53,8 @@
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
   <string name="file_size_exceeded">O tamanho do arquivo a ser baixado excede o espaço de armazenagem restante no dispositivo.</string>
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
+  <string name="download_exceed_message" tools:ignore="MissingTranslation">Os vídeos que você selecionou são maiores que 1 GB.
+        Você deseja baixá-los?</string>
   <!--Message shown when user attempts to download a video over cellular data,
     but has chosen to only allow video downloads over wifi-->
   <string name="wifi_off_message">Suas configurações atuais permitem apenas downloads via Wi-Fi.

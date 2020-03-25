@@ -11,7 +11,7 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">Şimdi kayıt yaptır</string>
   <!--Invitation Only button text-->
-  <string name="invitation_only_button_text">Davet gerekiyor</string>
+  <string name="invitation_only_button_text" tools:ignore="MissingTranslation">Davet gerekiyor</string>
   <!--Effort field name-->
   <string name="effort_field_name">Çaba:</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -32,6 +32,13 @@
   <string name="view_all_subjects" tools:ignore="MissingTranslation">Tüm Konulara Göz At</string>
   <!--Label for searching subjects-->
   <string name="search_subjects" tools:ignore="MissingTranslation">Konu Ara</string>
+  <!--Google Cast-->
+  <!--Description of a button that will cast/un-cast the app to a remote device-->
+  <string name="media_route_menu_title" tools:ignore="MissingTranslation">Oynat…</string>
+  <!--Google cast Introduction title-->
+  <string name="introducing_cast_text" tools:ignore="MissingTranslation">Cast\'i Sunuyoruz</string>
+  <!--Text to describe that video is casting on the remote device-->
+  <string name="remote_device_casting_message" tools:ignore="MissingTranslation">Video uzaktaki aygıta yayınlanıyor</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Dersinizi paylaşın</string>
@@ -87,9 +94,9 @@
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} Son Kullanıcı Lisans Anlaşması</string>
   <!--Label for Terms of Service and Honor Code-->
-  <string name="tos_and_honor_code">{platform_name} Hizmet Şartları ve Etik Şartlar</string>
+  <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name} Hizmet Şartları ve Etik Şartlar</string>
   <!--Label for Privacy Policy-->
-  <string name="privacy_policy">Gizlilik Politikası</string>
+  <string name="privacy_policy" tools:ignore="MissingTranslation">Gizlilik Politikası</string>
   <string name="login_title">Giriş</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Kapat</string>
@@ -97,17 +104,17 @@
   <string name="dropdown_list_prefix">Açılır liste.</string>
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads">Şu anki indirmeleri görüntüle</string>
+  <string name="label_current_downloads" tools:ignore="MissingTranslation">Şu anki indirmeleri görüntüle</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Profilinizi açın</string>
   <!--Title of user's course list screen-->
-  <string name="label_my_courses">Derslerim</string>
+  <string name="label_my_courses" tools:ignore="MissingTranslation">Derslerim</string>
   <!--Title of user's program list screen-->
   <string name="label_my_programs" tools:ignore="MissingTranslation">Programlar</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Dersleri Bul</string>
   <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover">Keşfet</string>
+  <string name="label_discover" tools:ignore="MissingTranslation">Keşfet</string>
   <!--Title of Degrees tab on Discovery screen-->
   <string name="label_degrees" tools:ignore="MissingTranslation">Diplomalar</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
@@ -125,9 +132,9 @@
   <!--Settings screen version-->
   <string name="label_version">Uygulama sürümü</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings">Ayarlar</string>
+  <string name="label_settings" tools:ignore="MissingTranslation">Ayarlar</string>
   <!--Title of Account screen-->
-  <string name="title_account">Hesap</string>
+  <string name="title_account" tools:ignore="MissingTranslation">Hesap</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Parolayı Sıfırla</string>
@@ -157,7 +164,7 @@
   <string name="end_user_title" tools:ignore="MissingTranslation">Son Kullanıcı Lisans Sözleşmesi</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
-  <string name="terms_of_service_title">Hizmet Şartları</string>
+  <string name="terms_of_service_title" tools:ignore="MissingTranslation">Hizmet Şartları</string>
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">Ders</string>
@@ -165,9 +172,9 @@
   <!--NOTE: TODO - not final one-->
   <string name="courseware_subtitle">Videolara ve ödevlere eriş</string>
   <!--Row title of videos on dashboard screen-->
-  <string name="videos_title">Videolar</string>
+  <string name="videos_title" tools:ignore="MissingTranslation">Videolar</string>
   <!--Row subtitle of videos on dashboard screen-->
-  <string name="videos_subtitle">Ders videolarını izle</string>
+  <string name="videos_subtitle" tools:ignore="MissingTranslation">Ders videolarını izle</string>
   <!--Row of Discussion on dashboard screen-->
   <string name="discussion_title">Tartışma</string>
   <!--Row of Discussion on dashboard screen-->
@@ -181,24 +188,24 @@
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">Duyurular</string>
   <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title">Önemli Tarihler</string>
+  <string name="course_dates_title" tools:ignore="MissingTranslation">Önemli Tarihler</string>
   <!--Title text for the additional resources section on the tabular course dashboard-->
-  <string name="resources_title">Kaynaklar</string>
+  <string name="resources_title" tools:ignore="MissingTranslation">Kaynaklar</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">En güncel haberlerle takipte kalın</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
-  <string name="course_dates_subtitle">Teslim tarihlerini takip edin ve güncel kalın</string>
+  <string name="course_dates_subtitle" tools:ignore="MissingTranslation">Teslim tarihlerini takip edin ve güncel kalın</string>
   <!--Accessible content description of course name label field-->
   <string name="course_name">Ders Adı</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Yeni Ders İçeriği</string>
   <!--Label for date when course starts-->
-  <string name="label_starting">Başlangıç {date}</string>
+  <string name="label_starting" tools:ignore="MissingTranslation">Başlangıç {date}</string>
   <!--Label for course that has ended-->
-  <string name="label_ended">Bitti {date}</string>
+  <string name="label_ended" tools:ignore="MissingTranslation">Bitti {date}</string>
   <!--Label for date when course is ending-->
-  <string name="label_ending">Bitiyor {date}</string>
+  <string name="label_ending" tools:ignore="MissingTranslation">Bitiyor {date}</string>
   <!--Label for date when course is expiring in a specific time frame like in 2 days-->
   <string name="label_expires" tools:ignore="MissingTranslation">Derse erişim {date} tarihinde sona eriyor</string>
   <!--Label for date when course is expiring on a specific date like on December 5-->
@@ -217,7 +224,7 @@
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">Şu anda ders içeriği mevcut değil.</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->
-  <string name="no_videos_text">Bu ders herhangi bir video içermiyor.</string>
+  <string name="no_videos_text" tools:ignore="MissingTranslation">Bu ders herhangi bir video içermiyor.</string>
   <!--Label shown when user is enrolled in no courses-->
   <string name="no_courses_to_display">Henüz herhangi bir derse kayıt yaptırmamış gözüküyorsunuz.</string>
   <!--Label shown when no announcements are available for a course-->
@@ -225,13 +232,27 @@
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">Bu ders için herhangi bir dinleyici notu yok.</string>
   <!--Label shown when no important dates are available for a course-->
-  <string name="no_course_dates_to_display">Ders tarihleri şu an mevcut değil.</string>
+  <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">Ders tarihleri şu an mevcut değil.</string>
   <!--Title of the screen where user can delete videos-->
-  <string name="delete_videos_title">Videoları Sil</string>
+  <string name="delete_videos_title" tools:ignore="MissingTranslation">Videoları Sil</string>
   <!--Label for a course item's due date for same day-->
-  <string name="due_date_today">Bugün {due_date} tarihine dek</string>
+  <string name="due_date_today" tools:ignore="MissingTranslation">Bugün {due_date} tarihine dek</string>
   <!--Label for a course item's due date-->
-  <string name="due_date_past_future">{due_date} tarihine dek</string>
+  <string name="due_date_past_future" tools:ignore="MissingTranslation">{due_date} tarihine dek</string>
+  <!--Upgrade banner's description which appears on course outline screen.-->
+  <string name="upgrade_banner_description" tools:ignore="MissingTranslation">Bir sertifika için giderken değerlendirmeleri tamamlayın!</string>
+  <!--Title upgrade to verified today course outline footer-->
+  <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">Bugün Onaylı\'ya Yükseltin</string>
+  <!--Title of place order for course upgrade screen-->
+  <string name="place_order_title" tools:ignore="MissingTranslation">Sipariş Ver</string>
+  <!--Mobile Payments-->
+  <string name="payments_info_header" tools:ignore="MissingTranslation">Onaylanmış Bir Sertifika Edinin!</string>
+  <string name="payments_info_details" tools:ignore="MissingTranslation">Doğrulanmış bir sertifika ile yeni bilgi ve becerilerinizi vurgulayın. \n\nİş fırsatlarınızı geliştirmek ve kariyerinizi geliştirmek için bu değerli sertifikayı kullanın veya okul başvurularınızda sertifikanızı vurgulayın.</string>
+  <string name="audit_access_expires_on" tools:ignore="MissingTranslation">Gözetmen erişimi {date} tarihinde sona eriyor</string>
+  <string name="audit_access_expires_details" tools:ignore="MissingTranslation">{date} tarihinde ilerlemeniz dahil, tüm ders erişiminizi kaybedeceksiniz.</string>
+  <string name="upgrade_deadline_details" tools:ignore="MissingTranslation">{date} tarihine dek üyeliğinizi yükselterek bu eğitime yayında kaldığı sürece sınırsız erişime kavuşun.</string>
+  <string name="locked_content_header" tools:ignore="MissingTranslation">Kimliği doğrulanmış öğrencilere açık!</string>
+  <string name="locked_content_details" tools:ignore="MissingTranslation">Notlandırılan ödevler sadece Doğrulanmış Kayıtlanma Öğrencileri\'ne açıktır. Özelliği açmak için yükseltin.</string>
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">Tartışma konuları</string>
@@ -365,10 +386,18 @@
   <string name="assessment_soon">Yakında</string>
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">Tam ekran izlemek için cihazınızı döndürünüz.</string>
+  <!--Label showing only when youtube in-app player produce error-->
+  <string name="assessment_unable_to_play_video" tools:ignore="MissingTranslation">Oynatıcı Hatası</string>
+  <!--Error message showing only when youtube in-app player produce error-->
+  <string name="assessment_unable_to_play_video_message" tools:ignore="MissingTranslation">Bu video oynatılamıyor. YouTube uygulamasında görüntüleyebilir veya daha sonra tekrar deneyebilirsiniz.</string>
   <!--Label showing only youtube is available-->
   <string name="assessment_only_on_youtube">Bu video sadece Youtube\'da izlenebilir.</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">Videoyu Youtube\'da izle</string>
+  <!--Label showing that you need to update youtube app in order to watch the video-->
+  <string name="assessment_needed_updating_youtube" tools:ignore="MissingTranslation">Bu videoyu izlemek için YouTube uygulamasını güncellemelisiniz.</string>
+  <!--Label for button to update youtube app-->
+  <string name="assessment_update_youtube" tools:ignore="MissingTranslation">YouTube\'u Güncelle</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">İndirmeler</string>
@@ -401,30 +430,30 @@
   <string name="no_connectivity">Bağlantı Hatası</string>
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
-  <string name="bulk_download_switch">Yığın video indirme düğmesi.</string>
+  <string name="bulk_download_switch" tools:ignore="MissingTranslation">Yığın video indirme düğmesi.</string>
   <!--Title for bulk videos download view when in new or partial videos' download state-->
-  <string name="download_to_device">Cihaza İndir</string>
+  <string name="download_to_device" tools:ignore="MissingTranslation">Cihaza İndir</string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="one">{total_videos_count} Video, toplam {total_videos_size}</item>
     <item quantity="other">{total_videos_count} Video, toplam {total_videos_size}</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
-  <string name="download_starting">İndirilme Başlıyor...</string>
+  <string name="download_starting" tools:ignore="MissingTranslation">İndirilme Başlıyor...</string>
   <!--Title for bulk videos download view when in downloading state-->
-  <string name="downloading_videos">Videolar İndiriliyor...</string>
+  <string name="downloading_videos" tools:ignore="MissingTranslation">Videolar İndiriliyor...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
-  <string name="download_remaining">Kalan {remaining_videos_count} video, toplam {remaining_videos_size}</string>
+  <string name="download_remaining" tools:ignore="MissingTranslation">Kalan {remaining_videos_count} video, toplam {remaining_videos_size}</string>
   <!--Title for bulk videos download view when in downloaded state-->
-  <string name="download_complete">Tüm Videolar İndirildi</string>
+  <string name="download_complete" tools:ignore="MissingTranslation">Tüm Videolar İndirildi</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
-  <string name="switch_off_no_downloading">Düğmeyi açmak, bu dersin tüm videolarını indirir.</string>
+  <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">Düğmeyi açmak, bu dersin tüm videolarını indirir.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
-  <string name="switch_on_all_downloading">Düğmeyi kapatmak, tüm video indirmelerini iptal eder ve bu dersin indirilmiş tüm videolarını siler.</string>
+  <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">Düğmeyi kapatmak, tüm video indirmelerini iptal eder ve bu dersin indirilmiş tüm videolarını siler.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
-  <string name="switch_on_all_downloaded">Düğmeyi kapatmak, bu dersin indirilmiş tüm videolarını siler.</string>
+  <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">Düğmeyi kapatmak, bu dersin indirilmiş tüm videolarını siler.</string>
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
-  <string name="view_downloads">Mevcut indirmeleri görüntülemek için çift tıklayın.</string>
+  <string name="view_downloads" tools:ignore="MissingTranslation">Mevcut indirmeleri görüntülemek için çift tıklayın.</string>
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">İzin ver</string>
@@ -472,7 +501,7 @@
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Hiçbir e-posta uygulaması yüklü değil</string>
   <!--Search for a course prompt-->
-  <string name="search_for_courses">Dersleri ara</string>
+  <string name="search_for_courses" tools:ignore="MissingTranslation">Dersleri ara</string>
   <!--Search for a program prompt-->
   <string name="search_for_programs" tools:ignore="MissingTranslation">Programları ara</string>
   <!--Search for a degree prompt-->
@@ -487,13 +516,13 @@
   <string name="or_register_with_email">ya da e-posta ile kayıt ol</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
-  <string name="launch_register">Hesabınızı Oluşturun</string>
+  <string name="launch_register" tools:ignore="MissingTranslation">Hesabınızı Oluşturun</string>
   <!--Button leading user to log in screen-->
-  <string name="launch_login">Giriş</string>
+  <string name="launch_login" tools:ignore="MissingTranslation">Giriş</string>
   <!--Introduction text on the launch screen-->
   <string name="launch_text" tools:ignore="MissingTranslation">Dünya\'nın en iyi üniversitelerinden dersler cebinizde.</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses">Dersleri Ara</string>
+  <string name="launch_search_courses" tools:ignore="MissingTranslation">Dersleri Ara</string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Seçimlik alanları göster</string>
