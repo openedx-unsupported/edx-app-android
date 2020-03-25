@@ -13,17 +13,22 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.ankit.mxrangepicker.date.DatePickerDialog;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
+import org.humana.mobile.base.MainApplication;
+import org.humana.mobile.base.RuntimeApplication;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
 import org.humana.mobile.databinding.TRowScheduleBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
@@ -114,6 +119,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     String about_url;
     private List<Period> savedPeriods = new ArrayList<>();
 
+   private Tracker mTracker;
+   private RuntimeApplication application;
+
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -165,11 +173,19 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         }
 
 
-//        if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
-//            setToolTip();
-//        }
+        // Google Analytic start here
+        mTracker = MainApplication.instance().getDefaultTracker();
+        Log.i("Schedule", "Schedule screen tracked ");
+        mTracker.setScreenName("Schedule");
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("Share")
+                .build());
 
-//        getDownloadPeriodDesc(mDataManager.getLoginPrefs().getUsername());
+
+        // Google Analytic end here
+
+
 
         periodAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {

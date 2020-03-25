@@ -18,6 +18,8 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.state.StateSaver;
 import com.facebook.FacebookSdk;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.joanzapata.iconify.Iconify;
@@ -76,6 +78,9 @@ public abstract class MainApplication extends MultiDexApplication {
 
     @Inject
     protected AnalyticsRegistry analyticsRegistry;
+
+    public static GoogleAnalytics sAnalytics;
+    public static Tracker sTracker;
 
     @Override
     public void onCreate() {
@@ -189,6 +194,9 @@ public abstract class MainApplication extends MultiDexApplication {
                 StateSaver.restoreInstanceState(target, state);
             }
         });
+
+        sAnalytics = GoogleAnalytics.getInstance(this);
+
     }
 
     @Override
@@ -248,4 +256,18 @@ public abstract class MainApplication extends MultiDexApplication {
     public static IEdxEnvironment getEnvironment(@NonNull Context context) {
         return RoboGuice.getInjector(context.getApplicationContext()).getInstance(IEdxEnvironment.class);
     }
+
+    /**
+     * Gets the default {@link Tracker} for this {@link MainApplication}.
+     * @return tracker
+     */
+    synchronized public Tracker getDefaultTracker() {
+        // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+        if (sTracker == null) {
+            sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+        }
+
+        return sTracker;
+    }
+
 }
