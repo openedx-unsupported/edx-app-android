@@ -88,9 +88,11 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="msauth"
-                    android:host="org.edx.mobile"
-                    android:path="place_signature_hash" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/${microsoftSignature}"
+                    android:scheme="msauth" />
             </intent-filter>
         </activity>
 

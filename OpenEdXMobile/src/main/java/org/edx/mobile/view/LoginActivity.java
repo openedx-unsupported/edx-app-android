@@ -3,14 +3,15 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.databinding.DataBindingUtil;
 
 import com.google.inject.Inject;
 
@@ -145,12 +146,16 @@ public class LoginActivity
                                               boolean microsoftEnabled) {
                 if (!facebookEnabled && !googleEnabled && !microsoftEnabled) {
                     activityLoginBinding.panelLoginSocial.setVisibility(View.GONE);
-                } else if (!facebookEnabled) {
-                    activityLoginBinding.socialAuth.facebookButton.getRoot().setVisibility(View.GONE);
-                } else if (!googleEnabled) {
-                    activityLoginBinding.socialAuth.googleButton.getRoot().setVisibility(View.GONE);
-                } else if (!microsoftEnabled) {
-                    activityLoginBinding.socialAuth.microsoftButton.getRoot().setVisibility(View.GONE);
+                } else {
+                    if (!facebookEnabled) {
+                        activityLoginBinding.socialAuth.facebookButton.getRoot().setVisibility(View.GONE);
+                    }
+                    if (!googleEnabled) {
+                        activityLoginBinding.socialAuth.googleButton.getRoot().setVisibility(View.GONE);
+                    }
+                    if (!microsoftEnabled) {
+                        activityLoginBinding.socialAuth.microsoftButton.getRoot().setVisibility(View.GONE);
+                    }
                 }
             }
         };

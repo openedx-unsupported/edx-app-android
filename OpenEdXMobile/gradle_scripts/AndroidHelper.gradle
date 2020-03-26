@@ -99,6 +99,65 @@ class AndroidHelper {
         }
         return available
     }
+
+    static def saveMicrosoftAuthConfigs(project, microsoftConfig) {
+        def microsoftConfigsJsonPath = project.projectDir.toString() + "/res/raw/auth_config.json"
+        new FileWriter(microsoftConfigsJsonPath).withWriter {
+            getMicrosoftConfigurations(project, microsoftConfig).writeTo(it)
+        }
+    }
+
+    static def getMicrosoftConfigurations(project, microsoftConfig) {
+        if (isValidConfigurations(microsoftConfig)) {
+            def jsonBuilder = new JsonBuilder()
+            def clientId = microsoftConfig.get("CLIENT_ID")
+            def signatureHash = microsoftConfig.get("SIGNATURE_HASH")
+            def audienceType = microsoftConfig.get("AUDIENCE_TYPE")
+            def tenantId = microsoftConfig.get("TENANT_ID")
+            jsonBuilder {
+                "client_id" "$clientId"
+                "authorization_user_agent" "DEFAULT"
+                "redirect_uri" "msauth://" + project.APPLICATION_ID + "/" + URLEncoder.encode(signatureHash, "UTF-8")
+                authorities([{
+                                 "type" "AAD"
+                                 audience {
+                                     "type" "$audienceType"
+                                     "tenant_id" "$tenantId"
+                                 }
+                             }])
+            }
+            return jsonBuilder
+        }
+    }
+
+    static def isValidConfigurations(microsoftConfig) {
+        def available = true
+        def message = ""
+        if (!microsoftConfig.get("CLIENT_ID")) {
+            message += 'MICROSOFT:CLIENT_ID is missing or empty\n'
+            available = false
+        }
+
+        if (!microsoftConfig.get("SIGNATURE_HASH")) {
+            message += 'MICROSOFT:SIGNATURE_HASH is missing or empty\n'
+            available = false
+        }
+
+        if (!microsoftConfig.get("AUDIENCE_TYPE")) {
+            message += 'MICROSOFT:AUDIENCE_TYPE is missing or empty\n'
+            available = false
+        }
+
+        if (!microsoftConfig.get("TENANT_ID")) {
+            message += 'MICROSOFT:TENANT_ID is missing or empty\n'
+            available = false
+        }
+
+        if (!available) {
+            throw new GradleException(message)
+        }
+        return available
+    }
 }
 
 ext.AndroidHelper = AndroidHelper
