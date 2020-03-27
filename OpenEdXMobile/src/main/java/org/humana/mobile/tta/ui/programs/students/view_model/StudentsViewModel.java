@@ -24,6 +24,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -67,7 +68,7 @@ public class StudentsViewModel extends BaseViewModel {
     private static final int SKIP = 0;
 
     private boolean allLoaded;
-    private boolean changesMade;
+    public boolean changesMade;
     private int take, skip;
 
     public ObservableBoolean filtersVisible = new ObservableBoolean();
@@ -75,6 +76,7 @@ public class StudentsViewModel extends BaseViewModel {
     public ObservableBoolean isTabView = new ObservableBoolean();
 
     public ObservableBoolean isSeen = new ObservableBoolean();
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -92,6 +94,20 @@ public class StudentsViewModel extends BaseViewModel {
         users = new ArrayList<>();
         filters = new ArrayList<>();
         gridUsersAdapter.setItems(users);
+
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mActivity);
+        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
+        bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Student");
+        mFirebaseAnalytics.setCurrentScreen(mActivity,"Student","Fragment");
+        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
+
+//        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
         gridUsersAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()) {
                 case R.id.ll_current_status:

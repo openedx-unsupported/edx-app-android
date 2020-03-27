@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -84,7 +86,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     public ObservableField<String> searchText = new ObservableField<>("");
     private List<SelectedFilter> selectedFilter;
 
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -127,6 +129,15 @@ public class AddUnitsViewModel extends BaseViewModel {
         filtersAdapter = new FiltersAdapter(mActivity);
 
         unitsAdapter.setItems(units);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mActivity);
+        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
+        bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Add units");
+        mFirebaseAnalytics.setCurrentScreen(mActivity,"Add units","Fragment");
+        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         unitsAdapter.setItemClickListener((view, item) -> {
             switch (view.getId()){
                 case R.id.layout_checkbox:

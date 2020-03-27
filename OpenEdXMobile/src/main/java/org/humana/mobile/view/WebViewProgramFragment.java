@@ -1,11 +1,13 @@
 package org.humana.mobile.view;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -86,6 +88,11 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
 
             @Override
             public void onPageLoadProgressChanged(WebView webView, int progress) {
+
+            }
+
+            @Override
+            public void openFile(WebView webView, ValueCallback<Uri> uploadMsg) {
 
             }
         });

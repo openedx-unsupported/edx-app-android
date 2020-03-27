@@ -2,6 +2,7 @@ package org.humana.mobile.view;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -121,6 +123,11 @@ public class CertificateFragment extends BaseFragment {
             @Override
             public void onPageLoadProgressChanged(WebView view, int progress) {
                 if (progress > AppConstants.PAGE_LOAD_THRESHOLD) loadingIndicator.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void openFile(WebView webView, ValueCallback<Uri> uploadMsg) {
+
             }
         });
         return view;

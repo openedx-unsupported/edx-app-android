@@ -1,11 +1,13 @@
 package org.humana.mobile.view;
 
 import android.annotation.TargetApi;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -215,6 +217,11 @@ public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFrag
         @Override
         public void onPageLoadProgressChanged(WebView view, int progress) {
             onWebViewLoadProgressChanged(progress);
+        }
+
+        @Override
+        public void openFile(WebView webView, ValueCallback<Uri> uploadMsg) {
+
         }
     };
 }

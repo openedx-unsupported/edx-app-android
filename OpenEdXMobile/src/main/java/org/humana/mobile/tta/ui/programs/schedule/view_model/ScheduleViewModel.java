@@ -13,22 +13,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.ankit.mxrangepicker.date.DatePickerDialog;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
 
 import org.humana.mobile.R;
-import org.humana.mobile.base.MainApplication;
-import org.humana.mobile.base.RuntimeApplication;
 import org.humana.mobile.databinding.TRowFilterDropDownBinding;
 import org.humana.mobile.databinding.TRowScheduleBinding;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
@@ -47,7 +43,6 @@ import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
-import org.humana.mobile.tta.tutorials.MxTooltip;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
@@ -119,8 +114,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
     String about_url;
     private List<Period> savedPeriods = new ArrayList<>();
 
-   private Tracker mTracker;
-   private RuntimeApplication application;
+    //   private Tracker mTracker;
+//   private RuntimeApplication application;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -174,17 +170,27 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
 
         // Google Analytic start here
-        mTracker = MainApplication.instance().getDefaultTracker();
-        Log.i("Schedule", "Schedule screen tracked ");
-        mTracker.setScreenName("Schedule");
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
-                .setAction("Share")
-                .build());
+//        mTracker = MainApplication.instance().getDefaultTracker();
+//        Log.i("Schedule", "Schedule screen tracked ");
+//        mTracker.setScreenName("Schedule");
+//        mTracker.send(new HitBuilders.EventBuilder()
+//                .setCategory("Action")
+//                .setAction("Share")
+//                .set(Fields.customDimension(1), "premiumUser")
+//                .build());
 
-
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mActivity);
+        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
+        bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Schedule");
+        mFirebaseAnalytics.setCurrentScreen(mActivity,"Schedule","Fragment");
+        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
+//        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         // Google Analytic end here
-
 
 
         periodAdapter.setItemClickListener((view, item) -> {

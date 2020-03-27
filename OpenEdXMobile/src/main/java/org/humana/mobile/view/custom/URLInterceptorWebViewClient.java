@@ -2,17 +2,23 @@ package org.humana.mobile.view.custom;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.humana.mobile.base.MainApplication;
 import org.humana.mobile.logger.Logger;
@@ -23,7 +29,11 @@ import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.StandardCharsets;
 import org.humana.mobile.util.links.WebViewLink;
 
+import java.io.File;
+
 import roboguice.RoboGuice;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by rohan on 2/2/15.
@@ -60,6 +70,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean isAllLinksExternal = false;
 
+
     public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView) {
         this.activity = activity;
         config = RoboGuice.getInjector(MainApplication.instance()).getInstance(Config.class);
@@ -93,8 +104,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private void setupWebView(WebView webView) {
         webView.setWebViewClient(this);
+        webView.getSettings().setAllowFileAccess(true);
         //We need to hideLoading the loading progress if the Page starts rendering.
         webView.setWebChromeClient(new WebChromeClient() {
+
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {
                     loadingFinished = false;
@@ -103,8 +116,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                     pageStatusListener.onPageLoadProgressChanged(view, progress);
                 }
             }
+
         });
     }
+
+
+
+
 
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -293,5 +311,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param progress Progress of the page being loaded.
          */
         void onPageLoadProgressChanged(WebView webView, int progress);
+
+        void openFile(WebView webView,ValueCallback<Uri> uploadMsg);
     }
 }

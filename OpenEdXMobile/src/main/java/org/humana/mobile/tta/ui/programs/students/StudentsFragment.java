@@ -40,6 +40,7 @@ public class StudentsFragment extends TaBaseFragment {
         super.onPageShow();
         viewModel.isSeen.set(true);
         viewModel.isSeen.notifyChange();
+        viewModel.changesMade = true;
         viewModel.fetchData();
     }
 }

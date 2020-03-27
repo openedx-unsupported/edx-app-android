@@ -1,7 +1,11 @@
 package org.humana.mobile.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.webkit.ValueCallback;
+import android.widget.Toast;
 
 import com.evernote.android.state.State;
 import com.google.inject.Inject;
@@ -12,6 +16,8 @@ import org.humana.mobile.core.IEdxEnvironment;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.view.common.PageViewStateCallback;
 import org.humana.mobile.view.common.RunnableCourseComponent;
+
+import static android.app.Activity.RESULT_OK;
 
 public abstract class CourseUnitFragment extends BaseFragment implements PageViewStateCallback, RunnableCourseComponent {
     public interface HasComponent {
@@ -26,6 +32,12 @@ public abstract class CourseUnitFragment extends BaseFragment implements PageVie
 
     @Inject
     IEdxEnvironment environment;
+
+    public Uri imageUri;
+
+    private static final int FILECHOOSER_RESULTCODE   = 2888;
+    private ValueCallback<Uri> mUploadMessage;
+    private Uri mCapturedImageURI = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,4 +95,7 @@ public abstract class CourseUnitFragment extends BaseFragment implements PageVie
     public void setHasComponentCallback(HasComponent callback) {
         hasComponentCallback = callback;
     }
+
+
+
 }

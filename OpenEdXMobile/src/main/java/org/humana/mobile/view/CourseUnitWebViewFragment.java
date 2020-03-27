@@ -1,12 +1,14 @@
 package org.humana.mobile.view;
 
 import android.annotation.TargetApi;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -92,6 +94,11 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
             @Override
             public void onPageLoadProgressChanged(WebView view, int progress) {
+            }
+
+            @Override
+            public void openFile(WebView webView, ValueCallback<Uri> uploadMsg) {
+
             }
         });
 

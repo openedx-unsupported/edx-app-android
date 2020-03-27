@@ -2,7 +2,10 @@ package org.humana.mobile.view.custom;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,11 +18,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.Icon;
@@ -73,6 +78,12 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     private OnResponseCallback<String> htmlCallback;
     private boolean isInitiated = false;
 
+    private ValueCallback<Uri> mUploadMessage;
+    public ValueCallback<Uri[]> uploadMessage;
+    public static final int REQUEST_SELECT_FILE = 100;
+    private final static int FILECHOOSER_RESULTCODE = 1;
+    private FragmentActivity fragmentActivity;
+
     public AuthenticatedWebView(Context context) {
         super(context);
         init();
@@ -116,9 +127,74 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal,
                             boolean isManuallyReloadable) {
         isInitiated = true;
+        this.fragmentActivity = fragmentActivity;
         this.isManuallyReloadable = isManuallyReloadable;
         webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
+
+        webView.setWebChromeClient(new WebChromeClient(){
+            // openFileChooser for Android 3.0+
+            protected void openFileChooser(ValueCallback uploadMsg, String acceptType)
+            {
+                mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("video");
+                fragmentActivity.startActivityForResult(Intent.createChooser(i, "File Browser"), FILECHOOSER_RESULTCODE);
+            }
+
+            // For Lollipop 5.0+ Devices
+            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams)
+            {
+                if (uploadMessage != null) {
+                    uploadMessage.onReceiveValue(null);
+                    uploadMessage = null;
+                }
+
+                uploadMessage = filePathCallback;
+
+                Intent intent = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    intent = fileChooserParams.createIntent();
+                }
+                try
+                {
+                    fragmentActivity.startActivityForResult(intent, REQUEST_SELECT_FILE);
+                } catch (ActivityNotFoundException e)
+                {
+                    uploadMessage = null;
+                    return false;
+                }
+                return true;
+            }
+
+            //For Android 4.1 only
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture)
+            {
+                mUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("video");
+                fragmentActivity.startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
+            }
+
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg)
+            {
+                mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("video");
+
+
+                // video/mp4
+                //video/x-msvideo
+                //video/x-ms-wmv
+                fragmentActivity.startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
+            }
+        });
+
+
         webViewClient = new URLInterceptorWebViewClient(fragmentActivity, webView) {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
@@ -128,6 +204,8 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                 showErrorMessage(R.string.network_error_message, FontAwesomeIcons.fa_exclamation_circle);
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
+
+
 
             @Override
             @TargetApi(Build.VERSION_CODES.M)
@@ -400,5 +478,32 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
     public boolean isShowingError() {
         return fullScreenErrorNotification != null && fullScreenErrorNotification.isShowing();
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            if (requestCode == REQUEST_SELECT_FILE)
+            {
+                if (uploadMessage == null)
+                    return;
+                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
+                uploadMessage = null;
+            }
+        }
+        else if (requestCode == FILECHOOSER_RESULTCODE)
+        {
+            if (null == mUploadMessage)
+                return;
+            // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment
+            // Use RESULT_OK only if you're implementing WebView inside an Activity
+            Uri result = intent == null || resultCode != fragmentActivity.RESULT_OK ? null : intent.getData();
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
+        }
+        else
+            Toast.makeText(fragmentActivity.getApplicationContext(), "Failed to Upload IMAGE", Toast.LENGTH_LONG).show();
     }
 }

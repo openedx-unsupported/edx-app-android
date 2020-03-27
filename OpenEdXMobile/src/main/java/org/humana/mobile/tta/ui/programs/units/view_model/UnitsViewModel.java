@@ -6,6 +6,7 @@ import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ObservableLong;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lib.mxcalendar.models.Event;
 import com.lib.mxcalendar.view.IMxCalenderListener;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -102,6 +104,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     private String periodName;
     private long periodId;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     //endregion
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
@@ -132,6 +136,20 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         selectedFilter = new ArrayList<>();
         selectedFilter.addAll(mDataManager.getSelectedFilters());
         eventObservableDate.set(startDateTime);
+
+
+        //Firebase analytics
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mActivity);
+        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
+        bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Unit");
+        mFirebaseAnalytics.setCurrentScreen(mActivity,"Unit","Fragment");
+        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
+
+//        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 
         unitsAdapter = new UnitsAdapter(mActivity);
