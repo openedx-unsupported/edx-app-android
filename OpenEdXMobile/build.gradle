@@ -420,12 +420,6 @@ android {
         showAll true
         warning 'TypographyQuotes', 'InvalidPackage'
         error 'StopShip', 'ContentDescription'
-        /**
-         * This is a bug that is fixed in the up-coming Android Studio 2.4 release.
-         * Link to issue: https://issuetracker.google.com/issues/37630182
-         */
-        //TODO: Remove GradleCompatible after we upgrade to Android Studio 2.4
-        disable 'GradleCompatible'
     }
 
     productFlavors {
