@@ -147,4 +147,6 @@
     <string name="select_period">Please select period.</string>
     <string name="not_enrolled">You\'re not enrolled in the program</string>
     <string name="internal_storage">Internal Storage</string>
+    <string name="proposed_date">Proposed Date</string>
+    <string name="empty_unit">Empty Unit</string>
 </resources>
