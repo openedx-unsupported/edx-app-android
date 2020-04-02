@@ -1,5 +1,6 @@
-API_HOST_URL: 'http://10.0.2.2:8000' # localhost is 10.0.2.2 in Android
-ENVIRONMENT_DISPLAY_NAME: 'Localhost'
-PLATFORM_NAME: 'Your platform name here'
-PLATFORM_DESTINATION_NAME: 'example.com'
-FEEDBACK_EMAIL_ADDRESS: 'support@example.com'
+API_HOST_URL: 'https://smartedu.idealschools.sc.ke' # localhost is 10.0.2.2 in Android
+ENVIRONMENT_DISPLAY_NAME: 'Smart Env'
+PLATFORM_NAME: 'Smart Edoo'
+PLATFORM_DESTINATION_NAME: 'online.smartedoo.co.ke'
+FEEDBACK_EMAIL_ADDRESS: 'support@smartedoo.co.ke'
+OAUTH_CLIENT_ID: '939c5a20eaaac259a2e1'
