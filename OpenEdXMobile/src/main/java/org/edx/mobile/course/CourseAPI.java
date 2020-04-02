@@ -130,6 +130,21 @@ public class CourseAPI {
         return null;
     }
 
+    /**
+     * Checks if course is enrolled by the user or not.
+     *
+     * @param courseId Id of the course.
+     * @return true if Course is enrolled by the user, false other wise
+     */
+    public Boolean isCourseEnrolled(@NonNull final String courseId) {
+        try {
+            return getCourseById(courseId) != null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
     public static abstract class GetCourseByIdCallback extends
             ErrorHandlingCallback<List<EnrolledCoursesResponse>> {
         @NonNull

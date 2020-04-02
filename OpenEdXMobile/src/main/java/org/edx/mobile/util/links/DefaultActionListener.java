@@ -1,9 +1,11 @@
 package org.edx.mobile.util.links;
 
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
@@ -154,62 +156,74 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
 
         logger.debug("CourseId - " + courseId);
         logger.debug("Email option - " + emailOptIn);
-        courseService.enrollInACourse(new CourseService.EnrollBody(courseId, emailOptIn))
-                .enqueue(new CourseService.EnrollCallback(
-                        activity,
+        if (courseApi.isCourseEnrolled(courseId)) {
+            Toast.makeText(activity, activity.getString(R.string.you_are_already_enrolled), Toast.LENGTH_SHORT).show();
+            openEnrolledCourseDashboard(courseId);
+        } else {
+            courseService.enrollInACourse(new CourseService.EnrollBody(courseId, emailOptIn))
+                    .enqueue(new CourseService.EnrollCallback(
+                            activity,
+                            new TaskProgressCallback.ProgressViewController(progressWheel)) {
+                        @Override
+                        protected void onResponse(@NonNull final ResponseBody responseBody) {
+                            super.onResponse(responseBody);
+                            logger.debug("Enrollment successful: " + courseId);
+                            Toast.makeText(activity, activity.getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
+
+                            environment.getAnalyticsRegistry().trackEnrolmentSuccess(courseId, emailOptIn);
+                            openEnrolledCourseDashboard(courseId);
+                        }
+
+                        @Override
+                        protected void onFailure(@NonNull Throwable error) {
+                            logger.warn("Error during enroll api call\n" + error);
+                            isTaskInProgress = false;
+                            enrollCallback.onFailure(error);
+
+                            if (activity instanceof BaseFragmentActivity) {
+                                final BaseFragmentActivity baseFragmentActivity = (BaseFragmentActivity) activity;
+                                if (error instanceof HttpStatusException && ((HttpStatusException) error).getStatusCode() == HttpStatus.BAD_REQUEST) {
+                                    final HashMap<String, CharSequence> params = new HashMap<>();
+                                    params.put("platform_name", environment.getConfig().getPlatformName());
+                                    final CharSequence message = ResourceUtil.getFormattedString(activity.getResources(), R.string.enrollment_error_message, params);
+                                    baseFragmentActivity.showAlertDialog(activity.getString(R.string.enrollment_error_title), message.toString());
+                                } else {
+                                    showEnrollErrorMessage(baseFragmentActivity, courseId, emailOptIn);
+                                }
+                            }
+                        }
+                    });
+        }
+    }
+
+    /**
+     * Method to open enrolled course dashboard based on courseId
+     * @param courseId
+     */
+    private void openEnrolledCourseDashboard(@NonNull final String courseId) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
+                        activity, courseId,
                         new TaskProgressCallback.ProgressViewController(progressWheel)) {
                     @Override
-                    protected void onResponse(@NonNull final ResponseBody responseBody) {
-                        super.onResponse(responseBody);
-                        logger.debug("Enrollment successful: " + courseId);
-                        Toast.makeText(activity, activity.getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
-
-                        environment.getAnalyticsRegistry().trackEnrolmentSuccess(courseId, emailOptIn);
-
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
-                                        activity, courseId,
-                                        new TaskProgressCallback.ProgressViewController(progressWheel)) {
-                                    @Override
-                                    protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
-                                        enrollCallback.onResponse(course);
-                                        environment.getRouter().showMainDashboard(activity);
-                                        environment.getRouter().showCourseDashboardTabs(activity, course, false);
-                                    }
-
-                                    @Override
-                                    protected void onFailure(@NonNull final Throwable error) {
-                                        logger.warn("Error during enroll api call\n" + error);
-                                        isTaskInProgress = false;
-                                        enrollCallback.onFailure(error);
-                                        Toast.makeText(activity, R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        });
+                    protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
+                        enrollCallback.onResponse(course);
+                        environment.getRouter().showMainDashboard(activity);
+                        environment.getRouter().showCourseDashboardTabs(activity, course, false);
                     }
 
                     @Override
-                    protected void onFailure(@NonNull Throwable error) {
+                    protected void onFailure(@NonNull final Throwable error) {
                         logger.warn("Error during enroll api call\n" + error);
                         isTaskInProgress = false;
                         enrollCallback.onFailure(error);
-
-                        if (activity instanceof BaseFragmentActivity) {
-                            final BaseFragmentActivity baseFragmentActivity = (BaseFragmentActivity) activity;
-                            if (error instanceof HttpStatusException && ((HttpStatusException) error).getStatusCode() == HttpStatus.BAD_REQUEST) {
-                                final HashMap<String, CharSequence> params = new HashMap<>();
-                                params.put("platform_name", environment.getConfig().getPlatformName());
-                                final CharSequence message = ResourceUtil.getFormattedString(activity.getResources(), R.string.enrollment_error_message, params);
-                                baseFragmentActivity.showAlertDialog(activity.getString(R.string.enrollment_error_title), message.toString());
-                            } else {
-                                showEnrollErrorMessage(baseFragmentActivity, courseId, emailOptIn);
-                            }
-                        }
+                        Toast.makeText(activity, R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
     }
 
     private void showEnrollErrorMessage(@NonNull BaseFragmentActivity baseFragmentActivity,
