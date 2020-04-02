@@ -28,6 +28,8 @@
     <string name="view_course_button_text">View course</string>
     <!-- Floating overlay text shown to user when they succeed at enrolling in a course -->
     <string name="you_are_now_enrolled">You are now enrolled in this course.</string>
+    <!-- Floating overlay text shown to user when user already enrolled in a course -->
+    <string name="you_are_already_enrolled" tools:ignore="MissingTranslation">You are already enrolled in this course.</string>
     <!-- Error message shown when dashboard cannot be shown from course detail view -->
     <string name="cannot_show_dashboard">Unable to show dashboard.</string>
     <!-- Error message shown when browser cannot handle request for given web url -->
