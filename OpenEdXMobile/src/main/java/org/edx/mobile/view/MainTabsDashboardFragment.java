@@ -2,8 +2,10 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +30,7 @@ import org.edx.mobile.user.Account;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
-import org.edx.mobile.util.Config;
+import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.UserProfileUtils;
 
 import java.util.ArrayList;
@@ -144,10 +146,8 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                     }));
         }
 
-        final Config.ProgramDiscoveryConfig programDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig();
-        final Config.CourseDiscoveryConfig courseDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig();
-        if ((courseDiscoveryConfig != null && courseDiscoveryConfig.isDiscoveryEnabled()) ||
-                (programDiscoveryConfig != null && programDiscoveryConfig.isDiscoveryEnabled(environment))) {
+        if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment) ||
+                ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
                     new FragmentItemModel.FragmentStateListener() {
@@ -164,7 +164,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull MoveToDiscoveryTabEvent event) {
-        if (!environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
+        if (!ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
             return;
         }
         if (binding != null) {

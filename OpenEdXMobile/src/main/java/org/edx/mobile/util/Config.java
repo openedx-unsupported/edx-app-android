@@ -3,8 +3,10 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
@@ -193,9 +195,8 @@ public class Config {
 
         public boolean isDiscoveryEnabled(@NonNull IEdxEnvironment environment) {
             return getDiscoveryType() != null &&
-                    environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig() != null &&
-                    environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled() &&
-                    environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled()
+                    ConfigUtil.Companion.isCourseDiscoveryEnabled(environment) &&
+                    ConfigUtil.Companion.isCourseWebviewDiscoveryEnabled(environment)
                     ;
         }
 
@@ -236,10 +237,8 @@ public class Config {
         }
 
         public boolean isDiscoveryEnabled(@NonNull IEdxEnvironment environment) {
-            return getDiscoveryType() != null &&
-                    environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig() != null &&
-                    environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isDiscoveryEnabled(environment) &&
-                    environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isWebviewDiscoveryEnabled()
+            return getDiscoveryType() != null && ConfigUtil.Companion.isProgramDiscoveryEnabled(environment) &&
+                    ConfigUtil.Companion.isProgramWebviewDiscoveryEnabled(environment)
                     ;
         }
 
@@ -302,7 +301,7 @@ public class Config {
 
         public boolean isEnabled() {
             // TODO Disable program feature for kitkat users, See Jira story LEARNER-6625 for more details.
-            return enabled && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT ;
+            return enabled && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT;
         }
 
         public String getUrl() {
@@ -804,7 +803,7 @@ public class Config {
         return getObjectOrNewInstance(PROGRAM, ProgramConfig.class);
     }
 
-        @Nullable
+    @Nullable
     public DiscoveryConfig getDiscoveryConfig() {
         return getObjectOrNewInstance(DISCOVERY, DiscoveryConfig.class);
     }

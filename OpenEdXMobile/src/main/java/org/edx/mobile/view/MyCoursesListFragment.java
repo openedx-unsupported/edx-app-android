@@ -1,11 +1,13 @@
 package org.edx.mobile.view;
 
 import androidx.databinding.DataBindingUtil;
+
 import android.os.Bundle;
 
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
@@ -156,7 +159,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
             addFindCoursesFooter();
             adapter.notifyDataSetChanged();
 
-            if (adapter.isEmpty() && !environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
+            if (adapter.isEmpty() && !ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
                 errorNotification.showError(R.string.no_courses_to_display,
                         FontAwesomeIcons.fa_exclamation_circle, 0, null);
                 binding.myCourseList.setVisibility(View.GONE);
@@ -247,8 +250,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
         if (binding.myCourseList.getFooterViewsCount() > 0) {
             return;
         }
-        if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig() != null &&
-                environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
+        if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
             // Add 'Find a Course' list item as a footer.
             final PanelFindCourseBinding footer = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
                     R.layout.panel_find_course, binding.myCourseList, false);
