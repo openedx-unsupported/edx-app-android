@@ -5,12 +5,11 @@ This module will handle test run on AWS Device Farm
 """
 
 import os
-import sys
 import errno
+import time
 import boto3
 import requests
-import time
-import setup_aws
+
 
 REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
@@ -23,19 +22,20 @@ RUN_NAME = 'edX_test_run'
 RUN_TIMEOUT_SECONDS = 60 * 30
 UPLOAD_SUCCESS_STATUS = 'SUCCEEDED'
 RUN_COMPLETED_STATUS = 'COMPLETED'
-TEST_PROJECT_REPO_NAME = 'edx-app-test'
-CUSTOM_SPECS_NAME ='edx.yml'
-APK_PATH = './OpenEdXMobile/build/outputs/apk/prod/debuggable/'
-AUT_NAME = APK_PATH + 'edx-debuggable-2.20.2.apk'	
-PACKAGE_NAME = TEST_PROJECT_REPO_NAME + '/test_bundle.zip'
+TARGET_AVAILABILITY = 'HIGHLY_AVAILABLE'
+APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable/'
+AUT_NAME = APK_PATH + 'edx-debuggable-2.20.2.apk'
+PACKAGE_NAME = 'test_bundle.zip'
+CUSTOM_SPECS_NAME = 'edx.yml'
+status_flag = False
+
 
 print('Application Under Test - {}, Test Package - {} - configs {}'.format(
-        AUT_NAME,
-        PACKAGE_NAME,
-        CUSTOM_SPECS_NAME
+    AUT_NAME,
+    PACKAGE_NAME,
+    CUSTOM_SPECS_NAME
     ))
 
-setup_aws.setup_aws_data()
 device_farm = boto3.client('devicefarm', region_name=REGION)
 
 
@@ -43,20 +43,26 @@ def aws_job():
     """
     aws job to manage test run
     """
+    target_project_arn = setup_project(PROJECT_NAME)
+    device_pool_arn = setup_device_pool(target_project_arn, DEVICE_POOL_NAME)
+    get_device_info(target_project_arn)
 
     project_arn = get_project_arn(PROJECT_NAME)
-    aut_arn = upload_file(project_arn,
-                          ANDROID_APP_UPLOAD_TYPE,
-                          AUT_NAME
-                          )
-    package_arn = upload_file(project_arn,
-                              PACKAGE_UPLOAD_TYPE,
-                              PACKAGE_NAME
-                              )
-    test_specs_arn = upload_file(project_arn,
-                                 CUSTOM_SPECS_UPLOAD_TYPE,
-                                 CUSTOM_SPECS_NAME
-                                 )
+    aut_arn = upload_file(
+        project_arn,
+        ANDROID_APP_UPLOAD_TYPE,
+        AUT_NAME
+        )
+    package_arn = upload_file(
+        project_arn,
+        PACKAGE_UPLOAD_TYPE,
+        PACKAGE_NAME
+        )
+    test_specs_arn = upload_file(
+        project_arn,
+        CUSTOM_SPECS_UPLOAD_TYPE,
+        CUSTOM_SPECS_NAME
+        )
     device_pool_arn = get_device_pool(project_arn, DEVICE_POOL_NAME)
 
     test_run_arn = schedule_run(
@@ -126,9 +132,7 @@ def upload_file(project_arn, upload_type, target_file_name):
         if current_status in UPLOAD_SUCCESS_STATUS:
             print('{} upload status - {}'.format(
                 target_file_name,
-                current_status
-            )
-            )
+                current_status))
             break
         print(
             'Waiting for upload to complete, current status - {}'.format(
@@ -173,7 +177,7 @@ def get_device_pool(project_arn, name):
     """
 
     for device_pool in device_farm.list_device_pools(arn=project_arn
-                                                     )['devicePools']:
+                                                    )['devicePools']:
         if device_pool['name'] == name:
             print('{} exits '.format(name))
             return device_pool['arn']
@@ -205,8 +209,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         name=name,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
-              'testSpecArn': test_specs_arn,
-              },
+              'testSpecArn': test_specs_arn,},
     )
 
     run_arn = schedule_run_result['run']['arn']
@@ -217,9 +220,8 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         test_run['run']['platform'],
         str(test_run['run']['created']),
         test_run['run']['status'],
-        test_run['run']['result']
-    )
-    )
+        test_run['run']['result'])
+         )
     return run_arn
 
 
@@ -243,9 +245,11 @@ def get_test_run(run_arn):
             print('Run is {} with {} result'.format(run_status, run_result))
             break
         print('{} - Waiting for run to finish, currently in {} status with {} result '.format(
-                wait_try,
-                run_status,
-                run_result))
+            wait_try,
+            run_status,
+            run_result
+            )
+             )
         now = time.time()
         if now - start > timeout_seconds:
             print(now - start)
@@ -255,7 +259,7 @@ def get_test_run(run_arn):
         wait_try += 1
 
 
-def get_test_run_artifacts(run_name, run_arn):
+def get_test_run_artifacts(run_arn):
     """
     get run artifacts
 
@@ -302,7 +306,7 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
             print('Artifacts directory created - {} '.format(
                 artifacts_directory
             )
-            )
+                 )
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
@@ -315,8 +319,224 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
         file_type,
         target_file_name
     )
-    )
+         )
 
+
+def setup_project(project_name):
+    """
+    Check if specific project exists, if not create new one by given name
+
+    Arguments:
+            project_name (str): project name
+
+    Return:
+            str: project arn value
+
+    """
+
+    project_arn = ''
+    for project in device_farm.list_projects()['projects']:
+        if project['name'] == project_name:
+            print('{} project already exists'.format(project_name))
+            project_arn = project['arn']
+        else:
+            print(
+                '{} project is not available, creating new one'.format(
+                    project_name
+                )
+            )
+            project_arn = create_project(project_name)
+
+        return project_arn
+
+    raise KeyError('Problem finding project %r' % project_name)
+
+
+def create_project(project_name):
+    """
+    Create new Project
+
+    Arguments:
+            project_name (str): name of project to create
+
+    Return:
+            str: project arn value
+
+    """
+
+    new_project = device_farm.create_project(
+        name=project_name,
+        defaultJobTimeoutMinutes=123)
+    if new_project is not None:
+        project_name = new_project['project']['name']
+        print('{} project created successfully'.format(project_name))
+        return new_project['project']['arn']
+    else:
+        print('Problem creating {} project'.format(project_name))
+
+
+def setup_device_pool(project_arn, device_pool_name):
+    """
+    Check if specific device pool exists, if not create new one by given name
+
+    Arguments:
+            project_arn (str): project arn
+            name (str): name of pool
+
+    Return:
+            str: device pool arn
+    """
+
+    target_device_pool_arn = ''
+    is_device_pool_exists = False
+    for device_pool in device_farm.list_device_pools(arn=project_arn)[
+            'devicePools']:
+        pool_name = device_pool['name']
+        if pool_name == device_pool_name:
+            print('{} already exists'.format(pool_name))
+            target_device_pool_arn = device_pool['arn']
+            is_device_pool_exists = True
+            break
+        else:
+            is_device_pool_exists = False
+
+    if not is_device_pool_exists:
+        target_device_pool_arn = create_device_pool(
+            device_pool_name, project_arn)
+
+    return target_device_pool_arn
+
+
+def create_device_pool(pool_name, project_arn):
+    """
+    Create new device pool
+
+    Arguments:
+            pool_name (str): name of pool to create
+
+    Return:
+            str: pool arn value
+
+    """
+
+    new_device_pool = device_farm.create_device_pool(
+        projectArn=project_arn,
+        name=pool_name,
+        description='it is edX device pool',
+        maxDevices=1,
+        rules=[
+            {
+                "attribute": "PLATFORM",
+                "operator": "EQUALS",
+                "value": '"ANDROID"'
+            },
+            {
+                "attribute": "OS_VERSION",
+                "operator": "GREATER_THAN_OR_EQUALS",
+                "value": '"9"'
+            },
+            {
+                "attribute": "MANUFACTURER",
+                "operator": "EQUALS",
+                "value": '"Google"'
+            },
+            {
+                "attribute": "AVAILABILITY",
+                "operator": "EQUALS",
+                "value": '"HIGHLY_AVAILABLE"'
+            },
+            {
+                "attribute": "FLEET_TYPE",
+                "operator": "EQUALS",
+                "value": '"PUBLIC"'
+            }
+        ]
+    )
+    if new_device_pool is not None:
+        new_pool_name = new_device_pool['devicePool']['name']
+        new_pool_arn = new_device_pool['devicePool']['arn']
+        print('{} is created successfully'.format(new_pool_name))
+        return new_pool_arn
+    else:
+        print('Problem creating {} device pool'.format(new_pool_name))
+
+
+def get_device_info(target_project_arn):
+    """
+    Check if specific device pool exists, if not create new one by given name
+
+    Arguments:
+            target_project_arn (str): project arn
+
+    """
+    try:
+        device_info = device_farm.list_devices(
+            arn=target_project_arn,
+            filters=[
+                {
+                    "attribute": "PLATFORM",
+                    "operator": "EQUALS",
+                    "values": ['ANDROID', ]
+                },
+                {
+                    "attribute": "OS_VERSION",
+                    "operator": "GREATER_THAN_OR_EQUALS",
+                    "values": ['9', ]
+                },
+                {
+                    "attribute": "MANUFACTURER",
+                    "operator": "EQUALS",
+                    "values": ['Google', ]
+                },
+                {
+                    "attribute": "AVAILABILITY",
+                    "operator": "EQUALS",
+                    "values": ['HIGHLY_AVAILABLE', ]
+                },
+                {
+                    "attribute": "FLEET_TYPE",
+                    "operator": "EQUALS",
+                    "values": ['PUBLIC', ]
+                }
+            ])['devices']
+
+        if device_info is not None:
+            # device_arn = device_info[0]['arn']
+            device_name = device_info[0]['name']
+            device_manufacture = device_info[0]['manufacturer']
+            device_model = device_info[0]['model']
+            device_model_id = device_info[0]['modelId']
+            device_type = device_info[0]['formFactor']
+            device_platform = device_info[0]['platform']
+            device_os = device_info[0]['os']
+            device_visibility = device_info[0]['fleetType']
+            device_availability = device_info[0]['availability']
+
+            print('Device Name - {} with Manufacture {}, model {}, modelId {} & type {}'.format(
+                device_name,
+                device_manufacture,
+                device_model,
+                device_model_id,
+                device_type
+            )
+                 )
+            print('Device Platform {} with OS {}, visibility {} & availability - {} '.format(
+                device_platform,
+                device_os,
+                device_visibility,
+                device_availability
+            )
+                 )
+
+            if device_availability == TARGET_AVAILABILITY:
+                print('AWS setup is complete')
+            else:
+                print('Problem, device is not available')
+        else:
+            print('Problem finding device info')
+
+    except IndexError:
+        print('Problem finding device from pool {}'.format(device_info))
 
 if __name__ == '__main__':
     aws_job()
