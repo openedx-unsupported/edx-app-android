@@ -12,7 +12,7 @@
         "type": "normal"
     },
     {
-        "name": "Biology & Life Sciences",
+        "name": "Biologie & Sciences de la Vie",
         "image_name": "biology",
         "filter": "Biology & Life Sciences",
         "type": "normal"
@@ -24,7 +24,7 @@
         "type": "popular"
     },
     {
-        "name": "Chemistry",
+        "name": "Chimie",
         "image_name": "chemistry",
         "filter": "Chemistry",
         "type": "normal"
@@ -36,13 +36,13 @@
         "type": "normal"
     },
     {
-        "name": "Computer Science",
+        "name": "Informatique",
         "image_name": "computer_science",
         "filter": "Computer Science",
         "type": "popular"
     },
     {
-        "name": "Data Analysis & Statistics",
+        "name": "Analyse de données & Statistiques",
         "image_name": "data_science",
         "filter": "Data Analysis & Statistics",
         "type": "popular"
@@ -54,7 +54,7 @@
         "type": "normal"
     },
     {
-        "name": "Economics & Finance",
+        "name": "Économie & Finance",
         "image_name": "economics_finance",
         "filter": "Economics & Finance",
         "type": "normal"
@@ -66,7 +66,7 @@
         "type": "normal"
     },
     {
-        "name": "Electronics",
+        "name": "Électronique ",
         "image_name": "electronics",
         "filter": "Electronics",
         "type": "normal"
@@ -78,91 +78,91 @@
         "type": "normal"
     },
     {
-        "name": "Engineering",
+        "name": "Ingénierie",
         "image_name": "engineering",
         "filter": "Engineering",
         "type": "normal"
     },
     {
-        "name": "Environmental Studies",
+        "name": "Études environnementales",
         "image_name": "environmental_studies",
         "filter": "Environmental Studies",
         "type": "normal"
     },
     {
-        "name": "Ethics",
+        "name": "Éthique",
         "image_name": "ethics",
         "filter": "Ethics",
         "type": "normal"
     },
     {
-        "name": "Food & Nutrition",
+        "name": "Alimentation & Nutrition",
         "image_name": "food_nutrition",
         "filter": "Food & Nutrition",
         "type": "normal"
     },
     {
-        "name": "Health & Safety",
+        "name": "Santé & Sécurité",
         "image_name": "health",
         "filter": "Health & Safety",
         "type": "normal"
     },
     {
-        "name": "History",
+        "name": "Histoire",
         "image_name": "history",
         "filter": "History",
         "type": "normal"
     },
     {
-        "name": "Humanities",
+        "name": "Humanités",
         "image_name": "humanities",
         "filter": "Humanities",
         "type": "popular"
     },
     {
-        "name": "Language",
+        "name": "Langue",
         "image_name": "language",
         "filter": "Language",
         "type": "popular"
     },
     {
-        "name": "Law",
+        "name": "Droit",
         "image_name": "law",
         "filter": "Law",
         "type": "normal"
     },
     {
-        "name": "Literature",
+        "name": "Littérature",
         "image_name": "literature",
         "filter": "Literature",
         "type": "normal"
     },
     {
-        "name": "Math",
+        "name": "Mathématique",
         "image_name": "math",
         "filter": "Math",
         "type": "normal"
     },
     {
-        "name": "Medicine",
+        "name": "Médecine",
         "image_name": "medicine",
         "filter": "Medicine",
         "type": "normal"
     },
     {
-        "name": "Music",
+        "name": "Musique",
         "image_name": "music",
         "filter": "Music",
         "type": "normal"
     },
     {
-        "name": "Philosophy & Ethics",
+        "name": "Philosophie & Éthique ",
         "image_name": "philosophy_ethics",
         "filter": "Philosophy & Ethics",
         "type": "normal"
     },
     {
-        "name": "Physics",
+        "name": "Physique",
         "image_name": "physics",
         "filter": "Physics",
         "type": "normal"
@@ -174,7 +174,7 @@
         "type": "normal"
     },
     {
-        "name": "Social Sciences",
+        "name": "Sciences sociales",
         "image_name": "social_sciences",
         "filter": "Social Sciences",
         "type": "normal"

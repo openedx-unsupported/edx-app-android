@@ -4,10 +4,12 @@
   <string name="error_unknown">Une erreur inconnue est survenue. Veuillez réessayer ultérieurement. </string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid">Impossible de charger le contenu de ce cours. Veuillez réessayez ultérieurement.</string>
+  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Impossible de charger le contenu de ce cours. Veuillez réessayez ultérieurement.</string>
   <!--Title of alert shown when course enrollment request fails-->
+  <string name="enrollment_error_title" tools:ignore="MissingTranslation">Erreur lors de l\'inscription</string>
   <!--Error message shown in alert when course enrollment request fails-->
   <!--Error message shown when a course section is not available on mobile-->
+  <string name="not_available_on_mobile" tools:ignore="MissingTranslation">Non disponible sur mobile</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">Vous n\'êtes pas connecté à Internet.</string>
@@ -37,6 +39,7 @@
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">Assurez-vous  que votre compte Facebook est associé avec votre  compte {platform_name} sur {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
+  <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">Ce compte Facebook n\'est pas lié à un compte {platform_name}. Veuillez vous inscrire.</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">Compte google non associé avec  compte {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
@@ -71,10 +74,14 @@
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length">%1$s ne peut avoir plus de %2$d caractères.</string>
   <!--Error message shown when a course hasn't started yet-->
+  <string name="course_not_started" tools:ignore="MissingTranslation">Ce cours n\'a pas encore démarré.</string>
   <!--Error message shown when a user's access has expired for a course-->
+  <string name="course_access_expired" tools:ignore="MissingTranslation">Votre accès à ce cours a expiré.</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
+  <string name="action_not_completed" tools:ignore="MissingTranslation">Votre action n\'a pas pu être achevée.</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
+  <string name="permission_not_granted" tools:ignore="MissingTranslation">Permission non accordée</string>
 </resources>

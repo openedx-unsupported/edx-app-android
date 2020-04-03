@@ -4,12 +4,13 @@
   <string name="error_unknown">unbekannter Fehler. Bitte versuchen Sie es später nochmal.</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid">Das laden der Kursinhalte ist derzeit nicht möglich. Bitte versuchen Sie es später erneut.</string>
+  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Das laden der Kursinhalte ist derzeit nicht möglich. Bitte versuchen Sie es später erneut.</string>
   <!--Title of alert shown when course enrollment request fails-->
   <string name="enrollment_error_title" tools:ignore="MissingTranslation">Fehler beim Einschreiben.</string>
   <!--Error message shown in alert when course enrollment request fails-->
   <string name="enrollment_error_message" tools:ignore="MissingTranslation">Momentan ist das Einschreiben in diesen Kurs mit der App der {platform_name} nicht möglich. Bitte versuchen sie es noch einmal in ihrem Webbrowser.</string>
   <!--Error message shown when a course section is not available on mobile-->
+  <string name="not_available_on_mobile" tools:ignore="MissingTranslation">Nicht auf dem Smartphone verfügbar</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">Sie sind nicht mit dem Internet verbunden.</string>
@@ -52,6 +53,8 @@
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
   <string name="file_size_exceeded">Die Grösse des Downloads übersteigt den verfügbaren Speicherplatz auf dem Gerät.</string>
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
+  <string name="download_exceed_message" tools:ignore="MissingTranslation">Die von Ihnen ausgewählten Videos sind größer als 1GB.
+Möchten Sie die Videos herunterladen?</string>
   <!--Message shown when user attempts to download a video over cellular data,
     but has chosen to only allow video downloads over wifi-->
   <string name="wifi_off_message">Ihr momentanen Einstellungen erlauben Downloads ausschliesslich über Wifi.

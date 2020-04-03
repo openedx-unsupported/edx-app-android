@@ -420,6 +420,8 @@ android {
         showAll true
         warning 'TypographyQuotes', 'InvalidPackage'
         error 'StopShip', 'ContentDescription'
+        warning 'MissingTranslation'
+        warning 'ImpliedQuantity'
     }
 
     productFlavors {

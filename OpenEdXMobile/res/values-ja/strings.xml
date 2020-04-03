@@ -200,6 +200,7 @@
   <!--Upgrade banner's description which appears on course outline screen.-->
   <!--Title upgrade to verified today course outline footer-->
   <!--Title of place order for course upgrade screen-->
+  <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">ディスカッショントピック</string>
@@ -330,10 +331,14 @@
   <string name="assessment_soon">すぐに</string>
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">全画面表示でこの動画を見るには画面を横向きにしてください。</string>
+  <!--Label showing only when youtube in-app player produce error-->
+  <!--Error message showing only when youtube in-app player produce error-->
   <!--Label showing only youtube is available-->
   <string name="assessment_only_on_youtube">この動画はYouTubeのみで見ることができます。</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">YouTubeで動画を見る</string>
+  <!--Label showing that you need to update youtube app in order to watch the video-->
+  <!--Label for button to update youtube app-->
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">ダウンロード</string>
