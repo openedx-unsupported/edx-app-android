@@ -28,6 +28,7 @@ import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
 import de.greenrobot.event.EventBus;
@@ -80,10 +81,9 @@ public class MainDiscoveryFragment extends BaseFragment {
 
     private void initFragments() {
         // Course discovery
-        if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig() != null &&
-                environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
+        if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
             Fragment courseDiscoveryFragment;
-            if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled()) {
+            if (ConfigUtil.Companion.isCourseWebviewDiscoveryEnabled(environment)) {
                 courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_webview");
                 if (courseDiscoveryFragment == null) {
                     courseDiscoveryFragment = new WebViewDiscoverCoursesFragment();
@@ -102,8 +102,7 @@ public class MainDiscoveryFragment extends BaseFragment {
         }
 
         // Program discovery
-        if (environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig() != null &&
-                environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isDiscoveryEnabled(environment)) {
+        if (ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {
             Fragment programDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_programs");
             if (programDiscoveryFragment == null) {
                 programDiscoveryFragment = new WebViewDiscoverProgramsFragment();
@@ -115,8 +114,7 @@ public class MainDiscoveryFragment extends BaseFragment {
         }
 
         // Degree discovery
-        if (environment.getConfig().getDiscoveryConfig().getDegreeDiscoveryConfig() != null &&
-                environment.getConfig().getDiscoveryConfig().getDegreeDiscoveryConfig().isDiscoveryEnabled(environment)) {
+        if (ConfigUtil.Companion.isDegreeDiscoveryEnabled(environment)) {
             Fragment degreeDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_degrees");
             if (degreeDiscoveryFragment == null) {
                 degreeDiscoveryFragment = new WebViewDiscoverDegreesFragment();
