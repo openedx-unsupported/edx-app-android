@@ -80,11 +80,11 @@ There are 3 Build Variants in this project:
 
 Building For Release
 --------------------
-To build an APK for release, you may specify an application ID and signing key.
+To build an APK for release, you have to specify an application ID and signing key.
 
-#### Specifying an Application ID
-Application ID key is optional and if it is not present the package identifier will be used as an Application ID.
-Create or edit the `gradle.properties` file inside the `OpenEdXMobile` directory of `edx-app-android`. For example:
+#### Specifying your own Application ID
+Application ID is the package identifier for your app.  
+Edit the `constants.gradle` file inside the `edx-app-android` directory. For example:
 
     APPLICATION_ID=com.example.yourapp
 
