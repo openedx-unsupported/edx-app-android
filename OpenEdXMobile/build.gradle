@@ -294,6 +294,9 @@ android {
 
         // test configuration
         testApplicationId 'org.edx.mobile.test'
+        
+        //fix google play upload issue with fb as a language
+        resConfigs "en", "GB"
 
         for (task in project.gradle.startParameter.taskNames) {
             if (task.contains("ScreenshotTest")) {
