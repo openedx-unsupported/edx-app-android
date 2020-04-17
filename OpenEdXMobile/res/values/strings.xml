@@ -116,6 +116,8 @@
     <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name} Terms of Service and Honor Code</string>
     <!-- Label for Privacy Policy -->
     <string name="privacy_policy" tools:ignore="MissingTranslation">Privacy Policy</string>
+    <!-- Smart Edoo specific enrollment prompt -->
+    <string name="register_on_smart_edoo" tools:ignore="MissingTranslation">Register on Smart Edoo</string>
 
     <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
