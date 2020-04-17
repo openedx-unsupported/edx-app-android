@@ -80,12 +80,11 @@ public class RegisterActivity extends BaseFragmentActivity
     private View registrationForm;
     private View facebookButton;
     private View googleButton;
+    private View microsoftButton;
     private TextView errorTextView;
 
     @Inject
     LoginPrefs loginPrefs;
-    @Inject
-    private LoginAPI loginAPI;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
@@ -119,6 +118,7 @@ public class RegisterActivity extends BaseFragmentActivity
         boolean isSocialEnabled = false;
         facebookButton = findViewById(R.id.facebook_button);
         googleButton = findViewById(R.id.google_button);
+        microsoftButton = findViewById(R.id.microsoft_button);
 
         if (!SocialFactory.isSocialFeatureEnabled(getApplication(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, environment.getConfig())) {
             facebookButton.setVisibility(View.GONE);
@@ -133,6 +133,15 @@ public class RegisterActivity extends BaseFragmentActivity
             isSocialEnabled = true;
             googleButton.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
         }
+
+        if (!SocialFactory.isSocialFeatureEnabled(getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT, environment.getConfig())) {
+            microsoftButton.setVisibility(View.GONE);
+        } else {
+            isSocialEnabled = true;
+            microsoftButton.setOnClickListener(socialLoginDelegate
+                    .createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT));
+        }
+
         if (!isSocialEnabled) {
             findViewById(R.id.panel_social_layout).setVisibility(View.GONE);
             findViewById(R.id.or_signup_with_email_title).setVisibility(View.GONE);
@@ -424,6 +433,9 @@ public class RegisterActivity extends BaseFragmentActivity
         if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
             socialTypeString = getString(R.string.facebook_text);
             signUpSuccessString = getString(R.string.sign_up_with_facebook_ok);
+        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT) {
+            socialTypeString = getString(R.string.microsoft_text);
+            signUpSuccessString = getString(R.string.sign_up_with_microsoft_ok);
         } else {  //google
             socialTypeString = getString(R.string.google_text);
             signUpSuccessString = getString(R.string.sign_up_with_google_ok);
@@ -616,6 +628,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         facebookButton.setClickable(enable);
         googleButton.setClickable(enable);
+        microsoftButton.setClickable(enable);
 
         return true;
     }

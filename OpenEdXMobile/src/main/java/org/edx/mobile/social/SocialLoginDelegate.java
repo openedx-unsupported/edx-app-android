@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.View;
 
 import com.google.inject.Inject;
@@ -21,6 +23,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.google.GoogleProvider;
+import org.edx.mobile.social.microsoft.MicrosoftProvide;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
@@ -43,29 +46,11 @@ public class SocialLoginDelegate {
 
     private Activity activity;
     private MobileLoginCallback callback;
-    private ISocial google, facebook;
+    private ISocial google, facebook, microsoft;
     private final LoginPrefs loginPrefs;
 
     private String userEmail;
     private Feature feature;
-
-    private ISocial.Callback googleCallback = new ISocial.Callback() {
-        @Override
-        public void onLogin(String accessToken) {
-            logger.debug("Google logged in; token= " + accessToken);
-            onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_GOOGLE);
-        }
-
-    };
-
-    private ISocial.Callback facebookCallback = new ISocial.Callback() {
-
-        @Override
-        public void onLogin(String accessToken) {
-            logger.debug("Facebook logged in; token= " + accessToken);
-            onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
-        }
-    };
 
     public SocialLoginDelegate(@NonNull Activity activity, @NonNull Bundle savedInstanceState,
                                @NonNull MobileLoginCallback callback, @NonNull Config config,
@@ -77,52 +62,98 @@ public class SocialLoginDelegate {
         this.feature = feature;
 
         google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, config);
-        google.setCallback(googleCallback);
+        google.setCallback(accessToken -> {
+            logger.debug("Google logged in; token= " + accessToken);
+            onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_GOOGLE);
+        });
 
         facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, config);
-        facebook.setCallback(facebookCallback);
+        facebook.setCallback(accessToken -> {
+            logger.debug("Facebook logged in; token= " + accessToken);
+            onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
+        });
 
+        microsoft = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT, config);
+        microsoft.setCallback(new ISocial.Callback() {
+            @Override
+            public void onCancel() {
+                if (activity instanceof ICommonUI)
+                    ((ICommonUI) activity).tryToSetUIInteraction(true);
+            }
+
+            @Override
+            public void onError(@Nullable Exception exception) {
+                if (activity instanceof ICommonUI)
+                    ((ICommonUI) activity).tryToSetUIInteraction(true);
+            }
+
+            @Override
+            public void onLogin(String accessToken) {
+                logger.debug("Microsoft logged in; token= " + accessToken);
+                onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_MICROSOFT);
+            }
+        });
         google.onActivityCreated(activity, savedInstanceState);
         facebook.onActivityCreated(activity, savedInstanceState);
+        microsoft.onActivityCreated(activity, savedInstanceState);
     }
 
     public void onActivityDestroyed() {
         google.onActivityDestroyed(activity);
         facebook.onActivityDestroyed(activity);
+        microsoft.onActivityDestroyed(activity);
     }
 
     public void onActivitySaveInstanceState(Bundle outState) {
         google.onActivitySaveInstanceState(activity, outState);
         facebook.onActivitySaveInstanceState(activity, outState);
+        microsoft.onActivitySaveInstanceState(activity, outState);
     }
 
     public void onActivityStarted() {
         google.onActivityStarted(activity);
         facebook.onActivityStarted(activity);
+        microsoft.onActivityStarted(activity);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         google.onActivityResult(requestCode, resultCode, data);
         facebook.onActivityResult(requestCode, resultCode, data);
+        microsoft.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onActivityStopped() {
         google.onActivityStopped(activity);
         facebook.onActivityStopped(activity);
+        microsoft.onActivityStopped(activity);
     }
 
-    public void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
-        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK)
-            facebook.login();
-        else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE)
-            google.login();
+    private void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+        switch (socialType) {
+            case TYPE_FACEBOOK:
+                facebook.login();
+                break;
+            case TYPE_GOOGLE:
+                google.login();
+                break;
+            case TYPE_MICROSOFT:
+                microsoft.login();
+                break;
+        }
     }
 
-    public void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
-        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK)
-            facebook.logout();
-        else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE)
-            google.logout();
+    private void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+        switch (socialType) {
+            case TYPE_FACEBOOK:
+                facebook.logout();
+                break;
+            case TYPE_GOOGLE:
+                google.logout();
+                break;
+            case TYPE_MICROSOFT:
+                microsoft.logout();
+                break;
+        }
     }
 
     /**
@@ -154,6 +185,8 @@ public class SocialLoginDelegate {
             socialProvider = new FacebookProvider();
         } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
             socialProvider = new GoogleProvider((GoogleOauth2) google);
+        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT) {
+            socialProvider = new MicrosoftProvide();
         }
 
         if (socialProvider != null) {
@@ -203,6 +236,12 @@ public class SocialLoginDelegate {
                 } catch (LoginAPI.AccountNotLinkedException e) {
                     throw new LoginException(makeLoginErrorMessage(e));
                 }
+            } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_MICROSOFT)) {
+                try {
+                    auth = loginAPI.logInUsingMicrosoft(accessToken);
+                } catch (LoginAPI.AccountNotLinkedException e) {
+                    throw new LoginException(makeLoginErrorMessage(e));
+                }
             } else {
                 throw new IllegalArgumentException("Unknown backend: " + backend);
             }
@@ -211,21 +250,27 @@ public class SocialLoginDelegate {
 
         public LoginErrorMessage makeLoginErrorMessage(@NonNull LoginAPI.AccountNotLinkedException e) throws LoginException {
             final boolean isFacebook = backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK);
+            final boolean isMicrosoft = backend.equalsIgnoreCase(PrefManager.Value.BACKEND_MICROSOFT);
             if (feature == Feature.SIGN_IN && e.getResponseCode() ==  HttpURLConnection.HTTP_BAD_REQUEST) {
                 final String title =  activity.getResources().getString(R.string.login_error);
                 final CharSequence desc = ResourceUtil.getFormattedString(context.getResources(),
-                        isFacebook ? R.string.error_account_not_linked_desc_fb_2 : R.string.error_account_not_linked_desc_google_2,
+                        isFacebook ? R.string.error_account_not_linked_desc_fb_2 :
+                                isMicrosoft ? R.string.error_account_not_linked_desc_microsoft_2 :
+                                        R.string.error_account_not_linked_desc_google_2,
                         "platform_name", environment.getConfig().getPlatformName());
                 throw new LoginException(new LoginErrorMessage(title, desc.toString()));
             }
             final CharSequence title = ResourceUtil.getFormattedString(context.getResources(),
-                    isFacebook ? R.string.error_account_not_linked_title_fb : R.string.error_account_not_linked_title_google,
+                    isFacebook ? R.string.error_account_not_linked_title_fb :
+                            isMicrosoft ? R.string.error_account_not_linked_title_microsoft :
+                                    R.string.error_account_not_linked_title_google,
                     "platform_name", environment.getConfig().getPlatformName());
             final HashMap<String, CharSequence> descParamsDesc = new HashMap<>();
             descParamsDesc.put("platform_name", environment.getConfig().getPlatformName());
             descParamsDesc.put("platform_destination", environment.getConfig().getPlatformDestinationName());
             final CharSequence desc = ResourceUtil.getFormattedString(context.getResources(),
-                    isFacebook ? R.string.error_account_not_linked_desc_fb : R.string.error_account_not_linked_desc_google,
+                    isFacebook ? R.string.error_account_not_linked_desc_fb :
+                            isMicrosoft ? R.string.error_account_not_linked_desc_microsoft : R.string.error_account_not_linked_desc_google,
                     descParamsDesc);
             return new LoginErrorMessage(title.toString(), desc.toString());
         }

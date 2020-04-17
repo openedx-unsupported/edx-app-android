@@ -21,25 +21,37 @@ public class LoginPresenterTest extends PresenterTest<LoginPresenter, LoginPrese
     @Test
     public void testOnViewCreation_withGoogleLoginDisabled_googleButtonNotVisible() {
         when(config.getGoogleConfig()).thenReturn(new Config.GoogleConfig(false));
-        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(false, "dummy app id"));
+        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(true, "dummy app id"));
+        when(config.getMicrosoftConfig()).thenReturn(new Config.MicrosoftConfig(true));
         startPresenter(new LoginPresenter(config, zeroRatedNetworkInfo));
-        verify(view).setSocialLoginButtons(false, false);
+        verify(view).setSocialLoginButtons(false, true, true);
     }
 
     @Test
     public void testOnViewCreation_withFacebookLoginDisabled_facebookButtonNotVisible() {
-        when(config.getGoogleConfig()).thenReturn(new Config.GoogleConfig(false));
-        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(true, "dummy app id"));
+        when(config.getGoogleConfig()).thenReturn(new Config.GoogleConfig(true));
+        when(config.getMicrosoftConfig()).thenReturn(new Config.MicrosoftConfig(true));
+        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(false, "dummy app id"));
         startPresenter(new LoginPresenter(config, zeroRatedNetworkInfo));
-        verify(view).setSocialLoginButtons(false, true);
+        verify(view).setSocialLoginButtons(true, false, true);
     }
 
     @Test
-    public void testOnViewCreation_withGoogleFacebookEnabled_socialLoginButtonsVisible() {
+    public void testOnViewCreation_withMicrosoftLoginDisabled_microsoftButtonNotVisible() {
         when(config.getGoogleConfig()).thenReturn(new Config.GoogleConfig(true));
-        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(false, "dummy app id"));
+        when(config.getMicrosoftConfig()).thenReturn(new Config.MicrosoftConfig(false));
+        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(true, "dummy app id"));
         startPresenter(new LoginPresenter(config, zeroRatedNetworkInfo));
-        verify(view).setSocialLoginButtons(true, false);
+        verify(view).setSocialLoginButtons(true, true, false);
+    }
+
+    @Test
+    public void testOnViewCreation_withSocialLoginEnabled_socialLoginButtonsVisible() {
+        when(config.getGoogleConfig()).thenReturn(new Config.GoogleConfig(true));
+        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(true, "dummy app id"));
+        when(config.getMicrosoftConfig()).thenReturn(new Config.MicrosoftConfig(true));
+        startPresenter(new LoginPresenter(config, zeroRatedNetworkInfo));
+        verify(view).setSocialLoginButtons(true, true, true);
     }
 
     @Test
@@ -47,7 +59,8 @@ public class LoginPresenterTest extends PresenterTest<LoginPresenter, LoginPrese
         when(zeroRatedNetworkInfo.isOnZeroRatedNetwork()).thenReturn(true);
         when(config.getGoogleConfig()).thenReturn(new Config.GoogleConfig(true));
         when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(true, "dummy app id"));
+        when(config.getMicrosoftConfig()).thenReturn(new Config.MicrosoftConfig(true));
         startPresenter(new LoginPresenter(config, zeroRatedNetworkInfo));
-        verify(view).setSocialLoginButtons(false, false);
+        verify(view).setSocialLoginButtons(false, false, false);
     }
 }

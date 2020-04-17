@@ -3,14 +3,15 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.databinding.DataBindingUtil;
 
 import com.google.inject.Inject;
 
@@ -85,6 +86,9 @@ public class LoginActivity
         activityLoginBinding.socialAuth.googleButton.getRoot().setOnClickListener(
                 socialLoginDelegate.createSocialButtonClickHandler(
                         SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
+        activityLoginBinding.socialAuth.microsoftButton.getRoot().setOnClickListener(
+                socialLoginDelegate.createSocialButtonClickHandler(
+                SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT));
 
         activityLoginBinding.loginButtonLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -138,13 +142,20 @@ public class LoginActivity
             }
 
             @Override
-            public void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled) {
-                if (!facebookEnabled && !googleEnabled) {
+            public void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled,
+                                              boolean microsoftEnabled) {
+                if (!facebookEnabled && !googleEnabled && !microsoftEnabled) {
                     activityLoginBinding.panelLoginSocial.setVisibility(View.GONE);
-                } else if (!facebookEnabled) {
-                    activityLoginBinding.socialAuth.facebookButton.getRoot().setVisibility(View.GONE);
-                } else if (!googleEnabled) {
-                    activityLoginBinding.socialAuth.googleButton.getRoot().setVisibility(View.GONE);
+                } else {
+                    if (!facebookEnabled) {
+                        activityLoginBinding.socialAuth.facebookButton.getRoot().setVisibility(View.GONE);
+                    }
+                    if (!googleEnabled) {
+                        activityLoginBinding.socialAuth.googleButton.getRoot().setVisibility(View.GONE);
+                    }
+                    if (!microsoftEnabled) {
+                        activityLoginBinding.socialAuth.microsoftButton.getRoot().setVisibility(View.GONE);
+                    }
                 }
             }
         };
@@ -340,6 +351,7 @@ public class LoginActivity
 
         activityLoginBinding.socialAuth.facebookButton.getRoot().setClickable(enable);
         activityLoginBinding.socialAuth.googleButton.getRoot().setClickable(enable);
+        activityLoginBinding.socialAuth.microsoftButton.getRoot().setClickable(enable);
 
         activityLoginBinding.emailEt.setEnabled(enable);
         activityLoginBinding.passwordEt.setEnabled(enable);

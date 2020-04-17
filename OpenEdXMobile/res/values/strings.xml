@@ -547,6 +547,8 @@
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
     <string name="google_text">Google</string>
+    <!-- Microsoft login method -->
+    <string name="microsoft_text" tools:ignore="MissingTranslation">Microsoft</string>
     <!-- Prompt allowing user to choose email program -->
     <string name="email_chooser_header">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
@@ -593,6 +595,7 @@
     <!-- Text for successful registration with social token  -->
     <string name="sign_up_with_facebook_ok">You’ve successfully signed in with Facebook.</string>
     <string name="sign_up_with_google_ok">You’ve successfully signed in with Google.</string>
+    <string name="sign_up_with_microsoft_ok" tools:ignore="MissingTranslation">You’ve successfully signed in with Microsoft.</string>
     <string name="sign_up_with_social_ok">We just need a little more information before you start learning with {platform_name}.</string>
     <!-- Continue registration after social login -->
     <string name="complete_registration">Complete your registration</string>

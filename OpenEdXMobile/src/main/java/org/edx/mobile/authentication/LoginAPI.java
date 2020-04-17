@@ -104,6 +104,11 @@ public class LoginAPI {
     }
 
     @NonNull
+    public AuthResponse logInUsingMicrosoft(String accessToken) throws Exception {
+        return finishSocialLogIn(accessToken, LoginPrefs.AuthBackend.MICROSOFT);
+    }
+
+    @NonNull
     private AuthResponse finishSocialLogIn(@NonNull String accessToken, @NonNull LoginPrefs.AuthBackend authBackend) throws Exception {
         final String backend = ApiConstants.getOAuthGroupIdForAuthBackend(authBackend);
         final Response<AuthResponse> response = loginService.exchangeAccessToken(accessToken, config.getOAuthClientId(), backend).execute();
@@ -170,6 +175,12 @@ public class LoginAPI {
     public AuthResponse registerUsingFacebook(@NonNull Bundle parameters, @NonNull String accessToken) throws Exception {
         register(parameters);
         return logInUsingFacebook(accessToken);
+    }
+
+    @NonNull
+    public AuthResponse registerUsingMicrosoft(@NonNull Bundle parameters, @NonNull String accessToken) throws Exception {
+        register(parameters);
+        return logInUsingMicrosoft(accessToken);
     }
 
     @NonNull

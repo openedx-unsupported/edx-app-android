@@ -56,6 +56,9 @@ public class ApiConstants {
             case GOOGLE: {
                 return PrefManager.Value.BACKEND_GOOGLE;
             }
+            case MICROSOFT: {
+                return PrefManager.Value.BACKEND_MICROSOFT;
+            }
             default: {
                 throw new IllegalArgumentException(authBackend.name());
             }

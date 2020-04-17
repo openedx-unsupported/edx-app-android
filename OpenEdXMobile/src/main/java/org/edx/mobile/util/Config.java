@@ -3,11 +3,10 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -54,6 +53,7 @@ public class Config {
     private static final String PROGRAM = "PROGRAM";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
+    private static final String MICROSOFT = "MICROSOFT";
     private static final String GOOGLE = "GOOGLE";
     private static final String TWITTER = "TWITTER";
     private static final String FABRIC = "FABRIC";
@@ -346,6 +346,22 @@ public class Config {
         }
 
         public GoogleConfig() {
+        }
+
+        public boolean isEnabled() {
+            return mEnabled;
+        }
+    }
+
+    public static class MicrosoftConfig {
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        public MicrosoftConfig(boolean mEnabled) {
+            this.mEnabled = mEnabled;
+        }
+
+        public MicrosoftConfig() {
         }
 
         public boolean isEnabled() {
@@ -821,6 +837,11 @@ public class Config {
     @NonNull
     public GoogleConfig getGoogleConfig() {
         return getObjectOrNewInstance(GOOGLE, GoogleConfig.class);
+    }
+
+    @NonNull
+    public MicrosoftConfig getMicrosoftConfig() {
+        return getObjectOrNewInstance(MICROSOFT, MicrosoftConfig.class);
     }
 
     @NonNull
