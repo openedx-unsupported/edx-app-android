@@ -1,0 +1,31 @@
+[
+  {
+    "version": "2.21",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "دعم Chromecast",
+        "message": "هل تريد مشاهدة فيديوهات الدورة التدريبية على شاشة كبيرة؟ لقد أضفنا دعم Chromecast والآن يمكنك القيام بذلك!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "مشغّل فيديوهات YouTube",
+        "message": "هل سئمت من الاضطرار إلى مغادرة التطبيق لمشاهدة فيديوهات الدورة التدريبية على YouTube؟ يمكنك الآن مشاهدة الفيديوهات باستخدام مشغّل داخل التطبيق."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "تسجيل الدخول إلى Microsoft",
+        "message": "يمكنك التسجيل الآن أو تسجيل دخولك باستخدام حساب في Microsoft."
+      }
+    ]
+  }
+]

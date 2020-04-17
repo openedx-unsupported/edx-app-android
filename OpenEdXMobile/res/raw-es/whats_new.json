@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.21",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Compatibilidad con Chromecast",
+        "message": "¿Quieres ver los videos de los cursos en una pantalla más grande? Nuestra plataforma ahora es compatible con Chromecast, así que ¡adelante!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Reproductor de YouTube",
+        "message": "¿Estás cansado de salir de la aplicación para ver los videos de los cursos en YouTube? Ahora puedes verlos con el reproductor en la app."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Inicio de sesión de Microsoft",
+        "message": "Ahora puedes registrarte o iniciar sesión con una cuenta de Microsoft."
+      }
+    ]
+  },
+  {
     "version": "2.20",
     "messages": [
       {

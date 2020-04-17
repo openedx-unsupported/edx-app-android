@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.21",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Suporte para o Chromecast",
+        "message": "Quer assistir a vídeos do curso em uma tela maior? Com a adição do suporte para o Chromecast, agora você pode!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Player do YouTube",
+        "message": "Está cansado de sair do app para assistir a vídeos do curso no YouTube? Agora você pode visualizá-los em um player integrado ao app."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Login da Microsoft",
+        "message": "Agora você pode se cadastrar ou fazer login com uma conta da Microsoft."
+      }
+    ]
+  },
+  {
     "version": "2.20",
     "messages": [
       {

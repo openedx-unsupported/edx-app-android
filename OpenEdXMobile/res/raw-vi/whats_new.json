@@ -1,0 +1,31 @@
+[
+  {
+    "version": "2.21",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Hỗ trợ Chromecast",
+        "message": "Bạn muốn xem video khóa học trên một màn hình lớn hơn? Chúng tôi đã bổ sung hỗ trợ Chromecast và giờ bạn có thể!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Trình phát YouTube",
+        "message": "Bạn đã mệt mỏi với việc phải rời ứng dụng để xem video khóa học trên YouTube? Giờ đây bạn có thể xem video với trình phát trong ứng dụng."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Đăng nhập Microsoft",
+        "message": "Giờ đây bạn có thể đăng ký hoặc đăng nhập bằng tài khoản Microsoft."
+      }
+    ]
+  }
+]
