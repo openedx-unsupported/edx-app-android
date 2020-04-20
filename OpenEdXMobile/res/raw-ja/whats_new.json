@@ -1,0 +1,29 @@
+{
+  "version":"2.21",
+  "messages":[
+    {
+      "platforms":[
+        "android"
+      ],
+      "image":"screen_1",
+      "title":"Chromecastのサポート",
+      "message":"大きな画面でコースの動画を視聴したいですか？ Chromecastのサポートを追加しました。できるようになりました！"
+    },
+    {
+      "platforms":[
+        "android"
+      ],
+      "image":"screen_2",
+      "title":"YouTubeプレーヤー",
+      "message":"YouTubeコースの動画を見るためにアプリを離れるのにうんざりしていませんか？アプリ内プレーヤーで動画を視聴できるようになりました。"
+    },
+    {
+      "platforms":[
+        "android"
+      ],
+      "image":"screen_3",
+      "title":"Microsoftログイン",
+      "message":"これで、Microsoftアカウントで登録またはログインできます."
+    }
+  ]
+},

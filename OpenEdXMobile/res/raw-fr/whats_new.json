@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.21",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Prise en charge de Chromecast",
+        "message": "Souhaitez-vous visionner des vidéos de cours sur un écran plus grand ? C'est désormais possible grâce à la prise en charge de Chromecast."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Lecteur YouTube",
+        "message": "Vous en avez marre de devoir quitter l'application pour regarder des vidéos de cours sur YouTube ? Vous pouvez désormais regarder les vidéos dans le lecteur intégré à l'application."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Connexion avec Microsoft",
+        "message": "Vous pouvez désormais vous inscrire ou vous connecter avec un compte Microsoft."
+      }
+    ]
+  },
+  {
     "version": "2.20",
     "messages": [
       {
