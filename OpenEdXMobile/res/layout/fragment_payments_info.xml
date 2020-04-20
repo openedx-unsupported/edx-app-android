@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/payment_blue_bg"
@@ -80,7 +80,7 @@
                         app:layout_constraintTop_toTopOf="@id/tv_header_detail"
                         app:layout_constraintWidth_percent=".35" />
 
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
