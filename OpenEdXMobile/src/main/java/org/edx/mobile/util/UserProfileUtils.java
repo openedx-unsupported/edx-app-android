@@ -1,8 +1,9 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,6 +22,7 @@ public class UserProfileUtils {
         } else {
             Glide.with(context)
                     .load(event.getUri())
+                    .dontAnimate()
                     .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(view);

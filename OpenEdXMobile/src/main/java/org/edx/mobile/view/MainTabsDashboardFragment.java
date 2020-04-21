@@ -2,15 +2,14 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.joanzapata.iconify.IconDrawable;
@@ -204,6 +203,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         if (profileImage.hasImage()) {
             Glide.with(this)
                     .load(profileImage.getImageUrlMedium())
+                    .dontAnimate()
                     .into(imageView);
         } else {
             Glide.with(this)
