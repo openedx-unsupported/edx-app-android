@@ -11,6 +11,7 @@ import com.google.android.gms.cast.framework.CastStateListener;
 import org.edx.mobile.R;
 import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.googlecast.GoogleCastDelegate;
+import org.edx.mobile.logger.Logger;
 
 import de.greenrobot.event.EventBus;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -19,6 +20,7 @@ public abstract class BaseAppActivity extends RoboAppCompatActivity implements C
 
     private GoogleCastDelegate googleCastDelegate;
     private MenuItem mediaRouteMenuItem;
+    private final Logger logger = new Logger(BaseAppActivity.class.getName());
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -49,7 +51,8 @@ public abstract class BaseAppActivity extends RoboAppCompatActivity implements C
                     googleCastDelegate.showIntroductoryOverlay(this, mediaRouteMenuItem);
                 }
             }
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            logger.error(e, true);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -78,9 +81,21 @@ public abstract class BaseAppActivity extends RoboAppCompatActivity implements C
 
     @Override
     public void onCastStateChanged(int newState) {
-        if (mediaRouteMenuItem != null) {
-            googleCastDelegate.showIntroductoryOverlay(this, mediaRouteMenuItem);
+        /* App throws `IllegalArgumentException` when showing the Introductory Overlay in some cases.
+         * Check the following issue for more details (still open).
+         * Ref: https://issuetracker.google.com/issues/36191274
+         * TODO: Replace the try-catch block with more appropriate logic / by updating the cast library
+         * as part of the Jira story: https://openedx.atlassian.net/browse/LEARNER-7722
+         */
+        try {
+            if (isInForeground()) {
+                if (mediaRouteMenuItem != null) {
+                    googleCastDelegate.showIntroductoryOverlay(this, mediaRouteMenuItem);
+                }
+                invalidateOptionsMenu();
+            }
+        } catch (Exception e) {
+            logger.error(e, true);
         }
-        invalidateOptionsMenu();
     }
 }
