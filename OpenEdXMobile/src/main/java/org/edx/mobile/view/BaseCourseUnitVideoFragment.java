@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -181,14 +182,17 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
 
     @Override
     public void downloadTranscript() {
-        TranscriptModel transcript = getTranscriptModel();
-        String transcriptUrl = LocaleUtils.getTranscriptURL(getActivity(), transcript);
-        transcriptManager.downloadTranscriptsForVideo(transcriptUrl, (TimedTextObject transcriptTimedTextObject) -> {
-            subtitlesObj = transcriptTimedTextObject;
-            if (!getActivity().isDestroyed()) {
-                initTranscripts();
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            TranscriptModel transcript = getTranscriptModel();
+            String transcriptUrl = LocaleUtils.getTranscriptURL(activity, transcript);
+            transcriptManager.downloadTranscriptsForVideo(transcriptUrl, (TimedTextObject transcriptTimedTextObject) -> {
+                subtitlesObj = transcriptTimedTextObject;
+                if (!activity.isDestroyed()) {
+                    initTranscripts();
+                }
+            });
+        }
     }
 
     @Override
