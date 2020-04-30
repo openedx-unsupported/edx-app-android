@@ -24,15 +24,16 @@ public class NotificationNavigationViewModel extends BaseViewModel {
 
     private String courseId, unitId;
     EnrolledCoursesResponse coursesResponse;
-    private String notificationId;
+    private String notificationId, actionUserName;
 
     public NotificationNavigationViewModel(BaseVMActivity activity, String courseId, String unitId,
-                                           String notificationId) {
+                                           String notificationId, String actionUserName) {
         super(activity);
 
         this.courseId = courseId;
         this.unitId = unitId;
         this.notificationId = notificationId;
+//        this.actionUserName = actionUserName;
 
         getEnrolledCourse();
         if (mDataManager.getLoginPrefs().getNotificationSeen().equals(Constants.NOTIFICATION_RECIEVED)) {
@@ -43,6 +44,7 @@ public class NotificationNavigationViewModel extends BaseViewModel {
 
     private void getEnrolledCourse() {
 
+//        Constants.USERNAME = actionUserName;
         mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody responseBody) {

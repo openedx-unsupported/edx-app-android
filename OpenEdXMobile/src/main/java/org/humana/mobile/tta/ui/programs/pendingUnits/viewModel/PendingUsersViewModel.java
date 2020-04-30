@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
 import com.maurya.mx.mxlib.core.MxInfiniteAdapter;
 import com.maurya.mx.mxlib.core.OnRecyclerItemClickListener;
@@ -65,6 +66,8 @@ public class PendingUsersViewModel extends BaseViewModel {
 
     public RecyclerView.LayoutManager filterLayoutManager;
     public RecyclerView.LayoutManager layoutManager;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     public PendingUsersViewModel(Context context, TaBaseFragment fragment) {
         super(context, fragment);
@@ -85,6 +88,16 @@ public class PendingUsersViewModel extends BaseViewModel {
         tags = new ArrayList<>();
         changesMade = true;
         getFilters();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mActivity);
+        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
+        bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Student");
+        bundle.putString("page_loaded","Student Screen");
+        mFirebaseAnalytics.setCurrentScreen(mActivity,"Student","Fragment");
+        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
 
 
         usersAdapter.setItemClickListener((view, item) -> {

@@ -186,6 +186,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
         bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
         bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Schedule");
+        bundle.putString("page_loaded","Schedule Screen");
         mFirebaseAnalytics.setCurrentScreen(mActivity,"Schedule","Fragment");
         mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
 //        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs());

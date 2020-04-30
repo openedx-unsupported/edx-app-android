@@ -145,6 +145,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
         bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
         bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Unit");
+        bundle.putString("page_loaded","Unit Screen");
         mFirebaseAnalytics.setCurrentScreen(mActivity,"Unit","Fragment");
         mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
 
@@ -857,7 +858,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 unitBinding.tvDescription.setText(model.getDesc());
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (!model.getStatus().equals("")) {
-                        unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                        if(!model.getComment().toLowerCase().equalsIgnoreCase("none comment")) {
+                            unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                        }
                         if (model.getStatus().equals("Submitted")) {
                             unitBinding.tvComment.setVisibility(View.GONE);
                         } else {

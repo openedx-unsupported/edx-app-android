@@ -98,6 +98,8 @@ public class Constants {
     public static final String KEY_NOTIFICATION_ID = "notification_id";
     public static final String KEY_ID = "id";
     public static final int CLIENT_TIMEOUT = 60;
+    public static final String EXTRA_ACTION_USERNAME = "action_user_name";
+    public static final String COURSE_KEY = "course";
 
 
 

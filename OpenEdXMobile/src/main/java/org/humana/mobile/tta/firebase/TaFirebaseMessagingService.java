@@ -50,6 +50,8 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
     public static final String EXTRA_PARENT_ACTION_ID = "action_parent_id";
     public static final String EXTRA_ACTION_ID = "action_id";
     public static final String NOTIFICATION_ID = "notification_id";
+    public static final String EXTRA_ACTION_USERNAME = "action_user_name";
+
     DataManager mDataManager;
     EnrolledCoursesResponse coursesResponse;
 
@@ -66,21 +68,32 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         mDataManager = DataManager.getInstance(this);
 
         if (remoteMessage.getData().containsKey(EXTRA_TITLE) && remoteMessage.getData().containsKey("body") &&
-                remoteMessage.getData().containsKey("path") && remoteMessage.getData().containsKey("type"))
+                remoteMessage.getData().containsKey("path") && remoteMessage.getData().containsKey("type")) {
             sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"),
                     remoteMessage.getData().get("path"), remoteMessage.getData().get("type"),
                     remoteMessage.getData().get(EXTRA_PARENT_ACTION_ID),
                     remoteMessage.getData().get(EXTRA_ACTION_ID),
-                    remoteMessage.getData().get(NOTIFICATION_ID));
+                    remoteMessage.getData().get(NOTIFICATION_ID),
+                    remoteMessage.getData().get(EXTRA_ACTION_USERNAME));
+
+            if(remoteMessage.getData().get("type").toLowerCase().equalsIgnoreCase("submitunit")) {
+                String mystring = remoteMessage.getData().get("body");
+                String arr[] = mystring.split(" ", 2);
+                Constants.USERNAME = arr[0];   //the
+            }else {
+                Constants.USERNAME ="";
+            }
+        }
         else if (remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("body"))
             sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"),
-                    "", "", "", "", String.valueOf(0L));
+                    "", "", "", "", String.valueOf(0L),"");
         else
             return;
     }
 
     private void sendNotification(String messageTitle, String messageBody, String path, String type,
-                                  String action_parent_id, String action_id, String notification_id) {
+                                  String action_parent_id, String action_id, String notification_id,
+                                  String actionUserName) {
         //**add this line**
         int requestID = (int) System.currentTimeMillis();
 
@@ -90,7 +103,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
         //remove this for generlisation && path!=null && !path.equals("")
         if (type != null && !type.equals("")) {
             notificationIntent = getNavigationIntent(type, path, action_parent_id, action_id,
-                    notification_id);
+                    notification_id, actionUserName);
         } else {
             notificationIntent = new Intent(getApplicationContext(), SplashActivity.class);
         }
@@ -148,7 +161,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private Intent getNavigationIntent(String type, String path, String action_parent_id,
-                                       String action_id, String notification_id) {
+                                       String action_id, String notification_id, String action_userName) {
         navigationIntent = new Intent();
 
         //if user is not logged in navigate to splash screen
@@ -173,6 +186,7 @@ public class TaFirebaseMessagingService extends FirebaseMessagingService {
             navigationIntent.putExtra(EXTRA_PARENT_ACTION_ID, action_parent_id);
             navigationIntent.putExtra(EXTRA_ACTION_ID, action_id);
             navigationIntent.putExtra(NOTIFICATION_ID, notification_id);
+            navigationIntent.putExtra(EXTRA_ACTION_USERNAME, action_userName);
         }
         return navigationIntent;
     }

@@ -1,38 +1,28 @@
 package org.humana.mobile.services;
 
-import android.Manifest;
 import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.google.android.gms.ads.formats.NativeAdOptions;
-
-import org.humana.mobile.core.EdxEnvironment;
 import org.humana.mobile.core.IEdxEnvironment;
-import org.humana.mobile.model.VideoModel;
-import org.humana.mobile.model.download.NativeDownloadModel;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Period;
+import org.humana.mobile.tta.data.local.db.table.CurricullamChaptersModel;
 
 import java.io.File;
-
-import de.greenrobot.event.EventBus;
 
 
 public class DownloadService extends IntentService {
@@ -49,9 +39,11 @@ public class DownloadService extends IntentService {
     String downloadPath, title;
     long periodId;
     static Period period;
+    static CurricullamChaptersModel chapter;
     long downloadId;
     static FragmentActivity activitys;
     public static boolean isDownload = false;
+    public static boolean isCurriculamm = false;
 
 
 
@@ -75,6 +67,23 @@ public class DownloadService extends IntentService {
         return in;
 
     }
+    public static Intent getDownloadService(final @NonNull FragmentActivity callingClassContext,
+                                            final @NonNull String downloadPath,
+                                            final @NonNull String title,
+                                            final @NonNull CurricullamChaptersModel chaptersModel,
+                                            final @NonNull Boolean isCurriculam) {
+        Intent in = new Intent(callingClassContext, DownloadService.class)
+                .putExtra(DOWNLOAD_PATH, downloadPath)
+                .putExtra(TITLE, title);
+
+        chapter = chaptersModel;
+        isCurriculamm = isCurriculam;
+        activitys = callingClassContext;
+        callingClassContext.startService(in);
+        return in;
+
+    }
+
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
@@ -99,15 +108,25 @@ public class DownloadService extends IntentService {
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uri.getLastPathSegment());// Storage directory path
         downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         // This will start downloading
-        downloadId = downloadManager.enqueue(request);
-        registerReceiver(onComplete, new IntentFilter(FILTER_TEXT));
+        if (isCurriculamm){
+            downloadId = downloadManager.enqueue(request);
+            registerReceiver(onComplete, new IntentFilter("org.humana.mobile.download.curricullam"));
 
-        Intent intent = new Intent();
-        intent.setAction(FILTER_TEXT);
-        intent.putExtra("data", "Downloaded");
-        intent.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, downloadId);
-        sendBroadcast(intent);
+            Intent intent = new Intent();
+            intent.setAction("org.humana.mobile.download.curricullam");
+            intent.putExtra("data", "Downloaded");
+            intent.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, downloadId);
+            sendBroadcast(intent);
+        }else {
+            downloadId = downloadManager.enqueue(request);
+            registerReceiver(onComplete, new IntentFilter(FILTER_TEXT));
 
+            Intent intent = new Intent();
+            intent.setAction(FILTER_TEXT);
+            intent.putExtra("data", "Downloaded");
+            intent.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, downloadId);
+            sendBroadcast(intent);
+        }
         isDownload = true;
 
         Cursor cursor = downloadManager.query(query);
@@ -143,6 +162,12 @@ public class DownloadService extends IntentService {
                             mDataManager.insertPeriodDesc(period);
 //                            EventBus.getDefault().post(period);
 
+                            break;
+                        case "org.humana.mobile.download.curricullam":
+                            chapter.setDownloadStatus("Downloaded");
+                            chapter.setTitle(title);
+                            chapter.setUrl(downloadPath);
+                            mDataManager.insertCurriculam(chapter);
                             break;
                         case DownloadManager.ACTION_NOTIFICATION_CLICKED:
                             break;

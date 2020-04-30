@@ -4,7 +4,6 @@ import org.humana.mobile.tta.data.local.db.table.Category;
 import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
-import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Feed;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.data.local.db.table.Period;
@@ -16,7 +15,7 @@ import org.humana.mobile.tta.data.local.db.table.UnitStatus;
 import org.humana.mobile.tta.data.local.db.table.User;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.model.library.CollectionConfigResponse;
-import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
+import org.humana.mobile.tta.data.local.db.table.CurricullamChaptersModel;
 
 import java.util.List;
 
@@ -91,5 +90,9 @@ public interface ILocalDataSource {
     Unit getUnit(String id);
     void insertUnits(List<Unit> units);
     void insertUnit(Unit unit);
+
+    List<CurricullamChaptersModel> getChapters(String username);
+    void insertCurricullams(List<CurricullamChaptersModel> chapters);
+    void insertCurricullam(CurricullamChaptersModel chapter);
 
 }

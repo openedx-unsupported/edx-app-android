@@ -152,16 +152,17 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 //                authWebView.loadUrl(false, unit.getBlockUrl());
                 String blockId = unit.getId();
                 String role = mdataManager.getLoginPrefs().getRole();
-                String program_id = encode(mdataManager.getLoginPrefs().getProgramId());
+                String program_id = mdataManager.getLoginPrefs().getProgramId();
 
-                String urlToloadStudent = environment.getConfig().getApiHostURL() + lms_xblock
-                        + blockId + "/?program_id=" + program_id + "&role=" + role + "&username=" + Constants.USERNAME;
 
-                String urlToload = environment.getConfig().getApiHostURL() + lms_xblock
-                        + blockId;
+
                 if (Constants.USERNAME.equals("")) {
+                    String urlToload = environment.getConfig().getApiHostURL() + lms_xblock
+                            + blockId;
                     authWebView.loadUrl(false, urlToload);
                 } else {
+                    String urlToloadStudent = environment.getConfig().getApiHostURL() + lms_xblock
+                            + blockId + "/?program_id=" + program_id + "&role=" + "student" + "&username=" + Constants.USERNAME;
                     authWebView.loadUrl(false, urlToloadStudent);
                 }
             }

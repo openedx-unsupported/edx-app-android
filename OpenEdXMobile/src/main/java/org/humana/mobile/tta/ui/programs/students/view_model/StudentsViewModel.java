@@ -102,6 +102,7 @@ public class StudentsViewModel extends BaseViewModel {
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
         bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
         bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Student");
+        bundle.putString("page_loaded","Student Screen");
         mFirebaseAnalytics.setCurrentScreen(mActivity,"Student","Fragment");
         mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
 

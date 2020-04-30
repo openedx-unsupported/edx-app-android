@@ -35,6 +35,7 @@ import org.humana.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.humana.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.humana.mobile.tta.data.model.profile.FeedbackResponse;
 import org.humana.mobile.tta.data.model.profile.FollowStatus;
+import org.humana.mobile.tta.data.local.db.table.CurricullamModel;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
@@ -261,6 +262,10 @@ public class TaAPI {
 
     public Call<List<Program>> getPrograms(){
         return taService.getPrograms();
+    }
+
+    public Call<CurricullamModel> getCurricullam(String program_id){
+        return taService.getCurricullam(program_id);
     }
 
     public Call<NotificationCountResponse> getNotificationCount(){

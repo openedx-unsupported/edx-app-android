@@ -97,6 +97,8 @@ import org.humana.mobile.tta.data.model.profile.FeedbackResponse;
 import org.humana.mobile.tta.data.model.profile.FollowStatus;
 import org.humana.mobile.tta.data.model.profile.UpdateMyProfileResponse;
 import org.humana.mobile.tta.data.model.profile.UserAddressResponse;
+import org.humana.mobile.tta.data.local.db.table.CurricullamChaptersModel;
+import org.humana.mobile.tta.data.local.db.table.CurricullamModel;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
@@ -174,6 +176,7 @@ import org.humana.mobile.tta.task.program.GetAllUnitsTask;
 import org.humana.mobile.tta.task.program.GetBlockComponentFromCacheTask;
 import org.humana.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.humana.mobile.tta.task.program.GetCourseComponentTask;
+import org.humana.mobile.tta.task.program.GetCurricullamTask;
 import org.humana.mobile.tta.task.program.GetNotificationCountTask;
 import org.humana.mobile.tta.task.program.GetPendingUnitsTask;
 import org.humana.mobile.tta.task.program.GetPendingUsersTask;
@@ -3637,6 +3640,45 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+
+    public void getCurricullam(String programId,OnResponseCallback<CurricullamModel> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetCurricullamTask(context, programId) {
+                @Override
+                protected void onSuccess(CurricullamModel programs) throws Exception {
+                    super.onSuccess(programs);
+                    if (programs == null) {
+                        callback.onFailure(new TaException("No programs available"));
+                        return;
+                    }
+
+                    for (CurricullamChaptersModel program : programs.getChapters()) {
+                        program.setUserName(loginPrefs.getUsername());
+                    }
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            mLocalDataSource.insertCurricullams(programs.getChapters());
+                        }
+                    }.start();
+
+                    callback.onSuccess(programs);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }.execute();
+
+        }
+
+
+    }
+
+
     public void getNotificationCount(OnResponseCallback<NotificationCountResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
@@ -3881,6 +3923,17 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
+    public void insertCurriculam(CurricullamChaptersModel chapter) {
+        new Thread() {
+            @Override
+            public void run() {
+                mLocalDataSource.insertCurricullam(chapter);
+            }
+        }.start();
+
+    }
+
+
     public void getPeriodDesc(String userName, OnResponseCallback<List<Period>> callback) {
 
         new Task<List<Period>>(context) {
@@ -3893,6 +3946,28 @@ public class DataManager extends BaseRoboInjector {
             protected void onSuccess(List<Period> periods) throws Exception {
                 super.onSuccess(periods);
                 callback.onSuccess(periods);
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                callback.onFailure(ex);
+            }
+        }.execute();
+    }
+
+    public void getCurricullamChaptersDesc(String url,
+                                           OnResponseCallback<List<CurricullamChaptersModel>> callback) {
+
+        new Task<List<CurricullamChaptersModel>>(context) {
+            @Override
+            public List<CurricullamChaptersModel> call() {
+                return mLocalDataSource.getChapters(url);
+            }
+
+            @Override
+            protected void onSuccess(List<CurricullamChaptersModel> chapters) throws Exception {
+                super.onSuccess(chapters);
+                callback.onSuccess(chapters);
             }
 
             @Override

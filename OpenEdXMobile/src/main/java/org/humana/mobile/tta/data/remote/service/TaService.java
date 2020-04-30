@@ -34,6 +34,7 @@ import org.humana.mobile.tta.data.model.library.ConfigModifiedDateResponse;
 import org.humana.mobile.tta.data.model.profile.ChangePasswordResponse;
 import org.humana.mobile.tta.data.model.profile.FeedbackResponse;
 import org.humana.mobile.tta.data.model.profile.FollowStatus;
+import org.humana.mobile.tta.data.local.db.table.CurricullamModel;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
@@ -203,6 +204,9 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_PROGRAMS)
     Call<List<Program>> getPrograms();
+
+    @GET(ApiConstants.URL_MX_GET_CURRICULLAM)
+    Call<CurricullamModel> getCurricullam(@Query(value = Constants.COURSE_KEY,encoded = true) String programId);
 
     @GET(ApiConstants.URL_MX_GET_NOTIFICATION_COUNT)
     Call<NotificationCountResponse> getNotificationCount();

@@ -1,12 +1,10 @@
 package org.humana.mobile.tta.data.local.db;
 
-import org.humana.mobile.tta.data.local.db.dao.PeriodDescDao;
 import org.humana.mobile.tta.data.local.db.table.Category;
 import org.humana.mobile.tta.data.local.db.table.Certificate;
 import org.humana.mobile.tta.data.local.db.table.Content;
 import org.humana.mobile.tta.data.local.db.table.ContentList;
 import org.humana.mobile.tta.data.local.db.table.ContentStatus;
-import org.humana.mobile.tta.data.local.db.table.DownloadPeriodDesc;
 import org.humana.mobile.tta.data.local.db.table.Feed;
 import org.humana.mobile.tta.data.local.db.table.Notification;
 import org.humana.mobile.tta.data.local.db.table.Period;
@@ -17,6 +15,7 @@ import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.local.db.table.UnitStatus;
 import org.humana.mobile.tta.data.local.db.table.User;
 import org.humana.mobile.tta.data.model.library.CollectionConfigResponse;
+import org.humana.mobile.tta.data.local.db.table.CurricullamChaptersModel;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -302,4 +301,20 @@ public class LocalDataSource implements ILocalDataSource {
     public void insertUnit(Unit unit) {
         mAppDatabase.unitDao().insert(unit);
     }
+
+    @Override
+    public List<CurricullamChaptersModel> getChapters(String url) {
+        return mAppDatabase.curricullamDao().getAllChapters(url);
+    }
+
+    @Override
+    public void insertCurricullams(List<CurricullamChaptersModel> chapters) {
+        mAppDatabase.curricullamDao().insertChapters(chapters);
+    }
+
+    @Override
+    public void insertCurricullam(CurricullamChaptersModel chapter) {
+        mAppDatabase.curricullamDao().insertChapter(chapter);
+    }
+
 }

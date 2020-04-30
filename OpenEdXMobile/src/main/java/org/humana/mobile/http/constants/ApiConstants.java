@@ -190,6 +190,9 @@ public class ApiConstants {
     public static final String URL_MX_GET_UPDATE_PERIOD= "mx_humana_lms/api/v1/updatePeriods";
 
 
+    public static final String URL_MX_GET_CURRICULLAM= "mx_humana_lms/api/v1/get_textbook";
+
+
     //Humana end
 
     public static final String TOKEN_TYPE_ACCESS = "access_token";

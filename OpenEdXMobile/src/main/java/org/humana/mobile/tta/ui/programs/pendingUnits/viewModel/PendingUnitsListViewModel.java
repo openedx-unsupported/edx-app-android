@@ -388,7 +388,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                     itemBinding.llApproval.setVisibility(View.VISIBLE);
                 }
 
-                if (getItemPosition(model) == 0) {
+               /* if (getItemPosition(model) == 0) {
                     if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {
                         new MxTooltip.Builder(mActivity)
                                 .anchorView(itemBinding.textPeriodName)
@@ -402,7 +402,7 @@ public class PendingUnitsListViewModel extends BaseViewModel {
 
                         mDataManager.getLoginPrefs().setScheduleTootipSeen(true);
                     }
-                }
+                }*/
 
                 itemBinding.btnApprove.setOnClickListener(v -> {
                     if (listener != null) {
