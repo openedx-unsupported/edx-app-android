@@ -984,5 +984,6 @@
     <string name="not_enrolled">You\'re not enrolled in the program</string>
     <string name="empty_unit">This unit is empty</string>
     <string name="internal_storage">Internal Storage</string>
+    <string name="open">open..</string>
 
 </resources>

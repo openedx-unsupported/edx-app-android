@@ -149,4 +149,5 @@
     <string name="internal_storage">Internal Storage</string>
     <string name="proposed_date">Proposed Date</string>
     <string name="empty_unit">Empty Unit</string>
+    <string name="open">open..</string>
 </resources>

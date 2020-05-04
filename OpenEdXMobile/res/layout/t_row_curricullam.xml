@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_10px"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/humana_card_background"
         app:cardCornerRadius="3dp"
         app:cardElevation="@dimen/_6px">
 
@@ -36,30 +36,32 @@
                 android:id="@+id/ll_read_more"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.4"
+                android:layout_weight="0.1"
                 android:layout_gravity="end"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_read_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
+                    android:layout_weight="1"
                     android:fontFamily="@font/hind_regular"
-                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:text="open.."
+                    android:visibility="gone"
                     android:textColor="@color/com_facebook_blue"
-                    android:text="Read More..." />
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/txt_read_more"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:background="@drawable/ic_before_dnd"
                     android:fontFamily="@font/hind_bold"
-                    android:gravity="center"
+                    android:gravity="end"
                     android:foregroundGravity="center"
                     android:layout_marginBottom="15dp"
                     android:padding="5dp"

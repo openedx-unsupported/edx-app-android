@@ -47,7 +47,7 @@ public class CurricullamViewModel extends BaseViewModel {
         super(context, fragment);
         curricullamModelList = new ArrayList<>();
         mActivity.showLoading();
-        programId = encode("course-v1:Humana+NT101+NeTT_FNK-A");
+        programId = encode(mDataManager.getLoginPrefs().getProgramId());
         layoutManager = new LinearLayoutManager(mActivity);
 
         curricullamAdapter = new CurricullamAdapter(mActivity);
@@ -175,9 +175,10 @@ public class CurricullamViewModel extends BaseViewModel {
                             .equalsIgnoreCase(mActivity.getString(R.string.downloaded))) {
                         itemBinding.txtReadMore.setBackground(
                                 ContextCompat.getDrawable(mActivity, R.drawable.ic_after_dnd));
+                        itemBinding.tvReadMore.setText(mActivity.getString(R.string.open));
                         itemBinding.pbDownload.setVisibility(View.GONE);
                         itemBinding.llReadMore.setVisibility(View.VISIBLE);
-                        itemBinding.tvReadMore.setVisibility(View.VISIBLE);
+                        itemBinding.tvReadMore.setVisibility(View.GONE);
                     } else if (model.getDownloadStatus().equals(mActivity.getString(R.string.downloading))) {
                         itemBinding.pbDownload.setVisibility(View.VISIBLE);
                         itemBinding.llReadMore.setVisibility(View.GONE);
