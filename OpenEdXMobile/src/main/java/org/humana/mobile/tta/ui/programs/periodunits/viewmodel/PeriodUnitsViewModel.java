@@ -455,7 +455,7 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
                         allLoaded = true;
-//                        unitsAdapter.setLoadingDone();
+                        unitsAdapter.setLoadingDone();
 //                        unitsAdapter.reset(true);
                         toggleEmptyVisibility();
 

@@ -491,7 +491,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                                 }
                             }
                             populateUnits(data);
-                            unitsAdapter.setLoadingDone();
+//                            unitsAdapter.setLoadingDone();
 
 
                         }
@@ -500,7 +500,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                         public void onFailure(Exception e) {
                             mActivity.hideLoading();
                             isUnitModePeriod = false;
-                            unitsAdapter.setLoadingDone();
+//                            unitsAdapter.setLoadingDone();
                             skip = 0;
                             fetchUnits();
 //                            toggleEmptyVisibility();
